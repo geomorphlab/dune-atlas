@@ -1,4 +1,5 @@
 // Citation text shown in the panel and in downloads.
+import { richHtml } from "../util/richtext";
 
 /** AI-assistance notice (verbatim; shown in About and written into every download). */
 export const AI_NOTICE = "This page was created with assistance from Claude AI. I have reviewed the functionality and underlying data but if you notice any issues or errors please contact me at a.gunn@monash.edu.";
@@ -47,10 +48,19 @@ export const CITATION_SOURCES: Record<string, CitationSource> = {
       { label: "Data", text: "Zomer, R. J. & Trabucco, A. Global Aridity Index and Potential Evapotranspiration (ET0) Database: Version 3.1 (Global-AI_PET v3.1). Figshare.", doi: "10.6084/m9.figshare.7504448.v7", license: "CC BY 4.0" },
     ],
   },
+  vegetation: {
+    id: "vegetation", title: "Vegetation cover (CSIRO MODIS Fractional Cover v3.1)",
+    entries: [
+      { label: "Paper", text: "Guerschman, J. P. et al. (2015). Assessing the effects of site heterogeneity and soil properties when unmixing photosynthetic vegetation, non-photosynthetic vegetation and bare soil fractions from Landsat and MODIS data. Remote Sensing of Environment 161, 12–26.", doi: "10.1016/j.rse.2015.01.021" },
+      { label: "Paper", text: "Guerschman, J. P. & Hill, M. J. (2018). Calibration and validation of the Australian fractional cover product for MODIS collection 6. Remote Sensing Letters 9, 696–705.", doi: "10.1080/2150704X.2018.1465611" },
+      { label: "Data", text: "Guerschman, J. (2014). Fractional cover - MODIS, CSIRO algorithm (v3.1). CSIRO; hosted by NCI.", doi: "10.4225/08/5848a3f19a7b3", license: "CC BY 4.0, © 2008–2019 CSIRO" },
+    ],
+    notice: "Full monthly time series: GEOGLAM RAPP Map, https://map.geo-rapp.org/",
+  },
 };
 export const DEFAULT_SOURCE_IDS = ["dune-atlas", "era5-land"];
-/** sources of a cell download (cells-aux carries the aridity cell means) */
-export const CELL_SOURCE_IDS = ["aridity"];
+/** sources of a cell download (the cells-aux sidecars carry the aridity and vegetation cell means) */
+export const CELL_SOURCE_IDS = ["aridity", "vegetation"];
 
 /** The sources to cite: the defaults plus any extra ids (e.g. from visible layers), in order. */
 export function citationSources(extra: string[] = []): CitationSource[] {
@@ -80,11 +90,22 @@ export function referencesLine(sources: CitationSource[] = citationSources()): s
 
 /** JSON form (metadata.json `citation`). */
 export function citationJson(sources: CitationSource[] = citationSources()) {
-  return sources.map((s) => ({ source: s.title, id: s.id, ...Object.fromEntries(s.entries.map((e) => [e.label.toLowerCase().replace(/[^a-z0-9]+/g, "_"), { text: e.text, doi: e.doi, url: `https://doi.org/${e.doi}`, ...(e.license ? { license: e.license } : {}) }])), ...(s.notice ? { notice: s.notice } : {}) }));
+  return sources.map((s) => { const keys = entryKeys(s); return { source: s.title, id: s.id, ...Object.fromEntries(s.entries.map((e, i) => [keys[i], { text: e.text, doi: e.doi, url: `https://doi.org/${e.doi}`, ...(e.license ? { license: e.license } : {}) }])), ...(s.notice ? { notice: s.notice } : {}) }; });
+}
+
+/** JSON keys of a source's entries: label in snake case, numbered when repeated (paper, paper_2). */
+function entryKeys(s: CitationSource): string[] {
+  const seen = new Map<string, number>();
+  return s.entries.map((e) => {
+    const k = e.label.toLowerCase().replace(/[^a-z0-9]+/g, "_");
+    const n = (seen.get(k) ?? 0) + 1;
+    seen.set(k, n);
+    return n === 1 ? k : `${k}_${n}`;
+  });
 }
 
 const esc = (t: string) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 /** Grouped HTML list (panels): one item per source with its Paper / Data entries and notice. */
 export function citationHtml(sources: CitationSource[] = citationSources()): string {
-  return `<ul class="cite-list">${sources.map((s) => `<li><strong>${esc(s.title)}</strong><ul>${s.entries.map((e) => `<li>${esc(e.label)}: ${esc(e.text)} <a href="https://doi.org/${e.doi}" target="_blank" rel="noopener">doi:${e.doi}</a></li>`).join("")}</ul>${s.notice ? `<p class="help">${esc(s.notice)}</p>` : ""}</li>`).join("")}</ul>`;
+  return `<ul class="cite-list">${sources.map((s) => `<li><strong>${esc(s.title)}</strong><ul>${s.entries.map((e) => `<li>${esc(e.label)}: ${esc(e.text)} <a href="https://doi.org/${e.doi}" target="_blank" rel="noopener">doi:${e.doi}</a></li>`).join("")}</ul>${s.notice ? `<p class="help">${richHtml(s.notice)}</p>` : ""}</li>`).join("")}</ul>`;
 }

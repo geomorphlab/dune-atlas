@@ -13,6 +13,7 @@ attrs, so the app can show it next to the layer.
 | `dunes/*.pmtiles` | dune map `dune-mask-rev1.tif`: Gunn, A. (2026) geomorphlab/dune-world Supplementary Code (v1.0.0), Zenodo, doi:10.5281/zenodo.20054674 | MIT | vectorised (8-connected), tiled |
 | (all wind-derived products) | ERA5-Land hourly reanalysis, Copernicus Climate Change Service, doi:10.24381/cds.e2161bac | Copernicus licence ("Contains modified Copernicus Climate Change Service information 2026") | via the Zenodo data above |
 | `fields/aridity.zarr`, `cells-aux.zarr/ai_*` | **Global Aridity Index and Potential Evapotranspiration (ET0) Database v3.1** (Global-AI_PET v3.1), annual AI `ai_v31_yr.tif` (1970–2000, 30″). Paper: Zomer, R.J., Xu, J. & Trabucco, A. (2022) Version 3 of the Global Aridity Index and Potential Evapotranspiration Database. *Sci. Data* 9, 409, doi:10.1038/s41597-022-01493-1. Dataset: Zomer & Trabucco, Figshare, doi:10.6084/m9.figshare.7504448.v7 (v3.1 = Figshare version 7, published 2025-07-17; concept DOI 10.6084/m9.figshare.7504448) | CC BY 4.0 (Figshare record) — see note | integer AI×10⁴ → float32; ocean / ET0 = 0 → no data; 65535 kept as 6.5535 (AI ≥ 6.5535); multiscale means of valid pixels; 12-bit rounding (≤ 1.2×10⁻⁴ relative); per-0.1°-cell means |
+| `fields/vegetation.zarr`, `cells-aux-veg.zarr` (`tot_cov_mean`, `tot_cov_n_months`) | **Fractional cover – MODIS, CSIRO Land and Water algorithm, Version 3.1.0** (CSIRO; MODIS MCD43A4 collection 6/6.1, monthly medoid, 500 m sinusoidal tiles), total vegetation cover `tot_cov` = PV + NPV, 2001–2025; the vegetation product of GEOGLAM Rangeland and Pasture Productivity (RAPP). Dataset: Guerschman, J. (2014) *Fractional cover – MODIS, CSIRO algorithm*, CSIRO, doi:10.4225/08/5848a3f19a7b3. Papers: Guerschman et al. (2015) *Remote Sens. Environ.* 161, 12–26, doi:10.1016/j.rse.2015.01.021; Guerschman & Hill (2018) *Remote Sens. Lett.* 9, 696–705, doi:10.1080/2150704X.2018.1465611. Distributed by NCI (project tc43; THREDDS https://thredds.nci.org.au/thredds/catalog/tc43/modis-fc/v310/tiles/monthly/cover/catalog.html); time series viewer: GEOGLAM RAPP Map https://map.geo-rapp.org/ | CC BY 4.0, Copyright 2008–2019 CSIRO | monthly 500 m tiles averaged to 0.1° (valid `tot_cov` ≤ 103 %) and over the 300 months 2001–2025 (months without valid data skipped); multiscale means of valid cells; 12-bit rounding (≤ 1.2×10⁻⁴ relative); see `docs/validation-veg.md` |
 | basemaps | OpenFreeMap/OpenMapTiles/OSM, Esri World Imagery, Mapterhorn, OpenTopoMap | providers' terms | none (attribution shown on the map) |
 
 **Licence note (Global-AI v3.1) — needs the author's confirmation.** The Figshare record (API, 2026-10-13:
@@ -34,3 +35,21 @@ paper, superseded by v3.1, which revises the net-longwave radiation term as the 
   references of every per-cell download (NetCDF `references`, metadata.json, README, citation TXT).
 - Flux divergence: computed by the atlas from RDP/RDD following Gunn (2026), Methods M6; cite the paper and
   the Supplementary Data.
+- Vegetation cover: Guerschman, J.P. et al. (2015) Remote Sens. Environ. 161, 12–26,
+  doi:10.1016/j.rse.2015.01.021; Guerschman, J.P. & Hill, M.J. (2018) Remote Sens. Lett. 9, 696–705,
+  doi:10.1080/2150704X.2018.1465611; data: Guerschman, J. (2014) Fractional cover – MODIS, CSIRO algorithm,
+  Version 3.1.0, CSIRO, doi:10.4225/08/5848a3f19a7b3 (CC BY 4.0, Copyright 2008–2019 CSIRO), distributed by
+  NCI. GEOGLAM RAPP Map (full monthly time series): https://map.geo-rapp.org/. Averaged to 0.1° and over
+  2001–2025 by dune-atlas. The CC BY 4.0 notice requires the creator (CSIRO Land and Water), the copyright
+  notice, the licence, a link to the data and an indication of changes; all five are in the registry
+  `attribution` and in the store root attrs. The product metadata also asks users to send citations of
+  publications that use the data to the data custodian (contact in the NetCDF global attributes).
+
+## Per-cell sidecars (convention for new per-cell variables)
+`cells.zarr` and `cells-aux.zarr` are immutable once published. Each later group of per-cell variables is a
+separate store `dune-atlas/<version>/cells-aux-<name>.zarr` on the same 1801 × 3600 grid with the
+`cells-aux.zarr` layout (`pipeline/src/dune_atlas_pipeline/cellsaux.py`): scalar arrays (latitude, longitude)
+float32 in plain 64 × 64 chunks; threshold-dependent arrays (latitude, longitude, ut) sharded 16 × 16 cells
+with a one-cell inner chunk and the index at the end; values only on `cells.zarr` land cells; all-ocean chunks
+absent; root attrs `variables`, `grid`, `sidecar_of`, `attribution`. Current sidecars: `cells-aux-veg.zarr`
+(`tot_cov_mean` %, `tot_cov_n_months`). A later data version may consolidate the sidecars into one store.

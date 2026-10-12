@@ -14,6 +14,8 @@ datasets:
     prefix: dune-atlas/v1
     description: ECMWF ERA5-Land hourly 10 m winds, 1950–2024, on the 0.1° grid (Gunn 2026).
     citation: "Muñoz Sabater, J. (2019). ERA5-Land hourly data from 1950 to present. C3S CDS. doi:10.24381/cds.e2161bac"
+    # per-cell sidecars on the cells.zarr grid (one store per later set of per-cell variables)
+    cellAuxStores: ["{dataset}/cells-aux.zarr", "{dataset}/cells-aux-veg.zarr"]
 defaultDataset: era5-land
 
 threshold:

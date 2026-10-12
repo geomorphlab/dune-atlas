@@ -209,7 +209,7 @@ describe("cell exports", () => {
     expect(Object.keys(md).sort()).toEqual(["ai_notice", "aux", "cell", "citation", "conventions", "copernicus_notice", "dataset", "fields", "files", "generated", "grid", "institution", "license", "permalink", "ut"]);
     expect(md.ut[14]).toBe(0.15);
     expect(md.files["flux_rose.csv"].columns.map((x: { name: string }) => x.name)).toEqual(csvColumns(c)["flux_rose.csv"].map((x) => x.name));
-    expect(md.citation.map((x: { source: string }) => x.source)).toEqual(["Dune Atlas / dune map", "ERA5-Land", "Global Aridity Index (Global-AI_PET v3.1)"]);
+    expect(md.citation.map((x: { source: string }) => x.source)).toEqual(["Dune Atlas / dune map", "ERA5-Land", "Global Aridity Index (Global-AI_PET v3.1)", "Vegetation cover (CSIRO MODIS Fractional Cover v3.1)"]);
     const rd = readmeText(c, META);
     expect(rd).toContain(AI_NOTICE);
     expect(rd).toContain("pd.read_csv(f, header=0, skiprows=[1, 2])");

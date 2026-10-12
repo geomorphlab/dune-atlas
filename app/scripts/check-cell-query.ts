@@ -46,8 +46,9 @@ class RangeFileStore {
   }
 }
 
-const auxDir = path.join(base, "cells-aux.zarr");
-const store = await CellStore.open(new RangeFileStore(path.join(base, "cells.zarr")), fs.existsSync(auxDir) ? { aux: new RangeFileStore(auxDir) } : {});
+// per-cell sidecars present in the fixture (cells-aux.zarr, cells-aux-<name>.zarr), in registry order
+const auxDirs = ["cells-aux.zarr", "cells-aux-veg.zarr"].map((d) => path.join(base, d)).filter((d) => fs.existsSync(d));
+const store = await CellStore.open(new RangeFileStore(path.join(base, "cells.zarr")), { aux: auxDirs.map((d) => new RangeFileStore(d)) });
 const openReqs = reqs, openBytes = bytes;
 const ref = snapToCell(lon, lat)!;
 const t0 = performance.now();
@@ -91,7 +92,7 @@ for (const ut of [5, 14, 40]) {
 const exportMeta = { datasetId: "era5-land", datasetTitle: "ERA5-Land 1950–2024 (0.1°)", dataVersion: "v1", permalink: `https://map.geomorphlab.org/?cell=${cell.iy},${cell.ix}`, storeAttrs: store.attrs, generated: new Date("2026-01-01T00:00:00Z") };
 const nc = cellNetcdf(cell, exportMeta), zip = await csvBundle(cell, exportMeta);
 const exportBase = exportBaseName(cell, exportMeta.datasetId);
-results.aux = cell.aux ? { ai_mean: cell.aux.scalars.ai_mean, ai_valid_frac: cell.aux.scalars.ai_valid_frac, ai_sat_frac: cell.aux.scalars.ai_sat_frac, qsdiv_ut14_m_per_kyr: cell.aux.series.qsdiv?.[14] * 1000 } : null;
+results.aux = cell.aux ? { ai_mean: cell.aux.scalars.ai_mean, ai_valid_frac: cell.aux.scalars.ai_valid_frac, ai_sat_frac: cell.aux.scalars.ai_sat_frac, qsdiv_ut14_m_per_kyr: cell.aux.series.qsdiv?.[14] * 1000, tot_cov_mean: cell.aux.scalars.tot_cov_mean, tot_cov_n_months: cell.aux.scalars.tot_cov_n_months } : null;
 results.exports = { base: exportBase, nc_bytes: nc.length, zip_bytes: zip.length, published_fields: cell.fieldVars.filter((v) => !WITHHELD.has(v)).length };
 
 const v = analyseCell(cell, 14, { windSectors: 16, fluxSectors: 32 });

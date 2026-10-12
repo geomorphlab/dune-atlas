@@ -181,7 +181,12 @@
           },
           "cellAuxStore": {
             "type": "string",
-            "description": "Per-cell auxiliary sidecar store (cells-aux.zarr); default '{dataset}/cells-aux.zarr'."
+            "description": "Single per-cell sidecar store (older registries); ignored when cellAuxStores is given."
+          },
+          "cellAuxStores": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Per-cell sidecar stores on the cells.zarr grid, merged in order (cells-aux.zarr, cells-aux-<name>.zarr); default ['{dataset}/cells-aux.zarr', '{dataset}/cells-aux-veg.zarr']."
           }
         }
       }

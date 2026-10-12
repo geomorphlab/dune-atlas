@@ -127,7 +127,7 @@ export class CellStore {
   #fields: zarr.Array<"float32", Readable>;
   #dunes: zarr.Array<"uint8", Readable>;
 
-  #aux: Promise<CellAuxStore | null> = Promise.resolve(null);
+  #aux: Promise<CellAuxStore[]> = Promise.resolve([]);
   private constructor(attrs: CellStoreAttrs, hist: zarr.Array<"uint32", Readable>, fields: zarr.Array<"float32", Readable>, dunes: zarr.Array<"uint8", Readable>) {
     this.attrs = attrs;
     this.#hist = hist;
@@ -136,9 +136,10 @@ export class CellStore {
   }
 
   /** Open from a URL (FetchStore) or any zarrita-compatible store. */
-  /** `opts.aux`: optional cells-aux.zarr sidecar (URL or store); a failure to open it only
-   *  drops the auxiliary values (console.warn). */
-  static async open(src: string | Readable, opts: { useSuffixRequest?: boolean; aux?: string | Readable } = {}): Promise<CellStore> {
+  /** `opts.aux`: optional per-cell sidecars (cells-aux.zarr, cells-aux-<name>.zarr; URL or store,
+   *  or a list); their variables are merged into `cell.aux`. A sidecar that cannot be opened only
+   *  drops its own values (console.warn). */
+  static async open(src: string | Readable, opts: { useSuffixRequest?: boolean; aux?: string | Readable | (string | Readable)[] } = {}): Promise<CellStore> {
     const base = typeof src === "string" ? new zarr.FetchStore(src, { useSuffixRequest: opts.useSuffixRequest ?? true }) : src;
     const store = new CachingStore(base);
     const root = zarr.root(store);
@@ -155,18 +156,18 @@ export class CellStore {
     if (!Array.isArray(attrs.field_vars) || attrs.field_vars.length !== fields.shape[2])
       throw new Error("cells.zarr: root attrs field_vars missing or inconsistent with fields shape");
     const cs = new CellStore(attrs, hist, fields, dunes);
-    if (opts.aux) {
-      cs.#aux = CellAuxStore.open(opts.aux, opts).then((a) => {
-        const g = (a.attrs as { grid?: Grid }).grid;
-        if (g && (g.ny !== cs.grid.ny || g.nx !== cs.grid.nx || g.lat0 !== cs.grid.lat0 || g.lon0 !== cs.grid.lon0)) throw new Error("cells-aux grid differs from cells.zarr");
-        return a;
-      }).catch((e) => { console.warn("[dune-atlas] cells-aux store not available:", e); return null; });
-    }
+    const auxSrcs = opts.aux === undefined ? [] : Array.isArray(opts.aux) ? opts.aux : [opts.aux];
+    cs.#aux = Promise.all(auxSrcs.map((s) => CellAuxStore.open(s, opts).then((a) => {
+      const g = (a.attrs as { grid?: Grid }).grid;
+      if (g && (g.ny !== cs.grid.ny || g.nx !== cs.grid.nx || g.lat0 !== cs.grid.lat0 || g.lon0 !== cs.grid.lon0)) throw new Error("sidecar grid differs from cells.zarr");
+      return a;
+    }).catch((e) => { console.warn(`[dune-atlas] per-cell sidecar ${typeof s === "string" ? s : ""} not available:`, e); return null; })))
+      .then((xs) => xs.filter((x): x is CellAuxStore => x !== null));
     return cs;
   }
 
-  /** the cells-aux sidecar (null if not configured / not available) */
-  auxStore(): Promise<CellAuxStore | null> { return this.#aux; }
+  /** the per-cell sidecars that could be opened (in configuration order) */
+  auxStores(): Promise<CellAuxStore[]> { return this.#aux; }
 
   get fieldVars(): string[] {
     return this.attrs.field_vars;
@@ -194,7 +195,16 @@ export class CellStore {
       zarr.get(this.#hist, [iy, ix, null, null]),
       zarr.get(this.#fields, [iy, ix, null, null]),
       zarr.get(this.#dunes, [iy, ix]),
-      this.#aux.then((a) => (a ? a.query(iy, ix).catch((e) => { console.warn("[dune-atlas] cells-aux read failed:", e); return undefined; }) : undefined)),
+      this.#aux.then(async (stores) => {
+        if (!stores.length) return undefined;
+        const parts = await Promise.all(stores.map((a) => a.query(iy, ix).catch((e) => { console.warn("[dune-atlas] per-cell sidecar read failed:", e); return undefined; })));
+        const ok = parts.filter((p): p is CellAux => !!p);
+        if (!ok.length) return undefined;
+        // first store wins for a variable name present in several
+        const out: CellAux = { series: {}, scalars: {}, attrs: {} };
+        for (const p of [...ok].reverse()) { Object.assign(out.series, p.series); Object.assign(out.scalars, p.scalars); Object.assign(out.attrs, p.attrs); }
+        return out;
+      }),
     ]);
     const hist = h.data as Uint32Array;
     const fields = f.data as Float32Array;

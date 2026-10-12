@@ -3,6 +3,7 @@
 //   outside the scroll area) | scrolling body: 'Active layers' = the visible layers in drawing
 //   order (drag or move up/down; top = drawn on top; opacity slider; × to hide), groups ->
 //   layers (toggle, info, display controls, legend), basemap radio + globe toggle, About & citation.
+import { richHtml } from "../util/richtext";
 import type { LayerAttribution, LayerDef, Registry } from "../registry/types";
 import type { Store, AppState } from "../store";
 import { h, nextId } from "./dom";
@@ -22,6 +23,7 @@ export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class="sources">
   <li><strong>Dune map</strong>: dune-mask-rev1.tif from the Supplementary Code record (Zenodo, MIT), vectorised into dune fields.</li>
   <li><strong>Saturated flux divergence</strong> ${mathHtml("$\\nabla\\cdot\\vec{q}_s$")}: divergence of the resultant drift potential vector (magnitude RDP, direction RDD) on the sphere, following Gunn (2026), Methods M6, computed with central differences on the 0.1° grid. Negative values (convergence) imply deposition; no data at coasts.</li>
   <li><strong>Aridity index</strong>: Global Aridity Index v3.1 (Global-AI_PET v3.1; Zomer, Xu &amp; Trabucco 2022), 1970–2000, native 30″ grid, CC BY 4.0; ocean and Antarctica (south of 60° S) have no data, values ≥ 6.5535 are at the top of the source range. The click panel shows the 0.1° cell mean.</li>
+  <li><strong>Vegetation cover</strong>: CSIRO MODIS Fractional Cover v3.1 (Guerschman et al. 2015; Guerschman &amp; Hill 2018), total vegetation cover (photosynthetic + non-photosynthetic vegetation), mean of the monthly 500 m values 2001–2025 on the 0.1° grid, CC BY 4.0 © 2008–2019 CSIRO, hosted by NCI; the vegetation product of GEOGLAM RAPP. <a href="https://map.geo-rapp.org/" target="_blank" rel="noopener noreferrer">Explore the full time series at GEOGLAM RAPP</a>. The click panel shows the cell mean and the number of valid months.</li>
 </ul>`;
 export const INVERT_NOTE = "Invert colours land WITHOUT mapped dunes. Vector tiles end at ±85.05° latitude, so interior Antarctica south of 85°S is not coloured.";
 
@@ -29,7 +31,7 @@ const safeUrl = (u: string) => (/^https?:\/\//i.test(u) ? u : "");
 /** Structured attribution (registry `attribution`): source, citation, licence, link, DOI, changes. */
 export function attributionHtml(a: LayerAttribution | undefined): string {
   if (!a) return "";
-  const row = (k: string, v: string | undefined, html?: string) => (v ? `<dt>${k}</dt><dd>${html ?? escapeHtml(v)}</dd>` : "");
+  const row = (k: string, v: string | undefined, html?: string) => (v ? `<dt>${k}</dt><dd>${html ?? richHtml(v)}</dd>` : "");
   const url = a.url ? safeUrl(a.url) : "";
   const doi = a.doi?.replace(/^doi:/i, "").replace(/^https?:\/\/doi\.org\//i, "");
   return `<dl class="attribution">${row("Source", a.source)}${row("Citation", a.citation)}${row("Data DOI", doi, doi ? `<a href="https://doi.org/${escapeHtml(doi)}" target="_blank" rel="noopener">doi:${escapeHtml(doi)}</a>` : "")}${row("Licence", a.licence)}${row("Link", url, url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(url.replace(/^https?:\/\//, "").slice(0, 60))}${url.length > 68 ? "…" : ""}</a>` : "")}${row("Changes", a.changes)}</dl>`;
@@ -40,7 +42,7 @@ export function infoHtml(l: LayerDef): string {
   const thr = l.type === "zarr-field"
     ? (l.thresholdAware ? `<p class="help">Updates with the ${mathHtml("$u_{*,th}$")} control.</p>` : `<p class="help">Threshold-independent: not affected by the ${mathHtml("$u_{*,th}$")} control.</p>`)
     : "";
-  return `${l.description ? `<p>${mathHtml(l.description)}</p>` : ""}${l.invertSource ? `<p class="help">${escapeHtml(INVERT_NOTE)}</p>` : ""}${thr}${l.attribution ? attributionHtml(l.attribution) : l.citation ? `<p class="cite">${escapeHtml(l.citation)}</p>` : ""}`;
+  return `${l.description ? `<p>${richHtml(l.description, mathHtml)}</p>` : ""}${l.invertSource ? `<p class="help">${escapeHtml(INVERT_NOTE)}</p>` : ""}${thr}${l.attribution ? attributionHtml(l.attribution) : l.citation ? `<p class="cite">${richHtml(l.citation)}</p>` : ""}`;
 }
 
 function layerItem(l: LayerDef, store: Store): HTMLElement {
@@ -321,7 +323,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     h("div", { html: `<p class="ai-notice">${notice}</p>
       <p>Click any land cell to see its 1950–2024 ERA5-Land wind rose, the sand-flux rose at the selected threshold, dune-orientation modes and all wind-regime parameters.</p>
       ${DATA_SOURCES_HTML}
-      ${citationHtml(citationSources(["aridity"]))}
+      ${citationHtml(citationSources(["aridity", "vegetation"]))}
       <p class="help">Contains modified Copernicus Climate Change Service information. Basemap credits are shown in the map attribution.</p>` })));
   root.append(header, pinned, body);
 }

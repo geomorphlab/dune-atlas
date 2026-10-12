@@ -324,8 +324,11 @@ flux_rose.csv  Flux rose vs threshold: one row per (rose_mode, ut, ua_bin) = 3 x
 ${colDoc("flux_rose.csv")}
 
 metadata.json  Cell coordinates, grid, conventions, column definitions, field long names
-  (plain and LaTeX), descriptions, citation; "aux" holds the per-cell auxiliary values
-  (aridity index cell mean ai_mean with ai_valid_frac / ai_sat_frac, Global-AI_PET v3.1).
+  (plain and LaTeX), descriptions, citation; "aux" holds the per-cell auxiliary values:
+  aridity index cell mean ai_mean with ai_valid_frac / ai_sat_frac (Global-AI_PET v3.1), and
+  vegetation cover tot_cov_mean (%, mean 2001-2025) with tot_cov_n_months (CSIRO MODIS Fractional
+  Cover v3.1; full monthly time series at https://map.geo-rapp.org/). The same scalars are in the
+  NetCDF download.
 
 qsdiv (fields_by_threshold.csv, m yr-1) is the saturated flux divergence: the divergence of the
 time-averaged flat-bed flux vector (magnitude rdpm, direction rdpa) on the sphere, following

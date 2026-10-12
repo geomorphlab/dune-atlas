@@ -386,6 +386,12 @@ export class CellPanel {
         const note = [Number.isFinite(vf) ? `${(100 * vf).toFixed(0)} % of cell valid` : "", sat ? `${(100 * sf).toFixed(0)} % saturated` : ""].filter(Boolean).join(", ");
         auxRows += `<tr data-field="ai_mean"><td class="sym">${mathHtml(`$${AUX_META.ai_mean.symbolTex}$`)}</td><th scope="row">Aridity index (cell mean, threshold-independent${note ? `; ${note}` : ""})</th><td class="num"${sat ? ' title="Some pixels are at the source saturation value 6.5535, so the mean is a lower bound"' : ""}>${val}</td></tr>`;
       }
+      if ("tot_cov_mean" in aux.scalars) {
+        const vc = aux.scalars.tot_cov_mean, nm = aux.scalars.tot_cov_n_months;
+        const months = Number.isFinite(nm) ? `${nm.toFixed(0)} of 300 months` : "";
+        const tip = Number.isFinite(nm) ? ` title="Mean over the ${nm.toFixed(0)} months of 2001–2025 with a valid MODIS value"` : "";
+        auxRows += `<tr data-field="tot_cov_mean"><td class="sym">${mathHtml(`$${AUX_META.tot_cov_mean.symbolTex}$`)}</td><th scope="row">Vegetation cover (mean 2001–2025${months ? `; <span class="subtext">${months}</span>` : ""})</th><td class="num"${tip}>${Number.isFinite(vc) ? `${vc.toFixed(1)} <span class="unit">%</span>` : MISSING}</td></tr>`;
+      }
     }
     const extra = `${auxRows}
       <tr><td class="sym">${MISSING}</td><th scope="row">Dunes (canonical mask)</th><td class="num">${cell.dune ? "yes" : "no"}</td></tr>

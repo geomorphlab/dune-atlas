@@ -97,7 +97,9 @@ export interface DatasetDef {
   citation?: string;
   /** cell store path; default '{dataset}/cells.zarr' */
   cellStore?: string;
-  /** per-cell auxiliary sidecar store (default {dataset}/cells-aux.zarr) */
+  /** per-cell sidecar stores, merged in order (default CONFIG.cellAuxPaths) */
+  cellAuxStores?: string[];
+  /** single sidecar (older registries; used when cellAuxStores is absent) */
   cellAuxStore?: string;
 }
 

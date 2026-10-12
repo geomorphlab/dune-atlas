@@ -151,9 +151,19 @@ and fixture layouts and fails if an upgrade changes them.
   (-180..180, -60..90) needs nothing special (tested with its real root metadata).
 * **Attribution**: a layer's optional `attribution` {source, citation, doi, licence, url, changes}
   is shown in its info popover (`infoHtml` / `attributionHtml`; links only for http(s) URLs).
-* **cells-aux.zarr**: `CellStore.open(url, {aux})` opens the sidecar (`CellAuxStore`, default
-  `{dataset}/cells-aux.zarr`, dataset `cellAuxStore` overrides; failures only drop the aux values).
-  `query` adds `cell.aux = {series: {qsdiv[64]}, scalars: {ai_mean, ai_valid_frac, ai_sat_frac},
+* **Per-cell sidecars** (`cells-aux.zarr`, `cells-aux-<name>.zarr`, one store per later set of
+  per-cell variables): `CellStore.open(url, {aux: [...]})` opens every store of the dataset's
+  `cellAuxStores` (registry; default `CONFIG.cellAuxPaths` = cells-aux, cells-aux-veg; env
+  `VITE_CELL_AUX_STORES`) and merges their variables into `cell.aux` (first store wins on a name
+  clash; a store that cannot be opened only drops its own values). Names, descriptions and source
+  statements of the variables shown / exported are in `cell/auxinfo.ts` (`AUX_META`).
+* **Vegetation cover** (`fields/vegetation.zarr`, Land surface group after aridity): linear
+  0–100 %, `ylgn`; panel row "Vegetation cover" from `tot_cov_mean` with `tot_cov_n_months`;
+  scalars in NetCDF / metadata.json; citation source `vegetation` (CELL_SOURCE_IDS, About).
+* **Links in registry text**: descriptions, legend notes, attribution values and citation
+  notices may contain `[label](https://…)` or bare http(s) URLs; `util/richtext.ts` renders them
+  as new-tab links and escapes everything else (non-http(s) URLs stay text).
+* **cells-aux.zarr contents**: `query` adds `cell.aux = {series: {qsdiv[64]}, scalars: {ai_mean, ai_valid_frac, ai_sat_frac},
   attrs}`. Panel: summary rows for ∇·q_s at the current threshold (m/kyr) and the aridity cell mean
   with UNEP class, valid / saturated fractions and "≥" when saturated pixels are included, plus a
   small "flux divergence vs threshold" line plot. Downloads: NetCDF `qsdiv(ut)` (m yr-1, float32 as

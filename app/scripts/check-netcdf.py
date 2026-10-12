@@ -28,6 +28,7 @@ fixture = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / "staging" / 
 outdir = pathlib.Path(sys.argv[2] if len(sys.argv) > 2 else ROOT / "staging" / "check-netcdf")
 g = zarr.open_group(str(fixture / "cells.zarr"), mode="r")
 aux = zarr.open_group(str(fixture / "cells-aux.zarr"), mode="r")  # sidecar: qsdiv(ut), ai_mean/valid/sat
+veg = zarr.open_group(str(fixture / "cells-aux-veg.zarr"), mode="r")  # sidecar: tot_cov_mean (%), tot_cov_n_months
 fv = list(g.attrs["field_vars"])
 ut_values = np.asarray(g.attrs["ut_values"])
 cells = json.loads((outdir / "cells.json").read_text())
@@ -86,6 +87,12 @@ for c in cells:
         np.testing.assert_array_equal(ds[v].values, np.float32(aux[v][iy, ix]), err_msg=v)
     assert "10.6084/m9.figshare.7504448.v7" in ds["ai_mean"].attrs["references"] and ds["ai_mean"].attrs["license"] == "CC BY 4.0"
     assert np.isfinite(float(ds["ai_mean"])), "fixture cells are on land"
+    # --- cells-aux-veg: vegetation cover scalars, exact float32
+    for v, u in (("tot_cov_mean", "%"), ("tot_cov_n_months", "1")):
+        assert ds[v].dims == () and ds[v].dtype == np.float32 and ds[v].attrs["units"] == u, v
+        np.testing.assert_array_equal(ds[v].values, np.float32(veg[v][iy, ix]), err_msg=v)
+    assert "10.4225/08/5848a3f19a7b3" in ds["tot_cov_mean"].attrs["references"] and ds["tot_cov_mean"].attrs["url"] == "https://map.geo-rapp.org/"
+    assert ds["tot_cov_mean"].attrs["license"].startswith("CC BY 4.0") and 0 <= float(ds["tot_cov_mean"]) <= 103
     # --- flux rose vs the Python reference
     fr = ds["flux_rose"].values.astype(np.float64)
     assert ds["flux_rose"].dims == ("rose_mode", "ut", "ua_bin") and ds["flux_rose"].attrs["units"] == "m2 yr-1"
@@ -153,7 +160,13 @@ for c in cells:
     assert meta["ut"] == [round(x, 2) for x in ut_values.tolist()]
     for v in ("ai_mean", "ai_valid_frac", "ai_sat_frac"):
         assert np.float32(meta["aux"][v]["value"]) == np.float32(aux[v][iy, ix]), v
-    assert [x["source"] for x in meta["citation"]] == ["Dune Atlas / dune map", "ERA5-Land", "Global Aridity Index (Global-AI_PET v3.1)"]
+    for v in ("tot_cov_mean", "tot_cov_n_months"):
+        assert np.float32(meta["aux"][v]["value"]) == np.float32(veg[v][iy, ix]), v
+    assert [x["source"] for x in meta["citation"]] == ["Dune Atlas / dune map", "ERA5-Land", "Global Aridity Index (Global-AI_PET v3.1)", "Vegetation cover (CSIRO MODIS Fractional Cover v3.1)"]
+    vc = meta["citation"][3]
+    assert vc["paper"]["doi"] == "10.1016/j.rse.2015.01.021" and vc["paper_2"]["doi"] == "10.1080/2150704X.2018.1465611" and vc["data"]["doi"] == "10.4225/08/5848a3f19a7b3"
+    readme = z.read("README.txt").decode()
+    assert "tot_cov_mean" in readme and "https://map.geo-rapp.org/" in readme
     for f in ("wind_histogram.csv", "fields_by_threshold.csv", "flux_rose.csv"):
         hdr = pd.read_csv(io.BytesIO(z.read(f)), header=None, nrows=3, dtype=str)
         assert [c_["name"] for c_ in meta["files"][f]["columns"]] == hdr.iloc[0].tolist(), f
@@ -173,6 +186,6 @@ for c in cells:
         engines = ["scipy", "netcdf4"]
     except ImportError:
         engines = ["scipy"]
-    report.append({"cell": [iy, ix], "nc": c["nc"], "ai_mean": float(aux["ai_mean"][iy, ix]), "qsdiv_ut14_m_per_kyr": float(qs[14]) * 1000, "crest_rows_checked": checked, "crest_rows_masked": 128 - checked, "hist_total": int(h.sum()), "engines": engines})
+    report.append({"cell": [iy, ix], "nc": c["nc"], "ai_mean": float(aux["ai_mean"][iy, ix]), "tot_cov_mean": float(veg["tot_cov_mean"][iy, ix]), "tot_cov_n_months": int(veg["tot_cov_n_months"][iy, ix]), "qsdiv_ut14_m_per_kyr": float(qs[14]) * 1000, "crest_rows_checked": checked, "crest_rows_masked": 128 - checked, "hist_total": int(h.sum()), "engines": engines})
     ds.close()
 print(json.dumps({"ok": True, "cells": report}))

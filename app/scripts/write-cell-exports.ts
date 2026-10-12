@@ -25,8 +25,8 @@ class FileStore {
   }
 }
 
-const auxDir = path.join(base, "cells-aux.zarr");
-const store = await CellStore.open(new FileStore(path.join(base, "cells.zarr")), fs.existsSync(auxDir) ? { aux: new FileStore(auxDir) } : {});
+const auxDirs = ["cells-aux.zarr", "cells-aux-veg.zarr"].map((d) => path.join(base, d)).filter((d) => fs.existsSync(d));
+const store = await CellStore.open(new FileStore(path.join(base, "cells.zarr")), { aux: auxDirs.map((d) => new FileStore(d)) });
 const written: Record<string, unknown>[] = [];
 for (const [iy, ix] of cells) {
   const cell = await store.query(iy, ix);

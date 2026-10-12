@@ -4,6 +4,7 @@ import type { LayerDef } from "../registry/types";
 import { effectiveDisplay, isAxis, scaleNorm, vectorColors, type LayerConfig } from "../layerconfig";
 import { mathHtml } from "../util/math";
 import { escapeHtml } from "../util/format";
+import { richHtml } from "../util/richtext";
 
 function tickLabel(v: number): string {
   const a = Math.abs(v);
@@ -76,7 +77,7 @@ export function legendHtml(layer: LayerDef, cfg?: LayerConfig): string {
       <div class="legend-bar" style="background:${gradient(e.colors)}" title="values outside the range are shown at the end colours">${marks}</div>
       <div class="legend-ticks${staggered ? " staggered" : ""}">${labels}</div>
       <div class="legend-units">${mathHtml(layer.units ?? "")}${e.scale === "log" ? " (log scale)" : e.scale === "symlog" ? ` (symlog, linear within ±${tickLabel(e.linthresh)})` : ""}${layer.thresholdAware ? ` · at current ${mathHtml("$u_{*,th}$")}` : ""}</div>${layer.display?.legendNote ? `
-      <div class="legend-note">${escapeHtml(layer.display.legendNote)}</div>` : ""}
+      <div class="legend-note">${richHtml(layer.display.legendNote)}</div>` : ""}
     </div>`;
   }
   const c = vectorColors(layer, cfg);

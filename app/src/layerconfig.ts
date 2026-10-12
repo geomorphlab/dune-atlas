@@ -24,7 +24,7 @@ export interface LayerConfig {
 }
 
 export const COLORMAP_GROUPS: { label: string; names: string[] }[] = [
-  { label: "Sequential", names: ["viridis", "magma", "inferno", "plasma", "cividis", "turbo", "ylorbr", "greys"] },
+  { label: "Sequential", names: ["viridis", "magma", "inferno", "plasma", "cividis", "turbo", "ylorbr", "ylgn", "greys"] },
   { label: "Diverging", names: COLORMAP_GROUPS_DIVERGING() },
   { label: "Cyclic", names: ["twilight", "twilight_shifted", "hsv"] },
 ];

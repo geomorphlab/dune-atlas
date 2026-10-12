@@ -124,7 +124,7 @@ let cellStore: Promise<CellStore> | null = null;
 const getCellStore = () => (cellStore ??= (() => {
   const ds = selectDataset(reg, store.state.dataset);
   const p = CellStore.open(resolveSource(ds?.cellStore ?? CONFIG.cellStorePath, dataBase, ds?.prefix), {
-    useSuffixRequest: CONFIG.useSuffixRequest, aux: resolveSource(ds?.cellAuxStore ?? CONFIG.cellAuxPath, dataBase, ds?.prefix),
+    useSuffixRequest: CONFIG.useSuffixRequest, aux: (ds?.cellAuxStores ?? (ds?.cellAuxStore ? [ds.cellAuxStore] : CONFIG.cellAuxPaths)).map((p) => resolveSource(p, dataBase, ds?.prefix)),
   });
   p.then((s) => { grid = s.grid; updateSelectedCell(); }).catch((e) => console.warn("[dune-atlas] cell store could not be opened", e));
   return p;

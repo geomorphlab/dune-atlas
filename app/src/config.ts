@@ -7,8 +7,9 @@ export const CONFIG = {
   /** Cell store path relative to the data base. */
   /** default cell store path ('{dataset}' = selected dataset prefix); a dataset's `cellStore` overrides */
   cellStorePath: (env.VITE_CELL_STORE as string | undefined) || "{dataset}/cells.zarr",
-  /** per-cell auxiliary sidecar (qsdiv, aridity cell means); a dataset's `cellAuxStore` overrides */
-  cellAuxPath: (env.VITE_CELL_AUX_STORE as string | undefined) || "{dataset}/cells-aux.zarr",
+  /** per-cell sidecars (cells-aux.zarr: qsdiv, aridity; cells-aux-<name>.zarr: later sets), used
+   *  when the dataset declares no `cellAuxStores`; VITE_CELL_AUX_STORES = comma-separated list */
+  cellAuxPaths: ((env.VITE_CELL_AUX_STORES as string | undefined) || "{dataset}/cells-aux.zarr,{dataset}/cells-aux-veg.zarr").split(",").map((x) => x.trim()).filter(Boolean),
   /** Use `Range: bytes=-N` for shard indexes (one request) instead of HEAD + range (two). */
   useSuffixRequest: (env.VITE_SUFFIX_RANGE as string | undefined) !== "0",
   windRoseSectors: 128,
