@@ -1,0 +1,327 @@
+{
+ "attributes": {
+  "title": "dune-atlas field: Aridity index (AI), native 30 arc-second grid",
+  "source": "Zomer, R.J., Xu, J. & Trabucco, A. (2022) Version 3 of the Global Aridity Index and Potential Evapotranspiration Database. Scientific Data 9, 409. doi:10.1038/s41597-022-01493-1; data doi:10.6084/m9.figshare.7504448.v7",
+  "license": "CC-BY-4.0",
+  "attribution": {
+   "source": "Global Aridity Index and Potential Evapotranspiration (ET0) Database, Version 3.1 (Global-AI_PET v3.1; Zomer & Trabucco), annual aridity index ai_v31_yr, 1970-2000, 30 arc-seconds",
+   "citation": "Zomer, R.J., Xu, J. & Trabucco, A. (2022) Version 3 of the Global Aridity Index and Potential Evapotranspiration Database. Scientific Data 9, 409. doi:10.1038/s41597-022-01493-1",
+   "doi": "10.6084/m9.figshare.7504448.v7",
+   "licence": "CC BY 4.0",
+   "url": "https://figshare.com/articles/dataset/Global_Aridity_Index_and_Potential_Evapotranspiration_ET0_Climate_Database_v2/7504448",
+   "changes": "Resampled/derived by dune-atlas: integer AI x 10^4 converted to float32 AI; ocean (ET0 nodata) and ET0 = 0 pixels set to no data; 65535 kept as 6.5535 (AI >= 6.5535); multiscale pyramid levels are nan-means of native pixels; display values rounded to 12 mantissa bits (relative error <= 1.2e-4)."
+  },
+  "dune_atlas:decode": {
+   "ocean_nodata": "et0_v31_yr == 65535 -> NaN",
+   "et0_zero": "-> NaN (undefined)",
+   "ai_zero_with_et0_gt_0": "kept 0 (hyper-arid)",
+   "ai_65535": "kept 6.5535 (AI >= 6.5535)",
+   "counts": {
+    "pixels": 777600000,
+    "ocean_nodata_et0_nodata": 555472356,
+    "ocean_nodata_with_ai_nonzero": 0,
+    "et0_zero_ai0_to_nan": 88054,
+    "et0_zero_ai65535_to_nan": 32141,
+    "genuine_zero_kept": 234618,
+    "saturated_kept_6.5535": 1170922,
+    "valid": 222007449
+   }
+  },
+  "dune_atlas:resampling": "count-weighted nan-mean of native pixels per f x f window (all levels from level 0)",
+  "dune_atlas:threshold_independent": true,
+  "zarr_conventions": [
+   {
+    "schema_url": "https://raw.githubusercontent.com/zarr-conventions/multiscales/refs/tags/v0.1/schema.json",
+    "spec_url": "https://github.com/zarr-conventions/multiscales/blob/v0.1/README.md",
+    "uuid": "d35379db-88df-4056-af3a-620245f8e347",
+    "name": "multiscales",
+    "description": "Multiscale layout of zarr datasets"
+   },
+   {
+    "schema_url": "https://raw.githubusercontent.com/zarr-conventions/proj/refs/tags/v0.1/schema.json",
+    "spec_url": "https://github.com/zarr-conventions/proj/blob/v0.1/README.md",
+    "uuid": "f17cb550-5864-4468-aeb7-f3180cfb622f",
+    "name": "proj",
+    "description": "Coordinate reference system information for geospatial data"
+   },
+   {
+    "schema_url": "https://raw.githubusercontent.com/zarr-conventions/spatial/refs/tags/v0.1/schema.json",
+    "spec_url": "https://github.com/zarr-conventions/spatial/blob/v0.1/README.md",
+    "uuid": "689b58e2-cf7b-45e0-9fff-9cfc0883d6b4",
+    "name": "spatial",
+    "description": "Spatial coordinate information"
+   }
+  ],
+  "proj:code": "EPSG:4326",
+  "spatial:dimensions": [
+   "y",
+   "x"
+  ],
+  "spatial:registration": "pixel",
+  "spatial:transform": [
+   0.008333333333333333,
+   0.0,
+   -180.0,
+   0.0,
+   -0.008333333333333333,
+   90.0
+  ],
+  "spatial:bbox": [
+   -180.0,
+   -60.0,
+   180.0,
+   90.0
+  ],
+  "spatial:shape": [
+   18000,
+   43200
+  ],
+  "zarr-layer": {
+   "aridity": {
+    "clim": [
+     0.003,
+     6.5
+    ],
+    "colormap": "brbg"
+   }
+  },
+  "multiscales": {
+   "layout": [
+    {
+     "asset": "0",
+     "spatial:transform": [
+      0.008333333333333333,
+      0.0,
+      -180.0,
+      0.0,
+      -0.008333333333333333,
+      90.0
+     ],
+     "spatial:shape": [
+      18000,
+      43200
+     ]
+    },
+    {
+     "asset": "1",
+     "derived_from": "0",
+     "transform": {
+      "scale": [
+       2.0,
+       2.0
+      ],
+      "translation": [
+       0.5,
+       0.5
+      ]
+     },
+     "resampling_method": "mean",
+     "spatial:transform": [
+      0.016666666666666666,
+      0.0,
+      -180.0,
+      0.0,
+      -0.016666666666666666,
+      90.0
+     ],
+     "spatial:shape": [
+      9000,
+      21600
+     ]
+    },
+    {
+     "asset": "2",
+     "derived_from": "0",
+     "transform": {
+      "scale": [
+       4.0,
+       4.0
+      ],
+      "translation": [
+       1.5,
+       1.5
+      ]
+     },
+     "resampling_method": "mean",
+     "spatial:transform": [
+      0.03333333333333333,
+      0.0,
+      -180.0,
+      0.0,
+      -0.03333333333333333,
+      90.0
+     ],
+     "spatial:shape": [
+      4500,
+      10800
+     ]
+    },
+    {
+     "asset": "3",
+     "derived_from": "0",
+     "transform": {
+      "scale": [
+       8.0,
+       8.0
+      ],
+      "translation": [
+       3.5,
+       3.5
+      ]
+     },
+     "resampling_method": "mean",
+     "spatial:transform": [
+      0.06666666666666667,
+      0.0,
+      -180.0,
+      0.0,
+      -0.06666666666666667,
+      90.0
+     ],
+     "spatial:shape": [
+      2250,
+      5400
+     ]
+    },
+    {
+     "asset": "4",
+     "derived_from": "0",
+     "transform": {
+      "scale": [
+       16.0,
+       16.0
+      ],
+      "translation": [
+       7.5,
+       7.5
+      ]
+     },
+     "resampling_method": "mean",
+     "spatial:transform": [
+      0.13333333333333333,
+      0.0,
+      -180.0,
+      0.0,
+      -0.13333333333333333,
+      90.0
+     ],
+     "spatial:shape": [
+      1125,
+      2700
+     ]
+    },
+    {
+     "asset": "5",
+     "derived_from": "0",
+     "transform": {
+      "scale": [
+       30.0,
+       30.0
+      ],
+      "translation": [
+       14.5,
+       14.5
+      ]
+     },
+     "resampling_method": "mean",
+     "spatial:transform": [
+      0.25,
+      0.0,
+      -180.0,
+      0.0,
+      -0.25,
+      90.0
+     ],
+     "spatial:shape": [
+      600,
+      1440
+     ]
+    },
+    {
+     "asset": "6",
+     "derived_from": "0",
+     "transform": {
+      "scale": [
+       60.0,
+       60.0
+      ],
+      "translation": [
+       29.5,
+       29.5
+      ]
+     },
+     "resampling_method": "mean",
+     "spatial:transform": [
+      0.5,
+      0.0,
+      -180.0,
+      0.0,
+      -0.5,
+      90.0
+     ],
+     "spatial:shape": [
+      300,
+      720
+     ]
+    },
+    {
+     "asset": "7",
+     "derived_from": "0",
+     "transform": {
+      "scale": [
+       120.0,
+       120.0
+      ],
+      "translation": [
+       59.5,
+       59.5
+      ]
+     },
+     "resampling_method": "mean",
+     "spatial:transform": [
+      1.0,
+      0.0,
+      -180.0,
+      0.0,
+      -1.0,
+      90.0
+     ],
+     "spatial:shape": [
+      150,
+      360
+     ]
+    },
+    {
+     "asset": "8",
+     "derived_from": "0",
+     "transform": {
+      "scale": [
+       240.0,
+       240.0
+      ],
+      "translation": [
+       119.5,
+       119.5
+      ]
+     },
+     "resampling_method": "mean",
+     "spatial:transform": [
+      2.0,
+      0.0,
+      -180.0,
+      0.0,
+      -2.0,
+      90.0
+     ],
+     "spatial:shape": [
+      75,
+      180
+     ]
+    }
+   ],
+   "resampling_method": "mean"
+  }
+ },
+ "zarr_format": 3,
+ "node_type": "group"
+}

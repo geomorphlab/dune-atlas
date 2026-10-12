@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dune-atlas-pipeline"
+version = "0.1.0"
+description = "Convert dune-world research outputs into web-optimised stores for dune-atlas"
+requires-python = ">=3.11"
+dependencies = ["numpy", "xarray", "zarr>=3", "numcodecs", "dask", "rasterio",
+                "rioxarray", "geopandas", "shapely", "pyyaml", "jsonschema"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+dune-atlas = "dune_atlas_pipeline.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

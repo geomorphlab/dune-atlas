@@ -1,0 +1,219 @@
+// Entry point: map shell + registry-driven overlays + global u*,th control + click-to-cell panel.
+import "maplibre-gl/dist/maplibre-gl.css";
+import "katex/dist/katex.min.css";
+import "./style.css";
+import maplibregl, { type StyleSpecification, type GeoJSONSource } from "maplibre-gl";
+import { loadRegistry } from "./registry/load";
+import { resolveSource, selectDataset } from "./registry/merge";
+import { CONFIG } from "./config";
+import { parseUrlState, serializeUrlState, type UrlState } from "./urlstate";
+import { migrateLegacySpacing } from "./layerconfig";
+import { Store, normaliseOrder, type AppState, type LayerState } from "./store";
+import { basemapStyle, defaultBasemap, withAtlasAdditions } from "./map/basemaps";
+import { OverlayManager, firstSymbolLayer, SELECTED_CELL_BOTTOM } from "./map/overlays";
+import { renderLayerPanel } from "./ui/layerPanel";
+import { versionFromPrefix } from "./cell/export";
+import { CellPanel, defaultFieldLabel, type FieldLabel } from "./ui/cellPanel";
+import { CellStore } from "./cell/cellstore";
+import { cellBounds, cellFromIndex, snapToCell, ERA5_LAND_GRID, type Grid } from "./cell/snap";
+import { C3S_NOTICE } from "./cell/citation";
+import { mathOnly } from "./util/math";
+
+const { registry: reg, errors } = loadRegistry();
+if (errors.length) console.warn("registry merge:", errors);
+const dataBase = CONFIG.dataBase ?? reg.dataBase;
+const url = parseUrlState(location.search);
+
+// ---- initial state (registry defaults, overridden by the URL) ----
+const urlLayers = url.layers ? new Map(url.layers.map((l) => [l.id, l])) : null;
+const layers: Record<string, LayerState> = {};
+for (const l of reg.layers) {
+  const u = urlLayers?.get(l.id);
+  // old links carry px spacing (ds=); convert to the km step at the initial view
+  const cfg = migrateLegacySpacing(u?.cfg, url.lat ?? CONFIG.initialView.lat, url.zoom ?? CONFIG.initialView.zoom);
+  layers[l.id] = { visible: urlLayers ? !!u : !!l.visible, opacity: u?.opacity ?? l.opacity ?? 1, ...(cfg ? { cfg } : {}) };
+}
+const basemapIds = new Set(reg.basemaps.map((b) => b.id));
+const registryOrder = reg.layers.map((l) => l.id);
+const init: AppState = {
+  basemap: url.basemap && basemapIds.has(url.basemap) ? url.basemap : defaultBasemap(reg.basemaps).id,
+  projection: url.proj ?? "globe",
+  utIndex: url.ut ?? reg.threshold.defaultIndex,
+  layers,
+  order: normaliseOrder(url.order, registryOrder),
+  dataset: selectDataset(reg, url.dataset)?.id ?? "",
+  cell: url.cell ?? null,
+  embed: !!url.embed,
+};
+const store = new Store(init);
+if (init.embed) document.body.classList.add("embed");
+
+// ---- map (2D only: no pitch, no rotation, no 3D terrain) ----
+const map = new maplibregl.Map({
+  container: "map",
+  style: { version: 8, sources: {}, layers: [] },
+  center: [url.lon ?? CONFIG.initialView.lon, url.lat ?? CONFIG.initialView.lat],
+  zoom: url.zoom ?? CONFIG.initialView.zoom,
+  attributionControl: false,
+  maxPitch: 0,
+  pitch: 0,
+  bearing: 0,
+  dragRotate: false,
+  pitchWithRotate: false,
+  touchPitch: false,
+});
+map.touchZoomRotate.disableRotation();
+map.keyboard.disableRotation();
+map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+if (!init.embed) map.addControl(new maplibregl.FullscreenControl(), "top-right");
+map.addControl(new maplibregl.ScaleControl({ maxWidth: 120 }), "bottom-left");
+map.addControl(new maplibregl.AttributionControl({
+  compact: true,
+  customAttribution: [
+    "Contains modified Copernicus Climate Change Service information",
+    `Dune and wind-regime data: <a href="https://doi.org/10.1038/s41467-026-75466-y" target="_blank" rel="noopener">Gunn (2026)</a>, CC BY 4.0`,
+  ],
+}), "bottom-right");
+map.getCanvas().setAttribute("aria-label", "Map. Click a land cell to show its wind and sand-flux roses.");
+map.getCanvas().style.cursor = "crosshair";
+
+const datasetPrefix = () => selectDataset(reg, store.state.dataset)?.prefix;
+const overlays = new OverlayManager(map, reg, dataBase, init.utIndex, { order: init.order, datasetPrefix: datasetPrefix() });
+overlays.onError = (l, e) => console.warn(`[dune-atlas] layer '${l.id}': data could not be loaded`, e);
+
+function applyBasemap() {
+  const b = reg.basemaps.find((x) => x.id === store.state.basemap) ?? defaultBasemap(reg.basemaps);
+  map.setStyle(basemapStyle(b), {
+    diff: false,
+    transformStyle: (_prev, next) => {
+      const s = withAtlasAdditions(next as StyleSpecification, { projection: store.state.projection });
+      s.metadata = { ...(s.metadata as object), "atlas:basemap": b.id };
+      return s;
+    },
+  });
+}
+
+function addSelectedCellLayers() {
+  if (map.getSource("selected-cell")) return;
+  map.addSource("selected-cell", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+  const before = firstSymbolLayer(map);
+  map.addLayer({ id: SELECTED_CELL_BOTTOM, type: "fill", source: "selected-cell", paint: { "fill-color": "#ffffff", "fill-opacity": 0.12 } }, before);
+  map.addLayer({ id: "selected-cell-line", type: "line", source: "selected-cell", paint: { "line-color": "#ff4d6d", "line-width": 2 } }, before);
+  updateSelectedCell();
+}
+
+/** grid of the current dataset's cell store (from its root attrs); ERA5-Land until opened */
+let grid: Grid = ERA5_LAND_GRID;
+
+function updateSelectedCell() {
+  const src = map.getSource("selected-cell") as GeoJSONSource | undefined;
+  if (!src) return;
+  const c = store.state.cell;
+  let f: GeoJSON.Feature | null = null;
+  if (c) { try { f = { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [cellBounds(cellFromIndex(c[0], c[1], grid), grid)] } }; } catch { f = null; } }
+  src.setData(f ?? { type: "FeatureCollection", features: [] });
+}
+
+map.on("style.load", () => {
+  const meta = map.getStyle().metadata as Record<string, unknown> | undefined;
+  if (!meta?.["atlas:basemap"]) return; // the empty bootstrap style
+  map.setProjection({ type: store.state.projection });
+  addSelectedCellLayers();
+  overlays.reattach(store.state.layers);
+});
+applyBasemap();
+
+// ---- panels ----
+const fullScreenUrl = () => {
+  const s = currentUrlState();
+  delete s.embed;
+  return `${location.origin}${location.pathname}${serializeUrlState(s)}`;
+};
+renderLayerPanel(document.getElementById("layer-panel")!, reg, store, { fullScreenUrl: init.embed ? fullScreenUrl : undefined });
+
+/** Table labels: registry title (plain language) + TeX symbol from titleTex / source long_name. */
+function fieldLabel(v: string): FieldLabel {
+  const l = reg.layers.find((x) => x.type === "zarr-field" && x.variable === v);
+  const d = defaultFieldLabel(v);
+  if (!l) return d;
+  return { symbolTex: mathOnly(l.titleTex) || d.symbolTex, quantity: l.title.replace(/\s*\([^)]*\)\s*$/, "") || d.quantity };
+}
+
+let cellStore: Promise<CellStore> | null = null;
+const getCellStore = () => (cellStore ??= (() => {
+  const ds = selectDataset(reg, store.state.dataset);
+  const p = CellStore.open(resolveSource(ds?.cellStore ?? CONFIG.cellStorePath, dataBase, ds?.prefix), {
+    useSuffixRequest: CONFIG.useSuffixRequest, aux: resolveSource(ds?.cellAuxStore ?? CONFIG.cellAuxPath, dataBase, ds?.prefix),
+  });
+  p.then((s) => { grid = s.grid; updateSelectedCell(); }).catch((e) => console.warn("[dune-atlas] cell store could not be opened", e));
+  return p;
+})());
+const panel = new CellPanel(document.getElementById("cell-panel")!, init.utIndex, {
+  windSectors: CONFIG.windRoseSectors, fluxSectors: CONFIG.fluxRoseSectors,
+  onClose: () => store.set({ cell: null }), fieldLabel, threshold: { def: reg.threshold, store },
+  exportMeta: () => {
+    const ds = selectDataset(reg, store.state.dataset);
+    return { datasetId: ds?.id ?? "", datasetTitle: ds?.title ?? "", dataVersion: versionFromPrefix(ds?.prefix), permalink: fullScreenUrl() };
+  },
+});
+if (init.cell) void panel.show(getCellStore(), init.cell[0], init.cell[1]);
+
+map.on("click", async (e) => {
+  try { grid = (await getCellStore()).grid; } catch { /* keep the fallback grid */ }
+  const c = snapToCell(e.lngLat.lng, e.lngLat.lat, grid);
+  if (c) store.set({ cell: [c.iy, c.ix] });
+});
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && store.state.cell) store.set({ cell: null }); });
+
+// ---- state -> map/panels/URL ----
+function currentUrlState(): UrlState {
+  const s = store.state;
+  const c = map.getCenter();
+  return {
+    lon: c.lng, lat: c.lat, zoom: map.getZoom(),
+    basemap: s.basemap,
+    layers: reg.layers.filter((l) => s.layers[l.id]?.visible).map((l) => ({ id: l.id, opacity: s.layers[l.id].opacity, cfg: s.layers[l.id].cfg })),
+    ut: s.utIndex,
+    cell: s.cell ?? undefined,
+    proj: s.projection,
+    embed: s.embed || undefined,
+    order: s.order.join(",") === registryOrder.join(",") ? undefined : s.order,
+    dataset: (reg.datasets?.length ?? 0) > 1 && s.dataset !== reg.defaultDataset ? s.dataset : undefined,
+  };
+}
+let urlTimer: number | undefined;
+function scheduleUrl() {
+  clearTimeout(urlTimer);
+  urlTimer = window.setTimeout(() => history.replaceState(null, "", serializeUrlState(currentUrlState()) || location.pathname), 250);
+}
+map.on("moveend", scheduleUrl);
+
+store.subscribe((s, ch) => {
+  if (ch.has("basemap")) applyBasemap();
+  if (ch.has("projection")) map.setProjection({ type: s.projection });
+  if (ch.has("dataset")) {
+    // re-resolve '{dataset}' sources and the cell store; keep the selected location by re-snapping
+    const prev = s.cell ? (() => { try { return cellFromIndex(s.cell![0], s.cell![1], grid); } catch { return null; } })() : null;
+    overlays.setDatasetPrefix(datasetPrefix());
+    overlays.reattach(s.layers);
+    cellStore = null;
+    void getCellStore().then((cs) => {
+      const c = prev ? snapToCell(prev.lon, prev.lat, cs.grid) : null;
+      const cur = store.state.cell;
+      if (c && cur && cur[0] === c.iy && cur[1] === c.ix) void panel.show(cs, c.iy, c.ix); // same indices: reload data
+      else store.set({ cell: c ? [c.iy, c.ix] : null });
+    });
+  }
+  if (ch.has("order")) overlays.setOrder(s.order);
+  if (ch.has("layers")) overlays.sync(s.layers);
+  if (ch.has("utIndex")) { overlays.setThreshold(s.utIndex); panel.setThreshold(s.utIndex); }
+  if (ch.has("cell")) {
+    updateSelectedCell();
+    if (s.cell) void panel.show(getCellStore(), s.cell[0], s.cell[1]);
+    else panel.close();
+  }
+  scheduleUrl();
+});
+
+// expose for debugging in the console
+(window as unknown as { duneAtlas: unknown }).duneAtlas = { map, store, registry: reg, notice: C3S_NOTICE };

@@ -1,0 +1,372 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://map.geomorphlab.org/registry/layers.schema.json",
+  "title": "dune-atlas layer registry",
+  "type": "object",
+  "required": [
+    "version",
+    "dataBase",
+    "threshold",
+    "basemaps",
+    "groups",
+    "layers"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "integer",
+      "const": 1
+    },
+    "dataBase": {
+      "type": "string",
+      "description": "Default base URL for relative `source` paths; overridden at build time by VITE_DATA_BASE."
+    },
+    "threshold": {
+      "type": "object",
+      "description": "Shared threshold friction velocity u*,th control.",
+      "required": [
+        "dim",
+        "values",
+        "defaultIndex",
+        "units",
+        "label"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "dim": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 1
+        },
+        "defaultIndex": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "units": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      }
+    },
+    "basemaps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "kind",
+          "attribution"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "raster",
+              "style",
+              "hillshade"
+            ]
+          },
+          "tiles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "style": {
+            "type": "string",
+            "description": "MapLibre style URL (kind=style)"
+          },
+          "encoding": {
+            "enum": [
+              "terrarium",
+              "mapbox"
+            ],
+            "description": "DEM encoding (kind=hillshade)"
+          },
+          "tileSize": {
+            "type": "integer"
+          },
+          "maxzoom": {
+            "type": "integer"
+          },
+          "attribution": {
+            "type": "string"
+          },
+          "default": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "collapsed": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "layers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/layer"
+      }
+    },
+    "datasets": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Wind-forcing datasets. Layer `source` / cell store paths containing '{dataset}' expand to the selected dataset's `prefix`; sources without it are dataset-independent.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "prefix"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string",
+            "description": "Path prefix relative to dataBase, e.g. dune-atlas/v1"
+          },
+          "description": {
+            "type": "string"
+          },
+          "citation": {
+            "type": "string"
+          },
+          "cellStore": {
+            "type": "string",
+            "description": "Cell store path (default '{dataset}/cells.zarr')"
+          },
+          "cellAuxStore": {
+            "type": "string",
+            "description": "Per-cell auxiliary sidecar store (cells-aux.zarr); default '{dataset}/cells-aux.zarr'."
+          }
+        }
+      }
+    },
+    "defaultDataset": {
+      "type": "string",
+      "description": "id of the dataset selected by default"
+    }
+  },
+  "$defs": {
+    "layer": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "group",
+        "type",
+        "source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_-]+$"
+        },
+        "title": {
+          "type": "string"
+        },
+        "titleTex": {
+          "type": "string",
+          "description": "Optional LaTeX title from source attrs"
+        },
+        "group": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "zarr-field",
+            "pmtiles-vector",
+            "pmtiles-raster",
+            "cog",
+            "geojson-points"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "description": "URL or path relative to dataBase"
+        },
+        "variable": {
+          "type": "string",
+          "description": "Variable name inside a zarr store"
+        },
+        "thresholdAware": {
+          "type": "boolean",
+          "description": "Layer has the shared threshold dimension; slider drives its selector."
+        },
+        "units": {
+          "type": "string",
+          "description": "Display units after transform"
+        },
+        "description": {
+          "type": "string"
+        },
+        "citation": {
+          "type": "string"
+        },
+        "attribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Structured source statement for third-party data shown by the app (all optional strings).",
+          "properties": {
+            "source": {
+              "type": "string"
+            },
+            "citation": {
+              "type": "string"
+            },
+            "doi": {
+              "type": "string"
+            },
+            "licence": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "changes": {
+              "type": "string"
+            }
+          }
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "queryable": {
+          "type": "boolean",
+          "description": "Show value in cell panel on click"
+        },
+        "display": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "transform": {
+              "enum": [
+                "none",
+                "scale",
+                "rad-to-bearing",
+                "rad-to-axis"
+              ],
+              "description": "rad-to-bearing: math angle (CCW from E, toward) to compass bearing 0-360; rad-to-axis: unsigned axis 0-180"
+            },
+            "scale": {
+              "type": "number"
+            },
+            "log": {
+              "type": "boolean"
+            },
+            "colormap": {
+              "type": "string",
+              "description": "Default named colormap from app/src/generated/colormaps.json (users can change it in the panel)"
+            },
+            "clim": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "cyclic": {
+              "type": "boolean"
+            },
+            "magnitudeVar": {
+              "type": "string",
+              "description": "Directional fields: variable whose value scales arrow length/opacity in 'arrows' mode (e.g. rdpa -> rdpm); also the default validity mask (see maskVar)."
+            },
+            "maskVar": {
+              "type": "string",
+              "description": "Directional fields: variable that must be > 0 (and finite) for the direction to be shown in every render mode (colour map, arrows, streamlines); cells where it is <= 0 or NaN are treated as no data. Defaults to magnitudeVar (rdpa -> rdpm, at/ab -> qacb, ae/ao -> qace)."
+            },
+            "ticks": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "Legend tick values (display units) replacing the default ticks (e.g. class limits); the clim ends are always shown."
+            },
+            "legendNote": {
+              "type": "string",
+              "description": "Short note shown under the legend (e.g. saturation of the top value, regions without data)."
+            },
+            "topLabel": {
+              "type": "string",
+              "description": "Legend label of the upper clim end (e.g. '\u2265 6.55' when the top value is saturated)."
+            }
+          }
+        },
+        "style": {
+          "type": "object",
+          "description": "MapLibre paint/layout overrides for vector layers"
+        },
+        "sourceLayer": {
+          "type": "string",
+          "description": "Vector tile source-layer name (pmtiles-vector)"
+        },
+        "minzoom": {
+          "type": "number"
+        },
+        "maxzoom": {
+          "type": "number"
+        },
+        "invertSource": {
+          "type": "string",
+          "description": "Vector tiles of the complement (e.g. land WITHOUT dunes) for the panel's 'invert' toggle; URL or path relative to dataBase (pmtiles-vector)."
+        },
+        "invertSourceLayer": {
+          "type": "string",
+          "description": "Source-layer name inside invertSource."
+        }
+      }
+    }
+  }
+}

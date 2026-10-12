@@ -1,0 +1,172 @@
+# dune-atlas layer registry (hand-written part). Validated against layers.schema.json by
+# `npm run validate-registry` (CI). At build time the app merges this file with every
+# registry/generated/*.yaml fragment ({groups, layers}) written by the pipeline; a generated
+# layer with the same id REPLACES the entry here (see app/src/registry/merge.ts).
+version: 1
+dataBase: https://data.geomorphlab.org   # overridden by VITE_DATA_BASE at build time
+
+# Wind-forcing datasets. Sources containing '{dataset}' expand to the selected dataset's prefix
+# (layers without it, e.g. dunes, are dataset-independent). The dataset selector appears in the
+# panel only when more than one dataset is listed.
+datasets:
+  - id: era5-land
+    title: ERA5-Land 1950–2024 (0.1°)
+    prefix: dune-atlas/v1
+    description: ECMWF ERA5-Land hourly 10 m winds, 1950–2024, on the 0.1° grid (Gunn 2026).
+    citation: "Muñoz Sabater, J. (2019). ERA5-Land hourly data from 1950 to present. C3S CDS. doi:10.24381/cds.e2161bac"
+defaultDataset: era5-land
+
+threshold:
+  dim: ut
+  label: "Threshold friction velocity u*,th"
+  units: m/s
+  defaultIndex: 14          # 0.15 m/s, the default threshold of Gunn (2026)
+  values: [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20, 0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.30, 0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.40, 0.41, 0.42, 0.43, 0.44, 0.45, 0.46, 0.47, 0.48, 0.49, 0.50, 0.51, 0.52, 0.53, 0.54, 0.55, 0.56, 0.57, 0.58, 0.59, 0.60, 0.61, 0.62, 0.63, 0.64]
+
+basemaps:
+  - id: openfreemap-dark
+    title: Dark (OpenFreeMap)
+    kind: style
+    style: https://tiles.openfreemap.org/styles/dark
+    attribution: "OpenFreeMap © OpenMapTiles Data from OpenStreetMap"
+    default: true             # the atlas UI is dark-themed
+  - id: esri-imagery
+    title: Satellite imagery (Esri)
+    kind: raster
+    tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"]
+    tileSize: 256
+    maxzoom: 19
+    attribution: "Esri, Maxar, Earthstar Geographics, and the GIS User Community"
+  - id: hillshade
+    title: Shaded relief (Mapterhorn, 2D)
+    kind: hillshade
+    # Mapterhorn: Terrarium-encoded 512 px WebP tiles, global ~30 m (z12), finer in some countries.
+    # Alternative: AWS Terrain Tiles https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png (256 px, z15).
+    tiles: ["https://tiles.mapterhorn.com/{z}/{x}/{y}.webp"]
+    encoding: terrarium
+    tileSize: 512
+    maxzoom: 12
+    attribution: '<a href="https://mapterhorn.com/attribution" target="_blank" rel="noopener">© Mapterhorn</a>'
+  - id: opentopomap
+    title: Topographic (OpenTopoMap)
+    kind: raster
+    tiles:
+      - "https://a.tile.opentopomap.org/{z}/{x}/{y}.png"
+      - "https://b.tile.opentopomap.org/{z}/{x}/{y}.png"
+      - "https://c.tile.opentopomap.org/{z}/{x}/{y}.png"
+    tileSize: 256
+    maxzoom: 17
+    attribution: 'Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, SRTM | Map style © <a href="https://opentopomap.org" target="_blank" rel="noopener">OpenTopoMap</a> (CC-BY-SA)'
+  - id: openfreemap-light
+    title: Light (OpenFreeMap Positron)
+    kind: style
+    style: https://tiles.openfreemap.org/styles/positron
+    attribution: "OpenFreeMap © OpenMapTiles Data from OpenStreetMap"   # shown by the style's own sources
+
+groups:
+  # ids match registry/generated/*.yaml so the generated fragments update these in place
+  - id: dunes
+    title: Dunes
+  - id: orientation
+    title: Bedform orientation
+    description: Compass bearings of the direction of dune migration / elongation (toward).
+  - id: crest-fluxes
+    title: Crest-normal/parallel fluxes
+    collapsed: true
+  - id: morphology
+    title: Ratios & morphology indices
+    collapsed: true
+  - id: wind
+    title: Wind statistics
+    collapsed: true
+  - id: drift
+    title: Drift potential
+  - id: climate            # id kept stable; shown as "Land surface"
+    title: Land surface
+
+layers:
+  # ---------------------------------------------------------------------------------------
+  # PLACEHOLDERS matching staging/fixture (fields/<var>.zarr for at ae qacb sige_sigh uft,
+  # dunes.geojson). Superseded by registry/generated/qsat_fields.yaml and
+  # registry/generated/dunes.yaml (same ids) when those exist.
+  # Withheld fields (constants.WITHHELD_VARS, currently none) must not appear here;
+  # validate-registry rejects them.
+  # ---------------------------------------------------------------------------------------
+  - id: dunes
+    title: Sand dunes (0.1° cells)
+    group: dunes
+    type: geojson-points            # placeholder: fixture GeoJSON polygons; production = pmtiles-vector
+    source: dunes.geojson
+    invertSource: dunes/nondune-land.pmtiles   # fixture: staging/fixture/dunes -> ../dunes
+    invertSourceLayer: nondune_land
+    visible: true
+    opacity: 0.8
+    units: "Cells mapped as sand dunes"
+    description: "ERA5-Land 0.1° cells containing wind-blown sand dunes (canonical mask, 106,540 cells)."
+    citation: "Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y"
+    style:
+      fill: {fill-color: "#a0a0a0", fill-opacity: 0.55}
+  - id: at
+    title: Migration direction αT
+    titleTex: "Migration direction $\\alpha_T$"
+    group: orientation
+    type: zarr-field
+    source: '{dataset}/fields/at.zarr'
+    variable: at
+    thresholdAware: true
+    queryable: true
+    units: "° bearing (toward)"
+    description: "Migration signed direction $\\alpha_T$. The direction transverse crests migrate, shown as a compass bearing."
+    citation: "Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y"
+    display: {transform: rad-to-bearing, colormap: twilight, cyclic: true, clim: [0, 360], magnitudeVar: qacb}
+  - id: ae
+    title: Elongation direction αE
+    titleTex: "Elongation direction $\\alpha_E$"
+    group: orientation
+    type: zarr-field
+    source: '{dataset}/fields/ae.zarr'
+    variable: ae
+    thresholdAware: true
+    queryable: true
+    units: "° bearing (toward)"
+    description: "Elongation mode signed direction $\\alpha_E$. The direction longitudinal crests elongate, shown as a compass bearing."
+    citation: "Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y"
+    display: {transform: rad-to-bearing, colormap: twilight, cyclic: true, clim: [0, 360]}
+  - id: qacb
+    title: Absolute across-crest migration-mode flux
+    titleTex: "Absolute across-crest migration-mode flux $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$"
+    group: crest-fluxes
+    type: zarr-field
+    source: '{dataset}/fields/qacb.zarr'
+    variable: qacb
+    thresholdAware: true
+    queryable: true
+    units: "m$^2$/yr"
+    description: "Time-averaged absolute sand flux across (normal to) migration-mode crests, in m$^2$/yr."
+    citation: "Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y"
+    display: {transform: none, log: true, colormap: magma, clim: [0.37, 1000]}
+  - id: sige_sigh
+    title: Elongation/migration growth-rate ratio
+    titleTex: "$\\sigma_E/\\sigma_H$"
+    group: morphology
+    type: zarr-field
+    source: '{dataset}/fields/sige_sigh.zarr'
+    variable: sige_sigh
+    thresholdAware: true
+    queryable: true
+    units: "–"
+    citation: "Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y"
+    display: {transform: none, colormap: viridis, clim: [0.024, 0.99]}
+  - id: uft
+    title: Fraction of time above threshold
+    titleTex: "$T|u_{\\ast,f}>u_{\\ast,th}/T$"
+    group: wind
+    type: zarr-field
+    source: '{dataset}/fields/uft.zarr'
+    variable: uft
+    thresholdAware: true
+    queryable: true
+    units: "–"
+    description: "Fraction of time the flat-bed friction velocity is above threshold."
+    citation: "Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y"
+    display: {transform: none, colormap: cividis, clim: [0, 0.98]}

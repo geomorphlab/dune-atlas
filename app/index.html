@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dune Atlas — Geomorphology Lab</title>
+    <meta name="description" content="Interactive atlas of Earth's wind-blown sand dunes, ERA5-Land wind regimes and sand-flux roses (Gunn 2026, Nature Communications)." />
+  </head>
+  <body>
+    <a class="skip-link" href="#layer-panel">Skip to layer controls</a>
+    <div id="app">
+      <main id="map" aria-label="Map"></main>
+      <aside id="layer-panel" aria-label="Layers and settings"></aside>
+      <aside id="cell-panel" aria-label="Selected cell" aria-live="polite" hidden></aside>
+    </div>
+    <noscript>The Dune Atlas needs JavaScript and WebGL.</noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

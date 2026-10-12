@@ -1,0 +1,33 @@
+# Dune map registry fragment (dune-atlas track: dune map PMTiles; raster fallback layer retired 2026-10-12).
+# Fragment merged into registry/layers.yaml: {groups, layers}; each layer validates against
+# registry/layers.schema.json $defs/layer. Vector features: MVT feature id = field id
+# (1 = largest); properties cells, area_km2, lon, lat (centroid), west/south/east/north (bbox).
+# `style` keys: fill -> MapLibre fill-layer paint (the app draws vector layers as fills only).
+groups:
+  - id: dunes
+    title: Dunes
+    description: Global aeolian dune map on the 0.1° ERA5-Land grid (106,540 cells, 7.8 % of land area).
+layers:
+  - id: dunes
+    title: Dune fields
+    group: dunes
+    type: pmtiles-vector
+    source: dune-atlas/v1/dunes/dunes.pmtiles
+    sourceLayer: dunes
+    visible: true
+    opacity: 1
+    queryable: true
+    minzoom: 0
+    maxzoom: 24
+    description: >-
+      Dune presence (layers.nc `dunes`) dissolved into 1,428 dune fields of 8-connected
+      0.1° cells; polygon edges follow grid-cell boundaries exactly (tiles z0–10, overzoomed
+      beyond). Area is the sum of spherical cell areas.
+    citation: "Gunn, A. (2026). geomorphlab/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code (v1.0.0). Zenodo. doi:10.5281/zenodo.20054674 (dune map: dune-mask-rev1.tif; MIT)"
+    # 'invert' view: land cells without dunes (land & ~dunes), cell-exact; built by dunes.build_nondune_pmtiles
+    invertSource: dune-atlas/v1/dunes/nondune-land.pmtiles
+    invertSourceLayer: nondune_land
+    style:
+      fill:
+        fill-color: "#a0a0a0"   # neutral grey, readable on the dark basemaps and on imagery
+        fill-opacity: 0.55

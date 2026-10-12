@@ -1,0 +1,49 @@
+diff --git a/node_modules/@carbonplan/zarr-layer/dist/index.js b/node_modules/@carbonplan/zarr-layer/dist/index.js
+index d4f9c22..6db7a8c 100644
+--- a/node_modules/@carbonplan/zarr-layer/dist/index.js
++++ b/node_modules/@carbonplan/zarr-layer/dist/index.js
+@@ -1050,6 +1050,12 @@ var _ZarrStore = class _ZarrStore {
+         scale: entry.transform?.scale ?? [1, 1],
+         translation: entry.transform?.translation ?? [0, 0]
+       };
++      // dune-atlas patch: per-level cell-edge bounds from the level's spatial:transform/shape
++      const lt = entry["spatial:transform"], lsh = entry["spatial:shape"];
++      if (Array.isArray(lt) && lt.length >= 6 && Array.isArray(lsh) && lsh.length >= 2) {
++        const lxa = lt[2], lxb = lt[2] + lsh[lsh.length - 1] * lt[0], lya = lt[5], lyb = lt[5] + lsh[lsh.length - 2] * lt[4];
++        level.xyLimits = { xMin: Math.min(lxa, lxb), xMax: Math.max(lxa, lxb), yMin: Math.min(lya, lyb), yMax: Math.max(lya, lyb) };
++      }
+       if (consolidatedMeta) {
+         const arrayKey = `${entry.asset}/${this.variable}`;
+         const arrayMeta = consolidatedMeta[arrayKey];
+@@ -5865,11 +5871,21 @@ var UntiledMode = class {
+   /**
+    * Calculate which regions are visible in the current viewport.
+    */
++  /** dune-atlas patch: xyLimits of the level with this width/height (its own spatial:transform), else the dataset box */
++  levelXYLimits(width, height) {
++    const lonI = this.dimIndices?.lon?.index, latI = this.dimIndices?.lat?.index;
++    for (const level of this.levels ?? []) {
++      if (!level?.xyLimits || !level.shape) continue;
++      const w = level.shape[lonI ?? level.shape.length - 1], h = level.shape[latI ?? level.shape.length - 2];
++      if (w === width && h === height) return level.xyLimits;
++    }
++    return this.xyLimits;
++  }
+   getVisibleRegions(map) {
+     const bounds = map.getBounds?.()?.toArray?.();
+     if (!bounds || !this.xyLimits || !this.regionSize) return [];
+     const [[west, south], [east, north]] = bounds;
+-    const { xMin, xMax, yMin, yMax } = this.xyLimits;
++    const { xMin, xMax, yMin, yMax } = this.levelXYLimits(this.width, this.height);
+     const [regionH, regionW] = this.regionSize;
+     if (this.proj4def && this.cachedWGS84Transformer) {
+       const transformer = this.cachedWGS84Transformer;
+@@ -6204,7 +6220,7 @@ var UntiledMode = class {
+       return { xMin: 0, xMax: 1, yMin: 0, yMax: 1 };
+     }
+     const [regionH, regionW] = regionSize;
+-    const { xMin, xMax, yMin, yMax } = this.xyLimits;
++    const { xMin, xMax, yMin, yMax } = this.levelXYLimits(width, height);
+     const pxXStart = regionX * regionW;
+     const pxXEnd = Math.min(pxXStart + regionW, width);
+     const pxYStart = regionY * regionH;

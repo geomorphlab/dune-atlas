@@ -1,0 +1,19 @@
+node_modules/
+app/dist/
+.DS_Store
+._*
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.venv/
+# large data never lives in git: staging lives on external drive / R2
+staging/
+*.zarr/
+*.pmtiles
+*.tif
+!fixtures/**
+.env*
+.npm-cache/
+
+# private notes (never published)
+notes/
