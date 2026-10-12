@@ -29,6 +29,52 @@ export interface AdapterContext {
   sourceOfVariable?: (v: string) => string | undefined;
   /** report a runtime data error (marks the layer 'not available' in the panel) */
   onDataError?: (err: unknown) => void;
+  /** false once the style this layer was requested for has been replaced (basemap switch):
+   *  async adapters check it before touching the map and throw StaleLayerError */
+  alive?: () => boolean;
+}
+
+/** Thrown by an adapter whose style was replaced while it was loading (nothing was added). */
+export class StaleLayerError extends Error {
+  constructor() { super("style replaced while the layer was loading"); }
+}
+function assertAlive(ctx: AdapterContext) {
+  if (ctx.alive && !ctx.alive()) throw new StaleLayerError();
+}
+
+/** Map objects created by one handle. A basemap switch replaces the style, and the next style
+ *  gets new layers / sources with the SAME ids, so a handle may only touch (style, remove) the
+ *  instances it created itself. */
+export class Owned {
+  #layers = new Map<string, unknown>();
+  #sources = new Map<string, unknown>();
+  constructor(private map: MlMap) {}
+  addSource(id: string, spec: Parameters<MlMap["addSource"]>[1]) {
+    if (!this.map.getSource(id)) this.map.addSource(id, spec);
+    this.#sources.set(id, this.map.getSource(id));
+  }
+  addLayer(spec: Parameters<MlMap["addLayer"]>[0], before?: string) {
+    this.map.addLayer(spec, before && this.map.getLayer(before) ? before : undefined);
+    const inst = this.map.getLayer(spec.id);
+    if (inst) this.#layers.set(spec.id, inst);
+  }
+  /** this handle's layer is on the map (not a same-id layer of a later style) */
+  has(id: string): boolean {
+    const inst = this.#layers.get(id);
+    return inst !== undefined && this.map.getLayer(id) === inst;
+  }
+  hasSource(id: string): boolean {
+    const inst = this.#sources.get(id);
+    return inst !== undefined && this.map.getSource(id) === inst;
+  }
+  /** owned layer ids that are on the map, in the given order */
+  live(ids: string[]): string[] { return ids.filter((x) => this.has(x)); }
+  remove() {
+    for (const id of this.#layers.keys()) if (this.has(id)) this.map.removeLayer(id);
+    for (const id of this.#sources.keys()) if (this.hasSource(id)) this.map.removeSource(id);
+    this.#layers.clear();
+    this.#sources.clear();
+  }
 }
 
 export interface LayerHandle {
@@ -110,6 +156,7 @@ export const zarrFieldAdapter: LayerAdapter = async (layer, ctx, opacity) => {
   const maskSrc = maskVar ? ctx.sourceOfVariable?.(maskVar) : undefined;
   if (maskVar && !maskSrc) console.warn(`[dune-atlas] ${layer.id}: mask variable ${maskVar} has no layer; direction shown unmasked`);
   const geo = await storeGeo(src);
+  assertAlive(ctx);
   const z = new ZarrLayer({
     id,
     ...zarrLayerSource(layer, src, geo, maskSrc),
@@ -125,10 +172,11 @@ export const zarrFieldAdapter: LayerAdapter = async (layer, ctx, opacity) => {
     zarrVersion: 3,
     onLoadingStateChange: (st) => { if (st.error) ctx.onDataError?.(st.error); },
   });
-  ctx.map.addLayer(z as unknown as maplibregl.CustomLayerInterface, ctx.beforeId);
+  const own = new Owned(ctx.map);
+  own.addLayer(z as unknown as maplibregl.CustomLayerInterface, ctx.beforeId);
   let applied = eff;
   return {
-    layerIds: [id],
+    get layerIds() { return own.live([id]); },
     setOpacity: (o) => { z.setOpacity(o); ctx.map.triggerRepaint(); },
     setThreshold: layer.thresholdAware ? (i) => { void z.setSelector(thresholdSelector(ctx.threshold.dim, i)); } : undefined,
     applyConfig: (cfg) => {
@@ -141,7 +189,7 @@ export const zarrFieldAdapter: LayerAdapter = async (layer, ctx, opacity) => {
       ctx.map.triggerRepaint();
       return true;
     },
-    remove: () => { if (ctx.map.getLayer(id)) ctx.map.removeLayer(id); },
+    remove: () => own.remove(),
   };
 };
 
@@ -177,8 +225,9 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
   const eff = effectiveDisplay(layer, ctx.cfg);
   const axis = isAxis(layer);
   const id = `ov-${layer.id}-vec`, src = `ovsrc-${layer.id}-vec`;
-  map.addSource(src, { type: "geojson", data: { type: "FeatureCollection", features: [] } });
-  map.addLayer({ id, type: "line", source: src, layout: { "line-cap": "round", "line-join": "round" },
+  const own = new Owned(map);
+  own.addSource(src, { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+  own.addLayer({ id, type: "line", source: src, layout: { "line-cap": "round", "line-join": "round" },
     paint: { "line-color": eff.vecColor, "line-width": eff.mode === "arrows" ? 1.4 : 1.2, "line-opacity": ["*", opacity, ["get", "a"]] } }, ctx.beforeId);
   const dirReader = FieldReader.open(res(ctx, layer.source), layer.variable!);
   const magVar = layer.display?.magnitudeVar ?? DEFAULT_MAGNITUDE[layer.variable!];
@@ -256,28 +305,27 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
         features.push({ type: "Feature", properties: { a: 1 }, geometry: { type: "MultiLineString", coordinates: heads.map((hd) => hd.map(un)) } });
       }
     }
-    (map.getSource(src) as GeoJSONSource | undefined)?.setData({ type: "FeatureCollection", features });
+    if (own.hasSource(src)) (map.getSource(src) as GeoJSONSource).setData({ type: "FeatureCollection", features });
     if (import.meta.env?.DEV) console.debug(`[dune-atlas] ${layer.id} ${eff.mode}: ${features.length} features, level ${level}, ${Math.round(performance.now() - t0)} ms`);
   };
   const onMove = () => { void compute(); };
   map.on("moveend", onMove);
   void compute();
   return {
-    layerIds: [id],
-    setOpacity: (o) => { op = o; map.setPaintProperty(id, "line-opacity", ["*", op, ["get", "a"]]); },
+    get layerIds() { return own.live([id]); },
+    setOpacity: (o) => { op = o; if (own.has(id)) map.setPaintProperty(id, "line-opacity", ["*", op, ["get", "a"]]); },
     setThreshold: layer.thresholdAware ? (i) => { if (i !== ut) { ut = i; void compute(); } } : undefined,
     applyConfig: (cfg) => {
       const next = effectiveDisplay(layer, cfg);
       if (next.mode !== eff.mode) return false;
-      map.setPaintProperty(id, "line-color", next.vecColor);
+      if (own.has(id)) map.setPaintProperty(id, "line-color", next.vecColor);
       if (next.spacingKm !== km) { km = next.spacingKm; void compute(); }
       return true;
     },
     remove: () => {
       alive = false;
       map.off("moveend", onMove);
-      if (map.getLayer(id)) map.removeLayer(id);
-      if (map.getSource(src)) map.removeSource(src);
+      own.remove();
     },
   };
 }
@@ -294,8 +342,11 @@ const GEOM_FILTER: Record<string, unknown> = {
 /** Shared by vector-ish adapters: one MapLibre layer per style key (fill, circle; outlines are
  *  not drawn, a registry `line` style is ignored), opacity scaling, the user fill colour, and the
  *  optional 'invert' complement fill (layer.invertSource). */
-function addStyledLayers(layer: LayerDef, ctx: AdapterContext, opacity: number, sourceId: string, kinds: string[], extra: (kind: string) => Partial<AddLayerObject>): LayerHandle {
+function addStyledLayers(layer: LayerDef, ctx: AdapterContext, opacity: number, sourceSpec: Parameters<MlMap["addSource"]>[1], kinds: string[], extra: (kind: string) => Partial<AddLayerObject>): LayerHandle {
   const map = ctx.map;
+  const sourceId = `ovsrc-${layer.id}`;
+  const own = new Owned(map);
+  own.addSource(sourceId, sourceSpec);
   const style = layer.style ?? DEFAULT_VECTOR_STYLE;
   const ids: string[] = [];
   const base: Record<string, number> = {};
@@ -304,11 +355,11 @@ function addStyledLayers(layer: LayerDef, ctx: AdapterContext, opacity: number, 
   const invId = `ov-${layer.id}-invert`, invSrc = `ovsrc-${layer.id}-invert`;
   const fillBase = typeof style.fill?.["fill-opacity"] === "number" ? (style.fill["fill-opacity"] as number) : 0.55;
   const ensureInvert = () => {
-    if (!layer.invertSource || map.getLayer(invId)) return;
+    if (!layer.invertSource || own.has(invId)) return;
     ensurePmtiles();
-    if (!map.getSource(invSrc)) map.addSource(invSrc, { type: "vector", url: `pmtiles://${res(ctx, layer.invertSource)}` });
-    const first = ids[0] && map.getLayer(ids[0]) ? ids[0] : ctx.beforeId;
-    map.addLayer({ id: invId, type: "fill", source: invSrc, "source-layer": layer.invertSourceLayer ?? "", paint: { "fill-color": col.fill, "fill-opacity": fillBase * op } } as AddLayerObject, first);
+    own.addSource(invSrc, { type: "vector", url: `pmtiles://${res(ctx, layer.invertSource)}` });
+    const first = ids[0] && own.has(ids[0]) ? ids[0] : ctx.beforeId;
+    own.addLayer({ id: invId, type: "fill", source: invSrc, "source-layer": layer.invertSourceLayer ?? "", paint: { "fill-color": col.fill, "fill-opacity": fillBase * op } } as AddLayerObject, first);
   };
   for (const kind of kinds) {
     if (!(kind in style)) continue;
@@ -318,69 +369,59 @@ function addStyledLayers(layer: LayerDef, ctx: AdapterContext, opacity: number, 
     paint[opp] = base[kind] * opacity;
     if (kind === "fill") paint["fill-color"] = col.fill;
     const id = `ov-${layer.id}-${kind}`;
-    map.addLayer({ id, type: kind, source: sourceId, paint, minzoom: layer.minzoom ?? 0, maxzoom: layer.maxzoom ?? 24, ...extra(kind) } as AddLayerObject, ctx.beforeId);
+    own.addLayer({ id, type: kind, source: sourceId, paint, minzoom: layer.minzoom ?? 0, maxzoom: layer.maxzoom ?? 24, ...extra(kind) } as AddLayerObject, ctx.beforeId);
     ids.push(id);
   }
   const applyVisibility = () => {
     const fillId = `ov-${layer.id}-fill`;
     if (col.invert) ensureInvert();
-    if (map.getLayer(invId)) map.setLayoutProperty(invId, "visibility", col.invert ? "visible" : "none");
-    if (map.getLayer(fillId)) map.setLayoutProperty(fillId, "visibility", col.invert ? "none" : "visible");
+    if (own.has(invId)) map.setLayoutProperty(invId, "visibility", col.invert ? "visible" : "none");
+    if (own.has(fillId)) map.setLayoutProperty(fillId, "visibility", col.invert ? "none" : "visible");
   };
   applyVisibility();
   return {
-    get layerIds() { return [...(map.getLayer(invId) ? [invId] : []), ...ids]; },
+    get layerIds() { return own.live([invId, ...ids]); },
     setOpacity: (o: number) => {
       op = o;
-      for (const kind of Object.keys(base)) map.setPaintProperty(`ov-${layer.id}-${kind}`, OPACITY_PROP[kind], base[kind] * o);
-      if (map.getLayer(invId)) map.setPaintProperty(invId, "fill-opacity", fillBase * o);
+      for (const kind of Object.keys(base)) if (own.has(`ov-${layer.id}-${kind}`)) map.setPaintProperty(`ov-${layer.id}-${kind}`, OPACITY_PROP[kind], base[kind] * o);
+      if (own.has(invId)) map.setPaintProperty(invId, "fill-opacity", fillBase * o);
     },
     applyConfig: (cfg) => {
       col = vectorColors(layer, cfg);
-      if (map.getLayer(`ov-${layer.id}-fill`)) map.setPaintProperty(`ov-${layer.id}-fill`, "fill-color", col.fill);
-      if (map.getLayer(`ov-${layer.id}-circle`)) map.setPaintProperty(`ov-${layer.id}-circle`, "circle-color", col.fill);
+      if (own.has(`ov-${layer.id}-fill`)) map.setPaintProperty(`ov-${layer.id}-fill`, "fill-color", col.fill);
+      if (own.has(`ov-${layer.id}-circle`)) map.setPaintProperty(`ov-${layer.id}-circle`, "circle-color", col.fill);
       applyVisibility();
-      if (map.getLayer(invId)) map.setPaintProperty(invId, "fill-color", col.fill);
+      if (own.has(invId)) map.setPaintProperty(invId, "fill-color", col.fill);
       return true;
     },
-    remove: () => {
-      for (const id of [invId, ...ids]) if (map.getLayer(id)) map.removeLayer(id);
-      for (const s of [sourceId, invSrc]) if (map.getSource(s)) map.removeSource(s);
-    },
+    remove: () => own.remove(),
   };
 }
 
 /** pmtiles-vector: PMTiles archive of vector tiles via the pmtiles:// protocol. */
 export const pmtilesVectorAdapter: LayerAdapter = (layer, ctx, opacity) => {
   ensurePmtiles();
-  const src = `ovsrc-${layer.id}`;
-  if (!ctx.map.getSource(src)) ctx.map.addSource(src, { type: "vector", url: `pmtiles://${res(ctx, layer.source)}` });
-  return addStyledLayers(layer, ctx, opacity, src, ["fill", "circle"], () => ({ "source-layer": layer.sourceLayer! }) as Partial<AddLayerObject>);
+  return addStyledLayers(layer, ctx, opacity, { type: "vector", url: `pmtiles://${res(ctx, layer.source)}` }, ["fill", "circle"], () => ({ "source-layer": layer.sourceLayer! }) as Partial<AddLayerObject>);
 };
 
 /** geojson-points: a GeoJSON file (points; polygons are also filled, e.g. the fixture dunes). */
 export const geojsonAdapter: LayerAdapter = (layer, ctx, opacity) => {
-  const src = `ovsrc-${layer.id}`;
-  if (!ctx.map.getSource(src)) ctx.map.addSource(src, { type: "geojson", data: res(ctx, layer.source) });
   const style = layer.style ?? { ...DEFAULT_VECTOR_STYLE, circle: { "circle-radius": 4, "circle-color": DEFAULT_VECTOR_FILL, "circle-opacity": 1 } };
-  return addStyledLayers({ ...layer, style }, ctx, opacity, src, ["fill", "circle"], (k) => ({ filter: GEOM_FILTER[k] }) as Partial<AddLayerObject>);
+  return addStyledLayers({ ...layer, style }, ctx, opacity, { type: "geojson", data: res(ctx, layer.source) }, ["fill", "circle"], (k) => ({ filter: GEOM_FILTER[k] }) as Partial<AddLayerObject>);
 };
 
 /** pmtiles-raster: raster tiles from a PMTiles archive. */
 export const pmtilesRasterAdapter: LayerAdapter = (layer, ctx, opacity) => {
   ensurePmtiles();
-  const src = `ovsrc-${layer.id}`;
-  if (!ctx.map.getSource(src)) ctx.map.addSource(src, { type: "raster", url: `pmtiles://${res(ctx, layer.source)}`, tileSize: 256 });
-  return addStyledLayers({ ...layer, style: layer.style ?? { raster: {} } }, ctx, opacity, src, ["raster"], () => ({}));
+  return addStyledLayers({ ...layer, style: layer.style ?? { raster: {} } }, ctx, opacity, { type: "raster", url: `pmtiles://${res(ctx, layer.source)}`, tileSize: 256 }, ["raster"], () => ({}));
 };
 
 /** cog: Cloud-Optimised GeoTIFF (must be EPSG:3857; RGB/paletted, or single band with a
  *  `#color:` fragment in the source URL - see @geomatico/maplibre-cog-protocol). */
 export const cogAdapter: LayerAdapter = async (layer, ctx, opacity) => {
   await ensureCog();
-  const src = `ovsrc-${layer.id}`;
-  if (!ctx.map.getSource(src)) ctx.map.addSource(src, { type: "raster", url: `cog://${res(ctx, layer.source)}`, tileSize: 256 });
-  return addStyledLayers({ ...layer, style: layer.style ?? { raster: {} } }, ctx, opacity, src, ["raster"], () => ({}));
+  assertAlive(ctx);
+  return addStyledLayers({ ...layer, style: layer.style ?? { raster: {} } }, ctx, opacity, { type: "raster", url: `cog://${res(ctx, layer.source)}`, tileSize: 256 }, ["raster"], () => ({}));
 };
 
 export const ADAPTERS: Record<LayerType, LayerAdapter> = {

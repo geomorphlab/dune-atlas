@@ -1,7 +1,7 @@
 // Basemap styles from registry `basemaps`. Every basemap becomes a full MapLibre style; overlays
 // are re-attached on each `style.load` (map/overlays.ts). The atlas is dark-themed: raster
 // basemaps sit on a dark background and every style gets a dark sky/space for the globe.
-import type { StyleSpecification, SkySpecification } from "maplibre-gl";
+import type { Map as MlMap, StyleSpecification, SkySpecification } from "maplibre-gl";
 import type { BasemapDef } from "../registry/types";
 
 export const SPACE_COLOR = "#05070b";
@@ -53,4 +53,19 @@ export function withAtlasAdditions(next: StyleSpecification, opts: { projection:
 
 export function defaultBasemap(basemaps: BasemapDef[]): BasemapDef {
   return basemaps.find((b) => b.default) ?? basemaps[0];
+}
+
+/** Switch the basemap: a full style swap (diff: false) tagged with metadata "atlas:basemap"; the
+ *  app's overlays are rebuilt on 'style.load' (overlays.restoreOverlays). MapLibre defers a
+ *  transformStyle swap until the previous style has loaded, and only the last style of a rapid
+ *  sequence emits 'style.load' on the map. */
+export function setBasemap(map: MlMap, b: BasemapDef, projection: "globe" | "mercator") {
+  map.setStyle(basemapStyle(b), {
+    diff: false,
+    transformStyle: (_prev, next) => {
+      const s = withAtlasAdditions(next as StyleSpecification, { projection });
+      s.metadata = { ...(s.metadata as object), "atlas:basemap": b.id };
+      return s;
+    },
+  });
 }

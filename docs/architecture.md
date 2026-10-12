@@ -206,8 +206,17 @@ and fixture layouts and fails if an upgrade changes them.
   qacb > 0, αE/αO need qace > 0. Rose sectors default to 128 (wind and flux). The
   wind rose is drawn FROM (toward + 180°), % of counted hours (normalised by the histogram sum;
   hours > 20 m/s are not in the histogram).
-* **Basemap swap**: `setStyle(diff:false, transformStyle)` → on `style.load` the overlay manager
-  re-adds every visible overlay and the selected-cell outline.
+* **Basemap swap**: `basemaps.setBasemap` = `setStyle(diff:false, transformStyle)` (MapLibre defers
+  the swap until the previous style has loaded; only the final style of a rapid sequence emits
+  `style.load`). On `style.load`, `overlays.restoreOverlays` adds the selected-cell highlight
+  (below the first basemap label) and `reattach`es every active overlay: old handles are
+  disposed, every visible layer is re-added with its opacity / config, and **each completed add
+  re-applies the drawing order** (`setOrder`), because adds finish asynchronously in any order
+  (zarr layers await their store metadata, vector layers are synchronous). Handles track the
+  map-object instances they created (`adapters.Owned`): after a swap the new style has layers
+  and sources with the same ids, and a stale handle never styles or removes them; async
+  adapters check `ctx.alive()` before touching the map (`StaleLayerError`). Tested on a
+  MapLibre stand-in (`tests/fakemap.ts`, `tests/basemapswitch.test.ts`).
 
 ### Registry contract
 

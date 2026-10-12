@@ -2,15 +2,15 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 import "katex/dist/katex.min.css";
 import "./style.css";
-import maplibregl, { type StyleSpecification, type GeoJSONSource } from "maplibre-gl";
+import maplibregl from "maplibre-gl";
 import { loadRegistry } from "./registry/load";
 import { resolveSource, selectDataset } from "./registry/merge";
 import { CONFIG } from "./config";
 import { parseUrlState, serializeUrlState, type UrlState } from "./urlstate";
 import { migrateLegacySpacing } from "./layerconfig";
 import { Store, normaliseOrder, type AppState, type LayerState } from "./store";
-import { basemapStyle, defaultBasemap, withAtlasAdditions } from "./map/basemaps";
-import { OverlayManager, firstSymbolLayer, SELECTED_CELL_BOTTOM } from "./map/overlays";
+import { defaultBasemap, setBasemap } from "./map/basemaps";
+import { OverlayManager, ensureSelectedCellLayers, restoreOverlays } from "./map/overlays";
 import { renderLayerPanel } from "./ui/layerPanel";
 import { versionFromPrefix } from "./cell/export";
 import { CellPanel, defaultFieldLabel, type FieldLabel } from "./ui/cellPanel";
@@ -83,43 +83,24 @@ overlays.onError = (l, e) => console.warn(`[dune-atlas] layer '${l.id}': data co
 
 function applyBasemap() {
   const b = reg.basemaps.find((x) => x.id === store.state.basemap) ?? defaultBasemap(reg.basemaps);
-  map.setStyle(basemapStyle(b), {
-    diff: false,
-    transformStyle: (_prev, next) => {
-      const s = withAtlasAdditions(next as StyleSpecification, { projection: store.state.projection });
-      s.metadata = { ...(s.metadata as object), "atlas:basemap": b.id };
-      return s;
-    },
-  });
-}
-
-function addSelectedCellLayers() {
-  if (map.getSource("selected-cell")) return;
-  map.addSource("selected-cell", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
-  const before = firstSymbolLayer(map);
-  map.addLayer({ id: SELECTED_CELL_BOTTOM, type: "fill", source: "selected-cell", paint: { "fill-color": "#ffffff", "fill-opacity": 0.12 } }, before);
-  map.addLayer({ id: "selected-cell-line", type: "line", source: "selected-cell", paint: { "line-color": "#ff4d6d", "line-width": 2 } }, before);
-  updateSelectedCell();
+  setBasemap(map, b, store.state.projection);
 }
 
 /** grid of the current dataset's cell store (from its root attrs); ERA5-Land until opened */
 let grid: Grid = ERA5_LAND_GRID;
 
-function updateSelectedCell() {
-  const src = map.getSource("selected-cell") as GeoJSONSource | undefined;
-  if (!src) return;
+function selectedCellFeature(): GeoJSON.Feature | null {
   const c = store.state.cell;
-  let f: GeoJSON.Feature | null = null;
-  if (c) { try { f = { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [cellBounds(cellFromIndex(c[0], c[1], grid), grid)] } }; } catch { f = null; } }
-  src.setData(f ?? { type: "FeatureCollection", features: [] });
+  if (!c) return null;
+  try { return { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [cellBounds(cellFromIndex(c[0], c[1], grid), grid)] } }; } catch { return null; }
+}
+function updateSelectedCell() {
+  if (map.getSource("selected-cell")) ensureSelectedCellLayers(map, selectedCellFeature());
 }
 
 map.on("style.load", () => {
-  const meta = map.getStyle().metadata as Record<string, unknown> | undefined;
-  if (!meta?.["atlas:basemap"]) return; // the empty bootstrap style
-  map.setProjection({ type: store.state.projection });
-  addSelectedCellLayers();
-  overlays.reattach(store.state.layers);
+  // every style swap: projection, selected-cell highlight, all active overlays in drawing order
+  if (restoreOverlays(map, overlays, store.state.layers, selectedCellFeature())) map.setProjection({ type: store.state.projection });
 });
 applyBasemap();
 
