@@ -15,5 +15,7 @@ export default defineConfig({
   test: {
     include: ["tests/**/*.test.ts"],
     environment: "node",
+    // shared CI runners are several times slower than a laptop (the default 5 s was hit there)
+    testTimeout: 20000,
   },
 });

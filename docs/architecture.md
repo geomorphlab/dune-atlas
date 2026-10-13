@@ -348,6 +348,11 @@ the fixture region exist there (`at ae qacb sige_sigh uft`); other layers log a 
 
 ### Tests
 
+`npm run test:ci` (scripts/test-ci.sh) reproduces the CI job from a clean `git archive` (no `notes/`,
+no `staging/`): `npm ci`, `validate-registry`, `npm test`, build, and lists the tests skipped
+because the fixture data are absent; `CI_NODE=<dir of node 22>` runs it with the CI Node version.
+Test timeout 20 s (shared runners are slower than a laptop).
+
 `npm test` (vitest): flux parity vs `flux.py`, the crest flux rose (both modes) and the excess-shear split (flat + elongation, 2 cells × 3 thresholds; classes match Python and sum to the unstacked rose and sector totals, rtol 1e-12) (7 cells incl. one synthetic with 40
 empty direction bins × 6 thresholds; rtol 1e-12 on DP and the per-direction rose, 1e-10 on RDP,
 1e-9 rad on RDD), the check that the TS DP/RDP/RDD and the petal sum equal the cell-store

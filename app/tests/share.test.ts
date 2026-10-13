@@ -14,8 +14,10 @@ const q = (v: number, step: number) => Number((Math.round(v / step) * step).toFi
 const hex = () => `#${Math.floor(rnd() * 0xffffff).toString(16).padStart(6, "0")}`;
 const sig6 = (v: number) => Number(v.toPrecision(6));
 
+// the registry is parsed once (parsing it per state made the 2000-state round trip take > 5 s on CI)
+const REG = loadRegistry().registry;
 function randomState(): ShareState {
-  const reg = loadRegistry().registry;
+  const reg = REG;
   const ids = [...reg.layers.map((l) => l.id)].sort(() => rnd() - 0.5).slice(0, Math.floor(rnd() * 6));
   const layers = ids.map((id) => {
     const cfg: LayerConfig = {};
