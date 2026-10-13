@@ -1,7 +1,16 @@
-// Export resolution and PNG metadata: one output resolution, 300 dpi at the on-screen size
-// (1 CSS px = 1/96 in), written to the PNG pHYs chunk.
+// Export pixel sizes and PNG metadata. Map: W = clamp(on-screen width x 1.5, 1600, 2400) px;
+// plots: PLOT_EXPORT_WIDTH px. Text and keys are sized relative to W (strip.ts). The PNG pHYs
+// chunk is always 300 dpi: it only sets the print size (W / 300 in wide).
+import { STRIP_UNITS } from "./strip";
+
 export const EXPORT_DPI = 300;
-export const EXPORT_PIXEL_RATIO = EXPORT_DPI / 96; // 3.125
+export const MAP_EXPORT = { factor: 1.5, min: 1600, max: 2400 } as const;
+/** map export width (px) for an on-screen map width (CSS px) */
+export const mapExportWidth = (cssWidth: number) => Math.min(MAP_EXPORT.max, Math.max(MAP_EXPORT.min, Math.round(cssWidth * MAP_EXPORT.factor)));
+/** the pixel ratio the map is captured at */
+export const mapExportPixelRatio = (cssWidth: number) => mapExportWidth(cssWidth) / cssWidth;
+/** plot export width (px) */
+export const PLOT_EXPORT_WIDTH = 1600;
 
 const CRC_TABLE = (() => {
   const t = new Uint32Array(256);
@@ -54,12 +63,12 @@ export function readPngPhys(png: Uint8Array): [number, number, number] | null {
   return null;
 }
 
-/** Where the strip goes under a captured canvas: the canvas scale may be lower than requested
- *  (MapLibre clamps the drawing buffer to maxCanvasSize), so the strip uses the ACTUAL scale of
- *  the canvas on both axes (uniform: no squeezed text). */
-export function stripPlacement(canvas: { width: number; height: number }, cssWidth: number, strip: { height: number }) {
-  const scale = canvas.width / cssWidth;
-  return { x: 0, y: canvas.height, width: canvas.width, height: Math.round(strip.height * scale), scale, dpi: 96 * scale };
+/** Where the strip goes under a captured canvas: the strip spans the canvas's ACTUAL pixel width
+ *  (MapLibre may clamp the drawing buffer to maxCanvasSize) with the same factor on both axes, so
+ *  text keeps its aspect and its size relative to the image. */
+export function stripPlacement(canvas: { width: number; height: number }, strip: { height: number }) {
+  const scale = canvas.width / STRIP_UNITS; // px per strip unit
+  return { x: 0, y: canvas.height, width: canvas.width, height: Math.round(strip.height * scale), scale };
 }
 
 export async function blobWithDpi(blob: Blob, dpi: number): Promise<Blob> {

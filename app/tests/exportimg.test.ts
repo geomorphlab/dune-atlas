@@ -7,6 +7,8 @@ import { Resvg } from "@resvg/resvg-js";
 import { loadRegistry } from "../src/registry/load";
 import { mapExportFilename, mapStripItems, mapStripSvg, scaleBar, type MapStripContext } from "../src/export/mapExport";
 import { STRIP_COLORS, stripSvg, wrapText } from "../src/export/strip";
+import { textWidth } from "../src/export/texsvg";
+import { texToPlain } from "../src/util/plaintext";
 import { CellPanel } from "../src/ui/cellPanel";
 import type { CellStore } from "../src/cell/cellstore";
 import { DARK_THEME, LIGHT_THEME } from "../src/cell/plottheme";
@@ -34,19 +36,18 @@ describe("map export: information strip", () => {
     const items = mapStripItems(ctx({}, SET));
     const bars = items.filter((i) => i.kind === "colorbar") as Extract<(typeof items)[number], { kind: "colorbar" }>[];
     const dpm = reg.layers.find((l) => l.id === "dpm")!, ar = reg.layers.find((l) => l.id === "aridity")!;
-    expect(bars.map((b) => b.title)).toEqual([dpm.title.replace(/\$/g, "").trim() === dpm.title ? dpm.title : bars[0].title, bars[1].title]);
+    expect(bars.map((b) => b.title)).toEqual(["Drift potential ($DP$)", "Aridity index ($\\mathrm{AI}$)"]);
     expect(bars).toHaveLength(2);
-    expect(bars[0].detail).toBe(`${dpm.units!.replace(/\$/g, "")} · at u*,th = 0.15 m/s`.replace("m^2", "m²"));
-    expect(bars[1].title).toBe(ar.title);
+    expect(bars[0].detail).toBe("$\\mathrm{m^{2}\\,yr^{-1}}$ · at $u_{*,th}$ = 0.15 $\\mathrm{m\\,s^{-1}}$");
     expect(bars[1].detail).not.toMatch(/u\*,th/); // threshold-independent: no threshold text
     expect(bars[0].colors.length).toBeGreaterThan(8);
     expect(bars[0].ticks.every((t) => t.pos >= 0 && t.pos <= 1)).toBe(true);
-    for (const b of bars) expect(b.title + b.detail).not.toMatch(/[$\\]/); // no raw LaTeX
+    for (const b of bars) expect(texToPlain(b.title + b.detail)).not.toMatch(/[$\\]/); // TeX only inside $...$ (rendered as paths)
     const t = texts(items);
-    expect(t).toContain("Globe (MapLibre globe) · centre 24.50° S, 15.25° E · zoom 6.2 · wind dataset ERA5-Land 0.1°, 1950–2024 · threshold friction velocity u*,th = 0.15 m/s");
+    expect(t).toContain("Globe (MapLibre globe) · centre 24.50° S, 15.25° E · zoom 6.2 · wind dataset ERA5-Land 0.1°, 1950–2024 · threshold friction velocity $u_{*,th}$ = 0.15 $\\mathrm{m\\,s^{-1}}$");
     const sw = items.find((i) => i.kind === "swatches") as Extract<(typeof items)[number], { kind: "swatches" }>;
     expect(sw.items.map((s) => [s.color, s.shape])).toEqual([["#c08040", "box"], ["#112233", "line"]]);
-    expect(sw.items[1].label).toMatch(/\(streamlines, direction of transport\) at u\*,th = 0\.15 m\/s/);
+    expect(sw.items[1].label).toMatch(/\(streamlines, direction of transport\) at \$u_\{\*,th\}\$ = 0\.15 \$\\mathrm\{m\\,s\^\{-1\}\}\$/);
     const keys = items.find((i) => i.kind === "mapkeys") as Extract<(typeof items)[number], { kind: "mapkeys" }>;
     expect(keys.northNote).toBe("north up at view centre");
     expect(keys.scale!.px).toBeGreaterThan(40); expect(keys.scale!.px).toBeLessThanOrEqual(120);
@@ -66,7 +67,7 @@ describe("map export: information strip", () => {
     const items = mapStripItems(ctx({ reg: r2, includeBasemap: false, view: { lon: -179.99, lat: 66.3, zoom: 1.2, bearing: 0, pitch: 0, proj: "mercator" }, state: { ...ctx({}, lay).state, dataset: "era5" } }, lay));
     const t = texts(items);
     expect(t).toContain("Web Mercator EPSG:3857 · centre 66.30° N, 179.99° W · zoom 1.2 · wind dataset ERA5 0.25°, 1950–2024");
-    expect(t).not.toContain("threshold friction velocity u*,th"); // no threshold-dependent layer
+    expect(t).not.toContain("threshold friction velocity"); // no threshold-dependent layer
     expect(t).toContain("Hersbach et al. 2020");
     expect(t).toContain("(ERA5, 1950–2024)");
     expect(t).toContain("Vegetation cover: CSIRO MODIS Fractional Cover v3.1");
@@ -87,9 +88,9 @@ describe("map export: information strip", () => {
     expect(mapExportFilename("era5-land", { lat: -24.5, lon: 15.2, zoom: 6.24 }, DATE)).toBe("dune-atlas_map_era5-land_-24.50_15.20_z6.2_2026-10-13.png");
     expect(mapExportFilename("era5", { lat: 66.3, lon: 180.01, zoom: 3 }, DATE)).toBe("dune-atlas_map_era5_66.30_-179.99_z3.0_2026-10-13.png");
   });
-  it("strip SVG: transparent background, dark text only (no dark fills), legible on white; 2x keeps the layout", () => {
+  it("strip SVG: transparent background, dark text only (no dark fills), legible on white; any pixel width keeps the layout", () => {
     const c = ctx({}, SET);
-    const { svg, height } = mapStripSvg(c, 1);
+    const { svg, height } = mapStripSvg(c);
     expect(svg).not.toMatch(/<rect(?![^>]*class="colorbar")(?![^>]*fill="#[0-9a-f]{6}" stroke)[^>]*fill="(?!url)/); // only colour bars / swatches are filled rects
     const fills = [...svg.matchAll(/<text[^>]*fill="(#[0-9a-f]{6})"/g)].map((m) => m[1]);
     expect(new Set(fills)).toEqual(new Set([STRIP_COLORS.text, STRIP_COLORS.muted]));
@@ -105,13 +106,16 @@ describe("map export: information strip", () => {
     expect(opaque / n).toBeLessThan(0.3); // mostly transparent
     if (process.platform === "darwin") expect(darkOpaque).toBeGreaterThan(200); // the text is there, dark (needs system fonts)
     expect(darkOpaque / n).toBeLessThan(0.15); // no dark background blocks
-    const two = mapStripSvg(c, 2);
+    const two = mapStripSvg(c, 2000);
     expect(two.height).toBe(height);
-    expect(two.svg).toMatch(new RegExp(`width="${1200 * 2}" height="${height * 2}" viewBox="0 0 1200 ${height}"`));
+    expect(two.svg).toMatch(new RegExp(`width="2000" height="${height * 2}" viewBox="0 0 1000 ${height}"`));
   });
-  it("text wrapping", () => {
-    expect(wrapText("a ".repeat(200), 100, 10).every((l) => l.length <= Math.floor(100 / 5.6))).toBe(true);
-    expect(stripSvg([{ kind: "text", text: "x" }], 300).height).toBeGreaterThan(20);
+  it("text wrapping (Helvetica / Arial advance widths)", () => {
+    const lines = wrapText("a ".repeat(200), 100, 10);
+    expect(lines.length).toBeGreaterThan(5);
+    expect(lines.every((l) => textWidth(l, 10) <= 100)).toBe(true);
+    expect(lines.slice(0, -1).every((l) => textWidth(`${l} a`, 10) > 100)).toBe(true); // greedy: full lines
+    expect(stripSvg([{ kind: "text", text: "x" }]).height).toBeGreaterThan(20);
   });
 });
 
@@ -126,10 +130,10 @@ describe("cell-panel plot exports (light theme, same settings as on screen)", ()
     await p.show({ query: async () => cell, attrs: {}, fieldVars: FIELD_VARS } as unknown as CellStore, cell.iy, cell.ix);
     return { p, root };
   };
-  it("every plot section has an Export menu (PNG at 300 dpi, SVG): one resolution", async () => {
+  it("every plot section has an Export menu (PNG, SVG): one size", async () => {
     const { root } = await open();
     expect([...root.querySelectorAll(".export-menu")].map((m) => m.getAttribute("data-plot"))).toEqual(PLOT_KEYS);
-    for (const m of root.querySelectorAll(".export-menu")) expect([...m.querySelectorAll("button")].map((b) => b.textContent)).toEqual(["PNG (300 dpi)", "SVG"]);
+    for (const m of root.querySelectorAll(".export-menu")) expect([...m.querySelectorAll("button")].map((b) => b.textContent)).toEqual(["PNG", "SVG"]);
   });
   it("SVG: light theme (no dark-theme colours), transparent, strip with title, cell, dataset, threshold, source, link; file names", async () => {
     const { p } = await open();
@@ -143,16 +147,16 @@ describe("cell-panel plot exports (light theme, same settings as on screen)", ()
       expect(svgText(x.svg)).toContain("doi:10.1038/s41467-026-75466-y");
       expect(svgText(x.svg)).toContain("Contains modified Copernicus Climate Change Service information (ERA5-Land, 1950–2024)");
       expect(svgText(x.svg)).toContain("View: https://map.geomorphlab.org/#v=AQEBAg");
-      expect(svgText(x.svg).includes("threshold friction velocity u*,th = 0.15 m/s"), k).toBe(k !== "wind-rose");
+      expect(svgText(x.svg).includes(texToPlain("threshold friction velocity $u_{*,th}$ = 0.15 $\\mathrm{m\\,s^{-1}}$")), k).toBe(k !== "wind-rose"); // plain fallback (no math renderer)
       expect(x.svg).not.toMatch(/\$|\\[a-z]+\{/); // no raw LaTeX in the strip
       const png = new Resvg(x.svg, { font: { loadSystemFonts: true }, background: "rgba(0,0,0,0)" }).render();
       expect(png.pixels[3], `${k} corner transparent`).toBe(0);
-      expect(png.width).toBe(x.width);
+      expect(png.width).toBe(x.pxWidth);
     }
     expect(p.plotExport("wind-rose")!.name("svg")).toBe("dune-atlas_wind-rose_era5-land_-24.5_15.2.svg");
     expect(p.plotExport("flux-rose")!.name("png")).toBe("dune-atlas_flux-rose_era5-land_-24.5_15.2_ut0.15.png");
     expect(plotFilename("qsdiv", "era5", { lat: -24.5, lon: 15.25 }, 0.2, "png")).toBe("dune-atlas_qsdiv_era5_-24.5_15.25_ut0.20.png");
-    expect(p.plotExport("modes", 2)!.svg).toMatch(/^<svg xmlns="http:\/\/www.w3.org\/2000\/svg" width="\d+" height="\d+" viewBox/);
+    expect(p.plotExport("modes", 2000)!.svg).toMatch(/^<svg xmlns="http:\/\/www.w3.org\/2000\/svg" width="2000" height="[\d.]+" viewBox="0 0 1000 /);
   });
   it("same settings as on screen: sectors, flux mode, axis units and threshold follow the panel", async () => {
     const { p, root } = await open();
@@ -167,8 +171,8 @@ describe("cell-panel plot exports (light theme, same settings as on screen)", ()
     expect(x.svg).toContain(`<desc id="x-flux-rose-d">${onScreen.replace(/&/g, "&amp;")}</desc>`);
     expect(onScreen).toMatch(/crest sand flux .* m²\/yr, at u\*,th 0\.31 m\/s/);
     expect(svgText(x.svg)).toContain("Elongation");
-    expect(svgText(x.svg)).toContain("m²/yr per sector");
-    expect(svgText(x.svg)).toContain("u*,th = 0.31 m/s");
+    expect(svgText(x.svg)).toContain(texToPlain("$\\mathrm{m^{2}\\,yr^{-1}}$ per sector"));
+    expect(svgText(x.svg)).toContain(texToPlain("$u_{*,th}$ = 0.31 $\\mathrm{m\\,s^{-1}}$"));
     expect(x.name("png")).toMatch(/_ut0\.31\.png$/);
     // the number of petal wedges equals the on-screen rose
     const n = (s: string) => (s.match(/<path d="M/g) ?? []).length;

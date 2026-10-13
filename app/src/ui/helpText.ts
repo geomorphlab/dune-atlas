@@ -31,7 +31,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "images", title: "Exporting images",
-    body: "Export map image (camera button, top right) saves the current view as a 300 dpi PNG at its on-screen size, with or without the basemap. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources, so the text is easy to crop. Each plot in the cell panel has an Export menu for a 300 dpi PNG or an SVG in a light theme.",
+    body: "Export map image (camera button, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources, so the text is easy to crop. Text is sized relative to the image so it stays legible when the image fills a slide. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.",
   },
   {
     id: "share", title: "Sharing the view",
@@ -69,7 +69,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "cell", targets: ["#cell-panel:not([hidden])", "#map"], title: "Click a land cell",
-    body: "Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters, with downloads and citation. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one.",
+    body: "Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information.",
   },
   {
     id: "dataset", targets: ["#dataset-select", "#layer-panel .panel-toggle"], title: "Wind dataset",
@@ -88,7 +88,7 @@ export const TOUR_LABELS = { back: "Back", next: "Next", done: "Done", skip: "Sk
 
 export const SHARE_TEXT = { button: "Share / copy link", title: "Share this view", copy: "Copy link", copied: "Link copied", note: "The link restores the position, zoom, wind dataset, threshold, basemap, active layers and the selected cell." };
 export const EXPORT_TEXT = {
-  button: "Export map image", title: "Export map image", basemap: "Include basemap", run: "Export PNG (300 dpi)", working: "Rendering…",
-  note: "300 dpi PNG of the current view at its on-screen size, without the panels. Colour bars, legends, scale and data sources are added below the map.",
-  plotMenu: "Export", png: "PNG (300 dpi)", svg: "SVG",
+  button: "Export map image", title: "Export map image", basemap: "Include basemap", run: "Export PNG", working: "Rendering…",
+  note: "PNG of the current view, 1600–2400 pixels wide, without the panels. Colour bars, legends, scale and data sources are added below the map, sized for slides.",
+  plotMenu: "Export", png: "PNG", svg: "SVG",
 };

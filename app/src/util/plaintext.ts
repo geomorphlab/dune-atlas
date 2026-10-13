@@ -41,8 +41,10 @@ function math(s: string): string {
       } else if (name === "frac") {
         const [a, j] = group(s, i); const [b, k] = group(s, j); i = k;
         out += `(${math(a)})/(${math(b)})`;
-      } else if (name === "mathrm" || name === "text" || name === "mathit" || name === "operatorname") {
+      } else if (name === "text") {
         const [g, j] = group(s, i); i = j; out += g;
+      } else if (name === "mathrm" || name === "mathit" || name === "operatorname") {
+        const [g, j] = group(s, i); i = j; out += math(g);
       } else {
         const sym = SYM[name] ?? name;
         out += sym;

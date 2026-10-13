@@ -2,7 +2,7 @@
 // radius = u*,th (first value at the centre, last at the rim). Axis modes (alpha_H) are drawn
 // both ways. Lines are shape-preserving cubic (PCHIP) interpolations of the unwrapped bearing vs
 // u*,th through every data point, broken where a mode is undefined. Plain SVG string (tested in node).
-import { DARK_THEME, type PlotTheme } from "./plottheme";
+import { DARK_THEME, plotLabel, type PlotTheme } from "./plottheme";
 import { angleDiffDeg, bearingToXY, mod } from "../util/angles";
 import { pchipDense, unwrapDeg } from "../util/pchip";
 import { escapeHtml } from "../util/format";
@@ -19,6 +19,8 @@ export interface ModeSeries {
 }
 
 export interface ModesPlotOptions {
+  /** radius axis label (may contain TeX) */
+  radiusLabel?: string;
   x: ArrayLike<number>; // u*,th values (m/s), increasing
   series: ModeSeries[];
   currentIndex: number;
@@ -98,7 +100,7 @@ export function modesPlotSvg(o: ModesPlotOptions): string {
       }
     }
   }
-  p.push(`<text x="${size - 4}" y="${size - 5}" font-size="${T.fs.axis}" text-anchor="end" fill="${T.label}">radius: u*,th (m/s)</text>`);
+  p.push(plotLabel(T, o.radiusLabel ?? "radius: u*,th (m/s)", size - 4, size - 5, T.fs.axis, { anchor: "end", fill: T.label }));
   p.push(`</svg>`);
   return p.join("");
 }

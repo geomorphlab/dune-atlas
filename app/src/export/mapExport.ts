@@ -10,8 +10,10 @@ import { legendTicks, tickLabel, tickPosition } from "../ui/legend";
 import { texToPlain } from "../util/plaintext";
 import { datasetInfo } from "../cell/datasetinfo";
 import { C3S_NOTICE, C3S_NOTICE_ERA5, ERA5_DOI, ERA5_PAPER_DOI, ERA5LAND_DOI, ERA5LAND_PAPER_DOI, PAPER_DOI } from "../cell/citation";
-import { stripSvg, type StripItem } from "./strip";
-import { blobWithDpi, EXPORT_PIXEL_RATIO, stripPlacement } from "./png";
+import { STRIP_UNITS, stripSvg, type StripItem } from "./strip";
+import type { MathRenderer } from "./texsvg";
+import { exportTitleTex, exportUnits, utTex } from "./labels";
+import { blobWithDpi, EXPORT_DPI, mapExportPixelRatio, stripPlacement } from "./png";
 
 export interface MapView { lon: number; lat: number; zoom: number; bearing: number; pitch: number; proj: "globe" | "mercator" }
 export interface MapStripContext {
@@ -54,8 +56,8 @@ function colorbarFor(l: LayerDef, cfg: AppState["layers"][string]["cfg"], ut: nu
   const deg = l.display?.transform === "rad-to-bearing" || l.display?.transform === "rad-to-axis";
   const ticks = legendTicks(l, cfg).map((v) => ({ pos: tickPosition(l, v, cfg), label: deg ? `${v}°` : tickLabel(v) }));
   // only what the bar does not show: units and the threshold (the ticks convey scale and limits)
-  const detail = [plain(l.units), l.thresholdAware ? `at u*,th = ${ut.toFixed(2)} m/s` : ""].filter(Boolean).join(" · ");
-  return { kind: "colorbar", title: plain(l.title), detail, colors: e.colors, ticks };
+  const detail = [exportUnits(l.units), l.thresholdAware ? `at ${utTex(ut)}` : ""].filter(Boolean).join(" · ");
+  return { kind: "colorbar", title: exportTitleTex(l), detail, colors: e.colors, ticks };
 }
 
 /** Strip items for the active layers and the view: colour bars, legends and map keys first, then
@@ -73,19 +75,21 @@ export function mapStripItems(c: MapStripContext): StripItem[] {
     if (l.type === "zarr-field") {
       const e = effectiveDisplay(l, cfg);
       if (e.mode === "colormap") keys.push(colorbarFor(l, cfg, ut));
-      else sw.push({ color: e.vecColor, shape: e.mode === "arrows" && !isAxis(l) ? "arrow" : "line", label: `${plain(l.title)} (${e.mode}, ${isAxis(l) ? "orientation axis" : "direction of transport"})${l.thresholdAware ? ` at u*,th = ${ut.toFixed(2)} m/s` : ""}` });
+      else sw.push({ color: e.vecColor, shape: e.mode === "arrows" && !isAxis(l) ? "arrow" : "line", label: `${exportTitleTex(l)} (${e.mode}, ${isAxis(l) ? "orientation axis" : "direction of transport"})${l.thresholdAware ? ` at ${utTex(ut)}` : ""}` });
     } else {
       const v = vectorColors(l, cfg);
-      sw.push({ color: v.fill, shape: "box", label: v.invert ? `${plain(l.title)}: land without mapped dunes` : plain(l.title) });
+      sw.push({ color: v.fill, shape: "box", label: v.invert ? `${exportTitleTex(l)}: land without mapped dunes` : exportTitleTex(l) });
     }
   }
   if (sw.length) keys.push({ kind: "swatches", items: sw });
-  const sb = scaleBar(view);
+  // scale bar: at most 15 % of the image width; its length converted to strip units
+  const sb0 = scaleBar(view, 0.15 * c.width);
+  const sb = sb0 && { px: (sb0.px * STRIP_UNITS) / c.width, label: sb0.label };
   keys.push({ kind: "mapkeys", bearing: view.bearing, northNote: view.proj === "globe" ? "north up at view centre" : undefined,
     scale: sb, scaleNote: sb ? (view.proj === "globe" ? "at view centre" : `at ${fmtLat(view.lat)}`) : "Scale bar omitted: the scale varies strongly across this view" });
   const text: StripItem[] = [
     { kind: "heading", text: "Dune Atlas · map.geomorphlab.org" },
-    { kind: "text", text: `${PROJECTION_TEXT[view.proj]} · centre ${fmtLat(view.lat)}, ${fmtLon(view.lon)} · zoom ${view.zoom.toFixed(1)} · wind dataset ${ds.name} ${ds.resolution}, ${ds.period}${anyThr ? ` · threshold friction velocity u*,th = ${ut.toFixed(2)} m/s` : ""}` },
+    { kind: "text", text: `${PROJECTION_TEXT[view.proj]} · centre ${fmtLat(view.lat)}, ${fmtLon(view.lon)} · zoom ${view.zoom.toFixed(1)} · wind dataset ${ds.name} ${ds.resolution}, ${ds.period}${anyThr ? ` · threshold friction velocity ${utTex(ut)}` : ""}` },
   ];
   // sources: the paper, the wind dataset with its Copernicus notice, other external sources shown
   text.push({ kind: "text", text: `Dune map and wind-regime method: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}.` });
@@ -101,7 +105,8 @@ export function mapStripItems(c: MapStripContext): StripItem[] {
   return [...keys, ...text];
 }
 
-export function mapStripSvg(c: MapStripContext, scale = 1) { return stripSvg(mapStripItems(c), c.width, { scale }); }
+/** the strip for the map; `pxWidth` = pixel width of the exported image */
+export function mapStripSvg(c: MapStripContext, pxWidth = STRIP_UNITS, math: MathRenderer | null = null) { return stripSvg(mapStripItems(c), { pxWidth, math }); }
 
 // ---------------------------------------------------------------------------------------------
 // Browser: capture and compose
@@ -109,10 +114,10 @@ export function mapStripSvg(c: MapStripContext, scale = 1) { return stripSvg(map
 
 const waitIdle = (map: MlMap) => new Promise<void>((res) => { if (map.loaded() && !map.isMoving()) { map.once("idle", () => res()); map.triggerRepaint(); } else map.once("idle", () => res()); });
 
-/** Capture the map canvas at `scale` (x CSS px). Basemap layers (and the selected-cell outline)
+/** Capture the map canvas at `scale` (x CSS px; default: the export width, mapExportWidth). Basemap layers (and the selected-cell outline)
  *  are hidden while capturing when not wanted; everything is restored afterwards. */
 export async function captureMap(map: MlMap, o: { scale?: number; includeBasemap: boolean; isOwnLayer: (id: string) => boolean; settle: () => Promise<void> }): Promise<HTMLCanvasElement> {
-  const scale = o.scale ?? EXPORT_PIXEL_RATIO;
+  const scale = o.scale ?? mapExportPixelRatio(map.getCanvas().clientWidth || map.getContainer().clientWidth);
   const hidden: string[] = [];
   for (const l of map.getStyle().layers) {
     const own = o.isOwnLayer(l.id);
@@ -154,12 +159,11 @@ export function svgToImage(svg: string): Promise<HTMLImageElement> {
   });
 }
 
-/** map image on top, strip below (at the canvas's ACTUAL scale on both axes), transparent wherever
- *  nothing is drawn; PNG with pHYs = the resulting dpi (300 unless the browser clamped the canvas) */
-export async function composeWithStrip(top: HTMLCanvasElement, cssWidth: number, stripFor: (scale: number) => { svg: string; height: number }): Promise<{ blob: Blob; dpi: number }> {
-  const probe = stripFor(1);
-  const pl = stripPlacement(top, cssWidth, probe);
-  const strip = stripFor(pl.scale); // width/height = viewBox x scale: rasterised 1:1, never stretched
+/** map image on top, strip below (spanning the canvas's ACTUAL width, same factor on both axes),
+ *  transparent wherever nothing is drawn; PNG tagged 300 dpi (pHYs: sets the print size only) */
+export async function composeWithStrip(top: HTMLCanvasElement, stripFor: (pxWidth: number) => { svg: string; height: number }): Promise<{ blob: Blob; width: number; height: number }> {
+  const strip = stripFor(top.width); // width/height attributes = the drawn size: rasterised 1:1
+  const pl = stripPlacement(top, strip);
   const img = await svgToImage(strip.svg);
   const c = document.createElement("canvas");
   c.width = top.width;
@@ -168,8 +172,7 @@ export async function composeWithStrip(top: HTMLCanvasElement, cssWidth: number,
   ctx.drawImage(top, 0, 0);
   ctx.drawImage(img, pl.x, pl.y, pl.width, pl.height);
   const blob = await new Promise<Blob>((res, rej) => c.toBlob((b) => (b ? res(b) : rej(new Error("PNG encoding failed"))), "image/png"));
-  const dpi = Math.round(pl.dpi);
-  return { blob: await blobWithDpi(blob, dpi), dpi };
+  return { blob: await blobWithDpi(blob, EXPORT_DPI), width: c.width, height: c.height };
 }
 
 export function downloadBlob(name: string, blob: Blob) {

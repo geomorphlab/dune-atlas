@@ -12,9 +12,10 @@ function renderMath(tex: string): string {
   if (hit !== undefined) return hit;
   let out: string;
   try {
-    out = katex.renderToString(tex, { throwOnError: true, displayMode: false, output: "html", strict: "ignore" });
+    // data-tex: the source, so image exports can redraw the formula (export/plotExport katexTex)
+    out = katex.renderToString(tex, { throwOnError: true, displayMode: false, output: "html", strict: "ignore" }).replace(/^<span class="katex"/, `<span class="katex" data-tex="${escapeHtml(tex)}"`);
   } catch {
-    out = `<span class="tex-fallback">${texToHtml(`$${tex}$`)}</span>`;
+    out = `<span class="tex-fallback" data-tex="${escapeHtml(tex)}">${texToHtml(`$${tex}$`)}</span>`;
   }
   cache.set(tex, out);
   return out;

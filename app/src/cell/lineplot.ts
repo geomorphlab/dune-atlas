@@ -1,7 +1,7 @@
 // Small x-y line plot (plain SVG string, tested in node): one series vs u*,th with a zero line
 // and a marker at the current threshold. Smooth shape-preserving cubic (PCHIP) through the data
 // points, broken at missing values.
-import { DARK_THEME, type PlotTheme } from "./plottheme";
+import { DARK_THEME, plotLabel, type PlotTheme } from "./plottheme";
 import { escapeHtml } from "../util/format";
 import { niceTicks } from "./roses";
 import { pchipDense } from "../util/pchip";
@@ -51,8 +51,8 @@ export function linePlotSvg(o: LinePlotOptions): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${escapeHtml(o.title)}" class="line-plot">
 <g stroke="${T.grid}" stroke-width="${f(0.6 * T.lw)}" fill="none">${yt.map((t) => `<line x1="${m.l}" x2="${W - m.r}" y1="${f(Y(t))}" y2="${f(Y(t))}"${t === 0 ? ` stroke="${T.zero}" stroke-width="1"` : ' stroke-dasharray="2 3"'}/>`).join("")}<rect x="${m.l}" y="${m.t}" width="${W - m.l - m.r}" height="${H - m.t - m.b}"/></g>
 <g font-size="${T.fs.tick}" fill="${T.text}">${yt.map((t) => `<text x="${m.l - 4}" y="${f(Y(t) + 0.3 * T.fs.tick)}" text-anchor="end">${tick(t)}</text>`).join("")}${xt.map((t) => `<text x="${f(X(t))}" y="${f(H - m.b + 1.2 * T.fs.tick)}" text-anchor="middle">${tick(t)}</text>`).join("")}
-<text x="${f((m.l + W - m.r) / 2)}" y="${H - 6}" text-anchor="middle">${escapeHtml(o.xLabel)}</text>
-<text transform="translate(${f(1.1 * T.fs.tick)} ${f((m.t + H - m.b) / 2)}) rotate(-90)" text-anchor="middle">${escapeHtml(o.yLabel)}</text></g>
+${plotLabel(T, o.xLabel, (m.l + W - m.r) / 2, H - 6, T.fs.tick, { anchor: "middle" })}
+<g transform="translate(${f(1.1 * T.fs.tick)} ${f((m.t + H - m.b) / 2)}) rotate(-90)">${plotLabel(T, o.yLabel, 0, 0, T.fs.tick, { anchor: "middle" })}</g></g>
 ${runs.map((p) => `<polyline points="${p}" fill="none" stroke="${col}" stroke-width="1.8" stroke-linejoin="round"/>`).join("")}
 ${Number.isFinite(cx) ? `<line class="current" x1="${f(X(cx))}" x2="${f(X(cx))}" y1="${m.t}" y2="${H - m.b}" stroke="${T.currentLine}" stroke-width="0.8" stroke-dasharray="3 2"/>` : ""}${Number.isFinite(cy) ? `<circle cx="${f(X(cx))}" cy="${f(Y(cy))}" r="3.2" fill="${col}" stroke="${T.name === "dark" ? "#141a21" : T.markerStroke}"/>` : ""}
 </svg>`;

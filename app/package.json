@@ -23,6 +23,7 @@
     "js-yaml": "^4",
     "katex": "^0.16.47",
     "maplibre-gl": "^5",
+    "mathjax-full": "^3.2.2",
     "pmtiles": "^4",
     "zarrita": "^0.5"
   },

@@ -8,9 +8,10 @@ import { analyseCell, EXCESS_CLASSES, EXCESS_COLORS, FLUX_MODES, MODE_DEFINED_BY
 import { roseSvg, SPEED_COLORS, roseBinChoices, type RoseSvgOptions } from "../cell/roses";
 import { modesPlotSvg } from "../cell/modesplot";
 import { DARK_THEME, LIGHT_THEME, seriesColor, type PlotTheme } from "../cell/plottheme";
-import { composePlotSvg, katexPlain, plotFilename, svgToPngBlob, type PlotExportSpec, type PlotKey } from "../export/plotExport";
+import { composePlotSvg, katexTex, plotFilename, svgToPngBlob, type PlotExportSpec, type PlotKey } from "../export/plotExport";
 import { downloadBlob } from "../export/mapExport";
-import { EXPORT_DPI, EXPORT_PIXEL_RATIO } from "../export/png";
+import { EXPORT_DPI, PLOT_EXPORT_WIDTH } from "../export/png";
+import { loadMathRenderer, unitsTex, type MathRenderer } from "../export/texsvg";
 import { EXPORT_TEXT } from "./helpText";
 import { linePlotSvg } from "../cell/lineplot";
 import { AUX_META, aridityClass } from "../cell/auxinfo";
@@ -447,33 +448,37 @@ export class CellPanel {
     // export specs: the same options, re-rendered in the light theme on export
     const edges = [0, 2.5, 5, 7.5, 10, 12.5, 20];
     const L = LIGHT_THEME;
+    // export labels: symbols and units as TeX (drawn as SVG paths in the exported images)
+    const texLabel = (k: keyof typeof s) => `${s[k].tex}${s[k].label.slice(s[k].label.indexOf(" "))}`;
+    const fmTex = fm.label.replace("(αE)", "($\\alpha_E$)").replace("(αH)", "($\\alpha_H$)");
+    const perSector = pct ? "% of total flux" : "$\\mathrm{m^{2}\\,yr^{-1}}$ per sector";
     this.#plots = {
       "wind-rose": {
-        key: "wind-rose", title: "Wind rose (direction the wind blows from)", thresholdDependent: false, caption: D.windCap.textContent ?? "",
+        key: "wind-rose", title: "Wind rose (direction the wind blows from)", thresholdDependent: false, caption: unitsTex(D.windCap.textContent ?? ""),
         svg: (t) => roseSvg({ ...windOpts, id: "x-wind-rose", theme: t }),
-        legend: [{ kind: "swatches", items: [...edges.slice(0, -1).map((e, k) => ({ color: SPEED_COLORS[k], shape: "box" as const, label: `${e}–${edges[k + 1]} m/s` })), { color: "none", shape: "line" as const, label: "10 m wind speed classes" }].filter((x) => x.color !== "none") }],
+        legend: [{ kind: "swatches", items: [...edges.slice(0, -1).map((e, k) => ({ color: SPEED_COLORS[k], shape: "box" as const, label: `${e}–${edges[k + 1]} $\\mathrm{m\\,s^{-1}}$` })), { color: "none", shape: "line" as const, label: "10 m wind speed classes" }].filter((x) => x.color !== "none") }],
       },
       "flux-rose": {
-        key: "flux-rose", title: `Sand flux rose (time-averaged, transport toward): ${fm.label}, ${pct ? "% of total flux" : "m²/yr per sector"}`, thresholdDependent: true, caption: katexPlain(D.fluxCap),
-        svg: (t) => roseSvg({ ...fluxOpts, id: "x-flux-rose", theme: t, arrows: arrows.map((a) => ({ ...a, color: seriesColor(a.color, t) })) }),
+        key: "flux-rose", title: `Sand flux rose (time-averaged, transport toward): ${fmTex}, ${perSector}`, thresholdDependent: true, caption: unitsTex(katexTex(D.fluxCap)),
+        svg: (t) => roseSvg({ ...fluxOpts, id: "x-flux-rose", theme: t, axisLabel: perSector, arrows: arrows.map((a) => ({ ...a, color: seriesColor(a.color, t) })) }),
         legend: [
-          { kind: "swatches", items: EXCESS_CLASSES.map((c, k) => ({ color: EXCESS_COLORS[k], shape: "box" as const, label: `${v.fluxMode === "flat" ? "u*f" : "uc"}/u*,th ${c}` })) },
-          { kind: "swatches", items: arrows.filter((a) => Number.isFinite(a.bearing)).map((a) => ({ color: seriesColor(a.color, L), shape: a.axis ? "line" as const : "arrow" as const, dash: a.dash, label: a.label })) },
-          { kind: "text", text: `DP = ${fmtPlain(v.drift.dp)} m²/yr · RDP = ${fmtPlain(v.drift.rdp)} m²/yr · RDP/DP = ${fmtPlain(v.drift.ratio)} · RDD = ${deg(v.drift.rddBearing)}` },
+          { kind: "swatches", items: EXCESS_CLASSES.map((c, k) => ({ color: EXCESS_COLORS[k], shape: "box" as const, label: `${ratioTex} ${c}` })) },
+          { kind: "swatches", items: ROSE_ARROW_KEYS.map((k, i) => ({ k, a: arrows[i] })).filter(({ a }) => Number.isFinite(a.bearing)).map(({ k, a }) => ({ color: seriesColor(a.color, L), shape: a.axis ? "line" as const : "arrow" as const, dash: a.dash, label: `${texLabel(k)}: ${deg(v.modes[k])}` })) },
+          { kind: "text", text: `$DP$ = ${fmtPlain(v.drift.dp)} $\\mathrm{m^{2}\\,yr^{-1}}$ · $RDP$ = ${fmtPlain(v.drift.rdp)} $\\mathrm{m^{2}\\,yr^{-1}}$ · $RDP/DP$ = ${fmtPlain(v.drift.ratio)} · $RDD$ = ${deg(v.drift.rddBearing)}` },
         ],
       },
       modes: {
-        key: "modes", title: "Dune-orientation modes vs threshold friction velocity (angle = direction toward, radius = u*,th)", thresholdDependent: true, caption: katexPlain(D.modesCap),
-        svg: (t) => modesPlotSvg(modesOpts(t)),
-        legend: [{ kind: "swatches", items: [...MODE_KEYS.map((k) => ({ color: seriesColor(s[k].color, L), shape: "line" as const, dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined, label: s[k].label })), { color: L.current, shape: "line" as const, dash: "4 3", label: "current threshold" }] }],
+        key: "modes", title: "Dune-orientation modes vs threshold friction velocity (angle = direction toward, radius = $u_{*,th}$)", thresholdDependent: true, caption: unitsTex(katexTex(D.modesCap)),
+        svg: (t) => modesPlotSvg({ ...modesOpts(t), radiusLabel: "radius: $u_{*,th}$ ($\\mathrm{m\\,s^{-1}}$)" }),
+        legend: [{ kind: "swatches", items: [...MODE_KEYS.map((k) => ({ color: seriesColor(s[k].color, L), shape: "line" as const, dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined, label: texLabel(k) })), { color: L.current, shape: "line" as const, dash: "4 3", label: "current threshold" }] }],
       },
     };
     if (D.qsdivSvg && cell.aux?.series.qsdiv) {
       const q = Array.from(cell.aux.series.qsdiv, (x) => x * 1000);
       this.#plots.qsdiv = {
-        key: "qsdiv", title: "Saturated flux divergence vs threshold friction velocity", thresholdDependent: true, caption: katexPlain(D.qsdivCap),
-        svg: (t) => linePlotSvg({ x: v.utValues, y: q, currentIndex: v.utIndex, xLabel: "u*,th (m/s)", yLabel: "m/kyr", title: "Saturated flux divergence vs threshold friction velocity", width: Math.min(size, 420), theme: t }),
-        legend: [{ kind: "swatches", items: [{ color: "#e3a33b", shape: "line", label: "flux divergence (m/kyr; < 0 = deposition)" }, { color: "#e3a33b", shape: "dot", label: "current threshold" }] }],
+        key: "qsdiv", title: "Saturated flux divergence $\\nabla\\cdot\\vec{q}_s$ vs threshold friction velocity $u_{*,th}$", thresholdDependent: true, caption: unitsTex(katexTex(D.qsdivCap)),
+        svg: (t) => linePlotSvg({ x: v.utValues, y: q, currentIndex: v.utIndex, xLabel: "$u_{*,th}$ ($\\mathrm{m\\,s^{-1}}$)", yLabel: "$\\nabla\\cdot\\vec{q}_s$ ($\\mathrm{m\\,kyr^{-1}}$)", title: "Saturated flux divergence vs threshold friction velocity", width: Math.min(size, 420), theme: t }),
+        legend: [{ kind: "swatches", items: [{ color: "#e3a33b", shape: "line", label: "flux divergence $\\nabla\\cdot\\vec{q}_s$ ($\\mathrm{m\\,kyr^{-1}}$; < 0 = deposition)" }, { color: "#e3a33b", shape: "dot", label: "current threshold" }] }],
       };
     }
   }
@@ -498,22 +503,21 @@ export class CellPanel {
   }
 
   /** the export file of a plot: name and content (SVG text; PNG is rasterised in the browser) */
-  plotExport(key: PlotKey, scale = 1): { name: (ext: "png" | "svg") => string; svg: string; width: number; height: number } | null {
+  plotExport(key: PlotKey, pxWidth = PLOT_EXPORT_WIDTH, math: MathRenderer | null = null): { name: (ext: "png" | "svg") => string; svg: string; width: number; height: number; plotHeight: number; pxWidth: number; pxHeight: number } | null {
     const spec = this.#plots[key], cell = this.#cell, v = this.#lastView;
     if (!spec || !cell || !v) return null;
     const ds = this.#ds(cell);
     const ctx = { cell: { lat: cell.lat, lon: cell.lon, iy: cell.iy, ix: cell.ix }, dataset: ds, ut: v.ut, shareLink: this.#opts.shareLink?.() ?? globalThis.location?.href ?? "", date: new Date() };
-    const out = composePlotSvg(spec, ctx, scale);
+    const out = composePlotSvg(spec, ctx, pxWidth, math);
     return { ...out, name: (ext) => plotFilename(key, ds.id, cell, spec.thresholdDependent ? v.ut : null, ext) };
   }
 
-  /** SVG (vector, same layout) or PNG at 300 dpi of the on-screen size */
+  /** SVG (vector, same proportions) or PNG PLOT_EXPORT_WIDTH px wide, tagged 300 dpi */
   async exportPlot(key: PlotKey, fmt: "png" | "svg") {
-    const r = fmt === "png" ? EXPORT_PIXEL_RATIO : 1;
-    const x = this.plotExport(key, r);
+    const x = this.plotExport(key, PLOT_EXPORT_WIDTH, await loadMathRenderer());
     if (!x) return;
     if (fmt === "svg") triggerDownload(x.name("svg"), x.svg, "image/svg+xml");
-    else downloadBlob(x.name("png"), await svgToPngBlob(x.svg, x.width * r, x.height * r, EXPORT_DPI));
+    else downloadBlob(x.name("png"), await svgToPngBlob(x.svg, x.pxWidth, x.pxHeight, EXPORT_DPI));
   }
 
   #table(cell: CellData, v: CellView): string {

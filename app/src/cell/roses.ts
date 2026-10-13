@@ -3,7 +3,7 @@
 import { C } from "../util/constants";
 import { bearingToXY, mathToBearingDeg, mod, towardToFrom } from "../util/angles";
 import { escapeHtml } from "../util/format";
-import { DARK_THEME, type PlotTheme } from "./plottheme";
+import { DARK_THEME, plotLabel, type PlotTheme } from "./plottheme";
 
 /** Speed-class edges (m/s) aligned to the 0.15625 m/s histogram bins (16 bins = 2.5 m/s). */
 export const DEFAULT_SPEED_EDGES = [0, 2.5, 5, 7.5, 10, 12.5, 20];
@@ -221,8 +221,8 @@ export function roseSvg(o: RoseSvgOptions): string {
     const lab = escapeHtml(o.ringFormat(t));
     parts.push(`<text class="ring" font-size="${T.fs.ring}" x="${f2(cx + x + 0.25 * T.fs.ring)}" y="${f2(cy + y + 0.35 * T.fs.ring)}" text-anchor="start" fill="${T.ring}">${lab}</text>`);
   }
-  if (o.axisLabel) parts.push(`<text class="axis-label" font-size="${T.fs.axis}" x="${size - 4}" y="${size - 5}" text-anchor="end" fill="${T.label}">${escapeHtml(o.axisLabel)}</text>`);
-  if (o.centreText) parts.push(`<text x="${cx}" y="${cy + 0.35 * T.fs.axis}" font-size="${T.fs.axis}">${escapeHtml(o.centreText)}</text>`);
+  if (o.axisLabel) parts.push(plotLabel(T, o.axisLabel, size - 4, size - 5, T.fs.axis, { anchor: "end", fill: T.label, cls: "axis-label" }));
+  if (o.centreText) parts.push(plotLabel(T, o.centreText, cx, cy + 0.35 * T.fs.axis, T.fs.axis, { anchor: "middle" }));
   parts.push(`</g></svg>`);
   return parts.join("");
 }

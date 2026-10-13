@@ -175,12 +175,12 @@ describe("help button and panel", () => {
     (pop.querySelector(".copy-link") as HTMLButtonElement).click();
     expect(writeText).toHaveBeenCalledTimes(2);
   });
-  it("export map: one resolution (300 dpi, no scale choice); basemap option is passed on", async () => {
+  it("export map: one size (no scale choice); basemap option is passed on", async () => {
     (tools.el.querySelector(".export-btn") as HTMLButtonElement).click();
     const pop = document.querySelector(".tool-pop-export") as HTMLElement;
     expect(pop.querySelectorAll('input[type="radio"]')).toHaveLength(0);
     expect(pop.textContent).not.toMatch(/[12]×|\b[12]x\b|resolution:/i);
-    expect((pop.querySelector(".run-export") as HTMLButtonElement).textContent).toBe("Export PNG (300 dpi)");
+    expect((pop.querySelector(".run-export") as HTMLButtonElement).textContent).toBe("Export PNG");
     (pop.querySelector('input[type="checkbox"]') as HTMLInputElement).checked = false;
     (pop.querySelector(".run-export") as HTMLButtonElement).click();
     await new Promise((r) => setTimeout(r, 0));

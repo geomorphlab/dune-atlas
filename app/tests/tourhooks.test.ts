@@ -36,7 +36,7 @@ function page(cell: [number, number] | null = null) {
     cellRoot.hidden = false; scroll = 0;
     cellRoot.innerHTML = '<div class="cell-threshold"></div><div class="cell-body"><p class="status">Loading…</p></div>';
     setTimeout(() => {
-      cellRoot.querySelector(".cell-body")!.innerHTML = fail ? '<p class="status error">failed</p>' : `<div class="summary"><table data-cell="${c}"></table></div>`;
+      cellRoot.querySelector(".cell-body")!.innerHTML = fail ? '<p class="status error">failed</p>' : `<div class="summary"><table data-cell="${c}"></table></div><details class="section downloads" data-section="downloads"><summary>Download &amp; cite</summary></details>`;
       panel.shownCell = { iy: c[0], ix: c[1] };
     }, 20);
   };
@@ -98,6 +98,46 @@ describe("tour step 4 (layers): Display of RDD opened, then restored", () => {
       expect(layersSnapshot()).toBe(before);
     });
   }
+  for (const startOpen of [false, true]) {
+    it(`layer panel initially ${startOpen ? "open" : "collapsed"}: the step shows it open with RDD's Display spotlit; leaving restores it ${startOpen ? "open" : "collapsed"}`, async () => {
+      page();
+      const toggle = layerPanel.querySelector<HTMLButtonElement>(".panel-toggle")!;
+      if (layerPanel.classList.contains("collapsed") === startOpen) toggle.click();
+      expect(layerPanel.classList.contains("collapsed")).toBe(!startOpen);
+      group().open = false; display().open = false;
+      // layout stand-in: the item has a box only while the list is shown
+      item().getBoundingClientRect = () => (layerPanel.classList.contains("collapsed") ? new DOMRect(0, 0, 0, 0) : new DOMRect(20, 300, 300, 140));
+      const t = tour();
+      await goTo(t, "layers");
+      expect(layerPanel.classList.contains("collapsed")).toBe(false);
+      expect(toggle.getAttribute("aria-expanded")).toBe("true");
+      expect(group().open && display().open).toBe(true);
+      expect(document.querySelector(".tour")!.classList.contains("no-target")).toBe(false);
+      const spot = document.querySelector(".tour-spot") as HTMLElement;
+      expect(parseFloat(spot.style.width)).toBeGreaterThanOrEqual(300);
+      expect(parseFloat(spot.style.top)).toBeLessThanOrEqual(300);
+      await leaveBy(t, "next");
+      expect(layerPanel.classList.contains("collapsed")).toBe(!startOpen);
+      expect(toggle.getAttribute("aria-expanded")).toBe(String(startOpen));
+      expect([group().open, display().open]).toEqual([false, false]);
+      t.end(false); await t.ready;
+    });
+  }
+  it("narrow screen (mobile): the list starts collapsed; the step opens it and leaving collapses it again", async () => {
+    const mm = vi.fn(() => ({ matches: true }));
+    vi.stubGlobal("matchMedia", mm);
+    try {
+      page();
+      expect(mm).toHaveBeenCalled();
+      expect(layerPanel.classList.contains("collapsed")).toBe(true);
+      const t = tour();
+      await goTo(t, "layers");
+      expect(layerPanel.classList.contains("collapsed")).toBe(false);
+      expect(display().open).toBe(true);
+      await leaveBy(t, "esc");
+      expect(layerPanel.classList.contains("collapsed")).toBe(true);
+    } finally { vi.unstubAllGlobals(); vi.stubGlobal("localStorage", { getItem: () => null, setItem: () => {}, removeItem: () => {}, clear: () => {} }); }
+  });
   it("a group that was already open with Display open stays so", async () => {
     page(); group().open = true; display().open = true;
     const t = tour(); await goTo(t, "layers"); await leaveBy(t, "next");
@@ -112,7 +152,7 @@ describe("tour step 6 (cell): example cell opened without moving the map, then r
     expect(stepIndex("cell")).toBe(5);
     expect(s.body).toMatch(/Namib/);
     expect(s.body).toMatch(/u_\{\*,th\}/);
-    expect(s.body).toMatch(/outlined/);
+    expect(s.body).toBe("Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information.");
   });
   for (const how of ["next", "back", "skip", "esc", "outside"]) {
     it(`no prior selection: example shown, slider outlined; leaving by ${how} closes the panel again`, async () => {
@@ -123,6 +163,8 @@ describe("tour step 6 (cell): example cell opened without moving the map, then r
       expect(cellRoot.hidden).toBe(false);
       expect(cellRoot.querySelector(".summary table")).not.toBeNull();
       expect(cellRoot.querySelector(".cell-threshold")!.classList.contains("tour-outline")).toBe(true);
+      expect(cellRoot.querySelector('[data-section="downloads"]')!.classList.contains("tour-outline")).toBe(true);
+      expect((cellRoot.querySelector('[data-section="downloads"]') as HTMLDetailsElement).open).toBe(false); // outlined, not opened
       expect(pop().querySelector(".tour-note")).toBeNull();
       expect(pop().classList.contains("tour-loading")).toBe(false);
       await leaveBy(t, how);

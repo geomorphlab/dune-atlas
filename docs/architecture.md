@@ -134,10 +134,12 @@ and fixture layouts and fails if an upgrade changes them.
   help button. Steps highlight the first visible of their targets (else a centred popover);
   Back / Next / Skip, Esc and click outside skip, arrows, focus trap, aria-live. Two steps
   demonstrate the UI through enter / leave hooks (`ui/tourHooks.ts`, run in sequence on a promise
-  chain so fast clicking cannot interleave them): step 4 (Layers) opens the drift-potential group
-  and the Display section of RDD (`rdpa`) and spotlights it; step 6 (Click a land cell) selects the
+  chain so fast clicking cannot interleave them): step 4 (Layers) first opens the layer list if it
+  is collapsed (desktop toggle or narrow screens; `setLayerPanelOpen`, as the Layers button), then
+  the drift-potential group and the Display section of RDD (`rdpa`), centres it in the list and
+  spotlights it; step 6 (Click a land cell) selects the
   example Namib cell (15.2° E, 24.5° S, the containing cell of the current dataset) without moving
-  the map, waits for the panel to render, outlines the panel's own u*,th slider and resets the
+  the map, waits for the panel to render, outlines the panel's own u*,th slider and the Download & cite section, and resets the
   mobile sheet to its default height (fallback text if the cell cannot be loaded). Leaving either
   step by any route restores the exact previous state (group / Display open, layer-list scroll and
   collapsed state, previous selection or none, its panel scroll, sheet height); no layer is added.
@@ -147,23 +149,30 @@ and fixture layouts and fails if an upgrade changes them.
   line colour, spacing, fill, invert). Ids are indices into append-only tables (`SHARE_IDS`; unknown
   ids inline), so links survive registry growth. Typical links: 58–77 characters with the site
   address. `?query` permalinks are still parsed and still written to the address bar.
-* **Image exports** (one resolution: 300 dpi): the map is captured from the live canvas after
-  `idle` + overlay adds at pixel ratio 300/96 (`export/png.ts`; basemap layers hidden for a
-  transparent background, selected-cell outline always hidden; `maxCanvasSize` raised to 16384 so
-  the drawing buffer is normally not clamped). The strip below is drawn at the ACTUAL canvas scale
-  (canvas width / CSS width) on both axes, so a clamped canvas gives a lower dpi, never squeezed
-  text; the dpi is written into the PNG (`pHYs`, 11811 px/m at 300 dpi). Layout: image, then a
-  full-width separator padded from it, then all text: colour bars of the active raster layers
-  (fixed 2.75 × 0.22 in, as many per row as fit, wrapping; title, ticks, units and u*,th only),
-  keys for vectors and streamlines, north arrow and scale bar at the view centre (omitted below
-  zoom 2.5), then the descriptive text (heading, projection and view, wind dataset, sources with
-  the Copernicus notice, share link, date). Font sizes are slide-legible (14 pt text, 15 pt bar
-  titles, 19 pt heading at print size). Panel plots are re-rendered from the on-screen options in
-  `LIGHT_THEME` (`cell/plottheme.ts`: larger fonts and thicker lines, light-on-dark series colours
-  mapped) with the same strip below (legends first, then title, cell centre without grid indices,
-  dataset, threshold, caption, sources, link, date), as SVG or PNG at 300 dpi of the on-screen size
-  (strip at least 640 CSS px wide). Rose ring (radial tick) labels have no halo, on screen and in
-  exports.
+* **Image exports** (one size, tagged 300 dpi): the map is captured from the live canvas after
+  `idle` + overlay adds at the pixel ratio giving W = clamp(on-screen width x 1.5, 1600, 2400) px
+  (`export/png.ts`; basemap layers hidden for a transparent background, selected-cell outline always
+  hidden; `maxCanvasSize` 16384). Plots are exported 1600 px wide. The PNG pHYs chunk is always
+  300 dpi (11811 px/m): it only sets the print size (W / 300 in). Sizing is RELATIVE to W: the
+  strip (`export/strip.ts`) is laid out 1000 units wide whatever the pixel width, with body text,
+  legends, colour-bar titles and ticks 0.018 W, the heading 0.024 W (about 17 pt and 23 pt when the
+  image fills a 13.33 in slide), colour bars 0.28 W x 0.022 W (3 per row, wrapping), and line
+  widths, ticks, north arrow and scale bar scaled likewise. Plot exports draw the plot 0.96 W
+  (wide plots) or 0.66 W (roses) wide with its labels at 0.018 W (`exportPlotTheme`). The strip
+  spans the canvas's ACTUAL width with one factor on both axes (a clamped canvas never squeezes
+  text). Layout: image, full-width separator padded from it, colour bars, keys, north arrow and
+  scale bar (its length in strip units = the map's scale), then the descriptive text. Colour bars
+  carry title, ticks, units and u*,th only; no grid row / column anywhere; rose ring labels have no
+  halo. Text is placed with Helvetica / Arial advance widths (`export/texsvg.ts`).
+* **Symbols in exports** (`export/texsvg.ts`, `export/mathjax.ts`, `export/labels.ts`): every
+  label of the exported images may contain TeX ($...$): layer titles (`exportTitleTex`: the
+  English title with the symbol of `titleTex`, e.g. "Drift potential ($DP$)"), units
+  (`unitsTex`: upright with superscripts, $\mathrm{m^{2}\,yr^{-1}}$), the threshold ($u_{*,th}$),
+  mode legends ($\alpha_T$ ...), $DP$ / $RDP$ / $RDD$, axis labels and the captions (the on-screen
+  KaTeX carries its source in `data-tex`). Formulas are drawn as SVG paths by MathJax (TeX input,
+  SVG output, no font cache: glyphs embedded, no font dependence), scaled with the surrounding
+  text (x 1.18 for matching x-heights). MathJax is a separate chunk (about 1.6 MB, 590 kB gzipped)
+  loaded only when an image is exported; if it cannot be loaded the symbols fall back to plain text.
 * **Antimeridian**: both wind grids have an edge column that straddles ±180 (ERA5-Land
   −180.05..−179.95, ERA5 −180.125..−179.875). zarr-layer patch (`patches/`): raster x bounds are
   not clamped to ±180 (the column keeps its width; the part beyond −180 is drawn at x < 0, which

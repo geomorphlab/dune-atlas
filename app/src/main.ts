@@ -11,7 +11,7 @@ import { migrateLegacySpacing } from "./layerconfig";
 import { Store, normaliseOrder, type AppState, type LayerState } from "./store";
 import { defaultBasemap, setBasemap } from "./map/basemaps";
 import { OverlayManager, ensureSelectedCellLayers, restoreOverlays } from "./map/overlays";
-import { renderLayerPanel } from "./ui/layerPanel";
+import { setLayerPanelOpen, renderLayerPanel } from "./ui/layerPanel";
 import { versionFromPrefix } from "./cell/export";
 import { CellPanel, defaultFieldLabel, type FieldLabel } from "./ui/cellPanel";
 import { CellStore } from "./cell/cellstore";
@@ -19,6 +19,8 @@ import { cellFeature, cellFromIndex, snapToCell, ERA5_LAND_GRID, type Grid } fro
 import { C3S_NOTICE } from "./cell/citation";
 import { mathOnly } from "./util/math";
 import { shareFromHash, shareToUrlState, shareUrl, type ShareState } from "./share/shortlink";
+import { mapExportPixelRatio } from "./export/png";
+import { loadMathRenderer } from "./export/texsvg";
 import { captureMap, composeWithStrip, downloadBlob, mapExportFilename, mapStripSvg } from "./export/mapExport";
 import { Tour, shouldShowTour, tourSeen } from "./ui/tour";
 import { TOUR_STEPS } from "./ui/helpText";
@@ -153,14 +155,14 @@ async function exportMap(o: { basemap: boolean }) {
   const c = map.getCenter();
   const view = { lon: c.lng, lat: c.lat, zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch(), proj: store.state.projection };
   const link = shareLinkNow(), date = new Date(), cssWidth = map.getCanvas().clientWidth;
-  // one resolution: 300 dpi at the on-screen size (pixel ratio 300/96)
-  const canvas = await captureMap(map, { includeBasemap: o.basemap, isOwnLayer: (id) => id.startsWith("ov-"), settle: () => overlays.settled() });
-  const { blob } = await composeWithStrip(canvas, cssWidth, (scale) => mapStripSvg({ reg, state: store.state, view, width: cssWidth, includeBasemap: o.basemap, shareLink: link, date }, scale));
+  // one size: W = clamp(on-screen width x 1.5, 1600, 2400) px, text relative to W, tagged 300 dpi
+  const canvas = await captureMap(map, { scale: mapExportPixelRatio(cssWidth), includeBasemap: o.basemap, isOwnLayer: (id) => id.startsWith("ov-"), settle: () => overlays.settled() });
+  const math = await loadMathRenderer(); // symbols as SVG paths (lazy chunk); null: plain text
+  const { blob } = await composeWithStrip(canvas, (pxWidth) => mapStripSvg({ reg, state: store.state, view, width: cssWidth, includeBasemap: o.basemap, shareLink: link, date }, pxWidth, math));
   downloadBlob(mapExportFilename(store.state.dataset, view, date), blob);
 }
 function openAbout() {
-  const toggle = layerPanelEl.querySelector(".panel-toggle") as HTMLButtonElement | null;
-  if (toggle?.getAttribute("aria-expanded") === "false") toggle.click();
+  setLayerPanelOpen(layerPanelEl, true);
   const about = layerPanelEl.querySelector("details.about") as HTMLDetailsElement | null;
   if (!about) return;
   about.open = true;
