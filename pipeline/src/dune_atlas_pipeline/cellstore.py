@@ -68,7 +68,7 @@ def open_sources(data_dir, dataset=None):
 def load_masks(data_dir, dataset=None):
     """(land, dunes) boolean grid arrays from the dataset's mask file. ERA5-Land: layers.nc, where `land` equals
     the finite-qsat mask (verified for all 64 ut of dpm) and `dunes` is the canonical 106,540-cell mask.
-    ERA5: era5_cellmasks.nc (cellmasks.py): land = ERA5 lsm > 0.5, dunes = footprint overlaps a 0.1° dune cell."""
+    ERA5: era5_cellmasks.nc (cellmasks.py): land = ERA5 lsm > 0, dunes = footprint overlaps a 0.1° dune cell."""
     ds = get_dataset(dataset)
     with xr.open_dataset(f"{data_dir}/{ds.masks_file}") as L:
         return L["land"].values.astype(bool), L["dunes"].values.astype(bool)

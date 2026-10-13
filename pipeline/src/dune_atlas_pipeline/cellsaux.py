@@ -153,7 +153,7 @@ def build(out, data_dir, qsdiv_native: str, ai_npz: str | None = None, ai_means:
         write_variable(root, "lsm", lsm, land, {
             "long_name": f"{ds.name} land-sea mask (fraction of land)", "long_name_latex": r"\mathrm{lsm}", "units": "1",
             "description": (f"{ds.name} land-sea mask, the invariant fraction of the cell covered by land (0–1). Atlas "
-                            "land cells are those with lsm > 0.5; other cells have no data."),
+                            f"land cells are those with lsm > {ds.lsm_land_above:g}; other cells have no data."),
             "source": ds.info["data_citation"], "citation": ds.info["citation"], "doi": ds.info["doi"],
             "licence": ds.info["licence"], "notice": ds.info["copernicus_notice"]})
     return {"objects": count_objects(out), "variables": list(root.attrs["variables"])}

@@ -56,7 +56,7 @@ def make_era5_dir(d):
     land[BLOCK] = True
     land[EDGE] = True
     land[BLOCK][::7, ::5] = False                     # some interior non-land cells (view assignment)
-    lsm = np.where(land, 0.9, 0.1)
+    lsm = np.where(land, 0.9, 0.0)
     dunes = np.zeros(g.shape, bool); dunes[260:270, 710:720] = True; dunes[300, 760] = True
     xr.Dataset({"land": (("latitude", "longitude"), land.astype("u1")),
                 "dunes": (("latitude", "longitude"), dunes.astype("u1")),
@@ -208,12 +208,17 @@ def test_cellmasks_build(tmp_path):
     dunes01 = np.zeros(ERA5_LAND_GRID.shape, "u1"); dunes01[1000, 2000] = 1; dunes01[500:503, 100] = 1
     xr.Dataset({"dunes": (("latitude", "longitude"), dunes01), "land": (("latitude", "longitude"), dunes01)}
                ).to_netcdf(d / "layers.nc")
-    lsm = np.zeros(ERA5_GRID.shape, "f4")
+    lsm = np.zeros(ERA5_GRID.shape, "f8")
     np.save(d / "lsm.npy", lsm)
     st = CM.build(str(d / "lsm.npy"), str(d), str(d / "m.nc"))
     assert st["land_cells"] == 0 and st["dune_cells"] >= 2 and st["dune_cells_land"] == 0
     assert st["dune_cells_0p1_without_era5_land"] == 4
-    assert abs(st["dune_area_in_lsm_le_0p5_cells_km2"] - st["dune_area_0p1_km2"]) < 1e-6 * st["dune_area_0p1_km2"]
+    assert abs(st["dune_area_in_not_land_cells_km2"] - st["dune_area_0p1_km2"]) < 1e-6 * st["dune_area_0p1_km2"]
+    # land = lsm > 0 (strict): the smallest positive packed value counts, exact zero does not
+    lsm[100, 100] = 1.5259487586405385e-05; lsm[101, 100] = 0.5
+    np.save(d / "lsm.npy", lsm)
+    st = CM.build(str(d / "lsm.npy"), str(d), str(d / "m2.nc"))
+    assert st["land_cells"] == 2 and st["land_definition"] == "lsm > 0"
     with xr.open_dataset(d / "m.nc") as M:
         assert M.dunes.values.sum() == st["dune_cells"] and M.land.values.sum() == 0
 

@@ -1,12 +1,16 @@
 """Build the ERA5 atlas cell store (cells.zarr) next to the data (PBS job on Gadi), validate it against the source
 stores, write a reference sample for the public check after upload, and pack it into transfer tars.
 
-    python era5_atlas_cells.py DATA_DIR OUT_DIR [--workers 8]
+    python era5_atlas_cells.py DATA_DIR OUT_DIR [--workers 8] [--qsat-subset] [--split-mb 200]
 
 DATA_DIR holds the two ERA5 source stores (or links to them) and era5_cellmasks.nc (cellmasks.py). OUT_DIR gets
 cells.zarr (+ manifest), validate.json, reference_sample.npz (300 random land cells: histogram + 23 x 64 fields
 as float32; 100 random other cells), tars cells_meta.tar and cells_rows_<a>_<b>.tar (shard rows a..b of both
-sharded arrays), and cells_summary.json (object counts, bytes, md5 per tar).
+sharded arrays), and cells_summary.json (object counts, bytes, md5 per tar). The reference sample draws 250 cells
+from all land cells and 50 from the land cells with lsm <= 0.5 (if any).
+--qsat-subset: also a land-cell copy of the qsat store (era5_atlas_prep.subset_qsat, land from era5_cellmasks.nc)
+and its tar, for the field pyramids. --split-mb: split every tar into parts of this size (parts/, md5 in
+parts/parts.md5) for transfers with a per-file size limit.
 """
 import argparse
 import json
@@ -22,6 +26,8 @@ def main(argv=None):
     p = argparse.ArgumentParser()
     p.add_argument("data"); p.add_argument("out"); p.add_argument("--workers", type=int, default=8)
     p.add_argument("--rows-per-tar", type=int, default=8)
+    p.add_argument("--qsat-subset", action="store_true")
+    p.add_argument("--split-mb", type=int, default=0)
     a = p.parse_args(argv)
     import xarray as xr
     import zarr
@@ -43,16 +49,22 @@ def main(argv=None):
     lg(json.dumps(summ["validate"]))
     # reference sample from the source stores (not from the written store)
     land, dunes = CS.load_masks(a.data, ds)
+    with xr.open_dataset(f"{a.data}/{ds.masks_file}") as M:
+        lsm = M["lsm"].values
     rng = np.random.default_rng(2026)
     L, O = np.argwhere(land), np.argwhere(~land)
-    li = L[rng.choice(len(L), 300, replace=False)]
+    Lp = np.argwhere(land & (lsm <= 0.5))
+    if len(Lp):
+        li = np.concatenate([L[rng.choice(len(L), 250, replace=False)], Lp[rng.choice(len(Lp), 50, replace=False)]])
+    else:
+        li = L[rng.choice(len(L), 300, replace=False)]
     oi = O[rng.choice(len(O), 100, replace=False)]
     dh = xr.open_zarr(f"{a.data}/{ds.hist_store}", consolidated=False)
     dq = xr.open_zarr(f"{a.data}/{ds.qsat_store}", consolidated=False)
     H = np.stack([dh.histogram_um_ua[i, j].values for i, j in li]).astype("u4")
     Fv = np.stack([np.stack([dq[v][:, i, j].values for v in CS.FIELD_VARS]) for i, j in li]).astype("f4")
     np.savez_compressed(os.path.join(a.out, "reference_sample.npz"), land_cells=li, other_cells=oi, hist=H,
-                        fields=Fv, field_vars=np.array(CS.FIELD_VARS))
+                        fields=Fv, field_vars=np.array(CS.FIELD_VARS), lsm=lsm[li[:, 0], li[:, 1]].astype("f4"))
     # pack
     g = zarr.open_group(out, mode="r")
     ny = g["hist"].shape[0]
@@ -77,12 +89,38 @@ def main(argv=None):
                if os.path.isdir(os.path.join(out, arr, "c", str(i)))]
         if mem:
             tar(f"cells_rows_{r0:02d}_{r1:02d}.tar", mem)
+    if a.qsat_subset:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import era5_atlas_prep as P
+        lg("qsat land-cell copy")
+        os.makedirs(os.path.join(a.out, "subset"), exist_ok=True)
+        P.subset_qsat(a.data, os.path.join(a.out, "subset"), land,
+                      note=f"atlas land cells ({ds.info['land_cells']}); no data elsewhere")
+        summ["qsat_subset_check"] = P.check_qsat(a.data, os.path.join(a.out, "subset"), land)
+        path = os.path.join(a.out, f"{P.QSAT}.tar")
+        subprocess.run(["tar", "-cf", path, "-C", os.path.join(a.out, "subset"), P.QSAT], check=True)
+        md5 = subprocess.run(["md5sum", path], check=True, capture_output=True, text=True).stdout.split()[0]
+        tars[os.path.basename(path)] = {"bytes": os.path.getsize(path), "md5": md5}
+        lg(json.dumps(summ["qsat_subset_check"]))
+    if a.split_mb:
+        pd = os.path.join(a.out, "parts"); os.makedirs(pd, exist_ok=True)
+        for name in tars:
+            subprocess.run(["split", "-b", f"{a.split_mb}M", "-d", "-a", "2", os.path.join(a.out, name),
+                            os.path.join(pd, name + ".part")], check=True)
+        parts = sorted(os.listdir(pd))
+        md5s = subprocess.run(["md5sum"] + parts, cwd=pd, check=True, capture_output=True, text=True).stdout
+        open(os.path.join(pd, "parts.md5"), "w").write(md5s)
+        for name in tars:
+            tars[name]["parts"] = len([x for x in parts if x.startswith(name + ".part")])
     st = CS.store_stats(out)
     summ.update({"store": st, "tars": tars})
     json.dump(summ, open(os.path.join(a.out, "cells_summary.json"), "w"), indent=1)
     lg(json.dumps({"tars": tars, "total": st["total"]}))
     ok = (v["hist_exact"] == v["n_checked"] == v["fields_exact_float32"] and v.get("ocean_fill") == v.get("ocean_checked")
           and not m["anomalies"])
+    if a.qsat_subset:
+        q = summ["qsat_subset_check"]
+        ok = ok and q["qsat_identical"] == q["land_checked"] and q["other_empty"] == q["other_checked"]
     sys.exit(0 if ok else 1)
 
 

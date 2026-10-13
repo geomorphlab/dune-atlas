@@ -6,8 +6,9 @@ R² Δλ (sin φ_north − sin φ_south). Rows are clipped to ±90° (the 0.1° 
 The 0.1° edges (odd multiples of 0.05°) and the 0.25° edges (odd multiples of 0.125°) never coincide, so every
 overlap is either zero or at least 0.025° wide.
 
-* `land`  = ERA5 land-sea mask lsm > 0.5 (the invariant ERA5 field; `era5_lsm.npy` from
-  pipeline/gadi/era5/era5_atlas_prep.py), `lsm` kept per cell;
+* `land`  = ERA5 land-sea mask fraction lsm > 0 (grid.DATASETS["era5"].lsm_land_above; the invariant ERA5 field,
+  `era5_lsm.npy` from pipeline/gadi/era5/era5_atlas_prep.py; packed lsm unpacks to exactly 0.0 for no land),
+  `lsm` kept per cell;
 * `dunes` = the target cell footprint overlaps at least one 0.1° dune cell (layers.nc `dunes`, = dune-mask-rev1);
 * `area_weighted_mean` regrids a 0.1° field (e.g. vegetation cover) as the area-weighted mean of the valid 0.1°
   cells over the footprint, with the valid area fraction.
@@ -89,7 +90,7 @@ class Regrid:
         return np.asarray((self.Wx.T @ t.T).T) > 0                    # (src.ny, src.nx)
 
 
-def build(lsm_path: str, data_dir: str, out: str, dst: Grid = ERA5_GRID) -> dict:
+def build(lsm_path: str, data_dir: str, out: str, dst: Grid = ERA5_GRID, land_above: float | None = None) -> dict:
     """era5_cellmasks.nc (land, dunes, lsm on the ERA5 grid) + statistics of dune cells without ERA5 land."""
     import xarray as xr
     lsm = np.load(lsm_path).astype("f8")
@@ -97,7 +98,9 @@ def build(lsm_path: str, data_dir: str, out: str, dst: Grid = ERA5_GRID) -> dict
     with xr.open_dataset(f"{data_dir}/layers.nc") as L:
         dunes01 = L["dunes"].values.astype(bool)
     assert dunes01.shape == ERA5_LAND_GRID.shape
-    land = lsm > 0.5
+    from .grid import DATASETS
+    thr = DATASETS["era5"].lsm_land_above if land_above is None else land_above
+    land = lsm > thr
     R = Regrid(dst, ERA5_LAND_GRID)
     dune_area = R.overlap_area(dunes01)                    # / R^2
     dunes = dune_area > 0
@@ -105,11 +108,12 @@ def build(lsm_path: str, data_dir: str, out: str, dst: Grid = ERA5_GRID) -> dict
     src_area = cell_area_factor(ERA5_LAND_GRID) * np.ones((1, ERA5_LAND_GRID.nx))
     lost_src = dunes01 & ~R.source_touches(land)           # 0.1° dune cells overlapping no ERA5 land cell
     st = {
-        "grid": dst.attrs(), "land_cells": int(land.sum()), "lsm_eq_0p5": int((lsm == 0.5).sum()),
+        "grid": dst.attrs(), "land_definition": f"lsm > {thr:g}", "land_cells": int(land.sum()),
+        "lsm_eq_threshold": int((lsm == thr).sum()),
         "dune_cells_0p1": int(dunes01.sum()), "dune_area_0p1_km2": float(src_area[dunes01].sum() * km2),
         "dune_cells": int(dunes.sum()), "dune_cells_land": int((dunes & land).sum()),
-        "dune_cells_lsm_le_0p5": int((dunes & ~land).sum()),
-        "dune_area_in_lsm_le_0p5_cells_km2": float(dune_area[dunes & ~land].sum() * km2),
+        "dune_cells_not_land": int((dunes & ~land).sum()),
+        "dune_area_in_not_land_cells_km2": float(dune_area[dunes & ~land].sum() * km2),
         "dune_area_in_land_cells_km2": float(dune_area[dunes & land].sum() * km2),
         "dune_cells_0p1_without_era5_land": int(lost_src.sum()),
         "dune_area_0p1_without_era5_land_km2": float(src_area[lost_src].sum() * km2),
@@ -118,7 +122,8 @@ def build(lsm_path: str, data_dir: str, out: str, dst: Grid = ERA5_GRID) -> dict
     lat, lon = dst.lat(), dst.lon()
     ds = xr.Dataset(
         {"land": (("latitude", "longitude"), land.astype("u1"), {
-            "long_name": "atlas land cell", "flag_values": [0, 1], "definition": "ERA5 land-sea mask lsm > 0.5"}),
+            "long_name": "atlas land cell", "flag_values": [0, 1],
+            "definition": f"ERA5 land–sea mask fraction > {thr:g}"}),
          "dunes": (("latitude", "longitude"), dunes.astype("u1"), {
              "long_name": "cell footprint overlaps a 0.1° dune cell", "flag_values": [0, 1],
              "definition": "at least one 0.1° cell of the dune map (dune-mask-rev1) overlaps the cell footprint"}),

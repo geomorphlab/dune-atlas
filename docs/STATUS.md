@@ -58,24 +58,29 @@ sizes + 13,050 new, 1.27 GB; create-only `If-None-Match: *` puts):
 | Google Sites page (§E) | live app | `docs/google-sites.md` |
 | UI iteration | you + me | `VITE_DATA_BASE=https://data.geomorphlab.org npm run dev` |
 
-## ERA5 dataset (0.25°): stores uploaded and verified (2026-10-13)
-`https://data.geomorphlab.org/dune-atlas/v1/datasets/era5/` — new prefix, new keys only (live listing before 48,903
-objects; after 57,566 = 48,903 unchanged + 8,663 new, 5.064 GB): `cells.zarr` (3,957 objects, 3.706 GB),
-23 × `fields/<var>.zarr` + `fields/qsdiv.zarr` (24 × 80 objects, 1.262 GB), `cells-aux.zarr` (2,462, 94.8 MB),
-`cells-aux-veg.zarr` (324, 0.84 MB). Layout `docs/storage-layout.md` §6; checks `docs/validation-era5.md` §4–6.
-- Source stores (Gadi scratch, built 2026-10-13, 141 SU): `era5_1950_2024_uam10_hist.zarr`,
-  `era5_1950_2024_qsat_params.zarr`; retention copy in `/g/data/k10/ag5517/dune-atlas/era5/` (identical, 22.1 GB).
-- Atlas build on Gadi: 10.3 SU (prep 6.85, cell store 2.74, retention copy 0.66, split 0.02); pyramids and sidecars
-  built locally.
-- Land cells: ERA5 lsm > 0.5 (351,848); dunes: 0.25° footprint overlaps a 0.1° dune cell (27,034; 703 of them with
-  lsm ≤ 0.5 and no wind data, holding 72,937 km² of 0.1° dune area).
-- Public checks: 300/300 land cells bit-identical (histograms, fields, all sidecar arrays), 100/100 other cells
-  empty, 216/216 pyramid windows identical, ranges 206, CORS for map.geomorphlab.org and localhost:5173.
-- Pipeline: `grid.py` (`Grid`, `DATASETS`), every builder takes `--dataset era5-land|era5` (default unchanged);
-  ERA5-Land outputs byte-identical to the previous commit (14,807 files); 95 Python tests.
+## ERA5 dataset (0.25°): stores uploaded and verified
+**Current: `https://data.geomorphlab.org/dune-atlas/v2/datasets/era5/` (2026-10-14), land = ERA5 land–sea mask
+fraction > 0** (394,899 cells). New keys only (listing before 57,566 objects, after 67,105; v1 unchanged): `cells.zarr`
+(4,443 objects, 4.276 GB), 23 × `fields/<var>.zarr` + `fields/qsdiv.zarr` (1,920, 1.433 GB), `cells-aux.zarr`
+(2,797, 107.1 MB), `cells-aux-veg.zarr` (379, 1.1 MB) — 9,539 objects, 5.817 GB. Layout `docs/storage-layout.md` §6;
+checks `docs/validation-era5.md` §4–6.
+- First build (land = lsm > 0.5, 351,848 cells; 8,663 objects, 5.064 GB) stays at `dune-atlas/v1/datasets/era5/` until
+  the app has switched; removal only with the author's approval.
+- Source stores (global, unchanged): Gadi scratch and the retention copy `/g/data/k10/ag5517/dune-atlas/era5/`
+  (identical, 22.1 GB); built 2026-10-13 (141 SU).
+- Atlas builds on Gadi: first build 10.3 SU; v2 6.69 SU (cell store + land-cell qsat copy + parts 6.49, per-variable
+  tars 0.11, per-object MD5 list 0.09). Pyramids and sidecars built locally, one variable at a time.
+- lsm > 0 vs lsm > 0.5: +43,051 cells (41,015 coastal, 1,144 lake/inland-water fringe, 892 isolated partial-land);
+  dune-overlapping cells without wind data 703 → 1 (7.0 km² of 0.1° dune area); qsdiv defined at 374,450 land cells
+  (17,214 former coastal cells now have a value; values present in both builds identical).
+- Public checks (default mode of `scripts/verify_era5_r2.py`): all 9,539 objects match their MD5 (ETag) and size;
+  20/20 land cells (10 with 0 < lsm ≤ 0.5, 3 dune cells) bit-identical through the app's CellStore, 5/5 non-land
+  cells empty, 10/10 pyramid windows, suffix range 206, CORS for map.geomorphlab.org.
+- Pipeline: `grid.py` (`Grid`, `DATASETS`, `lsm_land_above`), every builder takes `--dataset era5-land|era5`;
+  ERA5-Land outputs byte-identical to the previous commit (14,807 files).
 
 **For the app agent (dataset selector):**
-1. Registry: add `registry/datasets/era5/dataset.yaml` to `datasets` in `registry/layers.yaml` (prefix
+1. Registry: `registry/datasets/era5/dataset.yaml` (prefix **`dune-atlas/v2/datasets/era5`** since 2026-10-14; was
    `dune-atlas/v1/datasets/era5`, `cellAuxStores: ['{dataset}/cells-aux.zarr', '{dataset}/cells-aux-veg.zarr']`).
    Field and qsdiv layers must use `{dataset}` sources (`'{dataset}/fields/<var>.zarr'`; the generated
    `qsat_fields.yaml` / `x_extra_fields.yaml` still write `dune-atlas/v1/fields/...`). `registry/datasets/era5/

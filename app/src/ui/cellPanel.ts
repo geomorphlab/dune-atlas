@@ -330,7 +330,7 @@ export class CellPanel {
       const ds = this.#ds(cell);
       const other = Object.values(DATASET_INFO).find((x) => x.id !== ds.id);
       body.innerHTML = `<div class="empty-state"><p><strong>Outside the ${escapeHtml(ds.name)} land mask</strong></p>
-        <p>The atlas computes wind roses and sand-flux statistics only for land cells (${escapeHtml(ds.name)} land–sea mask fraction &gt; 0.5). This cell is mainly water, so no statistics are stored for it. Choose a nearby land cell${other ? `, or switch to ${escapeHtml(other.name)} (coastal cells can differ between the two land masks)` : ""}.</p>
+        <p>The atlas computes wind roses and sand-flux statistics only for land cells (${escapeHtml(ds.name)} land–sea mask fraction &gt; ${ds.landThreshold}). ${escapeHtml(ds.nonLandReason)}, so the atlas has no statistics for it. Choose a nearby land cell${other ? `, or switch to ${escapeHtml(other.name)} (coastal cells can differ between the two land masks)` : ""}.</p>
         <p class="help">${ds.resolution} cell: row ${cell.iy}, column ${cell.ix}; centre ${fmtLat(cell.lat)}, ${fmtLon(cell.lon)}.</p></div>`;
       return;
     }

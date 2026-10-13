@@ -123,6 +123,7 @@ class WindDataset:
     qsat_is_atlas: bool             # True: the qsat store holds the atlas field definitions directly
     period: str = "1950–2024"
     info: dict = field(default_factory=dict)   # `dataset` attrs of the atlas stores (None for ERA5-Land)
+    lsm_land_above: float | None = None        # land cells = land-sea mask fraction > this (datasets with an lsm)
 
     @property
     def resolution(self) -> str:
@@ -142,7 +143,7 @@ ERA5_INFO = {
     "doi": "10.24381/cds.adbb2d47",
     "licence": "Copernicus licence (Licence to use Copernicus products)",
     "copernicus_notice": COPERNICUS_NOTICE.format(name="ERA5", period="1950–2024"),
-    "land_cells": "cells with ERA5 land-sea mask lsm > 0.5 (invariant field)",
+    "land_cells": "ERA5 land–sea mask fraction > 0 (invariant field lsm, given per cell in cells-aux.zarr)",
     "fields_method": "23 sand-flux fields at 64 threshold friction velocities from the per-cell wind histograms, "
                      "time-averaged over the hourly record (histogram-weighted means), following Gunn (2026) "
                      "Nat Commun doi:10.1038/s41467-026-75466-y",
@@ -156,7 +157,8 @@ DATASETS = {
     "era5": WindDataset(
         id="era5", name="ERA5", grid=ERA5_GRID, n_hours=657456,
         hist_store="era5_1950_2024_uam10_hist.zarr", qsat_store="era5_1950_2024_qsat_params.zarr",
-        masks_file="era5_cellmasks.nc", land_only_source=False, qsat_is_atlas=True, info=ERA5_INFO),
+        masks_file="era5_cellmasks.nc", land_only_source=False, qsat_is_atlas=True, info=ERA5_INFO,
+        lsm_land_above=0.0),
 }
 
 

@@ -21,7 +21,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "pipeline" / "src"))
-PREFIX = "dune-atlas/v1/datasets/era5"
+PREFIX = "dune-atlas/v2/datasets/era5"   # --prefix; the first ERA5 build (land = lsm > 0.5) is under v1
 
 
 def md5(p):
@@ -38,18 +38,20 @@ def main():
     ap.add_argument("--files", required=True); ap.add_argument("--store", default="cells.zarr")
     ap.add_argument("--work", required=True); ap.add_argument("--extract", required=True)
     ap.add_argument("--summary", help="Gadi cells_summary.json (tar md5)"); ap.add_argument("--target", default="r2")
+    ap.add_argument("--prefix", default=PREFIX)
     ap.add_argument("tars", nargs="+")
     a = ap.parse_args()
+    prefix = a.prefix.strip("/")
     log = lambda m: print(time.strftime("%H:%M:%S"), m, flush=True)  # noqa: E731
     planned = {}
     for line in Path(a.files).read_text().splitlines():
         rel, size = line.rsplit(" ", 1)
-        planned[f"{PREFIX}/{a.store}/{rel}"] = int(size)
+        planned[f"{prefix}/{a.store}/{rel}"] = int(size)
     target = su.make_target(a.target)
     work = Path(a.work); work.mkdir(parents=True, exist_ok=True)
-    ledger = su.Ledger(work / f"uploaded-new-{PREFIX.replace('/', '_')}.json")
+    ledger = su.Ledger(work / f"uploaded-new-{prefix.replace('/', '_')}.json")
     existing = target.list_keys("dune-atlas/")
-    mine = su.check_new_keys(planned, existing, [f"{PREFIX}/{a.store}"], ledger, resume=True)
+    mine = su.check_new_keys(planned, existing, [f"{prefix}/{a.store}"], ledger, resume=True)
     log(f"live listing {len(existing)} objects; planned {len(planned)} keys ({sum(planned.values()) / 1e9:.3f} GB); "
         f"0 collisions; {len(mine)} already uploaded by an earlier run")
     sums = json.load(open(a.summary))["tars"] if a.summary else {}
@@ -59,7 +61,7 @@ def main():
         if t.name in sums:
             got = md5(t)
             assert got == sums[t.name]["md5"], (t.name, got)
-        r = su.upload_new_tar(target, ledger, t, PREFIX, planned, a.extract, log=log)
+        r = su.upload_new_tar(target, ledger, t, prefix, planned, a.extract, log=log)
         r["md5_checked"] = t.name in sums
         log(json.dumps(r)); out.append(r)
     print(json.dumps(out))

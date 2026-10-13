@@ -183,10 +183,12 @@ for c in cells:
     assert list(meta["aux"]) == ["qsdiv", "ai_mean", "ai_valid_frac", "ai_sat_frac", "tot_cov_mean", "tot_cov_valid_frac"], list(meta["aux"])
     assert meta["conventions"]["dune_present"] == "1 = the cell overlaps at least one 0.1° dune cell of the dune map (Gunn 2026)"
     if ERA5:
-        assert "lsm" in aux and float(aux["lsm"][iy, ix]) > 0.5  # land cell by the ERA5 mask (not exported)
+        assert "lsm" in aux and float(aux["lsm"][iy, ix]) > 0  # land cell by the ERA5 mask (lsm > 0; not exported)
+        assert meta["conventions"]["land_cells"] == "wind data: land cells (land–sea mask fraction above 0, i.e. any land in the cell); cells without land have no wind data"
         assert "0.25° cell" in ds["ai_mean"].attrs["description"] and "/ 900" in ds["ai_valid_frac"].attrs["description"]
         assert meta["grid"]["resolution"] == "0.25°"
     else:
+        assert meta["conventions"]["land_cells"] == "wind data: land cells (land–sea mask fraction above 0.5); ocean cells have no wind data"
         assert "0.1° cell" in ds["ai_mean"].attrs["description"] and "/ 144" in ds["ai_valid_frac"].attrs["description"]
     assert [x["source"] for x in meta["citation"]] == ["Dune Atlas / dune map", "ERA5" if ERA5 else "ERA5-Land", "Global Aridity Index (Global-AI_PET v3.1)", "Vegetation cover (CSIRO MODIS Fractional Cover v3.1)"]
     vc = meta["citation"][3]

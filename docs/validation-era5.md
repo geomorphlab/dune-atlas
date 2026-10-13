@@ -117,11 +117,13 @@ DP = 0 at 20 (ERA5-Land) and 12 (ERA5) dune cells. Globally, 1,000 ERA5 cells ha
 
 ## Decisions taken for the atlas build
 
-- **Land cells** = ERA5 land–sea mask lsm > 0.5. `lsm` is the invariant ERA5 field
+- **Land cells** = ERA5 land–sea mask fraction **lsm > 0** (strictly). `lsm` is the invariant ERA5 field
   (`/g/data/rt52/era5/single-levels/reanalysis/lsm`, int16 packed, unpacked in float64): identical over all 744
-  steps of the 2000-01 file and, at the first step, in the 1950-01, 1979-01 and 2024-12 files (max |Δ| = 0). No cell
-  has lsm = 0.5 exactly. 351,848 land cells (33.9 % of 1,038,240); lsm > 0 in 394,899 cells. `lsm` itself is kept
-  per land cell in `cells-aux.zarr`. The ERA5-Land land mask is not used for this dataset.
+  steps of the 2000-01 file and, at the first step, in the 1950-01, 1979-01 and 2024-12 files (max |Δ| = 0). The packed
+  minimum unpacks to exactly 0.0 (643,341 cells), the smallest positive value is 1.5 × 10⁻⁵. Land cells: **394,899**
+  (38.0 % of 1,038,240). `lsm` itself is kept per land cell in `cells-aux.zarr`. The ERA5-Land land mask is not used.
+  The first build of these stores used lsm > 0.5 (351,848 cells) and is kept under `dune-atlas/v1/datasets/era5/`
+  until the app has switched; the current stores are under `dune-atlas/v2/datasets/era5/`.
 - **Dune presence** (`cells.zarr` `dunes`) = the 0.25° footprint overlaps at least one 0.1° dune cell of the dune
   map (`layers.nc` `dunes` = dune-mask-rev1). No fractional dune cover is stored.
 - **Overlap weights** (dune overlap, vegetation regrid): exact spherical areas of the intersecting lat/lon rectangles,
@@ -129,7 +131,8 @@ DP = 0 at 20 (ERA5-Land) and 12 (ERA5) dune cells. Globally, 1,000 ERA5 cells ha
   0.25° edges (odd multiples of 0.125°) never coincide, so every overlap is zero or at least 0.025° wide.
 - **Hour count** per dataset: `cells.zarr` `n_hours` = 657,456 (ERA5-Land store: 657,455); `grid.DATASETS`.
 - **Fields** = the qsat store as computed (`qsat_compute.py` already gives the time-averaged definitions), float32
-  in `cells.zarr`, display units in the pyramids; only land cells carry values.
+  in `cells.zarr`, display units in the pyramids; only land cells carry values. The global source stores are
+  unchanged; only the derived atlas stores depend on the land definition.
 - **Flux divergence** from ERA5 `rdpm`/`rdpa` (all 64 thresholds) with the ERA5-Land method (`qsdiv.py`: spherical
   divergence, central differences, periodic in longitude, ±90° rows no data); rdpm/rdpa are first limited to the
   land cells, so a land cell next to a non-land cell has no value, as at ERA5-Land coasts.
@@ -139,64 +142,79 @@ DP = 0 at 20 (ERA5-Land) and 12 (ERA5) dune cells. Globally, 1,000 ERA5 cells ha
 ## 4. Atlas stores
 
 Layout and object counts: `docs/storage-layout.md` §6. Code: `pipeline/src/dune_atlas_pipeline/grid.py` (grids and
-dataset descriptions), `cellmasks.py`, the dataset-aware `cellstore`, `fields`, `qsat_view`, `qsdiv`, `cellsaux`,
-`vegetation`, `cogs`, `dataset_registry.py`; Gadi steps `pipeline/gadi/era5/era5_atlas_prep.py` (lsm, land-cell
-copies of the qsat store for transfer) and `era5_atlas_cells.py` (cell store next to the data); local steps
-`scripts/build_era5_atlas.sh`.
+dataset descriptions, `lsm_land_above`), `cellmasks.py`, the dataset-aware `cellstore`, `fields`, `qsat_view`,
+`qsdiv`, `cellsaux`, `vegetation`, `cogs`, `dataset_registry.py`; Gadi steps `pipeline/gadi/era5/era5_atlas_prep.py`
+(lsm) and `era5_atlas_cells.py` (cell store next to the data, land-cell qsat copy, transfer parts); local steps
+`scripts/build_era5_fields_pervar.py` (pyramids and flux divergence one variable at a time) and the sidecar commands
+in `scripts/build_era5_atlas.sh`.
 
 **Pipeline generalisation (regression).** Building ERA5-Land pieces with the generalised code and with the previous
 commit (`scripts/check_era5land_regression.py --full`: fixture-region cell store, three field pyramids, the global
 qsdiv pyramid and staging copy, global `cells-aux.zarr` and `cells-aux-veg.zarr`, DP COG array and transform,
-registry fragments) gives 14,807 / 14,807 byte-identical files. `pipeline/tests/test_era5_grid.py` covers a synthetic
-0.25° fixture (grid parsing and edges, cell store incl. the 1-row edge shard, pyramid levels and edges, divergence
-against an analytic field, exact-area regrid and dune overlap against brute force, sidecars).
+registry fragments) gives 14,807 / 14,807 byte-identical files (run again after the change of land definition).
+`pipeline/tests/test_era5_grid.py` covers a synthetic 0.25° fixture (grid parsing and edges, cell store incl. the
+1-row edge shard, pyramid levels and edges, divergence against an analytic field, exact-area regrid and dune overlap
+against brute force, the strict lsm > 0 rule, sidecars).
 
-**Dune cells.** 27,034 cells of 0.25° overlap a 0.1° dune cell; 26,331 of them are land cells. 703 dune-overlapping
-cells have lsm ≤ 0.5 (no wind data); they contain 72,937 km² of 0.1° dune area (0.63 % of the 11,614,510 km² of the
-106,540 0.1° dune cells). 290 0.1° dune cells (30,563 km², 0.26 %) overlap no ERA5 land cell at all.
+**Cells added by lsm > 0** (43,051 with 0 < lsm ≤ 0.5; `staging/era5/atlas_v2/new_cells_classes.json`): 41,015
+coastal (connected to the ocean through cells with lsm ≤ 0.5), 1,144 on the fringe of lakes / inland water (an lsm = 0
+water body other than the ocean), 892 isolated partial-land cells (no lsm = 0 cell in their cluster; median lsm
+0.34). Their lsm quartiles are 0.0099, 0.0842,
+0.2586; 4,174 lie south of 60° S.
 
-**Cell store** (built on Gadi from the scratch stores; 149 s with 8 workers): 1,960 land shards per sharded array, no
-anomalies. Independent check of 500 random land cells against the source stores: histograms identical, 23 × 64
-field vectors identical to the float32 cast of the source; DP/RDP/RDD recomputed from the stored histograms agree
-with the source fields to ≤ 2.1 × 10⁻¹⁵ relative (ut indices 0, 14, 30, 63); 200 / 200 non-land cells empty; every
-non-land shard absent and non-land inner chunks absent from the shard indices. Histogram sums: 366 of 500 cells
-equal 657,456, the rest are short by the hours above 20 m/s (max 37,596 h, 5.7 %).
+**Dune cells.** 27,034 cells of 0.25° overlap a 0.1° dune cell; 27,033 of them are land cells. **1**
+dune-overlapping cell is not land (lsm = 0); it contains 7.0 km² of 0.1° dune area
+(with lsm > 0.5: 703 cells, 72,937 km²). Every 0.1° dune cell overlaps at least one land cell (with lsm > 0.5: 290 did not,
+30,563 km²). The 106,540 0.1° dune cells cover 11,614,510 km².
 
-**Field pyramids** (23 + qsdiv; `staging/era5/atlas/pyramid_checks.json`): 4 levels each (1440, 720, 360, 180 px),
-per-level transforms exact; at three random thresholds per store the native level equals the display values of the
-source within the 12-bit rounding (≤ 1.22 × 10⁻⁴ relative), no value outside the land cells, and at every coarser
-level a pixel has a value exactly where its window contains a land value (coastal-safe coarsening). In the qsdiv
-staging copy, 4 subnormal values (|∇·q| < 3.1 × 10⁻⁴¹ m/yr) round to 0.
+**Cell store** (PBS 181171085 on Gadi, 425 s with 8 workers): 2,203 land shards per sharded array, no anomalies.
+Independent check of 500 random land cells against the global source stores: histograms identical, 23 × 64 field
+vectors identical to the float32 cast of the source; DP/RDP/RDD recomputed from the stored histograms agree with the
+source fields to ≤ 3.0 × 10⁻¹⁵ relative; 200 / 200 non-land cells empty; non-land shards and inner chunks absent.
+Histogram sums: 344 of 500 cells equal 657,456, the rest are short by the hours above 20 m/s (max 28,255 h, 4.3 %).
 
-**Sidecars** (`aux_checks.json`): every array equals its input on all land cells and has no data elsewhere.
-`qsdiv` finite at 333,062 land cells at u*,th = 0.15 m/s; over the dune-overlapping cells median −0.016 m/kyr,
-60.5 % negative, 2–98 % range −0.27 to +0.27 m/kyr (ERA5-Land: ±0.30). `ai_mean` defined at 244,320 land cells
-(the source ends at 60° S), `tot_cov_mean` at 223,019.
+**Field pyramids** (23 + qsdiv; `staging/era5/atlas_v2/pyramid_checks.json`): 4 levels each (1440, 720, 360, 180 px),
+per-level transforms exact; at three random thresholds per store, the native level at the 300 reference cells equals
+the display values of the source within the 12-bit rounding (≤ 1.22 × 10⁻⁴ relative), no value outside the land
+cells, and at every coarser level a pixel has a value exactly where its window contains a land value. In the qsdiv
+staging copy a few subnormal values (|∇·q| < 10⁻⁴⁰ m/yr) round to 0.
+
+**Flux divergence and coasts** (u*,th = 0.15 m/s; `qsdiv_v1_v2_ut14.json`): defined at 374,450 of 394,899
+land cells (20,449 land cells without a value: next to a non-land cell or on a ±90° row), against 333,062
+of 351,848 with lsm > 0.5. 17,214 cells that were coastal under lsm > 0.5 now have a value; values present in both
+builds are identical (333,062 / 333,062); of the 43,051 added cells, 24,174 have a value. At dune cells:
+26,858 with a value (was 25,359), median -0.018 m/kyr,
+61.4 % negative, 2–98 % range -0.40 to +0.29 m/kyr.
+
+**Sidecars** (`aux_checks.json`): every array equals its input on all land cells and has no data elsewhere
+(`qsdiv` at all 64 thresholds); `ai_mean` defined at 264,129 land cells (the source ends at 60° S), `tot_cov_mean` at
+244,104; `lsm` ≥ 1.5 × 10⁻⁵ on every land cell.
 
 **Colour limits.** `registry/datasets/era5/qsat_field_metadata.json` holds p2/p98 at u*,th = 0.15 m/s over the ERA5
-land cells; the p98 of every flux field is within 7 % of the ERA5-Land value (DP 1.07 vs 1.01 × 10⁻⁵ m²/s).
+land cells.
 
-**Metadata text.** All `zarr.json` attributes of the ERA5 stores and the registry files contain none of the terms of
-the public-text and repository denylists (618 texts scanned).
+**Metadata text.** The `zarr.json` attributes of the ERA5 v2 pyramid and sidecar stores and the registry files
+contain no term of the public-text and repository denylists.
 
-## 5. Upload and public checks (https://data.geomorphlab.org/dune-atlas/v1/datasets/era5)
+## 5. Upload and public checks (https://data.geomorphlab.org/dune-atlas/v2/datasets/era5)
 
-Create-only (`If-None-Match: *`) puts after a live listing of all of `dune-atlas/` (48,903 objects, 30.19 GB);
-the planned key set (8,663 objects, 5.064 GB) had no collision. `cells.zarr` arrived from Gadi as md5-checked tars
-(one per 8 shard rows, sent in 200 MB parts) and was uploaded part by part, its root and array metadata last; the
-other stores with `dune-atlas upload-new --prefix`. One resumable ledger:
-`staging/era5/atlas/r2/uploaded-new-dune-atlas_v1_datasets_era5.json`. Results (`scripts/verify_era5_r2.py`,
-`staging/era5/atlas/public_verification.json`):
+Create-only (`If-None-Match: *`) puts after a live listing of all of `dune-atlas/` (57,566 objects, all under
+`v1/`; none under `v2/`); 9,539 new objects (5.817 GB), zero collisions. `cells.zarr` arrived from Gadi as md5-checked
+tars (one per 8 shard rows, 200 MB parts) and was uploaded part by part, its metadata last; the other stores with
+`dune-atlas upload-new --prefix dune-atlas/v2/datasets/era5`. Ledger
+`staging/era5/atlas_v2/r2/uploaded-new-dune-atlas_v2_datasets_era5.json`. Checks (`scripts/verify_era5_r2.py`,
+default mode, 12 s; `staging/era5/atlas_v2/public_verification.json`):
 
 | check | result |
 |---|---|
-| listing after upload | 57,566 objects; the 48,903 earlier objects unchanged (same keys and sizes); 8,663 new, all under the prefix, sizes = ledger |
-| 300 random land cells (`cells.zarr` over HTTP vs the reference sample drawn on Gadi from the ERA5 source stores) | histograms 300 / 300 identical; field vectors 300 / 300 identical (float32 of the source) |
-| 100 random non-land cells | 100 / 100 empty (histogram 0, fields no data) |
-| `cells-aux.zarr` (`qsdiv`, `ai_*`, `lsm`), `cells-aux-veg.zarr` at the same cells | 300 / 300 identical per array; non-land cells no data; root attrs identical |
-| pyramid windows (24 stores × levels 0, 2, 3 × 3 random 128² windows at random u*,th) | 216 / 216 identical to the local stores; root attrs identical (24 / 24) |
-| HTTP | suffix range (`bytes=-4100`) 206; offset range 206 with `Content-Range`; absent non-land shard 404 |
-| CORS | preflight 204 for https://map.geomorphlab.org and http://localhost:5173, origin echoed, `content-range` exposed; repeat request edge `HIT` |
+| listing after upload | 67,105 objects; the 57,566 earlier objects unchanged (keys and sizes); the 9,539 new ones all under the prefix |
+| integrity, every object | keys = upload ledger = local MD5 set; 0 size and 0 ETag mismatches (ETag = MD5, no multipart objects); cells.zarr MD5s per object on Gadi |
+| delivery path (the app's `CellStore` + zarrita over HTTPS) | 20 / 20 land cells bit-identical to the source values (histograms, fields, sidecar arrays), 10 of them with 0 < lsm ≤ 0.5 and 3 dune cells; 5 / 5 non-land cells empty |
+| pyramid windows (10 random 64² windows, random store, level and u*,th) | 10 / 10 identical to the local stores |
+| HTTP | suffix range (`bytes=-4100`) 206; CORS preflight 204 for https://map.geomorphlab.org, origin echoed, `content-range` exposed |
+
+`--full` repeats the exhaustive check used for the first build (300 cells, every sidecar array, 216 windows; §5 of the
+first build: all identical).
 
 ## 6. Retention copy
 

@@ -45,8 +45,8 @@ layers:
     transform: none
     colormap: magma
     clim:
-    - 0.014
-    - 340.0
+    - 0.018
+    - 330.0
     log: true
 - id: rdpm
   title: Resultant drift potential (RDP)
@@ -71,8 +71,8 @@ layers:
     transform: none
     colormap: magma
     clim:
-    - 0.0077
-    - 320.0
+    - 0.01
+    - 310.0
     log: true
 - id: rdpa
   title: Resultant drift direction (RDD)
@@ -262,8 +262,8 @@ layers:
     transform: none
     colormap: rdbu
     clim:
-    - -1000.0
-    - 1000.0
+    - -990.0
+    - 990.0
 - id: qacb
   title: Absolute across-crest flux, migration mode ⟨|Q⊥(αH)|⟩
   titleTex: Absolute across-crest migration-mode flux $\langle |Q_{\bot}(\alpha_H)|\rangle$
@@ -287,8 +287,8 @@ layers:
     transform: none
     colormap: magma
     clim:
-    - 1.6
-    - 1100.0
+    - 1.8
+    - 1000.0
     log: true
 - id: qnlb
   title: Net along-crest flux, migration mode ⟨Q∥(αH)⟩
@@ -313,8 +313,8 @@ layers:
     transform: none
     colormap: rdbu
     clim:
-    - -36.0
-    - 36.0
+    - -48.0
+    - 48.0
 - id: qalb
   title: Absolute along-crest flux, migration mode ⟨|Q∥(αH)|⟩
   titleTex: Absolute along-crest migration-mode flux $\langle |Q_{\parallel}(\alpha_H)|\rangle$
@@ -338,8 +338,8 @@ layers:
     transform: none
     colormap: magma
     clim:
-    - 0.4
-    - 260.0
+    - 0.46
+    - 270.0
     log: true
 - id: qnle
   title: Net along-crest flux, elongation mode ⟨Q∥(αE)⟩
@@ -364,8 +364,8 @@ layers:
     transform: none
     colormap: rdbu
     clim:
-    - -460.0
-    - 460.0
+    - -450.0
+    - 450.0
 - id: qale
   title: Absolute along-crest flux, elongation mode ⟨|Q∥(αE)|⟩
   titleTex: Absolute along-crest elongation-mode flux $\langle |Q_{\parallel}(\alpha_E)|\rangle$
@@ -389,8 +389,8 @@ layers:
     transform: none
     colormap: magma
     clim:
-    - 0.27
-    - 470.0
+    - 0.33
+    - 460.0
     log: true
 - id: qace
   title: Absolute across-crest flux, elongation mode ⟨|Q⊥(αE)|⟩
@@ -415,8 +415,8 @@ layers:
     transform: none
     colormap: magma
     clim:
-    - 0.2
-    - 220.0
+    - 0.26
+    - 290.0
     log: true
 - id: sige_sigh
   title: Stability of elongating dunes on starved beds (σE/σH)
@@ -468,8 +468,8 @@ layers:
     transform: none
     colormap: viridis
     clim:
-    - 0.00041
-    - 4.2
+    - 0.00044
+    - 4.5
     log: true
 - id: qhab_ac_nc
   title: Growth-in-height vs migration balance (Q̂|⊥|/⊥,H)
@@ -496,7 +496,7 @@ layers:
     colormap: viridis
     clim:
     - 1.0
-    - 30.0
+    - 32.0
     log: true
 - id: qhne_ac_nl
   title: Morphology of elongating dunes (Q̂|⊥|/∥,E)
@@ -522,7 +522,7 @@ layers:
     transform: none
     colormap: viridis
     clim:
-    - 0.22
+    - 0.23
     - 10.0
     log: true
 - id: uft

@@ -2,7 +2,7 @@
 // Public text: no references to issues with the source data / paper in the site or the downloads.
 import { describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
-import { allowed, collectPublicText, DENY, strip } from "./publictext";
+import { allowed, collectPublicText, DENY, ERA5_V2_STORE_ATTRS, strip } from "./publictext";
 
 vi.stubGlobal("localStorage", { getItem: () => null, setItem: () => {}, removeItem: () => {}, clear: () => {} });
 
@@ -29,5 +29,28 @@ describe("download attributes from the real cells-aux store attrs", () => {
       expect(Object.keys(out).length).toBeGreaterThan(2);
       for (const [k, t] of Object.entries(out)) expect(siteDeny().test(t) || NAN_WORD.test(t), `${v}.${k}: ${t}`).toBe(false);
     }
+  });
+});
+
+describe("text shown or exported comes from the app, not from cell-store root attrs", () => {
+  it("the ERA5 v2 store attrs contain free text the site must not show (dataset.land_cells: '... stored ...')", () => {
+    expect(String((ERA5_V2_STORE_ATTRS.dataset as Record<string, string>).land_cells)).toMatch(/\bstored\b/);
+  });
+  it("sentinel: every free-text store attr and the generated dataset descriptions marked; none of the marks reaches the site (dataset selector tooltips included), panel or downloads", async () => {
+    const MARK = "ZZSTOREATTR";
+    // keep what the app legitimately reads from the store (grid, bins, thresholds, field list,
+    // units, hours); mark every other string, nested ones included
+    const KEEP = new Set(["grid", "um_edges", "ua_edges", "ut_values", "ut_default_index", "field_vars", "field_units", "n_hours"]);
+    const mark = (v: unknown): unknown => typeof v === "string" ? `${MARK} ${v}` : Array.isArray(v) ? v.map(mark) : v && typeof v === "object" ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, mark(x)])) : v;
+    const attrs = Object.fromEntries(Object.entries(ERA5_V2_STORE_ATTRS).map(([k, v]) => [k, KEEP.has(k) ? v : mark(v)]));
+    const t = await collectPublicText({}, attrs, { markDatasetDescriptions: MARK });
+    expect(Object.keys(t).some((k) => k.startsWith("metadata.era5."))).toBe(true);
+    expect(t["cell.nonland.era5"]).toMatch(/fraction > 0\)\. This cell has no land/);
+    // the Wind dataset selector tooltips: app text, not the generated registry descriptions
+    expect(t["panel.dataset-option.era5"]).toBe("ERA5 0.25°, 1950–2024; land cells: land–sea mask fraction > 0");
+    expect(t["panel.dataset-option.era5-land"]).toBe("ERA5-Land 0.1°, 1950–2024; land cells: land–sea mask fraction > 0.5");
+    for (const ds of ["era5", "era5-land"]) expect(t[`panel.dataset-option.${ds}`]).not.toMatch(/\blsm\b|zarr|stored/);
+    const leaks = Object.entries(t).filter(([, v]) => v.includes(MARK)).map(([k, v]) => `${k}: ${v.slice(0, 120)}`);
+    expect(leaks).toEqual([]);
   });
 });

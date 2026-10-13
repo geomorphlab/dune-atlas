@@ -29,7 +29,7 @@ const auxDirs = ["cells-aux.zarr", "cells-aux-veg.zarr"].map((d) => path.join(ba
 const store = await CellStore.open(new FileStore(path.join(base, "cells.zarr")), { aux: auxDirs.map((d) => new FileStore(d)) });
 // dataset: store attrs `dataset.id` (ERA5 stores), else ERA5-Land
 const dsId = ((store.attrs as unknown as { dataset?: { id?: string } }).dataset?.id) ?? "era5-land";
-const DEFAULT_CELLS: Record<string, string[]> = { "era5-land": ["1145,1952", "1174,1954", "1072,1928"], era5: ["458,781", "450,790", "470,795"] };
+const DEFAULT_CELLS: Record<string, string[]> = { "era5-land": ["1145,1952", "1174,1954", "1072,1928"], era5: ["458,781", "450,790", "470,795", "458,778" /* coastal, 0 < lsm <= 0.5 */] };
 const TITLES: Record<string, string> = { "era5-land": "ERA5-Land 0.1°, 1950–2024", era5: "ERA5 0.25°, 1950–2024" };
 const cells = (cellArgs.length ? cellArgs : DEFAULT_CELLS[dsId]).map((s) => s.split(",").map(Number) as [number, number]);
 const written: Record<string, unknown>[] = [];

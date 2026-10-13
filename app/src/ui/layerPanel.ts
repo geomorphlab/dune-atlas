@@ -10,6 +10,7 @@ import { h, nextId } from "./dom";
 import { legendHtml } from "./legend";
 import { thresholdControl } from "./threshold";
 import { escapeHtml } from "../util/format";
+import { datasetTooltip } from "../cell/datasetinfo";
 import { mathHtml } from "../util/math";
 import { AI_NOTICE, CITATIONS, citationHtml, citationSources } from "../cell/citation";
 import { canLog, COLORMAP_GROUPS, DEFAULT_SPACING_KM, effectiveDisplay, isDirectional, SPACING_KM_STEPS, vectorColors, type RenderMode } from "../layerconfig";
@@ -20,7 +21,7 @@ const AUTHOR_EMAIL = "a.gunn@monash.edu";
 /** 'Data sources' list in About (what each product is and where it comes from). */
 export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class="sources">
   <li><strong>Wind histograms and sand-flux fields (ERA5-Land 0.1°)</strong>: ERA5-Land 1950–2024 hourly 10 m winds (0.1°) and the qsat parameters of Gunn (2026), Supplementary Data (Zenodo, CC BY 4.0). Drift potentials (DP, RDP, RDD, RDP/DP) and crest fluxes are averages over the hourly record.</li>
-  <li><strong>Wind histograms and sand-flux fields (ERA5 0.25°)</strong>: ERA5 1950–2024 hourly 10 m winds on the 0.25° grid (Hersbach et al. 2020; Copernicus Climate Change Service, accessed via the NCI Australia replica); the histograms and the 23 sand-flux fields are computed for the atlas with the method of Gunn (2026). Cells with an ERA5 land–sea mask fraction above 0.5 carry wind data; a 0.25° cell counts as a dune cell where it overlaps a mapped 0.1° dune cell. Choose the dataset with the Wind dataset selector; the dune map, aridity and vegetation layers are the same for both.</li>
+  <li><strong>Wind histograms and sand-flux fields (ERA5 0.25°)</strong>: ERA5 1950–2024 hourly 10 m winds on the 0.25° grid (Hersbach et al. 2020; Copernicus Climate Change Service, accessed via the NCI Australia replica); the histograms and the 23 sand-flux fields are computed for the atlas with the method of Gunn (2026). Cells with an ERA5 land–sea mask fraction above 0 (any land in the cell) carry wind data; a 0.25° cell counts as a dune cell where it overlaps a mapped 0.1° dune cell. Choose the dataset with the Wind dataset selector; the dune map, aridity and vegetation layers are the same for both.</li>
   <li><strong>Dune map</strong>: dune-mask-rev1.tif from the Supplementary Code record (Zenodo, MIT), vectorised into dune fields.</li>
   <li><strong>Saturated flux divergence</strong> ${mathHtml("$\\nabla\\cdot\\vec{q}_s$")}: divergence of the resultant drift potential vector (magnitude RDP, direction RDD) on the sphere, following Gunn (2026), Methods M6, computed with central differences on the 0.1° grid. Negative values (convergence) imply deposition; no data at coasts.</li>
   <li><strong>Aridity index</strong>: Global Aridity Index v3.1 (Global-AI_PET v3.1; Zomer, Xu &amp; Trabucco 2022), 1970–2000, native 30″ grid, CC BY 4.0; ocean and Antarctica (south of 60° S) have no data, values ≥ 6.5535 are at the top of the source range. The click panel shows the 0.1° cell mean.</li>
@@ -291,7 +292,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
   }
   const datasets = reg.datasets ?? [];
   if (datasets.length > 1) {
-    const sel = h("select", { id: "dataset-select", "aria-label": "Wind dataset" }, ...datasets.map((d) => h("option", { value: d.id, title: d.description ?? "" }, d.title))) as HTMLSelectElement;
+    const sel = h("select", { id: "dataset-select", "aria-label": "Wind dataset" }, ...datasets.map((d) => h("option", { value: d.id, title: datasetTooltip(d.id) || d.title }, d.title))) as HTMLSelectElement;
     sel.value = store.state.dataset;
     sel.addEventListener("change", () => store.set({ dataset: sel.value }));
     store.subscribe((s, ch) => { if (ch.has("dataset")) sel.value = s.dataset; });

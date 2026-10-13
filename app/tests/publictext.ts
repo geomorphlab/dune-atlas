@@ -1,5 +1,7 @@
 // Collect every user-facing string of the site and the downloads (keyed), for the public-text
 // denylist test and the text audit.
+import fs from "node:fs";
+import path from "node:path";
 import { NAN_WORD, siteDeny } from "./denylist";
 import { loadRegistry } from "../src/registry/load";
 import { Store, type AppState } from "../src/store";
@@ -31,9 +33,16 @@ export function sampleCell(): CellData {
 }
 
 /** key -> text of every user-facing string (site + downloads). */
-export async function collectPublicText(auxAttrs: Record<string, Record<string, unknown>> = {}): Promise<Record<string, string>> {
+/** The root attrs of the ERA5 v2 cell store (tests/fixtures; with free-text entries such as
+ *  dataset.land_cells). Passed to the panels and downloads so that any store-attr text shown or
+ *  exported is checked too (and caught by the sentinel test in publictext.test.ts). */
+export const ERA5_V2_STORE_ATTRS = JSON.parse(fs.readFileSync(path.resolve(__dirname, "fixtures/era5-v2-cells-attrs.json"), "utf8")) as Record<string, unknown>;
+
+export async function collectPublicText(auxAttrs: Record<string, Record<string, unknown>> = {}, storeAttrs: Record<string, unknown> = ERA5_V2_STORE_ATTRS, o: { markDatasetDescriptions?: string } = {}): Promise<Record<string, string>> {
   const out: Record<string, string> = {};
   const { registry: reg } = loadRegistry();
+  // the generated dataset descriptions are not shown (the selector uses app text); the sentinel test marks them
+  if (o.markDatasetDescriptions) for (const d of reg.datasets ?? []) d.description = `${o.markDatasetDescriptions} ${d.description ?? ""}`;
   out["threshold.label"] = reg.threshold.label ?? "";
   for (const g of reg.groups) { out[`group.${g.id}.title`] = g.title; if (g.description) out[`group.${g.id}.description`] = g.description; }
   for (const l of reg.layers) {
@@ -44,7 +53,7 @@ export async function collectPublicText(auxAttrs: Record<string, Record<string, 
     for (const [k, v] of Object.entries(l.attribution ?? {})) if (k === "changes" || k === "source") out[`layer.${l.id}.attribution.${k}`] = v as string;
     out[`legend.${l.id}`] = textOf(legendHtml(l));
   }
-  for (const d of reg.datasets ?? []) { out[`dataset.${d.id}.title`] = d.title; if (d.description) out[`dataset.${d.id}.description`] = d.description; }
+  for (const d of reg.datasets ?? []) out[`dataset.${d.id}.title`] = d.title;
   // layer panel (all popovers, About, threshold help)
   document.body.innerHTML = '<aside id="layer-panel"></aside><aside id="cell-panel" hidden></aside>';
   const state: AppState = { basemap: reg.basemaps[0].id, projection: "globe", utIndex: 14,
@@ -56,29 +65,42 @@ export async function collectPublicText(auxAttrs: Record<string, Record<string, 
   out["panel.about"] = (lp.querySelector(".about")?.textContent ?? "").replace(/\s+/g, " ").trim();
   out["panel.pinned"] = (lp.querySelector(".pinned")?.textContent ?? "").replace(/\s+/g, " ").trim();
   lp.querySelectorAll("[title]").forEach((e, k) => { out[`panel.title.${k}`] = e.getAttribute("title") ?? ""; });
+  lp.querySelectorAll("#dataset-select option").forEach((e) => { out[`panel.dataset-option.${(e as HTMLOptionElement).value}`] = e.getAttribute("title") ?? ""; });
   lp.querySelectorAll(".help").forEach((e, k) => { out[`panel.help.${k}`] = (e.textContent ?? "").trim(); });
   // cell panel
   const cp = document.getElementById("cell-panel")!;
   const cell = sampleCell();
   for (const [v, a] of Object.entries(auxAttrs)) cell.aux!.attrs[v] = a;
   const p = new CellPanel(cp, 14, { windSectors: 16, fluxSectors: 32, onClose: () => {} });
-  await p.show({ query: async () => cell, attrs: {}, fieldVars: FIELD_VARS } as unknown as CellStore, cell.iy, cell.ix);
+  await p.show({ query: async () => cell, attrs: storeAttrs, fieldVars: FIELD_VARS } as unknown as CellStore, cell.iy, cell.ix);
   cp.querySelectorAll(".caption, .help, h3, summary, th, .fig-legend li, label").forEach((e, k) => { out[`cell.${e.tagName.toLowerCase()}.${k}`] = (e.textContent ?? "").replace(/\s+/g, " ").trim(); });
   cp.querySelectorAll("[title]").forEach((e, k) => { out[`cell.title.${k}`] = e.getAttribute("title") ?? ""; });
-  // downloads
-  const meta = { datasetId: "era5-land", datasetTitle: "ERA5-Land 1950–2024 (0.1°)", dataVersion: "v1", permalink: "https://map.geomorphlab.org/?cell=1145,1952", generated: new Date(0) };
-  const r = readNc(cellNetcdf(cell, meta));
-  for (const [k, v] of Object.entries(r.gatts)) if (typeof v === "string" && k !== "history") out[`nc.global.${k}`] = v;
-  for (const [n, v] of Object.entries(r.vars)) for (const [k, a] of Object.entries(v.attrs)) if (typeof a === "string") out[`nc.${n}.${k}`] = a;
+  // the non-land message of each dataset
+  for (const ds of ["era5-land", "era5"] as const) {
+    document.body.insertAdjacentHTML("beforeend", `<aside id="cell-panel-${ds}" hidden></aside>`);
+    const root = document.getElementById(`cell-panel-${ds}`)!;
+    const sea = makeCell({ iy: 458, ix: 770, lat: -24.5, lon: 12.5, hist: new Uint32Array(128 * 128), fields: new Float32Array(FIELD_VARS.length * 64).fill(NaN), hasData: false, dune: false });
+    const pn = new CellPanel(root, 14, { windSectors: 16, fluxSectors: 32, onClose: () => {}, exportMeta: () => ({ datasetId: ds, datasetTitle: ds, dataVersion: "v", permalink: "x" }) });
+    await pn.show({ query: async () => sea, attrs: storeAttrs, fieldVars: FIELD_VARS } as unknown as CellStore, sea.iy, sea.ix);
+    out[`cell.nonland.${ds}`] = (root.querySelector(".empty-state")?.textContent ?? "").replace(/\s+/g, " ").trim();
+  }
+  // downloads of both datasets, with the store attrs the panel passes on
   const flat = (o: unknown, pre: string) => {
     if (typeof o === "string") { out[pre] = o; return; }
     if (o && typeof o === "object") for (const [k, v] of Object.entries(o)) flat(v, `${pre}.${k}`);
   };
-  const md = JSON.parse(metadataJson(cell, meta));
-  delete md.generated; delete md.permalink;
-  flat(md, "metadata");
-  readmeText(cell, meta).split("\n").forEach((l, k) => { if (l.trim()) out[`readme.${String(k).padStart(3, "0")}`] = l; });
-  for (const [f, cols] of Object.entries(csvColumns(cell))) for (const c of cols) out[`csv.${f}.${c.name}`] = `${c.units} | ${c.longName}`;
+  for (const ds of ["era5-land", "era5"] as const) {
+    const sfx = ds === "era5-land" ? "" : `.${ds}`;
+    const meta = { datasetId: ds, datasetTitle: ds === "era5" ? "ERA5 0.25°, 1950–2024" : "ERA5-Land 1950–2024 (0.1°)", dataVersion: ds === "era5" ? "v2" : "v1", permalink: "https://map.geomorphlab.org/?cell=1145,1952", generated: new Date(0), storeAttrs: storeAttrs as never };
+    const r = readNc(cellNetcdf(cell, meta));
+    for (const [k, v] of Object.entries(r.gatts)) if (typeof v === "string" && k !== "history") out[`nc${sfx}.global.${k}`] = v;
+    for (const [n, v] of Object.entries(r.vars)) for (const [k, a] of Object.entries(v.attrs)) if (typeof a === "string") out[`nc${sfx}.${n}.${k}`] = a;
+    const md = JSON.parse(metadataJson(cell, meta));
+    delete md.generated; delete md.permalink;
+    flat(md, `metadata${sfx}`);
+    readmeText(cell, meta).split("\n").forEach((l, k) => { if (l.trim()) out[`readme${sfx}.${String(k).padStart(3, "0")}`] = l; });
+    for (const [f, cols] of Object.entries(csvColumns(cell, storeAttrs as never))) for (const c of cols) out[`csv${sfx}.${f}.${c.name}`] = `${c.units} | ${c.longName}`;
+  }
   citationFile(cell).split("\n").forEach((l, k) => { if (l.trim()) out[`citation.${k}`] = l; });
   // help panel, tour, share and export text (src/ui/helpText.ts)
   for (const [k, v] of Object.entries(HELP)) {

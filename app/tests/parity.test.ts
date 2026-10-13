@@ -64,6 +64,8 @@ const ALLOW: RegExp[] = [
   // the cell itself: position and values
   /^metadata\.json\.cell\.(latitude|longitude|cell_y|cell_x|grid_index|total_hours_binned):/,
   /^metadata\.json\.aux\.\w+\.value:/,
+  // the land definition (ERA5-Land: land–sea mask fraction > 0.5; ERA5: > 0)
+  /^metadata\.json\.conventions\.land_cells:/,
 ];
 
 interface Side { cell: CellData; meta: ExportMeta; store: CellStore }

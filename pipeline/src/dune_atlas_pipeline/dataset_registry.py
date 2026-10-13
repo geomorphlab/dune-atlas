@@ -30,7 +30,8 @@ from . import constants as C
 from .grid import get_dataset
 
 REPO = Path(__file__).resolve().parents[3]
-PREFIX = {"era5": "dune-atlas/v1/datasets/era5"}
+# ERA5 stores with land = lsm > 0 (2026-10-13); the first build (lsm > 0.5) is at dune-atlas/v1/datasets/era5
+PREFIX = {"era5": "dune-atlas/v2/datasets/era5"}
 TITLE = {"era5": "ERA5 0.25°, 1950–2024"}
 
 

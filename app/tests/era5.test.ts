@@ -38,7 +38,7 @@ describe("registry: ERA5 dataset", () => {
   it("two datasets; ERA5 entry from registry/datasets/era5; merged registry validates", () => {
     expect(reg.datasets!.map((d) => [d.id, d.title, d.prefix])).toEqual([
       ["era5-land", "ERA5-Land 0.1°, 1950–2024", "dune-atlas/v1"],
-      ["era5", "ERA5 0.25°, 1950–2024", "dune-atlas/v1/datasets/era5"],
+      ["era5", "ERA5 0.25°, 1950–2024", "dune-atlas/v2/datasets/era5"], // rebuilt: land = lsm > 0
     ]);
     expect(reg.datasets![1].cellAuxStores).toEqual(["{dataset}/cells-aux.zarr", "{dataset}/cells-aux-veg.zarr"]);
     expect(loadRegistry().errors).toEqual([]);
@@ -52,7 +52,7 @@ describe("registry: ERA5 dataset", () => {
       const l = reg.layers.find((x) => x.id === id)!;
       expect(l.source).toBe(`{dataset}/fields/${id}.zarr`);
       expect(resolveSource(l.source, "https://d.org", "dune-atlas/v1")).toBe(`https://d.org/dune-atlas/v1/fields/${id}.zarr`);
-      expect(resolveSource(l.source, "https://d.org", "dune-atlas/v1/datasets/era5")).toBe(`https://d.org/dune-atlas/v1/datasets/era5/fields/${id}.zarr`);
+      expect(resolveSource(l.source, "https://d.org", "dune-atlas/v2/datasets/era5")).toBe(`https://d.org/dune-atlas/v2/datasets/era5/fields/${id}.zarr`);
     }
     const v = reg.datasetLayers!.era5;
     expect(Object.keys(v).sort()).toEqual([...fieldIds].sort()); // dunes, aridity, vegetation: shared
@@ -90,7 +90,7 @@ describe("registry: ERA5 dataset", () => {
     expect(initialDataset(reg, undefined, true, "era5")).toBe("era5-land");
     expect(initialDataset(reg, undefined, false, "nope")).toBe("era5-land");
     expect(initialDataset(reg, "nope", false, "era5")).toBe("era5-land");
-    expect(versionFromPrefix(selectDataset(reg, "era5")!.prefix)).toBe("v1");
+    expect(versionFromPrefix(selectDataset(reg, "era5")!.prefix)).toBe("v2");
   });
 });
 
@@ -232,21 +232,42 @@ describe.skipIf(!haveFix)("ERA5 fixture: panel and downloads", () => {
     await p.show(land, 1150, 1960);
     expect(el.scrollTop).toBe(0);
   });
-  it("cell outside the land mask: 'Outside the <dataset> land mask', same wording for both datasets", async () => {
+  it("cell outside the land mask: 'Outside the <dataset> land mask' with each dataset's land definition (ERA5: > 0, ERA5-Land: > 0.5)", async () => {
     const root = await panel(await cs.query(458, 770), "era5");
     const es = root.querySelector(".empty-state")!;
     expect(es.querySelector("strong")!.textContent).toBe("Outside the ERA5 land mask");
-    expect(es.querySelectorAll("p")[1].textContent).toBe("The atlas computes wind roses and sand-flux statistics only for land cells (ERA5 land–sea mask fraction > 0.5). This cell is mainly water, so no statistics are stored for it. Choose a nearby land cell, or switch to ERA5-Land (coastal cells can differ between the two land masks).");
+    expect(es.querySelectorAll("p")[1].textContent).toBe("The atlas computes wind roses and sand-flux statistics only for land cells (ERA5 land–sea mask fraction > 0). This cell has no land (land–sea mask fraction 0), so the atlas has no statistics for it. Choose a nearby land cell, or switch to ERA5-Land (coastal cells can differ between the two land masks).");
     expect(es.querySelector(".help")!.textContent).toBe("0.25° cell: row 458, column 770; centre 24.5°S, 12.5°E.");
-    // ERA5-Land: the same text with the names swapped
+    // ERA5-Land: its own land definition, otherwise the same text with the names swapped
     const land = { ...(await cs.query(458, 770)), grid: { lat0: 90, dlat: -0.1, lon0: -180, dlon: 0.1, ny: 1801, nx: 3600 } };
     const r2 = await panel(land as CellData, "era5-land");
-    const t2 = r2.querySelector(".empty-state")!.textContent!;
-    const t1 = es.textContent!;
-    const norm = (t: string, n: string, o: string) => t.replaceAll(n, "{DS}").replaceAll(o, "{OTHER}").replace(/\d+\.\d+° cell.*$/s, "");
-    expect(norm(t2, "ERA5-Land", "ERA5")).toBe(norm(t1.replaceAll("ERA5-Land", "{OTHER}"), "ERA5", "{OTHER}"));
+    const p2 = r2.querySelectorAll(".empty-state p")[1].textContent!;
+    expect(p2).toBe("The atlas computes wind roses and sand-flux statistics only for land cells (ERA5-Land land–sea mask fraction > 0.5). This cell is mainly water, so the atlas has no statistics for it. Choose a nearby land cell, or switch to ERA5 (coastal cells can differ between the two land masks).");
     expect(r2.querySelector(".empty-state strong")!.textContent).toBe("Outside the ERA5-Land land mask");
-    expect(t2).toContain("or switch to ERA5 (coastal");
+    for (const t of [es.textContent!, r2.querySelector(".empty-state")!.textContent!]) expect(t).not.toMatch(/\bstored\b|lsm/);
+  });
+  it("land = lsm > 0: a coastal cell with 0 < lsm <= 0.5 now has data and opens the panel; its lsm = 0 neighbour shows the non-land message", async () => {
+    // (458, 778): 24.5° S, 14.5° E, lsm 0.32 (outside the first build's lsm > 0.5 mask); (458, 777): lsm 0
+    const coast = await cs.query(458, 778);
+    expect(coast.hasData).toBe(true);
+    expect(coast.totalHours).toBeGreaterThan(600000);
+    const root = await panel(coast, "era5");
+    expect(root.querySelector(".empty-state")).toBeNull();
+    expect(root.querySelector('tr[data-field="cell"] td.num')!.textContent).toMatch(/^458, 778; /);
+    expect(root.querySelector(".fig-svg svg")).not.toBeNull();
+    const sea = await cs.query(458, 777);
+    expect(sea.hasData).toBe(false);
+    const r2 = await panel(sea, "era5");
+    expect(r2.querySelector(".empty-state")!.textContent).toContain("This cell has no land (land–sea mask fraction 0)");
+    // lsm is not shown or exported (parity with ERA5-Land)
+    expect(root.textContent).not.toMatch(/\blsm\b|land–sea mask fraction 0\.32/);
+    expect(Object.keys(readNc(cellNetcdf(coast, META("era5"))).vars)).not.toContain("lsm");
+    // the first build (lsm > 0.5) had no data for it, if its fixture copy is around
+    const V1 = path.join(REPO, "staging/fixture/datasets/era5-v1");
+    if (fs.existsSync(V1)) {
+      const old = await CellStore.open(new RFS(path.join(V1, "cells.zarr")) as never);
+      expect((await old.query(458, 778)).hasData).toBe(false);
+    }
   });
   it("downloads: file name, grid attrs and resolution, references, aux texts for 0.25°", async () => {
     const c = await cs.query(458, 781);
@@ -319,11 +340,11 @@ describe("overlays: dataset switch, then basemap switch", () => {
     // switch to ERA5 (as main.ts: definitions, config, prefix, reattach)
     const changed = applyDatasetLayers(reg, "era5");
     layers = layersForDatasetSwitch(layers, changed);
-    ov.setDatasetPrefix("dune-atlas/v1/datasets/era5");
+    ov.setDatasetPrefix("dune-atlas/v2/datasets/era5");
     ov.reattach(layers);
     await settle();
     const check = () => {
-      expect(src("ov-dpm")).toBe("https://data.example/dune-atlas/v1/datasets/era5/fields/dpm.zarr");
+      expect(src("ov-dpm")).toBe("https://data.example/dune-atlas/v2/datasets/era5/fields/dpm.zarr");
       expect(src("ov-aridity")).toBe("https://data.example/dune-atlas/v1/fields/aridity.zarr"); // shared
       const z = map.getLayer("ov-dpm")!.implementation as { opacity: number; clim: number[] };
       expect(z.opacity).toBe(0.5);
@@ -339,7 +360,7 @@ describe("overlays: dataset switch, then basemap switch", () => {
       expect(map.errors).toEqual([]);
     };
     check();
-    expect(urls.some((u) => u.endsWith("/dune-atlas/v1/datasets/era5/fields/dpm.zarr/zarr.json"))).toBe(true);
+    expect(urls.some((u) => u.endsWith("/dune-atlas/v2/datasets/era5/fields/dpm.zarr/zarr.json"))).toBe(true);
     bm(0); await settle(); check();
     bm(3); bm(2); await settle(); check();
   });
