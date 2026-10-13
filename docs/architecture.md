@@ -98,8 +98,10 @@ and fixture layouts and fails if an upgrade changes them.
   fragments, same layer ids) are merged by `addDatasets` into `registry.datasetLayers[id]` (only
   layers that differ: colour limits, citation, attribution, descriptions). `applyDatasetLayers`
   swaps them into the shared layer objects in place (base copies kept for switching back) and
-  returns the changed ids. Choice: URL `dataset=`, else localStorage `duneAtlas.dataset` unless
-  the URL selects a cell (old permalinks = default dataset), else `defaultDataset`. A switch goes
+  returns the changed ids. Choice: the share link's dataset; a `?query` permalink's `dataset=`, or
+  `defaultDataset` (ERA5-Land) if it has none (permalinks were written without it for ERA5-Land;
+  the app now always writes it); with no view state in the URL, the user's last explicit switch
+  (localStorage `duneAtlas.dataset`), else the default view's (ERA5). A switch goes
   through `Store.intercept`: definitions swapped, persisted, colour-limit overrides of the
   swapped layers dropped (`layersForDatasetSwitch`; colormap, reverse, log, mode, colours,
   opacity, visibility and order kept); then the overlays re-resolve their sources
@@ -149,6 +151,18 @@ and fixture layouts and fails if an upgrade changes them.
   line colour, spacing, fill, invert). Ids are indices into append-only tables (`SHARE_IDS`; unknown
   ids inline), so links survive registry growth. Typical links: 58–77 characters with the site
   address. `?query` permalinks are still parsed and still written to the address bar.
+* **Opening view** (`src/defaultview.ts`): without view state in the URL (no `#v=`, no view keys in
+  `?query`; `embed=1` / `tour=1` alone do not count, so embeds open the same way) the atlas opens
+  in `DEFAULT_VIEW`, the decoded author link `#v=AQXirhW4wRLgAgIBDgMJVSACAWQAB1UA`: globe centred
+  at 15.1644° N, 17.5025° E, zoom 3.52; ERA5 0.25°; u*,th = 0.15 m/s (index 14); dark basemap;
+  RDD as streamlines at 85 % over the dune fields (100 %) over DP (85 %); no selected cell; layer
+  list open (on narrow screens it stays collapsed, the responsive default). Defaults are set at the
+  source (`resolveInitialState` -> `initialAppState`), not by redirecting: the address stays bare
+  while the state equals the opening one (and becomes bare again when it returns to it, e.g. after
+  the tour's example cell). Precedence: `#v=` > `?query` (missing fields from the default view) >
+  default view (dataset: the stored explicit choice, if any). Encoding the opening state gives the
+  same link (tested). The registry's `visible` / `opacity` remain the defaults of layers switched
+  on later and of permalinks that omit them.
 * **Image exports** (one size, tagged 300 dpi): the map is captured from the live canvas after
   `idle` + overlay adds at the pixel ratio giving W = clamp(on-screen width x 1.5, 1600, 2400) px
   (`export/png.ts`; basemap layers hidden for a transparent background, selected-cell outline always

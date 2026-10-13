@@ -15,5 +15,5 @@ export const CONFIG = {
   windRoseSectors: 128,
   fluxRoseSectors: 128,
   siteUrl: "https://map.geomorphlab.org/",
-  initialView: { lon: 15, lat: 15, zoom: 1.6 },
+  // the opening view (camera, dataset, layers, ...) is DEFAULT_VIEW in defaultview.ts
 };

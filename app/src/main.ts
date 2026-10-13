@@ -4,11 +4,10 @@ import "katex/dist/katex.min.css";
 import "./style.css";
 import maplibregl from "maplibre-gl";
 import { loadRegistry } from "./registry/load";
-import { applyDatasetLayers, initialDataset, layersForDatasetSwitch, resolveSource, selectDataset } from "./registry/merge";
+import { applyDatasetLayers, layersForDatasetSwitch, resolveSource, selectDataset } from "./registry/merge";
 import { CONFIG } from "./config";
 import { parseUrlState, serializeUrlState, type UrlState } from "./urlstate";
-import { migrateLegacySpacing } from "./layerconfig";
-import { Store, normaliseOrder, type AppState, type LayerState } from "./store";
+import { Store, type AppState } from "./store";
 import { defaultBasemap, setBasemap } from "./map/basemaps";
 import { OverlayManager, ensureSelectedCellLayers, restoreOverlays } from "./map/overlays";
 import { setLayerPanelOpen, renderLayerPanel } from "./ui/layerPanel";
@@ -18,7 +17,8 @@ import { CellStore } from "./cell/cellstore";
 import { cellFeature, cellFromIndex, snapToCell, ERA5_LAND_GRID, type Grid } from "./cell/snap";
 import { C3S_NOTICE } from "./cell/citation";
 import { mathOnly } from "./util/math";
-import { shareFromHash, shareToUrlState, shareUrl, type ShareState } from "./share/shortlink";
+import { shareFromHash, shareUrl, type ShareState } from "./share/shortlink";
+import { appShareState, DEFAULT_VIEW, initialAppState, resolveInitialState } from "./defaultview";
 import { mapExportPixelRatio } from "./export/png";
 import { loadMathRenderer } from "./export/texsvg";
 import { captureMap, composeWithStrip, downloadBlob, mapExportFilename, mapStripSvg } from "./export/mapExport";
@@ -30,38 +30,20 @@ import { tourHooks } from "./ui/tourHooks";
 const { registry: reg, errors } = loadRegistry();
 if (errors.length) console.warn("registry merge:", errors);
 const dataBase = CONFIG.dataBase ?? reg.dataBase;
-// short share link (#v=…) first, else the ?query permalink
-const shared = shareFromHash(location.hash);
-const url: UrlState = shared ? { ...shareToUrlState(shared), ...(parseUrlState(location.search).tour ? { tour: true } : {}) } : parseUrlState(location.search);
-
-// ---- wind dataset: URL, else (no cell in the URL: old permalinks are the default dataset) the
-// last choice (localStorage), else the registry default. Layer definitions follow the dataset.
+// ---- initial state: short share link (#v=…) > ?query permalink > the default view
+// (defaultview.ts). Wind dataset: the link's; query permalinks without one are the registry
+// defaultDataset (ERA5-Land, as they were written); with no view state in the URL, a returning
+// user's explicit choice (localStorage) or the default view's. Layer definitions follow it.
 const DATASET_KEY = "duneAtlas.dataset";
 const storedDataset = (() => { try { return localStorage.getItem(DATASET_KEY) ?? undefined; } catch { return undefined; } })();
-const initDataset = initialDataset(reg, url.dataset, !!url.cell, storedDataset);
+const start = resolveInitialState(shareFromHash(location.hash), parseUrlState(location.search), reg.defaultDataset, storedDataset);
+const url: UrlState = start.url;
+const initDataset = selectDataset(reg, start.dataset)?.id ?? "";
 applyDatasetLayers(reg, initDataset);
 
-// ---- initial state (registry defaults, overridden by the URL) ----
-const urlLayers = url.layers ? new Map(url.layers.map((l) => [l.id, l])) : null;
-const layers: Record<string, LayerState> = {};
-for (const l of reg.layers) {
-  const u = urlLayers?.get(l.id);
-  // old links carry px spacing (ds=); convert to the km step at the initial view
-  const cfg = migrateLegacySpacing(u?.cfg, url.lat ?? CONFIG.initialView.lat, url.zoom ?? CONFIG.initialView.zoom);
-  layers[l.id] = { visible: urlLayers ? !!u : !!l.visible, opacity: u?.opacity ?? l.opacity ?? 1, ...(cfg ? { cfg } : {}) };
-}
-const basemapIds = new Set(reg.basemaps.map((b) => b.id));
+// ---- initial state (the resolved view over the registry's layer defaults) ----
 const registryOrder = reg.layers.map((l) => l.id);
-const init: AppState = {
-  basemap: url.basemap && basemapIds.has(url.basemap) ? url.basemap : defaultBasemap(reg.basemaps).id,
-  projection: url.proj ?? "globe",
-  utIndex: url.ut ?? reg.threshold.defaultIndex,
-  layers,
-  order: normaliseOrder(url.order, registryOrder),
-  dataset: initDataset,
-  cell: url.cell ?? null,
-  embed: !!url.embed,
-};
+const init: AppState = initialAppState(reg, url, initDataset);
 const store = new Store(init);
 // a dataset switch swaps the layer definitions (sources, colour limits, citations) and resets
 // colour-limit overrides of the swapped layers in the same state change
@@ -77,12 +59,12 @@ if (init.embed) document.body.classList.add("embed");
 const map = new maplibregl.Map({
   container: "map",
   style: { version: 8, sources: {}, layers: [] },
-  center: [url.lon ?? CONFIG.initialView.lon, url.lat ?? CONFIG.initialView.lat],
-  zoom: url.zoom ?? CONFIG.initialView.zoom,
+  center: [url.lon ?? DEFAULT_VIEW.lon, url.lat ?? DEFAULT_VIEW.lat],
+  zoom: url.zoom ?? DEFAULT_VIEW.zoom,
   attributionControl: false,
   maxPitch: 0,
   pitch: 0,
-  bearing: shared?.bearing ?? 0,
+  bearing: start.bearing,
   dragRotate: false,
   pitchWithRotate: false,
   touchPitch: false,
@@ -138,17 +120,12 @@ const fullScreenUrl = () => {
   return `${location.origin}${location.pathname}${serializeUrlState(s)}`;
 };
 const layerPanelEl = document.getElementById("layer-panel")!;
-renderLayerPanel(layerPanelEl, reg, store, { fullScreenUrl: init.embed ? fullScreenUrl : undefined, initialOpen: shared?.panel });
+renderLayerPanel(layerPanelEl, reg, store, { fullScreenUrl: init.embed ? fullScreenUrl : undefined, initialOpen: start.panel });
 
 // ---- share link, map export, help & tour ----
 function shareState(): ShareState {
-  const s = store.state, c = map.getCenter();
-  return {
-    lon: c.lng, lat: c.lat, zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch(), proj: s.projection,
-    dataset: s.dataset, basemap: s.basemap, ut: s.utIndex, cell: s.cell,
-    layers: s.order.filter((id) => s.layers[id]?.visible).map((id) => ({ id, opacity: Number(s.layers[id].opacity.toFixed(2)), ...(s.layers[id].cfg ? { cfg: s.layers[id].cfg } : {}) })),
-    panel: !layerPanelEl.classList.contains("collapsed"),
-  };
+  const c = map.getCenter();
+  return appShareState(store.state, { lon: c.lng, lat: c.lat, zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() }, !layerPanelEl.classList.contains("collapsed"));
 }
 const shareLinkNow = () => shareUrl(`${location.origin}${location.pathname}`, shareState());
 async function exportMap(o: { basemap: boolean }) {
@@ -229,13 +206,20 @@ function currentUrlState(): UrlState {
     proj: s.projection,
     embed: s.embed || undefined,
     order: s.order.join(",") === registryOrder.join(",") ? undefined : s.order,
-    dataset: (reg.datasets?.length ?? 0) > 1 && s.dataset !== reg.defaultDataset ? s.dataset : undefined,
+    // always explicit: permalinks without a dataset are read as the registry defaultDataset
+    dataset: (reg.datasets?.length ?? 0) > 1 ? s.dataset : undefined,
   };
 }
+// opened without view state: the address stays bare (map.geomorphlab.org) while the state equals
+// the opening one, and becomes bare again when it returns to it (e.g. after the tour's demo cell)
+const openingQuery = start.source === "default" ? serializeUrlState(currentUrlState()) : null;
 let urlTimer: number | undefined;
 function scheduleUrl() {
   clearTimeout(urlTimer);
-  urlTimer = window.setTimeout(() => history.replaceState(null, "", serializeUrlState(currentUrlState()) || location.pathname), 250);
+  urlTimer = window.setTimeout(() => {
+    const q = serializeUrlState(currentUrlState());
+    history.replaceState(null, "", q === openingQuery ? (store.state.embed ? "?embed=1" : location.pathname) : q || location.pathname);
+  }, 250);
 }
 map.on("moveend", scheduleUrl);
 
