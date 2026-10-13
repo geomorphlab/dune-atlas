@@ -11,6 +11,10 @@ import { cellNetcdf, csvColumns, metadataJson, readmeText } from "../src/cell/ex
 import { citationFile } from "../src/cell/downloads";
 import { makeCell, FIELD_VARS } from "./helpers";
 import { readNc } from "./ncreader";
+import * as HELP from "../src/ui/helpText";
+import { mapStripItems } from "../src/export/mapExport";
+import { plotStripItems } from "../src/export/plotExport";
+import { datasetInfo } from "../src/cell/datasetinfo";
 
 const textOf = (html: string) => { const d = document.createElement("div"); d.innerHTML = html; return (d.textContent ?? "").replace(/\s+/g, " ").trim(); };
 
@@ -76,6 +80,25 @@ export async function collectPublicText(auxAttrs: Record<string, Record<string, 
   readmeText(cell, meta).split("\n").forEach((l, k) => { if (l.trim()) out[`readme.${String(k).padStart(3, "0")}`] = l; });
   for (const [f, cols] of Object.entries(csvColumns(cell))) for (const c of cols) out[`csv.${f}.${c.name}`] = `${c.units} | ${c.longName}`;
   citationFile(cell).split("\n").forEach((l, k) => { if (l.trim()) out[`citation.${k}`] = l; });
+  // help panel, tour, share and export text (src/ui/helpText.ts)
+  for (const [k, v] of Object.entries(HELP)) {
+    if (typeof v === "string") out[`help.${k}`] = v;
+    else if (Array.isArray(v)) v.forEach((e, i) => { for (const [f, t] of Object.entries(e)) if (typeof t === "string") out[`help.${k}.${i}.${f}`] = t; });
+    else if (v && typeof v === "object") for (const [f, t] of Object.entries(v)) if (typeof t === "string") out[`help.${k}.${f}`] = t;
+  }
+  // image-export strips (map with every layer; a panel plot of each dataset)
+  const strip = (items: ReturnType<typeof mapStripItems>, pre: string) => items.forEach((it, i) => {
+    if ("text" in it) out[`${pre}.${i}`] = it.text;
+    if (it.kind === "colorbar") out[`${pre}.${i}`] = `${it.title} | ${it.detail}`;
+    if (it.kind === "swatches") it.items.forEach((x, j) => { out[`${pre}.${i}.${j}`] = x.label; });
+    if (it.kind === "mapkeys") out[`${pre}.${i}`] = `${it.northNote ?? ""} ${it.scaleNote ?? ""}`;
+  });
+  for (const ds of ["era5-land", "era5"]) {
+    strip(mapStripItems({ reg, width: 1000, includeBasemap: true, shareLink: "https://map.geomorphlab.org/#v=AQ", date: new Date(0), view: { lon: 15, lat: -24, zoom: 1, bearing: 0, pitch: 0, proj: "globe" },
+      state: { ...state, dataset: ds, layers: Object.fromEntries(reg.layers.map((l) => [l.id, { visible: true, opacity: 1 }])) } }), `export.map.${ds}`);
+    strip(plotStripItems({ key: "flux-rose", title: "Sand flux rose", svg: () => "", legend: [], caption: "", thresholdDependent: true },
+      { cell: { lat: -24.5, lon: 15.2, iy: 1, ix: 2 }, dataset: datasetInfo(ds), ut: 0.15, shareLink: "x", date: new Date(0) }), `export.plot.${ds}`);
+  }
   return out;
 }
 

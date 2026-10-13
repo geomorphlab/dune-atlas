@@ -19,6 +19,8 @@ export interface UrlState {
   /** drawing order (top first), only when it differs from the registry */
   order?: string[];
   dataset?: string;
+  /** `tour=1`: show the guided tour (also in embed mode / after it was seen) */
+  tour?: boolean;
 }
 
 const num = (s: string | null) => (s === null || s.trim() === "" ? undefined : Number.isFinite(Number(s)) ? Number(s) : undefined);
@@ -55,6 +57,7 @@ export function parseUrlState(search: string): UrlState {
   const proj = q.get("proj");
   if (proj === "globe" || proj === "mercator") st.proj = proj;
   if (q.get("embed") === "1") st.embed = true;
+  if (q.get("tour") === "1") st.tour = true;
   return st;
 }
 

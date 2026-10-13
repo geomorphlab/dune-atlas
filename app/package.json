@@ -13,7 +13,8 @@
     "check-cell-query": "vite-node scripts/check-cell-query.ts --",
     "check-decode": "node scripts/check-decode.mjs",
     "postinstall": "patch-package",
-    "check-netcdf": "vite-node scripts/write-cell-exports.ts -- ../staging/fixture ../staging/check-netcdf && PYTHONPATH=../pipeline/src python scripts/check-netcdf.py ../staging/fixture ../staging/check-netcdf && vite-node scripts/write-cell-exports.ts -- ../staging/fixture/datasets/era5 ../staging/check-netcdf-era5 && PYTHONPATH=../pipeline/src python scripts/check-netcdf.py ../staging/fixture/datasets/era5 ../staging/check-netcdf-era5"
+    "check-netcdf": "vite-node scripts/write-cell-exports.ts -- ../staging/fixture ../staging/check-netcdf && PYTHONPATH=../pipeline/src python scripts/check-netcdf.py ../staging/fixture ../staging/check-netcdf && vite-node scripts/write-cell-exports.ts -- ../staging/fixture/datasets/era5 ../staging/check-netcdf-era5 && PYTHONPATH=../pipeline/src python scripts/check-netcdf.py ../staging/fixture/datasets/era5 ../staging/check-netcdf-era5",
+    "help-doc": "vite-node scripts/write-help-doc.ts"
   },
   "dependencies": {
     "@carbonplan/zarr-layer": "0.4.3",
@@ -25,6 +26,7 @@
     "zarrita": "^0.5"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/geojson": "^7946.0.16",
     "@types/js-yaml": "^4",
     "@types/node": "^22.20.5",

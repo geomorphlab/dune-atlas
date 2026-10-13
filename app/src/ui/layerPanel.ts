@@ -265,7 +265,7 @@ function orderList(reg: Registry, store: Store): HTMLElement {
   return wrap;
 }
 
-export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store, opts: { fullScreenUrl?: () => string } = {}) {
+export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store, opts: { fullScreenUrl?: () => string; initialOpen?: boolean } = {}) {
   root.replaceChildren();
   const toggle = h("button", { type: "button", class: "panel-toggle", "aria-expanded": "true", "aria-controls": "layer-panel-body", title: "Show / hide layers" }, "Layers");
   const body = h("div", { id: "layer-panel-body", class: "panel-body" });
@@ -274,7 +274,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     toggle.setAttribute("aria-expanded", String(open));
     root.classList.toggle("collapsed", !open);
   });
-  if (store.state.embed || globalThis.matchMedia?.("(max-width: 720px)").matches) {
+  if (opts.initialOpen === false || (opts.initialOpen === undefined && (store.state.embed || globalThis.matchMedia?.("(max-width: 720px)").matches))) {
     toggle.setAttribute("aria-expanded", "false");
     root.classList.add("collapsed");
   }

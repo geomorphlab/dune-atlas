@@ -2,6 +2,7 @@
 // radius = u*,th (first value at the centre, last at the rim). Axis modes (alpha_H) are drawn
 // both ways. Lines are shape-preserving cubic (PCHIP) interpolations of the unwrapped bearing vs
 // u*,th through every data point, broken where a mode is undefined. Plain SVG string (tested in node).
+import { DARK_THEME, type PlotTheme } from "./plottheme";
 import { angleDiffDeg, bearingToXY, mod } from "../util/angles";
 import { pchipDense, unwrapDeg } from "../util/pchip";
 import { escapeHtml } from "../util/format";
@@ -22,6 +23,7 @@ export interface ModesPlotOptions {
   series: ModeSeries[];
   currentIndex: number;
   size?: number;
+  theme?: PlotTheme;
 }
 
 const f2 = (v: number) => (Math.round(v * 100) / 100).toString();
@@ -57,27 +59,28 @@ export function modesPlotSvg(o: ModesPlotOptions): string {
   const pt = (b: number, u: number) => { const [x, y] = bearingToXY(b, rad(u)); return [cx + x, cy + y]; };
   const p: string[] = [];
   p.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="Polar plot of dune-orientation mode bearings (angle) against threshold friction velocity (radius, ${x0} m/s at the centre to ${x1} m/s at the rim)" class="modes-plot">`);
-  p.push(`<g fill="none" stroke="#56606b" stroke-width="0.6">`);
+  const T = o.theme ?? DARK_THEME;
+  p.push(`<g fill="none" stroke="${T.grid}" stroke-width="0.6">`);
   for (const u of [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]) p.push(`<circle cx="${cx}" cy="${cy}" r="${f2(rad(u))}"/>`);
-  p.push(`<circle cx="${cx}" cy="${cy}" r="${f2(R)}" stroke="#7a8590"/>`);
+  p.push(`<circle cx="${cx}" cy="${cy}" r="${f2(R)}" stroke="${T.gridStrong}"/>`);
   for (let b = 0; b < 360; b += 45) {
     const [x, y] = bearingToXY(b, R);
     p.push(`<line x1="${cx}" y1="${cy}" x2="${f2(cx + x)}" y2="${f2(cy + y)}"${b % 90 ? ' stroke-dasharray="2 3"' : ""}/>`);
   }
-  p.push(`</g><g font-size="8.5" fill="#aab4bf" text-anchor="start">`);
+  p.push(`</g><g font-size="8.5" fill="${T.label}" text-anchor="start">`);
   for (const u of [0.2, 0.4, 0.6]) {
     const [x, y] = bearingToXY(67.5, rad(u));
-    p.push(`<text x="${f2(cx + x + 1)}" y="${f2(cy + y)}" fill="none" stroke="#11161c" stroke-width="3" stroke-linejoin="round" aria-hidden="true">${u.toFixed(1)}</text>`);
+    p.push(`<text x="${f2(cx + x + 1)}" y="${f2(cy + y)}" fill="none" stroke="${T.halo}" stroke-width="3" stroke-linejoin="round" aria-hidden="true">${u.toFixed(1)}</text>`);
     p.push(`<text x="${f2(cx + x + 1)}" y="${f2(cy + y)}">${u.toFixed(1)}</text>`);
   }
-  p.push(`</g><g font-size="11" fill="currentColor" text-anchor="middle">`);
+  p.push(`</g><g font-size="11" fill="${T.text}" text-anchor="middle">`);
   for (const [lab, b] of [["N", 0], ["E", 90], ["S", 180], ["W", 270]] as const) {
     const [x, y] = bearingToXY(b, R + 11);
     p.push(`<text x="${f2(cx + x)}" y="${f2(cy + y + 4)}">${lab}</text>`);
   }
   p.push(`</g>`);
   const uc = o.x[o.currentIndex];
-  p.push(`<circle class="current-ut" cx="${cx}" cy="${cy}" r="${f2(rad(uc))}" fill="none" stroke="#ffd166" stroke-width="1.2" stroke-dasharray="4 3"><title>current u*,th = ${uc.toFixed(2)} m/s</title></circle>`);
+  p.push(`<circle class="current-ut" cx="${cx}" cy="${cy}" r="${f2(rad(uc))}" fill="none" stroke="${T.current}" stroke-width="1.2" stroke-dasharray="4 3"><title>current u*,th = ${uc.toFixed(2)} m/s</title></circle>`);
   for (const s of o.series) {
     const runs = continuousRuns(s.values, !!s.axis);
     const offsets = s.axis ? [0, 180] : [0];
@@ -92,11 +95,11 @@ export function modesPlotSvg(o: ModesPlotOptions): string {
       const v = s.values[o.currentIndex];
       if (Number.isFinite(v)) {
         const [x, y] = pt(v + off, uc);
-        p.push(`<circle class="current-mode" cx="${f2(x)}" cy="${f2(y)}" r="3.2" fill="${s.color}" stroke="#11161c" stroke-width="0.8"/>`);
+        p.push(`<circle class="current-mode" cx="${f2(x)}" cy="${f2(y)}" r="3.2" fill="${s.color}" stroke="${T.markerStroke}" stroke-width="0.8"/>`);
       }
     }
   }
-  p.push(`<text x="${size - 4}" y="${size - 5}" font-size="9.5" text-anchor="end" fill="#aab4bf">radius: u*,th (m/s)</text>`);
+  p.push(`<text x="${size - 4}" y="${size - 5}" font-size="9.5" text-anchor="end" fill="${T.label}">radius: u*,th (m/s)</text>`);
   p.push(`</svg>`);
   return p.join("");
 }

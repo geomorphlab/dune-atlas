@@ -18,11 +18,18 @@ import { CellStore } from "./cell/cellstore";
 import { cellFeature, cellFromIndex, snapToCell, ERA5_LAND_GRID, type Grid } from "./cell/snap";
 import { C3S_NOTICE } from "./cell/citation";
 import { mathOnly } from "./util/math";
+import { shareFromHash, shareToUrlState, shareUrl, type ShareState } from "./share/shortlink";
+import { captureMap, composeWithStrip, downloadBlob, mapExportFilename, mapStripSvg } from "./export/mapExport";
+import { Tour, shouldShowTour, tourSeen } from "./ui/tour";
+import { TOUR_STEPS } from "./ui/helpText";
+import { Tools } from "./ui/tools";
 
 const { registry: reg, errors } = loadRegistry();
 if (errors.length) console.warn("registry merge:", errors);
 const dataBase = CONFIG.dataBase ?? reg.dataBase;
-const url = parseUrlState(location.search);
+// short share link (#v=…) first, else the ?query permalink
+const shared = shareFromHash(location.hash);
+const url: UrlState = shared ? { ...shareToUrlState(shared), ...(parseUrlState(location.search).tour ? { tour: true } : {}) } : parseUrlState(location.search);
 
 // ---- wind dataset: URL, else (no cell in the URL: old permalinks are the default dataset) the
 // last choice (localStorage), else the registry default. Layer definitions follow the dataset.
@@ -72,7 +79,7 @@ const map = new maplibregl.Map({
   attributionControl: false,
   maxPitch: 0,
   pitch: 0,
-  bearing: 0,
+  bearing: shared?.bearing ?? 0,
   dragRotate: false,
   pitchWithRotate: false,
   touchPitch: false,
@@ -125,7 +132,41 @@ const fullScreenUrl = () => {
   delete s.embed;
   return `${location.origin}${location.pathname}${serializeUrlState(s)}`;
 };
-renderLayerPanel(document.getElementById("layer-panel")!, reg, store, { fullScreenUrl: init.embed ? fullScreenUrl : undefined });
+const layerPanelEl = document.getElementById("layer-panel")!;
+renderLayerPanel(layerPanelEl, reg, store, { fullScreenUrl: init.embed ? fullScreenUrl : undefined, initialOpen: shared?.panel });
+
+// ---- share link, map export, help & tour ----
+function shareState(): ShareState {
+  const s = store.state, c = map.getCenter();
+  return {
+    lon: c.lng, lat: c.lat, zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch(), proj: s.projection,
+    dataset: s.dataset, basemap: s.basemap, ut: s.utIndex, cell: s.cell,
+    layers: s.order.filter((id) => s.layers[id]?.visible).map((id) => ({ id, opacity: Number(s.layers[id].opacity.toFixed(2)), ...(s.layers[id].cfg ? { cfg: s.layers[id].cfg } : {}) })),
+    panel: !layerPanelEl.classList.contains("collapsed"),
+  };
+}
+const shareLinkNow = () => shareUrl(`${location.origin}${location.pathname}`, shareState());
+async function exportMap(o: { scale: 1 | 2; basemap: boolean }) {
+  const c = map.getCenter();
+  const view = { lon: c.lng, lat: c.lat, zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch(), proj: store.state.projection };
+  const link = shareLinkNow(), date = new Date();
+  const canvas = await captureMap(map, { scale: o.scale, includeBasemap: o.basemap, isOwnLayer: (id) => id.startsWith("ov-"), settle: () => overlays.settled() });
+  const strip = mapStripSvg({ reg, state: store.state, view, width: map.getCanvas().clientWidth, includeBasemap: o.basemap, shareLink: link, date }, o.scale);
+  downloadBlob(mapExportFilename(store.state.dataset, view, date), await composeWithStrip(canvas, strip, o.scale));
+}
+function openAbout() {
+  const toggle = layerPanelEl.querySelector(".panel-toggle") as HTMLButtonElement | null;
+  if (toggle?.getAttribute("aria-expanded") === "false") toggle.click();
+  const about = layerPanelEl.querySelector("details.about") as HTMLDetailsElement | null;
+  if (!about) return;
+  about.open = true;
+  about.scrollIntoView({ block: "start" });
+  (about.querySelector("summary") as HTMLElement | null)?.focus();
+}
+const tour = new Tour(TOUR_STEPS);
+const tools = new Tools({ startTour: () => tour.start(), shareLink: shareLinkNow, exportMap, openAbout });
+map.addControl({ onAdd: () => tools.el, onRemove: () => tools.el.remove() }, "top-right");
+if (shouldShowTour({ embed: init.embed, tourParam: !!url.tour, seen: tourSeen() })) map.once("idle", () => setTimeout(() => { if (!tour.active) tour.start(); }, 500));
 
 /** Table labels: registry title (plain language) + TeX symbol from titleTex / source long_name. */
 function fieldLabel(v: string): FieldLabel {
@@ -147,7 +188,7 @@ const getCellStore = (): Promise<CellStore> => (cellStore ??= (() => {
 })());
 const panel = new CellPanel(document.getElementById("cell-panel")!, init.utIndex, {
   windSectors: CONFIG.windRoseSectors, fluxSectors: CONFIG.fluxRoseSectors,
-  onClose: () => store.set({ cell: null }), fieldLabel, threshold: { def: reg.threshold, store },
+  onClose: () => store.set({ cell: null }), fieldLabel, threshold: { def: reg.threshold, store }, shareLink: () => shareLinkNow(),
   exportMeta: () => {
     const ds = selectDataset(reg, store.state.dataset);
     return { datasetId: ds?.id ?? "", datasetTitle: ds?.title ?? "", dataVersion: versionFromPrefix(ds?.prefix), permalink: fullScreenUrl() };
@@ -160,7 +201,7 @@ map.on("click", async (e) => {
   const c = snapToCell(e.lngLat.lng, e.lngLat.lat, grid);
   if (c) store.set({ cell: [c.iy, c.ix] });
 });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape" && store.state.cell) store.set({ cell: null }); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && store.state.cell && !tour.active && !tools.open) store.set({ cell: null }); });
 
 // ---- state -> map/panels/URL ----
 function currentUrlState(): UrlState {

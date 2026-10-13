@@ -114,7 +114,7 @@ describe.skipIf(!have)("ERA5-Land / ERA5 parity of the summary table and downloa
     const p = new CellPanel(root, 14, { windSectors: 16, fluxSectors: 32, onClose: () => {}, exportMeta: () => ({ datasetId: id, datasetTitle: s.meta.datasetTitle, dataVersion: "v1", permalink: s.meta.permalink }) });
     await p.show({ query: async () => s.cell, attrs: s.store.attrs, fieldVars: s.cell.fieldVars } as unknown as CellStore, s.cell.iy, s.cell.ix);
     const rows = [...root.querySelectorAll(".summary tbody tr")].map((r) => ({ field: r.getAttribute("data-field"), sym: r.querySelector("td.sym")!.textContent, label: r.querySelector("th")!.textContent!.replace(/\d+ % of cell/, "N % of cell") }));
-    const sections = [...root.querySelectorAll(".cell-body details")].map((d) => [d.getAttribute("data-section"), d.querySelector("summary")!.textContent!.replace(/= [\d.]+ m\/s/, "= X m/s")]);
+    const sections = [...root.querySelectorAll(".cell-body details.section")].map((d) => [d.getAttribute("data-section"), d.querySelector("summary")!.textContent!.replace(/= [\d.]+ m\/s/, "= X m/s")]);
     return { rows, sections, root };
   };
   it("summary table: same rows (keys, symbols, labels) in the same order; panel sections identical", async () => {

@@ -291,7 +291,7 @@ describe("cell panel", () => {
   it("every section heading is a disclosure (same markup as Modes); open by default; each state remembered", async () => {
     await open();
     const body = root.querySelector(".cell-body")!;
-    const secs = [...body.querySelectorAll("details")] as HTMLDetailsElement[];
+    const secs = [...body.querySelectorAll("details.section")] as HTMLDetailsElement[];
     // this synthetic cell has no cells-aux qsdiv series (that section is checked in newlayers.test.ts)
     const present = PANEL_SECTIONS.filter((k) => k !== "qsdiv");
     expect(secs.map((d) => d.dataset.section)).toEqual(present);
@@ -311,7 +311,7 @@ describe("cell panel", () => {
     for (const k of present) expect(memStorage.getItem(sectionOpenKey(k))).toBe("0");
     expect(MODES_OPEN_KEY).toBe("duneAtlas.cellPanel.modesOpen");
     await open();
-    const again = [...root.querySelectorAll(".cell-body details")] as HTMLDetailsElement[];
+    const again = [...root.querySelectorAll(".cell-body details.section")] as HTMLDetailsElement[];
     expect(again.map((d) => d.open)).toEqual(present.map(() => false));
     // threshold change re-renders the table heading in place (still inside its summary), state kept
     const mini = root.querySelector("#cell-ut-slider") as HTMLInputElement;

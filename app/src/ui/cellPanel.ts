@@ -5,8 +5,12 @@ import type { CellData, CellStore } from "../cell/cellstore";
 import { cellFromIndex, ERA5_LAND_GRID, type Grid } from "../cell/snap";
 import { fieldValue } from "../cell/cellstore";
 import { analyseCell, EXCESS_CLASSES, EXCESS_COLORS, FLUX_MODES, MODE_DEFINED_BY, MODE_KEYS, MODE_STYLE, ROSE_ARROW_KEYS, modeDefined, type CellView, type FluxMode, type ModeKey } from "../cell/analysis";
-import { roseSvg, SPEED_COLORS, roseBinChoices } from "../cell/roses";
+import { roseSvg, SPEED_COLORS, roseBinChoices, type RoseSvgOptions } from "../cell/roses";
 import { modesPlotSvg } from "../cell/modesplot";
+import { DARK_THEME, LIGHT_THEME, seriesColor, type PlotTheme } from "../cell/plottheme";
+import { composePlotSvg, katexPlain, plotFilename, svgToPngBlob, type PlotExportSpec, type PlotKey } from "../export/plotExport";
+import { downloadBlob } from "../export/mapExport";
+import { EXPORT_TEXT } from "./helpText";
 import { linePlotSvg } from "../cell/lineplot";
 import { AUX_META, aridityClass } from "../cell/auxinfo";
 import { DATASET_INFO, datasetInfo, type DatasetInfo } from "../cell/datasetinfo";
@@ -41,6 +45,8 @@ export interface CellPanelOptions {
   exportMeta?: () => Omit<ExportMeta, "storeAttrs" | "generated">;
   /** if given, a compact synced u*,th control is shown at the top of the panel */
   threshold?: { def: ThresholdDef; store: Store };
+  /** short link to the current view (plot exports) */
+  shareLink?: () => string;
 }
 
 const deg = (v: number) => (Number.isFinite(v) ? `${v.toFixed(0)}° (${compassPoint(v)})` : MISSING);
@@ -58,6 +64,14 @@ export const PANEL_SECTIONS = ["windRose", "fluxRose", "modes", "qsdiv", "summar
 export type PanelSection = (typeof PANEL_SECTIONS)[number];
 export const sectionOpenKey = (k: PanelSection) => `duneAtlas.cellPanel.${k}Open`;
 /** cell-centre coordinate: up to 2 decimals (0.1° and 0.25° centres exact), no trailing zeros */
+const SUP: Record<string, string> = { "-": "⁻", 0: "⁰", 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵", 6: "⁶", 7: "⁷", 8: "⁸", 9: "⁹" };
+/** number as plain text (exports): 3 significant digits, ×10ⁿ outside 0.01 .. 10⁴ */
+export function fmtPlain(v: number): string {
+  if (!Number.isFinite(v)) return MISSING;
+  const a = Math.abs(v);
+  if (a !== 0 && (a >= 1e4 || a < 1e-2)) { const [m, e] = v.toExponential(2).split("e"); return `${Number(m)}×10${String(Number(e)).replace(/./g, (c) => SUP[c] ?? c)}`; }
+  return String(Number(v.toPrecision(3)));
+}
 const coord = (v: number) => String(Number(v.toFixed(2)));
 /** Same location: either cell centre lies inside the other cell (cell sizes from the grids). */
 export function sameLocation(a: { lat: number; lon: number; grid?: Grid }, b: { lat: number; lon: number }, gb: Grid): boolean {
@@ -119,6 +133,9 @@ export class CellPanel {
   }
   #storeAttrs: Partial<CellStoreAttrs> | undefined;
   #dyn: Record<string, HTMLElement> = {};
+  /** export specs of the plots as last rendered (same settings as on screen) */
+  #plots: Partial<Record<PlotKey, PlotExportSpec>> = {};
+  #lastView: CellView | null = null;
   /** compact u*,th control, created once and re-used across cells (one store subscription) */
   #thr: HTMLElement | null = null;
   #fluxMode: FluxMode = "flat";
@@ -329,7 +346,7 @@ export class CellPanel {
       binSlider("Sectors", this.#windBins, choices, (n) => { this.#windBins = n; this.update(); }),
       d("windSvg", "div", "fig-svg"),
       h("ul", { class: "fig-legend", html: edges.slice(0, -1).map((e, k) => `<li><span class="swatch" style="background:${SPEED_COLORS[k]}"></span>${e}–${edges[k + 1]}</li>`).join("") + "<li>m/s at 10 m</li>" }),
-      d("windCap", "p", "caption")));
+      d("windCap", "p", "caption"), this.#exportMenu("wind-rose")));
     // flux rose
     const axisName = nextId("faxis");
     const axisSel = h("div", { class: "axis-toggle", role: "radiogroup", "aria-label": "Flux rose radial axis" },
@@ -350,17 +367,17 @@ export class CellPanel {
       d("fluxClassLegend", "ul", "fig-legend"),
       d("fluxLegend", "ul", "fig-legend arrows"),
       d("fluxKv", "dl", "kv"),
-      d("fluxCap", "p", "caption")));
+      d("fluxCap", "p", "caption"), this.#exportMenu("flux-rose")));
     // modes (polar)
     body.append(this.#section("modes", "fig modes", h("h3", { id: "md-h", html: `Modes vs threshold (polar: angle = direction, radius = ${mathHtml("$u_{*,th}$")})` }),
       d("modesSvg", "div", "fig-svg"),
       h("ul", { class: "fig-legend arrows", html: MODE_KEYS.map((k) => { const s = MODE_STYLE[k]; return `<li><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="${s.color}" stroke-width="2" ${"dash" in s ? `stroke-dasharray="${s.dash}"` : ""}/></svg>${mathHtml(s.tex)} ${escapeHtml(s.label.replace(/^\S+ /, ""))}</li>`; }).join("") }),
-      d("modesCap", "p", "caption")));
+      d("modesCap", "p", "caption"), this.#exportMenu("modes")));
     // flux divergence vs threshold (cells-aux), if available
     if (cell.aux?.series.qsdiv && Array.from(cell.aux.series.qsdiv).some(Number.isFinite)) {
       body.append(this.#section("qsdiv", "fig qsdiv", h("h3", { id: "qd-h", html: `Flux divergence ${mathHtml("$\\nabla\\cdot\\vec{q}_s$")} vs threshold` }),
         d("qsdivSvg", "div", "fig-svg"),
-        d("qsdivCap", "p", "caption")));
+        d("qsdivCap", "p", "caption"), this.#exportMenu("qsdiv")));
     }
     // table + downloads
     body.append(this.#section("summary", "summary", d("tableHead", "h3"), d("table", "div", "table-wrap"),
@@ -379,11 +396,13 @@ export class CellPanel {
     const ua = cell.bins.uaCentres;
     const D = this.#dyn;
     D.meta.innerHTML = ` Threshold ${mathHtml("$u_{*,th}$")} = <strong>${formatUt(v.ut)}</strong> (≈ ${v.thresholdWind10m.toFixed(1)} m/s wind at 10 m)`;
-    D.windSvg.innerHTML = roseSvg({
+    const windOpts: RoseSvgOptions = {
       id: "wind-rose", values: v.windRose.freq, colors: SPEED_COLORS, title: "Wind rose",
       desc: `Frequency of hourly 10 m winds by the direction they blow from, ${v.windRose.sectors} sectors, stacked by speed class; 1950–2024; sums to 100 %.`,
-      ringFormat: (x) => `${x}%`, axisLabel: "% of hours", size, uaCentres: ua,
-    });
+      ringFormat: (x: number) => `${x}%`, axisLabel: "% of hours", size, uaCentres: ua,
+    };
+    D.windSvg.innerHTML = roseSvg(windOpts);
+    this.#lastView = v;
     const dsw = this.#ds(cell);
     D.windCap.textContent = `Direction the wind blows FROM (meteorological), ${v.windRose.sectors} sectors of ${360 / v.windRose.sectors}°; radius = % of the ${v.windRose.totalHours.toLocaleString("en")} counted hourly samples (sums to 100 %; hours > 20 m/s are not in the histogram). ${dsw.name} 10 m wind ${dsw.period}.`;
     const s = MODE_STYLE;
@@ -391,13 +410,14 @@ export class CellPanel {
     const pct = this.#fluxAxis === "pct";
     const anyFlux = v.fluxSectors.some((x) => x > 0);
     const w = 360 / v.fluxSectors.length;
-    D.fluxSvg.innerHTML = roseSvg({
+    const fluxOpts: RoseSvgOptions = {
       id: "flux-rose", values: pct ? v.fluxStackPct : v.fluxStack, colors: EXCESS_COLORS,
       title: "Sand flux rose (time-averaged, transport toward)",
       desc: `Time-averaged ${v.fluxMode === "flat" ? "flat-bed" : "crest"} sand flux by the direction sand moves toward, ${v.fluxSectors.length} sectors of ${w} degrees, stacked by excess shear ${v.fluxMode === "flat" ? "u*f" : "uc"}/u*,th, ${pct ? "percent of total flux" : "m²/yr"}, at u*,th ${formatUt(v.ut)}.`,
       ringFormat: (x) => (pct ? `${Number(x.toPrecision(2))}%` : `${Number(x.toPrecision(2))}`), arrows,
       centreText: anyFlux ? undefined : "no transport", axisLabel: pct ? "% of total flux" : "m²/yr per sector", size, uaCentres: ua,
-    });
+    };
+    D.fluxSvg.innerHTML = roseSvg(fluxOpts);
     const ratioTex = v.fluxMode === "flat" ? "$u_{*f}/u_{*,th}$" : "$u_c/u_{*,th}$";
     D.fluxClassLegend.innerHTML = EXCESS_CLASSES.map((c, k) => `<li><span class="swatch" style="background:${EXCESS_COLORS[k]}"></span>${c}</li>`).join("") + `<li>${mathHtml(ratioTex)}</li>`;
     D.fluxLegend.innerHTML = arrows.map((a) => `<li><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="${a.color}" stroke-width="2" ${a.dash ? `stroke-dasharray="${a.dash}"` : ""}/></svg>${escapeHtml(a.label)}</li>`).join("");
@@ -413,14 +433,78 @@ export class CellPanel {
     const totalTxt = Number.isFinite(v.fluxTotal) ? `${fmtNum(v.fluxTotal)} m²/yr` : `${MISSING} (mode direction undefined at this threshold)`;
     D.fluxCap.innerHTML = `<strong>${escapeHtml(fm.label)}</strong>: ${mathHtml(fm.totalTex)} = ${totalTxt}. Direction sand moves TOWARD; ${v.fluxSectors.length} sectors of ${w}°. Radius = ${pct ? "% of the total flux in each sector (sums to 100 %)" : `time-averaged flux in each sector, m²/yr (sums to ${escapeHtml(fm.totalText)})`}. Time-averaged ${what}, Σ<sub>speed</sub> n·q / Σ<sub>all</sub> n from the wind histogram, computed in your browser. Colours split each sector by the excess shear ${mathHtml(ratioTex)} of the winds carrying the flux (only ${mathHtml(v.fluxMode === "flat" ? "$u_{*f} > u_{*,th}$" : "$u_c > u_{*,th}$")} transports sand). DP, RDP, RDP/DP, RDD and the arrows are the map fields at this threshold; a direction is hidden where the flux defining it is zero.`;
     D.modesCap.innerHTML = `Mode bearings (toward) for ${mathHtml("$u_{*,th}$")} = ${v.utValues[0].toFixed(2)} m/s (centre) to ${v.utValues[v.utValues.length - 1].toFixed(2)} m/s (rim); ${mathHtml("$\\alpha_H$")} is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current threshold.`;
-    D.modesSvg.innerHTML = modesPlotSvg({ x: v.utValues, currentIndex: v.utIndex, size: Math.min(size, 420), series: MODE_KEYS.map((k) => ({ label: s[k].label, color: s[k].color, dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined, values: v.modeSeries[k], axis: k === "ab", width: k === "ao" ? 2.8 : undefined })) });
+    const modesOpts = (t: PlotTheme) => ({ x: v.utValues, currentIndex: v.utIndex, size: Math.min(size, 420), theme: t, series: MODE_KEYS.map((k) => ({ label: s[k].label, color: seriesColor(s[k].color, t), dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined, values: v.modeSeries[k], axis: k === "ab", width: k === "ao" ? 2.8 : undefined })) });
+    D.modesSvg.innerHTML = modesPlotSvg(modesOpts(DARK_THEME));
     if (D.qsdivSvg && cell.aux?.series.qsdiv) {
       const q = Array.from(cell.aux.series.qsdiv, (x) => x * 1000);
-      D.qsdivSvg.innerHTML = linePlotSvg({ x: v.utValues, y: q, currentIndex: v.utIndex, xLabel: "u*,th (m/s)", yLabel: "m/kyr", title: "Saturated flux divergence vs threshold friction velocity", width: Math.min(size, 420) });
+      const qsOpts = { x: v.utValues, y: q, currentIndex: v.utIndex, xLabel: "u*,th (m/s)", yLabel: "m/kyr", title: "Saturated flux divergence vs threshold friction velocity", width: Math.min(size, 420) };
+      D.qsdivSvg.innerHTML = linePlotSvg(qsOpts);
       D.qsdivCap.innerHTML = `Saturated flux divergence of this cell (m/kyr; < 0 = flux convergence, deposition) for every ${mathHtml("$u_{*,th}$")}; dot and dashed line: current threshold (${fmtNum(q[v.utIndex])} m/kyr). Divergence of the time-averaged flux vector (RDP, RDD) following Gunn (2026), Methods M6; no data at coasts.`;
     }
     D.tableHead.innerHTML = `Cell summary at ${mathHtml("$u_{*,th}$")} = ${formatUt(v.ut)}`;
     D.table.innerHTML = this.#table(cell, v);
+    // export specs: the same options, re-rendered in the light theme on export
+    const edges = [0, 2.5, 5, 7.5, 10, 12.5, 20];
+    const L = LIGHT_THEME;
+    this.#plots = {
+      "wind-rose": {
+        key: "wind-rose", title: "Wind rose (direction the wind blows from)", thresholdDependent: false, caption: D.windCap.textContent ?? "",
+        svg: (t) => roseSvg({ ...windOpts, id: "x-wind-rose", theme: t }),
+        legend: [{ kind: "swatches", items: [...edges.slice(0, -1).map((e, k) => ({ color: SPEED_COLORS[k], shape: "box" as const, label: `${e}–${edges[k + 1]} m/s` })), { color: "none", shape: "line" as const, label: "10 m wind speed classes" }].filter((x) => x.color !== "none") }],
+      },
+      "flux-rose": {
+        key: "flux-rose", title: `Sand flux rose (time-averaged, transport toward): ${fm.label}, ${pct ? "% of total flux" : "m²/yr per sector"}`, thresholdDependent: true, caption: katexPlain(D.fluxCap),
+        svg: (t) => roseSvg({ ...fluxOpts, id: "x-flux-rose", theme: t, arrows: arrows.map((a) => ({ ...a, color: seriesColor(a.color, t) })) }),
+        legend: [
+          { kind: "swatches", items: EXCESS_CLASSES.map((c, k) => ({ color: EXCESS_COLORS[k], shape: "box" as const, label: `${v.fluxMode === "flat" ? "u*f" : "uc"}/u*,th ${c}` })) },
+          { kind: "swatches", items: arrows.filter((a) => Number.isFinite(a.bearing)).map((a) => ({ color: seriesColor(a.color, L), shape: a.axis ? "line" as const : "arrow" as const, dash: a.dash, label: a.label })) },
+          { kind: "text", text: `DP = ${fmtPlain(v.drift.dp)} m²/yr · RDP = ${fmtPlain(v.drift.rdp)} m²/yr · RDP/DP = ${fmtPlain(v.drift.ratio)} · RDD = ${deg(v.drift.rddBearing)}` },
+        ],
+      },
+      modes: {
+        key: "modes", title: "Dune-orientation modes vs threshold friction velocity (angle = direction toward, radius = u*,th)", thresholdDependent: true, caption: katexPlain(D.modesCap),
+        svg: (t) => modesPlotSvg(modesOpts(t)),
+        legend: [{ kind: "swatches", items: [...MODE_KEYS.map((k) => ({ color: seriesColor(s[k].color, L), shape: "line" as const, dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined, label: s[k].label })), { color: L.current, shape: "line" as const, dash: "4 3", label: "current threshold" }] }],
+      },
+    };
+    if (D.qsdivSvg && cell.aux?.series.qsdiv) {
+      const q = Array.from(cell.aux.series.qsdiv, (x) => x * 1000);
+      this.#plots.qsdiv = {
+        key: "qsdiv", title: "Saturated flux divergence vs threshold friction velocity", thresholdDependent: true, caption: katexPlain(D.qsdivCap),
+        svg: (t) => linePlotSvg({ x: v.utValues, y: q, currentIndex: v.utIndex, xLabel: "u*,th (m/s)", yLabel: "m/kyr", title: "Saturated flux divergence vs threshold friction velocity", width: Math.min(size, 420), theme: t }),
+        legend: [{ kind: "swatches", items: [{ color: "#e3a33b", shape: "line", label: "flux divergence (m/kyr; < 0 = deposition)" }, { color: "#e3a33b", shape: "dot", label: "current threshold" }] }],
+      };
+    }
+  }
+
+  /** export spec of a plot as last rendered (tests, exports) */
+  plotSpec(key: PlotKey): PlotExportSpec | undefined { return this.#plots[key]; }
+
+  #exportMenu(key: PlotKey): HTMLElement {
+    const items = h("div", { class: "export-items" });
+    for (const [label, fmt, scale] of [[EXPORT_TEXT.png1, "png", 1], [EXPORT_TEXT.png2, "png", 2], [EXPORT_TEXT.svg, "svg", 1]] as const) {
+      const b = h("button", { type: "button", "data-format": `${fmt}${scale}` }, label);
+      b.addEventListener("click", () => { void this.exportPlot(key, fmt, scale); (b.closest("details") as HTMLDetailsElement | null)?.removeAttribute("open"); });
+      items.append(b);
+    }
+    return h("details", { class: "export-menu", "data-plot": key }, h("summary", { title: "Export this plot (light theme, with data source and link)" }, EXPORT_TEXT.plotMenu), items);
+  }
+
+  /** the export file of a plot: name and content (SVG text; PNG is rasterised in the browser) */
+  plotExport(key: PlotKey, scale = 1): { name: (ext: "png" | "svg") => string; svg: string; width: number; height: number } | null {
+    const spec = this.#plots[key], cell = this.#cell, v = this.#lastView;
+    if (!spec || !cell || !v) return null;
+    const ds = this.#ds(cell);
+    const ctx = { cell: { lat: cell.lat, lon: cell.lon, iy: cell.iy, ix: cell.ix }, dataset: ds, ut: v.ut, shareLink: this.#opts.shareLink?.() ?? globalThis.location?.href ?? "", date: new Date() };
+    const out = composePlotSvg(spec, ctx, scale);
+    return { ...out, name: (ext) => plotFilename(key, ds.id, cell, spec.thresholdDependent ? v.ut : null, ext) };
+  }
+
+  async exportPlot(key: PlotKey, fmt: "png" | "svg", scale: 1 | 2) {
+    const x = this.plotExport(key, fmt === "png" ? scale : 1);
+    if (!x) return;
+    if (fmt === "svg") triggerDownload(x.name("svg"), x.svg, "image/svg+xml");
+    else downloadBlob(x.name("png"), await svgToPngBlob(x.svg, x.width * scale, x.height * scale));
   }
 
   #table(cell: CellData, v: CellView): string {

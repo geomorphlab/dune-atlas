@@ -6,7 +6,7 @@ import { mathHtml } from "../util/math";
 import { escapeHtml } from "../util/format";
 import { richHtml } from "../util/richtext";
 
-function tickLabel(v: number): string {
+export function tickLabel(v: number): string {
   const a = Math.abs(v);
   if (a !== 0 && (a >= 1e4 || a < 1e-2)) return v.toExponential(0).replace("e+", "e");
   return Number(v.toPrecision(3)).toString();

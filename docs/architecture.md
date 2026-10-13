@@ -124,6 +124,29 @@ and fixture layouts and fails if an upgrade changes them.
   (`sameLocation`: either cell centre inside the other cell - a dataset switch re-snap or the same
   cell) keeps the old content (aria-busy, dimmed) until the new data are in, then re-renders at
   the same scroll position; another location starts at the top. Collapsed sections persist.
+* **Help, tour, share, export** (`ui/tools.ts`, `ui/tour.ts`, `ui/helpText.ts`, `share/shortlink.ts`,
+  `export/`): a MapLibre control under the zoom buttons (never under the side panels or the mobile
+  bottom sheet) with Help and tour (?), Share / copy link and Export map image; each opens a small
+  dialog (Esc / × / click outside close it). All help, tour, share and export text is in
+  `ui/helpText.ts`; `docs/help-text.md` is generated from it (`npm run help-doc`, checked by a test)
+  and the public-text test covers it. The tour (8 steps, vanilla) runs once on the first visit
+  (localStorage `duneAtlas.tourSeen`; never in embed mode unless `?tour=1`); step 1 highlights the
+  help button. Steps highlight the first visible of their targets (else a centred popover);
+  Back / Next / Skip, Esc and click outside skip, arrows, focus trap, aria-live.
+* **Short share links** `#v=<base64url>` (format v1, binary, varints): camera, projection, dataset,
+  basemap, u*,th index, selected cell, layer panel open, and the visible layers in drawing order with
+  opacity and display config (colormap, reverse, limits to 6 significant digits, log, render mode,
+  line colour, spacing, fill, invert). Ids are indices into append-only tables (`SHARE_IDS`; unknown
+  ids inline), so links survive registry growth. Typical links: 58–77 characters with the site
+  address. `?query` permalinks are still parsed and still written to the address bar.
+* **Image exports**: the map is captured from the live canvas after `idle` + overlay adds (pixel
+  ratio set to the export scale, basemap layers hidden for a transparent background, selected-cell
+  outline always hidden), then composed with the information strip (`export/strip.ts`, transparent
+  SVG with dark text: colour bars of the active raster layers with units / scale / colormap / limits
+  / u*,th, keys for vectors and streamlines, north arrow, scale bar at the view centre (omitted below
+  zoom 2.5), projection, view, wind dataset, sources with the Copernicus notice, share link, date).
+  Panel plots are re-rendered from the on-screen options in `LIGHT_THEME` (`cell/plottheme.ts`;
+  light-on-dark series colours mapped) with a strip, as SVG or PNG (1x / 2x).
 * **Antimeridian**: both wind grids have an edge column that straddles ±180 (ERA5-Land
   −180.05..−179.95, ERA5 −180.125..−179.875). zarr-layer patch (`patches/`): raster x bounds are
   not clamped to ±180 (the column keeps its width; the part beyond −180 is drawn at x < 0, which

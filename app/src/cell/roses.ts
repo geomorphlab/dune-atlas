@@ -3,6 +3,7 @@
 import { C } from "../util/constants";
 import { bearingToXY, mathToBearingDeg, mod, towardToFrom } from "../util/angles";
 import { escapeHtml } from "../util/format";
+import { DARK_THEME, type PlotTheme } from "./plottheme";
 
 /** Speed-class edges (m/s) aligned to the 0.15625 m/s histogram bins (16 bins = 2.5 m/s). */
 export const DEFAULT_SPEED_EDGES = [0, 2.5, 5, 7.5, 10, 12.5, 20];
@@ -138,6 +139,8 @@ export interface RoseSvgOptions {
   axisLabel?: string;
   /** source direction-bin centres (decides whether sectors are centred on N) */
   uaCentres?: ArrayLike<number>;
+  /** colours of grid / labels (default: the dark on-screen theme) */
+  theme?: PlotTheme;
 }
 
 const f2 = (v: number) => (Math.round(v * 100) / 100).toString();
@@ -165,9 +168,10 @@ export function roseSvg(o: RoseSvgOptions): string {
   const scale = (v: number) => (R * v) / top;
   const parts: string[] = [];
   const id = o.id ?? "rose";
+  const T = o.theme ?? DARK_THEME;
   parts.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-labelledby="${id}-t ${id}-d" class="rose">`);
   parts.push(`<title id="${id}-t">${escapeHtml(o.title)}</title><desc id="${id}-d">${escapeHtml(o.desc)}</desc>`);
-  parts.push(`<g class="rose-grid" fill="none" stroke="#56606b" stroke-width="0.6">`);
+  parts.push(`<g class="rose-grid" fill="none" stroke="${T.grid}" stroke-width="0.6">`);
   for (const t of ticks) parts.push(`<circle cx="${cx}" cy="${cy}" r="${f2(scale(t))}"/>`);
   for (let b = 0; b < 360; b += 45) {
     const [x, y] = bearingToXY(b, R);
@@ -205,7 +209,7 @@ export function roseSvg(o: RoseSvgOptions): string {
     }
     parts.push(`</g>`);
   }
-  parts.push(`<g class="rose-labels" font-size="11" fill="currentColor" text-anchor="middle">`);
+  parts.push(`<g class="rose-labels" font-size="11" fill="${T.text}" text-anchor="middle">`);
   for (const [lab, b] of [["N", 0], ["E", 90], ["S", 180], ["W", 270]] as const) {
     const [x, y] = bearingToXY(b, R + 11);
     parts.push(`<text x="${f2(cx + x)}" y="${f2(cy + y + 4)}">${lab}</text>`);
@@ -214,10 +218,10 @@ export function roseSvg(o: RoseSvgOptions): string {
     const [x, y] = bearingToXY(157.5, scale(t));
     // halo drawn as a separate text element (paint-order is not supported everywhere)
     const lab = escapeHtml(o.ringFormat(t));
-    parts.push(`<text class="ring-halo" font-size="9" x="${f2(cx + x + 2)}" y="${f2(cy + y)}" text-anchor="start" fill="none" stroke="#11161c" stroke-width="3" stroke-linejoin="round" aria-hidden="true">${lab}</text>`);
-    parts.push(`<text class="ring" font-size="9" x="${f2(cx + x + 2)}" y="${f2(cy + y)}" text-anchor="start" fill="#c3ccd5">${lab}</text>`);
+    parts.push(`<text class="ring-halo" font-size="9" x="${f2(cx + x + 2)}" y="${f2(cy + y)}" text-anchor="start" fill="none" stroke="${T.halo}" stroke-width="3" stroke-linejoin="round" aria-hidden="true">${lab}</text>`);
+    parts.push(`<text class="ring" font-size="9" x="${f2(cx + x + 2)}" y="${f2(cy + y)}" text-anchor="start" fill="${T.ring}">${lab}</text>`);
   }
-  if (o.axisLabel) parts.push(`<text class="axis-label" font-size="10" x="${size - 4}" y="${size - 5}" text-anchor="end" fill="#aab4bf">${escapeHtml(o.axisLabel)}</text>`);
+  if (o.axisLabel) parts.push(`<text class="axis-label" font-size="10" x="${size - 4}" y="${size - 5}" text-anchor="end" fill="${T.label}">${escapeHtml(o.axisLabel)}</text>`);
   if (o.centreText) parts.push(`<text x="${cx}" y="${cy + 4}" font-size="10">${escapeHtml(o.centreText)}</text>`);
   parts.push(`</g></svg>`);
   return parts.join("");
