@@ -19,7 +19,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "cell", title: "Clicking a cell",
-    body: "Click any land cell to open the cell panel: the wind rose, the sand-flux rose at the current threshold, dune-orientation modes against the threshold, the flux divergence and a table of all parameters. Section headings fold and unfold. Close the panel with × or Esc.",
+    body: "Click any land cell to open the cell panel: the wind rose, the sand-flux rose at the current threshold, dune-orientation modes against the threshold, the flux divergence and a table of all parameters. Section headings fold and unfold. Close the panel with × or Esc. The latitude and longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point).",
   },
   {
     id: "datasets", title: "Wind datasets",

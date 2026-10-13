@@ -154,6 +154,11 @@ body.resizing { user-select: none; cursor: ew-resize; }
 .maplibregl-ctrl-attrib a { color: var(--link) !important; }
 .maplibregl-ctrl-attrib-button { filter: invert(1); }
 .maplibregl-ctrl-scale { background: rgba(20, 26, 33, .75); color: var(--fg); border-color: var(--muted); }
+/* cursor coordinates: same look as the scale bar, on the same line (floats beside it) */
+.maplibregl-ctrl.atlas-coords { clear: none; box-sizing: border-box; background: rgba(20, 26, 33, .75); color: var(--fg); border: 2px solid transparent; border-top: none;
+  font-size: 10px; padding: 0 5px; margin: 0 0 10px 8px; font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; }
+.maplibregl-ctrl.atlas-coords.stale { opacity: .6; }
+.maplibregl-ctrl.atlas-coords[hidden] { display: none; }
 
 /* embed (Google Sites iframe) */
 body.embed .atlas-header .subtitle { display: none; }

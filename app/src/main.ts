@@ -25,6 +25,7 @@ import { captureMap, composeWithStrip, downloadBlob, mapExportFilename, mapStrip
 import { Tour, shouldShowTour, tourSeen } from "./ui/tour";
 import { TOUR_STEPS } from "./ui/helpText";
 import { Tools } from "./ui/tools";
+import { CoordsControl } from "./ui/coords";
 import { tourHooks } from "./ui/tourHooks";
 
 const { registry: reg, errors } = loadRegistry();
@@ -76,6 +77,7 @@ map.keyboard.disableRotation();
 map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 if (!init.embed) map.addControl(new maplibregl.FullscreenControl(), "top-right");
 map.addControl(new maplibregl.ScaleControl({ maxWidth: 120 }), "bottom-left");
+map.addControl(new CoordsControl(), "bottom-left"); // cursor lat, lon, beside the scale bar
 map.addControl(new maplibregl.AttributionControl({
   compact: true,
   customAttribution: [

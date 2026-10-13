@@ -151,6 +151,11 @@ and fixture layouts and fails if an upgrade changes them.
   line colour, spacing, fill, invert). Ids are indices into append-only tables (`SHARE_IDS`; unknown
   ids inline), so links survive registry growth. Typical links: 58–77 characters with the site
   address. `?query` permalinks are still parsed and still written to the address bar.
+* **Cursor coordinates** (`ui/coords.ts`): a MapLibre control floated beside the scale bar
+  (bottom left, same dark box, 10 px tabular figures, `pointer-events: none`): "24.53° S, 15.21° E"
+  (2 decimals, hemisphere letters, longitude wrapped). Mouse: follows the cursor, keeps the last
+  value dimmed when the cursor leaves the map. Touch screens (`hover: none`): hidden until a tap,
+  then the last tapped point. DOM only, so never in image exports.
 * **Opening view** (`src/defaultview.ts`): without view state in the URL (no `#v=`, no view keys in
   `?query`; `embed=1` / `tour=1` alone do not count, so embeds open the same way) the atlas opens
   in `DEFAULT_VIEW`, the decoded author link `#v=AQXirhW4wRLgAgIBDgMJVSACAWQAB1UA`: globe centred
