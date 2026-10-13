@@ -2,15 +2,17 @@
 // control (persistent, synced with the layer panel) | content. Content is built once per cell;
 // threshold / bin / axis changes only refresh the dynamic parts so sliders keep focus.
 import type { CellData, CellStore } from "../cell/cellstore";
+import { cellFromIndex, ERA5_LAND_GRID, type Grid } from "../cell/snap";
 import { fieldValue } from "../cell/cellstore";
 import { analyseCell, EXCESS_CLASSES, EXCESS_COLORS, FLUX_MODES, MODE_DEFINED_BY, MODE_KEYS, MODE_STYLE, ROSE_ARROW_KEYS, modeDefined, type CellView, type FluxMode, type ModeKey } from "../cell/analysis";
 import { roseSvg, SPEED_COLORS, roseBinChoices } from "../cell/roses";
 import { modesPlotSvg } from "../cell/modesplot";
 import { linePlotSvg } from "../cell/lineplot";
 import { AUX_META, aridityClass } from "../cell/auxinfo";
+import { datasetInfo, type DatasetInfo } from "../cell/datasetinfo";
 import { fieldInfo } from "../cell/fieldinfo";
 import { citationFile, triggerDownload } from "../cell/downloads";
-import { cellNetcdf, csvBundle, exportBaseName, type ExportMeta } from "../cell/export";
+import { cellDataset, cellNetcdf, csvBundle, exportBaseName, type ExportMeta } from "../cell/export";
 import type { CellStoreAttrs } from "../cell/cellstore";
 import { CELL_SOURCE_IDS, citationHtml, citationSources } from "../cell/citation";
 import { isPublishedField } from "../util/constants";
@@ -50,9 +52,28 @@ export function defaultFieldLabel(v: string): FieldLabel {
   return { symbolTex: mathOnly(info.longName), quantity };
 }
 
-export const MODES_OPEN_KEY = "duneAtlas.cellPanel.modesOpen";
-function readModesOpen(): boolean {
-  try { return localStorage.getItem(MODES_OPEN_KEY) !== "0"; } catch { return true; }
+/** Collapsible panel sections (every section heading is a disclosure); open by default, a
+ *  collapse / expand is remembered in localStorage under duneAtlas.cellPanel.<key>Open. */
+export const PANEL_SECTIONS = ["windRose", "fluxRose", "modes", "qsdiv", "summary", "downloads"] as const;
+export type PanelSection = (typeof PANEL_SECTIONS)[number];
+export const sectionOpenKey = (k: PanelSection) => `duneAtlas.cellPanel.${k}Open`;
+/** cell-centre coordinate: up to 2 decimals (0.1° and 0.25° centres exact), no trailing zeros */
+const coord = (v: number) => String(Number(v.toFixed(2)));
+/** Same location: either cell centre lies inside the other cell (cell sizes from the grids). */
+export function sameLocation(a: { lat: number; lon: number; grid?: Grid }, b: { lat: number; lon: number }, gb: Grid): boolean {
+  const ha = a.grid ? Math.abs(a.grid.dlat) / 2 : 0, hb = Math.abs(gb.dlat) / 2;
+  const wa = a.grid ? Math.abs(a.grid.dlon) / 2 : 0, wb = Math.abs(gb.dlon) / 2;
+  const dLat = Math.abs(a.lat - b.lat), dLon0 = Math.abs(a.lon - b.lon) % 360, dLon = Math.min(dLon0, 360 - dLon0);
+  return dLat <= Math.max(ha, hb) + 1e-9 && dLon <= Math.max(wa, wb) + 1e-9;
+}
+export const MODES_OPEN_KEY = sectionOpenKey("modes");
+const SECTION_DEFAULT_OPEN: Record<PanelSection, boolean> = { windRose: true, fluxRose: true, modes: true, qsdiv: true, summary: true, downloads: true };
+function readSectionOpen(): Record<PanelSection, boolean> {
+  const out = { ...SECTION_DEFAULT_OPEN };
+  for (const k of PANEL_SECTIONS) {
+    try { const v = localStorage.getItem(sectionOpenKey(k)); if (v === "0" || v === "1") out[k] = v === "1"; } catch { /* private mode */ }
+  }
+  return out;
 }
 const WIDTH_KEY = "duneAtlas.cellPanel.width", HEIGHT_KEY = "duneAtlas.cellPanel.height";
 export const PANEL_MIN_W = 320;
@@ -76,6 +97,8 @@ function binSlider(label: string, value: number, choices: number[], onChange: (n
 export class CellPanel {
   #root: HTMLElement;
   #content: HTMLElement | null = null;
+  /** the scrolling element (persistent while the panel is open) */
+  #scroll: HTMLElement | null = null;
   #cell: CellData | null = null;
   #utIndex: number;
   #req = 0;
@@ -83,8 +106,17 @@ export class CellPanel {
   #windBins: number;
   #fluxBins: number;
   #fluxAxis: "pct" | "abs" = "pct";
-  /** 'Modes vs threshold' expanded by default; a collapse is remembered (localStorage) */
-  #modesOpen = readModesOpen();
+  /** open state of the collapsible sections (localStorage) */
+  #open = readSectionOpen();
+  /** a collapsible section: <details> whose <summary> holds the section's <h3> heading */
+  #section(key: PanelSection, cls: string, title: HTMLElement, ...children: (Node | null | undefined)[]) {
+    const det = h("details", { class: `section ${cls}`, "data-section": key, open: this.#open[key] }, h("summary", {}, title), ...children);
+    det.addEventListener("toggle", () => {
+      this.#open[key] = det.open;
+      try { localStorage.setItem(sectionOpenKey(key), det.open ? "1" : "0"); } catch { /* ignore */ }
+    });
+    return det;
+  }
   #storeAttrs: Partial<CellStoreAttrs> | undefined;
   #dyn: Record<string, HTMLElement> = {};
   /** compact u*,th control, created once and re-used across cells (one store subscription) */
@@ -188,22 +220,35 @@ export class CellPanel {
     document.body.classList.remove("cell-open");
   }
 
+  /** Show a cell. Re-showing the same location (the same cell, or the cell of another wind dataset
+   *  that contains the shown centre - a dataset switch) keeps the current content until the new
+   *  data are in, then re-renders at the same scroll position; another location starts at the top.
+   *  Collapsed sections are kept in both cases (#open). */
   async show(store: CellStore | Promise<CellStore>, iy: number, ix: number) {
     const req = ++this.#req;
     this.#root.hidden = false;
     document.body.classList.add("cell-open");
-    this.#frame({ iy, ix }).innerHTML = `<p class="status" role="status">Loading ERA5-Land cell ${iy}, ${ix}…</p>`;
+    const prev = this.#cell && this.#content?.isConnected && this.#scroll ? { cell: this.#cell, scrollTop: this.#scroll.scrollTop } : null;
+    const loading = () => { this.#frame({ iy, ix }).innerHTML = `<p class="status" role="status">Loading ${this.#ds().name} cell ${iy}, ${ix}…</p>`; };
+    if (prev) this.#setBusy(true);
+    else loading();
     try {
       const s = await store;
+      if (req !== this.#req) return;
+      let same = false;
+      const g = s.grid ?? prev?.cell.grid ?? ERA5_LAND_GRID;
+      try { same = !!prev && sameLocation(prev.cell, cellFromIndex(iy, ix, g), g); } catch { /* index outside the grid: query reports it */ }
+      if (prev && !same) { this.#setBusy(false); loading(); }
       const t0 = performance.now();
       const cell = await s.query(iy, ix);
       if (req !== this.#req) return;
       this.#cell = cell;
       this.#storeAttrs = s.attrs;
-      this.render();
+      this.render(same ? prev!.scrollTop : 0);
       this.#root.dataset.loadMs = String(Math.round(performance.now() - t0));
     } catch (e) {
       if (req !== this.#req) return;
+      this.#setBusy(false);
       this.#frame({ iy, ix }).innerHTML = `<p class="status error" role="alert">Could not load this cell: ${escapeHtml(String((e as Error)?.message ?? e))}</p>`;
     }
   }
@@ -227,19 +272,46 @@ export class CellPanel {
       kids.push(this.#thr);
     }
     kids.push(content);
-    // the handle sits outside the scrolling area so it spans the full panel edge
-    this.#root.replaceChildren(this.#handle, h("div", { class: "cell-scroll" }, ...kids));
+    // the handle sits outside the scrolling area so it spans the full panel edge; the scrolling
+    // element is kept across re-renders (its scroll position is restored by render)
+    if (!this.#scroll || this.#scroll.parentElement !== this.#root) {
+      this.#scroll = h("div", { class: "cell-scroll" });
+      this.#root.replaceChildren(this.#handle, this.#scroll);
+    }
+    this.#scroll.replaceChildren(...kids);
     this.#content = content;
     return content;
   }
 
-  /** build all sections for the current cell */
-  render() {
+  #setBusy(on: boolean) {
+    if (!this.#content) return;
+    this.#content.classList.toggle("busy", on);
+    if (on) this.#content.setAttribute("aria-busy", "true"); else this.#content.removeAttribute("aria-busy");
+  }
+
+  /** set the scroll position after a re-render; again after layout settles (fonts, KaTeX) if it
+   *  was clamped by a not yet complete layout */
+  #restoreScroll(top: number) {
+    const el = this.#scroll;
+    if (!el) return;
+    el.scrollTop = top;
+    if (top > 0) globalThis.requestAnimationFrame?.(() => { if (this.#scroll === el && el.scrollTop < top - 1) el.scrollTop = top; });
+  }
+
+  /** build all sections for the current cell; keeps the scroll position unless `scrollTop` is given */
+  render(scrollTop: number = this.#scroll?.scrollTop ?? 0) {
+    this.#renderBody();
+    this.#restoreScroll(scrollTop);
+  }
+
+  #renderBody() {
     const cell = this.#cell!;
     const body = this.#frame(cell);
     if (!cell.hasData) {
-      body.innerHTML = `<div class="empty-state"><p><strong>No wind data here.</strong></p>
-        <p>This 0.1° ERA5-Land cell (row ${cell.iy}, column ${cell.ix}; centre ${fmtLat(cell.lat)}, ${fmtLon(cell.lon)}) is ocean or outside the ERA5-Land land mask, so it has no wind histogram or wind-regime parameters.</p>
+      const ds = this.#ds(cell);
+      const why = "is ocean or mostly water (land–sea mask fraction ≤ 0.5)";
+      body.innerHTML = `<div class="empty-state"><p><strong>No wind data for this cell in ${escapeHtml(ds.name)}.</strong></p>
+        <p>This ${ds.resolution} ${escapeHtml(ds.name)} cell (row ${cell.iy}, column ${cell.ix}; centre ${fmtLat(cell.lat)}, ${fmtLon(cell.lon)}) ${why}, so it has no wind histogram or wind-regime parameters.</p>
         <p class="help">Click a land cell to see its wind and sand-flux roses.</p></div>`;
       return;
     }
@@ -253,8 +325,7 @@ export class CellPanel {
     if (!choices.includes(this.#windBins)) this.#windBins = choices[Math.min(1, choices.length - 1)];
     if (!choices.includes(this.#fluxBins)) this.#fluxBins = choices[Math.min(2, choices.length - 1)];
     this.#figSize = this.#sizeFor(this.#root.clientWidth || 390);
-    body.append(h("section", { class: "fig", "aria-labelledby": "wr-h" },
-      h("h3", { id: "wr-h" }, "Wind rose"),
+    body.append(this.#section("windRose", "fig wind", h("h3", { id: "wr-h" }, "Wind rose"),
       binSlider("Sectors", this.#windBins, choices, (n) => { this.#windBins = n; this.update(); }),
       d("windSvg", "div", "fig-svg"),
       h("ul", { class: "fig-legend", html: edges.slice(0, -1).map((e, k) => `<li><span class="swatch" style="background:${SPEED_COLORS[k]}"></span>${e}–${edges[k + 1]}</li>`).join("") + "<li>m/s at 10 m</li>" }),
@@ -271,8 +342,7 @@ export class CellPanel {
     const modeSel = h("select", { "aria-label": "Flux rose mode" }, ...FLUX_MODES.map((m) => h("option", { value: m.id }, m.label))) as HTMLSelectElement;
     modeSel.value = this.#fluxMode;
     modeSel.addEventListener("change", () => { this.#fluxMode = modeSel.value as FluxMode; this.update(); });
-    body.append(h("section", { class: "fig", "aria-labelledby": "fr-h" },
-      h("h3", { id: "fr-h" }, "Sand flux rose (time-averaged, transport toward)"),
+    body.append(this.#section("fluxRose", "fig flux", h("h3", { id: "fr-h" }, "Sand flux rose (time-averaged, transport toward)"),
       h("label", { class: "inline" }, "Flux ", modeSel),
       binSlider("Sectors", this.#fluxBins, choices, (n) => { this.#fluxBins = n; this.update(); }),
       axisSel,
@@ -281,26 +351,19 @@ export class CellPanel {
       d("fluxLegend", "ul", "fig-legend arrows"),
       d("fluxKv", "dl", "kv"),
       d("fluxCap", "p", "caption")));
-    // modes (polar), collapsed by default
-    const det = h("details", { class: "fig modes", open: this.#modesOpen },
-      h("summary", { html: `Modes vs threshold (polar: angle = direction, radius = ${mathHtml("$u_{*,th}$")})` }),
+    // modes (polar)
+    body.append(this.#section("modes", "fig modes", h("h3", { id: "md-h", html: `Modes vs threshold (polar: angle = direction, radius = ${mathHtml("$u_{*,th}$")})` }),
       d("modesSvg", "div", "fig-svg"),
       h("ul", { class: "fig-legend arrows", html: MODE_KEYS.map((k) => { const s = MODE_STYLE[k]; return `<li><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="${s.color}" stroke-width="2" ${"dash" in s ? `stroke-dasharray="${s.dash}"` : ""}/></svg>${mathHtml(s.tex)} ${escapeHtml(s.label.replace(/^\S+ /, ""))}</li>`; }).join("") }),
-      d("modesCap", "p", "caption"));
-    det.addEventListener("toggle", () => {
-      this.#modesOpen = det.open;
-      try { localStorage.setItem(MODES_OPEN_KEY, det.open ? "1" : "0"); } catch { /* ignore */ }
-    });
-    body.append(det);
+      d("modesCap", "p", "caption")));
     // flux divergence vs threshold (cells-aux), if available
     if (cell.aux?.series.qsdiv && Array.from(cell.aux.series.qsdiv).some(Number.isFinite)) {
-      body.append(h("section", { class: "fig qsdiv", "aria-labelledby": "qd-h" },
-        h("h3", { id: "qd-h", html: `Flux divergence ${mathHtml("$\\nabla\\cdot\\vec{q}_s$")} vs threshold` }),
+      body.append(this.#section("qsdiv", "fig qsdiv", h("h3", { id: "qd-h", html: `Flux divergence ${mathHtml("$\\nabla\\cdot\\vec{q}_s$")} vs threshold` }),
         d("qsdivSvg", "div", "fig-svg"),
         d("qsdivCap", "p", "caption")));
     }
     // table + downloads
-    body.append(h("section", { class: "summary", "aria-labelledby": "tb-h" }, d("tableHead", "h3"), d("table", "div", "table-wrap"),
+    body.append(this.#section("summary", "summary", d("tableHead", "h3"), d("table", "div", "table-wrap"),
       h("p", { class: "caption" }, "Angles are compass bearings of the transport direction; fluxes converted from m²/s to m²/yr; — = not defined (e.g. no crest flux).")));
     body.append(this.#downloads(cell));
     this.#dyn.tableHead.id = "tb-h";
@@ -387,18 +450,25 @@ export class CellPanel {
         auxRows += `<tr data-field="ai_mean"><td class="sym">${mathHtml(`$${AUX_META.ai_mean.symbolTex}$`)}</td><th scope="row">Aridity index (cell mean, threshold-independent${note ? `; ${note}` : ""})</th><td class="num"${sat ? ' title="Some pixels are at the source saturation value 6.5535, so the mean is a lower bound"' : ""}>${val}</td></tr>`;
       }
       if ("tot_cov_mean" in aux.scalars) {
-        const vc = aux.scalars.tot_cov_mean, nm = aux.scalars.tot_cov_n_months;
-        const months = Number.isFinite(nm) ? `${nm.toFixed(0)} of 300 months` : "";
-        const tip = Number.isFinite(nm) ? ` title="Mean over the ${nm.toFixed(0)} months of 2001–2025 with a valid MODIS value"` : "";
-        auxRows += `<tr data-field="tot_cov_mean"><td class="sym">${mathHtml(`$${AUX_META.tot_cov_mean.symbolTex}$`)}</td><th scope="row">Vegetation cover (mean 2001–2025${months ? `; <span class="subtext">${months}</span>` : ""})</th><td class="num"${tip}>${Number.isFinite(vc) ? `${vc.toFixed(1)} <span class="unit">%</span>` : MISSING}</td></tr>`;
+        const vc = aux.scalars.tot_cov_mean, vfr = aux.scalars.tot_cov_valid_frac;
+        const frac = Number.isFinite(vfr) ? `${(100 * vfr).toFixed(0)} % of cell with data` : "";
+        const tip = frac ? ` title="Mean of the 0.1° vegetation cover means (2001–2025) over the part of the cell with data (${(100 * vfr).toFixed(0)} %)"` : "";
+        auxRows += `<tr data-field="tot_cov_mean"><td class="sym">${mathHtml(`$${AUX_META.tot_cov_mean.symbolTex}$`)}</td><th scope="row">Vegetation cover (mean 2001–2025${frac ? `; <span class="subtext">${frac}</span>` : ""})</th><td class="num"${tip}>${Number.isFinite(vc) ? `${vc.toFixed(1)} <span class="unit">%</span>` : MISSING}</td></tr>`;
       }
     }
+    const ds = this.#ds(cell);
     const extra = `${auxRows}
-      <tr><td class="sym">${MISSING}</td><th scope="row">Dunes (canonical mask)</th><td class="num">${cell.dune ? "yes" : "no"}</td></tr>
-      <tr><td class="sym">${MISSING}</td><th scope="row">Cell centre (lat, lon)</th><td class="num">${cell.lat.toFixed(1)}°, ${cell.lon.toFixed(1)}°</td></tr>
-      <tr><td class="sym">${MISSING}</td><th scope="row">ERA5-Land cell (row, column; index)</th><td class="num">${cell.iy}, ${cell.ix}; ${cell.id}</td></tr>
-      <tr><td class="sym">${MISSING}</td><th scope="row">Hours counted</th><td class="num">${cell.totalHours.toLocaleString("en")} h</td></tr>`;
+      <tr data-field="dunes"><td class="sym">${MISSING}</td><th scope="row">Dunes present (cell overlaps a mapped 0.1° dune cell)</th><td class="num">${cell.dune ? "yes" : "no"}</td></tr>
+      <tr data-field="centre"><td class="sym">${MISSING}</td><th scope="row">Cell centre (lat, lon)</th><td class="num">${coord(cell.lat)}°, ${coord(cell.lon)}°</td></tr>
+      <tr data-field="cell"><td class="sym">${MISSING}</td><th scope="row">Grid cell (row, column; index)</th><td class="num">${cell.iy}, ${cell.ix}; ${cell.id} <span class="unit">(${escapeHtml(ds.name)} ${ds.resolution})</span></td></tr>
+      <tr data-field="hours"><td class="sym">${MISSING}</td><th scope="row">Hours counted</th><td class="num">${cell.totalHours.toLocaleString("en")} h</td></tr>`;
     return `<table><thead><tr><th scope="col">Symbol</th><th scope="col">Quantity</th><th scope="col">Value</th></tr></thead><tbody>${rows}${extra}</tbody></table>`;
+  }
+
+  /** wind dataset of the panel (export metadata id; else from the cell grid) */
+  #ds(cell?: CellData): DatasetInfo {
+    const id = this.#opts.exportMeta?.().datasetId;
+    return cell ? cellDataset(cell, id) : datasetInfo(id);
   }
 
   /** export metadata: dataset, version, permalink (from the app) + the cell store attrs */
@@ -415,16 +485,15 @@ export class CellPanel {
     };
     const base = () => exportBaseName(cell, this.#exportMeta().datasetId);
     const copy = btn("Copy citation", "Copy the citation text to the clipboard", () => {
-      const t = citationFile(cell);
+      const t = citationFile(cell, this.#exportMeta().datasetId);
       void navigator.clipboard?.writeText(t).then(() => { copy.textContent = "Copied"; setTimeout(() => { copy.textContent = "Copy citation"; }, 1500); }, () => triggerDownload(`${base()}_citation.txt`, t, "text/plain"));
     });
-    return h("section", { class: "downloads", "aria-labelledby": "dl-h" },
-      h("h3", { id: "dl-h" }, "Download & cite"),
+    return this.#section("downloads", "downloads", h("h3", { id: "dl-h" }, "Download & cite"),
       h("div", { class: "buttons" },
         btn("NetCDF (.nc)", "Wind histogram, all fields vs threshold, flux roses and metadata in one NetCDF-3 file (CF-1.8)", () => triggerDownload(`${base()}.nc`, cellNetcdf(cell, this.#exportMeta()), "application/x-netcdf")),
         btn("CSV bundle (.zip)", "wind_histogram.csv, fields_by_threshold.csv, flux_rose.csv, metadata.json and README.txt", () => { void csvBundle(cell, this.#exportMeta()).then((z) => triggerDownload(`${base()}.zip`, z, "application/zip")); }),
-        btn("Citation (TXT)", "Citation text file", () => triggerDownload(`${base()}_citation.txt`, citationFile(cell), "text/plain")),
+        btn("Citation (TXT)", "Citation text file", () => triggerDownload(`${base()}_citation.txt`, citationFile(cell, this.#exportMeta().datasetId), "text/plain")),
         copy),
-      h("div", { class: "cite-wrap", html: citationHtml(citationSources(CELL_SOURCE_IDS)) }));
+      h("div", { class: "cite-wrap", html: citationHtml(citationSources(CELL_SOURCE_IDS, this.#exportMeta().datasetId)) }));
   }
 }

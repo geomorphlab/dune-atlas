@@ -1,6 +1,7 @@
 """Build `cells.zarr`: per-cell wind histograms + 23x64 field vectors for click queries.
 
-Layout (docs/storage-layout.md): zarr v3, full 1801x3600 grid, sharded 16x16 cells,
+Layout (docs/storage-layout.md): zarr v3, full grid of the wind dataset (ERA5-Land 1801x3600, ERA5 721x1440;
+grid.DATASETS), sharded 16x16 cells,
 inner chunk = one cell, blosc zstd-5 bitshuffle, shard index at end (zarrita requirement).
 Only shards containing land are written; the rest stay absent (fill value), and ocean cells
 inside a land shard are absent from the shard index (empty inner chunk).
@@ -16,7 +17,7 @@ Full-grid run (see scripts/run_cells_full.sh):
 * Resumable: `<out>.manifest.json` beside the store (never inside it) records finished shards
   and per-block statistics; it is rewritten atomically after every block. A shard is only
   recorded after it has been written, so an interrupted block is simply redone.
-* Edge shards (1801 = 112*16 + 9 rows) are written as truncated chunks by zarr.
+* Edge shards (1801 = 112*16 + 9 rows; 721 = 45*16 + 1) are written as truncated chunks by zarr.
 * Every block also checks that no histogram counts lie outside the land mask and that each
   land cell sums to N_HOURS; violations are recorded in the manifest `anomalies` list.
 """
@@ -34,6 +35,7 @@ import zarr
 from zarr.codecs import BloscCodec, BytesCodec, ShardingCodec
 
 from . import constants as C
+from .grid import get_dataset, grid_of
 
 SHARD = 16
 BLOCK = 64  # source chunk edge (uam10_hist and qsat_params are both chunked 64 in lat/lon)
@@ -53,24 +55,61 @@ def _sharding(inner, typesize):
     )
 
 
-def open_sources(data_dir):
-    dh = xr.open_zarr(f"{data_dir}/era5-land_1950_2024_uam10_hist.zarr", consolidated=False)
+def open_sources(data_dir, dataset=None):
+    ds = get_dataset(dataset)
+    dh = xr.open_zarr(f"{data_dir}/{ds.hist_store}", consolidated=False)
     from .qsat_view import open_qsat
-    dq = open_qsat(data_dir, chunks={})  # qsat_view.py
+    dq = open_qsat(data_dir, chunks={}, dataset=ds)  # qsat_view.py
+    g = grid_of(dh)
+    assert g == ds.grid and grid_of(dq) == ds.grid, (g, ds.grid)
     return dh, dq
 
 
-def load_masks(data_dir):
-    """(land, dunes) boolean (1801, 3600) from layers.nc. `land` equals the finite-qsat mask
-    (verified for all 64 ut of dpm); `dunes` is the canonical 106,540-cell mask."""
-    with xr.open_dataset(f"{data_dir}/layers.nc") as L:
+def load_masks(data_dir, dataset=None):
+    """(land, dunes) boolean grid arrays from the dataset's mask file. ERA5-Land: layers.nc, where `land` equals
+    the finite-qsat mask (verified for all 64 ut of dpm) and `dunes` is the canonical 106,540-cell mask.
+    ERA5: era5_cellmasks.nc (cellmasks.py): land = ERA5 lsm > 0.5, dunes = footprint overlaps a 0.1° dune cell."""
+    ds = get_dataset(dataset)
+    with xr.open_dataset(f"{data_dir}/{ds.masks_file}") as L:
         return L["land"].values.astype(bool), L["dunes"].values.astype(bool)
 
 
-def create_store(out, data_dir, dh=None, dq=None, overwrite=False):
+def _root_attrs(ds, dq, land, dunes):
+    if ds.id == "era5-land":   # attrs of the published ERA5-Land store (unchanged)
+        title = "dune-atlas cell store: ERA5-Land 1950-2024 10 m wind histograms and qsat parameters"
+        source = "Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y; data doi:10.5281/zenodo.20046812"
+        dtype_note = "float32 cast of float64 source qsat_params"
+    else:
+        title = (f"dune-atlas cell store: {ds.name} {ds.period.replace('–', '-')} 10 m wind histograms and "
+                 "sand-flux fields")
+        source = f"{ds.info['citation']}; {ds.info['data_citation']}"
+        dtype_note = "float32 cast of the float64 source fields"
+    a = {
+        "title": title, "source": source, "license": "CC-BY-4.0", "grid": ds.grid.attrs(),
+        "um_edges": C.UM_EDGES.tolist(), "ua_edges": C.UA_EDGES.tolist(),
+        "ua_convention": "arctan2(v10,u10): direction wind blows toward, radians CCW from east",
+        "ut_values": C.UT_VALUES.tolist(), "ut_default_index": C.UT_DEFAULT_INDEX,
+        "field_vars": FIELD_VARS,
+        "field_units": {v: dq[v].attrs.get("units") for v in FIELD_VARS},
+        "field_long_names": {v: dq[v].attrs.get("long_name") for v in FIELD_VARS},
+        "fields_dtype_note": dtype_note,
+        "n_hours": ds.n_hours,
+        "land_cells": int(land.sum()), "dune_cells": int(dunes.sum()),
+        "dune_cells_without_wind": [[int(i), int(j)] for i, j in zip(*np.where(dunes & ~land))],
+    }
+    if ds.info:
+        a["dataset"] = ds.info
+        a["dunes_definition"] = ("cells whose footprint overlaps at least one 0.1° dune cell of the dune map "
+                                 "(Gunn 2026, dune-mask-rev1)")
+        a["license_notice"] = ds.info["copernicus_notice"]
+    return a
+
+
+def create_store(out, data_dir, dh=None, dq=None, overwrite=False, dataset=None):
     """Create (or reopen) the store. Static arrays `land` and `dunes` are written whole here."""
+    ds = get_dataset(dataset)
     if dh is None:
-        dh, dq = open_sources(data_dir)
+        dh, dq = open_sources(data_dir, ds)
     if overwrite and os.path.exists(manifest_path(out)):
         os.remove(manifest_path(out))
     root = zarr.open_group(out, mode="w" if overwrite else "a", zarr_format=3)
@@ -81,25 +120,9 @@ def create_store(out, data_dir, dh=None, dq=None, overwrite=False):
                            "refusing to recreate arrays (delete store + manifest to start over)")
     ny, nx = dh.sizes["latitude"], dh.sizes["longitude"]
     nm, na = dh.sizes["um_bin"], dh.sizes["ua_bin"]
-    land, dunes = load_masks(data_dir)
+    land, dunes = load_masks(data_dir, ds)
     assert land.shape == dunes.shape == (ny, nx)
-    root.attrs.update({
-        "title": "dune-atlas cell store: ERA5-Land 1950-2024 10 m wind histograms and qsat parameters",
-        "source": "Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y; data doi:10.5281/zenodo.20046812",
-        "license": "CC-BY-4.0",
-        "grid": {"lat0": 90.0, "dlat": -0.1, "lon0": -180.0, "dlon": 0.1, "ny": ny, "nx": nx,
-                 "cell_registration": "centre"},
-        "um_edges": C.UM_EDGES.tolist(), "ua_edges": C.UA_EDGES.tolist(),
-        "ua_convention": "arctan2(v10,u10): direction wind blows toward, radians CCW from east",
-        "ut_values": C.UT_VALUES.tolist(), "ut_default_index": C.UT_DEFAULT_INDEX,
-        "field_vars": FIELD_VARS,
-        "field_units": {v: dq[v].attrs.get("units") for v in FIELD_VARS},
-        "field_long_names": {v: dq[v].attrs.get("long_name") for v in FIELD_VARS},
-        "fields_dtype_note": "float32 cast of float64 source qsat_params",
-        "n_hours": C.N_HOURS,
-        "land_cells": int(land.sum()), "dune_cells": int(dunes.sum()),
-        "dune_cells_without_wind": [[int(i), int(j)] for i, j in zip(*np.where(dunes & ~land))],
-    })
+    root.attrs.update(_root_attrs(ds, dq, land, dunes))
     kw = dict(overwrite=True)
     root.create_array("hist", shape=(ny, nx, nm, na), dtype="uint32",
                       chunks=(SHARD, SHARD, nm, na), serializer=_sharding((1, 1, nm, na), 4),
@@ -166,14 +189,15 @@ def _plan(land, y0, y1, x0, x1, done, block=BLOCK):
 _W = {}  # per-process cache of opened sources / store
 
 
-def _worker_init(out, data_dir, blosc_threads):
+def _worker_init(out, data_dir, blosc_threads, dataset=None):
     if blosc_threads:
         from numcodecs import blosc
         blosc.set_nthreads(blosc_threads)
-    dh, dq = open_sources(data_dir)
+    ds = get_dataset(dataset)
+    dh, dq = open_sources(data_dir, ds)
     root = zarr.open_group(out, mode="r+", zarr_format=3)
     _W.update(dh=dh, dq=dq, hist=root["hist"], fields=root["fields"],
-              land=np.asarray(root["land"][:], dtype=bool))
+              land=np.asarray(root["land"][:], dtype=bool), ds=ds)
 
 
 def _do_block(task):
@@ -186,17 +210,21 @@ def _do_block(task):
     h = dh.histogram_um_ua.isel(latitude=ys, longitude=xs).values  # int64 (y,x,128,128)
     t_read = time.time() - t0
     anomalies = []
+    ds = _W["ds"]
     fin = np.isfinite(fv).any((0, 1))
-    if (fin != land).any():
-        anomalies.append({"block": [by, bx], "kind": "finite_fields_vs_land", "n": int((fin != land).sum())})
+    # land-only sources (ERA5-Land): values exactly on land; global sources (ERA5): every land cell has values
+    bad = (fin != land) if ds.land_only_source else (land & ~fin)
+    if bad.any():
+        anomalies.append({"block": [by, bx], "kind": "finite_fields_vs_land", "n": int(bad.sum())})
     tot = h.sum((2, 3))
-    if (tot[~land] != 0).any():
+    if ds.land_only_source and (tot[~land] != 0).any():
         anomalies.append({"block": [by, bx], "kind": "counts_outside_land", "n": int((tot[~land] != 0).sum())})
-    # Hours with |U10| > 20 m/s fall outside the bins, so a land cell may sum to slightly < N_HOURS.
-    deficit = C.N_HOURS - tot[land]
-    if (deficit < 0).any() or (deficit >= C.N_HOURS).any():
+    # Hours with |U10| > 20 m/s fall outside the bins, so a land cell may sum to slightly < n_hours.
+    nh = ds.n_hours
+    deficit = nh - tot[land]
+    if (deficit < 0).any() or (deficit >= nh).any():
         anomalies.append({"block": [by, bx], "kind": "land_sum_out_of_range",
-                          "n": int(((deficit < 0) | (deficit >= C.N_HOURS)).sum())})
+                          "n": int(((deficit < 0) | (deficit >= nh)).sum())})
     assert h.max(initial=0) < 2**32 and h.min(initial=0) >= 0
     h32 = h.astype(np.uint32); del h
     h32[~land] = 0
@@ -217,15 +245,16 @@ def _do_block(task):
 
 
 def write_region(out, data_dir, y0=0, y1=None, x0=0, x1=None, block=BLOCK, workers=1,
-                 blosc_threads=None, log=print, max_blocks=None):
-    """Write all shards covering [y0:y1, x0:x1] (indices; y0, x0 aligned to SHARD).
+                 blosc_threads=None, log=print, max_blocks=None, dataset=None):
+    """Write all shards covering [y0:y1, x0:x1] (indices; y0, x0 aligned to SHARD; y1/x1 None = grid end).
     Returns number of shards written in this call."""
     assert y0 % SHARD == 0 and x0 % SHARD == 0 and block % SHARD == 0
-    dh, dq = open_sources(data_dir)
+    ds = get_dataset(dataset)
+    dh, dq = open_sources(data_dir, ds)
     ny, nx = dh.sizes["latitude"], dh.sizes["longitude"]
     y1 = ny if y1 is None else min(y1, ny)
     x1 = nx if x1 is None else min(x1, nx)
-    root = create_store(out, data_dir, dh, dq)
+    root = create_store(out, data_dir, dh, dq, dataset=ds)
     land = np.asarray(root["land"][:], dtype=bool)
     m = load_manifest(out)
     done = set(map(tuple, m["done"]))
@@ -260,11 +289,12 @@ def write_region(out, data_dir, y0=0, y1=None, x0=0, x1=None, block=BLOCK, worke
             f"elapsed {el:.0f}s eta {eta:.0f}s" + (f" ANOMALY {r['anomalies']}" if r["anomalies"] else ""))
 
     if workers <= 1:
-        _worker_init(out, data_dir, bt)
+        _worker_init(out, data_dir, bt, ds)
         for i, p in enumerate(work):
             _record(_do_block(p), i)
     else:
-        for i, r in enumerate(_fanout("write", work, workers, out=out, data=data_dir, blosc_threads=bt)):
+        for i, r in enumerate(_fanout("write", work, workers, out=out, data=data_dir, blosc_threads=bt,
+                                      dataset=ds.id)):
             _record(r, i)
     m["last_run"] = {"region": [y0, y1, x0, x1], "workers": workers, "wall_s": round(time.time() - t0, 1),
                      "shards_written": nw, "cells_written": ncells}
@@ -328,7 +358,7 @@ def _fanout(kind, tasks, workers, **kw):
 
 def _worker_main(kind, opts):
     if kind == "write":
-        _worker_init(opts["out"], opts["data"], opts.get("blosc_threads"))
+        _worker_init(opts["out"], opts["data"], opts.get("blosc_threads"), opts.get("dataset"))
         fn = _do_block
     else:
         raise ValueError(kind)
@@ -380,7 +410,7 @@ def batch_dp_rdp_rdd(h, ut):
     return qd.sum(1), np.abs(r), np.angle(r)
 
 
-def validate_store(store, data_dir, n=500, seed=0, ut_idx=(0, 14, 30, 63), region=None, n_ocean=200):
+def validate_store(store, data_dir, n=500, seed=0, ut_idx=(0, 14, 30, 63), region=None, n_ocean=200, dataset=None):
     """Independent checks of a written store against source. Returns a JSON-able dict.
     `region` = (y0, y1, x0, x1) restricts sampling to the written region (default: whole grid,
     restricted to shards recorded as done in the manifest)."""
@@ -391,7 +421,8 @@ def validate_store(store, data_dir, n=500, seed=0, ut_idx=(0, 14, 30, 63), regio
     land = np.asarray(g["land"][:], dtype=bool)
     dunes = np.asarray(g["dunes"][:], dtype=bool)
     ny, nx = land.shape
-    dh, dq = open_sources(data_dir)
+    ds = get_dataset(dataset)
+    dh, dq = open_sources(data_dir, ds)
     covered = np.zeros_like(land)
     if region is not None:
         y0, y1, x0, x1 = region
@@ -435,8 +466,9 @@ def validate_store(store, data_dir, n=500, seed=0, ut_idx=(0, 14, 30, 63), regio
     out["hist_exact"] = hist_ok
     out["fields_exact_float32"] = fld_ok
     sums = np.array(sums)
-    out["hist_sum"] = {"n_eq_n_hours": int((sums == C.N_HOURS).sum()), "n_below": int((sums < C.N_HOURS).sum()),
-                       "n_above": int((sums > C.N_HOURS).sum()), "max_deficit": int((C.N_HOURS - sums).max())}
+    nh = ds.n_hours
+    out["hist_sum"] = {"n_eq_n_hours": int((sums == nh).sum()), "n_below": int((sums < nh).sum()),
+                       "n_above": int((sums > nh).sum()), "max_deficit": int((nh - sums).max())}
     out["recompute"] = {str(k): {"n": len(rel[k]["dp_vs_f64"]), "n_dp_zero": n_dp0[k], "n_dp_zero_mismatch": n_dp0_bad[k],
                                  **{m_: float(np.max(v)) if v else None for m_, v in rel[k].items()}}
                         for k in ut_idx}
@@ -483,10 +515,13 @@ def write_parity_fixture(store, out_json, cells, ut_idx=(0, 5, 14, 30, 63)):
     histograms, for JS parity tests against the same store."""
     from . import flux
     g = zarr.open_group(store, mode="r")
+    gr = g.attrs.get("grid", {"lat0": 90.0, "dlat": -0.1, "lon0": -180.0, "dlon": 0.1})
+    nd = 1 if gr["dlon"] == 0.1 else 2
     recs = []
     for i, j in cells:
         h = g["hist"][i, j].astype(np.float64)
-        rec = {"cell": [int(i), int(j)], "lat": round(90 - 0.1 * i, 1), "lon": round(-180 + 0.1 * j, 1),
+        rec = {"cell": [int(i), int(j)], "lat": round(gr["lat0"] + gr["dlat"] * i, nd),
+               "lon": round(gr["lon0"] + gr["dlon"] * j, nd),
                "hist_sum": int(h.sum()), "ut": {}}
         for k in ut_idx:
             dp, rdp, rdd = flux.dp_rdp_rdd(h, C.UT_VALUES[k])
@@ -511,9 +546,10 @@ def main(argv=None):
     w = sub.add_parser("write"); v = sub.add_parser("validate"); s = sub.add_parser("stats")
     for q in (w, v):
         q.add_argument("--data", default=DEFAULT_DATA)
+        q.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
     for q in (w, v, s):
         q.add_argument("--out", required=True)
-    w.add_argument("--region", nargs=4, type=int, default=[0, 1801, 0, 3600])
+    w.add_argument("--region", nargs=4, type=int, default=None, help="y0 y1 x0 x1 (default: whole grid)")
     w.add_argument("--workers", type=int, default=4)
     w.add_argument("--max-blocks", type=int)
     v.add_argument("--n", type=int, default=500)
@@ -527,11 +563,12 @@ def main(argv=None):
         return _worker_main(a.kind, json.loads(a.opts))
     lg = lambda msg: print(time.strftime("%H:%M:%S"), msg, flush=True)  # noqa: E731
     if a.cmd == "write":
-        write_region(a.out, a.data, *a.region, workers=a.workers, log=lg, max_blocks=a.max_blocks)
+        write_region(a.out, a.data, *(a.region or [0, None, 0, None]), workers=a.workers, log=lg,
+                     max_blocks=a.max_blocks, dataset=a.dataset)
         junk = apple_junk(a.out)
         lg(f"apple metadata files inside store: {len(junk)}")
     elif a.cmd == "validate":
-        res = validate_store(a.out, a.data, n=a.n, seed=a.seed)
+        res = validate_store(a.out, a.data, n=a.n, seed=a.seed, dataset=a.dataset)
         print(json.dumps(res, indent=1))
         if a.json:
             json.dump(res, open(a.json, "w"), indent=1)

@@ -63,3 +63,30 @@ Root attrs of `fields/aridity.zarr` follow the topozarr stores (`multiscales.lay
 unchanged; level selection in zarr-layer uses level widths only, so non-power-of-two factors are fine. A click on
 the aridity layer can read `cells-aux.zarr/ai_mean` (0.1° cell mean) rather than the 30″ pixel.
 Upload: `dune-atlas upload-new` (create-only `If-None-Match: *` puts after a live listing; aborts on any collision).
+
+## 6. Second wind dataset: ERA5 0.25° (added 2026-10-13; new keys only)
+
+Prefix convention: the ERA5-Land stores stay at `dune-atlas/v1/` (registry dataset `era5-land`, `prefix:
+dune-atlas/v1`); every further wind dataset gets its own prefix **`dune-atlas/v1/datasets/<id>/`** with the same
+relative layout, so registry sources written as `{dataset}/...` resolve for either dataset. ERA5 is at
+`dune-atlas/v1/datasets/era5/` (registry entry `registry/datasets/era5/dataset.yaml`). Dataset-independent stores
+(`dunes/*.pmtiles`, `fields/aridity.zarr`, `fields/vegetation.zarr`) are not duplicated.
+
+Grid 721 × 1440 (`grid` attrs `{lat0: 90, dlat: -0.25, lon0: -180, dlon: 0.25, ny: 721, nx: 1440,
+cell_registration: centre}`; edges ± 0.125°). Land cells: ERA5 land–sea mask lsm > 0.5 (351,848 cells, 33.9 %).
+
+| store (under `dune-atlas/v1/datasets/era5/`) | layout | objects | size |
+|---|---|---|---|
+| `cells.zarr` | as §1: `hist` (721, 1440, 128, 128) uint32 and `fields` (721, 1440, 23, 64) float32, shard 16 × 16 cells, inner chunk 1 cell, index at end, blosc zstd-5 bitshuffle; `land`, `dunes` (uint8, 256² chunks). 1,960 land shards per array (721 = 45 × 16 + 1: the last shard row is 1 cell high) | 3,957 | 3.706 GB (hist 2.172, fields 1.534) |
+| `fields/<var>.zarr` × 23 | as §2 (topozarr layout, (ut = 64, y, x) float32 display units, 12-bit mantissa, blosc zstd-5 shuffle); **4 levels** 1440 / 720 / 360 / 180 px (coarsest ≤ 256 px), per-level `spatial:transform` exact ([0.25·2ˡ, 0, −180.125, 0, −0.25·2ˡ, 90.125]); cells other than land cells have no data | 23 × 80 | 1.204 GB |
+| `fields/qsdiv.zarr` | as the field stores, m/yr | 80 | 58.3 MB |
+| `cells-aux.zarr` | as §5: `qsdiv` (lat, lon, ut) sharded; scalars `ai_mean`, `ai_valid_frac`, `ai_sat_frac`, **`lsm`** (64² chunks) | 2,462 | 94.8 MB |
+| `cells-aux-veg.zarr` | as the ERA5-Land sidecar; scalars **`tot_cov_mean`** (area-weighted regrid of the 0.1° product) and **`tot_cov_valid_frac`** | 324 | 0.84 MB |
+| **total** | | **8,663** | **5.064 GB** |
+
+Root attrs of every ERA5 store carry the dataset (`dataset` block in `cells.zarr`; `dataset_*` keys in the field
+stores; `dataset`, `dataset_name`, `dataset_resolution`, `land_cells_definition` in the sidecars), the ERA5
+citation and the Copernicus notice. `cells.zarr` `n_hours` = 657,456 (ERA5-Land 657,455).
+Upload: `scripts/upload_era5_parts.py` (cells.zarr, streamed from Gadi in tar parts) and `dune-atlas upload-new
+--prefix dune-atlas/v1/datasets/era5` (the rest); create-only puts after a live listing of all of `dune-atlas/`
+(48,903 objects before, 57,566 after, nothing outside the new prefix changed). Checks: `docs/validation-era5.md` §5.

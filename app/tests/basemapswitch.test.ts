@@ -54,7 +54,7 @@ const SELECTION: GeoJSON.Feature = { type: "Feature", properties: {}, geometry: 
 
 function setup(invert: boolean, delay: () => number = () => Math.floor(rand() * 8)) {
   const map = new FakeMap(URLS, delay);
-  const ov = new OverlayManager(map as unknown as MlMap, reg, "https://data.example", 14, { order: ORDER });
+  const ov = new OverlayManager(map as unknown as MlMap, reg, "https://data.example", 14, { order: ORDER, datasetPrefix: "dune-atlas/v1" });
   const layers = state(invert);
   map.on("style.load", () => { restoreOverlays(map as unknown as MlMap, ov, layers, SELECTION); });
   const switchTo = (id: string) => setBasemap(map as unknown as MlMap, reg.basemaps.find((b) => b.id === id)!, "globe");

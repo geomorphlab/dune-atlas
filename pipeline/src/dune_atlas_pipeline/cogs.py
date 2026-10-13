@@ -5,7 +5,8 @@ Two flavours per threshold:
 * `dp_ut{k}_3857.tif` -- EPSG:3857 GoogleMapsCompatible tiling, 256 px blocks, DEFLATE +
   floating-point predictor: the layout @geomatico/maplibre-cog-protocol requires (it does
   not reproject; single-band float + `#color:` ramp, NaN rendered transparent).
-* `dp_ut{k}_4326.tif` -- native 0.1 deg grid (no resampling), 512 px blocks, ZSTD + predictor 3:
+* `dp_ut{k}_4326.tif` -- native grid of the wind dataset (0.1 deg ERA5-Land, 0.25 deg ERA5; no resampling),
+  512 px blocks, ZSTD + predictor 3:
   for GPU-reprojecting readers (e.g. deck.gl/maplibre custom layers) or download.
 Overviews use AVERAGE (GDAL skips nodata -> same count-weighted mean as fields.py).
 """
@@ -19,21 +20,26 @@ from pathlib import Path
 import numpy as np
 
 from . import constants as C
+from .grid import get_dataset
 
 UT_PRESETS = (5, 14, 20, 30, 40)       # u*,th = 0.06, 0.15, 0.21, 0.31, 0.41 m/s
-TRANSFORM_4326 = (0.1, 0.0, -180.05, 0.0, -0.1, 90.05)  # pixel-registered cell edges
+TRANSFORM_4326 = (0.1, 0.0, -180.05, 0.0, -0.1, 90.05)  # pixel-registered cell edges (ERA5-Land; grid.Grid.transform_4326)
 
 
-def _dp_slice(data_dir: str, k: int) -> np.ndarray:
-    import xarray as xr
+def _dp_slice(data_dir: str, k: int, dataset=None) -> np.ndarray:
     from .qsat_view import open_qsat
-    dq = open_qsat(data_dir, chunks=None)
-    return (dq["dpm"].isel(ut=k).values * C.S2Y).astype("float32")
+    ds = get_dataset(dataset)
+    dq = open_qsat(data_dir, chunks=None, dataset=ds)
+    a = (dq["dpm"].isel(ut=k).values * C.S2Y).astype("float32")
+    if not ds.land_only_source:
+        from .cellstore import load_masks
+        a[~load_masks(data_dir, ds)[0]] = np.nan
+    return a
 
 
 def write_cog(arr: np.ndarray, path: str, crs: str = "EPSG:4326", *, compress: str = "ZSTD",
               blocksize: int = 512, level: int | None = None, tiling_scheme: str | None = None,
-              warp_resampling: str = "NEAREST", tags: dict | None = None) -> float:
+              warp_resampling: str = "NEAREST", tags: dict | None = None, transform=TRANSFORM_4326) -> float:
     """Write a single-band float32 COG via GDAL's COG driver (CreateCopy from a MEM dataset).
     Returns build seconds. For crs='EPSG:3857' the COG driver itself warps to the
     GoogleMapsCompatible tile matrix (TILING_SCHEME)."""
@@ -45,7 +51,7 @@ def write_cog(arr: np.ndarray, path: str, crs: str = "EPSG:4326", *, compress: s
 
     t0 = time.time()
     prof = dict(driver="GTiff", width=arr.shape[1], height=arr.shape[0], count=1, dtype="float32",
-                crs=CRS.from_epsg(4326), transform=Affine(*TRANSFORM_4326), nodata=float("nan"))
+                crs=CRS.from_epsg(4326), transform=Affine(*transform), nodata=float("nan"))
     co = dict(COMPRESS=compress, PREDICTOR=3, BLOCKSIZE=blocksize, OVERVIEW_RESAMPLING="AVERAGE",
               NUM_THREADS="ALL_CPUS", BIGTIFF="IF_SAFER")
     if level is not None:
@@ -63,19 +69,21 @@ def write_cog(arr: np.ndarray, path: str, crs: str = "EPSG:4326", *, compress: s
     return time.time() - t0
 
 
-def build_dp_cogs(data_dir: str, out_dir: str, ut_indices=UT_PRESETS) -> list[dict]:
+def build_dp_cogs(data_dir: str, out_dir: str, ut_indices=UT_PRESETS, dataset=None) -> list[dict]:
     os.makedirs(out_dir, exist_ok=True)
+    ds = get_dataset(dataset)
     rows = []
     for k in ut_indices:
         t0 = time.time()
-        arr = _dp_slice(data_dir, k)
+        arr = _dp_slice(data_dir, k, ds)
+        assert arr.shape == ds.grid.shape
         t_read = time.time() - t0
         tags = dict(variable="dpm", long_name="Drift potential (DP)", units="m2/yr",
                     ut=f"{C.UT_VALUES[k]:.2f}", ut_index=k, source="Gunn (2026) doi:10.1038/s41467-026-75466-y")
         for crs, kw in (("EPSG:3857", dict(compress="DEFLATE", blocksize=256)),
                         ("EPSG:4326", dict(compress="ZSTD", blocksize=512))):
             p = Path(out_dir) / f"dp_ut{k:02d}_{crs.split(':')[1]}.tif"
-            dt = write_cog(arr, str(p), crs, tags=tags, **kw)
+            dt = write_cog(arr, str(p), crs, tags=tags, transform=ds.grid.transform_4326(), **kw)
             rows.append(dict(file=p.name, ut_index=k, ut=float(C.UT_VALUES[k]), crs=crs,
                              compress=kw["compress"], blocksize=kw["blocksize"],
                              bytes=p.stat().st_size, build_s=round(dt, 2), read_s=round(t_read, 2)))
@@ -142,8 +150,9 @@ def main(argv=None):
                                                    os.path.expanduser("~/Documents/research/projects/dune-world/data")))
     p.add_argument("--out", required=True)
     p.add_argument("--ut", nargs="*", type=int, default=list(UT_PRESETS))
+    p.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
     a = p.parse_args(argv)
-    rows = build_dp_cogs(a.data, a.out, a.ut)
+    rows = build_dp_cogs(a.data, a.out, a.ut, dataset=a.dataset)
     (Path(a.out) / "cog_build_stats.json").write_text(json.dumps(rows, indent=1))
     for r in rows:
         print(json.dumps(r))

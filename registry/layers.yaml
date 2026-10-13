@@ -10,7 +10,7 @@ dataBase: https://data.geomorphlab.org   # overridden by VITE_DATA_BASE at build
 # panel only when more than one dataset is listed.
 datasets:
   - id: era5-land
-    title: ERA5-Land 1950–2024 (0.1°)
+    title: ERA5-Land 0.1°, 1950–2024
     prefix: dune-atlas/v1
     description: ECMWF ERA5-Land hourly 10 m winds, 1950–2024, on the 0.1° grid (Gunn 2026).
     citation: "Muñoz Sabater, J. (2019). ERA5-Land hourly data from 1950 to present. C3S CDS. doi:10.24381/cds.e2161bac"

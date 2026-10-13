@@ -185,7 +185,9 @@
           },
           "cellAuxStores": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "Per-cell sidecar stores on the cells.zarr grid, merged in order (cells-aux.zarr, cells-aux-<name>.zarr); default ['{dataset}/cells-aux.zarr', '{dataset}/cells-aux-veg.zarr']."
           }
         }
@@ -194,6 +196,16 @@
     "defaultDataset": {
       "type": "string",
       "description": "id of the dataset selected by default"
+    },
+    "datasetLayers": {
+      "type": "object",
+      "description": "Filled by the app's registry loader (not written by hand): per non-default dataset, the layer definitions that differ from the default dataset's, by layer id (from registry/datasets/<id>/).",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/$defs/layer"
+        }
+      }
     }
   },
   "$defs": {
@@ -345,7 +357,7 @@
             },
             "topLabel": {
               "type": "string",
-              "description": "Legend label of the upper clim end (e.g. '\u2265 6.55' when the top value is saturated)."
+              "description": "Legend label of the upper clim end (e.g. '≥ 6.55' when the top value is saturated)."
             }
           }
         },

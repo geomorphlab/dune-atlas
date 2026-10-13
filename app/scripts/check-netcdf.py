@@ -28,13 +28,24 @@ fixture = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / "staging" / 
 outdir = pathlib.Path(sys.argv[2] if len(sys.argv) > 2 else ROOT / "staging" / "check-netcdf")
 g = zarr.open_group(str(fixture / "cells.zarr"), mode="r")
 aux = zarr.open_group(str(fixture / "cells-aux.zarr"), mode="r")  # sidecar: qsdiv(ut), ai_mean/valid/sat
-veg = zarr.open_group(str(fixture / "cells-aux-veg.zarr"), mode="r")  # sidecar: tot_cov_mean (%), tot_cov_n_months
+veg = zarr.open_group(str(fixture / "cells-aux-veg.zarr"), mode="r")  # sidecar: tot_cov_mean (%), tot_cov_n_months | tot_cov_valid_frac
+VEG2 = "tot_cov_valid_frac"  # published for both datasets (0.1°: 1 where the 0.1° mean is valid, else 0)
+NATIVE_VALID_FRAC = "tot_cov_valid_frac" in veg.attrs["variables"]
+
+
+def veg_value(v, iy, ix):
+    """Expected per-cell vegetation value (float32), independent of the app's mapping."""
+    if v == "tot_cov_valid_frac" and not NATIVE_VALID_FRAC:
+        return np.float32(1.0 if np.isfinite(veg["tot_cov_mean"][iy, ix]) else 0.0)
+    return np.float32(veg[v][iy, ix])
 fv = list(g.attrs["field_vars"])
 ut_values = np.asarray(g.attrs["ut_values"])
 cells = json.loads((outdir / "cells.json").read_text())
 report = []
 for c in cells:
     iy, ix = c["iy"], c["ix"]
+    dsid = c.get("dataset", "era5-land")
+    ERA5 = dsid == "era5"
     ds = xr.open_dataset(outdir / c["nc"], engine="scipy", mask_and_scale=False)
     h = np.asarray(g["hist"][iy, ix])
     F = np.asarray(g["fields"][iy, ix])  # (var, ut) float32
@@ -57,13 +68,18 @@ for c in cells:
         assert ds.attrs.get(k), k
     assert ds.attrs["Conventions"] == "CF-1.8" and ds.attrs["license"] == "CC BY 4.0" and ds.attrs["institution"] == "Geomorphology Lab, Monash University"
     refs = ds.attrs["references"]
-    assert refs.startswith("Dune Atlas / dune map: Paper: ") and " | ERA5-Land: Paper: " in refs, refs[:200]
+    assert refs.startswith("Dune Atlas / dune map: Paper: ") and (" | ERA5: Paper: " if ERA5 else " | ERA5-Land: Paper: ") in refs, refs[:200]
     assert " | Global Aridity Index (Global-AI_PET v3.1): Paper: Zomer" in refs
-    for doi in ("10.1038/s41467-026-75466-y", "10.5281/zenodo.20046812", "10.5281/zenodo.20054674", "10.5194/essd-13-4349-2021", "10.24381/cds.e2161bac",
-                "10.1038/s41597-022-01493-1", "10.6084/m9.figshare.7504448.v7"):
+    reanalysis = ("10.1002/qj.3803", "10.24381/cds.adbb2d47") if ERA5 else ("10.5281/zenodo.20046812", "10.5194/essd-13-4349-2021", "10.24381/cds.e2161bac")
+    for doi in ("10.1038/s41467-026-75466-y", "10.5281/zenodo.20054674", *reanalysis, "10.1038/s41597-022-01493-1", "10.6084/m9.figshare.7504448.v7"):
         assert doi in refs, doi
+    other = ("10.24381/cds.e2161bac", "10.5281/zenodo.20046812") if ERA5 else ("10.24381/cds.adbb2d47",)
+    assert not any(d in refs for d in other), "references of the other dataset"
+    res = abs(gr["dlat"])
+    assert ds.attrs["geospatial_lat_resolution"] == f"{res:g} degree" and ("ERA5 10 m wind" if ERA5 else "ERA5-Land 10 m wind") in ds.attrs["title"]
+    assert ds["wind_hist"].attrs["long_name"].endswith(("ERA5 1950-2024" if ERA5 else "ERA5-Land 1950-2024"))
     assert ds.attrs["comment"].startswith("This page was created with assistance from Claude AI.")
-    assert c["nc"] == f"dune-atlas_era5-land_{c['lat']:g}_{c['lon']:g}.nc", c["nc"]
+    assert c["nc"] == f"dune-atlas_{dsid}_{c['lat']:g}_{c['lon']:g}.nc", c["nc"]
     # --- histogram (exact)
     assert ds["wind_hist"].dtype == np.int32
     np.testing.assert_array_equal(ds["wind_hist"].values, h.astype(np.int64))
@@ -88,9 +104,11 @@ for c in cells:
     assert "10.6084/m9.figshare.7504448.v7" in ds["ai_mean"].attrs["references"] and ds["ai_mean"].attrs["license"] == "CC BY 4.0"
     assert np.isfinite(float(ds["ai_mean"])), "fixture cells are on land"
     # --- cells-aux-veg: vegetation cover scalars, exact float32
-    for v, u in (("tot_cov_mean", "%"), ("tot_cov_n_months", "1")):
+    for v, u in (("tot_cov_mean", "%"), (VEG2, "1")):
         assert ds[v].dims == () and ds[v].dtype == np.float32 and ds[v].attrs["units"] == u, v
-        np.testing.assert_array_equal(ds[v].values, np.float32(veg[v][iy, ix]), err_msg=v)
+        np.testing.assert_array_equal(ds[v].values, veg_value(v, iy, ix), err_msg=v)
+    # the same per-cell variables for every wind dataset: no land-sea mask, no month count
+    assert "lsm" not in ds.variables and "tot_cov_n_months" not in ds.variables
     assert "10.4225/08/5848a3f19a7b3" in ds["tot_cov_mean"].attrs["references"] and ds["tot_cov_mean"].attrs["url"] == "https://map.geo-rapp.org/"
     assert ds["tot_cov_mean"].attrs["license"].startswith("CC BY 4.0") and 0 <= float(ds["tot_cov_mean"]) <= 103
     # --- flux rose vs the Python reference
@@ -160,9 +178,17 @@ for c in cells:
     assert meta["ut"] == [round(x, 2) for x in ut_values.tolist()]
     for v in ("ai_mean", "ai_valid_frac", "ai_sat_frac"):
         assert np.float32(meta["aux"][v]["value"]) == np.float32(aux[v][iy, ix]), v
-    for v in ("tot_cov_mean", "tot_cov_n_months"):
-        assert np.float32(meta["aux"][v]["value"]) == np.float32(veg[v][iy, ix]), v
-    assert [x["source"] for x in meta["citation"]] == ["Dune Atlas / dune map", "ERA5-Land", "Global Aridity Index (Global-AI_PET v3.1)", "Vegetation cover (CSIRO MODIS Fractional Cover v3.1)"]
+    for v in ("tot_cov_mean", VEG2):
+        assert np.float32(meta["aux"][v]["value"]) == veg_value(v, iy, ix), v
+    assert list(meta["aux"]) == ["qsdiv", "ai_mean", "ai_valid_frac", "ai_sat_frac", "tot_cov_mean", "tot_cov_valid_frac"], list(meta["aux"])
+    assert meta["conventions"]["dune_present"] == "1 = the cell overlaps at least one 0.1° dune cell of the dune map (Gunn 2026)"
+    if ERA5:
+        assert "lsm" in aux and float(aux["lsm"][iy, ix]) > 0.5  # land cell by the ERA5 mask (not exported)
+        assert "0.25° cell" in ds["ai_mean"].attrs["description"] and "/ 900" in ds["ai_valid_frac"].attrs["description"]
+        assert meta["grid"]["resolution"] == "0.25°"
+    else:
+        assert "0.1° cell" in ds["ai_mean"].attrs["description"] and "/ 144" in ds["ai_valid_frac"].attrs["description"]
+    assert [x["source"] for x in meta["citation"]] == ["Dune Atlas / dune map", "ERA5" if ERA5 else "ERA5-Land", "Global Aridity Index (Global-AI_PET v3.1)", "Vegetation cover (CSIRO MODIS Fractional Cover v3.1)"]
     vc = meta["citation"][3]
     assert vc["paper"]["doi"] == "10.1016/j.rse.2015.01.021" and vc["paper_2"]["doi"] == "10.1080/2150704X.2018.1465611" and vc["data"]["doi"] == "10.4225/08/5848a3f19a7b3"
     readme = z.read("README.txt").decode()
@@ -186,6 +212,6 @@ for c in cells:
         engines = ["scipy", "netcdf4"]
     except ImportError:
         engines = ["scipy"]
-    report.append({"cell": [iy, ix], "nc": c["nc"], "ai_mean": float(aux["ai_mean"][iy, ix]), "tot_cov_mean": float(veg["tot_cov_mean"][iy, ix]), "tot_cov_n_months": int(veg["tot_cov_n_months"][iy, ix]), "qsdiv_ut14_m_per_kyr": float(qs[14]) * 1000, "crest_rows_checked": checked, "crest_rows_masked": 128 - checked, "hist_total": int(h.sum()), "engines": engines})
+    report.append({"cell": [iy, ix], "nc": c["nc"], "ai_mean": float(aux["ai_mean"][iy, ix]), "tot_cov_mean": float(veg["tot_cov_mean"][iy, ix]), VEG2: float(veg_value(VEG2, iy, ix)), "dataset": dsid, "qsdiv_ut14_m_per_kyr": float(qs[14]) * 1000, "crest_rows_checked": checked, "crest_rows_masked": 128 - checked, "hist_total": int(h.sum()), "engines": engines})
     ds.close()
 print(json.dumps({"ok": True, "cells": report}))

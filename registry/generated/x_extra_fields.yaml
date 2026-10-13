@@ -61,7 +61,7 @@ layers:
   titleTex: $\nabla\cdot\vec{q}_s$
   group: drift
   type: zarr-field
-  source: dune-atlas/v1/fields/qsdiv.zarr
+  source: '{dataset}/fields/qsdiv.zarr'
   variable: qsdiv
   thresholdAware: true
   units: m/kyr

@@ -8,6 +8,8 @@ export const PAPER_DOI = "10.1038/s41467-026-75466-y";
 export const DATA_DOI = "10.5281/zenodo.20046812";
 export const ERA5LAND_DOI = "10.24381/cds.e2161bac";
 export const ERA5LAND_PAPER_DOI = "10.5194/essd-13-4349-2021";
+export const ERA5_DOI = "10.24381/cds.adbb2d47";
+export const ERA5_PAPER_DOI = "10.1002/qj.3803";
 
 /** One citable work. */
 export interface CitationEntry { label: string; text: string; doi: string; license?: string }
@@ -18,6 +20,7 @@ export interface CitationSource { id: string; title: string; entries: CitationEn
 export const DUNE_MAP_DOI = "10.5281/zenodo.20054674";
 
 export const C3S_NOTICE = "Contains modified Copernicus Climate Change Service information (ERA5-Land, 1950–2024). Neither the European Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data it contains.";
+export const C3S_NOTICE_ERA5 = "Contains modified Copernicus Climate Change Service information (ERA5, 1950–2024). Neither the European Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data it contains.";
 
 /** All known sources. Only those in DEFAULT_SOURCE_IDS (plus ids requested by active layers via
  *  citationSources(extra)) are cited; 'aridity' is the hook for the aridity-index layer (add its
@@ -33,6 +36,16 @@ export const CITATION_SOURCES: Record<string, CitationSource> = {
       { label: "Data (dune map)", text: "Gunn, A. (2026). geomorphlab/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code (v1.0.0). Zenodo.", doi: DUNE_MAP_DOI, license: "MIT" },
     ],
   },
+  // ERA5 dataset: wind histograms and sand-flux fields computed for the atlas (not in the
+  // Supplementary Data record), with the method of the paper; the dune map as for ERA5-Land
+  "dune-atlas-era5": {
+    id: "dune-atlas-era5", title: "Dune Atlas / dune map",
+    entries: [
+      { label: "Paper", text: "Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications.", doi: PAPER_DOI },
+      { label: "Data (dune map)", text: "Gunn, A. (2026). geomorphlab/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code (v1.0.0). Zenodo.", doi: DUNE_MAP_DOI, license: "MIT" },
+    ],
+    notice: "ERA5 wind histograms and sand-flux fields computed for the Dune Atlas from ERA5 hourly 10 m winds with the method of Gunn (2026).",
+  },
   "era5-land": {
     id: "era5-land", title: "ERA5-Land",
     entries: [
@@ -40,6 +53,14 @@ export const CITATION_SOURCES: Record<string, CitationSource> = {
       { label: "Data", text: "Muñoz Sabater, J. (2019). ERA5-Land hourly data from 1950 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS).", doi: ERA5LAND_DOI },
     ],
     notice: C3S_NOTICE,
+  },
+  era5: {
+    id: "era5", title: "ERA5",
+    entries: [
+      { label: "Paper", text: "Hersbach, H. et al. (2020). The ERA5 global reanalysis. Quarterly Journal of the Royal Meteorological Society 146, 1999–2049.", doi: ERA5_PAPER_DOI },
+      { label: "Data", text: "Hersbach, H. et al. (2023). ERA5 hourly data on single levels from 1940 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS); accessed via the NCI Australia replica.", doi: ERA5_DOI },
+    ],
+    notice: C3S_NOTICE_ERA5,
   },
   aridity: {
     id: "aridity", title: "Global Aridity Index (Global-AI_PET v3.1)",
@@ -59,12 +80,18 @@ export const CITATION_SOURCES: Record<string, CitationSource> = {
   },
 };
 export const DEFAULT_SOURCE_IDS = ["dune-atlas", "era5-land"];
+/** the atlas + reanalysis sources of a wind dataset (default: ERA5-Land) */
+export function datasetSourceIds(datasetId?: string): string[] {
+  return datasetId === "era5" ? ["dune-atlas-era5", "era5"] : DEFAULT_SOURCE_IDS;
+}
 /** sources of a cell download (the cells-aux sidecars carry the aridity and vegetation cell means) */
 export const CELL_SOURCE_IDS = ["aridity", "vegetation"];
 
-/** The sources to cite: the defaults plus any extra ids (e.g. from visible layers), in order. */
-export function citationSources(extra: string[] = []): CitationSource[] {
-  const ids = [...DEFAULT_SOURCE_IDS, ...extra.filter((x) => !DEFAULT_SOURCE_IDS.includes(x))];
+/** The sources to cite: the dataset's atlas + reanalysis sources, then any extra ids (e.g. the
+ *  per-cell aridity / vegetation sources), in order. */
+export function citationSources(extra: string[] = [], datasetId?: string): CitationSource[] {
+  const base = datasetSourceIds(datasetId);
+  const ids = [...base, ...extra.filter((x) => !base.includes(x))];
   return ids.map((id) => CITATION_SOURCES[id]).filter((x): x is CitationSource => !!x);
 }
 

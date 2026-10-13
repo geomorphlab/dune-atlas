@@ -118,8 +118,11 @@ body.resizing { user-select: none; cursor: ew-resize; }
 .cell-head .close { border: none; background: none; font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px; }
 .cell-threshold { position: sticky; top: 41px; z-index: 1; background: var(--bg2); border-bottom: 1px solid var(--line); padding: 6px 12px 2px; }
 .cell-body { padding: 4px 12px 12px; }
+.cell-body.busy { opacity: 0.55; transition: opacity 0.15s; }
 .cell-body h3, .cell-body summary { font-size: 14px; margin: 12px 0 4px; font-weight: 600; }
 .cell-body details summary { cursor: pointer; }
+/* every panel section is a disclosure: the arrow, then the section's h3 inline (heading semantics kept) */
+.cell-body details.section > summary > h3 { display: inline; font: inherit; margin: 0; }
 .status.error { color: var(--danger); }
 .empty-state { padding: 8px 0; }
 .bin-row, .axis-toggle { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }

@@ -15,6 +15,10 @@ that every field follows the definitions in the descriptions below:
                     crest flux (and off land)
 
 All other variables are read from the source unchanged. `open_source()` returns the source store.
+
+Other wind datasets (grid.DATASETS, `qsat_is_atlas=True`, e.g. ERA5): the qsat store written by
+`qsat_compute.py` already holds the time-averaged definitions above, so `open_qsat(..., dataset="era5")` returns its
+23 variables unchanged.
 """
 from __future__ import annotations
 
@@ -66,13 +70,20 @@ _ATTRS = {
 }
 
 
-def open_source(data_dir, chunks=None) -> xr.Dataset:
-    return xr.open_zarr(f"{data_dir}/{SOURCE_NAME}", consolidated=False, chunks=chunks)
+def open_source(data_dir, chunks=None, dataset=None) -> xr.Dataset:
+    from .grid import get_dataset
+    name = SOURCE_NAME if dataset is None else get_dataset(dataset).qsat_store
+    return xr.open_zarr(f"{data_dir}/{name}", consolidated=False, chunks=chunks)
 
 
-def open_qsat(data_dir, chunks=None, drift_store=None) -> xr.Dataset:
+def open_qsat(data_dir, chunks=None, drift_store=None, dataset=None) -> xr.Dataset:
     """23-variable qsat Dataset. Variables read from the source use `chunks` as given (None = lazy
     numpy backend); derived variables are dask arrays on the source's 64^3 chunks (computed on access)."""
+    from .grid import get_dataset
+    dset = get_dataset(dataset)
+    if dset.qsat_is_atlas:
+        from .constants import QSAT_VARS
+        return open_source(data_dir, chunks=chunks, dataset=dset)[QSAT_VARS]
     ds = open_source(data_dir, chunks=chunks)
     src = open_source(data_dir, chunks={})                      # dask, native chunks
     dr = xr.open_zarr(str(drift_store or DRIFT_STORE), consolidated=False, chunks={})

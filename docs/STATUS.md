@@ -58,16 +58,40 @@ sizes + 13,050 new, 1.27 GB; create-only `If-None-Match: *` puts):
 | Google Sites page (§E) | live app | `docs/google-sites.md` |
 | UI iteration | you + me | `VITE_DATA_BASE=https://data.geomorphlab.org npm run dev` |
 
-## Next dataset: ERA5 (waiting for the Gadi path)
-The atlas will offer a wind-dataset selector (ERA5-Land now; ERA5 from the student's equivalent zarrs on Gadi).
-App side: `datasets` in the registry, `{dataset}` in layer sources, grid read from `cells.zarr` attrs (in progress).
-Pipeline side, to do once the path and file layout are known:
-- parameterise the source names (`era5-land_1950_2024_*.zarr`) and the grid (ERA5 0.25°, 721 × 1440) in `cellstore`,
-  `fields.display_array` (it rebuilds the exact 0.1° coordinates), `qsat_view`, `cogs` and the CLI region defaults. Write
-  `grid` attrs from the source coordinates instead of constants;
-- land mask and the drift store for ERA5 (`scripts/drift/compute_drift.py` generalised) and the qhbf/qhef fractions;
-- run conversion + upload next to the data (Gadi), or stream from Gadi straight to R2 (same `stream_upload`);
-- the dune map stays the 0.1° product (independent of the wind dataset).
+## ERA5 dataset (0.25°): stores uploaded and verified (2026-10-13)
+`https://data.geomorphlab.org/dune-atlas/v1/datasets/era5/` — new prefix, new keys only (live listing before 48,903
+objects; after 57,566 = 48,903 unchanged + 8,663 new, 5.064 GB): `cells.zarr` (3,957 objects, 3.706 GB),
+23 × `fields/<var>.zarr` + `fields/qsdiv.zarr` (24 × 80 objects, 1.262 GB), `cells-aux.zarr` (2,462, 94.8 MB),
+`cells-aux-veg.zarr` (324, 0.84 MB). Layout `docs/storage-layout.md` §6; checks `docs/validation-era5.md` §4–6.
+- Source stores (Gadi scratch, built 2026-10-13, 141 SU): `era5_1950_2024_uam10_hist.zarr`,
+  `era5_1950_2024_qsat_params.zarr`; retention copy in `/g/data/k10/ag5517/dune-atlas/era5/` (identical, 22.1 GB).
+- Atlas build on Gadi: 10.3 SU (prep 6.85, cell store 2.74, retention copy 0.66, split 0.02); pyramids and sidecars
+  built locally.
+- Land cells: ERA5 lsm > 0.5 (351,848); dunes: 0.25° footprint overlaps a 0.1° dune cell (27,034; 703 of them with
+  lsm ≤ 0.5 and no wind data, holding 72,937 km² of 0.1° dune area).
+- Public checks: 300/300 land cells bit-identical (histograms, fields, all sidecar arrays), 100/100 other cells
+  empty, 216/216 pyramid windows identical, ranges 206, CORS for map.geomorphlab.org and localhost:5173.
+- Pipeline: `grid.py` (`Grid`, `DATASETS`), every builder takes `--dataset era5-land|era5` (default unchanged);
+  ERA5-Land outputs byte-identical to the previous commit (14,807 files); 95 Python tests.
+
+**For the app agent (dataset selector):**
+1. Registry: add `registry/datasets/era5/dataset.yaml` to `datasets` in `registry/layers.yaml` (prefix
+   `dune-atlas/v1/datasets/era5`, `cellAuxStores: ['{dataset}/cells-aux.zarr', '{dataset}/cells-aux-veg.zarr']`).
+   Field and qsdiv layers must use `{dataset}` sources (`'{dataset}/fields/<var>.zarr'`; the generated
+   `qsat_fields.yaml` / `x_extra_fields.yaml` still write `dune-atlas/v1/fields/...`). `registry/datasets/era5/
+   qsat_fields.yaml` and `x_extra_fields.yaml` are the same layers (same ids) with `{dataset}` sources and ERA5 colour
+   limits; either use them per dataset or keep the ERA5-Land limits for both (comparable colours).
+   `npx vite-node ../scripts/validate_dataset_registry.ts era5` (from `app/`) validates the combination.
+2. Grid from `cells.zarr` attrs `grid`: `{lat0: 90, dlat: -0.25, lon0: -180, dlon: 0.25, ny: 721, nx: 1440}`;
+   `n_hours` 657,456; root attrs `dataset` (name, resolution, period, citation, data_citation, doi, licence,
+   copernicus_notice, land_cells definition) for downloads / About.
+3. Sidecars: `cells-aux.zarr` has `qsdiv`, `ai_mean`, `ai_valid_frac`, `ai_sat_frac` and the new scalar `lsm`;
+   `cells-aux-veg.zarr` has `tot_cov_mean` and the new `tot_cov_valid_frac` (no `tot_cov_n_months`: the 0.25° value
+   is an area-weighted regrid of the 0.1° product). `AUX_META` texts mention "0.1° cell" and "/144" — per dataset
+   use 0.25° and /900; the store attrs carry the dataset-specific descriptions.
+4. Dune presence in the panel: `cells.zarr` `dunes` = the cell overlaps at least one 0.1° dune cell. Dune vector
+   layers (`dune-atlas/v1/dunes/*.pmtiles`), aridity and vegetation maps are dataset-independent.
+5. Pyramids have 4 levels (coarsest 180 px) instead of 5.
 
 ## Author questions
 All resolved (2026-10-12).

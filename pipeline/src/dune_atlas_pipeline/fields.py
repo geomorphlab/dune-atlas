@@ -42,6 +42,7 @@ import numpy as np
 import xarray as xr
 
 from . import constants as C
+from .grid import get_dataset, grid_of
 
 ANGLE_VARS = {"ab", "ae", "at", "ao", "rdpa"}
 FLUX_VARS = {"dpm", "rdpm", "qnlb", "qncb", "qalb", "qacb", "qnle", "qale", "qace"}
@@ -54,6 +55,20 @@ CITATION = ("Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. 
             "Nature Communications. doi:10.1038/s41467-026-75466-y. "
             "Data: doi:10.5281/zenodo.20046812")
 SOURCE_PREFIX = "dune-atlas/v1/fields"
+# Per-dataset text of the field stores and registry fragments (ERA5-Land: the published v1 strings).
+# registry sources of the per-dataset field stores: '{dataset}' expands to the selected dataset's
+# prefix (ERA5-Land: dune-atlas/v1 -> dune-atlas/v1/fields/<var>.zarr, the existing keys;
+# ERA5: dune-atlas/v1/datasets/era5/fields/<var>.zarr)
+DATASET_SOURCE_PREFIX = {"era5-land": "{dataset}/fields", "era5": "{dataset}/fields"}
+
+
+def dataset_citation(dataset=None) -> str:
+    ds = get_dataset(dataset)
+    if ds.id == "era5-land":
+        return CITATION
+    return (f"Fields computed for the atlas from {ds.name} hourly 10 m winds ({ds.info['citation']}; data "
+            f"{ds.info['data_citation']}) with the method of Gunn, A. (2026) The distribution of Earth's wind-blown "
+            "sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y")
 REPO = Path(__file__).resolve().parents[3]
 METADATA_JSON = REPO / "registry" / "qsat_field_metadata.json"
 
@@ -243,10 +258,10 @@ def display_array(dq: xr.Dataset, var: str, meta: dict | None = None) -> xr.Data
         attrs["angle_convention"] = "direction toward, radians CCW from east (-pi..pi); bearing = (90 - deg(a)) mod 360"
     da = da.astype("float32")  # topozarr kernel and browsers lack reliable float16
     da.attrs = attrs
-    # float32 source coords are not exactly uniform; rebuild exact 0.1-degree grid values.
-    ny, nx = dq.sizes["latitude"], dq.sizes["longitude"]
-    da = da.assign_coords(latitude=np.round(90.0 - 0.1 * np.arange(ny), 6),
-                          longitude=np.round(-180.0 + 0.1 * np.arange(nx), 6),
+    # float32 source coords are not exactly uniform; rebuild the exact grid values (grid read from the source).
+    g = grid_of(dq)
+    da = da.assign_coords(latitude=np.round(g.lat0 + g.dlat * np.arange(g.ny), 6),
+                          longitude=np.round(g.lon0 + g.dlon * np.arange(g.nx), 6),
                           ut=np.asarray(C.UT_VALUES[: dq.sizes["ut"]], dtype="float64"))
     return da
 
@@ -313,7 +328,7 @@ def _maxrss_gb() -> float:
 def build_field_pyramid(dq: xr.Dataset, var: str, out: str, *, levels: int | None = None,
                         region: dict | None = None, meta: dict | None = None,
                         max_workers: int | None = None, keepbits: int | None = DEFAULT_KEEPBITS,
-                        codec: str = DEFAULT_CODEC, **_ignored) -> dict:
+                        codec: str = DEFAULT_CODEC, dataset=None, land=None, **_ignored) -> dict:
     """Write `out` (= fields/<var>.zarr). Returns timing/size stats.
 
     levels=None -> choose_levels(width).
@@ -321,14 +336,21 @@ def build_field_pyramid(dq: xr.Dataset, var: str, out: str, *, levels: int | Non
       default 12 -> relative error <= 2^-13 ~ 1.2e-4, angles <= 0.03 deg). None/23 = lossless.
     codec: 'blosc-zstd-shuffle' (default; blosc zstd-5 byte-shuffle, decoded by zarrita via
       numcodecs.js like cells.zarr) or 'zstd' (topozarr default zstd level 0, no shuffle).
-    Coarse levels are computed from the *unrounded* native values, then rounded."""
+    Coarse levels are computed from the *unrounded* native values, then rounded.
+    dataset: grid.DATASETS id (store text); land: optional boolean (y, x) mask - cells outside it are set to
+      no data before the pyramid is built (global sources such as ERA5)."""
     import topozarr
     import xproj  # noqa: F401  (registers .proj accessor)
     import zarr
 
     meta = meta or load_metadata()
     t0 = time.time()
+    dset = get_dataset(dataset)
     da = display_array(dq, var, meta)
+    if land is not None:
+        attrs = dict(da.attrs)
+        da = da.where(xr.DataArray(np.asarray(land, bool), dims=("latitude", "longitude")))
+        da.attrs = attrs
     if region:
         da = da.isel(**region)
     da = da.load()                                  # (ut, y, x) float32 in memory (global: 1.66 GB)
@@ -347,12 +369,19 @@ def build_field_pyramid(dq: xr.Dataset, var: str, out: str, *, levels: int | Non
     ds["ut"].attrs.update(units="m/s", long_name="threshold friction velocity u*,th")
     ds.attrs.update({
         "title": f"dune-atlas field: {FIELD_META[var]['title']}",
-        "source": CITATION, "license": "CC-BY-4.0",
+        "source": dataset_citation(dset), "license": "CC-BY-4.0",
         "ut_default_index": C.UT_DEFAULT_INDEX,
         "dune_atlas:resampling": ("nearest-finite (first finite native cell of each window, row-major)"
                                   if var in ANGLE_VARS else
                                   "count-weighted nan-mean over native cells (recomputed from level 0)"),
     })
+    ds_attrs = {}
+    if dset.info:
+        ds_attrs = {"dune_atlas:dataset": dset.id, "dataset_name": dset.name, "dataset_resolution": dset.resolution,
+                    "dataset_period": dset.period, "dataset_n_hours": dset.n_hours,
+                    "dataset_citation": dset.info["citation"], "dataset_data_citation": dset.info["data_citation"],
+                    "dataset_land_cells": dset.info["land_cells"], "license_notice": dset.info["copernicus_notice"]}
+        ds.attrs.update(ds_attrs)
     ds = ds.proj.assign_crs(spatial_ref="EPSG:4326")
     hints = {var: topozarr.ZarrLayerVarConfig(clim=stored_clim(var, meta), colormap=FIELD_META[var]["colormap"])}
     pyr = topozarr.create_pyramid(ds, levels=nlev, x_dim="x", y_dim="y",
@@ -372,6 +401,8 @@ def build_field_pyramid(dq: xr.Dataset, var: str, out: str, *, levels: int | Non
         if codec == "zstd" and l == 0 and keepbits in (None, 23):
             continue                                 # topozarr already wrote exactly this
         _rewrite_array(root[str(l)], var, arr, codec)
+    if ds_attrs:
+        root.attrs.update(ds_attrs)                  # level groups carry them via topozarr; root too
     t_fix = time.time() - t2
     stats = dict(var=var, levels=nlev, shape=list(ds[var].shape),
                  level_widths=[int(ds.sizes["x"] // 2 ** l) for l in range(nlev)],
@@ -417,10 +448,12 @@ def bitround(a: np.ndarray, keepbits: int) -> np.ndarray:
 
 
 # ----------------------------------------------------------------------------- registry
-def registry_fragment(meta: dict | None = None, var_order=None) -> dict:
+def registry_fragment(meta: dict | None = None, var_order=None, dataset=None) -> dict:
     """{groups, layers}: one zarr-field layer per variable, validating against
-    registry/layers.schema.json $defs/layer."""
+    registry/layers.schema.json $defs/layer. `dataset` selects the source prefix and citation."""
     from .cellstore import FIELD_VARS
+    dset = get_dataset(dataset)
+    prefix, citation = DATASET_SOURCE_PREFIX[dset.id], dataset_citation(dset)
     meta = meta or load_metadata()
     group_order = [g["id"] for g in GROUPS]
     order = list(var_order or LAYER_ORDER)
@@ -452,8 +485,8 @@ def registry_fragment(meta: dict | None = None, var_order=None) -> dict:
             display["log"] = True
         layers.append({
             "id": v, "title": fm["title"], "titleTex": m["long_name"], "group": fm["group"],
-            "type": "zarr-field", "source": f"{SOURCE_PREFIX}/{v}.zarr", "variable": v,
-            "thresholdAware": True, "units": units, "description": desc, "citation": CITATION,
+            "type": "zarr-field", "source": f"{prefix}/{v}.zarr", "variable": v,
+            "thresholdAware": True, "units": units, "description": desc, "citation": citation,
             "visible": v == "dpm", "opacity": 0.85, "queryable": True, "display": display,
         })
     _frag = {"groups": GROUPS, "layers": layers}
@@ -490,16 +523,24 @@ def main(argv=None):
     b.add_argument("--keepbits", type=int, default=DEFAULT_KEEPBITS, help="23 = lossless")
     b.add_argument("--codec", default=DEFAULT_CODEC, choices=["blosc-zstd-shuffle", "zstd"])
     b.add_argument("--force", action="store_true")
+    b.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
+    b.add_argument("--meta", help="qsat field metadata json (colour limits); default per dataset")
     a = p.parse_args(argv)
     if a.cmd == "registry":
         print(write_registry_fragment(a.out))
         return
-    from .cellstore import FIELD_VARS
+    from .cellstore import FIELD_VARS, load_masks
     from .qsat_view import open_qsat
-    dq = open_qsat(a.data, chunks=None)  # qsat_view.py
+    dset = get_dataset(a.dataset)
+    dq = open_qsat(a.data, chunks=None, dataset=dset)  # qsat_view.py
+    land = None if dset.land_only_source else load_masks(a.data, dset)[0]
+    if a.meta:
+        meta_path = a.meta
+    else:
+        meta_path = METADATA_JSON if dset.id == "era5-land" else REPO / "registry" / "datasets" / dset.id / "qsat_field_metadata.json"
     os.makedirs(a.out, exist_ok=True)
     log = Path(a.out) / "build_stats.jsonl"
-    meta = load_metadata()
+    meta = load_metadata(meta_path)
     for v in a.vars or FIELD_VARS:
         dst = Path(a.out) / f"{v}.zarr"
         done = Path(a.out) / f".{v}.done"
@@ -507,7 +548,7 @@ def main(argv=None):
             print("skip", v, flush=True)
             continue
         st = build_field_pyramid(dq, v, str(dst), levels=a.levels, meta=meta, keepbits=a.keepbits,
-                                 codec=a.codec)
+                                 codec=a.codec, dataset=dset, land=land)
         with open(log, "a") as f:
             f.write(json.dumps(st) + "\n")
         done.write_text(json.dumps(st))

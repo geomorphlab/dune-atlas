@@ -4,7 +4,7 @@ import "katex/dist/katex.min.css";
 import "./style.css";
 import maplibregl from "maplibre-gl";
 import { loadRegistry } from "./registry/load";
-import { resolveSource, selectDataset } from "./registry/merge";
+import { applyDatasetLayers, initialDataset, layersForDatasetSwitch, resolveSource, selectDataset } from "./registry/merge";
 import { CONFIG } from "./config";
 import { parseUrlState, serializeUrlState, type UrlState } from "./urlstate";
 import { migrateLegacySpacing } from "./layerconfig";
@@ -24,6 +24,13 @@ if (errors.length) console.warn("registry merge:", errors);
 const dataBase = CONFIG.dataBase ?? reg.dataBase;
 const url = parseUrlState(location.search);
 
+// ---- wind dataset: URL, else (no cell in the URL: old permalinks are the default dataset) the
+// last choice (localStorage), else the registry default. Layer definitions follow the dataset.
+const DATASET_KEY = "duneAtlas.dataset";
+const storedDataset = (() => { try { return localStorage.getItem(DATASET_KEY) ?? undefined; } catch { return undefined; } })();
+const initDataset = initialDataset(reg, url.dataset, !!url.cell, storedDataset);
+applyDatasetLayers(reg, initDataset);
+
 // ---- initial state (registry defaults, overridden by the URL) ----
 const urlLayers = url.layers ? new Map(url.layers.map((l) => [l.id, l])) : null;
 const layers: Record<string, LayerState> = {};
@@ -41,11 +48,19 @@ const init: AppState = {
   utIndex: url.ut ?? reg.threshold.defaultIndex,
   layers,
   order: normaliseOrder(url.order, registryOrder),
-  dataset: selectDataset(reg, url.dataset)?.id ?? "",
+  dataset: initDataset,
   cell: url.cell ?? null,
   embed: !!url.embed,
 };
 const store = new Store(init);
+// a dataset switch swaps the layer definitions (sources, colour limits, citations) and resets
+// colour-limit overrides of the swapped layers in the same state change
+store.intercept((patch, cur) => {
+  if (patch.dataset === undefined || patch.dataset === cur.dataset) return patch;
+  const changed = applyDatasetLayers(reg, patch.dataset);
+  try { localStorage.setItem(DATASET_KEY, patch.dataset); } catch { /* private mode */ }
+  return { ...patch, layers: layersForDatasetSwitch(patch.layers ?? cur.layers, changed) };
+});
 if (init.embed) document.body.classList.add("embed");
 
 // ---- map (2D only: no pitch, no rotation, no 3D terrain) ----
@@ -121,12 +136,13 @@ function fieldLabel(v: string): FieldLabel {
 }
 
 let cellStore: Promise<CellStore> | null = null;
-const getCellStore = () => (cellStore ??= (() => {
+const getCellStore = (): Promise<CellStore> => (cellStore ??= (() => {
   const ds = selectDataset(reg, store.state.dataset);
   const p = CellStore.open(resolveSource(ds?.cellStore ?? CONFIG.cellStorePath, dataBase, ds?.prefix), {
     useSuffixRequest: CONFIG.useSuffixRequest, aux: (ds?.cellAuxStores ?? (ds?.cellAuxStore ? [ds.cellAuxStore] : CONFIG.cellAuxPaths)).map((p) => resolveSource(p, dataBase, ds?.prefix)),
   });
-  p.then((s) => { grid = s.grid; updateSelectedCell(); }).catch((e) => console.warn("[dune-atlas] cell store could not be opened", e));
+  // a store opened for a dataset that is no longer selected (rapid switching) must not set the grid
+  p.then((s) => { if (cellStore === p) { grid = s.grid; updateSelectedCell(); } }).catch((e) => console.warn("[dune-atlas] cell store could not be opened", e));
   return p;
 })());
 const panel = new CellPanel(document.getElementById("cell-panel")!, init.utIndex, {
@@ -178,7 +194,9 @@ store.subscribe((s, ch) => {
     overlays.setDatasetPrefix(datasetPrefix());
     overlays.reattach(s.layers);
     cellStore = null;
-    void getCellStore().then((cs) => {
+    const want = getCellStore();
+    void want.then((cs) => {
+      if (cellStore !== want) return; // superseded by a later switch
       const c = prev ? snapToCell(prev.lon, prev.lat, cs.grid) : null;
       const cur = store.state.cell;
       if (c && cur && cur[0] === c.iy && cur[1] === c.ix) void panel.show(cs, c.iy, c.ix); // same indices: reload data

@@ -108,7 +108,7 @@ def test_registry_semantics():
     frag = {l["id"]: l for l in F.registry_fragment()["layers"]}
     for v, l in frag.items():
         assert l["type"] == "zarr-field" and l["thresholdAware"] is True
-        assert l["source"] == f"dune-atlas/v1/fields/{v}.zarr"
+        assert l["source"] == f"{{dataset}}/fields/{v}.zarr"  # ERA5-Land: dune-atlas/v1/fields/<v>.zarr
         assert "$" not in l["title"] and "\\" not in l["title"] and "$" not in l["description"]
         lo, hi = l["display"]["clim"]
         assert lo < hi

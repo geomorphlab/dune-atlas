@@ -242,6 +242,48 @@ def build_cells_aux(out, nc_path, data_dir) -> dict:
             "land_cells": int(land.sum()), "land_defined": int((land & np.isfinite(m)).sum())}
 
 
+def build_cells_aux_regridded(out, nc_path, data_dir, dataset="era5") -> dict:
+    """cells-aux-veg.zarr for a coarser wind grid (ERA5 0.25°): `tot_cov_mean` = area-weighted mean of the valid
+    0.1° tot_cov_mean values over the cell footprint (exact spherical overlap areas, cellmasks.Regrid), and
+    `tot_cov_valid_frac` = valid fraction of the footprint area; on the dataset's land cells."""
+    from . import cellsaux as CA
+    from .cellmasks import Regrid
+    from .cellstore import load_masks
+    from .grid import ERA5_LAND_GRID, get_dataset
+    ds = get_dataset(dataset)
+    g = ds.grid
+    m, _ = load(nc_path)
+    land = load_masks(data_dir, ds)[0]
+    mean, vfrac = Regrid(g, ERA5_LAND_GRID).area_weighted_mean(m)
+    root = CA.open_store(out, land, dataset=ds, root_attrs={
+        "title": "dune-atlas per-cell vegetation cover (sidecar to cells.zarr)",
+        "conventions": ("scalar arrays: (latitude, longitude), plain 64x64 chunks; the fill value marks cells with no "
+                        "data: not land, outside the source coverage, or no valid month"),
+        "sidecar_of": "cells.zarr", "sidecar_convention": AUX_CONVENTION,
+        "license": "CC-BY-4.0", "attribution": ATTRIBUTION, "data_access": THREDDS_URL, "time_series": MAP_URL,
+        "regridding": (f"area-weighted mean of the 0.1° atlas vegetation cells over each {g.label} cell footprint "
+                       f"(centre ± {g.res / 2:g}°), exact spherical overlap areas"),
+    })
+    a = ATTRIBUTION
+    changes = a["changes"].replace("coarser zoom levels are means of the valid 0.1° cells; ",
+                                   f"{g.label} cell values are area-weighted means of the valid 0.1° cells; ")
+    common = {"source": a["source"], "citation": a["citation"], "doi": a["doi"], "licence": a["licence"],
+              "url": a["url"], "changes": changes}
+    CA.write_variable(root, "tot_cov_mean", mean, land, {
+        "long_name": "Total vegetation cover, mean 2001-2025", "long_name_latex": r"\overline{V}", "units": "%",
+        "description": (f"Area-weighted mean over the {g.label} cell footprint of the 0.1° mean total vegetation cover "
+                        "(photosynthetic + non-photosynthetic vegetation, MODIS Fractional Cover v3.1, valid months "
+                        "2001-01 .. 2025-12), using the 0.1° cells with a value; a regrid of the 0.1° product. "
+                        "Undefined (no data) where no 0.1° cell in the footprint has a value."), **common})
+    CA.write_variable(root, "tot_cov_valid_frac", vfrac, land, {
+        "long_name": "Fraction of the cell footprint with vegetation cover data", "long_name_latex": r"f_\mathrm{valid}",
+        "units": "1", "valid_min": 0.0, "valid_max": 1.0,
+        "description": (f"Area fraction of the {g.label} cell footprint covered by 0.1° cells with a valid mean "
+                        "vegetation cover (0 outside the source coverage)."), **common})
+    return {"objects": CA.count_objects(out), "variables": list(root.attrs["variables"]),
+            "land_cells": int(land.sum()), "land_defined": int((land & np.isfinite(mean)).sum())}
+
+
 # ----------------------------------------------------------------------------- registry
 def registry_layer() -> dict:
     a = ATTRIBUTION
@@ -283,12 +325,14 @@ def main(argv=None):
     b.add_argument("--keepbits", type=int, default=12)
     c = sub.add_parser("cellsaux"); c.add_argument("--nc", required=True); c.add_argument("--out", required=True)
     c.add_argument("--data", default=os.environ.get("DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data")))
+    c.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
     sub.add_parser("registry")
     a = p.parse_args(argv)
     if a.cmd == "pyramid":
         print(json.dumps(build_pyramid(a.nc, a.out, keepbits=a.keepbits)))
     elif a.cmd == "cellsaux":
-        print(json.dumps(build_cells_aux(a.out, a.nc, a.data)))
+        print(json.dumps(build_cells_aux(a.out, a.nc, a.data) if a.dataset == "era5-land" else
+                         build_cells_aux_regridded(a.out, a.nc, a.data, a.dataset)))
     else:
         print(write_fragment())
 

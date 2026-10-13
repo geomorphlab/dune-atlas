@@ -104,6 +104,8 @@ export interface DatasetDef {
 }
 
 export interface Registry {
+  /** filled by the loader: per non-default dataset, the layer definitions that differ (by id) */
+  datasetLayers?: Record<string, Record<string, LayerDef>>;
   version: 1;
   dataBase: string;
   datasets?: DatasetDef[];

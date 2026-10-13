@@ -22,9 +22,14 @@ type Listener = (s: AppState, changed: Set<Key>) => void;
 export class Store {
   #s: AppState;
   #ls: Listener[] = [];
+  #intercepts: ((patch: Partial<AppState>, cur: Readonly<AppState>) => Partial<AppState>)[] = [];
   constructor(init: AppState) { this.#s = init; }
   get state(): Readonly<AppState> { return this.#s; }
+  /** Rewrite a patch before it is applied (e.g. a dataset switch also resets per-dataset layer
+   *  config), so dependent keys change in ONE notification. */
+  intercept(f: (patch: Partial<AppState>, cur: Readonly<AppState>) => Partial<AppState>): void { this.#intercepts.push(f); }
   set(patch: Partial<AppState>): void {
+    for (const f of this.#intercepts) patch = f(patch, this.#s);
     const changed = new Set<Key>();
     for (const k of Object.keys(patch) as Key[]) {
       if (this.#s[k] !== patch[k]) changed.add(k);

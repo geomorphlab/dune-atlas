@@ -27,7 +27,7 @@ pyramids and the click panel range-reads one cell from `cells.zarr`, both on R2
 | `src/map/overlays.ts` | lazily adds/removes overlays, keeps registry order below basemap labels, re-attaches after a basemap swap, fans out the threshold |
 | `src/ui/layerPanel.ts`, `legend.ts`, `threshold.ts` | registry-generated panel: dataset selector (> 1 dataset), pinned u\*,th control, 'Active layers' list (drawing order: drag / move buttons, opacity slider per row, × to hide), groups, toggles, display options (colormap chooser, reverse, clim + reset, log, render mode, line colour, spacing (km); fill colour + invert for vectors), legends, info popovers, basemap radio, globe toggle, About & citation |
 | `src/util/math.ts` | KaTeX rendering of `$…$` segments (titles, units, descriptions, table symbols) with a plain fallback (`tex.ts`) |
-| `src/ui/cellPanel.ts` | click-to-cell side panel / bottom sheet (resizable, width/height in localStorage, figures re-render to fit): compact synced u\*,th control, wind + flux roses (flux mode flat/elongation/transverse, petals stacked by excess shear, sector sliders, %/m²/yr axis), polar modes plot (expanded by default; a collapse is remembered in localStorage), flux divergence vs threshold (cells-aux), Symbol/Quantity/Value table, downloads |
+| `src/ui/cellPanel.ts` | click-to-cell side panel / bottom sheet (resizable, width/height in localStorage, figures re-render to fit): compact synced u\*,th control, wind + flux roses (flux mode flat/elongation/transverse, petals stacked by excess shear, sector sliders, %/m²/yr axis), polar modes plot, flux divergence vs threshold (cells-aux), Symbol/Quantity/Value table, downloads; every section (wind rose, flux rose, modes, qsdiv, cell summary, download & cite) is a `<details class="section">` whose `<summary>` holds the section `<h3>`, open by default, state in localStorage `duneAtlas.cellPanel.<key>Open` (`PANEL_SECTIONS`) |
 | `src/cell/snap.ts` | lon/lat → nearest cell of the store's grid (root attrs `grid`; antimeridian wrap, polar clamp, any spacing / lon0) |
 | `src/cell/cellstore.ts` | zarrita reader for `cells.zarr` (`hist`, `fields`, `dunes`) + caching store (shard indexes, metadata) |
 | `src/cell/flux.ts` | line-for-line port of `pipeline/.../flux.py` (bins from the store attrs): `fluxRose`, `dpRdpRdd` (time-averaged flat-bed flux), `crestFluxRose` (crest flux with speed-up), `fluxRoseByExcessShear` |
@@ -87,8 +87,38 @@ and fixture layouts and fails if an upgrade changes them.
   the initial view.
 * **Datasets**: `registry.datasets[{id, title, prefix, …}]` + `defaultDataset`; a source containing
   `{dataset}` expands to the selected dataset's `prefix` (cell store: `{dataset}/cells.zarr`);
-  sources without it (dunes) are dataset-independent. The selector appears only with > 1 dataset;
-  switching re-resolves all overlays and the cell store and re-snaps the selected location.
+  sources without it (dunes, aridity, vegetation) are dataset-independent. The selector ("Wind
+  dataset": ERA5-Land 0.1° | ERA5 0.25°) appears only with > 1 dataset.
+* **Dataset variants**: `registry/datasets/<id>/*.yaml` (dataset entry + generated field
+  fragments, same layer ids) are merged by `addDatasets` into `registry.datasetLayers[id]` (only
+  layers that differ: colour limits, citation, attribution, descriptions). `applyDatasetLayers`
+  swaps them into the shared layer objects in place (base copies kept for switching back) and
+  returns the changed ids. Choice: URL `dataset=`, else localStorage `duneAtlas.dataset` unless
+  the URL selects a cell (old permalinks = default dataset), else `defaultDataset`. A switch goes
+  through `Store.intercept`: definitions swapped, persisted, colour-limit overrides of the
+  swapped layers dropped (`layersForDatasetSwitch`; colormap, reverse, log, mode, colours,
+  opacity, visibility and order kept); then the overlays re-resolve their sources
+  (`setDatasetPrefix` + `reattach`), the cell store reopens and the selected location is
+  re-snapped to the new grid (stale opens from rapid switching are ignored), and the layer panel
+  re-renders legends and info popovers. Panel / downloads / citations take the dataset from
+  `exportMeta().datasetId`: `cell/datasetinfo.ts` (name, resolution, hours, land and dune rules),
+  `cell/auxinfo.ts` ({res}/{npx} texts), `cell/citation.ts` (`datasetSourceIds`: ERA5 →
+  Hersbach 2020 + CDS DOI + ERA5 notice).
+* **Dataset parity of the panel and downloads**: the summary table, NetCDF, CSV bundle,
+  metadata.json and README have the same rows / variables / columns / keys, order, units and
+  texts for both datasets; only dataset-specific values differ (name, resolution / grid, hours,
+  references / citation / notice, file name, cell position) - enforced by `tests/parity.test.ts`
+  (explicit allowlist). `harmonizeAux` (in `CellStore.query`) maps the sidecars of every dataset
+  onto `AUX_ORDER` = qsdiv, ai_mean, ai_valid_frac, ai_sat_frac, tot_cov_mean,
+  tot_cov_valid_frac: the 0.1° valid fraction is 1 where the 0.1° mean is valid (else 0); the
+  ERA5 `lsm` and the 0.1° `tot_cov_n_months` stay in the stores but are not published per cell.
+  Shared texts: dune presence = "the cell overlaps at least one 0.1° dune cell" (the 0.1° cell
+  itself for ERA5-Land), land = land–sea mask fraction > 0.5, no-data message for ocean cells.
+* **Panel re-renders keep the view**: the scrolling element persists while the panel is open;
+  threshold changes and re-renders keep its scroll position, and `show()` of the same location
+  (`sameLocation`: either cell centre inside the other cell - a dataset switch re-snap or the same
+  cell) keeps the old content (aria-busy, dimmed) until the new data are in, then re-renders at
+  the same scroll position; another location starts at the top. Collapsed sections persist.
 * **Grid-agnostic cell queries**: grid (`lat0, dlat, lon0, dlon, ny, nx`), histogram bin edges and
   `ut_values` come from the cell store root attrs (ERA5-Land constants only as a fallback), so a
   0.25° ERA5 store (721 × 1440) works unchanged.
@@ -158,7 +188,7 @@ and fixture layouts and fails if an upgrade changes them.
   clash; a store that cannot be opened only drops its own values). Names, descriptions and source
   statements of the variables shown / exported are in `cell/auxinfo.ts` (`AUX_META`).
 * **Vegetation cover** (`fields/vegetation.zarr`, Land surface group after aridity): linear
-  0–100 %, `ylgn`; panel row "Vegetation cover" from `tot_cov_mean` with `tot_cov_n_months`;
+  0–100 %, `ylgn`; panel row "Vegetation cover" from `tot_cov_mean` with `tot_cov_valid_frac`;
   scalars in NetCDF / metadata.json; citation source `vegetation` (CELL_SOURCE_IDS, About).
 * **Links in registry text**: descriptions, legend notes, attribution values and citation
   notices may contain `[label](https://…)` or bare http(s) URLs; `util/richtext.ts` renders them
@@ -290,7 +320,11 @@ zarr-layer, an attribute audit (every *_latex string rendered by KaTeX with thro
 attributes free of `\` / `$`; UDUNITS units), deflated zip read back with node zlib, SVG/legend builders (gapless sectors for every allowed count, flux % sums to 100, polar modes plot), arrows and
 Jobard–Lefer streamlines on synthetic fields (uniform, vortex, ±π wrap, axial field across 0/180°:
 no sign flips, median length ≫ dsep, separation, stops at no data) and a < 200 ms budget, datasets
-and {dataset} expansion, a synthetic 0.25° grid for snapping, drawing order, the multiscale window reader on
+and {dataset} expansion, a synthetic 0.25° grid for snapping, the ERA5 dataset (`tests/era5.test.ts`:
+variants and sources, in-place swap and restore, config kept / limits reset, initial-dataset rules,
+0.25° snapping incl. antimeridian and poles, panel + downloads on `staging/fixture/datasets/era5`
+incl. the ocean message, overlays reloaded with ERA5 sources then a basemap switch, layer panel
+refresh; per-level bounds of the ERA5 pyramids in `georef.test.ts`), drawing order, the multiscale window reader on
 the fixture pyramids, KaTeX rendering, DOM tests of both panels (happy-dom:
 pinned threshold, colormap chooser, render modes, km spacing slider + km→px/clamp/legacy migration, dune fill/invert without outline controls, invert, drawing order (× and re-tick on top), dataset selector, flux modes, visibility rule, resize handle, AI notice, sector
 sliders, flux axis toggle, Symbol/Quantity/Value table), and the cell store against

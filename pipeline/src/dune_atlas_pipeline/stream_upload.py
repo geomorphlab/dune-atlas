@@ -211,12 +211,13 @@ def _free_gb(path):
 
 # ----------------------------------------------------------------------------- stages
 def stream_cells(target, ledger, work: Path, prefix: str, data_dir: str, workers=4, band=64,
-                 rows=None, log=print, min_free_gb=4.0):
+                 rows=None, log=print, min_free_gb=4.0, dataset=None):
     """Cell store, one band of `band` rows at a time. Shard files (…/c/<i>/<j>/0/0) are uploaded and
     deleted after each band; metadata and the small static arrays are uploaded (overwriting) at the end."""
     from . import cellstore
+    from .grid import get_dataset
     out = work / "cells.zarr"
-    y_start, y_stop = rows if rows else (0, 1801)
+    y_start, y_stop = rows if rows else (0, get_dataset(dataset).grid.ny)
     is_shard = lambda rel: rel.startswith(("hist/c/", "fields/c/"))  # noqa: E731
     for y0 in range(y_start - y_start % band, y_stop, band):
         tag = f"cells-band-{y0}"
@@ -225,8 +226,8 @@ def stream_cells(target, ledger, work: Path, prefix: str, data_dir: str, workers
         if _free_gb(work) < min_free_gb:
             raise RuntimeError(f"less than {min_free_gb} GB free in {work}")
         t0 = time.time()
-        cellstore.write_region(str(out), data_dir, y0, min(y0 + band, y_stop), 0, 3600, workers=workers,
-                               log=lambda s: None)
+        cellstore.write_region(str(out), data_dir, y0, min(y0 + band, y_stop), 0, None, workers=workers,
+                               log=lambda s: None, dataset=dataset)
         n, sent = _upload_tree(target, ledger, out, f"{prefix}/cells.zarr", True, log, only=is_shard)
         ledger.mark(tag); ledger.save()
         log(f"cells rows {y0}-{min(y0 + band, y_stop)}: {n} shard objects, {sent / 1e6:.1f} MB, {time.time() - t0:.0f} s")
@@ -294,11 +295,85 @@ def assert_no_collision(planned_keys, existing: dict, new_prefixes) -> None:
         raise CollisionError(f"{len(hits)} planned keys already exist remotely, e.g. {hits[:3]}")
 
 
+def _put_new_verified(target, key, path, log):
+    """Create-only put of one file, then size verification (5 attempts). Returns (key, size)."""
+    size = path.stat().st_size
+    for attempt in range(5):
+        try:
+            try:
+                target.put_new(key, path)             # create-only: an existing key is never overwritten
+            except FileExistsError:
+                if attempt == 0:
+                    raise CollisionError(f"{key} appeared remotely after the collision check - aborting")
+                # a previous attempt of ours succeeded but its verification failed: accept if sizes match
+            got = target.size(key)
+            if got != size:
+                raise IOError(f"size mismatch for {key}: local {size} remote {got}")
+            return key, size
+        except CollisionError:
+            raise
+        except Exception as e:  # noqa: BLE001
+            if attempt == 4:
+                raise
+            log(f"retry {attempt + 1} for {key}: {e}")
+            time.sleep(2 ** attempt)
+
+
+def put_new_files(target, ledger: Ledger, todo, log=print, threads=None):
+    """Parallel create-only verified puts of [(key, path)]; each key is recorded in the ledger once verified."""
+    from concurrent.futures import ThreadPoolExecutor
+    done = 0
+    with ThreadPoolExecutor(max_workers=threads or UPLOAD_THREADS) as ex:
+        for key, size in ex.map(lambda kp: _put_new_verified(target, kp[0], kp[1], log), todo):
+            ledger.add(key, size)                         # ledger touched only in this (main) thread
+            done += 1
+            if done % 200 == 0:
+                ledger.save(); log(f"  {done}/{len(todo)}")
+    ledger.save()
+    return done
+
+
+def check_new_keys(planned: dict, existing: dict, new_prefixes, ledger: Ledger, resume=False) -> set:
+    """Collision check for a planned {key: size} set (e.g. a store that arrives in parts). Returns the keys already
+    uploaded by an interrupted run of ours (in the ledger and remote with the same size; only with resume=True)."""
+    mine = {k for k, sz in planned.items() if resume and ledger.has(k) and existing.get(k) == sz}
+    assert_no_collision([k for k in planned if k not in mine], {k: v for k, v in existing.items() if k not in mine},
+                        new_prefixes)
+    return mine
+
+
+def upload_new_tar(target, ledger: Ledger, tar_path, prefix: str, planned: dict, extract_dir, log=print,
+                   remove_extracted=True) -> dict:
+    """One part of a store that arrives as tars (members '<store>/...'): extract into `extract_dir`, check every
+    member against the planned {key: size} set (already collision-checked with check_new_keys), upload create-only
+    (verified) the keys not yet in the ledger, then remove the extracted files (they live in a scratch directory)."""
+    import tarfile
+    extract_dir = Path(extract_dir)
+    with tarfile.open(tar_path) as tf:
+        members = [m for m in tf.getmembers() if m.isfile()]
+        tf.extractall(extract_dir, members=members, filter="data")
+    todo, n_done = [], 0
+    for m in members:
+        key = f"{prefix}/{m.name}"
+        p = extract_dir / m.name
+        if planned.get(key) != p.stat().st_size:
+            raise CollisionError(f"{key}: not in the planned key set or size differs")
+        if ledger.has(key):
+            n_done += 1
+        else:
+            todo.append((key, p))
+    put_new_files(target, ledger, todo, log)
+    if remove_extracted:
+        for m in members:
+            (extract_dir / m.name).unlink()
+    return {"tar": Path(tar_path).name, "members": len(members), "uploaded_now": len(todo), "already": n_done,
+            "bytes": sum(m.size for m in members)}
+
+
 def upload_new_stores(target, ledger: Ledger, stores, prefix: str, existing: dict, log=print, resume=False):
     """Upload locally built stores under NEW keys only. `existing` = live listing of `prefix` taken just before.
     With resume=True, keys already in the ledger AND present remotely with the same size are accepted
     (interrupted upload); anything else that collides aborts before the first byte is sent."""
-    from concurrent.futures import ThreadPoolExecutor
     files = plan_new_stores(stores, prefix)
     keys = [k for k, _ in files]
     assert len(set(keys)) == len(keys)
@@ -308,37 +383,7 @@ def upload_new_stores(target, ledger: Ledger, stores, prefix: str, existing: dic
     todo = [(k, p) for k, p in files if k not in mine]
     log(f"uploading {len(todo)} new objects ({sum(p.stat().st_size for _, p in todo) / 1e6:.1f} MB); "
         f"{len(mine)} already done; 0 collisions with {len(existing)} existing keys")
-    def put_verified(kp):
-        key, path = kp
-        size = path.stat().st_size
-        for attempt in range(5):
-            try:
-                try:
-                    target.put_new(key, path)             # create-only: an existing key is never overwritten
-                except FileExistsError:
-                    if attempt == 0:
-                        raise CollisionError(f"{key} appeared remotely after the collision check - aborting")
-                    # a previous attempt of ours succeeded but its verification failed: accept if sizes match
-                got = target.size(key)
-                if got != size:
-                    raise IOError(f"size mismatch for {key}: local {size} remote {got}")
-                return key, size
-            except CollisionError:
-                raise
-            except Exception as e:  # noqa: BLE001
-                if attempt == 4:
-                    raise
-                log(f"retry {attempt + 1} for {key}: {e}")
-                time.sleep(2 ** attempt)
-
-    done = 0
-    with ThreadPoolExecutor(max_workers=UPLOAD_THREADS) as ex:
-        for key, size in ex.map(put_verified, todo):      # ledger touched only in this (main) thread
-            ledger.add(key, size)
-            done += 1
-            if done % 200 == 0:
-                ledger.save(); log(f"  {done}/{len(todo)}")
-    ledger.save()
+    put_new_files(target, ledger, todo, log)
     return {"objects": len(files), "bytes": sum(p.stat().st_size for _, p in files), "uploaded_now": len(todo)}
 
 

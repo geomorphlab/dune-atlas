@@ -130,11 +130,29 @@ describe("patched zarr-layer: each pyramid level uses its own bounds", () => {
     expect(Math.abs(lat - (90 - 1 / 240))).toBeLessThan(1e-9);
     expect(Math.abs(rendererPixelCentre(g, 17999, 43199)[1] - (-60 + 1 / 240))).toBeLessThan(1e-9);
   });
-  for (const [label, layout, twoD] of [["v1 (1801 x 3600, floor halvings)", v1Layout(), false], ["fixture", null, false], ["aridity (2-D, 9 levels, -60..90)", ARIDITY.multiscales.layout, true]] as const) {
+  const ERA5_DPM = path.resolve(__dirname, "../../staging/fixture/datasets/era5/fields/dpm.zarr/zarr.json");
+  it.skipIf(!fs.existsSync(ERA5_DPM))("ERA5 (0.25°, 721 x 1440): explicit bounds are the cell edges -180.125..179.875, -90.125..90.125; centres exact", () => {
+    for (const v of ["dpm", "rdpa", "qsdiv", "uft"]) {
+      const g = storeGeoFromAttrs(JSON.parse(fs.readFileSync(ERA5_DPM.replace("dpm.zarr", `${v}.zarr`), "utf8")).attributes)!;
+      expect(g.bounds).toEqual([-180.125, -90.125, 179.875, 90.125]);
+      expect(g.shape).toEqual([721, 1440]);
+      const [lon, lat] = rendererPixelCentre(g, 0, 0);
+      expect(Math.abs(lon + 180)).toBeLessThan(1e-9);
+      expect(Math.abs(lat - 90)).toBeLessThan(1e-9);
+      const [lon1, lat1] = rendererPixelCentre(g, 720, 1439);
+      expect(Math.abs(lon1 - 179.75)).toBeLessThan(1e-9);
+      expect(Math.abs(lat1 + 90)).toBeLessThan(1e-9);
+      // the Namib fixture cell (458, 781) is at (-24.5, 15.25)
+      const [lo, la] = rendererPixelCentre(g, 458, 781);
+      expect(Math.abs(lo - 15.25)).toBeLessThan(1e-9);
+      expect(Math.abs(la + 24.5)).toBeLessThan(1e-9);
+    }
+  });
+  for (const [label, layout, twoD] of [["v1 (1801 x 3600, floor halvings)", v1Layout(), false], ["fixture", null, false], ["ERA5 0.25° fixture (721 x 1440)", "era5", false], ["aridity (2-D, 9 levels, -60..90)", ARIDITY.multiscales.layout, true]] as const) {
     it(`${label}: cell centres of every level map to the transform-derived coordinates (1e-9 deg)`, () => {
-      let lay = layout as Record<string, unknown>[] | null;
+      let lay = (typeof layout === "string" ? null : layout) as Record<string, unknown>[] | null;
       if (!lay) {
-        const f = path.resolve(__dirname, "../../staging/fixture/fields/at.zarr/zarr.json");
+        const f = layout === "era5" ? ERA5_DPM : path.resolve(__dirname, "../../staging/fixture/fields/at.zarr/zarr.json");
         if (!fs.existsSync(f)) return;
         lay = JSON.parse(fs.readFileSync(f, "utf8")).attributes.multiscales.layout;
       }

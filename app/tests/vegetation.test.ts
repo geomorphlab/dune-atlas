@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 // Vegetation cover layer (Land surface group), generic per-cell sidecars, safe links in registry
 // text, panel row, downloads and citations.
+import { harmonizeAux } from "../src/cell/auxinfo";
 import { describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
@@ -127,7 +128,10 @@ describe("generic per-cell sidecars", () => {
     const direct = zarr.root(new RFS(path.join(fixture, "cells-aux-veg.zarr")) as never);
     const m = await zarr.get(await zarr.open(direct.resolve("tot_cov_mean"), { kind: "array" }), [1145, 1952]);
     expect(c.aux!.scalars.tot_cov_mean).toBe(Number(m));
-    expect(c.aux!.scalars.tot_cov_n_months).toBe(299);
+    // published per cell: the same variables as ERA5 (0.1°: valid fraction 1 where the mean is valid; no month count)
+    expect(c.aux!.scalars.tot_cov_valid_frac).toBe(1);
+    expect("tot_cov_n_months" in c.aux!.scalars).toBe(false);
+    expect(c.aux!.attrs.tot_cov_valid_frac.doi).toBe("10.4225/08/5848a3f19a7b3");
     expect(c.aux!.scalars.ai_mean).toBeGreaterThan(0);
     expect(c.aux!.series.qsdiv.length).toBe(64);
     expect(c.aux!.attrs.tot_cov_mean.doi).toBe("10.4225/08/5848a3f19a7b3");
@@ -144,30 +148,37 @@ describe("generic per-cell sidecars", () => {
 function vegCell(): CellData {
   const hist = new Uint32Array(128 * 128); hist[40 * 128 + 70] = 100;
   const c = makeCell({ iy: 1145, ix: 1952, lat: -24.5, lon: 15.2, hist, fields: new Float32Array(FIELD_VARS.length * 64).fill(0.3) });
-  c.aux = { series: {}, scalars: { tot_cov_mean: 20.275455474853516, tot_cov_n_months: 299 },
-    attrs: { tot_cov_mean: { citation: "Guerschman, J.P. et al. (2015) …", doi: "10.4225/08/5848a3f19a7b3", licence: "CC BY 4.0, Copyright 2008-2019 CSIRO", url: RAPP, source: "store text", changes: "store text" }, tot_cov_n_months: { doi: "10.4225/08/5848a3f19a7b3" } } };
+  c.aux = harmonizeAux({ series: {}, scalars: { tot_cov_mean: 20.275455474853516, tot_cov_n_months: 299 },
+    attrs: { tot_cov_mean: { citation: "Guerschman, J.P. et al. (2015) …", doi: "10.4225/08/5848a3f19a7b3", licence: "CC BY 4.0, Copyright 2008-2019 CSIRO", url: RAPP, source: "store text", changes: "store text" }, tot_cov_n_months: { doi: "10.4225/08/5848a3f19a7b3" } } });
   return c;
 }
 const META = { datasetId: "era5-land", datasetTitle: "ERA5-Land", dataVersion: "v1", permalink: "https://map.geomorphlab.org/?cell=1145,1952", generated: new Date("2026-10-13T00:00:00Z") };
 
 describe("vegetation in the panel and the downloads", () => {
-  it("summary row 'Vegetation cover' in %, months as subtext and tooltip", async () => {
+  it("harmonizeAux: 0.1° valid fraction from the mean (1 / 0); month count and unknown variables dropped", () => {
+    const x = harmonizeAux({ series: { qsdiv: new Float32Array(2) }, scalars: { tot_cov_mean: NaN, tot_cov_n_months: 0, lsm: 1, ai_mean: 0.2 }, attrs: { tot_cov_mean: { doi: "d" }, lsm: {} } });
+    expect(x.scalars).toEqual({ ai_mean: 0.2, tot_cov_mean: NaN, tot_cov_valid_frac: 0 });
+    expect(Object.keys(x.attrs)).toEqual(["tot_cov_mean", "tot_cov_valid_frac"]);
+    const y = harmonizeAux({ series: {}, scalars: { tot_cov_mean: 3, tot_cov_valid_frac: 0.4 }, attrs: {} });
+    expect(y.scalars.tot_cov_valid_frac).toBe(0.4); // 0.25°: the store's area fraction
+  });
+  it("summary row 'Vegetation cover' in %, fraction of the cell with data as subtext and tooltip", async () => {
     document.body.innerHTML = '<aside id="cell-panel" hidden></aside>';
     const root = document.getElementById("cell-panel")!;
     const c = vegCell();
     const p = new CellPanel(root, 14, { windSectors: 16, fluxSectors: 32, onClose: () => {} });
     await p.show({ query: async () => c, attrs: {}, fieldVars: FIELD_VARS } as unknown as CellStore, 1145, 1952);
     const row = root.querySelector('.summary tr[data-field="tot_cov_mean"]')!;
-    expect(row.querySelector("th")!.textContent).toBe("Vegetation cover (mean 2001–2025; 299 of 300 months)");
+    expect(row.querySelector("th")!.textContent).toBe("Vegetation cover (mean 2001–2025; 100 % of cell with data)");
     expect(row.querySelector("td.num")!.textContent).toBe("20.3 %");
-    expect(row.querySelector("td.num")!.getAttribute("title")).toMatch(/299 months/);
+    expect(row.querySelector("td.num")!.getAttribute("title")).toBe("Mean of the 0.1° vegetation cover means (2001–2025) over the part of the cell with data (100 %)");
     // citation list in the panel includes the vegetation source with the RAPP link
     expect(root.textContent).toContain("Vegetation cover (CSIRO MODIS Fractional Cover v3.1)");
   });
   it("NetCDF scalars + metadata.json aux + README + citations", () => {
     const c = vegCell();
     const r = readNc(cellNetcdf(c, META));
-    for (const [v, u, x] of [["tot_cov_mean", "%", 20.275455474853516], ["tot_cov_n_months", "1", 299]] as const) {
+    for (const [v, u, x] of [["tot_cov_mean", "%", 20.275455474853516], ["tot_cov_valid_frac", "1", 1]] as const) {
       expect(r.vars[v].dims).toEqual([]);
       expect(r.vars[v].attrs.units).toBe(u);
       expect((r.vars[v].data as Float32Array)[0]).toBe(Math.fround(x));
@@ -181,7 +192,9 @@ describe("vegetation in the panel and the downloads", () => {
     expect(String(r.gatts.references)).toContain("https://doi.org/10.1016/j.rse.2015.01.021");
     const md = JSON.parse(metadataJson(c, META));
     expect(md.aux.tot_cov_mean.value).toBe(Math.fround(20.275455474853516));
-    expect(md.aux.tot_cov_n_months.value).toBe(299);
+    expect(md.aux.tot_cov_valid_frac.value).toBe(1);
+    expect(md.aux.tot_cov_n_months).toBeUndefined();
+    expect(r.vars.tot_cov_n_months).toBeUndefined();
     const vc = md.citation.find((x: { id: string }) => x.id === "vegetation");
     expect([vc.paper.doi, vc.paper_2.doi, vc.data.doi]).toEqual(["10.1016/j.rse.2015.01.021", "10.1080/2150704X.2018.1465611", "10.4225/08/5848a3f19a7b3"]);
     expect(vc.notice).toContain(RAPP);

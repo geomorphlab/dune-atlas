@@ -142,7 +142,7 @@ describe("cell exports", () => {
     }
     // field attributes and global attributes are exactly these (no other annotations)
     for (const v of FIELD_VARS) expect(Object.keys(r.vars[v].attrs).sort()).toEqual(["_FillValue", "coordinates", "description", "description_latex", "long_name", "long_name_latex", "units"]);
-    expect(Object.keys(r.gatts).sort()).toEqual(["Conventions", "comment", "data_version", "dataset_id", "history", "institution", "license", "references", "source", "title"]);
+    expect(Object.keys(r.gatts).sort()).toEqual(["Conventions", "comment", "data_version", "dataset_id", "geospatial_lat_resolution", "geospatial_lon_resolution", "history", "institution", "license", "references", "source", "title"]);
     expect(String(r.vars.qha_rdp_dp.attrs.description)).toMatch(/^Directional variability of sand flux: ratio of resultant to total drift potential/);
     expect(r.vars.dpm.attrs.units).toBe("m2 s-1");
     expect(r.vars.flux_rose.dims).toEqual(["rose_mode", "ut", "ua_bin"]);

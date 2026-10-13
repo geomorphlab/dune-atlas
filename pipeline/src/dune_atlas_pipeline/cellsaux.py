@@ -4,7 +4,8 @@ Extensible: one array per variable, each with documented attrs (units, long_name
 licence, ...); new variables are new arrays (new object keys) - existing arrays are never rewritten.
 Root attrs `variables` lists them, `grid` repeats cells.zarr's grid.
 
-Layout (zarr v3, grid 1801 x 3600, latitude 90 -> -90, longitude -180 -> 179.9, cell centres):
+Layout (zarr v3, grid of the wind dataset - ERA5-Land 1801 x 3600, latitude 90 -> -90, longitude -180 -> 179.9;
+ERA5 721 x 1440, longitude -180 -> 179.75; cell centres):
 * threshold-dependent arrays, e.g. `qsdiv` (1801, 3600, 64 ut) float32: exactly the cells.zarr `fields`
   convention - shard (16, 16, 64) = one object per 16 x 16 cells, inner chunk one cell (1, 1, 64),
   blosc zstd-5 bitshuffle, shard index at the END (zarrita suffix read; the app's CachingStore memoises it);
@@ -21,10 +22,17 @@ import os
 import numpy as np
 
 from . import constants as C
+from .grid import ERA5_LAND_GRID, get_dataset
 
 SHARD = 16
 SCALAR_CHUNK = 64
-GRID = {"lat0": 90.0, "dlat": -0.1, "lon0": -180.0, "dlon": 0.1, "ny": 1801, "nx": 3600, "cell_registration": "centre"}
+GRID = ERA5_LAND_GRID.attrs()
+CONVENTIONS_V1 = ("threshold-dependent arrays: (latitude, longitude, ut), shard 16x16 cells, inner chunk "
+                  "1 cell, index at end; scalar arrays: (latitude, longitude), plain 64x64 chunks; "
+                  "NaN = no value (ocean, or not defined)")
+CONVENTIONS = ("threshold-dependent arrays: (latitude, longitude, ut), shard 16x16 cells, inner chunk 1 cell, index "
+               "at end; scalar arrays: (latitude, longitude), plain 64x64 chunks; the fill value marks cells with no "
+               "data (not land, or undefined)")
 
 
 def _sharding(inner, typesize=4):
@@ -33,19 +41,21 @@ def _sharding(inner, typesize=4):
                                                                              typesize=typesize)], index_location="end")
 
 
-def open_store(out, land: np.ndarray, root_attrs: dict | None = None):
+def open_store(out, land: np.ndarray, root_attrs: dict | None = None, dataset=None):
     import zarr
+    ds = get_dataset(dataset)
     root = zarr.open_group(out, mode="a", zarr_format=3)
     if "variables" not in root.attrs:
-        root.attrs.update({
+        a = {
             "title": "dune-atlas per-cell auxiliary variables (sidecar to cells.zarr)",
-            "grid": GRID, "ut_values": C.UT_VALUES.tolist(), "ut_default_index": C.UT_DEFAULT_INDEX,
+            "grid": ds.grid.attrs(), "ut_values": C.UT_VALUES.tolist(), "ut_default_index": C.UT_DEFAULT_INDEX,
             "land_cells": int(land.sum()), "variables": [],
-            "conventions": ("threshold-dependent arrays: (latitude, longitude, ut), shard 16x16 cells, inner chunk "
-                            "1 cell, index at end; scalar arrays: (latitude, longitude), plain 64x64 chunks; "
-                            "NaN = no value (ocean, or not defined)"),
-            **(root_attrs or {}),
-        })
+            "conventions": CONVENTIONS_V1 if ds.id == "era5-land" else CONVENTIONS,
+        }
+        if ds.info:
+            a.update({"dataset": ds.info["id"], "dataset_name": ds.name, "dataset_resolution": ds.resolution,
+                      "land_cells_definition": ds.info["land_cells"]})
+        root.attrs.update({**a, **(root_attrs or {})})
     return root
 
 
@@ -90,20 +100,30 @@ def count_objects(path) -> dict:
     return out
 
 
-def build(out, data_dir, qsdiv_native: str, ai_npz: str | None = None, ai_means: dict | None = None) -> dict:
-    """Build cells-aux.zarr from the staging qsdiv (ut, y, x) zarr and the AI cell means."""
+def build(out, data_dir, qsdiv_native: str, ai_npz: str | None = None, ai_means: dict | None = None,
+          dataset=None) -> dict:
+    """Build cells-aux.zarr from the staging qsdiv (ut, y, x) zarr and the AI cell means. For ERA5 also the
+    land-sea mask `lsm` (from the dataset mask file)."""
     import xarray as xr
     from . import aridity, qsdiv
-    with xr.open_dataset(f"{data_dir}/layers.nc") as L:
-        land = L["land"].values.astype(bool)
-    root = open_store(out, land)
-    q = qsdiv.read_native(qsdiv_native)                     # (64, 1801, 3600) float32 m/yr
-    qa = qsdiv.var_attrs()
+    from .cellstore import load_masks
+    ds = get_dataset(dataset)
+    g = ds.grid
+    land = load_masks(data_dir, ds)[0]
+    root = open_store(out, land, dataset=ds)
+    q = qsdiv.read_native(qsdiv_native)                     # (64, ny, nx) float32 m/yr
+    assert q.shape[1:] == g.shape
+    qa = qsdiv.var_attrs(g)
+    if ds.id == "era5-land":
+        q_source = "Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y; data doi:10.5281/zenodo.20046812"
+    else:
+        q_source = (f"Derived from the {ds.name} rdpm and rdpa fields of this atlas (method: Gunn (2026) Nat Commun "
+                    f"doi:10.1038/s41467-026-75466-y, Methods M6); wind data {ds.info['data_citation']}")
     write_variable(root, "qsdiv", np.moveaxis(q, 0, -1), land, {
         "long_name": qa["long_name"], "long_name_latex": qa["long_name_latex"], "units": "m/yr",
         "description": qa["description"], "derived_from": qa["derived_from"], "method": qa["method"],
         "display_units": "m/kyr", "display_scale": 1000.0,
-        "source": "Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y; data doi:10.5281/zenodo.20046812", "licence": "CC BY 4.0"})
+        "source": q_source, "licence": "CC BY 4.0"})
     del q
     if ai_means is None:
         z = np.load(ai_npz)
@@ -114,17 +134,26 @@ def build(out, data_dir, qsdiv_native: str, ai_npz: str | None = None, ai_means:
     write_variable(root, "ai_mean", ai_means["ai_mean"], land, {
         "long_name": "Aridity index, mean over the cell", "long_name_latex": r"\overline{\mathrm{AI}}",
         "units": "dimensionless",
-        "description": ("Mean of the valid 30-arc-second Global-AI v3.1 pixels inside the 0.1° cell footprint "
-                        "(centre ± 0.05°), equal weight per pixel (no cos-latitude weighting); undefined where "
+        "description": (f"Mean of the valid 30-arc-second Global-AI v3.1 pixels inside the {g.label} cell footprint "
+                        f"(centre ± {g.res / 2:g}°), equal weight per pixel (no cos-latitude weighting); undefined where "
                         "none is valid. Includes saturated pixels at 6.5535 (AI ≥ 6.5535), so it is a lower bound where "
                         "ai_sat_frac > 0."), **common})
     write_variable(root, "ai_valid_frac", ai_means["ai_valid_frac"], land, {
         "long_name": "Fraction of the cell footprint with valid aridity data", "long_name_latex": r"f_\mathrm{valid}",
         "units": "1",
-        "description": ("Valid 30″ pixels / 144 (nominal pixels per 0.1° cell). Pixels outside the source extent "
+        "description": (f"Valid 30″ pixels / {round((g.res * 120) ** 2)} (nominal pixels per {g.label} cell). Pixels outside the source extent "
                         "(south of 60° S) or with no data (ocean, ET0 = 0) count as not valid."), **common})
     write_variable(root, "ai_sat_frac", ai_means["ai_sat_frac"], land, {
         "long_name": "Fraction of valid aridity pixels at saturation (AI ≥ 6.5535)", "long_name_latex": r"f_\mathrm{sat}",
         "units": "1", "description": "Fraction of valid pixels at the source maximum (65535, AI >= 6.5535); undefined where no pixel is valid.",
         **common})
+    if not ds.land_only_source:
+        with xr.open_dataset(f"{data_dir}/{ds.masks_file}") as M:
+            lsm = M["lsm"].values.astype("f4")
+        write_variable(root, "lsm", lsm, land, {
+            "long_name": f"{ds.name} land-sea mask (fraction of land)", "long_name_latex": r"\mathrm{lsm}", "units": "1",
+            "description": (f"{ds.name} land-sea mask, the invariant fraction of the cell covered by land (0–1). Atlas "
+                            "land cells are those with lsm > 0.5; other cells have no data."),
+            "source": ds.info["data_citation"], "citation": ds.info["citation"], "doi": ds.info["doi"],
+            "licence": ds.info["licence"], "notice": ds.info["copernicus_notice"]})
     return {"objects": count_objects(out), "variables": list(root.attrs["variables"])}

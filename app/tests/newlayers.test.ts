@@ -14,7 +14,7 @@ import { CellStore, CellAuxStore, type CellData } from "../src/cell/cellstore";
 import { cellNetcdf, fieldsByThresholdCsv, metadataJson } from "../src/cell/export";
 import { aridityClass, AUX_META } from "../src/cell/auxinfo";
 import { linePlotSvg } from "../src/cell/lineplot";
-import { CellPanel } from "../src/ui/cellPanel";
+import { PANEL_SECTIONS, CellPanel } from "../src/ui/cellPanel";
 import { makeCell, FIELD_VARS } from "./helpers";
 import { C } from "../src/util/constants";
 import { fmtNum } from "../src/util/format";
@@ -166,7 +166,12 @@ describe("panel and downloads with cells-aux values", () => {
     expect(row("qsdiv").querySelector("td.num")!.textContent).toMatch(/^-0\.058\d* m\/kyr$/);
     expect(row("ai_mean").querySelector("td.num")!.textContent).toBe("≥ 0.050 (arid)");
     expect(row("ai_mean").textContent).toMatch(/100 % of cell valid, 25 % saturated/);
-    expect(root.querySelector("section.qsdiv svg.line-plot")).not.toBeNull();
+    expect(root.querySelector("details.qsdiv svg.line-plot")).not.toBeNull();
+    // all six sections, in order, each a disclosure with its h3 in the summary
+    expect([...root.querySelectorAll(".cell-body details.section")].map((d) => (d as HTMLElement).dataset.section)).toEqual([...PANEL_SECTIONS]);
+    const qd = root.querySelector('details[data-section="qsdiv"]') as HTMLDetailsElement;
+    expect(qd.open).toBe(true);
+    expect(qd.querySelector(":scope > summary > h3")!.textContent!.replace(/\s+/g, " ")).toMatch(/^Flux divergence .* vs threshold$/);
     p.setThreshold(3);
     expect(row("qsdiv").querySelector("td.num")!.textContent).toBe("—");
     expect(aridityClass(0.02)).toBe("hyper-arid");

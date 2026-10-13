@@ -27,7 +27,7 @@ layers:
   titleTex: Drift potential $DP$
   group: drift
   type: zarr-field
-  source: dune-atlas/v1/fields/dpm.zarr
+  source: '{dataset}/fields/dpm.zarr'
   variable: dpm
   thresholdAware: true
   units: m²/yr
@@ -51,7 +51,7 @@ layers:
   titleTex: Resultant drift potential $RDP$
   group: drift
   type: zarr-field
-  source: dune-atlas/v1/fields/rdpm.zarr
+  source: '{dataset}/fields/rdpm.zarr'
   variable: rdpm
   thresholdAware: true
   units: m²/yr
@@ -74,7 +74,7 @@ layers:
   titleTex: Resultant drift direction $RDD$
   group: drift
   type: zarr-field
-  source: dune-atlas/v1/fields/rdpa.zarr
+  source: '{dataset}/fields/rdpa.zarr'
   variable: rdpa
   thresholdAware: true
   units: °
@@ -99,7 +99,7 @@ layers:
   titleTex: $RDP/DP$
   group: drift
   type: zarr-field
-  source: dune-atlas/v1/fields/qha_rdp_dp.zarr
+  source: '{dataset}/fields/qha_rdp_dp.zarr'
   variable: qha_rdp_dp
   thresholdAware: true
   units: dimensionless
@@ -122,7 +122,7 @@ layers:
   titleTex: Migration signed direction $\alpha_T$
   group: orientation
   type: zarr-field
-  source: dune-atlas/v1/fields/at.zarr
+  source: '{dataset}/fields/at.zarr'
   variable: at
   thresholdAware: true
   units: °
@@ -147,7 +147,7 @@ layers:
   titleTex: Migration mode unsigned direction $\alpha_H$
   group: orientation
   type: zarr-field
-  source: dune-atlas/v1/fields/ab.zarr
+  source: '{dataset}/fields/ab.zarr'
   variable: ab
   thresholdAware: true
   units: °
@@ -171,7 +171,7 @@ layers:
   titleTex: Elongation mode signed direction $\alpha_E$
   group: orientation
   type: zarr-field
-  source: dune-atlas/v1/fields/ae.zarr
+  source: '{dataset}/fields/ae.zarr'
   variable: ae
   thresholdAware: true
   units: °
@@ -196,7 +196,7 @@ layers:
   titleTex: Oblique signed direction $\alpha_O$
   group: orientation
   type: zarr-field
-  source: dune-atlas/v1/fields/ao.zarr
+  source: '{dataset}/fields/ao.zarr'
   variable: ao
   thresholdAware: true
   units: °
@@ -221,7 +221,7 @@ layers:
   titleTex: Net across-crest migration-mode flux $\langle Q_{\bot}(\alpha_H)\rangle$
   group: crest-fluxes
   type: zarr-field
-  source: dune-atlas/v1/fields/qncb.zarr
+  source: '{dataset}/fields/qncb.zarr'
   variable: qncb
   thresholdAware: true
   units: m²/yr
@@ -243,7 +243,7 @@ layers:
   titleTex: Absolute across-crest migration-mode flux $\langle |Q_{\bot}(\alpha_H)|\rangle$
   group: crest-fluxes
   type: zarr-field
-  source: dune-atlas/v1/fields/qacb.zarr
+  source: '{dataset}/fields/qacb.zarr'
   variable: qacb
   thresholdAware: true
   units: m²/yr
@@ -266,7 +266,7 @@ layers:
   titleTex: Net along-crest migration-mode flux $\langle Q_{\parallel}(\alpha_H)\rangle$
   group: crest-fluxes
   type: zarr-field
-  source: dune-atlas/v1/fields/qnlb.zarr
+  source: '{dataset}/fields/qnlb.zarr'
   variable: qnlb
   thresholdAware: true
   units: m²/yr
@@ -288,7 +288,7 @@ layers:
   titleTex: Absolute along-crest migration-mode flux $\langle |Q_{\parallel}(\alpha_H)|\rangle$
   group: crest-fluxes
   type: zarr-field
-  source: dune-atlas/v1/fields/qalb.zarr
+  source: '{dataset}/fields/qalb.zarr'
   variable: qalb
   thresholdAware: true
   units: m²/yr
@@ -311,7 +311,7 @@ layers:
   titleTex: Net along-crest elongation-mode flux $\langle Q_{\parallel}(\alpha_E)\rangle$
   group: crest-fluxes
   type: zarr-field
-  source: dune-atlas/v1/fields/qnle.zarr
+  source: '{dataset}/fields/qnle.zarr'
   variable: qnle
   thresholdAware: true
   units: m²/yr
@@ -333,7 +333,7 @@ layers:
   titleTex: Absolute along-crest elongation-mode flux $\langle |Q_{\parallel}(\alpha_E)|\rangle$
   group: crest-fluxes
   type: zarr-field
-  source: dune-atlas/v1/fields/qale.zarr
+  source: '{dataset}/fields/qale.zarr'
   variable: qale
   thresholdAware: true
   units: m²/yr
@@ -356,7 +356,7 @@ layers:
   titleTex: Absolute across-crest elongation-mode flux $\langle |Q_{\bot}(\alpha_E)|\rangle$
   group: crest-fluxes
   type: zarr-field
-  source: dune-atlas/v1/fields/qace.zarr
+  source: '{dataset}/fields/qace.zarr'
   variable: qace
   thresholdAware: true
   units: m²/yr
@@ -379,7 +379,7 @@ layers:
   titleTex: $\sigma_E/\sigma_H$
   group: morphology
   type: zarr-field
-  source: dune-atlas/v1/fields/sige_sigh.zarr
+  source: '{dataset}/fields/sige_sigh.zarr'
   variable: sige_sigh
   thresholdAware: true
   units: dimensionless
@@ -401,7 +401,7 @@ layers:
   titleTex: $\hat{Q}_{\parallel/\bot,H}$
   group: morphology
   type: zarr-field
-  source: dune-atlas/v1/fields/qhab_nl_nc.zarr
+  source: '{dataset}/fields/qhab_nl_nc.zarr'
   variable: qhab_nl_nc
   thresholdAware: true
   units: dimensionless
@@ -426,7 +426,7 @@ layers:
   titleTex: $\hat{Q}_{|\bot|/\bot,H}$
   group: morphology
   type: zarr-field
-  source: dune-atlas/v1/fields/qhab_ac_nc.zarr
+  source: '{dataset}/fields/qhab_ac_nc.zarr'
   variable: qhab_ac_nc
   thresholdAware: true
   units: dimensionless
@@ -450,7 +450,7 @@ layers:
   titleTex: $\hat{Q}_{|\bot|/\parallel,E}$
   group: morphology
   type: zarr-field
-  source: dune-atlas/v1/fields/qhne_ac_nl.zarr
+  source: '{dataset}/fields/qhne_ac_nl.zarr'
   variable: qhne_ac_nl
   thresholdAware: true
   units: dimensionless
@@ -474,7 +474,7 @@ layers:
   titleTex: $T|u_{\ast,f}>u_{\ast,th}/T$
   group: wind
   type: zarr-field
-  source: dune-atlas/v1/fields/uft.zarr
+  source: '{dataset}/fields/uft.zarr'
   variable: uft
   thresholdAware: true
   units: dimensionless
@@ -496,7 +496,7 @@ layers:
   titleTex: $\langle u_{\ast,f}|u_{\ast,f}>u_{\ast,th}\rangle/u_{\ast,th}$
   group: wind
   type: zarr-field
-  source: dune-atlas/v1/fields/ufm.zarr
+  source: '{dataset}/fields/ufm.zarr'
   variable: ufm
   thresholdAware: true
   units: dimensionless
@@ -518,7 +518,7 @@ layers:
   titleTex: Fraction of bed-mode flux while flat-bed $u_{\ast,f}>u_{\ast,th}$
   group: wind
   type: zarr-field
-  source: dune-atlas/v1/fields/qhbf.zarr
+  source: '{dataset}/fields/qhbf.zarr'
   variable: qhbf
   thresholdAware: true
   units: dimensionless
@@ -542,7 +542,7 @@ layers:
   titleTex: Fraction of elongation-mode flux while flat-bed $u_{\ast,f}>u_{\ast,th}$
   group: wind
   type: zarr-field
-  source: dune-atlas/v1/fields/qhef.zarr
+  source: '{dataset}/fields/qhef.zarr'
   variable: qhef
   thresholdAware: true
   units: dimensionless

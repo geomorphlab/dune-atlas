@@ -7,7 +7,7 @@ import { loadRegistry } from "../src/registry/load";
 import { Store, type AppState } from "../src/store";
 import { renderLayerPanel, AI_NOTICE } from "../src/ui/layerPanel";
 import { metersPerPixel, spacingToPx } from "../src/layerconfig";
-import { CellPanel, MODES_OPEN_KEY } from "../src/ui/cellPanel";
+import { CellPanel, MODES_OPEN_KEY, PANEL_SECTIONS, sameLocation, sectionOpenKey } from "../src/ui/cellPanel";
 import { CONFIG } from "../src/config";
 import type { CellData, CellStore } from "../src/cell/cellstore";
 import { C } from "../src/util/constants";
@@ -166,8 +166,9 @@ describe("layer panel", () => {
     expect(items()[0]).toBe(victim);
     expect(store.state.order[0]).toBe(victim);
   });
-  it("dataset selector is hidden with a single dataset", () => {
-    expect(root.querySelector("#dataset-select")).toBeNull();
+  it("dataset selector is shown for the two wind datasets (ERA5-Land, ERA5)", () => {
+    const sel = root.querySelector("#dataset-select") as HTMLSelectElement;
+    expect([...sel.options].map((o) => o.textContent)).toEqual(["ERA5-Land 0.1°, 1950–2024", "ERA5 0.25°, 1950–2024"]);
   });
   it("dunes: fill colour picker and invert only (no outline controls, no colour swatch)", () => {
     const it_ = item(root, "dunes");
@@ -226,11 +227,17 @@ describe("layer panel", () => {
   });
 });
 
-describe("dataset selector (> 1 dataset)", () => {
+describe("dataset selector", () => {
+  it("is hidden with a single dataset", () => {
+    document.body.innerHTML = '<aside id="layer-panel"></aside>';
+    const root = document.getElementById("layer-panel")!;
+    renderLayerPanel(root, { ...reg, datasets: reg.datasets!.slice(0, 1) }, new Store(initState()));
+    expect(root.querySelector("#dataset-select")).toBeNull();
+  });
   it("is shown, lists the datasets and drives the store", () => {
     document.body.innerHTML = '<aside id="layer-panel"></aside>';
     const root = document.getElementById("layer-panel")!;
-    const reg2 = { ...reg, datasets: [...(reg.datasets ?? []), { id: "era5", title: "ERA5 1950–2024 (0.25°)", prefix: "dune-atlas/era5/v1" }] };
+    const reg2 = reg;
     const store = new Store(initState());
     renderLayerPanel(root, reg2, store);
     const sel = root.querySelector("#dataset-select") as HTMLSelectElement;
@@ -280,6 +287,90 @@ describe("cell panel", () => {
     const d2 = root.querySelector("details.modes") as HTMLDetailsElement;
     d2.open = true; d2.dispatchEvent(new Event("toggle"));
     expect(memStorage.getItem(MODES_OPEN_KEY)).toBe("1");
+  });
+  it("every section heading is a disclosure (same markup as Modes); open by default; each state remembered", async () => {
+    await open();
+    const body = root.querySelector(".cell-body")!;
+    const secs = [...body.querySelectorAll("details")] as HTMLDetailsElement[];
+    // this synthetic cell has no cells-aux qsdiv series (that section is checked in newlayers.test.ts)
+    const present = PANEL_SECTIONS.filter((k) => k !== "qsdiv");
+    expect(secs.map((d) => d.dataset.section)).toEqual(present);
+    // no heading outside a disclosure summary; one h3 per summary; same classes as Modes
+    for (const h3 of body.querySelectorAll("h3")) expect(h3.parentElement!.matches("details.section > summary")).toBe(true);
+    for (const d of secs) {
+      expect(d.classList.contains("section")).toBe(true);
+      expect(d.firstElementChild!.tagName).toBe("SUMMARY");
+      expect(d.firstElementChild!.querySelectorAll("h3").length).toBe(1);
+      expect(d.open).toBe(true);
+    }
+    const title = (k: string) => body.querySelector(`details[data-section="${k}"] > summary`)!.textContent!.replace(/\s+/g, " ");
+    expect(title("summary")).toMatch(/^Cell summary at u.*= 0\.\d\d m\/s/);
+    expect(title("downloads")).toBe("Download & cite");
+    // collapse each; a new panel (another cell) keeps every choice
+    for (const d of secs) { d.open = false; d.dispatchEvent(new Event("toggle")); }
+    for (const k of present) expect(memStorage.getItem(sectionOpenKey(k))).toBe("0");
+    expect(MODES_OPEN_KEY).toBe("duneAtlas.cellPanel.modesOpen");
+    await open();
+    const again = [...root.querySelectorAll(".cell-body details")] as HTMLDetailsElement[];
+    expect(again.map((d) => d.open)).toEqual(present.map(() => false));
+    // threshold change re-renders the table heading in place (still inside its summary), state kept
+    const mini = root.querySelector("#cell-ut-slider") as HTMLInputElement;
+    mini.value = "40"; fire(mini, "input");
+    const sh = root.querySelector('details[data-section="summary"] > summary > h3')!;
+    expect(sh.textContent).toContain("0.41 m/s");
+    expect((root.querySelector('details[data-section="summary"]') as HTMLDetailsElement).open).toBe(false);
+    const dl = root.querySelector('details[data-section="downloads"]') as HTMLDetailsElement;
+    dl.open = true; dl.dispatchEvent(new Event("toggle"));
+    expect(memStorage.getItem("duneAtlas.cellPanel.downloadsOpen")).toBe("1");
+    expect(memStorage.getItem("duneAtlas.cellPanel.summaryOpen")).toBe("0");
+  });
+  it("scroll position and collapsed sections survive re-renders at the same location; another cell starts at the top", async () => {
+    const c0 = cell();
+    const p = await open(c0);
+    const sc = () => root.querySelector(".cell-scroll") as HTMLElement;
+    const el = sc();
+    el.scrollTop = 640;
+    expect(el.scrollTop).toBe(640);
+    const fr = root.querySelector('details[data-section="fluxRose"]') as HTMLDetailsElement;
+    fr.open = false; fr.dispatchEvent(new Event("toggle"));
+    // threshold change (in-place update) and a full re-render (e.g. resize)
+    store.set({ utIndex: 30 });
+    expect(sc()).toBe(el);
+    expect(el.scrollTop).toBe(640);
+    p.render();
+    expect(sc()).toBe(el);
+    expect(el.scrollTop).toBe(640);
+    // re-show the same cell (as after a dataset switch to the same indices): the old content stays
+    // (busy) while loading, then the new content at the same position
+    let release!: () => void;
+    const gate = new Promise<void>((r) => (release = r));
+    const slow = { query: async () => { await gate; return { ...c0 }; }, attrs: {}, fieldVars: FIELD_VARS } as unknown as CellStore;
+    const shown = p.show(slow, c0.iy, c0.ix);
+    await new Promise((r) => setTimeout(r, 5));
+    expect(root.textContent).not.toContain("Loading");
+    expect(root.querySelector("svg.rose")).not.toBeNull(); // previous content still shown
+    expect(root.querySelector(".cell-body")!.getAttribute("aria-busy")).toBe("true");
+    expect(el.scrollTop).toBe(640);
+    release(); await shown;
+    expect(sc()).toBe(el);
+    expect(el.scrollTop).toBe(640);
+    expect(root.querySelector(".cell-body")!.hasAttribute("aria-busy")).toBe(false);
+    expect((root.querySelector('details[data-section="fluxRose"]') as HTMLDetailsElement).open).toBe(false);
+    expect((root.querySelector('details[data-section="windRose"]') as HTMLDetailsElement).open).toBe(true);
+    // a neighbouring 0.1° cell is another location: top, loading message while it loads
+    const c1 = { ...c0, iy: c0.iy + 1, lat: c0.lat - 0.1, id: c0.id + 3600 };
+    const shown2 = p.show(fakeStore(c1), c1.iy, c1.ix);
+    await shown2;
+    expect(sc().scrollTop).toBe(0);
+    expect((root.querySelector('details[data-section="fluxRose"]') as HTMLDetailsElement).open).toBe(false); // collapse remembered
+  });
+  it("sameLocation: either centre inside the other cell (ERA5-Land 0.1° / ERA5 0.25°), antimeridian", () => {
+    const L = { lat0: 90, dlat: -0.1, lon0: -180, dlon: 0.1, ny: 1801, nx: 3600 }, E = { lat0: 90, dlat: -0.25, lon0: -180, dlon: 0.25, ny: 721, nx: 1440 };
+    expect(sameLocation({ lat: -24.5, lon: 15.2, grid: L }, { lat: -24.5, lon: 15.25 }, E)).toBe(true);
+    expect(sameLocation({ lat: -24.5, lon: 15.25, grid: E }, { lat: -24.5, lon: 15.3 }, L)).toBe(true);
+    expect(sameLocation({ lat: -24.5, lon: 15.2, grid: L }, { lat: -24.5, lon: 15.3 }, L)).toBe(false);
+    expect(sameLocation({ lat: -24.5, lon: 15.25, grid: E }, { lat: -24.5, lon: 15.5 }, E)).toBe(false);
+    expect(sameLocation({ lat: 0, lon: 179.9, grid: L }, { lat: 0, lon: -180 }, E)).toBe(true);
   });
   it("default rose sectors are 128 (wind and flux)", async () => {
     expect(CONFIG.windRoseSectors).toBe(128);

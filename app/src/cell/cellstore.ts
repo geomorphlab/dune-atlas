@@ -4,6 +4,7 @@
 //   fields [1801, 3600, 23 var, 64 ut]  float32  (order in root attrs field_vars)
 //   dunes  [1801, 3600] uint8 (canonical mask, layers.nc `dunes`)
 // Ocean / no-data shards are absent and read as fill values (0 / NaN).
+import { harmonizeAux } from "./auxinfo";
 import * as zarr from "zarrita";
 import { cellFromIndex, ERA5_LAND_GRID, type CellRef, type Grid } from "./snap";
 import { binsFromEdges, DEFAULT_BINS, type Bins } from "./flux";
@@ -203,7 +204,7 @@ export class CellStore {
         // first store wins for a variable name present in several
         const out: CellAux = { series: {}, scalars: {}, attrs: {} };
         for (const p of [...ok].reverse()) { Object.assign(out.series, p.series); Object.assign(out.scalars, p.scalars); Object.assign(out.attrs, p.attrs); }
-        return out;
+        return harmonizeAux(out);
       }),
     ]);
     const hist = h.data as Uint32Array;

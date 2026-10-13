@@ -8,8 +8,17 @@ import { fieldValue, nUt, type CellData, type CellStoreAttrs } from "./cellstore
 import { crestFluxRose, fluxRose, DEFAULT_BINS } from "./flux";
 import { modeDefined } from "./analysis";
 import { fieldInfo } from "./fieldinfo";
-import { AI_NOTICE, C3S_NOTICE, CELL_SOURCE_IDS, citationJson, citationSources, citationText, referencesLine } from "./citation";
-import { AUX_META, auxSourceAttrs, auxVars } from "./auxinfo";
+import { AI_NOTICE, C3S_NOTICE, C3S_NOTICE_ERA5, CELL_SOURCE_IDS, citationJson, citationSources, citationText, referencesLine } from "./citation";
+import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "./auxinfo";
+import { DATASET_INFO, datasetInfo, resolutionText, type DatasetInfo } from "./datasetinfo";
+
+/** The wind dataset of a cell: from the export metadata id, else from the cell grid spacing. */
+export function cellDataset(cell: Pick<CellData, "grid">, datasetId?: string): DatasetInfo {
+  if (datasetId && DATASET_INFO[datasetId]) return DATASET_INFO[datasetId];
+  const d = Math.abs(cell.grid?.dlat ?? 0.1);
+  return Object.values(DATASET_INFO).find((x) => Math.abs(x.resDeg - d) < 1e-9) ?? datasetInfo();
+}
+const cellDeg = (cell: Pick<CellData, "grid">, ds: DatasetInfo) => Math.abs(cell.grid?.dlat ?? ds.resDeg);
 import { writeNetcdf3, type NcAttrs, type NcVariable } from "./netcdf3";
 import { writeZip, type DeflateRaw } from "./zip";
 
@@ -32,7 +41,7 @@ export const ROSE_MODES = ["flat_bed", "elongation", "transverse"] as const;
 
 /** "v1" from a dataset prefix such as dune-atlas/v1 (else ""). */
 export function versionFromPrefix(prefix: string | undefined): string {
-  return /(?:^|\/)(v\d+[a-z0-9.-]*)\/?$/i.exec(prefix ?? "")?.[1] ?? "";
+  return /(?:^|\/)(v\d+[a-z0-9.-]*)(?:\/|$)/i.exec(prefix ?? "")?.[1] ?? "";
 }
 
 const r6 = (v: number) => Number(v.toFixed(6)).toString();
@@ -124,6 +133,7 @@ export function fluxRoseTable(cell: CellData): Float64Array[][] {
 
 /** NetCDF-3 (64-bit offset) file of one cell. */
 export function cellNetcdf(cell: CellData, meta: ExportMeta): Uint8Array {
+  const ds = cellDataset(cell, meta.datasetId), deg = cellDeg(cell, ds);
   const { ue, ae, uc, ac } = bins(cell);
   const nUm = uc.length, nUa = ac.length, n = nUt(cell);
   const ut = cell.utValues ?? C.UT_VALUES;
@@ -151,21 +161,21 @@ export function cellNetcdf(cell: CellData, meta: ExportMeta): Uint8Array {
       grid_registration: "pixel: lat0/lon0 are the centre of cell (0, 0); cell (y, x) spans centre ± d/2",
       comment: "latitude = grid_lat0 + grid_dlat * cell_y; longitude = grid_lon0 + grid_dlon * cell_x" } })),
     { name: "wind_hist", type: "int", dims: ["um_bin", "ua_bin"], data: cell.hist, attrs: {
-      long_name: "hours per 10 m wind speed and direction bin, ERA5-Land 1950-2024", units: "h",
+      long_name: `hours per 10 m wind speed and direction bin, ${ds.name} ${ds.period.replace("–", "-")}`, units: "h",
       total_hours_binned: { type: "int", values: cell.totalHours },
-      comment: "Hourly ERA5-Land 10 m wind; hours with U10 > 20 m/s are not binned. Direction = direction the wind blows TOWARD (ua_bin).",
+      comment: `Hourly ${ds.name} 10 m wind (${ds.resolution} grid); hours with U10 > 20 m/s are not binned. Direction = direction the wind blows TOWARD (ua_bin).`,
       coordinates: "latitude longitude" } },
     ...pubVars.map(({ v, i }): NcVariable => {
       const m = fieldMeta(v, meta.storeAttrs);
       const attrs: NcAttrs = { long_name: m.longName, long_name_latex: m.longNameLatex, units: m.units, description: m.description, description_latex: m.descriptionLatex, _FillValue: F(NaN), coordinates: "latitude longitude" };
       return { name: v, type: "float", dims: ["ut"], data: cell.fields.subarray(i * n, i * n + n), attrs };
     }),
-    { name: "dune_present", type: "int", dims: [], data: [cell.dune ? 1 : 0], attrs: { long_name: "cell mapped as containing wind-blown sand dunes", flag_values: { type: "int", values: [0, 1] }, flag_meanings: "no_dunes dunes", units: "1" } },
+    { name: "dune_present", type: "int", dims: [], data: [cell.dune ? 1 : 0], attrs: { long_name: "cell mapped as containing wind-blown sand dunes", comment: `1 = ${ds.dunesRule}`, flag_values: { type: "int", values: [0, 1] }, flag_meanings: "no_dunes dunes", units: "1" } },
     ...auxVars(cell.aux).map((v): NcVariable => {
       const m = AUX_META[v], aux = cell.aux!;
-      const src = auxSourceAttrs(aux, v);
+      const src = auxSourceAttrs(aux, v, deg);
       const attrs: NcAttrs = { long_name: m.longName, long_name_latex: `${m.longName} $${m.symbolTex}$`, units: m.units,
-        description: texToPlain(m.description), _FillValue: F(NaN), coordinates: "latitude longitude" };
+        description: texToPlain(auxDescription(v, deg)), _FillValue: F(NaN), coordinates: "latitude longitude" };
       for (const k of ["source", "references", "license", "url", "comment", "method"]) if (src[k]) attrs[k] = texToPlain(src[k]);
       return m.kind === "series"
         ? { name: v, type: "float", dims: ["ut"], data: Float32Array.from(aux.series[v]), attrs }
@@ -181,12 +191,14 @@ export function cellNetcdf(cell: CellData, meta: ExportMeta): Uint8Array {
   return writeNetcdf3({
     dims: [{ name: "um_bin", size: nUm }, { name: "ua_bin", size: nUa }, { name: "ut", size: n }, { name: "nv", size: 2 }, { name: "rose_mode", size: 3 }, { name: "name_strlen", size: NAME_LEN }],
     attrs: {
-      title: `Dune Atlas cell export: ERA5-Land 10 m wind histogram and sand-flux parameters at ${cell.lat}° N, ${cell.lon}° E`,
+      title: `Dune Atlas cell export: ${ds.name} 10 m wind histogram and sand-flux parameters at ${cell.lat}° N, ${cell.lon}° E (${ds.resolution} cell)`,
       institution: INSTITUTION,
       source: meta.datasetTitle,
       dataset_id: meta.datasetId,
       data_version: meta.dataVersion,
-      references: referencesLine(citationSources(CELL_SOURCE_IDS)),
+      references: referencesLine(citationSources(CELL_SOURCE_IDS, ds.id)),
+      geospatial_lat_resolution: `${resolutionText(deg)}`.replace("°", " degree"),
+      geospatial_lon_resolution: `${resolutionText(Math.abs(cell.grid?.dlon ?? deg))}`.replace("°", " degree"),
       license: LICENSE,
       Conventions: "CF-1.8",
       history: `${when}: downloaded from ${meta.permalink}`,
@@ -205,7 +217,7 @@ export function csvColumns(cell: CellData, attrs?: ExportMeta["storeAttrs"]): Re
       { name: "um_bin_lo", units: "m s-1", longName: "10 m wind speed bin lower edge" },
       { name: "um_bin_hi", units: "m s-1", longName: "10 m wind speed bin upper edge" },
       ...DIR_COLUMNS,
-      { name: "wind_hist", units: "h", longName: "hours in the speed x direction bin, ERA5-Land 1950-2024 (hours with U10 > 20 m/s not binned)" },
+      { name: "wind_hist", units: "h", longName: `hours in the speed x direction bin, ${cellDataset(cell).name} 1950-2024 (hours with U10 > 20 m/s not binned)` },
     ],
     "fields_by_threshold.csv": [UT_COLUMN, ...pub.map((v) => { const m = fieldMeta(v, attrs); return { name: v, units: m.units, longName: m.longName }; }),
       ...auxVars(cell.aux).filter((v) => AUX_META[v].kind === "series").map((v) => ({ name: v, units: AUX_META[v].units, longName: AUX_META[v].longName }))],
@@ -258,11 +270,12 @@ export function fluxRoseCsv(cell: CellData): string {
 }
 
 export function metadataJson(cell: CellData, meta: ExportMeta): string {
+  const ds = cellDataset(cell, meta.datasetId), deg = cellDeg(cell, ds);
   const pub = cell.fieldVars.filter(isPublishedField);
   const cols = csvColumns(cell, meta.storeAttrs);
   return JSON.stringify({
     cell: { latitude: cell.lat, longitude: cell.lon, cell_y: cell.iy, cell_x: cell.ix, grid_index: cell.id, dune_present: cell.dune, total_hours_binned: cell.totalHours },
-    grid: { ...cell.grid, registration: "pixel: lat0/lon0 are the centre of cell (0, 0); cell (y, x) spans centre ± d/2" },
+    grid: { ...cell.grid, resolution: resolutionText(deg), registration: "pixel: lat0/lon0 are the centre of cell (0, 0); cell (y, x) spans centre ± d/2" },
     dataset: { id: meta.datasetId, title: meta.datasetTitle, version: meta.dataVersion },
     conventions: {
       wind_direction: "ua_bin = arctan2(v10, u10) = direction the wind blows TOWARD, radians counter-clockwise from east; ua_bin_bearing_toward = (90 - degrees(ua_bin)) mod 360; ua_bin_bearing_from = toward + 180",
@@ -270,23 +283,26 @@ export function metadataJson(cell: CellData, meta: ExportMeta): string {
       fluxes: "fields: m2 s-1 (multiply by 31557600 for m2 yr-1); flux_rose: m2 yr-1",
       missing: "empty CSV cell (NetCDF: _FillValue) = undefined (e.g. no crest flux)",
       csv_headers: "3 header rows: variable name (as in the NetCDF), units (UDUNITS), plain long name",
+      dune_present: `1 = ${ds.dunesRule}`,
+      land_cells: `wind data: ${ds.landRule}`,
     },
     ut: (cell.utValues ?? C.UT_VALUES).slice(0, nUt(cell)).map(ut2),
     files: Object.fromEntries(Object.entries(cols).map(([f, c]) => [f, { columns: c.map((x) => ({ name: x.name, units: x.units, long_name: x.longName })) }])),
     fields: Object.fromEntries(pub.map((v) => { const m = fieldMeta(v, meta.storeAttrs); return [v, { long_name: m.longName, long_name_latex: m.longNameLatex, units: m.units, description: m.description, description_latex: m.descriptionLatex }]; })),
     aux: Object.fromEntries(auxVars(cell.aux).map((v) => {
-      const m = AUX_META[v], src = auxSourceAttrs(cell.aux!, v);
+      const m = AUX_META[v], src = auxSourceAttrs(cell.aux!, v, deg);
       const value = m.kind === "series" ? undefined : (Number.isFinite(cell.aux!.scalars[v]) ? cell.aux!.scalars[v] : null);
       return [v, { long_name: m.longName, long_name_latex: `${m.longName} $${m.symbolTex}$`, units: m.units, ...(m.kind === "scalar" ? { value } : { in_file: "fields_by_threshold.csv" }),
-        description: texToPlain(m.description), ...Object.fromEntries(["source", "references", "license", "url", "comment", "method"].filter((k) => src[k]).map((k) => [k, texToPlain(src[k])])) }];
+        description: texToPlain(auxDescription(v, deg)), ...Object.fromEntries(["source", "references", "license", "url", "comment", "method"].filter((k) => src[k]).map((k) => [k, texToPlain(src[k])])) }];
     })),
-    citation: citationJson(citationSources(CELL_SOURCE_IDS)),
-    license: LICENSE, institution: INSTITUTION, copernicus_notice: C3S_NOTICE,
+    citation: citationJson(citationSources(CELL_SOURCE_IDS, ds.id)),
+    license: LICENSE, institution: INSTITUTION, copernicus_notice: ds.id === "era5" ? C3S_NOTICE_ERA5 : C3S_NOTICE,
     generated: (meta.generated ?? new Date()).toISOString(), permalink: meta.permalink, ai_notice: AI_NOTICE,
   }, null, 1) + "\n";
 }
 
 export function readmeText(cell: CellData, meta: ExportMeta): string {
+  const ds = cellDataset(cell, meta.datasetId);
   const cols = csvColumns(cell, meta.storeAttrs);
   const colDoc = (f: string) => cols[f].map((c) => `    ${c.name.padEnd(22)} [${c.units}] ${c.longName}`).join("\n");
   return `Dune Atlas cell export
@@ -307,7 +323,7 @@ Read with
 wind_histogram.csv and flux_rose.csv are in tidy long format and use the same direction-bin
 columns (ua_bin ... ua_bin_bearing_from), values and order (ua_bin = source bin index order).
 
-wind_histogram.csv  Hourly ERA5-Land 10 m wind 1950-2024; one row per speed x direction bin.
+wind_histogram.csv  Hourly ${ds.name} 10 m wind 1950-2024 (${ds.resolution} cell); one row per speed x direction bin.
 ${colDoc("wind_histogram.csv")}
 
 fields_by_threshold.csv  Sand-flux parameters vs threshold; one row per u*,th (64 values,
@@ -324,11 +340,11 @@ flux_rose.csv  Flux rose vs threshold: one row per (rose_mode, ut, ua_bin) = 3 x
 ${colDoc("flux_rose.csv")}
 
 metadata.json  Cell coordinates, grid, conventions, column definitions, field long names
-  (plain and LaTeX), descriptions, citation; "aux" holds the per-cell auxiliary values:
-  aridity index cell mean ai_mean with ai_valid_frac / ai_sat_frac (Global-AI_PET v3.1), and
-  vegetation cover tot_cov_mean (%, mean 2001-2025) with tot_cov_n_months (CSIRO MODIS Fractional
-  Cover v3.1; full monthly time series at https://map.geo-rapp.org/). The same scalars are in the
-  NetCDF download.
+  (plain and LaTeX), descriptions, citation; "aux" holds the per-cell auxiliary values
+  (also in the NetCDF download):
+${auxVars(cell.aux).filter((v) => AUX_META[v].kind === "scalar").map((v) => `    ${v.padEnd(20)} ${AUX_META[v].longName}`).join("\n") || "    (none)"}
+  Aridity: Global-AI_PET v3.1. Vegetation cover (tot_cov_*): CSIRO MODIS Fractional Cover v3.1,
+  mean 2001-2025; full monthly time series at https://map.geo-rapp.org/.
 
 qsdiv (fields_by_threshold.csv, m yr-1) is the saturated flux divergence: the divergence of the
 time-averaged flat-bed flux vector (magnitude rdpm, direction rdpa) on the sphere, following
@@ -337,7 +353,7 @@ Gunn (2026), Methods M6. Negative values (flux convergence) imply deposition.
 Drift potentials (dpm, rdpm, rdpa, qha_rdp_dp) and crest fluxes are averages over the hourly
 record (sums over all speed and direction bins weighted by the hours in each bin).
 
-${citationText("", citationSources(CELL_SOURCE_IDS)).trim()}
+${citationText("", citationSources(CELL_SOURCE_IDS, ds.id)).trim()}
 
 Licence: ${LICENSE}.
 

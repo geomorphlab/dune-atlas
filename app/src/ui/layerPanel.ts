@@ -19,7 +19,8 @@ export { AI_NOTICE } from "../cell/citation";
 const AUTHOR_EMAIL = "a.gunn@monash.edu";
 /** 'Data sources' list in About (what each product is and where it comes from). */
 export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class="sources">
-  <li><strong>Wind histograms and sand-flux fields</strong>: ERA5-Land 1950–2024 hourly 10 m winds (0.1°) and the qsat parameters of Gunn (2026), Supplementary Data (Zenodo, CC BY 4.0). Drift potentials (DP, RDP, RDD, RDP/DP) and crest fluxes are averages over the hourly record.</li>
+  <li><strong>Wind histograms and sand-flux fields (ERA5-Land 0.1°)</strong>: ERA5-Land 1950–2024 hourly 10 m winds (0.1°) and the qsat parameters of Gunn (2026), Supplementary Data (Zenodo, CC BY 4.0). Drift potentials (DP, RDP, RDD, RDP/DP) and crest fluxes are averages over the hourly record.</li>
+  <li><strong>Wind histograms and sand-flux fields (ERA5 0.25°)</strong>: ERA5 1950–2024 hourly 10 m winds on the 0.25° grid (Hersbach et al. 2020; Copernicus Climate Change Service, accessed via the NCI Australia replica); the histograms and the 23 sand-flux fields are computed for the atlas with the method of Gunn (2026). Cells with an ERA5 land–sea mask fraction above 0.5 carry wind data; a 0.25° cell counts as a dune cell where it overlaps a mapped 0.1° dune cell. Choose the dataset with the Wind dataset selector; the dune map, aridity and vegetation layers are the same for both.</li>
   <li><strong>Dune map</strong>: dune-mask-rev1.tif from the Supplementary Code record (Zenodo, MIT), vectorised into dune fields.</li>
   <li><strong>Saturated flux divergence</strong> ${mathHtml("$\\nabla\\cdot\\vec{q}_s$")}: divergence of the resultant drift potential vector (magnitude RDP, direction RDD) on the sphere, following Gunn (2026), Methods M6, computed with central differences on the 0.1° grid. Negative values (convergence) imply deposition; no data at coasts.</li>
   <li><strong>Aridity index</strong>: Global Aridity Index v3.1 (Global-AI_PET v3.1; Zomer, Xu &amp; Trabucco 2022), 1970–2000, native 30″ grid, CC BY 4.0; ocean and Antarctica (south of 60° S) have no data, values ≥ 6.5535 are at the top of the source range. The click panel shows the 0.1° cell mean.</li>
@@ -178,7 +179,11 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
     h("div", { class: "layer-row" }, cb, h("label", { for: cid, html: l.titleTex ? mathHtml(l.titleTex) : escapeHtml(l.title) }), info),
     controls, legend, pop);
   refresh(store.state);
-  store.subscribe((s, ch) => { if (ch.has("layers")) refresh(s); });
+  store.subscribe((s, ch) => {
+    // a dataset switch changes the layer's definition in place (colour limits, citation)
+    if (ch.has("dataset")) pop.innerHTML = infoHtml(l);
+    if (ch.has("layers") || ch.has("dataset")) refresh(s);
+  });
   return item;
 }
 
@@ -287,7 +292,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     sel.value = store.state.dataset;
     sel.addEventListener("change", () => store.set({ dataset: sel.value }));
     store.subscribe((s, ch) => { if (ch.has("dataset")) sel.value = s.dataset; });
-    header.append(h("label", { class: "inline dataset-row", for: "dataset-select" }, "Wind data ", sel));
+    header.append(h("label", { class: "inline dataset-row", for: "dataset-select" }, "Wind dataset ", sel));
   }
   // pinned: never scrolls away, stays visible even when the layer list is collapsed
   const pinned = h("div", { class: "pinned" }, thresholdControl(reg.threshold, store));
@@ -321,9 +326,9 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
   const notice = AI_NOTICE.replace(AUTHOR_EMAIL, `<a href="mailto:${AUTHOR_EMAIL}">${AUTHOR_EMAIL}</a>`);
   body.append(h("details", { class: "about" }, h("summary", {}, "About, data sources & citation"),
     h("div", { html: `<p class="ai-notice">${notice}</p>
-      <p>Click any land cell to see its 1950–2024 ERA5-Land wind rose, the sand-flux rose at the selected threshold, dune-orientation modes and all wind-regime parameters.</p>
+      <p>Click any land cell to see its 1950–2024 wind rose (ERA5-Land 0.1° or ERA5 0.25°, chosen with the Wind dataset selector), the sand-flux rose at the selected threshold, dune-orientation modes and all wind-regime parameters.</p>
       ${DATA_SOURCES_HTML}
-      ${citationHtml(citationSources(["aridity", "vegetation"]))}
+      ${citationHtml(citationSources(["era5", "aridity", "vegetation"]))}
       <p class="help">Contains modified Copernicus Climate Change Service information. Basemap credits are shown in the map attribution.</p>` })));
   root.append(header, pinned, body);
 }
