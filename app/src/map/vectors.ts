@@ -32,6 +32,13 @@ const isGlobalGrid = (g: Grid) => Math.abs(Math.abs(g.dlon) * g.nx - 360) < 1e-6
 function colIndex(g: Grid, lon: number): number {
   let fx = (lon - g.lon0) / g.dlon;
   if (isGlobalGrid(g)) fx = ((fx % g.nx) + g.nx) % g.nx;
+  else if (fx < -0.5 || fx > g.nx - 0.5) {
+    // a window across the antimeridian has continuous longitudes beyond ±180: try lon ± 360
+    for (const sh of [360, -360]) {
+      const f2 = (lon + sh - g.lon0) / g.dlon;
+      if (f2 >= -0.5 && f2 <= g.nx - 0.5) return f2;
+    }
+  }
   return fx;
 }
 
@@ -94,10 +101,55 @@ export function sampleUnit(g: Grid, lon: number, lat: number, axis: boolean, min
   return [Math.sin(t), Math.cos(t)];
 }
 
-/** Point at offset `dist` (degrees of latitude) along a compass bearing. */
+/** Point at great-circle distance `dist` (degrees of arc) along a compass bearing (spherical
+ *  destination; exact near the poles). The longitude is continuous with `lon` (not wrapped to
+ *  ±180), so a segment from (lon, lat) to the result is the short way round. */
 export function offset(lon: number, lat: number, bearing: number, dist: number): [number, number] {
-  const b = bearing * D2R;
-  return [lon + (dist * Math.sin(b)) / cosLat(lat), Math.max(-89.9, Math.min(89.9, lat + dist * Math.cos(b)))];
+  const b = bearing * D2R, d = dist * D2R, p1 = lat * D2R;
+  const sp2 = Math.sin(p1) * Math.cos(d) + Math.cos(p1) * Math.sin(d) * Math.cos(b);
+  const p2 = Math.asin(Math.max(-1, Math.min(1, sp2)));
+  const dl = Math.atan2(Math.sin(b) * Math.sin(d) * Math.cos(p1), Math.cos(d) - Math.sin(p1) * sp2);
+  return [lon + dl / D2R, p2 / D2R];
+}
+
+/** Great-circle distance between two lon/lat points (degrees of arc). */
+export function gcDeg(a: [number, number], b: [number, number]): number {
+  const p1 = a[1] * D2R, p2 = b[1] * D2R, dp = p2 - p1, dl = (b[0] - a[0]) * D2R;
+  const h = Math.sin(dp / 2) ** 2 + Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) ** 2;
+  return (2 * Math.asin(Math.min(1, Math.sqrt(h)))) / D2R;
+}
+
+const wrap180 = (d: number) => d - 360 * Math.round(d / 360);
+
+/** Make a lon/lat polyline safe to draw on the globe and in Mercator: longitudes are unwrapped
+ *  along the line (each step the short way round), the line is split where it crosses the
+ *  antimeridian - the pieces meet at an interpolated vertex at +180 / -180, so the line stays
+ *  visually continuous - and wherever a step is longer than `maxSegDeg` (great circle; a
+ *  discontinuity, e.g. a vertex off the globe) or a vertex is not finite. Every piece has >= 2
+ *  vertices with longitudes in [-180, 180]; no segment spans the antimeridian. */
+export function geoPolylines(pts: ArrayLike<[number, number]>, maxSegDeg = 2): [number, number][][] {
+  const out: [number, number][][] = [];
+  let cur: [number, number][] = [];
+  const flush = () => { if (cur.length >= 2) out.push(cur); cur = []; };
+  for (let k = 0; k < pts.length; k++) {
+    const [lo, la] = pts[k];
+    if (!Number.isFinite(lo) || !Number.isFinite(la)) { flush(); continue; }
+    if (!cur.length) { cur.push([wrap180(lo), la]); continue; }
+    const [pl, pa] = cur[cur.length - 1];
+    let u = pl + wrap180(lo - pl);
+    if (gcDeg([pl, pa], [u, la]) > maxSegDeg) { flush(); cur.push([wrap180(lo), la]); continue; }
+    if (u > 180 || u < -180) {
+      const e = u > 180 ? 180 : -180;
+      const t = (e - pl) / (u - pl), le = pa + t * (la - pa);
+      if (pl !== e) cur.push([e, le]);
+      flush();
+      cur.push([-e, le]);
+      u -= 2 * e;
+    }
+    cur.push([u, la]);
+  }
+  flush();
+  return out;
 }
 
 export interface ArrowSeed { lon: number; lat: number; /** arrow length in degrees of latitude */ len: number }
@@ -120,8 +172,9 @@ export function arrowFeatures(seeds: ArrowSeed[], dir: Grid, opts: { axis: boole
     const f = Number.isFinite(ref) && ref > 0 && Number.isFinite(m) ? Math.min(1, Math.abs(m) / ref) : 1;
     const L = s.len * (opts.mag ? 0.35 + 0.65 * f : 1);
     const tail = offset(s.lon, s.lat, b + 180, L / 2), tip = offset(s.lon, s.lat, b, L / 2);
-    const coords: [number, number][][] = [[tail, tip]];
-    if (!opts.axis) coords.push([offset(tip[0], tip[1], b + 150, L * 0.3), tip, offset(tip[0], tip[1], b - 150, L * 0.3)]);
+    const parts: [number, number][][] = [[tail, tip]];
+    if (!opts.axis) parts.push([offset(tip[0], tip[1], b + 150, L * 0.3), tip, offset(tip[0], tip[1], b - 150, L * 0.3)]);
+    const coords = parts.flatMap((pp) => geoPolylines(pp, Math.max(2, 2 * L)));
     return { type: "Feature", properties: { a: opts.mag ? 0.35 + 0.65 * f : 1, b: Math.round(b) }, geometry: { type: "MultiLineString", coordinates: coords } };
   });
 }

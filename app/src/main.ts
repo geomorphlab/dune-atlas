@@ -15,7 +15,7 @@ import { renderLayerPanel } from "./ui/layerPanel";
 import { versionFromPrefix } from "./cell/export";
 import { CellPanel, defaultFieldLabel, type FieldLabel } from "./ui/cellPanel";
 import { CellStore } from "./cell/cellstore";
-import { cellBounds, cellFromIndex, snapToCell, ERA5_LAND_GRID, type Grid } from "./cell/snap";
+import { cellFeature, cellFromIndex, snapToCell, ERA5_LAND_GRID, type Grid } from "./cell/snap";
 import { C3S_NOTICE } from "./cell/citation";
 import { mathOnly } from "./util/math";
 
@@ -104,10 +104,10 @@ function applyBasemap() {
 /** grid of the current dataset's cell store (from its root attrs); ERA5-Land until opened */
 let grid: Grid = ERA5_LAND_GRID;
 
-function selectedCellFeature(): GeoJSON.Feature | null {
+function selectedCellFeature(): GeoJSON.FeatureCollection | null {
   const c = store.state.cell;
   if (!c) return null;
-  try { return { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [cellBounds(cellFromIndex(c[0], c[1], grid), grid)] } }; } catch { return null; }
+  try { return cellFeature(cellFromIndex(c[0], c[1], grid), grid); } catch { return null; }
 }
 function updateSelectedCell() {
   if (map.getSource("selected-cell")) ensureSelectedCellLayers(map, selectedCellFeature());

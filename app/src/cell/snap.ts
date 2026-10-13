@@ -61,3 +61,26 @@ export function cellBounds(c: CellRef, g: Grid = ERA5_LAND_GRID): [number, numbe
   const w = c.lon - hx, e = c.lon + hx;
   return [[w, s], [e, s], [e, n], [w, n], [w, s]];
 }
+
+/** Selected-cell highlight as GeoJSON. A cell that straddles the antimeridian is split into the
+ *  parts west and east of ±180 (both within ±180, so the globe and Mercator draw both halves):
+ *  the fill is a MultiPolygon (`part: "fill"`) and the outline a MultiLineString without the
+ *  seam edge (`part: "outline"`). Other cells: one Polygon (fill and outline). */
+export function cellFeature(c: CellRef, g: Grid = ERA5_LAND_GRID): GeoJSON.FeatureCollection {
+  const ring = cellBounds(c, g);
+  const [w, s] = ring[0], [e, n] = ring[2];
+  if (w >= -180 && e <= 180) return { type: "FeatureCollection", features: [{ type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [ring] } }] };
+  // the overhang beyond -180 (or +180) is drawn on the other side
+  const [a0, a1, b0, b1] = w < -180 ? [-180, e, w + 360, 180] : [w, 180, -180, e - 360];
+  const box = (x0: number, x1: number): [number, number][] => [[x0, s], [x1, s], [x1, n], [x0, n], [x0, s]];
+  // outline: every edge except the one on the seam (x = ±180)
+  const east: [number, number][] = [[a0, s], [a1, s], [a1, n], [a0, n]]; // part starting at the seam -180 (west edge on the seam)
+  const west: [number, number][] = [[b1, n], [b0, n], [b0, s], [b1, s]]; // part ending at the seam +180 (east edge on the seam)
+  const outline = w < -180 ? [east, west] : [[[a1, s], [a0, s], [a0, n], [a1, n]] as [number, number][], [[b0, n], [b1, n], [b1, s], [b0, s]] as [number, number][]];
+  return {
+    type: "FeatureCollection", features: [
+      { type: "Feature", properties: { part: "fill" }, geometry: { type: "MultiPolygon", coordinates: [[box(a0, a1)], [box(b0, b1)]] } },
+      { type: "Feature", properties: { part: "outline" }, geometry: { type: "MultiLineString", coordinates: outline } },
+    ],
+  };
+}

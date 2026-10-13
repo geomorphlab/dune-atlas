@@ -9,7 +9,7 @@ import { roseSvg, SPEED_COLORS, roseBinChoices } from "../cell/roses";
 import { modesPlotSvg } from "../cell/modesplot";
 import { linePlotSvg } from "../cell/lineplot";
 import { AUX_META, aridityClass } from "../cell/auxinfo";
-import { datasetInfo, type DatasetInfo } from "../cell/datasetinfo";
+import { DATASET_INFO, datasetInfo, type DatasetInfo } from "../cell/datasetinfo";
 import { fieldInfo } from "../cell/fieldinfo";
 import { citationFile, triggerDownload } from "../cell/downloads";
 import { cellDataset, cellNetcdf, csvBundle, exportBaseName, type ExportMeta } from "../cell/export";
@@ -309,10 +309,10 @@ export class CellPanel {
     const body = this.#frame(cell);
     if (!cell.hasData) {
       const ds = this.#ds(cell);
-      const why = "is ocean or mostly water (land–sea mask fraction ≤ 0.5)";
-      body.innerHTML = `<div class="empty-state"><p><strong>No wind data for this cell in ${escapeHtml(ds.name)}.</strong></p>
-        <p>This ${ds.resolution} ${escapeHtml(ds.name)} cell (row ${cell.iy}, column ${cell.ix}; centre ${fmtLat(cell.lat)}, ${fmtLon(cell.lon)}) ${why}, so it has no wind histogram or wind-regime parameters.</p>
-        <p class="help">Click a land cell to see its wind and sand-flux roses.</p></div>`;
+      const other = Object.values(DATASET_INFO).find((x) => x.id !== ds.id);
+      body.innerHTML = `<div class="empty-state"><p><strong>Outside the ${escapeHtml(ds.name)} land mask</strong></p>
+        <p>The atlas computes wind roses and sand-flux statistics only for land cells (${escapeHtml(ds.name)} land–sea mask fraction &gt; 0.5). This cell is mainly water, so no statistics are stored for it. Choose a nearby land cell${other ? `, or switch to ${escapeHtml(other.name)} (coastal cells can differ between the two land masks)` : ""}.</p>
+        <p class="help">${ds.resolution} cell: row ${cell.iy}, column ${cell.ix}; centre ${fmtLat(cell.lat)}, ${fmtLon(cell.lon)}.</p></div>`;
       return;
     }
     const d = (k: string, tag: keyof HTMLElementTagNameMap = "div", cls = "") => (this.#dyn[k] = h(tag, { class: cls }));
@@ -384,7 +384,8 @@ export class CellPanel {
       desc: `Frequency of hourly 10 m winds by the direction they blow from, ${v.windRose.sectors} sectors, stacked by speed class; 1950–2024; sums to 100 %.`,
       ringFormat: (x) => `${x}%`, axisLabel: "% of hours", size, uaCentres: ua,
     });
-    D.windCap.textContent = `Direction the wind blows FROM (meteorological), ${v.windRose.sectors} sectors of ${360 / v.windRose.sectors}°; radius = % of the ${v.windRose.totalHours.toLocaleString("en")} counted hourly samples (sums to 100 %; hours > 20 m/s are not in the histogram). ERA5-Land 10 m wind 1950–2024.`;
+    const dsw = this.#ds(cell);
+    D.windCap.textContent = `Direction the wind blows FROM (meteorological), ${v.windRose.sectors} sectors of ${360 / v.windRose.sectors}°; radius = % of the ${v.windRose.totalHours.toLocaleString("en")} counted hourly samples (sums to 100 %; hours > 20 m/s are not in the histogram). ${dsw.name} 10 m wind ${dsw.period}.`;
     const s = MODE_STYLE;
     const arrows = ROSE_ARROW_KEYS.map((k) => ({ bearing: v.modes[k], color: s[k].color, label: `${s[k].label}: ${deg(v.modes[k])}`, axis: k === "ab", dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined }));
     const pct = this.#fluxAxis === "pct";

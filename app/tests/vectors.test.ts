@@ -3,8 +3,9 @@
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { arrowFeatures, sampleBearing, sampleNearest, sampleUnit, offset, buildScreenField, evenStreamlines, sampleScreen, arrowheadsAlong, type Grid, type ScreenField, type Streamline } from "../src/map/vectors";
+import { arrowFeatures, gcDeg, geoPolylines, sampleBearing, sampleNearest, sampleUnit, offset, buildScreenField, evenStreamlines, sampleScreen, arrowheadsAlong, type Grid, type ScreenField, type Streamline } from "../src/map/vectors";
 import { FieldReader } from "../src/map/fieldreader";
+import * as zarr from "zarrita";
 import { effectiveDisplay, decodeConfig, encodeConfig, canLog, isDirectional, metersPerPixel, spacingToPx, DSEP_PX_CLAMP, SPACING_KM_STEPS, nearestSpacingStep, migrateLegacySpacing, vectorColors } from "../src/layerconfig";
 import { mathHtml, mathOnly, textOnly } from "../src/util/math";
 import { loadRegistry } from "../src/registry/load";
@@ -289,5 +290,115 @@ describe("KaTeX", () => {
     expect(mathOnly("Drift potential $DP$")).toBe("DP");
     expect(textOnly("Drift potential $DP$")).toBe("Drift potential");
     expect(mathOnly("no math")).toBe("");
+  });
+});
+
+describe("antimeridian and pole: streamline / arrow geometry is drawn the short way", () => {
+  const segs = (pieces: [number, number][][]) => pieces.flatMap((p) => p.slice(1).map((q, k) => [p[k], q] as const));
+  const checkPieces = (pieces: [number, number][][], maxDeg: number) => {
+    for (const p of pieces) {
+      expect(p.length).toBeGreaterThanOrEqual(2);
+      for (const [lo, la] of p) { expect(lo).toBeGreaterThanOrEqual(-180); expect(lo).toBeLessThanOrEqual(180); expect(Math.abs(la)).toBeLessThanOrEqual(90); }
+    }
+    for (const [a, b] of segs(pieces)) {
+      expect(Math.abs(b[0] - a[0])).toBeLessThanOrEqual(180); // never the long way round (Δlon > 180 drawn as an arc around the globe)
+      if (Math.abs(a[1]) < 85 && Math.abs(b[1]) < 85) expect(Math.abs(b[0] - a[0])).toBeLessThan(30);
+      expect(gcDeg(a, b)).toBeLessThanOrEqual(maxDeg + 1e-9);
+    }
+  };
+  it("geoPolylines: split at ±180 with a shared interpolated vertex, both directions; long steps and NaN split", () => {
+    const r = (ps: [number, number][][]) => ps.map((p) => p.map(([a, b]) => [Number(a.toFixed(9)), Number(b.toFixed(9))]));
+    expect(r(geoPolylines([[179.5, 10], [179.9, 10], [-179.9, 11], [-179.5, 11]]))).toEqual([[[179.5, 10], [179.9, 10], [180, 10.5]], [[-180, 10.5], [-179.9, 11], [-179.5, 11]]]);
+    expect(r(geoPolylines([[-179.5, 0], [-179.9, 0], [179.9, 0]]))).toEqual([[[-179.5, 0], [-179.9, 0], [-180, 0]], [[180, 0], [179.9, 0]]]);
+    expect(geoPolylines([[10, 0], [10.5, 0], [30, 0], [30.5, 0], [NaN, 0], [31, 0], [31.5, 0]], 2)).toEqual([[[10, 0], [10.5, 0]], [[30, 0], [30.5, 0]], [[31, 0], [31.5, 0]]]);
+    expect(geoPolylines([[181, 0], [181.5, 0]])).toEqual([[[-179, 0], [-178.5, 0]]]); // inputs outside ±180 are wrapped
+    expect(geoPolylines([[5, 0]])).toEqual([]);
+  });
+  it("a latitude circle at 80° N through the antimeridian: short segments, two pieces meeting at ±180", () => {
+    const ring: [number, number][] = Array.from({ length: 361 }, (_, k) => [((100 + k + 180) % 360) - 180, 80]);
+    const pieces = geoPolylines(ring, 2);
+    checkPieces(pieces, 2);
+    expect(pieces.length).toBe(2);
+    expect(pieces[0][pieces[0].length - 1]).toEqual([180, 80]);
+    expect(pieces[1][0]).toEqual([-180, 80]);
+    const len = (ps: [number, number][][]) => segs(ps).reduce((s, [a, b]) => s + gcDeg(a, b), 0);
+    expect(len(pieces)).toBeCloseTo(360 * Math.cos(80 * Math.PI / 180), 1); // nothing lost
+  });
+  it("end to end: streamlines circling the pole on a polar view (screen -> lon/lat) cross the antimeridian without long segments", () => {
+    // azimuthal view centred on the North Pole: 0.1° of latitude per px, lon = bearing of the pixel from the centre
+    const W = 400, H = 400, k = 0.1;
+    const inv = (x: number, y: number): [number, number] => {
+      const dx = x - W / 2, dy = y - H / 2;
+      return [Math.atan2(dx, dy) * 180 / Math.PI, 90 - k * Math.hypot(dx, dy)];
+    };
+    const cell = 5, nx = W / cell + 1, ny = H / cell + 1;
+    const lon = new Float64Array(nx * ny), lat = new Float64Array(nx * ny);
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) [lon[j * nx + i], lat[j * nx + i]] = inv(i * cell, j * cell);
+    // mostly eastward flow (rings around the pole) with a slight poleward drift
+    const field = buildScreenField(lon, lat, nx, ny, cell, false, () => [0.98, 0.2]);
+    const lines = evenStreamlines(field, { width: W, height: H, dsep: 18, maxLines: 400, budgetMs: 2000 });
+    expect(lines.length).toBeGreaterThan(10);
+    const raw = lines.map((l) => l.pts.map((p) => inv(p[0], p[1])));
+    // unsplit, consecutive vertices at ~+180 / ~-180 would be joined the long way round
+    expect(raw.some((l) => l.slice(1).some((q, i) => Math.abs(q[0] - l[i][0]) > 180))).toBe(true);
+    let split = 0;
+    for (const l of raw) {
+      const pieces = geoPolylines(l, 4 * 18 * k);
+      checkPieces(pieces, 4 * 18 * k);
+      split += pieces.length - 1;
+      // continuity: the pieces of one line meet (same latitude at +180 / -180)
+      for (let i = 1; i < pieces.length; i++) {
+        const e = pieces[i - 1][pieces[i - 1].length - 1], s = pieces[i][0];
+        expect(Math.abs(e[0])).toBe(180); expect(s[0]).toBe(-e[0]); expect(s[1]).toBe(e[1]);
+      }
+    }
+    expect(split).toBeGreaterThan(0);
+  });
+  it("arrows at the antimeridian and next to the pole: short segments in ±180", () => {
+    const g: Grid = { lon0: -180, lat0: 90, dlon: 1, dlat: -1, nx: 360, ny: 181, data: new Float32Array(360 * 181).fill(90) }; // toward east
+    const seeds = [{ lon: 179.9, lat: 70, len: 2 }, { lon: -179.95, lat: -20, len: 3 }, { lon: 40, lat: 89.6, len: 2 }, { lon: -100, lat: 88.9, len: 1.5 }];
+    for (const axis of [false, true]) {
+      const f = arrowFeatures(seeds, g, { axis });
+      expect(f.length).toBe(seeds.length);
+      for (const ft of f) checkPieces(ft.geometry.coordinates as [number, number][][], 3);
+      // the shaft near the antimeridian is split into two adjacent pieces
+      expect((f[0].geometry.coordinates as number[][][]).filter((p) => p.some((q) => Math.abs(q[0]) === 180)).length).toBeGreaterThanOrEqual(2);
+    }
+    expect(gcDeg([0, 0], [1, 0])).toBeCloseTo(1, 9);
+    const [x, y] = offset(0, 89.5, 90, 1); // along the great circle, not along the parallel
+    expect(gcDeg([0, 89.5], [x, y])).toBeCloseTo(1, 9);
+  });
+});
+
+describe("FieldReader / sampling across the antimeridian (global grids)", () => {
+  // global 0.25° grid with ERA5 edges -180.125 .. 179.875; value = column index
+  const mk = async () => {
+    const nx = 1440, ny = 8;
+    const s = new Map<string, Uint8Array>();
+    const root = zarr.root(s as never);
+    await zarr.create(root, { attributes: { multiscales: { layout: [{ asset: "0", "spatial:transform": [0.25, 0, -180.125, 0, -0.25, 1], "spatial:shape": [ny, nx] }] } } } as never);
+    const a = await zarr.create(root.resolve("0/v"), { shape: [1, ny, nx], chunk_shape: [1, ny, 360], data_type: "float32", fill_value: NaN } as never);
+    const d = new Float32Array(ny * nx); for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) d[j * nx + i] = i;
+    await zarr.set(a as never, null, { data: d, shape: [1, ny, nx], stride: [ny * nx, nx, 1] } as never);
+    return FieldReader.open(s as never, "v");
+  };
+  it("a window across ±180 joins both ends in order; samples on both sides hit the right columns", async () => {
+    const r = await mk();
+    for (const [w, e] of [[179.0, 181.0], [-181.0, -179.0], [179.5, -179.5]] as const) {
+      const g = await r.read(0, 0, [w, -0.5, e, 0.5]);
+      expect(g.nx).toBeLessThan(20); // not the whole width
+      const row = Array.from(g.data.subarray(0, g.nx));
+      // consecutive source columns, wrapping 1439 -> 0
+      for (let i = 1; i < row.length; i++) expect((row[i] - row[i - 1] + 1440) % 1440).toBe(1);
+      expect(row).toContain(1439); expect(row).toContain(0);
+      // column 0 is centred at -180 (edges 179.875 / -179.875), column 1439 at 179.75
+      expect(sampleNearest(g, 179.95, 0)).toBe(0);
+      expect(sampleNearest(g, -179.95, 0)).toBe(0);
+      expect(sampleNearest(g, 180.05, 0)).toBe(0);
+      expect(sampleNearest(g, 179.8, 0)).toBe(1439);
+      expect(sampleNearest(g, -179.8, 0)).toBe(1);
+    }
+    // the whole width when the view spans 360° or more
+    expect((await r.read(0, 0, [-200, -0.5, 200, 0.5])).nx).toBe(1440);
   });
 });

@@ -73,7 +73,12 @@ and fixture layouts and fails if an upgrade changes them.
   lines < 2 dsep dropped; ≤ 2500 lines, 250 ms). The field is sampled as unit vectors (directions:
   bilinear (sin, cos); the axial αH: doubled angles, sign chosen to continue the line) from the
   pyramid level with cell ≤ dsep/4 px, mapped to screen through the local Jacobian of the node
-  lon/lat grid (≤ 20k nodes). Direction fields get arrowheads along the lines. Drawn as a GeoJSON
+  lon/lat grid (≤ 20k nodes). Direction fields get arrowheads along the lines. Screen vertices are
+  unprojected and passed through `geoPolylines`: longitudes unwrapped along the line, split at the
+  antimeridian with a shared interpolated vertex at ±180 (otherwise MapLibre joins 179.9 → −179.9
+  the long way, a ring around the globe), and split at any step longer than 4·dsep in degrees or
+  a non-finite vertex; arrows use the spherical destination (`offset`, exact near the poles) and
+  the same split. Drawn as a GeoJSON
   line layer (globe and mercator); recomputed on `moveend` and threshold change.
 * **Arrow / streamline spacing** is set on the ground: slider 'Spacing (km)' with steps 10, 20,
   50, 100, 200, 500, 1000 km (default 100; URL `~km=`). On every recompute it is converted to
@@ -119,6 +124,16 @@ and fixture layouts and fails if an upgrade changes them.
   (`sameLocation`: either cell centre inside the other cell - a dataset switch re-snap or the same
   cell) keeps the old content (aria-busy, dimmed) until the new data are in, then re-renders at
   the same scroll position; another location starts at the top. Collapsed sections persist.
+* **Antimeridian**: both wind grids have an edge column that straddles ±180 (ERA5-Land
+  −180.05..−179.95, ERA5 −180.125..−179.875). zarr-layer patch (`patches/`): raster x bounds are
+  not clamped to ±180 (the column keeps its width; the part beyond −180 is drawn at x < 0, which
+  wraps on the globe and is drawn again at world offset +1 in Mercator), world offsets padded by 1°,
+  and `getVisibleRegions` intersects the unwrapped (or west > east) viewport with the data extent
+  at ±360° shifts so regions on both sides of the seam are fetched and drawn. The selected-cell
+  highlight of a seam cell is split into two parts within ±180 (`cellFeature`, no outline on the
+  seam). Arrows / streamlines read one continuous window across the seam (`FieldReader.read`
+  joins the columns of both ends of a global grid; sampling tries lon ± 360) and split their
+  lines at ±180 (`geoPolylines`).
 * **Grid-agnostic cell queries**: grid (`lat0, dlat, lon0, dlon, ny, nx`), histogram bin edges and
   `ut_values` come from the cell store root attrs (ERA5-Land constants only as a fallback), so a
   0.25° ERA5 store (721 × 1440) works unchanged.
@@ -245,7 +260,9 @@ and fixture layouts and fails if an upgrade changes them.
   magnitude is not > 0 — the map's direction-validity mask: RDD needs rdpm > 0, αH/αT need
   qacb > 0, αE/αO need qace > 0. Rose sectors default to 128 (wind and flux). The
   wind rose is drawn FROM (toward + 180°), % of counted hours (normalised by the histogram sum;
-  hours > 20 m/s are not in the histogram).
+  hours > 20 m/s are not in the histogram); it does not depend on u*,th. Every threshold-dependent
+  element (flux rose + DP/RDP/RDD, modes ring and dots, qsdiv marker, summary heading and table,
+  meta line) is re-rendered in place by `update()` on a slider change.
 * **Basemap swap**: `basemaps.setBasemap` = `setStyle(diff:false, transformStyle)` (MapLibre defers
   the swap until the previous style has loaded; only the final style of a rapid sequence emits
   `style.load`). On `style.load`, `overlays.restoreOverlays` adds the selected-cell highlight

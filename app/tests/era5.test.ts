@@ -18,6 +18,7 @@ import { CellPanel } from "../src/ui/cellPanel";
 import { cellNetcdf, exportBaseName, metadataJson, readmeText, versionFromPrefix } from "../src/cell/export";
 import { citationFile } from "../src/cell/downloads";
 import { auxDescription } from "../src/cell/auxinfo";
+import { formatUt } from "../src/ui/threshold";
 import { readNc } from "./ncreader";
 import { FakeMap } from "./fakemap";
 import { OverlayManager, restoreOverlays } from "../src/map/overlays";
@@ -161,6 +162,48 @@ describe.skipIf(!haveFix)("ERA5 fixture: panel and downloads", () => {
     expect(cite).not.toContain("Muñoz");
     expect(cite).not.toContain("Supplementary Data");
   });
+  it("threshold slider: every threshold-dependent element re-renders with the new u*,th; the wind rose is identical (scroll kept)", async () => {
+    const reg = loadRegistry().registry;
+    document.body.innerHTML = '<aside id="cell-panel" hidden></aside>';
+    const root = document.getElementById("cell-panel")!;
+    const layers: Record<string, LayerState> = {};
+    const st = new Store({ basemap: "x", projection: "globe", utIndex: 5, layers, order: [], dataset: "era5", cell: [458, 781], embed: false } as AppState);
+    const p = new CellPanel(root, 5, { windSectors: 16, fluxSectors: 32, onClose: () => {}, exportMeta: () => META("era5"), threshold: { def: reg.threshold, store: st } });
+    st.subscribe((s2, ch) => { if (ch.has("utIndex")) p.setThreshold(s2.utIndex); });
+    await p.show(cs, 458, 781);
+    const c = await cs.query(458, 781);
+    const q = (sel: string) => root.querySelector(sel) as HTMLElement;
+    const el = q(".cell-scroll");
+    el.scrollTop = 700;
+    const snapOf = () => ({
+      flux: q('[data-section="fluxRose"] .fig-svg').innerHTML, fluxKv: q('[data-section="fluxRose"] dl.kv').textContent!,
+      modesUt: q("svg.modes-plot circle.current-ut").getAttribute("r"), modesDots: [...root.querySelectorAll("svg.modes-plot circle.current-mode")].map((x) => x.getAttribute("cx")).join(),
+      qsdiv: q('[data-section="qsdiv"] svg.line-plot').innerHTML, qsdivCap: q('[data-section="qsdiv"] .caption').textContent!,
+      head: q('[data-section="summary"] > summary > h3').textContent!, table: q('[data-section="summary"] table').innerHTML,
+      meta: q(".cell-meta").textContent!,
+    });
+    const windOf = () => ({ svg: q('[data-section="windRose"] .fig-svg').innerHTML, cap: q('[data-section="windRose"] .caption').textContent!, legend: q('[data-section="windRose"] .fig-legend').innerHTML });
+    const a0 = snapOf(), w0 = windOf();
+    const svgs = [...root.querySelectorAll(".fig-svg")];
+    expect(w0.cap).toMatch(/ ERA5 10 m wind 1950–2024\.$/); // caption names the selected dataset
+    expect(w0.svg).not.toContain("rose-dim");
+    // move the slider (store -> panel), as in the app
+    const slider = q("#cell-ut-slider") as HTMLInputElement;
+    slider.value = "30"; slider.dispatchEvent(new Event("input"));
+    expect(st.state.utIndex).toBe(30);
+    const a1 = snapOf();
+    for (const k of Object.keys(a0) as (keyof typeof a0)[]) expect(a1[k], k).not.toEqual(a0[k]);
+    expect(a1.head).toContain(formatUt(c.utValues[30]));
+    // the wind rose does not depend on u*,th: SVG, legend and caption unchanged
+    expect(windOf()).toEqual(w0);
+    // rendered into the same containers, scroll position unchanged
+    expect([...root.querySelectorAll(".fig-svg")]).toEqual(svgs);
+    expect(q(".cell-scroll")).toBe(el);
+    expect(el.scrollTop).toBe(700);
+    // back to the first threshold: identical to the first rendering
+    slider.value = "5"; slider.dispatchEvent(new Event("input"));
+    expect(snapOf()).toEqual(a0);
+  });
   it("dataset switch at the same location keeps the panel scroll position and collapsed sections", async () => {
     const LAND = path.join(REPO, "staging/fixture");
     const land = await CellStore.open(new RFS(path.join(LAND, "cells.zarr")) as never, { aux: [new RFS(path.join(LAND, "cells-aux.zarr")), new RFS(path.join(LAND, "cells-aux-veg.zarr"))] as never });
@@ -189,10 +232,21 @@ describe.skipIf(!haveFix)("ERA5 fixture: panel and downloads", () => {
     await p.show(land, 1150, 1960);
     expect(el.scrollTop).toBe(0);
   });
-  it("ocean / lsm ≤ 0.5 cell: neutral no-data message", async () => {
+  it("cell outside the land mask: 'Outside the <dataset> land mask', same wording for both datasets", async () => {
     const root = await panel(await cs.query(458, 770), "era5");
-    expect(root.querySelector(".empty-state strong")!.textContent).toBe("No wind data for this cell in ERA5.");
-    expect(root.textContent).toMatch(/This 0\.25° ERA5 cell \(row 458, column 770; centre .*\) is ocean or mostly water \(land–sea mask fraction ≤ 0\.5\)/);
+    const es = root.querySelector(".empty-state")!;
+    expect(es.querySelector("strong")!.textContent).toBe("Outside the ERA5 land mask");
+    expect(es.querySelectorAll("p")[1].textContent).toBe("The atlas computes wind roses and sand-flux statistics only for land cells (ERA5 land–sea mask fraction > 0.5). This cell is mainly water, so no statistics are stored for it. Choose a nearby land cell, or switch to ERA5-Land (coastal cells can differ between the two land masks).");
+    expect(es.querySelector(".help")!.textContent).toBe("0.25° cell: row 458, column 770; centre 24.5°S, 12.5°E.");
+    // ERA5-Land: the same text with the names swapped
+    const land = { ...(await cs.query(458, 770)), grid: { lat0: 90, dlat: -0.1, lon0: -180, dlon: 0.1, ny: 1801, nx: 3600 } };
+    const r2 = await panel(land as CellData, "era5-land");
+    const t2 = r2.querySelector(".empty-state")!.textContent!;
+    const t1 = es.textContent!;
+    const norm = (t: string, n: string, o: string) => t.replaceAll(n, "{DS}").replaceAll(o, "{OTHER}").replace(/\d+\.\d+° cell.*$/s, "");
+    expect(norm(t2, "ERA5-Land", "ERA5")).toBe(norm(t1.replaceAll("ERA5-Land", "{OTHER}"), "ERA5", "{OTHER}"));
+    expect(r2.querySelector(".empty-state strong")!.textContent).toBe("Outside the ERA5-Land land mask");
+    expect(t2).toContain("or switch to ERA5 (coastal");
   });
   it("downloads: file name, grid attrs and resolution, references, aux texts for 0.25°", async () => {
     const c = await cs.query(458, 781);

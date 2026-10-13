@@ -12,7 +12,7 @@ import { fetchRootAttrs, storeGeoFromAttrs, type StoreGeo } from "./zarrgeo";
 import { MaskedFieldStore } from "./maskedstore";
 import { fragmentFor, symlogUniforms } from "./shader";
 import { FieldReader } from "./fieldreader";
-import { applyMask, arrowFeatures, arrowheadsAlong, buildScreenField, evenStreamlines, sampleUnit, type ArrowSeed, type Grid } from "./vectors";
+import { applyMask, arrowFeatures, arrowheadsAlong, buildScreenField, evenStreamlines, geoPolylines, sampleUnit, type ArrowSeed, type Grid } from "./vectors";
 import { mathToAxisDeg, mathToBearingDeg } from "../util/angles";
 
 export interface AdapterContext {
@@ -248,8 +248,11 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
     const canvas = map.getCanvas();
     const W = canvas.clientWidth, H = canvas.clientHeight;
     const b = map.getBounds();
+    // continuous west..east (may extend beyond ±180 at the antimeridian: the reader joins the
+    // columns of both ends of the global grid); the whole width only when the view spans >= 360°
     let bounds: [number, number, number, number] = [b.getWest(), Math.max(-90, b.getSouth()), b.getEast(), Math.min(90, b.getNorth())];
-    if (bounds[2] - bounds[0] >= 360 || bounds[0] < -180 || bounds[2] > 180) bounds = [-180, bounds[1], 180, bounds[3]]; // antimeridian / world copies
+    if (bounds[2] < bounds[0]) bounds[2] += 360;
+    if (bounds[2] - bounds[0] >= 360) bounds = [-180, bounds[1], 180, bounds[3]];
     const c = map.project(map.getCenter());
     const p1 = map.unproject([c.x, c.y - 50]), p0 = map.unproject([c.x, c.y + 50]);
     const degPerPx = Math.max(1e-6, Math.abs(p1.lat - p0.lat) / 100);
@@ -299,10 +302,16 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
       const field = buildScreenField(lon, lat, nx, ny, cell, axis, (lo, la) => sampleUnit(dir, lo, la, axis));
       const lines = evenStreamlines(field, { width: W, height: H, dsep, maxLines: 2500, budgetMs: 250 });
       const un = (p: [number, number]) => { const ll = map.unproject(p); return [ll.lng, ll.lat] as [number, number]; };
-      features = lines.map((l) => ({ type: "Feature", properties: { a: 1 }, geometry: { type: "LineString", coordinates: l.pts.map(un) } }) as GeoJSON.Feature);
+      // screen vertices -> lon/lat pieces drawn the short way (split at the antimeridian, and at any
+      // step longer than a few line spacings - a discontinuity, never a real streamline step)
+      const maxSeg = Math.max(1, 4 * dsep * degPerPx);
+      features = lines.flatMap((l) => {
+        const pieces = geoPolylines(l.pts.map(un), maxSeg);
+        return pieces.length ? [{ type: "Feature", properties: { a: 1 }, geometry: pieces.length === 1 ? { type: "LineString", coordinates: pieces[0] } : { type: "MultiLineString", coordinates: pieces } } as GeoJSON.Feature] : [];
+      });
       if (!axis) {
         const heads = arrowheadsAlong(lines, Math.max(60, 3 * dsep), 4.5);
-        features.push({ type: "Feature", properties: { a: 1 }, geometry: { type: "MultiLineString", coordinates: heads.map((hd) => hd.map(un)) } });
+        features.push({ type: "Feature", properties: { a: 1 }, geometry: { type: "MultiLineString", coordinates: heads.flatMap((hd) => geoPolylines(hd.map(un), maxSeg)) } });
       }
     }
     if (own.hasSource(src)) (map.getSource(src) as GeoJSONSource).setData({ type: "FeatureCollection", features });

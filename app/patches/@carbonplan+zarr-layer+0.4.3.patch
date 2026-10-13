@@ -1,5 +1,5 @@
 diff --git a/node_modules/@carbonplan/zarr-layer/dist/index.js b/node_modules/@carbonplan/zarr-layer/dist/index.js
-index d4f9c22..6db7a8c 100644
+index d4f9c22..11a10f8 100644
 --- a/node_modules/@carbonplan/zarr-layer/dist/index.js
 +++ b/node_modules/@carbonplan/zarr-layer/dist/index.js
 @@ -1050,6 +1050,12 @@ var _ZarrStore = class _ZarrStore {
@@ -15,7 +15,45 @@ index d4f9c22..6db7a8c 100644
        if (consolidatedMeta) {
          const arrayKey = `${entry.asset}/${this.variable}`;
          const arrayMeta = consolidatedMeta[arrayKey];
-@@ -5865,11 +5871,21 @@ var UntiledMode = class {
+@@ -2030,6 +2036,12 @@ function lonToMercatorNorm(lon) {
+   const clamped = Math.max(-180, Math.min(180, lon));
+   return (clamped + 180) / 360;
+ }
++function lonToMercatorNormUnclamped(lon) {
++  // dune-atlas patch: antimeridian - raster bounds are not clamped to ±180, so an edge column that
++  // straddles the antimeridian (e.g. -180.125..-179.875) keeps its width; the part beyond -180 is
++  // drawn at x < 0 (globe: wraps on the sphere; Mercator: drawn again at world offset +1)
++  return (lon + 180) / 360;
++}
+ function latToMercatorNorm(lat) {
+   const clamped = Math.max(
+     -MERCATOR_LAT_LIMIT,
+@@ -2130,9 +2142,9 @@ function boundsToMercatorNorm(xyLimits, crs) {
+     [yMin, yMax] = [yMax, yMin];
+   }
+   const bounds = {
+-    x0: lonToMercatorNorm(xyLimits.xMin),
++    x0: lonToMercatorNormUnclamped(xyLimits.xMin),
+     y0: latToMercatorNorm(yMax),
+-    x1: lonToMercatorNorm(xyLimits.xMax),
++    x1: lonToMercatorNormUnclamped(xyLimits.xMax),
+     y1: latToMercatorNorm(yMin)
+   };
+   if (crs === "EPSG:4326") {
+@@ -2204,8 +2216,10 @@ function computeWorldOffsets(map, isGlobe) {
+   if (west > east) {
+     effectiveEast = east + 360;
+   }
+-  const minWorld = Math.floor((west + 180) / 360);
+-  const maxWorld = Math.floor((effectiveEast + 180) / 360);
++  // dune-atlas patch: antimeridian - 1° padding so the part of an edge column beyond ±180 (drawn in
++  // the neighbouring world copy) is drawn when the viewport only touches the seam
++  const minWorld = Math.floor((west - 1 + 180) / 360);
++  const maxWorld = Math.floor((effectiveEast + 1 + 180) / 360);
+   const worldOffsets = [];
+   for (let i = minWorld; i <= maxWorld; i++) {
+     worldOffsets.push(i);
+@@ -5865,11 +5879,21 @@ var UntiledMode = class {
    /**
     * Calculate which regions are visible in the current viewport.
     */
@@ -38,7 +76,53 @@ index d4f9c22..6db7a8c 100644
      const [regionH, regionW] = this.regionSize;
      if (this.proj4def && this.cachedWGS84Transformer) {
        const transformer = this.cachedWGS84Transformer;
-@@ -6204,7 +6220,7 @@ var UntiledMode = class {
+@@ -5921,27 +5945,38 @@ var UntiledMode = class {
+       }
+       return regions2;
+     }
+-    const xMinIdx = geoToArrayIndex(west, xMin, xMax, this.width);
+-    const xMaxIdx = geoToArrayIndex(east, xMin, xMax, this.width);
++    // dune-atlas patch: antimeridian - the viewport may extend beyond ±180 (world copies, a view
++    // centred near the seam) or be given with west > east; intersect it with the data extent at
++    // shifts of -360, 0, +360 and take the union of the region columns of every piece.
++    let vw = west, ve = east;
++    if (ve < vw) ve += 360;
++    if (ve - vw >= 360) { vw = -180; ve = 180; }
++    const xRanges = [];
++    for (let k = -2; k <= 2; k++) {
++      const a = Math.max(vw - 360 * k, Math.min(xMin, xMax)), b = Math.min(ve - 360 * k, Math.max(xMin, xMax));
++      if (a <= b) xRanges.push([geoToArrayIndex(a, xMin, xMax, this.width), geoToArrayIndex(b, xMin, xMax, this.width)]);
++    }
++    if (!xRanges.length) return [];
+     let ySouthIdx = geoToArrayIndex(south, yMin, yMax, this.height);
+     let yNorthIdx = geoToArrayIndex(north, yMin, yMax, this.height);
+     if (this.latIsAscending === false) {
+       ySouthIdx = this.height - 1 - ySouthIdx;
+       yNorthIdx = this.height - 1 - yNorthIdx;
+     }
+-    const regionXMin = Math.floor(Math.min(xMinIdx, xMaxIdx) / regionW);
+-    const regionXMax = Math.floor(Math.max(xMinIdx, xMaxIdx) / regionW);
+     const regionYMin = Math.floor(Math.min(ySouthIdx, yNorthIdx) / regionH);
+     const regionYMax = Math.floor(Math.max(ySouthIdx, yNorthIdx) / regionH);
+     const numRegionsX = Math.ceil(this.width / regionW);
+     const numRegionsY = Math.ceil(this.height / regionH);
+-    const clampedXMin = Math.max(0, regionXMin);
+-    const clampedXMax = Math.min(numRegionsX - 1, regionXMax);
++    const cols = /* @__PURE__ */ new Set();
++    for (const [i0, i1] of xRanges) {
++      const r0 = Math.max(0, Math.floor(Math.min(i0, i1) / regionW)), r1 = Math.min(numRegionsX - 1, Math.floor(Math.max(i0, i1) / regionW));
++      for (let rx = r0; rx <= r1; rx++) cols.add(rx);
++    }
+     const clampedYMin = Math.max(0, regionYMin);
+     const clampedYMax = Math.min(numRegionsY - 1, regionYMax);
+     const regions = [];
+     for (let ry = clampedYMin; ry <= clampedYMax; ry++) {
+-      for (let rx = clampedXMin; rx <= clampedXMax; rx++) {
++      for (const rx of [...cols].sort((p, q) => p - q)) {
+         regions.push({ regionX: rx, regionY: ry });
+       }
+     }
+@@ -6204,7 +6239,7 @@ var UntiledMode = class {
        return { xMin: 0, xMax: 1, yMin: 0, yMax: 1 };
      }
      const [regionH, regionW] = regionSize;
@@ -47,3 +131,14 @@ index d4f9c22..6db7a8c 100644
      const pxXStart = regionX * regionW;
      const pxXEnd = Math.min(pxXStart + regionW, width);
      const pxYStart = regionY * regionH;
+@@ -6299,8 +6334,8 @@ var UntiledMode = class {
+         const latMin = geoBounds.yMin;
+         const latMax = geoBounds.yMax;
+         region.mercatorBounds = {
+-          x0: lonToMercatorNorm(geoBounds.xMin),
+-          x1: lonToMercatorNorm(geoBounds.xMax),
++          x0: lonToMercatorNormUnclamped(geoBounds.xMin),
++          x1: lonToMercatorNormUnclamped(geoBounds.xMax),
+           y0: latToMercatorNorm(latMax),
+           y1: latToMercatorNorm(latMin),
+           // Include lat bounds for fragment shader reprojection

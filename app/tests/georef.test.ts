@@ -357,3 +357,102 @@ describe("direction-validity mask (synthetic)", () => {
     expect(o2.bounds).toEqual(g.bounds);
   });
 });
+
+describe("patched zarr-layer: antimeridian (regions on both sides of ±180, edge column not clamped)", () => {
+  const fn = (start: string, end: string) => method(LIB, start, end);
+  const helpers = [
+    "var MERCATOR_LAT_LIMIT = 85.05112878;",
+    fn("function lonToMercatorNorm(lon) {", "function latToMercatorNorm(lat) {"),
+    fn("function latToMercatorNorm(lat) {", "function mercatorNormToLat(mercY) {"),
+    fn("function boundsToMercatorNorm(xyLimits, crs) {", "function geoToArrayIndex("),
+    fn("function geoToArrayIndex(", "function flipTexCoordV("),
+    fn("function computeWorldOffsets(map, isGlobe) {", "// src/render-helpers.ts"),
+  ].join("\n");
+  const parse = method(LIB, "_parseUntiledMultiscale(metadata) {", "  static clearCache() {");
+  const lvl = method(LIB, "levelXYLimits(width, height) {", "  getVisibleRegions(map) {");
+  const vis = method(LIB, "getVisibleRegions(map) {", "  /**\n   * Create a region key");
+  const reg = method(LIB, "getRegionBounds(regionX, regionY, levelMeta) {", "  /**\n   * Create geometry");
+  // eslint-disable-next-line @typescript-eslint/no-implied-eval
+  const make = () => new Function(`${helpers}\nreturn { lib: { ${parse}, ${lvl}, ${vis}, ${reg} }, boundsToMercatorNorm, computeWorldOffsets };`)() as {
+    lib: Record<string, unknown> & { _parseUntiledMultiscale(m: unknown): void; getVisibleRegions(map: unknown): { regionX: number; regionY: number }[]; getRegionBounds(rx: number, ry: number, lm?: unknown): { xMin: number; xMax: number; yMin: number; yMax: number } };
+    boundsToMercatorNorm(b: { xMin: number; xMax: number; yMin: number; yMax: number }, crs: string): { x0: number; x1: number };
+    computeWorldOffsets(map: unknown, isGlobe: boolean): number[];
+  };
+  it("patch markers present", () => {
+    expect(LIB).toContain("dune-atlas patch: antimeridian - raster bounds are not clamped");
+    expect(LIB).toContain("dune-atlas patch: antimeridian - the viewport may extend beyond ±180");
+    expect(LIB).toContain("x0: lonToMercatorNormUnclamped(geoBounds.xMin),");
+  });
+  const era5Layout = () => {
+    const out = []; let ny = 721, nx = 1440, d = 0.25;
+    for (let k = 0; k < 4; k++) { out.push({ asset: String(k), "spatial:transform": [d, 0, -180.125, 0, -d, 90.125], "spatial:shape": [ny, nx] }); ny = Math.floor(ny / 2); nx = Math.floor(nx / 2); d *= 2; }
+    return out;
+  };
+  for (const [name, layout, half] of [["ERA5-Land 0.1°", v1Layout(4), 0.05], ["ERA5 0.25°", era5Layout(), 0.125]] as const) {
+    describe(name, () => {
+      const setup = (k: number, rs: number) => {
+        const h = make(), m = h.lib;
+        m._parseUntiledMultiscale({ layout });
+        const levels = m.untiledLevels as { shape?: number[] }[];
+        layout.forEach((e, i) => { levels[i].shape = [64, ...(e["spatial:shape"] as number[])]; });
+        const g0 = storeGeoFromAttrs({ multiscales: { layout } })!;
+        const [ny, nx] = layout[k]["spatial:shape"] as number[];
+        Object.assign(m, { variable: "v", crs: "EPSG:4326", metadata: null, levels, latIsAscending: false, dimIndices: { lon: { index: 2 }, lat: { index: 1 } },
+          xyLimits: { xMin: g0.bounds[0], yMin: g0.bounds[1], xMax: g0.bounds[2], yMax: g0.bounds[3] }, width: nx, height: ny, regionSize: [rs, rs] });
+        return { h, m, nx, ny, rs };
+      };
+      it("edge column keeps its width: region 0 starts at x < 0 (lon -180 - half cell)", () => {
+        const { h, m, rs } = setup(0, 128);
+        const b = m.getRegionBounds(0, 3, undefined);
+        expect(b.xMin).toBeCloseTo(-180 - half, 9);
+        const mb = h.boundsToMercatorNorm(b, "EPSG:4326");
+        expect(mb.x0).toBeCloseTo(-half / 360, 12);
+        expect((mb.x1 - mb.x0) * 360).toBeCloseTo(rs * 2 * half, 9); // rs columns of the cell size
+      });
+      const views: [number, number][] = [];
+      for (const c of [179.99, -179.99, 180.01, -180.01, 179.9, -179.95]) for (const hw of [0.02, 0.1, 0.5, 3, 20]) views.push([c - hw, c + hw]);
+      for (const k of [0, 2]) for (const proj of ["mercator", "globe"] as const) {
+        it(`level ${k}, ${proj}: every cell column of a viewport across ±180 is drawn on both sides`, () => {
+          const { h, m, nx, rs } = setup(k, 64);
+          const lm = { width: nx, height: (layout[k]["spatial:shape"] as number[])[0], regionSize: [64, 64] };
+          for (const [w, e] of views) {
+            // MapLibre gives unwrapped bounds in Mercator; on the globe they may come wrapped (west > east)
+            const wrap = (x: number) => x - 360 * Math.round(x / 360);
+            const [bw, be] = proj === "globe" ? [wrap(w), wrap(e)] : [w, e];
+            const map = { getBounds: () => ({ toArray: () => [[bw, 60], [be, 70]], getWest: () => bw, getEast: () => be }), getRenderWorldCopies: () => true };
+            const regs = m.getVisibleRegions(map);
+            const worlds = h.computeWorldOffsets(map, proj === "globe");
+            expect(regs.length).toBeLessThan(Math.ceil(nx / rs) * 10); // not the whole world
+            const ranges = regs.map((r) => { const b = m.getRegionBounds(r.regionX, r.regionY, lm); const mb = h.boundsToMercatorNorm(b, "EPSG:4326"); return { x0: mb.x0, x1: mb.x1, s: b.yMin, n: b.yMax }; });
+            const step = Math.min(0.01, (e - w) / 50);
+            for (let lon = w; lon <= e + 1e-9; lon += step) {
+              const x = (lon + 180) / 360;
+              const offs = proj === "globe" ? [-1, 0, 1] : worlds; // the sphere is periodic; Mercator draws the listed world copies
+              const hit = ranges.some((r) => r.s <= 65 && r.n >= 65 && offs.some((o) => x >= r.x0 + o - 1e-12 && x <= r.x1 + o + 1e-12));
+              expect(hit, `${name} level ${k} ${proj} view [${w}, ${e}] lon ${lon.toFixed(3)}`).toBe(true);
+            }
+          }
+        });
+      }
+    });
+  }
+  it("selected-cell highlight of a cell centred at -180 is drawn on both sides (no outline on the seam)", async () => {
+    const { cellFeature } = await import("../src/cell/snap");
+    for (const [g, half] of [[ERA5_LAND_GRID, 0.05], [{ lat0: 90, dlat: -0.25, lon0: -180, dlon: 0.25, ny: 721, nx: 1440 }, 0.125]] as const) {
+      const c = cellFromIndex(426, 0, g);
+      expect(c.lon).toBe(-180);
+      const fc = cellFeature(c, g);
+      const fill = fc.features.find((f) => f.properties?.part === "fill")!.geometry as GeoJSON.MultiPolygon;
+      const xs = fill.coordinates.map((p) => p[0].map((q) => q[0]));
+      expect(xs.map((x) => [Math.min(...x), Math.max(...x)])).toEqual([[-180, -180 + half], [180 - half, 180]]);
+      const outline = fc.features.find((f) => f.properties?.part === "outline")!.geometry as GeoJSON.MultiLineString;
+      for (const line of outline.coordinates) for (let i = 1; i < line.length; i++) {
+        const [a, b] = [line[i - 1], line[i]];
+        expect(a[0] === b[0] && Math.abs(a[0]) === 180).toBe(false); // no edge along the seam
+      }
+      expect(JSON.stringify(fc)).not.toMatch(/-18[01]\.\d*[1-9]|18[01]\.\d*[1-9]/); // all longitudes within ±180
+      // an interior cell stays one polygon
+      expect(cellFeature(cellFromIndex(426, 5, g), g).features).toHaveLength(1);
+    }
+  });
+});

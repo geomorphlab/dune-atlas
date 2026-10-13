@@ -52,12 +52,33 @@ export class FieldReader {
     const [dx, , x0, , dy, y0] = L.transform; // edges; dy < 0
     const [ny, nx] = L.shape;
     let [w, s, e, n] = bounds;
-    if (e - w >= 360 || e < w) { w = -180; e = 180; }
-    const i0 = Math.max(0, Math.floor((w - x0) / dx) - 1), i1 = Math.min(nx, Math.ceil((e - x0) / dx) + 1);
+    if (e < w) e += 360; // wrapped bounds across the antimeridian (west > east)
+    const global = Math.abs(nx * dx - 360) < 1e-6;
+    if (e - w >= 360 || (!global && (w < -180 || e > 180))) { w = -180; e = 180; }
     const j0 = Math.max(0, Math.floor((n - y0) / dy) - 1), j1 = Math.min(ny, Math.ceil((s - y0) / dy) + 1);
+    // column range in continuous (unwrapped) index space; a global grid wraps around ±180, so a
+    // window across the antimeridian reads the columns at both ends and joins them in order
+    let i0 = Math.floor((w - x0) / dx) - 1, i1 = Math.ceil((e - x0) / dx) + 1;
+    if (!global || i1 - i0 >= nx) { i0 = Math.max(0, i0); i1 = Math.min(nx, i1); }
     if (i1 <= i0 || j1 <= j0) return { data: new Float32Array(0), nx: 0, ny: 0, lon0: 0, lat0: 0, dlon: dx, dlat: dy };
     const arr = await this.#array(level);
-    const r = await zarr.get(arr, [ut, zarr.slice(j0, j1), zarr.slice(i0, i1)]);
-    return { data: r.data as Float32Array, nx: i1 - i0, ny: j1 - j0, lon0: x0 + (i0 + 0.5) * dx, lat0: y0 + (j0 + 0.5) * dy, dlon: dx, dlat: dy };
+    const runs: [number, number, number][] = []; // [source start, source end, output offset]
+    for (let i = i0; i < i1;) {
+      const src = ((i % nx) + nx) % nx, len = Math.min(i1 - i, nx - src);
+      runs.push([src, src + len, i - i0]);
+      i += len;
+    }
+    const W = i1 - i0, H = j1 - j0;
+    const parts = await Promise.all(runs.map(([a, b]) => zarr.get(arr, [ut, zarr.slice(j0, j1), zarr.slice(a, b)])));
+    let data: Float32Array;
+    if (parts.length === 1) data = parts[0].data as Float32Array;
+    else {
+      data = new Float32Array(W * H);
+      parts.forEach((p, k) => {
+        const [a, b, off] = runs[k], wk = b - a, d = p.data as Float32Array;
+        for (let j = 0; j < H; j++) data.set(d.subarray(j * wk, (j + 1) * wk), j * W + off);
+      });
+    }
+    return { data, nx: W, ny: H, lon0: x0 + (i0 + 0.5) * dx, lat0: y0 + (j0 + 0.5) * dy, dlon: dx, dlat: dy };
   }
 }

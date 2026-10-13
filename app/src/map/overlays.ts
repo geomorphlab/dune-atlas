@@ -167,12 +167,16 @@ export class OverlayManager {
 }
 
 /** Selected-cell highlight (fill + outline), above every overlay and below basemap labels. */
-export function ensureSelectedCellLayers(map: MlMap, feature: GeoJSON.Feature | null) {
+export type Selection = GeoJSON.Feature | GeoJSON.FeatureCollection | null;
+/** Selected-cell highlight: fill + outline layers on one source. Features with `part: "fill"` /
+ *  `part: "outline"` are drawn by one layer only (a cell split at the antimeridian: no outline
+ *  along the seam); other features by both. */
+export function ensureSelectedCellLayers(map: MlMap, feature: Selection) {
   if (!map.getSource("selected-cell")) {
     map.addSource("selected-cell", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
     const before = firstSymbolLayer(map);
-    map.addLayer({ id: SELECTED_CELL_BOTTOM, type: "fill", source: "selected-cell", paint: { "fill-color": "#ffffff", "fill-opacity": 0.12 } }, before);
-    map.addLayer({ id: SELECTED_CELL_LINE, type: "line", source: "selected-cell", paint: { "line-color": "#ff4d6d", "line-width": 2 } }, before);
+    map.addLayer({ id: SELECTED_CELL_BOTTOM, type: "fill", source: "selected-cell", filter: ["!=", ["get", "part"], "outline"], paint: { "fill-color": "#ffffff", "fill-opacity": 0.12 } }, before);
+    map.addLayer({ id: SELECTED_CELL_LINE, type: "line", source: "selected-cell", filter: ["!=", ["get", "part"], "fill"], paint: { "line-color": "#ff4d6d", "line-width": 2 } }, before);
   }
   (map.getSource("selected-cell") as unknown as { setData(d: unknown): void }).setData(feature ?? { type: "FeatureCollection", features: [] });
 }
@@ -181,7 +185,7 @@ export const SELECTED_CELL_LINE = "selected-cell-line";
 /** style.load handler: after a basemap switch, rebuild the app's own layers on the new style -
  *  the selected-cell highlight, then every active overlay in the drawing order with its current
  *  opacity and config. Ignores the empty bootstrap style. */
-export function restoreOverlays(map: MlMap, overlays: OverlayManager, layers: Record<string, LayerState>, selection: GeoJSON.Feature | null): boolean {
+export function restoreOverlays(map: MlMap, overlays: OverlayManager, layers: Record<string, LayerState>, selection: Selection): boolean {
   const meta = map.getStyle().metadata as Record<string, unknown> | undefined;
   if (!meta?.["atlas:basemap"]) return false;
   ensureSelectedCellLayers(map, selection);
