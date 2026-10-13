@@ -1,10 +1,12 @@
 // Information strip appended BELOW exported images (map, panel plots): a transparent SVG with dark
-// text, legible on white. Pure string builder (tested; rasterised in the browser for PNGs).
+// text, legible on white and on slides. Layout, top to bottom: separator (full width, padded from
+// the image), colour bars / legends / map keys, then the descriptive text. Sizes are CSS px (1 px =
+// 1/96 in); exports are rasterised at 300 dpi (EXPORT_PIXEL_RATIO). Pure string builder (tested).
 import { escapeHtml } from "../util/format";
 
 export type StripItem =
   | { kind: "heading"; text: string }
-  | { kind: "text"; text: string; muted?: boolean; small?: boolean }
+  | { kind: "text"; text: string; muted?: boolean }
   | { kind: "colorbar"; title: string; detail: string; colors: string[]; ticks: { pos: number; label: string }[] }
   | { kind: "swatches"; items: { color: string; label: string; shape: "box" | "line" | "arrow" | "dot"; dash?: string }[] }
   | { kind: "mapkeys"; bearing: number; northNote?: string; scale?: { px: number; label: string } | null; scaleNote?: string };
@@ -12,6 +14,14 @@ export type StripItem =
 /** the only colours of the strip apart from data colours (colour bars, swatches) */
 export const STRIP_COLORS = { text: "#1d2329", muted: "#47515b", rule: "#8d969f" };
 export const STRIP_FONT = "Helvetica, Arial, sans-serif";
+/** points -> CSS px */
+export const pt = (v: number) => (v * 96) / 72;
+/** font sizes (CSS px): body / legend / colour-bar text 14 pt, colour-bar titles 15 pt, titles 19 pt */
+export const STRIP_FS = { text: pt(14), barTitle: pt(15), title: pt(19) };
+/** fixed colour-bar size: 2.75 in x 0.22 in */
+export const COLORBAR = { width: 2.75 * 96, height: 0.22 * 96, gap: 0.45 * 96 };
+/** padding between the image and the separator, and around the strip content */
+export const STRIP_PAD = { top: 14, side: 16 };
 
 const f = (v: number) => (Math.round(v * 100) / 100).toString();
 let gradSeq = 0;
@@ -34,47 +44,55 @@ export function wrapText(text: string, width: number, fs: number): string[] {
   return out;
 }
 
-/** Build the strip: `width` in CSS px; the SVG is `width*scale` px wide (viewBox in CSS px). */
-export function stripSvg(items: StripItem[], width: number, opts: { scale?: number; rule?: boolean } = {}): { svg: string; height: number } {
-  const pad = 12, inner = width - 2 * pad;
+/** colour bars per row for a strip of `width` */
+export const colorbarsPerRow = (width: number) => Math.max(1, Math.floor((width - 2 * STRIP_PAD.side + COLORBAR.gap) / (COLORBAR.width + COLORBAR.gap)));
+
+/** Build the strip of `width` CSS px. `scale` sets the pixel size: width/height = viewBox x scale. */
+export function stripSvg(items: StripItem[], width: number, opts: { scale?: number } = {}): { svg: string; height: number } {
+  const pad = STRIP_PAD.side, inner = width - 2 * pad, FS = STRIP_FS;
   const p: string[] = [];
-  let y = pad;
-  const text = (x: number, yy: number, s: string, fs: number, o: { bold?: boolean; muted?: boolean; anchor?: string } = {}) =>
-    p.push(`<text x="${f(x)}" y="${f(yy)}" font-size="${fs}"${o.bold ? ' font-weight="700"' : ""}${o.anchor ? ` text-anchor="${o.anchor}"` : ""} fill="${o.muted ? STRIP_COLORS.muted : STRIP_COLORS.text}">${escapeHtml(s)}</text>`);
-  if (opts.rule !== false) p.push(`<line x1="${pad}" x2="${f(width - pad)}" y1="0.5" y2="0.5" stroke="${STRIP_COLORS.rule}" stroke-width="1"/>`);
+  const text = (x: number, yy: number, s: string, fs: number, o: { bold?: boolean; muted?: boolean; anchor?: string; cls?: string } = {}) =>
+    p.push(`<text${o.cls ? ` class="${o.cls}"` : ""} x="${f(x)}" y="${f(yy)}" font-size="${f(fs)}"${o.bold ? ' font-weight="700"' : ""}${o.anchor ? ` text-anchor="${o.anchor}"` : ""} fill="${o.muted ? STRIP_COLORS.muted : STRIP_COLORS.text}">${escapeHtml(s)}</text>`);
+  // separator: full width, padded from the image
+  p.push(`<line class="separator" x1="0" x2="${f(width)}" y1="${STRIP_PAD.top}" y2="${STRIP_PAD.top}" stroke="${STRIP_COLORS.rule}" stroke-width="1.5"/>`);
+  let y = STRIP_PAD.top + 10;
   let k = 0;
   while (k < items.length) {
     const it = items[k];
     if (it.kind === "heading" || it.kind === "text") {
-      const fs = it.kind === "heading" ? 13 : it.small ? 10 : 11.5;
-      for (const line of wrapText(it.text, inner, fs)) { y += fs * 1.3; text(pad, y, line, fs, { bold: it.kind === "heading", muted: it.kind === "text" && it.muted }); }
-      y += 3; k++;
+      const fs = it.kind === "heading" ? FS.title : FS.text;
+      for (const line of wrapText(it.text, inner, fs)) { y += fs * 1.28; text(pad, y, line, fs, { bold: it.kind === "heading", muted: it.kind === "text" && it.muted, cls: it.kind === "heading" ? "title" : "desc" }); }
+      y += 6; k++;
       continue;
     }
     if (it.kind === "colorbar") {
-      // consecutive colour bars share rows of columns
+      // consecutive colour bars: a grid of fixed-size bars, as many per row as fit, then wrap
       const bars: Extract<StripItem, { kind: "colorbar" }>[] = [];
       while (k < items.length && items[k].kind === "colorbar") bars.push(items[k++] as Extract<StripItem, { kind: "colorbar" }>);
-      const cols = Math.max(1, Math.min(bars.length, Math.floor(inner / 230)));
-      const cw = inner / cols;
+      const cols = colorbarsPerRow(width), bw = COLORBAR.width, bh = COLORBAR.height;
       for (let r = 0; r < bars.length; r += cols) {
         let rowH = 0;
-        bars.slice(r, r + cols).forEach((b, c) => {
-          const x0 = pad + c * cw, bw = cw - 18;
-          let yy = y + 12;
-          for (const line of wrapText(b.title, bw, 11)) { text(x0, yy, line, 11, { bold: true }); yy += 13; }
+        const row = bars.slice(r, r + cols);
+        // bars of a row share one baseline: room for the longest (wrapped) title
+        const titleLines = Math.max(...row.map((b) => wrapText(b.title, bw, FS.barTitle).length));
+        row.forEach((b, c) => {
+          const x0 = pad + c * (bw + COLORBAR.gap);
+          let yy = y + FS.barTitle * 1.1;
+          for (const line of wrapText(b.title, bw, FS.barTitle)) { text(x0, yy, line, FS.barTitle, { bold: true, cls: "bar-title" }); yy += FS.barTitle * 1.22; }
+          yy = y + FS.barTitle * 1.1 + titleLines * FS.barTitle * 1.22 - FS.barTitle * 0.6;
           const gid = `strip-grad-${++gradSeq}`;
           const stops = b.colors.map((col, i) => `<stop offset="${f((100 * i) / Math.max(1, b.colors.length - 1))}%" stop-color="${col}"/>`).join("");
           p.push(`<defs><linearGradient id="${gid}" x1="0" x2="1" y1="0" y2="0">${stops}</linearGradient></defs>`);
-          p.push(`<rect class="colorbar" x="${f(x0)}" y="${f(yy - 6)}" width="${f(bw)}" height="11" fill="url(#${gid})" stroke="${STRIP_COLORS.rule}" stroke-width="0.6"/>`);
-          yy += 5;
-          // tick marks for all ticks; labels only where they do not overlap (ends first)
-          const lw = (l: string) => l.length * charW(9.5) + 4;
+          p.push(`<rect class="colorbar" x="${f(x0)}" y="${f(yy)}" width="${f(bw)}" height="${f(bh)}" fill="url(#${gid})" stroke="${STRIP_COLORS.rule}" stroke-width="1"/>`);
+          yy += bh;
+          // tick marks for all ticks; labels where they do not overlap (the ends first)
+          const lw = (l: string) => l.length * charW(FS.text) + 8;
           const span = (t: { pos: number; label: string }) => {
             const tx = x0 + t.pos * bw, w = lw(t.label);
             return t.pos < 0.02 ? [tx, tx + w] : t.pos > 0.98 ? [tx - w, tx] : [tx - w / 2, tx + w / 2];
           };
-          const order = b.ticks.map((t, i) => i).sort((i, j) => (i === 0 || i === b.ticks.length - 1 ? -1 : 0) - (j === 0 || j === b.ticks.length - 1 ? -1 : 0));
+          const isEnd = (i: number) => i === 0 || i === b.ticks.length - 1;
+          const order = b.ticks.map((_, i) => i).sort((i, j) => Number(isEnd(j)) - Number(isEnd(i)));
           const placed: number[][] = [];
           const show = new Set<number>();
           for (const i of order) {
@@ -83,53 +101,56 @@ export function stripSvg(items: StripItem[], width: number, opts: { scale?: numb
           }
           b.ticks.forEach((t, i) => {
             const tx = x0 + t.pos * bw;
-            p.push(`<line x1="${f(tx)}" x2="${f(tx)}" y1="${f(yy)}" y2="${f(yy + 3)}" stroke="${STRIP_COLORS.text}" stroke-width="0.8"/>`);
-            if (show.has(i)) text(tx, yy + 13, t.label, 9.5, { anchor: t.pos < 0.02 ? "start" : t.pos > 0.98 ? "end" : "middle" });
+            p.push(`<line class="tick" x1="${f(tx)}" x2="${f(tx)}" y1="${f(yy)}" y2="${f(yy + 6)}" stroke="${STRIP_COLORS.text}" stroke-width="1.5"/>`);
+            if (show.has(i)) text(tx, yy + 6 + FS.text, t.label, FS.text, { anchor: t.pos < 0.02 ? "start" : t.pos > 0.98 ? "end" : "middle", cls: "tick-label" });
           });
-          yy += 15;
-          for (const line of wrapText(b.detail, bw, 9.5)) { yy += 12; text(x0, yy, line, 9.5, { muted: true }); }
-          rowH = Math.max(rowH, yy - y + 4);
+          yy += 6 + FS.text + 4;
+          if (b.detail) for (const line of wrapText(b.detail, bw, FS.text)) { yy += FS.text * 1.25; text(x0, yy, line, FS.text, { muted: true, cls: "bar-detail" }); }
+          rowH = Math.max(rowH, yy - y + 10);
         });
-        y += rowH + 4;
+        y += rowH + 6;
       }
       continue;
     }
     if (it.kind === "swatches") {
-      let x = pad, yy = y + 14;
+      const fs = FS.text, sw = 30, sh = 18;
+      let x = pad, yy = y + fs * 1.25;
       for (const s of it.items) {
-        const lw = 22 + it.items.length * 0 + s.label.length * charW(10.5) + 14;
-        if (x + lw > width - pad && x > pad) { x = pad; yy += 16; }
-        if (s.shape === "box") p.push(`<rect x="${f(x)}" y="${f(yy - 9)}" width="16" height="10" fill="${s.color}" stroke="${STRIP_COLORS.rule}" stroke-width="0.6"/>`);
-        else if (s.shape === "dot") p.push(`<circle cx="${f(x + 8)}" cy="${f(yy - 4)}" r="3.5" fill="${s.color}"/>`);
+        const lw = sw + 10 + s.label.length * charW(fs) + 28;
+        if (x + lw > width - pad && x > pad) { x = pad; yy += fs * 1.6; }
+        const my = yy - fs * 0.35;
+        if (s.shape === "box") p.push(`<rect class="swatch" x="${f(x)}" y="${f(my - sh / 2)}" width="${sw}" height="${sh}" fill="${s.color}" stroke="${STRIP_COLORS.rule}" stroke-width="1"/>`);
+        else if (s.shape === "dot") p.push(`<circle class="swatch" cx="${f(x + sw / 2)}" cy="${f(my)}" r="6" fill="${s.color}"/>`);
         else {
           // a muted underlay keeps light line colours (e.g. white streamlines) visible on white
-          p.push(`<line x1="${f(x - 1)}" x2="${f(x + 17)}" y1="${f(yy - 4)}" y2="${f(yy - 4)}" stroke="${STRIP_COLORS.rule}" stroke-width="4" stroke-opacity="0.55"/>`);
-          p.push(`<line x1="${f(x)}" x2="${f(x + 16)}" y1="${f(yy - 4)}" y2="${f(yy - 4)}" stroke="${s.color}" stroke-width="2"${s.dash ? ` stroke-dasharray="${s.dash}"` : ""}/>`);
-          if (s.shape === "arrow") p.push(`<path d="M${f(x + 17)},${f(yy - 4)} l-5,-3 v6 z" fill="${s.color}"/>`);
+          p.push(`<line class="swatch" x1="${f(x - 1)}" x2="${f(x + sw + 1)}" y1="${f(my)}" y2="${f(my)}" stroke="${STRIP_COLORS.rule}" stroke-width="7" stroke-opacity="0.5"/>`);
+          p.push(`<line class="swatch" x1="${f(x)}" x2="${f(x + sw)}" y1="${f(my)}" y2="${f(my)}" stroke="${s.color}" stroke-width="3.5"${s.dash ? ` stroke-dasharray="${s.dash.split(" ").map((d) => Number(d) * 1.8).join(" ")}"` : ""}/>`);
+          if (s.shape === "arrow") p.push(`<path class="swatch" d="M${f(x + sw + 2)},${f(my)} l-9,-5.5 v11 z" fill="${s.color}"/>`);
         }
-        text(x + 21, yy, s.label, 10.5);
+        text(x + sw + 10, yy, s.label, fs, { cls: "legend-label" });
         x += lw;
       }
-      y = yy + 6;
+      y = yy + fs * 0.7;
       k++;
       continue;
     }
     // map keys: north arrow + scale bar
-    const yy = y + 30;
-    const cx = pad + 12;
-    p.push(`<g class="north" transform="translate(${f(cx)} ${f(yy - 10)}) rotate(${f(-it.bearing)})"><path d="M0,-14 L6,6 L0,2 L-6,6 Z" fill="${STRIP_COLORS.text}"/></g>`);
-    text(cx, yy + 12, "N", 10, { bold: true, anchor: "middle" });
-    let x = pad + 40;
-    if (it.northNote) { text(x, yy - 14, it.northNote, 10, { muted: true }); }
+    const fs = FS.text;
+    const yy = y + 48;
+    const cx = pad + 16;
+    p.push(`<g class="north" transform="translate(${f(cx)} ${f(yy - 14)}) rotate(${f(-it.bearing)})"><path d="M0,-24 L10,10 L0,4 L-10,10 Z" fill="${STRIP_COLORS.text}"/></g>`);
+    text(cx, yy + fs + 2, "N", fs, { bold: true, anchor: "middle", cls: "legend-label" });
+    const x = pad + 60;
+    if (it.northNote) text(x, yy - 26, it.northNote, fs, { muted: true, cls: "legend-label" });
     if (it.scale) {
-      const sx = x, w = it.scale.px;
-      p.push(`<path class="scalebar" d="M${f(sx)},${f(yy - 6)} v6 h${f(w)} v-6" fill="none" stroke="${STRIP_COLORS.text}" stroke-width="1.4"/>`);
-      text(sx + w + 6, yy, `${it.scale.label}${it.scaleNote ? ` (${it.scaleNote})` : ""}`, 10.5);
-    } else if (it.scaleNote) text(x, yy, it.scaleNote, 10.5, { muted: true });
-    y = yy + 18;
+      const w = it.scale.px;
+      p.push(`<path class="scalebar" d="M${f(x)},${f(yy - 10)} v10 h${f(w)} v-10" fill="none" stroke="${STRIP_COLORS.text}" stroke-width="2.5"/>`);
+      text(x + w + 10, yy, `${it.scale.label}${it.scaleNote ? ` (${it.scaleNote})` : ""}`, fs, { cls: "legend-label" });
+    } else if (it.scaleNote) text(x, yy, it.scaleNote, fs, { muted: true, cls: "legend-label" });
+    y = yy + fs + 12;
     k++;
   }
-  const height = Math.ceil(y + pad - 4);
+  const height = Math.ceil(y + pad);
   const sc = opts.scale ?? 1;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${f(width * sc)}" height="${f(height * sc)}" viewBox="0 0 ${f(width)} ${height}" font-family="${STRIP_FONT}">${p.join("")}</svg>`;
   return { svg, height };

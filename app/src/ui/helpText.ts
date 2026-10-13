@@ -31,7 +31,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "images", title: "Exporting images",
-    body: "Export map image (camera button, top right) saves the current view as a PNG at 1× or 2×, with or without the basemap, with an information strip below the map: colour bars, scale, view, wind dataset and data sources. Each plot in the cell panel has an Export menu for PNG or SVG in a light theme.",
+    body: "Export map image (camera button, top right) saves the current view as a 300 dpi PNG at its on-screen size, with or without the basemap. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources, so the text is easy to crop. Each plot in the cell panel has an Export menu for a 300 dpi PNG or an SVG in a light theme.",
   },
   {
     id: "share", title: "Sharing the view",
@@ -60,8 +60,8 @@ export const TOUR_STEPS: TourStep[] = [
     body: "This slider sets the friction velocity above which the wind moves sand. Every threshold-dependent layer and the cell panel update as you move it.",
   },
   {
-    id: "layers", targets: ["#layer-panel-body .layer-group", "#layer-panel .panel-toggle"], title: "Layers",
-    body: "Tick layers to add them to the map. ⓘ explains a layer; Display changes its colours and limits and, for directions, shows arrows or streamlines. On small screens, open the list with the Layers button.",
+    id: "layers", targets: ['#layer-panel .layer-item[data-layer="rdpa"]', "#layer-panel-body .layer-group", "#layer-panel .panel-toggle"], title: "Layers and their display",
+    body: "Tick layers to add them to the map; ⓘ explains a layer. Display, opened here for the resultant drift direction (RDD), changes a layer's colours and colour limits and, for direction fields, draws a colour map, arrows or streamlines in the line colour and spacing you choose.",
   },
   {
     id: "active", targets: ["#layer-panel-body .order", "#layer-panel .panel-toggle"], title: "Active layers",
@@ -69,7 +69,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "cell", targets: ["#cell-panel:not([hidden])", "#map"], title: "Click a land cell",
-    body: "Clicking a land cell opens the cell panel with its wind rose, sand-flux rose, dune-orientation modes and a table of all parameters, plus downloads and citation.",
+    body: "Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters, with downloads and citation. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one.",
   },
   {
     id: "dataset", targets: ["#dataset-select", "#layer-panel .panel-toggle"], title: "Wind dataset",
@@ -81,11 +81,14 @@ export const TOUR_STEPS: TourStep[] = [
   },
 ];
 
+/** shown under a step whose demonstration could not be prepared */
+export const TOUR_FALLBACK = { cell: "The example cell could not be loaded just now (are you offline?). Click any land cell on the map to open its panel." };
+
 export const TOUR_LABELS = { back: "Back", next: "Next", done: "Done", skip: "Skip tour", step: (i: number, n: number) => `Step ${i} of ${n}` };
 
 export const SHARE_TEXT = { button: "Share / copy link", title: "Share this view", copy: "Copy link", copied: "Link copied", note: "The link restores the position, zoom, wind dataset, threshold, basemap, active layers and the selected cell." };
 export const EXPORT_TEXT = {
-  button: "Export map image", title: "Export map image", scale: "Size", basemap: "Include basemap", run: "Export PNG", working: "Rendering…",
-  note: "PNG of the current view without the panels, with colour bars, scale, view and data sources below the map.",
-  plotMenu: "Export", png1: "PNG", png2: "PNG 2×", svg: "SVG",
+  button: "Export map image", title: "Export map image", basemap: "Include basemap", run: "Export PNG (300 dpi)", working: "Rendering…",
+  note: "300 dpi PNG of the current view at its on-screen size, without the panels. Colour bars, legends, scale and data sources are added below the map.",
+  plotMenu: "Export", png: "PNG (300 dpi)", svg: "SVG",
 };

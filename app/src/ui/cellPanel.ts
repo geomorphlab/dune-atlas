@@ -10,6 +10,7 @@ import { modesPlotSvg } from "../cell/modesplot";
 import { DARK_THEME, LIGHT_THEME, seriesColor, type PlotTheme } from "../cell/plottheme";
 import { composePlotSvg, katexPlain, plotFilename, svgToPngBlob, type PlotExportSpec, type PlotKey } from "../export/plotExport";
 import { downloadBlob } from "../export/mapExport";
+import { EXPORT_DPI, EXPORT_PIXEL_RATIO } from "../export/png";
 import { EXPORT_TEXT } from "./helpText";
 import { linePlotSvg } from "../cell/lineplot";
 import { AUX_META, aridityClass } from "../cell/auxinfo";
@@ -477,14 +478,20 @@ export class CellPanel {
     }
   }
 
+  /** scroll position of the panel content (tour: restored exactly after the example cell) */
+  get scrollTop(): number { return this.#scroll?.scrollTop ?? 0; }
+  set scrollTop(v: number) { this.#restoreScroll(v); }
+  /** the cell shown (null: closed / loading the first cell) */
+  get shownCell(): { iy: number; ix: number } | null { return this.#cell ? { iy: this.#cell.iy, ix: this.#cell.ix } : null; }
+
   /** export spec of a plot as last rendered (tests, exports) */
   plotSpec(key: PlotKey): PlotExportSpec | undefined { return this.#plots[key]; }
 
   #exportMenu(key: PlotKey): HTMLElement {
     const items = h("div", { class: "export-items" });
-    for (const [label, fmt, scale] of [[EXPORT_TEXT.png1, "png", 1], [EXPORT_TEXT.png2, "png", 2], [EXPORT_TEXT.svg, "svg", 1]] as const) {
-      const b = h("button", { type: "button", "data-format": `${fmt}${scale}` }, label);
-      b.addEventListener("click", () => { void this.exportPlot(key, fmt, scale); (b.closest("details") as HTMLDetailsElement | null)?.removeAttribute("open"); });
+    for (const [label, fmt] of [[EXPORT_TEXT.png, "png"], [EXPORT_TEXT.svg, "svg"]] as const) {
+      const b = h("button", { type: "button", "data-format": fmt }, label);
+      b.addEventListener("click", () => { void this.exportPlot(key, fmt); (b.closest("details") as HTMLDetailsElement | null)?.removeAttribute("open"); });
       items.append(b);
     }
     return h("details", { class: "export-menu", "data-plot": key }, h("summary", { title: "Export this plot (light theme, with data source and link)" }, EXPORT_TEXT.plotMenu), items);
@@ -500,11 +507,13 @@ export class CellPanel {
     return { ...out, name: (ext) => plotFilename(key, ds.id, cell, spec.thresholdDependent ? v.ut : null, ext) };
   }
 
-  async exportPlot(key: PlotKey, fmt: "png" | "svg", scale: 1 | 2) {
-    const x = this.plotExport(key, fmt === "png" ? scale : 1);
+  /** SVG (vector, same layout) or PNG at 300 dpi of the on-screen size */
+  async exportPlot(key: PlotKey, fmt: "png" | "svg") {
+    const r = fmt === "png" ? EXPORT_PIXEL_RATIO : 1;
+    const x = this.plotExport(key, r);
     if (!x) return;
     if (fmt === "svg") triggerDownload(x.name("svg"), x.svg, "image/svg+xml");
-    else downloadBlob(x.name("png"), await svgToPngBlob(x.svg, x.width * scale, x.height * scale));
+    else downloadBlob(x.name("png"), await svgToPngBlob(x.svg, x.width * r, x.height * r, EXPORT_DPI));
   }
 
   #table(cell: CellData, v: CellView): string {

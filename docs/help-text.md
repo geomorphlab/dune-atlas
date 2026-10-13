@@ -32,7 +32,7 @@ Download & cite in the cell panel saves the wind histogram and all parameters of
 
 ### Exporting images
 
-Export map image (camera button, top right) saves the current view as a PNG at 1× or 2×, with or without the basemap, with an information strip below the map: colour bars, scale, view, wind dataset and data sources. Each plot in the cell panel has an Export menu for PNG or SVG in a light theme.
+Export map image (camera button, top right) saves the current view as a 300 dpi PNG at its on-screen size, with or without the basemap. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources, so the text is easy to crop. Each plot in the cell panel has an Export menu for a 300 dpi PNG or an SVG in a light theme.
 
 ### Sharing the view
 
@@ -60,11 +60,11 @@ Highlights: `#layer-panel .pinned`
 
 This slider sets the friction velocity above which the wind moves sand. Every threshold-dependent layer and the cell panel update as you move it.
 
-### 4. Layers
+### 4. Layers and their display
 
-Highlights: `#layer-panel-body .layer-group` or `#layer-panel .panel-toggle`
+Highlights: `#layer-panel .layer-item[data-layer="rdpa"]` or `#layer-panel-body .layer-group` or `#layer-panel .panel-toggle`
 
-Tick layers to add them to the map. ⓘ explains a layer; Display changes its colours and limits and, for directions, shows arrows or streamlines. On small screens, open the list with the Layers button.
+Tick layers to add them to the map; ⓘ explains a layer. Display, opened here for the resultant drift direction (RDD), changes a layer's colours and colour limits and, for direction fields, draws a colour map, arrows or streamlines in the line colour and spacing you choose.
 
 ### 5. Active layers
 
@@ -76,7 +76,7 @@ The layers on the map, top first. Drag a row or use the arrows to change which l
 
 Highlights: `#cell-panel:not([hidden])` or `#map`
 
-Clicking a land cell opens the cell panel with its wind rose, sand-flux rose, dune-orientation modes and a table of all parameters, plus downloads and citation.
+Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters, with downloads and citation. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one.
 
 ### 7. Wind dataset
 
@@ -90,6 +90,8 @@ Highlights: `.atlas-tools .share-btn` or `.atlas-tools`
 
 Copy a short link to this view, or export the map as an image with colour bars, scale and data sources. Plots in the cell panel have their own Export menus. This is the end of the tour.
 
+Fallback (example cell not loaded): The example cell could not be loaded just now (are you offline?). Click any land cell on the map to open its panel.
+
 ## Share
 
 - Button: Share / copy link
@@ -99,6 +101,6 @@ Copy a short link to this view, or export the map as an image with colour bars, 
 ## Export
 
 - Button: Export map image
-- Popover: Export map image; Size 1× / 2×; Include basemap; Export PNG; while rendering "Rendering…"
-- Note: PNG of the current view without the panels, with colour bars, scale, view and data sources below the map.
-- Cell-panel plots: menu "Export" with PNG, PNG 2×, SVG
+- Popover: Export map image; Include basemap; Export PNG (300 dpi); while rendering "Rendering…"
+- Note: 300 dpi PNG of the current view at its on-screen size, without the panels. Colour bars, legends, scale and data sources are added below the map.
+- Cell-panel plots: menu "Export" with PNG (300 dpi), SVG

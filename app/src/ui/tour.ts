@@ -28,6 +28,11 @@ export function visibleTarget(step: TourStep, doc: Document = document): HTMLEle
   return null;
 }
 
+/** Per-step side effects: `enter` prepares the UI (may be async, e.g. loading an example cell;
+ *  a returned string is shown under the step text, e.g. a fallback), `leave` restores the exact
+ *  previous state. `leave` runs whenever the step is left: Next, Back, Skip, Esc, click outside. */
+export interface TourHooks { enter?: () => void | string | Promise<void | string>; leave?: () => void | Promise<void> }
+
 export class Tour {
   #steps: TourStep[];
   #i = 0;
@@ -36,11 +41,24 @@ export class Tour {
   #spot!: HTMLElement;
   #prevFocus: Element | null = null;
   #onEnd?: (completed: boolean) => void;
+  #hooks: Record<string, TourHooks>;
+  /** step whose `enter` ran and whose `leave` is still due */
+  #entered: string | null = null;
+  #seq = 0;
   #reposition = () => this.#place();
 
-  constructor(steps: TourStep[] = TOUR_STEPS, opts: { onEnd?: (completed: boolean) => void } = {}) {
+  constructor(steps: TourStep[] = TOUR_STEPS, opts: { onEnd?: (completed: boolean) => void; hooks?: Record<string, TourHooks> } = {}) {
     this.#steps = steps;
     this.#onEnd = opts.onEnd;
+    this.#hooks = opts.hooks ?? {};
+  }
+  /** resolves when the current step's `enter` (and a previous `leave`) has finished */
+  ready: Promise<void> = Promise.resolve();
+
+  #leave(): Promise<void> {
+    const id = this.#entered;
+    this.#entered = null;
+    return Promise.resolve(id ? this.#hooks[id]?.leave?.() : undefined).catch((e) => console.warn("[dune-atlas] tour: restore failed", e));
   }
   get active() { return !!this.#root; }
   get index() { return this.#i; }
@@ -77,7 +95,9 @@ export class Tour {
     if (!this.#root) return;
     this.#root.remove();
     this.#root = null;
+    this.#seq++;
     globalThis.removeEventListener?.("resize", this.#reposition);
+    this.ready = this.ready.then(() => this.#leave());
     markSeen();
     if (this.#prevFocus instanceof HTMLElement) this.#prevFocus.focus();
     if (!silent) this.#onEnd?.(completed);
@@ -90,6 +110,20 @@ export class Tour {
     q(".tour-count").textContent = TOUR_LABELS.step(i + 1, n);
     q("#tour-title").innerHTML = mathHtml(s.title);
     q("#tour-body").innerHTML = `<p>${mathHtml(s.body)}</p>`;
+    // leave the previous step (restore), then enter this one; re-anchor once it is ready
+    const my = ++this.#seq;
+    const hook = this.#hooks[s.id];
+    this.#pop.classList.toggle("tour-loading", !!hook?.enter);
+    this.ready = this.ready.then(() => this.#leave()).then(async () => {
+      if (my !== this.#seq || !hook?.enter) return;
+      this.#entered = s.id;
+      let note: void | string;
+      try { note = await hook.enter(); } catch (e) { note = undefined; console.warn("[dune-atlas] tour step", s.id, e); }
+      if (my !== this.#seq || !this.#root) return;
+      if (typeof note === "string" && note) q("#tour-body").insertAdjacentHTML("beforeend", `<p class="tour-note">${mathHtml(note)}</p>`);
+      this.#pop.classList.remove("tour-loading");
+      this.#place();
+    });
     (q(".tour-back") as HTMLButtonElement).disabled = i === 0;
     q(".tour-next").textContent = i === n - 1 ? TOUR_LABELS.done : TOUR_LABELS.next;
     this.#pop.dataset.step = s.id;

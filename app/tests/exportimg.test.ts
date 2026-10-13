@@ -36,9 +36,9 @@ describe("map export: information strip", () => {
     const dpm = reg.layers.find((l) => l.id === "dpm")!, ar = reg.layers.find((l) => l.id === "aridity")!;
     expect(bars.map((b) => b.title)).toEqual([dpm.title.replace(/\$/g, "").trim() === dpm.title ? dpm.title : bars[0].title, bars[1].title]);
     expect(bars).toHaveLength(2);
-    expect(bars[0].detail).toMatch(/log scale · colormap magma, limits .* · at u\*,th = 0\.15 m\/s/);
+    expect(bars[0].detail).toBe(`${dpm.units!.replace(/\$/g, "")} · at u*,th = 0.15 m/s`.replace("m^2", "m²"));
     expect(bars[1].title).toBe(ar.title);
-    expect(bars[1].detail).toMatch(/threshold-independent/);
+    expect(bars[1].detail).not.toMatch(/u\*,th/); // threshold-independent: no threshold text
     expect(bars[0].colors.length).toBeGreaterThan(8);
     expect(bars[0].ticks.every((t) => t.pos >= 0 && t.pos <= 1)).toBe(true);
     for (const b of bars) expect(b.title + b.detail).not.toMatch(/[$\\]/); // no raw LaTeX
@@ -46,7 +46,7 @@ describe("map export: information strip", () => {
     expect(t).toContain("Globe (MapLibre globe) · centre 24.50° S, 15.25° E · zoom 6.2 · wind dataset ERA5-Land 0.1°, 1950–2024 · threshold friction velocity u*,th = 0.15 m/s");
     const sw = items.find((i) => i.kind === "swatches") as Extract<(typeof items)[number], { kind: "swatches" }>;
     expect(sw.items.map((s) => [s.color, s.shape])).toEqual([["#c08040", "box"], ["#112233", "line"]]);
-    expect(sw.items[1].label).toMatch(/streamlines, direction of transport \(toward\) at u\*,th = 0\.15 m\/s/);
+    expect(sw.items[1].label).toMatch(/\(streamlines, direction of transport\) at u\*,th = 0\.15 m\/s/);
     const keys = items.find((i) => i.kind === "mapkeys") as Extract<(typeof items)[number], { kind: "mapkeys" }>;
     expect(keys.northNote).toBe("north up at view centre");
     expect(keys.scale!.px).toBeGreaterThan(40); expect(keys.scale!.px).toBeLessThanOrEqual(120);
@@ -126,10 +126,10 @@ describe("cell-panel plot exports (light theme, same settings as on screen)", ()
     await p.show({ query: async () => cell, attrs: {}, fieldVars: FIELD_VARS } as unknown as CellStore, cell.iy, cell.ix);
     return { p, root };
   };
-  it("every plot section has an Export menu (PNG, PNG 2×, SVG)", async () => {
+  it("every plot section has an Export menu (PNG at 300 dpi, SVG): one resolution", async () => {
     const { root } = await open();
     expect([...root.querySelectorAll(".export-menu")].map((m) => m.getAttribute("data-plot"))).toEqual(PLOT_KEYS);
-    for (const m of root.querySelectorAll(".export-menu")) expect([...m.querySelectorAll("button")].map((b) => b.textContent)).toEqual(["PNG", "PNG 2×", "SVG"]);
+    for (const m of root.querySelectorAll(".export-menu")) expect([...m.querySelectorAll("button")].map((b) => b.textContent)).toEqual(["PNG (300 dpi)", "SVG"]);
   });
   it("SVG: light theme (no dark-theme colours), transparent, strip with title, cell, dataset, threshold, source, link; file names", async () => {
     const { p } = await open();
@@ -139,7 +139,7 @@ describe("cell-panel plot exports (light theme, same settings as on screen)", ()
       for (const c of DARK_ONLY) expect(x.svg.toLowerCase(), `${k} has ${c}`).not.toContain(`"${c}"`);
       expect(x.svg).not.toContain("currentColor");
       expect(x.svg).toContain(LIGHT_THEME.text);
-      expect(svgText(x.svg)).toContain("Cell centre 24.50° S, 15.20° E (grid row 1145, column 1952) · ERA5-Land 0.1°, 1950–2024");
+      expect(svgText(x.svg)).toContain("Cell centre 24.50° S, 15.20° E · ERA5-Land 0.1°, 1950–2024");
       expect(svgText(x.svg)).toContain("doi:10.1038/s41467-026-75466-y");
       expect(svgText(x.svg)).toContain("Contains modified Copernicus Climate Change Service information (ERA5-Land, 1950–2024)");
       expect(svgText(x.svg)).toContain("View: https://map.geomorphlab.org/#v=AQEBAg");

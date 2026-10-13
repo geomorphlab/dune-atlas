@@ -156,7 +156,8 @@ function wedge(cx: number, cy: number, r0: number, r1: number, a0: number, a1: n
 /** Render a (stacked) rose as an SVG string. Bearings are compass, N up, clockwise. */
 export function roseSvg(o: RoseSvgOptions): string {
   const size = o.size ?? 260;
-  const pad = 22;
+  const T0 = o.theme ?? DARK_THEME;
+  const pad = Math.max(22, 2 * T0.fs.compass);
   const R = size / 2 - pad;
   const cx = size / 2, cy = size / 2;
   const n = o.values.length;
@@ -168,10 +169,10 @@ export function roseSvg(o: RoseSvgOptions): string {
   const scale = (v: number) => (R * v) / top;
   const parts: string[] = [];
   const id = o.id ?? "rose";
-  const T = o.theme ?? DARK_THEME;
+  const T = T0;
   parts.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-labelledby="${id}-t ${id}-d" class="rose">`);
   parts.push(`<title id="${id}-t">${escapeHtml(o.title)}</title><desc id="${id}-d">${escapeHtml(o.desc)}</desc>`);
-  parts.push(`<g class="rose-grid" fill="none" stroke="${T.grid}" stroke-width="0.6">`);
+  parts.push(`<g class="rose-grid" fill="none" stroke="${T.grid}" stroke-width="${f2(0.6 * T.lw)}">`);
   for (const t of ticks) parts.push(`<circle cx="${cx}" cy="${cy}" r="${f2(scale(t))}"/>`);
   for (let b = 0; b < 360; b += 45) {
     const [x, y] = bearingToXY(b, R);
@@ -209,20 +210,19 @@ export function roseSvg(o: RoseSvgOptions): string {
     }
     parts.push(`</g>`);
   }
-  parts.push(`<g class="rose-labels" font-size="11" fill="${T.text}" text-anchor="middle">`);
+  parts.push(`<g class="rose-labels" font-size="${T.fs.compass}" fill="${T.text}" text-anchor="middle">`);
   for (const [lab, b] of [["N", 0], ["E", 90], ["S", 180], ["W", 270]] as const) {
-    const [x, y] = bearingToXY(b, R + 11);
-    parts.push(`<text x="${f2(cx + x)}" y="${f2(cy + y + 4)}">${lab}</text>`);
+    const [x, y] = bearingToXY(b, R + 0.95 * T.fs.compass);
+    parts.push(`<text x="${f2(cx + x)}" y="${f2(cy + y + 0.36 * T.fs.compass)}">${lab}</text>`);
   }
   for (const t of ticks) {
     const [x, y] = bearingToXY(157.5, scale(t));
-    // halo drawn as a separate text element (paint-order is not supported everywhere)
+    // plain text (no halo), just outside the ring towards SSE
     const lab = escapeHtml(o.ringFormat(t));
-    parts.push(`<text class="ring-halo" font-size="9" x="${f2(cx + x + 2)}" y="${f2(cy + y)}" text-anchor="start" fill="none" stroke="${T.halo}" stroke-width="3" stroke-linejoin="round" aria-hidden="true">${lab}</text>`);
-    parts.push(`<text class="ring" font-size="9" x="${f2(cx + x + 2)}" y="${f2(cy + y)}" text-anchor="start" fill="${T.ring}">${lab}</text>`);
+    parts.push(`<text class="ring" font-size="${T.fs.ring}" x="${f2(cx + x + 0.25 * T.fs.ring)}" y="${f2(cy + y + 0.35 * T.fs.ring)}" text-anchor="start" fill="${T.ring}">${lab}</text>`);
   }
-  if (o.axisLabel) parts.push(`<text class="axis-label" font-size="10" x="${size - 4}" y="${size - 5}" text-anchor="end" fill="${T.label}">${escapeHtml(o.axisLabel)}</text>`);
-  if (o.centreText) parts.push(`<text x="${cx}" y="${cy + 4}" font-size="10">${escapeHtml(o.centreText)}</text>`);
+  if (o.axisLabel) parts.push(`<text class="axis-label" font-size="${T.fs.axis}" x="${size - 4}" y="${size - 5}" text-anchor="end" fill="${T.label}">${escapeHtml(o.axisLabel)}</text>`);
+  if (o.centreText) parts.push(`<text x="${cx}" y="${cy + 0.35 * T.fs.axis}" font-size="${T.fs.axis}">${escapeHtml(o.centreText)}</text>`);
   parts.push(`</g></svg>`);
   return parts.join("");
 }

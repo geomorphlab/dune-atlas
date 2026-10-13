@@ -129,24 +129,41 @@ and fixture layouts and fails if an upgrade changes them.
   bottom sheet) with Help and tour (?), Share / copy link and Export map image; each opens a small
   dialog (Esc / × / click outside close it). All help, tour, share and export text is in
   `ui/helpText.ts`; `docs/help-text.md` is generated from it (`npm run help-doc`, checked by a test)
-  and the public-text test covers it. The tour (8 steps, vanilla) runs once on the first visit
+  and the public-text test covers it. The tour (8 steps, no tour library) runs once on the first visit
   (localStorage `duneAtlas.tourSeen`; never in embed mode unless `?tour=1`); step 1 highlights the
   help button. Steps highlight the first visible of their targets (else a centred popover);
-  Back / Next / Skip, Esc and click outside skip, arrows, focus trap, aria-live.
+  Back / Next / Skip, Esc and click outside skip, arrows, focus trap, aria-live. Two steps
+  demonstrate the UI through enter / leave hooks (`ui/tourHooks.ts`, run in sequence on a promise
+  chain so fast clicking cannot interleave them): step 4 (Layers) opens the drift-potential group
+  and the Display section of RDD (`rdpa`) and spotlights it; step 6 (Click a land cell) selects the
+  example Namib cell (15.2° E, 24.5° S, the containing cell of the current dataset) without moving
+  the map, waits for the panel to render, outlines the panel's own u*,th slider and resets the
+  mobile sheet to its default height (fallback text if the cell cannot be loaded). Leaving either
+  step by any route restores the exact previous state (group / Display open, layer-list scroll and
+  collapsed state, previous selection or none, its panel scroll, sheet height); no layer is added.
 * **Short share links** `#v=<base64url>` (format v1, binary, varints): camera, projection, dataset,
   basemap, u*,th index, selected cell, layer panel open, and the visible layers in drawing order with
   opacity and display config (colormap, reverse, limits to 6 significant digits, log, render mode,
   line colour, spacing, fill, invert). Ids are indices into append-only tables (`SHARE_IDS`; unknown
   ids inline), so links survive registry growth. Typical links: 58–77 characters with the site
   address. `?query` permalinks are still parsed and still written to the address bar.
-* **Image exports**: the map is captured from the live canvas after `idle` + overlay adds (pixel
-  ratio set to the export scale, basemap layers hidden for a transparent background, selected-cell
-  outline always hidden), then composed with the information strip (`export/strip.ts`, transparent
-  SVG with dark text: colour bars of the active raster layers with units / scale / colormap / limits
-  / u*,th, keys for vectors and streamlines, north arrow, scale bar at the view centre (omitted below
-  zoom 2.5), projection, view, wind dataset, sources with the Copernicus notice, share link, date).
-  Panel plots are re-rendered from the on-screen options in `LIGHT_THEME` (`cell/plottheme.ts`;
-  light-on-dark series colours mapped) with a strip, as SVG or PNG (1x / 2x).
+* **Image exports** (one resolution: 300 dpi): the map is captured from the live canvas after
+  `idle` + overlay adds at pixel ratio 300/96 (`export/png.ts`; basemap layers hidden for a
+  transparent background, selected-cell outline always hidden; `maxCanvasSize` raised to 16384 so
+  the drawing buffer is normally not clamped). The strip below is drawn at the ACTUAL canvas scale
+  (canvas width / CSS width) on both axes, so a clamped canvas gives a lower dpi, never squeezed
+  text; the dpi is written into the PNG (`pHYs`, 11811 px/m at 300 dpi). Layout: image, then a
+  full-width separator padded from it, then all text: colour bars of the active raster layers
+  (fixed 2.75 × 0.22 in, as many per row as fit, wrapping; title, ticks, units and u*,th only),
+  keys for vectors and streamlines, north arrow and scale bar at the view centre (omitted below
+  zoom 2.5), then the descriptive text (heading, projection and view, wind dataset, sources with
+  the Copernicus notice, share link, date). Font sizes are slide-legible (14 pt text, 15 pt bar
+  titles, 19 pt heading at print size). Panel plots are re-rendered from the on-screen options in
+  `LIGHT_THEME` (`cell/plottheme.ts`: larger fonts and thicker lines, light-on-dark series colours
+  mapped) with the same strip below (legends first, then title, cell centre without grid indices,
+  dataset, threshold, caption, sources, link, date), as SVG or PNG at 300 dpi of the on-screen size
+  (strip at least 640 CSS px wide). Rose ring (radial tick) labels have no halo, on screen and in
+  exports.
 * **Antimeridian**: both wind grids have an edge column that straddles ±180 (ERA5-Land
   −180.05..−179.95, ERA5 −180.125..−179.875). zarr-layer patch (`patches/`): raster x bounds are
   not clamped to ±180 (the column keeps its width; the part beyond −180 is drawn at x < 0, which

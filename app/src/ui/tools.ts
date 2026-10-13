@@ -8,7 +8,7 @@ import { EXPORT_TEXT, HELP_ABOUT_LINK, HELP_BUTTON_LABEL, HELP_RESTART, HELP_SEC
 export interface ToolsOptions {
   startTour: () => void;
   shareLink: () => string;
-  exportMap: (o: { scale: 1 | 2; basemap: boolean }) => Promise<void>;
+  exportMap: (o: { basemap: boolean }) => Promise<void>;
   openAbout: () => void;
 }
 
@@ -97,22 +97,15 @@ export class Tools {
   }
 
   openExport(owner = this.el.querySelector(".export-btn") as HTMLButtonElement) {
-    const name = nextId("exp-scale");
-    const scale = h("fieldset", { class: "export-scale" }, h("legend", {}, EXPORT_TEXT.scale),
-      ...([1, 2] as const).map((s) => {
-        const id = nextId("exp-s");
-        return h("label", { for: id, class: "inline" }, h("input", { type: "radio", name, id, value: String(s), checked: s === 1 }), ` ${s}×`);
-      }));
     const bmId = nextId("exp-bm");
     const bm = h("input", { type: "checkbox", id: bmId, checked: true }) as HTMLInputElement;
     const run = h("button", { type: "button", class: "run-export" }, EXPORT_TEXT.run) as HTMLButtonElement;
     const status = h("p", { class: "help", role: "status" });
     run.addEventListener("click", async () => {
-      const s = Number((scale.querySelector("input:checked") as HTMLInputElement | null)?.value ?? 1) === 2 ? 2 : 1;
       run.disabled = true; status.textContent = EXPORT_TEXT.working;
-      try { await this.#opts.exportMap({ scale: s, basemap: bm.checked }); this.close(); } catch (e) { status.textContent = `Export failed: ${(e as Error)?.message ?? e}`; run.disabled = false; }
+      try { await this.#opts.exportMap({ basemap: bm.checked }); this.close(); } catch (e) { status.textContent = `Export failed: ${(e as Error)?.message ?? e}`; run.disabled = false; }
     });
-    this.#openPop("export", owner, EXPORT_TEXT.title, scale, h("label", { for: bmId, class: "inline" }, bm, ` ${EXPORT_TEXT.basemap}`), h("p", { class: "help" }, EXPORT_TEXT.note), run, status);
+    this.#openPop("export", owner, EXPORT_TEXT.title, h("label", { for: bmId, class: "inline" }, bm, ` ${EXPORT_TEXT.basemap}`), h("p", { class: "help" }, EXPORT_TEXT.note), run, status);
   }
 }
 

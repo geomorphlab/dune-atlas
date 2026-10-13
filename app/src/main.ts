@@ -23,6 +23,7 @@ import { captureMap, composeWithStrip, downloadBlob, mapExportFilename, mapStrip
 import { Tour, shouldShowTour, tourSeen } from "./ui/tour";
 import { TOUR_STEPS } from "./ui/helpText";
 import { Tools } from "./ui/tools";
+import { tourHooks } from "./ui/tourHooks";
 
 const { registry: reg, errors } = loadRegistry();
 if (errors.length) console.warn("registry merge:", errors);
@@ -83,6 +84,8 @@ const map = new maplibregl.Map({
   dragRotate: false,
   pitchWithRotate: false,
   touchPitch: false,
+  // 300-dpi exports render at pixel ratio 3.125; the default 4096 px cap would lower that
+  maxCanvasSize: [16384, 16384],
 });
 map.touchZoomRotate.disableRotation();
 map.keyboard.disableRotation();
@@ -146,13 +149,14 @@ function shareState(): ShareState {
   };
 }
 const shareLinkNow = () => shareUrl(`${location.origin}${location.pathname}`, shareState());
-async function exportMap(o: { scale: 1 | 2; basemap: boolean }) {
+async function exportMap(o: { basemap: boolean }) {
   const c = map.getCenter();
   const view = { lon: c.lng, lat: c.lat, zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch(), proj: store.state.projection };
-  const link = shareLinkNow(), date = new Date();
-  const canvas = await captureMap(map, { scale: o.scale, includeBasemap: o.basemap, isOwnLayer: (id) => id.startsWith("ov-"), settle: () => overlays.settled() });
-  const strip = mapStripSvg({ reg, state: store.state, view, width: map.getCanvas().clientWidth, includeBasemap: o.basemap, shareLink: link, date }, o.scale);
-  downloadBlob(mapExportFilename(store.state.dataset, view, date), await composeWithStrip(canvas, strip, o.scale));
+  const link = shareLinkNow(), date = new Date(), cssWidth = map.getCanvas().clientWidth;
+  // one resolution: 300 dpi at the on-screen size (pixel ratio 300/96)
+  const canvas = await captureMap(map, { includeBasemap: o.basemap, isOwnLayer: (id) => id.startsWith("ov-"), settle: () => overlays.settled() });
+  const { blob } = await composeWithStrip(canvas, cssWidth, (scale) => mapStripSvg({ reg, state: store.state, view, width: cssWidth, includeBasemap: o.basemap, shareLink: link, date }, scale));
+  downloadBlob(mapExportFilename(store.state.dataset, view, date), blob);
 }
 function openAbout() {
   const toggle = layerPanelEl.querySelector(".panel-toggle") as HTMLButtonElement | null;
@@ -163,10 +167,6 @@ function openAbout() {
   about.scrollIntoView({ block: "start" });
   (about.querySelector("summary") as HTMLElement | null)?.focus();
 }
-const tour = new Tour(TOUR_STEPS);
-const tools = new Tools({ startTour: () => tour.start(), shareLink: shareLinkNow, exportMap, openAbout });
-map.addControl({ onAdd: () => tools.el, onRemove: () => tools.el.remove() }, "top-right");
-if (shouldShowTour({ embed: init.embed, tourParam: !!url.tour, seen: tourSeen() })) map.once("idle", () => setTimeout(() => { if (!tour.active) tour.start(); }, 500));
 
 /** Table labels: registry title (plain language) + TeX symbol from titleTex / source long_name. */
 function fieldLabel(v: string): FieldLabel {
@@ -195,6 +195,17 @@ const panel = new CellPanel(document.getElementById("cell-panel")!, init.utIndex
   },
 });
 if (init.cell) void panel.show(getCellStore(), init.cell[0], init.cell[1]);
+
+// ---- help, tour (with the Display and example-cell demonstrations), share, export ----
+// example cell: a dune cell in the Namib Sand Sea, the containing cell of the current dataset
+const EXAMPLE_CELL = { lon: 15.2, lat: -24.5 };
+const tour = new Tour(TOUR_STEPS, { hooks: tourHooks({
+  layerPanel: layerPanelEl, store, panel, cellRoot: document.getElementById("cell-panel")!,
+  exampleCell: async () => { const c = snapToCell(EXAMPLE_CELL.lon, EXAMPLE_CELL.lat, (await getCellStore()).grid); return c ? [c.iy, c.ix] : null; },
+}) });
+const tools = new Tools({ startTour: () => tour.start(), shareLink: shareLinkNow, exportMap, openAbout });
+map.addControl({ onAdd: () => tools.el, onRemove: () => tools.el.remove() }, "top-right");
+if (shouldShowTour({ embed: init.embed, tourParam: !!url.tour, seen: tourSeen() })) map.once("idle", () => setTimeout(() => { if (!tour.active) tour.start(); }, 500));
 
 map.on("click", async (e) => {
   try { grid = (await getCellStore()).grid; } catch { /* keep the fallback grid */ }

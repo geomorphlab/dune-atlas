@@ -16,16 +16,23 @@ export interface PlotTheme {
   current: string;
   currentLine: string;
   markerStroke: string;
+  /** font sizes (CSS px): compass letters, ring / radius tick labels, axis titles and tick labels */
+  fs: { compass: number; ring: number; axis: number; tick: number };
+  /** line-width multiplier (grid, markers, current threshold) */
+  lw: number;
 }
 
 export const DARK_THEME: PlotTheme = {
   name: "dark", text: "currentColor", grid: "#56606b", gridStrong: "#7a8590", zero: "#9aa5b1", label: "#aab4bf", ring: "#c3ccd5",
   halo: "#11161c", current: "#ffd166", currentLine: "#f1f3f5", markerStroke: "#11161c",
+  fs: { compass: 11, ring: 9, axis: 10, tick: 10 }, lw: 1,
 };
 
 export const LIGHT_THEME: PlotTheme = {
   name: "light", text: "#1d2329", grid: "#c2c8cf", gridStrong: "#8d969f", zero: "#5f6973", label: "#47515b", ring: "#2f3740",
   halo: "#ffffff", current: "#b7791f", currentLine: "#2f3740", markerStroke: "#ffffff",
+  // exports: >= 14 pt at the physical size (1 CSS px = 1/96 in)
+  fs: { compass: 20, ring: 18.7, axis: 18.7, tick: 18.7 }, lw: 1.7,
 };
 
 /** On-screen series / arrow colours that are too light on white, and their light-theme versions. */
