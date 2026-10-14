@@ -10,7 +10,9 @@
 # pages checked against the Gazetteer's MARS_nomenclature_center_pts (downloaded in October 2026).
 enabled: true
 credit: "Feature names: Gazetteer of Planetary Nomenclature (IAU Working Group for Planetary System Nomenclature; USGS Astrogeology), https://planetarynames.wr.usgs.gov/."
-note: "Names in the search are IAU-approved feature names from the Gazetteer of Planetary Nomenclature (and a few informal aliases), used for navigation; the dune fields lie within or near the named features."
+# note: the naming note (verbatim, approved October 2026), note_links: the text that is a link
+note: "Dune-field names are IAU-approved feature names from the Gazetteer of Planetary Nomenclature (IAU/USGS), with a few informal aliases."
+note_links: [{"text": "Gazetteer of Planetary Nomenclature", "href": "https://planetarynames.wr.usgs.gov/"}]
 places:
   - {id: olympia-undae, line1: "Olympia Undae", type: Unda, aliases: ["north polar erg"], lat: 81.16, lon: 178.48, radius_km: 600, dune_km2: 354952, sources: ["IAU/USGS Gazetteer of Planetary Nomenclature, https://planetarynames.wr.usgs.gov/", "https://planetarynames.wr.usgs.gov/Feature/4451"]}
   - {id: scandia-cavi, line1: "Scandia Cavi", type: Cavus, lat: 77.55, lon: -150.35, radius_km: 332, dune_km2: 111199, sources: ["IAU/USGS Gazetteer of Planetary Nomenclature, https://planetarynames.wr.usgs.gov/", "https://planetarynames.wr.usgs.gov/Feature/5355"]}

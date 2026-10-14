@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 // Dune-field name labels (map/placelabels.ts), prepared for Earth: a fixture place list with two-line
 // names in non-Latin scripts (Arabic, Persian, Urdu: right to left; Chinese: CJK; Cyrillic; Tibetan) -
-// the deployed Earth list stays empty and disabled. Style layer validity, zoom thresholds and priority
+// the deployed list is tests/earthplaces.test.ts. Style layer validity, zoom thresholds and priority
 // by size, line 2 and the scripts drawn on the map, the lazy RTL plugin, the layer's place in the stack,
 // visibility and tone, label clicks and the popup, state in links, the toggle and the map export.
 import fs from "node:fs";
@@ -51,8 +51,8 @@ describe("label features", () => {
     expect(f("dasht-e-lut").properties!.minzoom).toBeLessThan(f("tibet-field").properties!.minzoom);
     expect(f("rub-al-khali").properties!.rank).toBeLessThan(f("thar").properties!.rank);   // 500 km before 400 km
     expect(f("thar").properties!.rank).toBeLessThan(f("dateline").properties!.rank);
-    expect(labelSize(25)).toBe(10);
-    expect(labelSize(600)).toBe(14);
+    expect(labelSize(10)).toBe(10);
+    expect(labelSize(400)).toBe(14);
     expect(labelSize(10000)).toBe(14);
     expect(labelSize(100)).toBeGreaterThan(10);
     expect(labelMinZoom(1e5, EARTH_R)).toBe(0);
@@ -233,12 +233,12 @@ describe("'Show names' state", () => {
     expect(appShareState(st, { lon: 10, lat: 20, zoom: 3 }, true).names).toBe(true);
     expect(initialAppState(reg, shareToUrlState(decodeShare(off)!), "era5").names).toBeUndefined();
   });
-  it("Earth: no toggle while its place list is disabled (deployed: empty and disabled)", () => {
-    expect(loadPlaces()).toEqual({ enabled: false, places: [] });
+  it("Earth: the toggle with the place list enabled, off by default", () => {
+    expect(loadPlaces().enabled).toBe(true);
     document.body.innerHTML = '<aside id="layer-panel"></aside>';
     const st = initialAppState(reg, {}, "era5");
     renderLayerPanel(document.getElementById("layer-panel")!, reg, new Store(st));
-    expect(document.getElementById("show-names")).toBeNull();
+    expect((document.getElementById("show-names") as HTMLInputElement).checked).toBe(false);
   });
   it("Earth: every basemap states its tone (dune-name colours)", () => {
     for (const b of reg.basemaps) expect(["dark", "light"], b.id).toContain(b.tone);

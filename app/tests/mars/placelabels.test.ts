@@ -4,7 +4,7 @@
 // and the help sentence.
 import { describe, expect, it } from "vitest";
 import { validateStyleMin } from "@maplibre/maplibre-gl-style-spec";
-import { PLACE_SOURCE, placeFeatures, placeLabelLayer, placePopupContent } from "../../src/core/map/placelabels";
+import { labelRadius, PLACE_SOURCE, placeFeatures, placeLabelLayer, placePopupContent } from "../../src/core/map/placelabels";
 import { loadPlaces } from "../../src/core/search/places";
 import { loadRegistry } from "../../src/core/registry/load";
 import { initialAppState } from "../../src/core/defaultview";
@@ -34,12 +34,16 @@ describe("Mars name labels", () => {
     }
   });
   it("large features at low zoom (Olympia Undae, the chasmata), small craters as you zoom in", () => {
-    expect(prop("Olympia Undae").minzoom).toBeLessThan(1);
+    expect(prop("Olympia Undae").minzoom).toBeLessThan(1.5);
+    const med = (a: number[]) => [...a].sort((x, y) => x - y)[Math.floor(a.length / 2)];
     const chasmata = LIST.places.filter((p) => p.type === "Chasma").map((p) => prop(p.line1).minzoom);
     const craters25 = LIST.places.filter((p) => p.type === "Crater" && p.radius_km <= 25).map((p) => prop(p.line1).minzoom);
     expect(chasmata.length).toBeGreaterThan(5);
     expect(craters25.length).toBeGreaterThan(5);
-    expect(Math.max(...chasmata)).toBeLessThan(Math.min(...craters25));
+    expect(med(chasmata)).toBeLessThan(med(craters25));
+    // threshold and priority follow labelRadius (radius and mapped dune area)
+    const byR = [...LIST.places].sort((a, b) => labelRadius(b) - labelRadius(a)).map((p) => prop(p.line1).minzoom);
+    expect(byR).toEqual([...byR].sort((a, b) => a - b));
     expect(prop("Gale crater").minzoom).toBeLessThan(prop("Endeavour crater").minzoom);
     expect(prop("Olympia Undae").rank).toBeLessThan(prop("Gale crater").rank);
     expect(prop("Olympia Undae").size).toBe(14);

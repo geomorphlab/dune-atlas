@@ -7,7 +7,7 @@ import path from "node:path";
 import yaml from "js-yaml";
 import Ajv2020 from "ajv/dist/2020";
 import { describe, expect, it, vi } from "vitest";
-import { editDistance, loadPlaces, matchPlaces, nameScore, PLACES_DISCLAIMER, placeBounds, placesNote, searchKey, type Place } from "../src/core/search/places";
+import { editDistance, loadPlaces, matchPlaces, nameScore, placeBounds, placesNote, placesNoteHtml, searchKey, type Place } from "../src/core/search/places";
 import { SearchBox, searchZoom, SEARCH_TEXT } from "../src/core/ui/search";
 import { infoHtml } from "../src/core/ui/layerPanel";
 import { loadRegistry } from "../src/core/registry/load";
@@ -64,8 +64,10 @@ describe("place lists in the registry", () => {
     const doc = yaml.load(fs.readFileSync(path.join(REG_DIR, b, "places.yaml"), "utf8"));
     expect(validate(doc), JSON.stringify(validate.errors)).toBe(true);
   });
-  it("Earth: disabled and empty (names under review); Mars: enabled", () => {
-    expect(yaml.load(fs.readFileSync(path.join(REG_DIR, "earth", "places.yaml"), "utf8"))).toEqual({ enabled: false, places: [] });
+  it("both lists enabled", () => {
+    const earth = yaml.load(fs.readFileSync(path.join(REG_DIR, "earth", "places.yaml"), "utf8")) as { enabled: boolean; places: Place[] };
+    expect(earth.enabled).toBe(true);
+    expect(earth.places.length).toBeGreaterThan(200);
     const mars = yaml.load(fs.readFileSync(path.join(REG_DIR, "mars", "places.yaml"), "utf8")) as { enabled: boolean; places: Place[] };
     expect(mars.enabled).toBe(true);
     expect(mars.places.length).toBeGreaterThan(100);
@@ -75,8 +77,8 @@ describe("place lists in the registry", () => {
     expect(validate({ enabled: true, places: [{ id: "x", line1: "X", lat: 99, lon: 0, radius_km: 1, sources: ["s"] }] })).toBe(false);
     expect(validate({ enabled: true, places: [{ id: "x", line1: "X", line2: { text: "Х" }, lat: 0, lon: 0, radius_km: 1, sources: ["s"] }] })).toBe(false);
   });
-  it("the app loads the body's list (disabled)", () => {
-    expect(loadPlaces()).toEqual({ enabled: false, places: [] });
+  it("the app loads the body's list", () => {
+    expect(loadPlaces().enabled).toBe(true);
     expect(loadPlaces({ x: "enabled: true\nplaces: []\n" }).enabled).toBe(true);
     expect(loadPlaces({})).toEqual({ enabled: false, places: [] });
   });
@@ -85,17 +87,23 @@ describe("place lists in the registry", () => {
     expect(matchPlaces("crater", L).map((h) => h.place.id)).toEqual(["b", "a", "c"]);
     expect(matchPlaces("alpha", L)[0].place.id).toBe("a");   // a better match wins over a larger area
   });
-  it("the naming note: none while disabled or empty; the list's own note, else the default", () => {
+  it("the naming note: none while disabled or empty, else the list's note; its links", () => {
     expect(placesNote({ enabled: false, places: PLACES, note: "N" })).toBe("");
     expect(placesNote({ enabled: true, places: [], note: "N" })).toBe("");
     expect(placesNote({ enabled: true, places: PLACES, note: "N" })).toBe("N");
-    expect(placesNote({ enabled: true, places: PLACES })).toBe(PLACES_DISCLAIMER);
+    expect(placesNote({ enabled: true, places: PLACES })).toBe("");
     expect(loadPlaces({ x: "enabled: true\nnote: N\nplaces: []\n" }).note).toBe("N");
+    expect(placesNoteHtml({ enabled: true, places: PLACES, note: "Write to a@b.org <now>.", note_links: [{ text: "a@b.org", href: "mailto:a@b.org" }] }))
+      .toBe('Write to <a href="mailto:a@b.org">a@b.org</a> &lt;now&gt;.');
   });
-  it("the naming note is drafted but not shown in the dune layer's ⓘ while the named search is disabled", () => {
-    const dunes = loadRegistry().registry.layers.find((l) => l.invertSource)!;
-    expect(PLACES_DISCLAIMER).toMatch(/^Dune-field names in the search are for navigation only\./);
-    expect(infoHtml(dunes)).not.toContain("navigation only");
+  it("Earth naming note: verbatim, the e-mail address a mailto link; in the dune layer's ⓘ (and no other layer's)", () => {
+    const NOTE = "Displayed dune field names are derived from previously published academic research and data, regional knowledge, and internet searches. Naming conventions (language, jurisdiction, spelling, merging, etc.) were chosen for clarity but may be wrong or offend certain peoples. Please contact Andrew Gunn at a.gunn@monash.edu if you have any suggestions for changes, removals, or additions.";
+    expect(loadPlaces().note).toBe(NOTE);
+    const html = placesNoteHtml(loadPlaces());
+    expect(html).toBe(NOTE.replace("a.gunn@monash.edu", '<a href="mailto:a.gunn@monash.edu">a.gunn@monash.edu</a>'));
+    const reg = loadRegistry().registry;
+    expect(infoHtml(reg.layers.find((l) => l.invertSource)!)).toContain(`<p class="help places-note">${html}</p>`);
+    for (const l of reg.layers.filter((x) => !x.invertSource)) expect(infoHtml(l), l.id).not.toContain("places-note");
   });
 });
 

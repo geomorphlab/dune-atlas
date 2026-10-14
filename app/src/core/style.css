@@ -350,6 +350,10 @@ label.inline.dunes-only-row { display: flex; width: max-content; max-width: 100%
 .atlas-search .search-hit[aria-selected="true"], .atlas-search .search-hit:hover { background: var(--bg3); }
 .atlas-search .hit-line2, .atlas-search .hit-country, .atlas-search .hit-type { color: var(--muted); }
 .atlas-search .hit-type { font-size: 11.5px; }
+.atlas-search .search-names-foot { margin: 2px 0 0; font-size: 11.5px; }
+.atlas-search .search-names-link { font-size: 11.5px; }
+.atlas-search .search-names-note { margin: 2px 0 0; font-size: 11.5px; }
+.atlas-search .hit-alias { color: var(--muted); font-style: italic; font-size: 11.5px; }
 .atlas-search .hit-country { flex-basis: 100%; font-size: 11.5px; }
 /* Concepts panel (mortarboard button; ui/concepts.ts): one disclosure per entry, its references below */
 .tool-pop.tool-pop-concepts { width: min(420px, calc(100vw - 70px)); }
@@ -396,5 +400,7 @@ label.inline.region-param, label.inline.region-range { display: flex; margin: 1p
 .place-popup-body .place-name { font-weight: 600; font-style: italic; font-size: 13.5px; }
 .place-popup-body .place-line2 { font-size: 13px; }
 .place-popup-body .place-meta { color: var(--muted); }
-.place-popup-body .place-sources { margin: 0; padding-left: 16px; overflow-wrap: anywhere; }
-.place-popup-body a { color: var(--accent); }
+.place-popup-body .place-sources, .place-popup-body .place-alt { margin: 0 0 3px; padding-left: 16px; overflow-wrap: anywhere; }
+.place-popup-body .place-note { color: var(--muted); font-size: 11.5px; }
+.maplibregl-popup.place-popup .maplibregl-popup-content { max-height: 340px; overflow-y: auto; }
+.place-popup-body a { color: var(--link); }

@@ -1,6 +1,10 @@
 // User-facing text: no implementation, failure-handling,
 // internal or relict wording in any site or download string of either build. Used by
 // tests/usertext.test.ts (Earth, tests/publictext.ts) and tests/mars/publictext.test.ts (Mars).
+import fs from "node:fs";
+import path from "node:path";
+import yaml from "js-yaml";
+import { placesNoteHtml, type PlaceList } from "../src/core/search/places";
 
 /** phrases a visitor should not meet (case-insensitive) */
 export const DEV_PHRASES: [string, RegExp][] = [
@@ -23,12 +27,19 @@ const DATA_GUIDE_ALLOWED = new Set(["storage", "internal decisions / files"]);
 /** download keys that are machine-readable names, not prose (file / variable names are expected there) */
 const MACHINE = /^(E|M)?:?(metadata\.(files|aux\.[^.]+\.in_file|citation\.\d+\.id)|csv\.)/;
 
+/** the naming notes of the place lists (registry/<body>/places.yaml `note`) are approved verbatim: not swept
+ *  (as text and as rendered with their links) */
+export const VERBATIM_NOTES: string[] = (["earth", "mars"] as const).flatMap((b) => {
+  const doc = yaml.load(fs.readFileSync(path.resolve(__dirname, `../../registry/${b}/places.yaml`), "utf8")) as PlaceList;
+  return doc.note ? [doc.note, placesNoteHtml({ ...doc, enabled: true, places: [{ id: "x", line1: "x", lat: 0, lon: 0, radius_km: 1, sources: ["x"] }] })] : [];
+});
+
 export function devPhraseHits(t: Record<string, string>): string[] {
   const out: string[] = [];
   for (const [k, v0] of Object.entries(t)) {
     if (MACHINE.test(k)) continue;
     let v = v0;
-    for (const p of PENDING_OTHER_TRACK) v = v.split(p).join("");
+    for (const p of [...PENDING_OTHER_TRACK, ...VERBATIM_NOTES]) v = v.split(p).join("");
     for (const [what, re] of DEV_PHRASES) if (!(DATA_GUIDE.test(k) && DATA_GUIDE_ALLOWED.has(what)) && re.test(v)) out.push(`${k} [${what}]: ${v.slice(Math.max(0, v.search(re) - 60), v.search(re) + 80)}`);
   }
   return out;
