@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// "Start tour" bubble (PI request, Oct 2026): arrival / after-autostart rules, click / Enter starts the tour,
+// "Start tour" bubble: arrival / after-autostart rules, click / Enter starts the tour,
 // Esc or a click elsewhere hides it for the visit, remembered once the tour has been started, placement never
 // over the side panel, the cell panel or the planet button; plus the tour auto-start fallback and the loading
 // indicator.

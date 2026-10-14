@@ -8,11 +8,11 @@ import os
 import numpy as np
 import pytest
 
-D = os.environ.get("DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data"))
+D = os.environ.get("DUNE_WORLD_DATA", "")
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 STORE = os.environ.get("CELLS_STORE", os.path.join(ROOT, "staging", "regional", "cells.zarr"))
-pytestmark = pytest.mark.skipif(not (os.path.isdir(D) and os.path.isdir(STORE)),
-                                reason="source data or written store not available")
+pytestmark = [pytest.mark.data, pytest.mark.staging, pytest.mark.skipif(not (os.path.isdir(D) and os.path.isdir(STORE)),
+                                reason="source data or written store not available")]
 
 
 @pytest.fixture(scope="module")

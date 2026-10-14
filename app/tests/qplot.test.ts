@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// "<quantity> vs threshold" plot (PI request 2026-10): selector over every per-threshold quantity (layer-list
+// "<quantity> vs threshold" plot: selector over every per-threshold quantity (layer-list
 // names), DP by default, title / caption / axis / live value / export follow the choice, the choice is stored
 // (per body) and in share links (backwards compatible); ±60,000 and gaps do not wreck the axis; x labels fit.
 import { beforeEach, describe, expect, it, vi } from "vitest";

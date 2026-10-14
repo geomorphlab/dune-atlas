@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// Slider jitter on Mars (PI round 5 item 2): the grain-size slider over all 64 d values must not change the
+// Slider jitter on Mars: the grain-size slider over all 64 d values must not change the
 // layout of the layer panel or the cell panel (same invariant as tests/jitter.test.ts, tests/jitterlib.ts).
 import { describe, expect, it, vi } from "vitest";
 import { loadRegistry } from "../../src/registry/load";
@@ -34,7 +34,7 @@ describe("slider jitter (Mars): layer panel and cell panel keep their layout ove
     const r = await sweep(store, [lp, cp], 64);
     expect(r.overflow).toEqual([]);
     expect(r.sigs.size).toBe(1);
-    expect(holes([lp, cp])).toEqual([]);   // review U8 / L11: no reserved room in the middle of running text
+    expect(holes([lp, cp])).toEqual([]);   // no reserved room in the middle of running text
     expect(r.slots).toBeGreaterThan(30);
     // the readout keeps its character count: " 50 µm" ... "1000 µm" (leading figure spaces)
     const out = lp.querySelector("output.ut-value")!;
@@ -43,8 +43,8 @@ describe("slider jitter (Mars): layer panel and cell panel keep their layout ove
     expect([...a].length).toBe([...b].length);
     expect(a).toMatch(/^\u2007+50 µm$/); expect(b).toBe("1000 µm");
     setMeasurer(undefined);
-  }, 120_000); // 64-position sweep: ~5 s locally, over 20 s on a 2-core CI runner with the full suite
-  it("measured slot widths are tight: the widest value plus at most 0.3 ch (review U8 / L11)", () => {
+  }, 120_000); // full 64-position sweep (FULL_SWEEP=1): ~5 s locally, over 20 s on a 2-core CI runner
+  it("measured slot widths are tight: the widest value plus at most 0.3 ch", () => {
     setMeasurer(fakeMeasure);
     const vals = ["31.4&nbsp;m²/yr", "8.76&nbsp;m²/yr", "112&nbsp;m²/yr"];
     const w = reserveCh(vals), widest = Math.max(...vals.map((v) => measuredWidthCh(v)));

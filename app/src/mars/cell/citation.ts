@@ -17,10 +17,10 @@ export const PAHTZ_DURAN_DOI = "10.1017/jfm.2023.343";
 export const HABERLE_DOI = "10.1016/j.icarus.2019.03.026";
 export const FV3_URL = "https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/";
 export const DEM_URL = "https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m";
-/** exact wording of the Terrain track (pipeline mars/terrain.py DEM_ATTRIBUTION, registry/mars/generated/x_elevation.yaml) */
+/** exact wording used by pipeline mars/terrain.py DEM_ATTRIBUTION and registry/mars/generated/x_elevation.yaml */
 export const DEM_CITATION = "Fergason, R. L, Hare, T. M., & Laura, J. (2018). HRSC and MOLA Blended Digital Elevation Model at 200m v2. Astrogeology PDS Annex, U.S. Geological Survey.";
 export const DEM_LICENCE = "MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO)";
-/** licence of the self-built MOLA–HRSC hillshade (terrarium) tiles (PI decision 2026-10-14) */
+/** licence of the self-built MOLA–HRSC hillshade (terrarium) tiles */
 export const HILLSHADE_LICENCE = "the MOLA–HRSC hillshade tiles are released under CC BY-SA 3.0 IGO (derived from HRSC CC BY-SA 3.0 IGO and MOLA CC0)";
 export const MGD3_2007_DOI = "10.1029/2007JE002943";
 
@@ -29,7 +29,7 @@ export const MGD3_2007_DOI = "10.1029/2007JE002943";
 export function fieldsCitation(_datasetId?: string): string {
   return `Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications. doi:${PAPER_DOI}; transport law: Pähtz, T. & Durán, O. (2023). Scaling laws for planetary sediment transport from DEM-RANS numerical simulations. Journal of Fluid Mechanics 963, A20. doi:${PAHTZ_DURAN_DOI}; winds: MCMC FV3-based Mars GCM Beta Output Release 1, one Mars year of hourly lowest-level winds (NASA Ames Mars Climate Modeling Center (2023), ${FV3_URL}; model physics: Haberle, R. M. et al. (2019). Icarus 333, 130–164. doi:${HABERLE_DOI})`;
 }
-/** Licence of everything derived from the FV3 output (PI 2026-10-14). */
+/** Licence of everything derived from the FV3 output. */
 export const fieldsLicence = (_datasetId?: string) => "NASA Ames MCMC output; no licence stated (NASA open data)";
 export const MGD3_2014_DOI = "10.1016/j.icarus.2013.04.011";
 /** Fenton (2020): updated equatorial inventory and many small dune fields (< 1 km², not in MGD3); merged into the dune layer */

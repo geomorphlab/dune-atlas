@@ -28,7 +28,7 @@ describe("Mars registry", () => {
     expect(t.values).toEqual(M.D_VALUES_UM);
     expect(t.values.length).toBe(64);
     expect(t.values[t.defaultIndex]).toBe(200);
-    // log-spaced, rounded to integer µm; node 29 is exactly 200 µm (geometric 198.5, per PI)
+    // log-spaced, rounded to integer µm; node 29 is exactly 200 µm (geometric 198.5)
     t.values.forEach((v, k) => expect(v, `d index ${k}`).toBe(k === 29 ? 200 : Math.round(50 * 20 ** (k / 63))));
   });
   it("layers: dunes, d-aware fields + qsdiv, 2-D air density and elevation; no Earth-only layers", () => {
@@ -50,7 +50,7 @@ describe("Mars registry", () => {
     for (const id of ["rho_mean", "elevation"]) expect(reg.layers.find((l) => l.id === id)!.group).toBe("environment");
   });
   it("basemaps: MOLA–HRSC hillshade (default, terrarium 512 px via pmtiles), OpenPlanetaryMap v0.2, Esri CTX / HiRISE / MDIM / colour relief, no plain dark background", () => {
-    expect(reg.basemaps.map((b) => b.id)).toEqual(["hrsc-mola-hillshade", "opm-mars", "esri-ctx1", "esri-hirise", "esri-mdim", "esri-mcolordem"]); // no plain dark background on Mars (PI 2026-10-14)
+    expect(reg.basemaps.map((b) => b.id)).toEqual(["hrsc-mola-hillshade", "opm-mars", "esri-ctx1", "esri-hirise", "esri-mdim", "esri-mcolordem"]); // no plain dark background on Mars
     const h = reg.basemaps[0];
     expect([h.kind, h.encoding, h.tileSize, h.maxzoom, h.default]).toEqual(["hillshade", "terrarium", 512, 8, true]);
     expect(h.tiles![0]).toBe("pmtiles://dune-atlas/mars/v1/basemaps/hrsc-mola-terrarium.pmtiles/{z}/{x}/{y}");

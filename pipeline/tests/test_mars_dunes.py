@@ -75,7 +75,7 @@ def test_tippecanoe_args_follow_earth():
 
 
 def test_tile_metadata_cites_mgd3_and_fenton():
-    """Round 3: archive metadata (tippecanoe --attribution/--description) = MGD3 (2007, 2010, 2012, 2014) plus
+    """Archive metadata (tippecanoe --attribution/--description) = MGD3 (2007, 2010, 2012, 2014) plus
     Fenton (2020), merged; the rebuilt archives have new R2 keys (create-only), the registry points at them."""
     for args in (D.tippecanoe_args(), D.invert_tippecanoe_args()):
         att = next(x for x in args if x.startswith("--attribution="))

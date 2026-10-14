@@ -1,7 +1,7 @@
 import { configDefaults, defineConfig } from "vitest/config";
 import { bodyPlugin } from "./scripts/body-plugin";
 
-// Body switch (docs/mars-app.md): VITE_BODY=mars builds the Mars atlas (module substitutions and
+// Body switch (docs/guide/mars.md): VITE_BODY=mars builds the Mars atlas (module substitutions and
 // source patches from src/mars/build.ts, output dist-mars/, tests tests/mars/); anything else is the
 // Earth atlas, built exactly as before (no plugin).
 const MARS = process.env.VITE_BODY === "mars";

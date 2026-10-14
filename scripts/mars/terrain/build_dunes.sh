@@ -1,6 +1,6 @@
 #!/bin/bash
 # Mars dune PMTiles + 2-degree overlap-fraction grid (local; conda env dune-atlas-tiles: tippecanoe, geopandas,
-# pyproj, shapely, pmtiles). Inputs: the PI shapefile dunes.{shp,shx,dbf,prj,cpg} copied to
+# pyproj, shapely, pmtiles). Inputs: the merged MGD3 + Fenton (2020) dune shapefile dunes.{shp,shx,dbf,prj,cpg} copied to
 # staging/mars/terrain/dunes_src/; optional assessment grid for the comparison.
 set -eu
 R=$(cd "$(dirname "$0")/../../.." && pwd)

@@ -3,8 +3,8 @@ import os
 import numpy as np
 import pytest
 
-D = os.environ.get("DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data"))
-pytestmark = pytest.mark.skipif(not os.path.isdir(D), reason="source data not available")
+D = os.environ.get("DUNE_WORLD_DATA", "")
+pytestmark = [pytest.mark.data, pytest.mark.staging, pytest.mark.skipif(not os.path.isdir(D), reason="source data not available")]
 
 ANGLES = ("ab", "ae", "at", "ao", "rdpa")
 

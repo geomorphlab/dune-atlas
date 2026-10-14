@@ -1,5 +1,5 @@
 // Read one ERA5-Land cell from the web cell store (`cells.zarr`, zarr v3, sharded 16x16 cells;
-// see docs/storage-layout.md):
+// see docs/reference/storage-layout.md):
 //   hist   [1801, 3600, 128 um, 128 ua] uint32   (inner chunk = one cell)
 //   fields [1801, 3600, 23 var, 64 ut]  float32  (order in root attrs field_vars)
 //   dunes  [1801, 3600] uint8 (canonical mask, layers.nc `dunes`)

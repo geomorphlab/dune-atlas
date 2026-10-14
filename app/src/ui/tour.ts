@@ -19,8 +19,8 @@ export function tourSeen(): boolean {
 function markSeen() { try { localStorage.setItem(TOUR_SEEN_KEY, "1"); } catch { /* private mode */ } }
 
 /** Popover position next to the highlight `sr`: the first of below / above / right / left that lies fully on
- *  screen (12 px margin) and does not overlap the highlight; else the one with the least overlap (review U15,
- *  L16: steps 8 and 9 ran off the right edge and step 3 covered its own target). `pop` is the border-box size. */
+ *  screen (12 px margin) and does not overlap the highlight; else the one with the least overlap (steps 8 and 9 ran off the right edge and step 3 covered its own target). `pop`
+ *  is the border-box size. */
 export function tourPlacement(sr: { left: number; top: number; width: number; height: number }, pop: { w: number; h: number }, view: { w: number; h: number }, gap = 10, margin = 12): { left: number; top: number; side: string } {
   const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
   const cx = sr.left + sr.width / 2 - pop.w / 2, cy = sr.top + sr.height / 2 - pop.h / 2;
@@ -147,7 +147,7 @@ export class Tour {
     this.ready = this.ready.then(() => this.#leave()).then(async () => {
       // the previous step's restore (e.g. step 4 closing RDD's Display, scrolling the list back) moves the
       // controls: re-anchor on the restored layout, also for steps without a hook (step 5 kept the stale
-      // highlight position of the layer list while the list moved; PI, Oct 2026)
+      // highlight position of the layer list while the list moved)
       if (my === this.#seq && this.#root && !hook?.enter) { this.#place(); return; }
       if (my !== this.#seq || !hook?.enter) return;
       this.#entered = s.id;

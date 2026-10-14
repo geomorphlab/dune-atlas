@@ -1,4 +1,4 @@
-// Tab title "MGL - Dune Atlas" (identical to Earth) and the lab icon (PI round 6 item 4), Mars: index.html
+// Tab title "MGL - Dune Atlas" (identical to Earth) and the lab icon, Mars: index.html
 // through the Mars build's HTML transform (scripts/body-plugin.ts, MARS_HTML).
 import { describe, expect, it } from "vitest";
 import { bodyPlugin } from "../../scripts/body-plugin";

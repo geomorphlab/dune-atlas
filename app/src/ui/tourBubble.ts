@@ -1,4 +1,4 @@
-// "Start tour" speech bubble pointing at the Help (?) button (PI request, Oct 2026). Shared by both atlases,
+// "Start tour" speech bubble pointing at the Help (?) button. Shared by both atlases,
 // including ?embed=1.
 //  - shown on arrival; when the tour starts by itself (first visit), shown after it closes only if it was
 //    skipped at step 1;

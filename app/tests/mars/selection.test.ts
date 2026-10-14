@@ -1,4 +1,4 @@
-// Selected-cell highlight at the poles on Mars (PI round 5 item 7): 2° cells 84–86, 86–88, 88–90 N/S.
+// Selected-cell highlight at the poles on Mars: 2° cells 84–86, 86–88, 88–90 N/S.
 import { describe, it, expect } from "vitest";
 import { MARS_GRID } from "../../src/mars/body";
 import { checkPolarCell, checkProjectionSwitch } from "../selectionlib";

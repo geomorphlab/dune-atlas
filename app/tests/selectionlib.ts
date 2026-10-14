@@ -1,5 +1,5 @@
-// Shared by tests/selection.test.ts and tests/mars/selection.test.ts (selected-cell highlight at the poles,
-// PI round 5 item 7): the flat-map source (clipped, no vertex on the Mercator edge) and the globe geometry
+// Shared by tests/selection.test.ts and tests/mars/selection.test.ts (selected-cell highlight at the poles):
+// the flat-map source (clipped, no vertex on the Mercator edge) and the globe geometry
 // (true bounds; outline without an edge at a pole) of polar cells, and the layer switch by projection.
 import { SELECTED_CELL_RING, zoomForCellPx } from "../src/map/overlays";
 import { expect } from "vitest";
@@ -78,7 +78,7 @@ export function checkProjectionSwitch(g: Grid, lat: number) {
   const c = cellFromIndex(rowAt(g, lat), 10, g);
   ensureSelectedCellLayers(map as never, cellFeature(c, g));
   expect(layers.map((l) => l.id)).toEqual([SELECTED_CELL_BOTTOM, SELECTED_CELL_LINE, SELECTED_CELL_GLOBE_FILL, SELECTED_CELL_GLOBE_LINE, SELECTED_CELL_RING]);
-  // ring at the cell centre (review L12), shown while the cell is under 12 px, gone above 24 px
+  // ring at the cell centre, shown while the cell is under 12 px, gone above 24 px
   const ring = (sources[SELECTED_CELL_RING] as GeoJSON.FeatureCollection).features[0].geometry as GeoJSON.Point;
   expect(ring.coordinates[0]).toBeCloseTo(c.lon, 6);
   expect(ring.coordinates[1]).toBeCloseTo(Math.max(-85, Math.min(85, c.lat)), 6);

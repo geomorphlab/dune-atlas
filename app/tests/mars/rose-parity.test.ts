@@ -41,7 +41,7 @@ describe("Mars flux roses vs the Python reference", () => {
       for (const k of c.cases.filter((x) => x.alpha === null)) {
         const t = thresholdStats(s, k.dUm);
         for (const key of ["utMedian", "utP05", "utP95", "fracAbove", "fracInvalid"] as const) expect(rel(t[key], k.stats[key])).toBeLessThan(1e-12);
-        expect(t.fracInvalid).toBe(0); // Ga sqrt(s) > 81 for every hour (docs/mars-spec.md section 3)
+        expect(t.fracInvalid).toBe(0); // Ga sqrt(s) > 81 for every hour (docs/reference/mars-spec.md section 3)
       }
     }
   });

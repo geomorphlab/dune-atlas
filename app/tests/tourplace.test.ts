@@ -1,4 +1,4 @@
-// Tour popover placement (review U15 / L16): fully on screen, never over its own highlight when there is room.
+// Tour popover placement: fully on screen, never over its own highlight when there is room.
 import { describe, it, expect } from "vitest";
 import { tourPlacement } from "../src/ui/tour";
 

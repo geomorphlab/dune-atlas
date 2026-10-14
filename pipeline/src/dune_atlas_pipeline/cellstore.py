@@ -1,6 +1,6 @@
 """Build `cells.zarr`: per-cell wind histograms + 23x64 field vectors for click queries.
 
-Layout (docs/storage-layout.md): zarr v3, full grid of the wind dataset (ERA5-Land 1801x3600, ERA5 721x1440;
+Layout (docs/reference/storage-layout.md): zarr v3, full grid of the wind dataset (ERA5-Land 1801x3600, ERA5 721x1440;
 grid.DATASETS), sharded 16x16 cells,
 inner chunk = one cell, blosc zstd-5 bitshuffle, shard index at end (zarrita requirement).
 Only shards containing land are written; the rest stay absent (fill value), and ocean cells

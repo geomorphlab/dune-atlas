@@ -80,7 +80,7 @@ export interface BasemapDef {
   maxzoom?: number;
   attribution: string;
   default?: boolean;
-  /** photographic imagery: the layer panel suggests lowering the colour layers' opacity (review U10) */
+  /** photographic imagery: the layer panel suggests lowering the colour layers' opacity */
   imagery?: boolean;
   /** info (i) popover: definition, Source, Resolution, Licence, Link */
   info?: { description?: string; source?: string; resolution?: string; coverage?: string; licence?: string; url?: string };

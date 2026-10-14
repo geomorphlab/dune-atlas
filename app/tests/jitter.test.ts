@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// Slider jitter (PI round 5 item 2): sweeping the u*,th slider over all 64 positions must not change the
+// Slider jitter: sweeping the u*,th slider over all 64 positions must not change the
 // layout of the layer panel or the cell panel. happy-dom has no layout engine, so the test checks the
 // invariant that makes the layout constant (ui/livenum.ts): (1) outside the live-number slots, the text and
 // element structure of both panels is identical at every position; (2) every live value fits its slot
@@ -47,15 +47,15 @@ describe("slider jitter (Earth): layer panel and cell panel keep their layout ov
     expect(reg.threshold.values.length).toBe(64);
     expect(r.overflow).toEqual([]);
     expect(r.sigs.size).toBe(1);
-    expect(holes([lp, cp])).toEqual([]);   // review U8 / L11: no reserved room in the middle of running text
+    expect(holes([lp, cp])).toEqual([]);   // no reserved room in the middle of running text
     expect(r.slots).toBeGreaterThan(30);   // readouts, meta, legend, DP/RDP/RDD, caption, heading, table values
     // tabular figures on both panels and the slots (style.css)
     const css = fs.readFileSync(path.resolve(__dirname, "../src/style.css"), "utf8");
     expect(css).toMatch(/#layer-panel, #cell-panel, \.legend \{ font-variant-numeric: tabular-nums; \}/);
     expect(css).toMatch(/\.live-num \{ display: inline-block; white-space: nowrap;[^}]*tabular-nums/);
     setMeasurer(undefined);
-  }, 120_000); // 64-position sweep: ~5 s locally, over 20 s on a 2-core CI runner with the full suite
-  it("measured slot widths are tight: the widest value plus at most 0.3 ch (review U8 / L11)", () => {
+  }, 120_000); // full 64-position sweep (FULL_SWEEP=1): ~5 s locally, over 20 s on a 2-core CI runner
+  it("measured slot widths are tight: the widest value plus at most 0.3 ch", () => {
     setMeasurer(fakeMeasure);
     const vals = ["31.4&nbsp;m²/yr", "8.76&nbsp;m²/yr", "112&nbsp;m²/yr"];
     const w = reserveCh(vals), widest = Math.max(...vals.map((v) => measuredWidthCh(v)));

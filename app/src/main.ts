@@ -43,7 +43,7 @@ const dataBase = CONFIG.dataBase ?? reg.dataBase;
 // user's explicit choice (localStorage) or the default view's. Layer definitions follow it.
 const DATASET_KEY = storageKey("dataset"); // "duneAtlas.dataset" (Earth; body.ts)
 const storedDataset = (() => { try { return localStorage.getItem(DATASET_KEY) ?? undefined; } catch { return undefined; } })();
-// planet button return (?resume=1, review U11): this atlas's last view, stored per body on every view change
+// planet button return (?resume=1): this atlas's last view, stored per body on every view change
 const LAST_VIEW_KEY = storageKey(LAST_VIEW);
 const storedView = (() => { try { return localStorage.getItem(LAST_VIEW_KEY); } catch { return null; } })();
 const query0 = parseUrlState(location.search);
@@ -85,7 +85,7 @@ const map = new maplibregl.Map({
   maxCanvasSize: [16384, 16384],
 });
 map.touchZoomRotate.disableRotation();
-map.scrollZoom.setWheelZoomRate(WHEEL_ZOOM_RATE); // faster wheel zoom (review U9)
+map.scrollZoom.setWheelZoomRate(WHEEL_ZOOM_RATE); // faster wheel zoom
 const loading = new LoadingIndicator(map); // first draw; again on dataset / projection / basemap changes
 loading.begin();
 map.keyboard.disableRotation();
@@ -93,7 +93,7 @@ map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-ri
 if (!init.embed) map.addControl(new maplibregl.FullscreenControl(), "top-right");
 map.addControl(new maplibregl.ScaleControl({ maxWidth: 120 }), "bottom-left");
 map.addControl(new CoordsControl(), "bottom-left"); // cursor lat, lon, beside the scale bar
-// attribution: the wind-regime line follows the selected dataset (mapAttributionHtml; PI, Oct 2026)
+// attribution: the wind-regime line follows the selected dataset (mapAttributionHtml)
 const attributionFor = (ds: string) => new maplibregl.AttributionControl({
   compact: true,
   customAttribution: ["Contains modified Copernicus Climate Change Service information", mapAttributionHtml(ds)],
@@ -201,7 +201,7 @@ const tour = new Tour(TOUR_STEPS, { hooks: tourHooks({
 const tools = new Tools({ startTour: () => tourStart.fromHelp(), shareLink: shareLinkNow, exportMap, openAbout });
 map.addControl({ onAdd: () => tools.el, onRemove: () => tools.el.remove() }, "top-right");
 const autostart = shouldShowTour({ embed: init.embed, tourParam: !!url.tour, seen: tourSeen() });
-// "Start tour" bubble by the Help button (PI request); the automatic first-visit start also has a time-out
+// "Start tour" bubble by the Help button; the automatic first-visit start also has a time-out
 // fallback in case the map never reports idle
 const tourStart = wireTourBubble(tour, { autostart });
 if (autostart) autostartTour(map, () => { if (!tour.active) tour.start(); });

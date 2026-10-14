@@ -29,7 +29,7 @@ const initState = (): AppState => ({ basemap: reg.basemaps[0].id, projection: "g
 const text = (el: Element) => (el.textContent ?? "").replace(/\s+/g, " ");
 /** Earth-only wording that must not appear anywhere in the Mars site or downloads */
 const EARTH = /ERA5|Copernicus|C3S|ECMWF|1950|10 m wind|at 10 m|land[- ]sea|land cell|aridity|vegetation|Namib|Earth's wind-blown sand dunes(?! - Supp)|EPSG:3857|6371 km/i;
-// allowed: the paper title; Fryberger's DP definition in the DP ⓘ ("computed from 10 m wind speeds in knots", PI text 3.2)
+// allowed: the paper title; Fryberger's DP definition in the DP ⓘ ("computed from 10 m wind speeds in knots")
 const EARTH_OK = (s: string) => s.replace(/The distribution of Earth's wind-blown sand dunes/g, "").replace(/computed from 10 m wind speeds in knots/g, "");
 
 async function openPanel() {
@@ -50,8 +50,8 @@ describe("Mars cell panel", () => {
     expect(t).toMatch(/Grain diameter d:\s*200 µm/);
     expect(t).toMatch(/median over the hours/);
     expect(t).toMatch(/m\/s, lowest model level/);
-    expect(t).toMatch(/lowest-level wind \(height in this cell \d\.\d\d–\d\.\d\d m\)/);   // review L17: the cell's range, About gives all cells
-    expect(t).not.toMatch(/Height of the lowest-level wind|Grid cell|Hours counted/);   // removed rows (round 5)
+    expect(t).toMatch(/lowest-level wind \(height in this cell \d\.\d\d–\d\.\d\d m\)/);   // the cell's range, About gives all cells
+    expect(t).not.toMatch(/Height of the lowest-level wind|Grid cell|Hours counted/);   // removed rows
     for (const th of root.querySelectorAll(".summary tbody th")) expect(th.textContent).not.toMatch(/[()]/);
     expect(t).not.toMatch(/z₀|z0|log law/);
     expect(t).toMatch(/Modes vs grain diameter/);
@@ -128,7 +128,7 @@ describe("Mars downloads", () => {
     expect(fg[0]).toContain(",sigma_e_over_sigma_h,");
     expect(fg[0]).toContain(",ustar_mean_above_threshold_over_ustar_th,");
     expect(fluxRoseCsv(cell).split("\n")[0]).toBe("\ufeffrose_mode,grain_diameter,direction_bin_centre,direction_bin_lower,direction_bin_upper,bearing_toward,bearing_from,flux");
-    expect(Object.keys(csvColumns(cell))).toEqual(["wind_series.csv", "fields_by_grain_size.csv", "flux_rose.csv", "rose_16_sectors.csv"]);   // + 16-sector table (review U7)
+    expect(Object.keys(csvColumns(cell))).toEqual(["wind_series.csv", "fields_by_grain_size.csv", "flux_rose.csv", "rose_16_sectors.csv"]);   // + 16-sector table
     const md = JSON.parse(metadataJson(cell, meta));
     expect(md.planet).toBe("Mars");
     expect(md.fields_citation).toBe(fieldsCitation("fv3-beta1"));
@@ -155,7 +155,7 @@ describe("Mars public text", () => {
     renderLayerPanel(root, reg, new Store(initState()));
     for (const b of root.querySelectorAll("details")) (b as HTMLDetailsElement).open = true;
     for (const p of root.querySelectorAll(".info-popover")) (p as HTMLElement).hidden = false;
-    // About, "Earth and Mars: what can be compared" (PI text 2.2) names Earth on purpose: present, then left out
+    // About, "Earth and Mars: what can be compared" names Earth on purpose: present, then left out
     const cmp = root.querySelector(".about .earth-mars")!;
     expect(text(cmp)).toMatch(/^Earth and Mars: what can be compared Both atlases compute the same quantities/);
     cmp.remove();

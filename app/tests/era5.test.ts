@@ -58,7 +58,7 @@ describe("registry: ERA5 dataset", () => {
     expect(Object.keys(v).sort()).toEqual([...fieldIds].sort()); // dunes, aridity, vegetation: shared
     for (const id of ["dunes", "aridity", "vegetation"]) expect(reg.layers.find((x) => x.id === id)!.source).not.toContain("{dataset}");
     expect(v.qacb.display!.clim).not.toEqual(reg.layers.find((x) => x.id === "qacb")!.display!.clim);
-    // DP and RDP: one fixed colour range for both datasets, so the maps compare by eye (review L15)
+    // DP and RDP: one fixed colour range for both datasets, so the maps compare by eye
     for (const id of ["dpm", "rdpm"]) expect(v[id].display!.clim, id).toEqual(reg.layers.find((x) => x.id === id)!.display!.clim);
     expect(v.dpm.display!.clim).toEqual([0.01, 300]);
     expect(v.dpm.citation).toContain("10.1002/qj.3803");
@@ -155,7 +155,7 @@ describe.skipIf(!haveFix)("ERA5 fixture: panel and downloads", () => {
   it("panel: dune rule, lsm, vegetation, cell label, citations of ERA5", async () => {
     const root = await panel(await cs.query(458, 781), "era5");
     const row = (f: string) => root.querySelector(`.summary tr[data-field="${f}"]`)!;
-    expect(row("dunes").textContent).toBe("—Dunes present (cell overlaps a mapped 0.1° dune cell)yes");
+    expect(row("dunes").textContent).toBe("—Dunes presentyes");
     expect(root.querySelector('.summary tr[data-field="lsm"]')).toBeNull();
     expect(row("tot_cov_mean").querySelector("th")!.textContent).toBe("Vegetation cover");
     expect(row("centre").querySelector("td.num")!.textContent).toBe("-24.5°, 15.25°");   // ERA5 cell (458, 781)
@@ -294,7 +294,7 @@ describe.skipIf(!haveFix)("ERA5 fixture: panel and downloads", () => {
     expect(md.copernicus_notice).toContain("(ERA5, 1950–2024)");
     expect(md.citation.map((x: { id: string }) => x.id)).toEqual(["dune-atlas-era5", "era5", "aridity", "vegetation"]);
     expect(readmeText(c, META("era5"))).toContain("wind_histogram.csv  Hourly ERA5 10 m wind 1950-2024 (0.25° cell)");
-    expect(citationFile(c, "era5")).toMatch(/^Dune Atlas \(map\.geomorphlab\.org\), ERA5 0\.25° cell 458,781 \(-24\.5 N, 15\.25 E\)/);
+    expect(citationFile(c, "era5")).toMatch(/^Dune Atlas \(map\.geomorphlab\.org\), ERA5 0\.25° cell 458,781, centre 24\.50° S, 15\.25° E\nWind dataset: ERA5 0\.25°, 1950–2024/);
     expect(auxDescription("ai_valid_frac", 0.1)).toBe("Valid 30″ pixels / 144 (nominal pixels per 0.1° cell).");
   });
 });

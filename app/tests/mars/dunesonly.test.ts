@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// 'Dunes only' (PI round 5 item 6), Mars: wind-derived layers masked to the 2° cells overlapping a dune
+// 'Dunes only', Mars: wind-derived layers masked to the 2° cells overlapping a dune
 // polygon (cells.zarr/dune; 2,749 cells in the real store, MARS_STORE_ROOT), fixture and synthetic pyramid.
 import { describe, expect, it, vi } from "vitest";
 import fs from "node:fs";

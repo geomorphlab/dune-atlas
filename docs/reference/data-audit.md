@@ -1,6 +1,6 @@
 # Source data audit (Phase 1)
 
-Source: `~/Documents/research/projects/dune-world/data` (local copies of Zenodo 10.5281/zenodo.20046812).
+Source: `$DUNE_WORLD_DATA` (local copies of Zenodo 10.5281/zenodo.20046812).
 
 ## Grid
 - ERA5-Land 0.1° grid, 1801 × 3600. Latitude 90 → −90 (descending), longitude −180 → 179.9.
@@ -37,5 +37,5 @@ Source: `~/Documents/research/projects/dune-world/data` (local copies of Zenodo 
 
 ## `layers.nc` (458 MB): dunes, land, aridity, dpm, qsdiv, aeosed, africamask, area, delat, rdpdp, dpmq (y, x).
 The atlas uses `dunes`, `land` and `area`. Aridity is read from the native Global-AI v3.1 GeoTIFF instead
-(`aridity.py`, `docs/validation-qsdiv.md` §2); flux divergence is computed by `qsdiv.py`.
+(`aridity.py`, `docs/records/validation-qsdiv.md` §2); flux divergence is computed by `qsdiv.py`.
 

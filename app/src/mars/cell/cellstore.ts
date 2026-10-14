@@ -1,5 +1,5 @@
 // Read one Mars cell from the web cell store (cells.zarr, zarr v3, sharded 16x16 cells, inner
-// chunk = 1 cell; data contract in docs/mars-app.md):
+// chunk = 1 cell; data contract in docs/guide/mars.md):
 //   series [90, 180, 5, 16032] float32  u, v (m/s, toward east/north), T (K), rho (kg m^-3), z (m, lowest-level height) per hour
 //   fields [90, 180, 23, 64]   float32  (order: root attrs field_vars; last axis = grain-size index)
 //   dunes  [90, 180] float32 overlap fraction; dune [90, 180] uint8 (fraction > 0)

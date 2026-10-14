@@ -4,7 +4,7 @@
 // threshold of Pahtz & Duran (2023) at the selected median grain diameter d (mars/cell/analysis.ts).
 // Kept close to ui/cellPanel.ts line by line: port Earth changes here when they matter on Mars.
 import { groupedBody, wireTableGroups } from "../../ui/tablegroups";
-import { utTex } from "../../export/labels"; // plot-export legend: the slider value (PI, Oct 2026)
+import { utTex } from "../../export/labels"; // plot-export legend: the slider value
 import { terseQuantity } from "../../ui/terse";
 import { storageKey } from "../../body";
 import type { CellData } from "../../cell/cellstore";
@@ -51,7 +51,7 @@ const fmtUt = (v: number) => `${v.toFixed(2)} m/s`;
 /** citation file of a cell download (TXT, clipboard) */
 function citationFile(cell: { lat: number; lon: number }, datasetId?: string, setting?: string): string {
   const ds = datasetInfo(datasetId);
-  // centre with hemisphere letters, the wind dataset and the grain size the values are taken at (review U14)
+  // centre with hemisphere letters, the wind dataset and the grain size the values are taken at
   return citationText([`Mars Dune Atlas (map.geomorphlab.org/mars), ${ds.name} ${ds.resolution} cell, centre ${latLonText(cell.lat, cell.lon)}`,
     `Wind dataset: ${ds.name} ${ds.resolution}, ${ds.period}`, ...(setting ? [`Values at ${setting}`] : [])].join("\n"), citationSources(CELL_SOURCE_IDS, datasetId));
 }
@@ -82,7 +82,7 @@ export interface CellPanelOptions {
 }
 
 const deg = (v: number) => (Number.isFinite(v) ? `${v.toFixed(0)}° (${compassPoint(v)})` : MISSING);
-/** a mode's readout: bearings with their compass point; the αH axis (0–180°) without one (review L5) */
+/** a mode's readout: bearings with their compass point; the αH axis (0–180°) without one */
 const modeDeg = (k: ModeKey, v: number) => (k !== "ab" ? deg(v) : Number.isFinite(v) ? `${v.toFixed(0)}° (axis)` : MISSING);
 const BEARING_W = lazyWidth(() => bearingReserve(deg));
 /** widest cell title, e.g. "89.9°S, 179.9°W" (ui/livenum.ts width estimate) */
@@ -157,7 +157,7 @@ export function defaultFieldLabel(v: string): FieldLabel {
 
 /** Collapsible panel sections in panel order (every section heading is a disclosure, open by default; a
  *  collapse / expand is remembered in localStorage under duneAtlasMars.cellPanel.<key>Open). The summary table is
- *  back after the plots, without the key-numbers box (PI, Oct 2026); its rows fold in groups (ui/tablegroups.ts). */
+ *  back after the plots, without the key-numbers box; its rows fold in groups (ui/tablegroups.ts). */
 export const PANEL_SECTIONS = ["windRose", "fluxRose", "modes", "qsdiv", "summary", "downloads"] as const;
 export type PanelSection = (typeof PANEL_SECTIONS)[number];
 export const sectionOpenKey = (k: PanelSection) => storageKey(`cellPanel.${k}Open`); // per body (body.ts)
@@ -501,7 +501,7 @@ export class CellPanel {
       d("modesSvg", "div", "fig-svg"),
       h("ul", { class: "fig-legend arrows", html: MODE_KEYS.map((k) => { const s = MODE_STYLE[k]; return `<li><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="${s.color}" stroke-width="2" ${"dash" in s ? `stroke-dasharray="${s.dash}"` : ""}/></svg>${mathHtml(s.tex)} ${escapeHtml(s.label.replace(/^\S+ /, ""))}</li>`; }).join("") }),
       d("modesCap", "p", "caption"), this.#exportMenu("modes")));
-    // "<quantity> vs grain diameter" (cell/qplot.ts; PI request 2026-10): a y-axis selector, DP by default; the
+    // "<quantity> vs grain diameter" (cell/qplot.ts): a y-axis selector, DP by default; the
     // section keeps its id "qsdiv" (stored open state, links)
     const groups = this.#plotGroups(cell);
     const qsel = h("select", { class: "qplot-select", "aria-label": "Quantity plotted against the grain diameter" },
@@ -533,7 +533,7 @@ export class CellPanel {
     const num = (x: number, digits: number, unit = "") => (Number.isFinite(x) ? `${x.toFixed(digits)}${unit}` : MISSING);
     const dsk = this.#ds(cell);
     // one value per row, each slot at the end of its row (no hole beside a shorter value; ui/livenum.ts)
-    // the per-hour threshold lines of before Oct 2026 (no box; PI): one statement per line, its varying-length
+    // the per-hour threshold lines (no box): one statement per line, its varying-length
     // value at the end (no hole; ui/livenum.ts)
     const line = (k: string, val: string) => `<span class="meta-line">${k}: ${val}</span>`;
     D.meta.innerHTML = [
@@ -640,7 +640,7 @@ export class CellPanel {
 
   #exportMenu(key: PlotKey): HTMLElement {
     const items = h("div", { class: "export-items" });
-    // white background by default, transparent on request (review U6)
+    // white background by default, transparent on request
     const tid = nextId("exp-tr");
     const tr = h("input", { type: "checkbox", id: tid, class: "export-transparent" }) as HTMLInputElement;
     for (const [label, fmt] of [[EXPORT_TEXT.png, "png"], [EXPORT_TEXT.svg, "svg"]] as const) {
@@ -717,7 +717,7 @@ export class CellPanel {
     return `<table><thead><tr><th scope="col">Symbol</th><th scope="col">Quantity</th><th scope="col">Value</th></tr></thead>${groupedBody(rows + extra)}</table>`;
   }
 
-  /** the slider setting the cell values are taken at (Citation TXT; review U14) */
+  /** the slider setting the cell values are taken at (Citation TXT) */
   #citeSetting(): string { return `median grain diameter d = ${formatUt(this.#lastView?.ut ?? NaN).replace(/\u2007/g, "")}`; }
 
   /** wind dataset of the panel (export metadata id; else from the cell grid) */

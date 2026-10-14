@@ -290,7 +290,7 @@ describe("cell panel", () => {
     expect(det.open).toBe(true);
     expect(det.querySelector("svg.modes-plot")).not.toBeNull();
     expect(root.querySelectorAll(".summary tbody.tgroup-rows tr").length).toBe(23 - C.WITHHELD_VARS.length + 2);   // + dunes, centre (rows in groups)
-    // terse labels: no parentheses (round 5); grid cell and hours only in the downloads
+    // terse labels: no parentheses; grid cell and hours only in the downloads
     for (const th of root.querySelectorAll(".summary tbody.tgroup-rows th")) expect(th.textContent).not.toMatch(/[()]/);
     expect(root.querySelector('.summary tr[data-field="cell"]')).toBeNull();
     expect(root.querySelector('.summary tr[data-field="hours"]')).toBeNull();

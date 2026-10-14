@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// Summary table groups (PI, Oct 2026): collapsible group rows, state remembered per body; titles and members
+// Summary table groups: collapsible group rows, state remembered per body; titles and members
 // as the layer panel's groups; colour bars without notes.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { loadRegistry } from "../src/registry/load";

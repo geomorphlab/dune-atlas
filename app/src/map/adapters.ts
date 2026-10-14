@@ -1,7 +1,7 @@
 // Layer-type adapters: one function per registry `type` that adds a layer to the map and returns
 // a handle. To add a new layer type: write an adapter here, register it in ADAPTERS, add the
 // type to registry/layers.schema.json `$defs/layer/properties/type/enum` (and any semantic
-// checks to src/registry/validate.ts). See docs/architecture.md.
+// checks to src/registry/validate.ts). See docs/guide/architecture.md.
 import maplibregl, { type Map as MlMap, type AddLayerObject, type GeoJSONSource } from "maplibre-gl";
 import { Protocol } from "pmtiles";
 import { ZarrLayer } from "@carbonplan/zarr-layer";
@@ -32,7 +32,7 @@ export interface AdapterContext {
   /** 'Dunes only' (map/dunemask.ts): set for wind-derived layers while the toggle is on; cells without
    *  dunes are NaN (transparent) in colour maps and carry no arrows / streamlines */
   duneMask?: DuneMaskProvider;
-  /** 'Dunes only' with the dune map shown (review L8): its polygons are drawn as outlines (fill hidden), so the
+  /** 'Dunes only' with the dune map shown: its polygons are drawn as outlines (fill hidden), so the
    *  dune fill does not cover the wind-derived colours that are now only in the dune cells */
   outlineOnly?: boolean;
   /** report a runtime data error (marks the layer 'not available' in the panel) */
@@ -443,7 +443,7 @@ function addStyledLayers(layer: LayerDef, ctx: AdapterContext, opacity: number, 
     own.addLayer({ id, type: kind, source: sourceId, paint, minzoom: layer.minzoom ?? 0, maxzoom: layer.maxzoom ?? 24, ...extra(kind) } as AddLayerObject, ctx.beforeId);
     ids.push(id);
   }
-  // Dunes only (review L8): the polygons as outlines above the fill's place, the fill hidden
+  // Dunes only: the polygons as outlines above the fill's place, the fill hidden
   const outId = `ov-${layer.id}-outline`;
   if (ctx.outlineOnly && ids.includes(`ov-${layer.id}-fill`)) {
     own.addLayer({ id: outId, type: "line", source: sourceId, paint: { "line-color": col.fill, "line-width": OUTLINE_WIDTH, "line-opacity": op }, minzoom: layer.minzoom ?? 0, maxzoom: layer.maxzoom ?? 24, ...extra("fill") } as AddLayerObject, ctx.beforeId);

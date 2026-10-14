@@ -1,4 +1,4 @@
-// Shared by tests/dunesonly.test.ts and tests/mars/dunesonly.test.ts ('Dunes only', PI round 5 item 6):
+// Shared by tests/dunesonly.test.ts and tests/mars/dunesonly.test.ts:
 // an in-memory zarr v3 writer (bytes codec) for synthetic field pyramids and cell stores, and the checks of
 // the masked virtual store (map/maskedstore.ts + map/dunemask.ts) against a real cell store and field store.
 import { expect } from "vitest";

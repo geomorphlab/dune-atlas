@@ -26,7 +26,7 @@ import numpy as np
 from . import constants as C
 from .grid import ERA5_LAND_GRID, get_dataset
 
-R_EARTH = 6371e3
+R_EARTH = C.R_EARTH_ROUND
 VAR = "qsdiv"
 NY, NX = 1801, 3600
 
@@ -201,7 +201,7 @@ def main(argv=None):
     import argparse
     p = argparse.ArgumentParser(prog="python -m dune_atlas_pipeline.qsdiv")
     sub = p.add_subparsers(dest="cmd", required=True)
-    dd = os.environ.get("DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data"))
+    dd = os.environ.get("DUNE_WORLD_DATA", "")
     c = sub.add_parser("compute", help="qsdiv, all 64 ut -> staging zarr (float32 m/yr)")
     c.add_argument("--data", default=dd)
     c.add_argument("--out", required=True)

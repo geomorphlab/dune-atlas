@@ -83,7 +83,7 @@ def test_build_all(tmp_path):
     assert sorted(l["id"] for l in q["layers"]) == sorted(QV)
     for lay in q["layers"]:
         assert lay["source"] == f"{{dataset}}/fields/{lay['id']}.zarr"
-        # definitions only (units / slider / data are info-popover rows; PI 2026-10-14); one citation + licence
+        # definitions only (units / slider / data are info-popover rows); one citation + licence
         assert "Shown at the selected" not in lay["description"] and "Converted from" not in lay["description"]
         assert lay["attribution"]["licence"] == SC.LICENCE and lay["attribution"]["citation"] == SC.CITATION
         assert "u*,th (default" not in lay["description"]

@@ -1,6 +1,6 @@
 """Total vegetation cover (MODIS Fractional Cover v3.1, CSIRO; GEOGLAM RAPP), 2001-2025 mean on the 0.1 deg
 atlas grid: GeoZarr pyramid `fields/vegetation.zarr`, per-cell sidecar `cells-aux-veg.zarr` and the registry
-fragment `registry/generated/x_vegetation.yaml` (docs/sources.md, docs/validation-veg.md).
+fragment `registry/generated/x_vegetation.yaml` (docs/reference/sources.md, docs/records/validation-veg.md).
 
 Input: `tot_cov_mean_2001_2025.nc` (latitude 90 -> -90, longitude -180 -> 179.9, cell centres, 0.1 deg), made on
 NCI Gadi from the monthly 0.1 deg aggregates of the tc43 tiles (`scripts/veg_gadi.py`):
@@ -66,12 +66,12 @@ ATTRIBUTION = {
                 "cells; values rounded to a relative precision of 1.2e-4."),
 }
 
-DESCRIPTION = (   # shortened for the info popover (PI 2026-10-14); source, licence and processing are attribution rows
+DESCRIPTION = (   # shortened for the info popover; source, licence and processing are attribution rows
     "Mean total vegetation cover (green plus dry vegetation, including trees; % of the ground), 2001–2025, from the "
     "CSIRO MODIS Fractional Cover v3.1 (500 m, monthly) averaged onto the 0.1° cells over the months with valid data. "
     "Calibrated against Australian field sites; saturates under closed canopies. "
     "Total cover includes non-photosynthetic vegetation (dry and dead plant material) as well as green vegetation, "
-    "so it can be substantial where little green vegetation is visible; compare it with the aridity index. "  # PI text 3.15
+    "so it can be substantial where little green vegetation is visible; compare it with the aridity index. "
     "No data over ocean, Antarctica, "
     "land north of 70° N and the 180° meridian cells. "
     f"[Explore the full monthly time series at GEOGLAM RAPP]({MAP_URL}).")
@@ -296,7 +296,7 @@ def registry_layer() -> dict:
         "attribution": dict(a),
         "visible": False, "opacity": 0.85, "queryable": False,
         "display": {"transform": "none", "colormap": COLORMAP, "clim": list(CLIM), "log": False,
-                    # (no legendNote: stated once, in the info; PI, Oct 2026)
+                    # (no legendNote: stated once, in the info)
                     "ticks": [0, 20, 40, 60, 80, 100], "topLabel": "≥ 100"},
     }
 
@@ -322,7 +322,7 @@ def main(argv=None):
     b = sub.add_parser("pyramid"); b.add_argument("--nc", required=True); b.add_argument("--out", required=True)
     b.add_argument("--keepbits", type=int, default=12)
     c = sub.add_parser("cellsaux"); c.add_argument("--nc", required=True); c.add_argument("--out", required=True)
-    c.add_argument("--data", default=os.environ.get("DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data")))
+    c.add_argument("--data", default=os.environ.get("DUNE_WORLD_DATA", ""))
     c.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
     sub.add_parser("registry")
     a = p.parse_args(argv)

@@ -47,7 +47,7 @@ describe("vegetation layer (registry)", () => {
     expect(g1 > r1 && g1 > b1).toBe(true);                // dark green
     expect(COLORMAP_GROUPS.find((x) => x.label === "Sequential")!.names).toContain("ylgn");
   });
-  it("colour bar: ticks only (the explanation and the GEOGLAM RAPP link are in the info; PI, Oct 2026)", () => {
+  it("colour bar: ticks only (the explanation and the GEOGLAM RAPP link are in the info)", () => {
     const html = legendHtml(veg);
     expect(html).not.toMatch(/legend-note|MODIS|RAPP/);
     const d = document.createElement("div"); d.innerHTML = infoHtml(veg);
@@ -170,7 +170,7 @@ describe("vegetation in the panel and the downloads", () => {
     const row = root.querySelector('.summary tr[data-field="tot_cov_mean"]')!;
     expect(row.querySelector("th")!.textContent).toBe("Vegetation cover");
     expect(row.querySelector("th")!.getAttribute("title")).toBe(`Mean 2001–2025; 100 % of cell with data. ${VEG_CAVEAT}`);
-    expect(row.querySelector("td.num")!.textContent).toBe("20.3 % (green + dry)");   // review L7: total cover includes dry vegetation
+    expect(row.querySelector("td.num")!.textContent).toBe("20.3 % (green + dry)");   // total cover includes dry vegetation
     expect(row.querySelector("td.num .unit")!.getAttribute("title")).toBe(VEG_CAVEAT);
     expect(row.querySelector("td.num")!.getAttribute("title")).toBe("Mean of the 0.1° vegetation cover means (2001–2025) over the part of the cell with data (100 %)");
     // citation list in the panel includes the vegetation source with the RAPP link

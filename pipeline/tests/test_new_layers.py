@@ -14,7 +14,7 @@ from dune_atlas_pipeline import stream_upload as SU
 from dune_atlas_pipeline.fields import bitround
 
 REPO = Path(__file__).resolve().parents[2]
-D = os.environ.get("DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data"))
+D = os.environ.get("DUNE_WORLD_DATA", "")
 HAVE_DATA = os.path.isdir(D)
 
 

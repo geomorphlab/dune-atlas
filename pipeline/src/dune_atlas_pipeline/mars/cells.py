@@ -1,5 +1,5 @@
 """Mars `cells.zarr` from the MCMC FV3 GCM beta release 1 (one Mars year, hourly, 2°): per-cell hourly series
-and the 23 fields x 64 grain sizes (docs/mars-spec.md section 6, data contract of the Mars build).
+and the 23 fields x 64 grain sizes (docs/reference/mars-spec.md section 6, data contract of the Mars build).
 
 Grid (contract): rows lat 89 -> -89 (lat0 = 89, dlat = -2), columns lon -179 -> 179 (lon0 = -179, dlon = 2), cell
 centres. The FV3 arrays (lat ascending -89..89, lon 1..359) are flipped in latitude and rolled by 90 columns:
@@ -57,7 +57,7 @@ DATASET = {
                  "doi:10.1016/j.icarus.2019.03.026"),
     "transport_law": ("Pähtz, T. & Durán, O. (2023) Scaling laws for planetary sediment transport from DEM-RANS "
                       "numerical simulations. J. Fluid Mech. 963, A20. doi:10.1017/jfm.2023.343 (eqs. 3.2, 3.20, "
-                      "5.1; two typo corrections, docs/mars-spec.md)"),
+                      "5.1; two typo corrections, docs/reference/mars-spec.md)"),
     "fields_method": ("23 sand-flux fields at 64 median grain diameters from the hourly lowest-level winds, "
                       "time-averaged over the Mars year (one sample per hour), per-hour threshold and flux "
                       "(Pähtz & Durán 2023) with the crest-mode methods outlined in Gunn (2026) Nat Commun "

@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// 'Centre map on this cell' (PI round 6 item 3), Earth: 0.1° ERA5-Land cells.
+// 'Centre map on this cell', Earth: 0.1° ERA5-Land cells.
 import { describe, it, vi } from "vitest";
 import { CellPanel } from "../src/ui/cellPanel";
 import type { CellStore } from "../src/cell/cellstore";

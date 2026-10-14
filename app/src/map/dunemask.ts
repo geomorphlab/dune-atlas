@@ -1,4 +1,4 @@
-// 'Dunes only' (PI round 5 item 6, both builds): wind-derived map layers restricted to the cells with dunes.
+// 'Dunes only' (both builds): wind-derived map layers restricted to the cells with dunes.
 // The mask is the dataset's own per-cell dune flag, already published in its cell store (no new data):
 //   Earth  {dataset}/cells.zarr/dunes  uint8 (1801 x 3600 ERA5-Land, 721 x 1440 ERA5): 1 = the cell overlaps
 //          at least one 0.1° dune cell of the dune map (DATASET_INFO.dunesRule)

@@ -8,7 +8,7 @@ zarr-python 3.4.1, GDAL 3.13.3, zarrita 0.5.4 / geotiff.js (node 26).
 **Scope of measurements (provisional where noted):** global pyramids were built for 5 of the 23
 variables (dpm, at, qhef, qncb, uft — one per kind: flux, angle, ratio, signed flux, wind
 fraction) on the internal disk (`staging/global-test/`, 1.4 GB). The full 23-variable set was
-**not** built: the external staging drive `/Volumes/MGL2TB/dune-atlas-staging` was not accessible
+**not** built: the external staging drive `$STAGING` was not accessible
 from the sandbox. 23-variable totals below are extrapolations from those 5.
 
 ## 1. Store layout (`fields/<var>.zarr`, one store per variable)
@@ -104,7 +104,7 @@ A full-land Sahara chunk (361×360, 520 kB raw) drops from 382 kB to 187 kB per 
 
 **Extrapolation to 23 variables (provisional, from the 5 above):** mean 274 MB/var → **≈ 6.3 GB**
 on R2 (≈ 14 GB with the lossless topozarr default); **≈ 6–7 min** sequential build; ≥ 12 GB free
-disk recommended. This replaces the ≈ 10 GB (≤ 24 GB) estimate in `docs/storage-layout.md`.
+disk recommended. This replaces the ≈ 10 GB (≤ 24 GB) estimate in `docs/reference/storage-layout.md`.
 
 Browser-stack check (node, zarrita 0.5.4 + numcodecs.js blosc, range reads on disk): values at
 levels 0/2/4 for dpm and at match zarr-python exactly; a level-0 chunk read costs 2 requests on a

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Drift record of the Mars build (app/src/mars/upstream.json): for every Earth module the Mars build
 // substitutes, patches or was adapted from, the git blob id of the Earth source it was last
-// reconciled with and that commit. tests/mars/upstream.test.ts (npm run test:mars) fails, naming
-// each module, as soon as the Earth source differs from the record. See docs/mars-app.md,
+// reconciled with. tests/mars/upstream.test.ts (npm run test:mars) fails, naming
+// each module, as soon as the Earth source differs from the record. See docs/guide/mars.md,
 // "Keeping Mars in sync with Earth".
 //
 //   node scripts/mars/app/reconcile.mjs --check [--rev <rev>]
@@ -59,7 +59,7 @@ const load = () => (existsSync(RECORD) ? JSON.parse(readFileSync(RECORD, "utf8")
 function save(rec) {
   const sorted = Object.fromEntries(Object.entries(rec.modules).sort(([a], [b]) => a.localeCompare(b)));
   const out = {
-    _about: "Earth modules the Mars build substitutes, patches or was adapted from, with the git blob id of the Earth source last reconciled and that commit. Checked by tests/mars/upstream.test.ts; updated with scripts/mars/app/reconcile.mjs. See docs/mars-app.md.",
+    _about: "Earth modules the Mars build substitutes, patches or was adapted from, with the git blob id of the Earth source last reconciled. Checked by tests/mars/upstream.test.ts; updated with scripts/mars/app/reconcile.mjs. See docs/guide/mars.md.",
     modules: sorted,
   };
   writeFileSync(RECORD, JSON.stringify(out, null, 2) + "\n");
@@ -70,7 +70,7 @@ function record(rec, path, mods, allowDirty) {
   const committed = blobAt("HEAD", path), work = blobWorktree(path);
   if (!work) throw new Error(`app/${path} does not exist`);
   if (committed !== work && !allowDirty) throw new Error(`app/${path} has uncommitted changes; commit the Earth change first (or --allow-dirty)`);
-  rec.modules[path] = { ...mods[path], blob: work, commit: head };
+  rec.modules[path] = { ...mods[path], blob: work };
   console.log(`recorded ${path} ${work.slice(0, 10)} @ ${head.slice(0, 10)}`);
 }
 
@@ -86,8 +86,7 @@ if (flag("--check")) {
     const now = rev ? blobAt(rev, p) : blobWorktree(p);
     if (now === e.blob) continue;
     bad++;
-    const stat = now ? git("diff", "--shortstat", e.commit, rev ?? "HEAD", "--", `app/${p}`) : "deleted";
-    console.log(`CHANGED ${p} (${e.kind} -> ${e.mars}): ${stat || "uncommitted changes"}\n    git diff ${e.commit.slice(0, 10)} ${rev ?? "HEAD"} -- app/${p}`);
+    console.log(`CHANGED ${p} (${e.kind} -> ${e.mars}): ${now ? "differs from the recorded blob" : "deleted"}\n    git diff ${e.blob.slice(0, 10)} ${rev ?? "HEAD"}:app/${p}    (blob of the last reconciled source)\n    git log --oneline -5 -- app/${p}`);
   }
   console.log(bad ? `${bad} module(s) to reconcile` : `all ${Object.keys(rec.modules).length} recorded modules match${rev ? ` at ${rev}` : ""}`);
   process.exit(bad ? 1 : 0);
@@ -113,7 +112,7 @@ if (flag("--check")) {
   for (const p of Object.keys(mods)) {
     const b = blobAt(rev, p);
     if (b !== blobWorktree(p)) throw new Error(`app/${p} at ${rev.slice(0, 10)} differs from the working tree`);
-    rec.modules[p] = { ...mods[p], blob: b, commit: rev };
+    rec.modules[p] = { ...mods[p], blob: b };
   }
   save(rec);
   console.log(`initialised ${Object.keys(mods).length} modules at ${rev}`);

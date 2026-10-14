@@ -15,7 +15,7 @@ import { crestFluxRose, fluxRoseByExcessShear, fluxRose, thresholdWindSpeed, DEF
 import { sectorSums, windRoseData, type WindRose } from "./roses";
 
 export const MODE_STYLE = {
-  // one name per quantity (review L5): the layer-list names; αH is an axis (0–180°), the crest line
+  // one name per quantity: the layer-list names; αH is an axis (0–180°), the crest line
   at: { label: "αT (transverse migration direction)", tex: "$\\alpha_T$", color: "#ff6b6b" },
   ae: { label: "αE (elongation direction)", tex: "$\\alpha_E$", color: "#4dabf7" },
   ao: { label: "αO (along-crest transport direction)", tex: "$\\alpha_O$", color: "#c77dff", dash: "0.5 3.5" },

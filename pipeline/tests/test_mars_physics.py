@@ -1,4 +1,4 @@
-"""Mars transport law (docs/mars-spec.md section 3; Pahtz & Duran 2023 JFM 963:A20)."""
+"""Mars transport law (docs/reference/mars-spec.md section 3; Pahtz & Duran 2023 JFM 963:A20)."""
 import numpy as np
 import pytest
 
@@ -35,7 +35,7 @@ def test_earth_sanity_rho_f_not_rho_p():
 
 def test_packed_sand_volume_flux():
     """Atlas fluxes are volumes of packed sand, q = Q/(rho_p phi) with phi = 0.6 (as the Earth atlas,
-    FLUXCONSTANT = 5/0.6; docs/mars-spec.md section 3)."""
+    FLUXCONSTANT = 5/0.6; docs/reference/mars-spec.md section 3)."""
     assert M.PACKING == 0.6
     e = _earth_state()
     du = 0.4 ** 2 - 0.2 ** 2

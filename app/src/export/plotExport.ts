@@ -72,7 +72,7 @@ export const plotFraction = (pw: number, ph: number) => (pw / ph >= 1.3 ? 0.96 :
  *  background. Laid out STRIP_UNITS wide; all text relative to the image width W: plot labels and
  *  the strip's text 0.018 W, headings 0.024 W. `pxWidth` sets the width / height attributes (PNG
  *  pixel size; the SVG has the same proportions). */
-/** default background of plot exports (review U6: transparent images lost their dark text on dark slides) */
+/** default background of plot exports (transparent images lost their dark text on dark slides) */
 export const PLOT_BACKGROUND = "#ffffff";
 export function composePlotSvg(spec: PlotExportSpec, c: PlotExportContext, pxWidth = PLOT_EXPORT_WIDTH, math: MathRenderer | null = null, background: string | null = PLOT_BACKGROUND): { svg: string; width: number; height: number; plotHeight: number; pxWidth: number; pxHeight: number } {
   const U = STRIP_UNITS;

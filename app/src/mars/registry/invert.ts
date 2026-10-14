@@ -1,5 +1,5 @@
 // Mars dune 'invert' view: registry/mars/layers.yaml carries invertSource / invertSourceLayer on the
-// dunes placeholder (Earth puts them on its generated dunes layer). The Terrain track's fragment
+// dunes placeholder (Earth puts them on its generated dunes layer). The generated dunes fragment
 // (registry/mars/generated/dunes.yaml) replaces the placeholder as a whole; until it carries its own
 // invert fields, keep the base layer's on the merged layer. Applied by the Mars patch of registry/load.ts.
 import type { MergeResult } from "../../registry/merge";

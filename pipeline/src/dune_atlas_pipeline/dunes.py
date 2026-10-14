@@ -32,6 +32,8 @@ import subprocess
 import numpy as np
 from affine import Affine
 
+from . import constants as C
+
 NY, NX = 1801, 3600
 RES = 0.1
 TRANSFORM = Affine(RES, 0.0, -180.05, 0.0, -RES, 90.05)  # pixel-registered 0.1 deg grid
@@ -54,7 +56,7 @@ def load_layers(layers_nc: str):
     return dunes, land, area
 
 
-def spherical_cell_area(R: float = 6371007.181) -> np.ndarray:
+def spherical_cell_area(R: float = C.R_EARTH_AUTHALIC) -> np.ndarray:
     """Spherical cell areas (m^2) on the grid with latitude edges clipped to +-90.
     Used when no `area` array is supplied (tests); layers.nc `area` agrees to <1e-5."""
     lat = 90 - RES * np.arange(NY)
@@ -470,7 +472,7 @@ if __name__ == "__main__":
     import argparse
     p = argparse.ArgumentParser()
     p.add_argument("--layers", default=os.path.join(os.environ.get(
-        "DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data")), "layers.nc"))
+        "DUNE_WORLD_DATA", ""), "layers.nc"))
     p.add_argument("--out", default="staging/dunes")
     p.add_argument("--no-raster", action="store_true")
     a = p.parse_args()

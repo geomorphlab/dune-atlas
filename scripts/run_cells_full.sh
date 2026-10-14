@@ -4,16 +4,16 @@
 # interruption (finished shards are recorded in $STAGING/cells.zarr.manifest.json).
 #
 #   conda activate dune-atlas
-#   STAGING=/Volumes/MGL2TB/dune-atlas-staging scripts/run_cells_full.sh
+#   STAGING=/path/to/dune-atlas-staging scripts/run_cells_full.sh
 #
-# Env: STAGING (default /Volumes/MGL2TB/dune-atlas-staging), DUNE_WORLD_DATA (source dir),
+# Env: STAGING (required: a disk with ~250 GB free), DUNE_WORLD_DATA (source dir),
 #      WORKERS (default 4; ~1.5 GB RAM each), REGION ("y0 y1 x0 x1", default whole grid),
 #      PYTHON (default python), CLEAN_APPLE_METADATA=1 to delete ._* / .DS_Store inside the store.
-# Expect ~22-27 GB written, ~21,150 objects (see docs/validation-cells.md for the estimate).
+# Expect ~22-27 GB written, ~21,150 objects (see docs/records/validation-cells.md for the estimate).
 set -euo pipefail
 
-STAGING=${STAGING:-/Volumes/MGL2TB/dune-atlas-staging}
-DATA=${DUNE_WORLD_DATA:-$HOME/Documents/research/projects/dune-world/data}
+STAGING=${STAGING:?set STAGING to the output directory}
+DATA=${DUNE_WORLD_DATA:?set DUNE_WORLD_DATA to the source data directory}
 WORKERS=${WORKERS:-4}
 REGION=${REGION:-0 1801 0 3600}
 PYTHON=${PYTHON:-python}

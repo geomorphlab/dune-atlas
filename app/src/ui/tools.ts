@@ -44,7 +44,7 @@ export class Tools {
       btn("share-btn", SHARE_TEXT.button, ICONS.share, (b) => this.openShare(b)),
       btn("export-btn", EXPORT_TEXT.button, ICONS.camera, (b) => this.openExport(b)),
       this.#planetButton());
-    // every download confirms itself on the page (review L14)
+    // every download confirms itself on the page
     globalThis.document?.addEventListener(DOWNLOAD_EVENT, (e) => { const n = (e as CustomEvent<{ name: string }>).detail?.name; if (n) toast(`${EXPORT_TEXT.downloaded} ${n}`, 4000); });
   }
 
@@ -54,7 +54,7 @@ export class Tools {
     const b = h("button", { type: "button", class: "tool-btn planet-btn", "aria-label": label, title: label, html: ICONS.planet }) as HTMLButtonElement;
     b.addEventListener("click", () => {
       this.close();
-      const url = otherBodyUrl({ embed: isEmbedded(), resume: true }); // the other atlas reopens its last view (review U11)
+      const url = otherBodyUrl({ embed: isEmbedded(), resume: true }); // the other atlas reopens its last view
       (this.#opts.navigate ?? ((u: string) => globalThis.location.assign(u)))(url);
     });
     return b;
@@ -120,7 +120,7 @@ export class Tools {
     const bm = h("input", { type: "checkbox", id: bmId, checked: true }) as HTMLInputElement;
     const tr = h("input", { type: "checkbox", id: trId }) as HTMLInputElement;
     const run = h("button", { type: "button", class: "run-export" }, EXPORT_TEXT.run) as HTMLButtonElement;
-    // progress (review U6): an indeterminate bar, the current stage and the elapsed time; then a completion line
+    // progress: an indeterminate bar, the current stage and the elapsed time; then a completion line
     const bar = h("progress", { class: "export-progress", "aria-label": EXPORT_TEXT.working, hidden: true }) as HTMLProgressElement;
     const status = h("p", { class: "help export-status", role: "status", "aria-live": "polite" });
     run.addEventListener("click", async () => {
@@ -150,7 +150,7 @@ export function toast(text: string, ms = 2000) {
 }
 
 /** Anchor a tool popover to the left of the tools column, top aligned with its button, and keep it off an open
- *  cell panel (review U15 / L16): on the desktop it moves left of the panel when there is room (else it stays and
+ *  cell panel: on the desktop it moves left of the panel when there is room (else it stays and
  *  may overlap); with the bottom sheet (narrow screens) its height stops above the sheet. */
 export function placeToolPop(pop: HTMLElement, owner: HTMLElement, doc: Document = document) {
   const r = owner.getBoundingClientRect(), vw = globalThis.innerWidth || 1024, vh = globalThis.innerHeight || 768;

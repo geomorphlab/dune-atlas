@@ -1,4 +1,4 @@
-// Cell summary table: rows in collapsible groups, as the layer panel's groups (PI, Oct 2026). The group of a
+// Cell summary table: rows in collapsible groups, as the layer panel's groups. The group of a
 // row follows its layer group in the registry (tests/tablegroups.test.ts checks titles and membership against the
 // registry of both atlases); open / closed is remembered per group and per body ("duneAtlas[Mars].cellPanel.tableGroups").
 import { storageKey } from "../body";

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# CI-like check from a clean export (as .github/workflows/deploy.yml on ubuntu-latest): no notes/,
-# no staging/, fresh `npm ci`, then validate-registry (+ :mars), test (+ test:mars), build, build:mars
-# with VITE_BASE=/mars/ copied to dist/mars (the Pages layout).
+# CI-like check of the app from a clean export (the app job of .github/workflows/ci.yml, without the
+# synthetic fixtures): no notes/, no staging/, fresh `npm ci`, then validate-registry (+ :mars), test
+# (+ test:mars), build, build:mars with VITE_BASE=/mars/ copied to dist/mars (the Pages layout).
 #   npm run test:ci            # HEAD plus uncommitted changes to tracked files (git stash create)
 #   npm run test:ci -- <ref>   # any commit / tag
-# Set CI_NODE=/path/to/node22/bin to run with the CI Node version (deploy.yml: node-version 22).
+# Set CI_NODE=/path/to/node22/bin to run with the CI Node version (ci.yml: node-version 22).
 set -euo pipefail
 repo="$(git -C "$(dirname "$0")/.." rev-parse --show-toplevel)"
 ref="${1:-$(git -C "$repo" stash create)}"
@@ -28,11 +28,5 @@ CI=true npm run test:mars
 CI=true npx vitest run --reporter=verbose 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g' | grep -E '^\s+↓' | sed 's/^ */ci: skipped: /' || true
 VITE_DATA_BASE="https://data.geomorphlab.org" npm run build
 VITE_BODY=mars VITE_BASE=/mars/ VITE_DATA_BASE="https://data.geomorphlab.org" VITE_SITE_URL="https://map.geomorphlab.org/mars/" npm run build:mars
-rm -rf dist/mars && cp -R dist-mars dist/mars
-test -f dist/index.html && test -f dist/mars/index.html
-grep -q 'src="/mars/assets/' dist/mars/index.html || { echo "ci: Mars assets not under /mars/"; exit 1; }
-# tab icon (app/public): served at / and /mars/ in the Pages layout, linked under each build's base
-for f in favicon.ico favicon-32.png apple-touch-icon.png; do test -f "dist/$f" && test -f "dist/mars/$f" || { echo "ci: $f missing in dist/ or dist/mars/"; exit 1; }; done
-grep -q 'href="/favicon.ico"' dist/index.html && grep -q 'href="/mars/favicon.ico"' dist/mars/index.html || { echo "ci: icon links not under the base"; exit 1; }
-grep -q '<title>MGL - Dune Atlas</title>' dist/index.html && grep -q '<title>MGL - Dune Atlas</title>' dist/mars/index.html || { echo "ci: page title"; exit 1; }
+bash scripts/check-pages-layout.sh
 echo "ci: OK"

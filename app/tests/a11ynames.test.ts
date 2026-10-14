@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// Every checkbox in the layer panel has an accessible name (review L16: KaTeX-only labels were read as "on").
+// Every checkbox in the layer panel has an accessible name (KaTeX-only labels were read as "on").
 import { describe, expect, it, vi } from "vitest";
 import { renderLayerPanel } from "../src/ui/layerPanel";
 import { loadRegistry } from "../src/registry/load";

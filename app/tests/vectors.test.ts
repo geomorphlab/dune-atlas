@@ -44,7 +44,7 @@ describe("vector geometry", () => {
     expect(f.length).toBe(2);
     const [[tail, tip], head] = f[0].geometry.coordinates;
     expect(tip[0]).toBeGreaterThan(tail[0]);
-    // anchored at the base (round 6): tail = seed point, tip one arrow length downwind along the great circle
+    // anchored at the base: tail = seed point, tip one arrow length downwind along the great circle
     expect(tail).toEqual([10, 10]);
     expect(gcDeg(tail as [number, number], tip as [number, number])).toBeCloseTo(2, 9);
     expect(head.length).toBe(3);

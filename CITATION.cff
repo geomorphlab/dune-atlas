@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+message: "If you use the Dune Atlas or its data, please cite the paper below (preferred citation)."
+title: "Dune Atlas: interactive atlas of wind-blown sand dunes, wind regimes and sand-flux fields for Earth and Mars"
+type: software
+authors:
+  - family-names: Gunn
+    given-names: Andrew
+    email: a.gunn@monash.edu
+    affiliation: "Geomorphology Lab, Monash University"
+repository-code: "https://github.com/geomorphlab/dune-atlas"
+url: "https://map.geomorphlab.org/"
+license: MIT
+keywords:
+  - aeolian geomorphology
+  - sand dunes
+  - sand flux
+  - wind regime
+  - ERA5
+  - Mars
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Gunn
+      given-names: Andrew
+  title: "The distribution of Earth's wind-blown sand dunes"
+  journal: "Nature Communications"
+  year: 2026
+  doi: "10.1038/s41467-026-75466-y"
+references:
+  - type: dataset
+    authors:
+      - family-names: Gunn
+        given-names: Andrew
+    title: "The distribution of Earth's wind-blown sand dunes - Supplementary Data"
+    publisher:
+      name: Zenodo
+    year: 2026
+    doi: "10.5281/zenodo.20046812"
+    license: CC-BY-4.0
+  - type: software
+    authors:
+      - family-names: Gunn
+        given-names: Andrew
+    title: "geomorphlab/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code"
+    version: "v1.0.0"
+    publisher:
+      name: Zenodo
+    year: 2026
+    doi: "10.5281/zenodo.20054674"
+    license: MIT

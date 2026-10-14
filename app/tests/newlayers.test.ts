@@ -41,7 +41,7 @@ describe("registry: aridity and qsdiv", () => {
     expect(a.display).toMatchObject({ colormap: "brbg", clim: [0.003, 6.5], log: true, ticks: [0.03, 0.2, 0.5, 0.65], topLabel: "≥ 6.5" });
     expect(q.thresholdAware).toBe(true);
     expect(q.display).toMatchObject({ colormap: "piyg", clim: [-0.3, 0.3], transform: "scale", scale: 1000 });
-    expect(q.titleTex).toBe("Saturated flux divergence $\\nabla\\cdot\\vec{q}_s$"); // name and symbol (review U12)
+    expect(q.titleTex).toBe("Saturated flux divergence $\\nabla\\cdot\\vec{q}_s$"); // name and symbol
     expect(() => katex.renderToString(q.titleTex!.split("$")[1], { throwOnError: true })).not.toThrow();
     expect(q.description).toMatch(/following Gunn \(2026\), Methods M6/);
     expect(q.description).toMatch(/No data at coasts/);
@@ -83,7 +83,7 @@ describe("info popover and legend", () => {
     expect(infoHtml(L("qsdiv"))).toMatch(/Updates with the/);
     expect(attributionHtml({ url: "javascript:alert(1)", source: "<b>x</b>" })).not.toMatch(/javascript:|<b>/);
   });
-  it("aridity legend: UNEP class ticks and the saturated top label only; classes and no-data areas are in the info (PI, Oct 2026)", () => {
+  it("aridity legend: UNEP class ticks and the saturated top label only; classes and no-data areas are in the info", () => {
     const a = L("aridity");
     expect(legendTicks(a)).toEqual([0.003, 0.03, 0.2, 0.5, 0.65, 6.5]);
     const h = legendHtml(a);
@@ -166,14 +166,14 @@ describe("panel and downloads with cells-aux values", () => {
     expect(row("qsdiv").querySelector("td.num")!.textContent!.replace(/\u00a0/g, " ")).toBe(`${fmtNum(Math.fround(-1e-4 + 14 * 3e-6) * 1000)} m/kyr`);
     expect(row("qsdiv").querySelector("td.num")!.textContent!.replace(/\u00a0/g, " ")).toMatch(/^-0\.058\d* m\/kyr$/);
     expect(row("ai_mean").querySelector("td.num")!.textContent).toBe("≥ 0.050 (arid)");
-    expect(row("ai_mean").querySelector("th")!.textContent).toBe("Aridity index");               // terse label (round 5)
+    expect(row("ai_mean").querySelector("th")!.textContent).toBe("Aridity index");               // terse label
     expect(row("ai_mean").querySelector("th")!.getAttribute("title")).toMatch(/100 % of cell valid, 25 % saturated/);
     expect(root.querySelector("details.qsdiv svg.line-plot")).not.toBeNull();
     // all six sections, in order, each a disclosure with its h3 in the summary
     expect([...root.querySelectorAll(".cell-body details.section")].map((d) => (d as HTMLElement).dataset.section)).toEqual([...PANEL_SECTIONS]);
     const qd = root.querySelector('details[data-section="qsdiv"]') as HTMLDetailsElement;
     expect(qd.open).toBe(true);
-    expect(qd.querySelector(":scope > summary > h3")!.textContent!.replace(/\s+/g, " ")).toMatch(/^Drift potential DP vs threshold$/);   // the quantity plot, DP by default (PI request 2026-10)
+    expect(qd.querySelector(":scope > summary > h3")!.textContent!.replace(/\s+/g, " ")).toMatch(/^Drift potential DP vs threshold$/);   // the quantity plot, DP by default
     p.setThreshold(3);
     expect(row("qsdiv").querySelector("td.num")!.textContent).toBe("—");
     expect(aridityClass(0.02)).toBe("hyper-arid");

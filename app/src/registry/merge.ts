@@ -1,5 +1,5 @@
 // Merge the hand-written registry (registry/layers.yaml) with generated fragments
-// (registry/generated/*.yaml, written by the pipeline tracks). Pure; used by the app
+// (registry/generated/*.yaml, written by the pipeline). Pure; used by the app
 // (via import.meta.glob), by scripts/validate-registry.ts and by the tests.
 //
 // Rules

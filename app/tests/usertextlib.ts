@@ -1,4 +1,4 @@
-// User-facing text (PI round 7 item 3; docs/user-text-audit.md): no implementation, failure-handling,
+// User-facing text: no implementation, failure-handling,
 // internal or relict wording in any site or download string of either build. Used by
 // tests/usertext.test.ts (Earth, tests/publictext.ts) and tests/mars/publictext.test.ts (Mars).
 
@@ -13,8 +13,8 @@ export const DEV_PHRASES: [string, RegExp][] = [
   ["relict physics / values", /\blog[- ]law\b|\bz0\b|\bz₀\b|\b199 µm\b/i],
   ["reprojection detail", /\breprojected\b/i],
 ];
-/** known strings outside the App track (Terrain owns registry/mars/generated/dunes.yaml): reported
- *  to Terrain with the new text (docs/user-text-audit.md); allowed until rebuilt, then removed here */
+/** known strings outside this file (owned by registry/mars/generated/dunes.yaml): reported
+ *  elsewhere with the new text; allowed until rebuilt, then removed here */
 export const PENDING_OTHER_TRACK: string[] = [];
 /** download keys that are machine-readable names, not prose (file / variable names are expected there) */
 const MACHINE = /^(E|M)?:?(metadata\.(files|aux\.[^.]+\.in_file|citation\.\d+\.id)|csv\.)/;

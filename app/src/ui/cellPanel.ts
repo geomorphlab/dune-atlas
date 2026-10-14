@@ -2,7 +2,7 @@
 // control (persistent, synced with the layer panel) | content. Content is built once per cell;
 // threshold / bin / axis changes only refresh the dynamic parts so sliders keep focus.
 import { groupedBody, wireTableGroups } from "./tablegroups";
-import { utTex } from "../export/labels"; // plot-export legend: the slider value (PI, Oct 2026)
+import { utTex } from "../export/labels"; // plot-export legend: the slider value
 import { terseQuantity } from "./terse";
 import { storageKey } from "../body";
 import type { CellData, CellStore } from "../cell/cellstore";
@@ -64,7 +64,7 @@ export interface CellPanelOptions {
 }
 
 const deg = (v: number) => (Number.isFinite(v) ? `${v.toFixed(0)}° (${compassPoint(v)})` : MISSING);
-/** a mode's readout: bearings with their compass point; the αH axis (0–180°) without one (review L5) */
+/** a mode's readout: bearings with their compass point; the αH axis (0–180°) without one */
 const modeDeg = (k: ModeKey, v: number) => (k !== "ab" ? deg(v) : Number.isFinite(v) ? `${v.toFixed(0)}° (axis)` : MISSING);
 const BEARING_W = lazyWidth(() => bearingReserve(deg));
 /** widest cell title, e.g. "89.9°S, 179.9°W" (ui/livenum.ts width estimate) */
@@ -94,7 +94,7 @@ function reserves(cell: CellData, utValues: ArrayLike<number>): Reserves {
   return r;
 }
 
-/** vegetation cover caveat in the table (review L7): total cover includes dry vegetation */
+/** vegetation cover caveat in the table: total cover includes dry vegetation */
 export const VEG_CAVEAT = "Total cover includes non-photosynthetic vegetation (dry and dead plant material) as well as green vegetation, so it can be substantial where little green vegetation is visible; compare it with the aridity index.";
 
 /** the stored choice of the plotted quantity (per body) */
@@ -120,7 +120,7 @@ export function defaultFieldLabel(v: string): FieldLabel {
 
 /** Collapsible panel sections in panel order (every section heading is a disclosure, open by default; a
  *  collapse / expand is remembered in localStorage under duneAtlas.cellPanel.<key>Open). The summary table is
- *  back after the plots, without the key-numbers box (PI, Oct 2026); its rows fold in groups (ui/tablegroups.ts). */
+ *  back after the plots, without the key-numbers box; its rows fold in groups (ui/tablegroups.ts). */
 export const PANEL_SECTIONS = ["windRose", "fluxRose", "modes", "qsdiv", "summary", "downloads"] as const;
 export type PanelSection = (typeof PANEL_SECTIONS)[number];
 export const sectionOpenKey = (k: PanelSection) => storageKey(`cellPanel.${k}Open`); // per body (body.ts)
@@ -463,7 +463,7 @@ export class CellPanel {
       d("modesSvg", "div", "fig-svg"),
       h("ul", { class: "fig-legend arrows", html: MODE_KEYS.map((k) => { const s = MODE_STYLE[k]; return `<li><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="${s.color}" stroke-width="2" ${"dash" in s ? `stroke-dasharray="${s.dash}"` : ""}/></svg>${mathHtml(s.tex)} ${escapeHtml(s.label.replace(/^\S+ /, ""))}</li>`; }).join("") }),
       d("modesCap", "p", "caption"), this.#exportMenu("modes")));
-    // "<quantity> vs threshold" (cell/qplot.ts; PI request 2026-10): a y-axis selector, DP by default; the
+    // "<quantity> vs threshold" (cell/qplot.ts): a y-axis selector, DP by default; the
     // section keeps its id "qsdiv" (stored open state, links)
     const groups = this.#plotGroups(cell);
     const qsel = h("select", { class: "qplot-select", "aria-label": "Quantity plotted against the threshold" },
@@ -493,7 +493,7 @@ export class CellPanel {
     const R = reserves(cell, v.utValues);
     const dsk = this.#ds(cell);
     // one value per row, each slot at the end of its row (no hole beside a shorter value; ui/livenum.ts)
-    // the threshold line of before Oct 2026 (no box; PI), one statement per line with its value at the end (no
+    // the threshold line (no box), one statement per line with its value at the end (no
     // hole; ui/livenum.ts)
     D.meta.innerHTML = `<span class="meta-line">Threshold ${mathHtml("$u_{*,th}$")}: <strong>${live(formatUt(v.ut), R.ut, "left")}</strong></span>`
       + `<span class="meta-line">Wind at 10 m at the threshold: ≈ ${live(`${v.thresholdWind10m.toFixed(1)}&nbsp;m/s`, R.wind, "left")}</span>`;
@@ -594,7 +594,7 @@ export class CellPanel {
 
   #exportMenu(key: PlotKey): HTMLElement {
     const items = h("div", { class: "export-items" });
-    // white background by default, transparent on request (review U6)
+    // white background by default, transparent on request
     const tid = nextId("exp-tr");
     const tr = h("input", { type: "checkbox", id: tid, class: "export-transparent" }) as HTMLInputElement;
     for (const [label, fmt] of [[EXPORT_TEXT.png, "png"], [EXPORT_TEXT.svg, "svg"]] as const) {
@@ -678,7 +678,7 @@ export class CellPanel {
     return `<table><thead><tr><th scope="col">Symbol</th><th scope="col">Quantity</th><th scope="col">Value</th></tr></thead>${groupedBody(rows + extra)}</table>`;
   }
 
-  /** the slider setting the cell values are taken at (Citation TXT; review U14) */
+  /** the slider setting the cell values are taken at (Citation TXT) */
   #citeSetting(): string { return `threshold friction velocity u*,th = ${formatUt(this.#lastView?.ut ?? NaN)}`; }
 
   /** wind dataset of the panel (export metadata id; else from the cell grid) */

@@ -1,5 +1,5 @@
 // "<quantity> vs threshold" (Earth, x = u*,th) / "<quantity> vs grain diameter" (Mars, x = d) plot of the cell
-// panel (PI request 2026-10): a y-axis selector over every scalar the cell has per slider position - the 23
+// panel: a y-axis selector over every scalar the cell has per slider position - the 23
 // sand-flux fields, the flux divergence and (Mars) the per-hour threshold statistics. Names, symbols and units
 // are the layer list's (registry/field_names.json; one name per quantity). Direction fields use a fixed
 // 0-360° (axes 0-180°) y axis with breaks where the bearing wraps (PLOT_DIRECTIONS switches them off);
@@ -15,7 +15,7 @@ import { fmtNum, MISSING } from "../util/format";
 import { textOnly } from "../util/math";
 import { csvName } from "./csvnames";
 
-/** include the direction fields (RDD, αT, αE, αH, αO) in the selector; the PI may drop them */
+/** include the direction fields (RDD, αT, αE, αH, αO) in the selector */
 export const PLOT_DIRECTIONS = true;
 /** the default quantity (divergence is niche) */
 export const DEFAULT_PLOT = "dpm";

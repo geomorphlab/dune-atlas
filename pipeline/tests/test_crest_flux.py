@@ -8,7 +8,7 @@ import pytest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 STORE = ROOT / "staging" / "fixture" / "cells.zarr"
-pytestmark = pytest.mark.skipif(not (STORE / "zarr.json").exists(), reason="fixture not built")
+pytestmark = [pytest.mark.staging, pytest.mark.skipif(not (STORE / "zarr.json").exists(), reason="fixture not built")]
 
 CELLS = [(1100, 1950), (1174, 1954), (1145, 1948), (1072, 1928)]
 

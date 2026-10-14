@@ -248,7 +248,7 @@ export function geoPolylines(pts: ArrayLike<[number, number]>, maxSegDeg = 2): [
 
 export interface ArrowSeed { lon: number; lat: number; /** arrow length in degrees of latitude */ len: number }
 
-/** Arrow features anchored at their BASE (PI round 6, as wind quivers): the tail is the seed point and the
+/** Arrow features anchored at their BASE (as wind quivers): the tail is the seed point and the
  *  arrow points downwind (toward the transport direction), length L. Headless axis segments (no direction)
  *  stay centred on the seed. `mag` scales length/opacity. */
 export function arrowFeatures(seeds: ArrowSeed[], dir: Grid, opts: { axis: boolean; mag?: Grid | null }): Feature<MultiLineString>[] {
@@ -501,7 +501,7 @@ export function evenStreamlines(f: ScreenField, o: EvenOptions): Streamline[] {
   return lines;
 }
 
-/** 'Dunes only' (PI round 6): clip streamlines integrated on the UNMASKED field to the dune cells. Each
+/** 'Dunes only': clip streamlines integrated on the UNMASKED field to the dune cells. Each
  *  line is split where it leaves / enters a dune cell (at vertex resolution, <= `outEvery` px); pieces shorter
  *  than `minLen` px are dropped. `inside(x, y)`: the screen point lies in a dune cell. */
 export function clipStreamlines(lines: Streamline[], inside: (x: number, y: number) => boolean, minLen: number): Streamline[] {

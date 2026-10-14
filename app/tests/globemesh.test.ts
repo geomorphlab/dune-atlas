@@ -1,4 +1,4 @@
-// Globe alignment of the field raster with vector outlines (PI, Oct 2026: at 22° N, 56.7° E the raster cell fell
+// Globe alignment of the field raster with vector outlines (at 22° N, 56.7° E the raster cell fell
 // short of the dune outline on the right and bottom in globe view). Cause: zarr-layer drew each region as one quad
 // split into ~1° steps; on the globe every step is a flat chord below the sphere and the texture varies linearly
 // along it, so a cell edge inside a step is drawn where the chord is, not where the sphere (and MapLibre's finely
@@ -52,7 +52,7 @@ describe("field raster vs vector outline on the globe", () => {
   });
   for (const [lat, lon] of [[22.0, 56.7], [0.0, 10.05], [45.0, 30.0], [70.0, 100.0]]) {
     it(`cell at ${lat}° N, ${lon}° E: offset of the right and bottom raster edges from the outline (zoom 10.5-11.9)`, () => {
-      // the cell (0.2° wide, as in the PI's screenshot), the view centre 700 px left of and 400 px above its right/bottom corner
+      // the cell (0.2° wide), the view centre 700 px left of and 400 px above its right/bottom corner
       const right = lon + 0.15, bottom = lat - 0.05;
       let worstOld = 0, worstNew = 0;
       for (const z of [10.5, 11, 11.5, 11.9]) {

@@ -66,6 +66,10 @@ const ALLOW: RegExp[] = [
   /^metadata\.json\.aux\.\w+\.value:/,
   // the land definition (ERA5-Land: land–sea mask fraction > 0.5; ERA5: > 0)
   /^metadata\.json\.conventions\.land_cells:/,
+  // citation and licence of the sand-flux fields: the paper's data record (ERA5-Land) or computed for the
+  // atlas from the dataset's winds (ERA5), cell/citation.ts fieldsCitation / fieldsLicence
+  /^(global|metadata\.json)\.fields_(citation|license):/,
+  /^README\.txt:\d+: "Cite the sand-flux fields as: /,
 ];
 
 interface Side { cell: CellData; meta: ExportMeta; store: CellStore }
@@ -115,7 +119,7 @@ describe.skipIf(!have)("ERA5-Land / ERA5 parity of the summary table and downloa
     const s = sides[id];
     const p = new CellPanel(root, 14, { windSectors: 16, fluxSectors: 32, onClose: () => {}, exportMeta: () => ({ datasetId: id, datasetTitle: s.meta.datasetTitle, dataVersion: "v1", permalink: s.meta.permalink }) });
     await p.show({ query: async () => s.cell, attrs: s.store.attrs, fieldVars: s.cell.fieldVars } as unknown as CellStore, s.cell.iy, s.cell.ix);
-    const rows = [...root.querySelectorAll(".summary tbody tr")].map((r) => ({ field: r.getAttribute("data-field"), sym: r.querySelector("td.sym")!.textContent, label: r.querySelector("th")!.textContent!.replace(/\d+ % of cell/, "N % of cell") }));
+    const rows = [...root.querySelectorAll(".summary tbody tr[data-field]")].map((r) => ({ field: r.getAttribute("data-field"), sym: r.querySelector("td.sym")!.textContent, label: r.querySelector("th")!.textContent!.replace(/\d+ % of cell/, "N % of cell") }));
     const sections = [...root.querySelectorAll(".cell-body details.section")].map((d) => [d.getAttribute("data-section"), d.querySelector("summary")!.textContent!.replace(/= [\d.]+ m\/s/, "= X m/s")]);
     return { rows, sections, root };
   };

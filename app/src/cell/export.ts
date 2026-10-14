@@ -40,7 +40,7 @@ export interface ExportMeta {
   utIndex?: number;
 }
 
-/** rose_16_sectors.csv (review U7): the wind and sand-flux roses of the panel in 16 compass sectors, degrees,
+/** rose_16_sectors.csv: the wind and sand-flux roses of the panel in 16 compass sectors, degrees,
  *  at the panel's threshold (Earth) or grain size (Mars); both builds. */
 export const ROSE16_FILE = "rose_16_sectors.csv";
 export const rose16Columns = (axis: CsvColumn): CsvColumn[] => [

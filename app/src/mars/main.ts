@@ -54,7 +54,7 @@ reg.basemaps = prepareMarsBasemaps(reg.basemaps, dataBase);
 // user's explicit choice (localStorage) or the default view's. Layer definitions follow it.
 const DATASET_KEY = storageKey("dataset"); // "duneAtlasMars.dataset": same origin as Earth (body.ts)
 const storedDataset = (() => { try { return localStorage.getItem(DATASET_KEY) ?? undefined; } catch { return undefined; } })();
-// planet button return (?resume=1, review U11): this atlas's last view, stored per body on every view change
+// planet button return (?resume=1): this atlas's last view, stored per body on every view change
 const LAST_VIEW_KEY = storageKey(LAST_VIEW);
 const storedView = (() => { try { return localStorage.getItem(LAST_VIEW_KEY); } catch { return null; } })();
 const query0 = parseUrlState(location.search);
@@ -96,7 +96,7 @@ const map = new maplibregl.Map({
   maxCanvasSize: [16384, 16384],
 });
 map.touchZoomRotate.disableRotation();
-map.scrollZoom.setWheelZoomRate(WHEEL_ZOOM_RATE); // faster wheel zoom (review U9)
+map.scrollZoom.setWheelZoomRate(WHEEL_ZOOM_RATE); // faster wheel zoom
 const loading = new LoadingIndicator(map); // first draw; again on dataset / projection / basemap changes
 loading.begin();
 map.keyboard.disableRotation();
@@ -118,7 +118,7 @@ const datasetPrefix = () => selectDataset(reg, store.state.dataset)?.prefix;
 const overlays = new OverlayManager(map, reg, dataBase, init.utIndex, { order: init.order, datasetPrefix: datasetPrefix(), dunesOnly: !!init.dunesOnly });
 overlays.onError = (l, e) => console.warn(`[dune-atlas] layer '${l.id}': data could not be loaded`, e);
 
-// globe polar caps (map/polarcap.ts, docs/mars-app.md 5b): basemap cap + dune fill/invert caps, globe only
+// globe polar caps (map/polarcap.ts, docs/guide/mars.md 5b): basemap cap + dune fill/invert caps, globe only
 const polarCaps = globePolarCaps(map, marsPolarCapOptions(dataBase, reg.basemaps, reg.layers));
 
 function applyBasemap() {
@@ -213,7 +213,7 @@ const tour = new Tour(TOUR_STEPS, { hooks: tourHooks({
 const tools = new Tools({ startTour: () => tourStart.fromHelp(), shareLink: shareLinkNow, exportMap, openAbout });
 map.addControl({ onAdd: () => tools.el, onRemove: () => tools.el.remove() }, "top-right");
 const autostart = shouldShowTour({ embed: init.embed, tourParam: !!url.tour, seen: tourSeen() });
-// "Start tour" bubble by the Help button (PI request); the automatic first-visit start also has a time-out
+// "Start tour" bubble by the Help button; the automatic first-visit start also has a time-out
 // fallback in case the map never reports idle
 const tourStart = wireTourBubble(tour, { autostart });
 if (autostart) autostartTour(map, () => { if (!tour.active) tour.start(); });

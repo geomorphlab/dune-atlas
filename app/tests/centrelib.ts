@@ -1,4 +1,4 @@
-// Shared by tests/centre.test.ts and tests/mars/centre.test.ts: 'Centre map on this cell' (PI round 6 item 3).
+// Shared by tests/centre.test.ts and tests/mars/centre.test.ts: 'Centre map on this cell'.
 import { expect, vi } from "vitest";
 import { CENTRE_MS, MERCATOR_LAT, MIN_CELL_PX, cellPx, centreOnCell, centreTarget, zoomForCell } from "../src/map/centre";
 

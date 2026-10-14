@@ -1,6 +1,6 @@
 # Validation: Mars wind fields (FV3 beta 1, cells.zarr, pyramids, sidecars)
 
-Wind track of the Mars build (docs/mars-spec.md). **Current build v2** (2026-10-14): v1 with fluxes of packed sand, q = Q/(ρ_p φ), φ = 0.6 (§11). **v1** (2026-10-14): u* from the smooth-wall mixing-length profile of Pähtz & Durán (2023) eq. 2.2 under constant stress at each hour's lowest-level height z (spec §2, physics change 5b92eff); series (u, v, T, ρ, z). The first build **v0** used a neutral log law with z₀ = 1 mm at a fixed 2 m and a 4-variable series; it is kept on Gadi as `cells.zarr.v0` until integration and compared in §6. **Default grain size 200 µm** (PI, 2026-10-14; commit 7dad373): node 29 of the d axis moved from 199 to exactly 200 µm; that one node of every d-dependent product was recomputed (§3a) and the store before the change is kept as `cells.zarr.v1-199`. Code: `pipeline/src/dune_atlas_pipeline/mars/` (`fields.py` engine, `cells.py` store builder and validation, `stats.py`, `fixture.py`, `pyramids.py`, `sidecars.py`), `pipeline/gadi/mars/cells_job.sh`, `scripts/mars/data/`. Gadi code snapshot of the v1 store: `wind-39b1329`.
+Wind track of the Mars build (docs/reference/mars-spec.md). **Current build v2** (2026-10-14): v1 with fluxes of packed sand, q = Q/(ρ_p φ), φ = 0.6 (§11). **v1** (2026-10-14): u* from the smooth-wall mixing-length profile of Pähtz & Durán (2023) eq. 2.2 under constant stress at each hour's lowest-level height z (spec §2, physics change 5b92eff); series (u, v, T, ρ, z). The first build **v0** used a neutral log law with z₀ = 1 mm at a fixed 2 m and a 4-variable series; it is kept on Gadi as `cells.zarr.v0` until integration and compared in §6. **Default grain size 200 µm** (PI, 2026-10-14; commit 7dad373): node 29 of the d axis moved from 199 to exactly 200 µm; that one node of every d-dependent product was recomputed (§3a) and the store before the change is kept as `cells.zarr.v1-199`. Code: `pipeline/src/dune_atlas_pipeline/mars/` (`fields.py` engine, `cells.py` store builder and validation, `stats.py`, `fixture.py`, `pyramids.py`, `sidecars.py`), `pipeline/gadi/mars/cells_job.sh`, `scripts/mars/data/`. Gadi code snapshot of the v1 store: `wind-39b1329`.
 
 ## 1. Method
 
@@ -79,7 +79,7 @@ v1 series 1.878 GB (116 kB per cell, 5 variables; v0 1.639 GB for 4). Effect on 
 
 | store | where | size | objects |
 |---|---|---|---|
-| cells.zarr (series (90, 180, 5, 16032) 72 shards, fields 72 shards, dunes, dune, ls, sol) | Gadi `/scratch/k10/ag5517/dune-atlas/mars/stores/datasets/fv3-beta1/cells.zarr` | 1.951 GB (series 1.878 GB, fields 72.0 MB) | 155 |
+| cells.zarr (series (90, 180, 5, 16032) 72 shards, fields 72 shards, dunes, dune, ls, sol) | Gadi `$DUNE_ATLAS_WORK/mars/stores/datasets/fv3-beta1/cells.zarr` | 1.951 GB (series 1.878 GB, fields 72.0 MB) | 155 |
 | cells.zarr fixture subset (fields 21 shards = 3 × 3 around each site; series the 3 site shards (0,9), (2,7), (4,6)) | devroot `…/fv3-beta1/cells.zarr` | 111 MB | 35 |
 | fields/<var>.zarr × 23 + qsdiv (d, y, x), rho_mean (y, x); one level at 2° | devroot `…/fv3-beta1/fields/` and Gadi mirror | 49 MB | 273 |
 | cells-aux.zarr: qsdiv (lat, lon, d) m/yr, rho_mean, elev_mean (lat, lon) | devroot `…/fv3-beta1/cells-aux.zarr` and Gadi mirror | 4.6 MB | 88 |

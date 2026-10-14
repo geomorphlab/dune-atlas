@@ -19,7 +19,7 @@ import tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-DATA = os.environ.get("DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data"))
+DATA = os.environ.get("DUNE_WORLD_DATA", "")
 QSDIV_NATIVE = REPO / "staging" / "new-layers" / "qsdiv_native.zarr"
 AI_NPZ = REPO / "staging" / "new-layers" / "ai_cellmeans_era5land.npz"
 VEG_NC = REPO / "staging" / "new-layers" / "veg" / "tot_cov_mean_2001_2025.nc"

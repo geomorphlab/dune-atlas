@@ -1,4 +1,4 @@
-/* Base text: panels at 12.5-14 px (review U12 / L16: +0.5 px on captions, help, legends, tables). */
+/* Base text: panels at 12.5-14 px (+0.5 px on captions, help, legends, tables). */
 /* Dark theme throughout (panels, legends, popovers, controls, tables, SVG plots). */
 :root {
   color-scheme: dark;
@@ -75,7 +75,7 @@ label.inline { display: inline-flex; align-items: center; gap: 4px; margin: 2px 
 /* Wind dataset and Dunes only: one row each, the same in both builds; the selector takes the row */
 label.inline.dataset-row { display: flex; align-items: center; gap: 6px; margin: 2px 0 6px; white-space: nowrap; }
 .dataset-row select { flex: 1 1 auto; min-width: 0; width: 100%; }
-/* Wind dataset row with its ⓘ (PI text 3.16) */
+/* Wind dataset row with its ⓘ */
 .dataset-line { display: flex; flex-wrap: wrap; align-items: center; column-gap: 6px; }
 .dataset-line > .info-popover { flex: 1 0 100%; }
 .dataset-line > label.inline.dataset-row { flex: 1 1 auto; min-width: 0; }
@@ -278,7 +278,7 @@ body.embed #layer-panel { top: 44px; max-height: calc(100% - 94px); }
 .tour.no-target .tour-backdrop { background: rgba(0,0,0,.55); }
 .tour-spot { position: fixed; border-radius: 8px; box-shadow: 0 0 0 9999px rgba(0,0,0,.55); outline: 2px solid var(--accent); pointer-events: none; transition: all .2s ease; }
 .tour-pop { position: fixed; box-sizing: border-box; max-height: calc(100vh - 24px); overflow-y: auto; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 4px 22px rgba(0,0,0,.7); padding: 10px 14px 12px; }
-/* the popover border is neutral: the accent outline marks only the highlighted control (one yellow box per step; PI, Oct 2026) */
+/* the popover border is neutral: the accent outline marks only the highlighted control (one yellow box per step) */
 /* box-sizing: the width set by the tour (min(340, vw - 24) px) is the whole box (it was the content box: 30 px more, so steps 8-9 ran off the right edge) */
 .tour-pop h2 { font-size: 16px; margin: 0 0 6px; }
 .tour-pop .tour-count { margin: 0; font-size: 11.5px; color: var(--muted); }
@@ -297,10 +297,10 @@ label.inline.dunes-only-row { display: flex; width: max-content; max-width: 100%
 .dunes-only-row { margin: 0 0 6px; color: var(--text, inherit); cursor: pointer; }
 .dunes-only-row input { margin: 0 4px 0 0; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-/* cell panel: key numbers at the top (review U5); one value per row, each live slot ends its row */
+/* cell panel: key numbers at the top; one value per row, each live slot ends its row */
 /* Mars per-hour threshold lines (cell meta): one statement per line, the value last */
 .cell-meta .meta-line { display: block; }
-/* summary table groups (PI, Oct 2026): a disclosure row per layer group, as in the layer panel */
+/* summary table groups: a disclosure row per layer group, as in the layer panel */
 .summary table tbody.tgroup-head th { padding: 6px 0 2px; text-align: left; border-bottom: 1px solid var(--line); }
 .summary .tgroup-toggle { all: unset; cursor: pointer; font-weight: 600; font-size: 12.5px; color: var(--fg); }
 .summary .tgroup-toggle::before { content: "▸"; display: inline-block; width: 1.1em; color: var(--muted); }
@@ -310,7 +310,7 @@ label.inline.dunes-only-row { display: flex; width: max-content; max-width: 100%
 .caption .cap-lead { display: block; }
 .fig-legend li.key-label { color: var(--muted); }
 /* full-screen layout with the cell panel open: the attribution moves left of the panel instead of running under
-   it (review U-Mars: the panel covered the end of the credits line) */
+   it (the panel covered the end of the credits line) */
 @media (min-width: 721px) {
   body.cell-open .maplibregl-ctrl-bottom-right { right: calc(min(var(--cell-w), 70vw) + 52px); }
   body.cell-open .maplibregl-ctrl-bottom-right .maplibregl-ctrl-attrib { max-width: calc(100vw - 300px - min(var(--cell-w), 70vw) - 52px); }
@@ -320,7 +320,7 @@ label.inline.dunes-only-row { display: flex; width: max-content; max-width: 100%
 .qplot-row select { flex: 1 1 auto; min-width: 0; max-width: 100%; }
 /* the slider's one help line keeps 12 px (one line in a 360 px embed frame; tests/embedlib.ts) */
 .threshold:not(.compact) > .help { font-size: 12px; }
-/* "Start tour" bubble (PI request): left of the Help button with a tail pointing right (or below the tools column, tail up) */
+/* "Start tour" bubble: left of the Help button with a tail pointing right (or below the tools column, tail up) */
 .tour-bubble { position: fixed; z-index: 40; padding: 6px 12px; border-radius: 14px; border: 1px solid var(--accent); background: var(--bg); color: var(--fg); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.55); white-space: nowrap; animation: tour-bubble-in .35s ease-out; }
 .tour-bubble::after { content: ""; position: absolute; width: 8px; height: 8px; background: var(--bg); border: 1px solid var(--accent); border-width: 1px 1px 0 0; }
 .tour-bubble[data-tail="right"]::after { right: -5px; top: calc(50% - 4px); transform: rotate(45deg); }

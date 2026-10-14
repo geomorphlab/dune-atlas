@@ -1,4 +1,4 @@
-// Headless screenshots of the Mars atlas (run on a normal desktop; the agent sandbox cannot start
+// Headless screenshots of the Mars atlas (run on a machine that can launch
 // Chrome). No servers needed: Playwright serves the built app (app/dist-mars) and a data directory
 // (fixture or devroot) through request interception, with HTTP Range and CORS like R2.
 //

@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// Review round 2026-10: map export layout (strip below, as before; PI), download confirmations (L14).
+// Map export layout: strip below the map, as before; download confirmations.
 import { describe, expect, it, vi } from "vitest";
 import { loadRegistry } from "../src/registry/load";
 import { initialAppState, DEFAULT_VIEW } from "../src/defaultview";
@@ -14,7 +14,7 @@ import { EXPORT_TEXT } from "../src/ui/helpText";
 const reg = loadRegistry().registry;
 vi.stubGlobal("localStorage", { getItem: () => null, setItem: () => {}, removeItem: () => {} });
 
-describe("map export layout (PI, Oct 2026: back to the strip below the map)", () => {
+describe("map export layout (back to the strip below the map)", () => {
   const st = initialAppState(reg, shareToUrlState(DEFAULT_VIEW), DEFAULT_VIEW.dataset);
   const ctx = (cssW: number) => ({ reg, state: st, view: { lon: 15, lat: -24, zoom: 4, bearing: 0, pitch: 0, proj: "globe" as const }, width: cssW, includeBasemap: true, shareLink: "https://map.geomorphlab.org/#v=abcdefgh", date: new Date(Date.UTC(2026, 9, 14)) });
   it("strip below the map across its full width; no selected-cell line; no text beyond the right edge", () => {
@@ -33,7 +33,7 @@ describe("map export layout (PI, Oct 2026: back to the strip below the map)", ()
   });
 });
 
-describe("download confirmations (review L14)", () => {
+describe("download confirmations", () => {
   it("every download fires the page event; the tools show a status message naming the file", async () => {
     document.body.innerHTML = "";
     const tools = new Tools({ startTour: () => {}, shareLink: () => "x", exportMap: async () => {}, openAbout: () => {} });

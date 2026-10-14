@@ -151,7 +151,7 @@ describe("cell-panel plot exports (light theme, same settings as on screen)", ()
       expect(svgText(x.svg).includes(texToPlain("threshold friction velocity $u_{*,th}$ = 0.15 $\\mathrm{m\\,s^{-1}}$")), k).toBe(k !== "wind-rose"); // plain fallback (no math renderer)
       expect(x.svg).not.toMatch(/\$|\\[a-z]+\{/); // no raw LaTeX in the strip
       const png = new Resvg(x.svg, { font: { loadSystemFonts: true }, background: "rgba(0,0,0,0)" }).render();
-      // white background by default (review U6); transparent on request
+      // white background by default; transparent on request
       expect([...png.pixels.slice(0, 4)], `${k} corner white`).toEqual([255, 255, 255, 255]);
       expect(png.width).toBe(x.pxWidth);
       const xt = p.plotExport(k, PLOT_EXPORT_WIDTH, null, true)!;

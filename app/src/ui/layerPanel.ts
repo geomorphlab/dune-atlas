@@ -28,7 +28,7 @@ export { AI_NOTICE } from "../cell/citation";
 const AUTHOR_EMAIL = "a.gunn@monash.edu";
 /** 'Data sources' list in About (what each product is and where it comes from). The wind-dataset items and every
  *  dataset fact in the general items come from the dataset table (cell/datasetinfo.ts); sand-flux and divergence
- *  items: PI text, Oct 2026 (docs/user-text-audit-2.md). */
+ *  items are written directly here. */
 export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class="sources">
   ${Object.values(DATASET_INFO).map(datasetSourceItem).join("\n  ")}
   <li><strong>Sand-flux fields</strong>: for every hour, the friction velocity u* = κ U₁₀ / ln(z/z₀) from the 10 m wind speed U₁₀ (logarithmic wind profile; κ = 0.41, z = 10 m, roughness length z₀ = 1 mm) and the saturated transport rate of Martin &amp; Kok (2017), q = C ρ<sub>f</sub> u*,th (u*² − u*,th²) / (g ρ<sub>s</sub> φ) for u* &gt; u*,th, with C = 5, air density ρ<sub>f</sub> = 1.2 kg/m³, grain density ρ<sub>s</sub> = 2650 kg/m³, packing fraction φ = 0.6 and g = 9.8 m/s², at the selected threshold u*,th, averaged over ${datasetFacts("period")} (Gunn 2026, Methods M3). Fluxes are volumes of packed sand (pore space included) per metre width per year of 365.25 days (m²/yr). Drift potentials, crest fluxes and dune-orientation modes follow the methods reviewed in Courrech du Pont et al. (2024).</li>
@@ -37,7 +37,7 @@ export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class="sources">
   <li><strong>Aridity index</strong>: Global Aridity Index v3.1 (Global-AI_PET v3.1; Zomer, Xu &amp; Trabucco 2022), 1970–2000, native 30″ grid, CC BY 4.0; ocean and Antarctica (south of 60° S) have no data, values ≥ 6.5535 are at the top of the source range. The click panel shows the mean over the cell of the selected wind dataset.</li>
   <li><strong>Vegetation cover</strong>: CSIRO MODIS Fractional Cover v3.1 (Guerschman et al. 2015; Guerschman &amp; Hill 2018), total vegetation cover (photosynthetic + non-photosynthetic vegetation), mean of the monthly 500 m values 2001–2025 on the 0.1° grid, CC BY 4.0 © 2008–2019 CSIRO, hosted by NCI; the vegetation product of GEOGLAM RAPP. <a href="https://map.geo-rapp.org/" target="_blank" rel="noopener noreferrer">Explore the full time series at GEOGLAM RAPP</a>. The click panel shows the cell mean and the number of valid months.</li>
 </ul>`;
-/** About: "Earth and Mars: what can be compared" (PI text 1.3 / 2.2, identical in both atlases) */
+/** About: "Earth and Mars: what can be compared" (identical in both atlases) */
 export const COMPARE_HTML = `<div class="earth-mars"><h4>Earth and Mars: what can be compared</h4>
 <p>Both atlases compute the same quantities with the methods outlined in Gunn (2026): the time-averaged saturated sand flux over a flat bed fully covered by loose sand (DP), its resultant (RDP, RDD, RDP/DP), crest fluxes, dune-orientation modes and flux divergence. Both report fluxes as volumes of packed sand (packing fraction 0.6, pore space included) per metre width per Earth year of 365.25 days (m²/yr), and both show wind roses as the direction the wind blows from and sand roses as the direction sand moves toward. They differ in four ways.</p>
 <ul class="sources">
@@ -55,7 +55,7 @@ export const INVERT_NOTE = "Invert: colour the land WITHOUT mapped dunes instead
 
 const safeUrl = (u: string) => (/^https?:\/\//i.test(u) ? u : "");
 /** Rows of the structured attribution (registry `attribution`), in the fixed order Source, Citation,
- *  Data DOI, Licence, Link, Changes (docs/info-text-audit.md). */
+ *  Data DOI, Licence, Link, Changes. */
 function attributionRows(a: LayerAttribution): string {
   const row = (k: string, v: string | undefined, html?: string) => (v ? `<dt>${k}</dt><dd>${html ?? richHtml(v)}</dd>` : "");
   const url = a.url ? safeUrl(a.url) : "";
@@ -68,8 +68,8 @@ export function attributionHtml(a: LayerAttribution | undefined): string {
 }
 
 /** Sentences that repeat a fact row of the info popover (units, display convention, slider dependence).
- *  Since round 4 (PI 2026-10-14) the generators no longer emit them; this is a render-time fallback for
- *  texts not yet regenerated (stale registries, layers owned by other tracks) so each fact is stated once. */
+ *  The generators no longer emit them; this is a render-time fallback for
+ *  texts not yet regenerated (stale registries, layers generated separately) so each fact is stated once. */
 const REPEATED_FACTS: RegExp[] = [
   /\s*Shown(?: in [^ ]+)? at the selected (?:threshold friction velocity u\*,th|median grain diameter d) \(default [^)]*\)\./g,
   /\s*Converted from m²\/s to m²\/yr\./g,
@@ -87,7 +87,7 @@ export function infoUnits(l: LayerDef): string {
   return l.units ? escapeHtml(l.units) : "";
 }
 
-/** Info popover body of a layer, one structure for every layer of both builds (docs/info-text-audit.md):
+/** Info popover body of a layer, one structure for every layer of both builds:
  *  definition, invert note (dune layer), then one list: Units, Wind data, Slider (map fields), Source,
  *  Citation, Data DOI, Licence, Link, Changes (attribution; or the citation alone). */
 export function infoHtml(l: LayerDef, datasetId?: string): string {
@@ -107,10 +107,10 @@ export function infoHtml(l: LayerDef, datasetId?: string): string {
   return `${def ? `<p class="info-def">${richHtml(def, mathHtml)}</p>` : ""}${l.invertSource ? `<p class="help">${escapeHtml(INVERT_NOTE)}</p>` : ""}${facts || sources ? `<dl class="attribution info-facts">${facts}${sources}</dl>` : ""}`;
 }
 
-/** shown under the basemap choices while an imagery basemap is selected (review U10) */
+/** shown under the basemap choices while an imagery basemap is selected */
 export const IMAGERY_HINT = "To see the imagery under the colour layers, lower their opacity in Active layers.";
 
-/** Info popover of a basemap, the layer structure (docs/info-text-audit.md): definition, then Source,
+/** Info popover of a basemap, the layer structure: definition, then Source,
  *  Resolution, Licence, Link. The credits also stay in the map attribution. */
 export function basemapInfoHtml(b: BasemapDef): string {
   const i = b.info ?? {};
@@ -123,7 +123,7 @@ export function basemapInfoHtml(b: BasemapDef): string {
   return `${i.description ? `<p class="info-def">${richHtml(i.description, mathHtml)}</p>` : ""}${rows ? `<dl class="attribution info-facts">${rows}</dl>` : ""}`;
 }
 
-/** 'Dunes only' (PI round 5): one UI-wide switch, in the URL / share link; restricts every wind-derived map
+/** 'Dunes only': one UI-wide switch, in the URL / share link; restricts every wind-derived map
  *  layer to the dataset's dune cells (map/dunemask.ts). Non-wind layers and the cell panel are unchanged. */
 export const DUNES_ONLY_HELP = "Draw the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in cells with dunes; the other layers and the cell panel are unchanged.";
 export function dunesOnlyToggle(store: Store): HTMLElement {
@@ -151,7 +151,7 @@ function infoToggle(title: string, html: string, idBase: string): { button: HTML
 function layerItem(l: LayerDef, store: Store): HTMLElement {
   const cid = nextId(`lyr-${l.id}`);
   const st0 = store.state.layers[l.id] ?? { visible: false, opacity: l.opacity ?? 1 };
-  // an explicit accessible name: a label of KaTeX alone was read as "on" (review L16)
+  // an explicit accessible name: a label of KaTeX alone was read as "on"
   const cb = h("input", { type: "checkbox", id: cid, checked: st0.visible, "aria-label": `Show ${l.title}` }) as HTMLInputElement;
   const infoId = nextId(`info-${l.id}`);
   const info = h("button", { type: "button", class: "info-button", "aria-expanded": "false", "aria-controls": infoId, "aria-label": `About ${l.title}` }, "i");
@@ -411,7 +411,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     tip();
     sel.addEventListener("change", () => store.set({ dataset: sel.value }));
     store.subscribe((s, ch) => { if (ch.has("dataset")) { sel.value = s.dataset; tip(); } });
-    // one line in both builds; with an ⓘ (what the datasets are and how they differ, PI text 3.16) where
+    // one line in both builds; with an ⓘ (what the datasets are and how they differ) where
     // DATASET_INFO_TEXT is set (Earth), its popover wrapping below the line
     const line = h("div", { class: "dataset-line" }, h("label", { class: "inline dataset-row", for: "dataset-select" }, "Wind dataset ", sel));
     if (DATASET_INFO_TEXT) {
@@ -451,7 +451,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
   globe.addEventListener("change", () => store.set({ projection: globe.checked ? "globe" : "mercator" }));
   store.subscribe((s, ch) => { if (ch.has("projection")) globe.checked = s.projection === "globe"; });
   fs.append(h("div", { class: "radio-row" }, globe, h("label", { for: "opt-globe" }, "Globe view")));
-  // imagery basemaps lie under opaque colour layers: say how to see them (review U10; opacity is not changed)
+  // imagery basemaps lie under opaque colour layers: say how to see them (opacity is not changed)
   const hint = h("p", { class: "help basemap-hint", role: "status" }, IMAGERY_HINT);
   const showHint = () => { hint.hidden = !reg.basemaps.find((b) => b.id === store.state.basemap)?.imagery; };
   showHint();

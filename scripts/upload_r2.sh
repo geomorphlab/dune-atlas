@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Upload a staged data release to Cloudflare R2 (S3 API) with rclone.
 #   R2_ACCOUNT_ID=... AWS_ACCESS_KEY_ID=... AWS_SECRET_ACCESS_KEY=... \
-#   scripts/upload_r2.sh /Volumes/MGL2TB/dune-atlas-staging/v1 v1
+#   scripts/upload_r2.sh $STAGING/v1 v1
 # Requires rclone (conda-forge: `conda install -c conda-forge rclone`). Published versions are
 # immutable: refuses to upload into a version prefix that already has objects unless FORCE=1.
 set -euo pipefail

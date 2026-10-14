@@ -133,7 +133,7 @@ describe("zarr-field shaders and legends", () => {
   });
   it("legend ticks", () => {
     const l = { id: "x", title: "x", group: "g", type: "zarr-field" as const, source: "s", display: { log: true, clim: [0.1, 200] as [number, number], colormap: "magma" } };
-    // 100 sits too close to the end label 200 (review U17): dropped, not staggered
+    // 100 sits too close to the end label 200: dropped, not staggered
     expect(legendTicks(l)).toEqual([0.1, 1, 10, 200]);
     expect(legendTicks({ ...l, display: { ...l.display, clim: [0.00048, 320] as [number, number] } })).toEqual([0.00048, 0.01, 0.1, 1, 10, 320]);
     expect(["0.00048", "0.01", "300", "60000", "10⁻⁵", "2×10⁶"]).toEqual([0.00048, 0.01, 300, 60000, 1e-5, 2e6].map(tickLabel));

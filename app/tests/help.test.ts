@@ -185,15 +185,15 @@ describe("help button and panel", () => {
     (pop.querySelector(".run-export") as HTMLButtonElement).click();
     await new Promise((r) => setTimeout(r, 0));
     expect(opts.exportMap).toHaveBeenCalledWith(expect.objectContaining({ basemap: false, transparent: false }));
-    // the popover stays open with a completion line (review U6)
+    // the popover stays open with a completion line
     expect(document.querySelector(".tool-pop")).not.toBeNull();
     expect(pop.querySelector(".export-status")!.textContent).toMatch(/^Saved/);
   });
 });
 
 describe("help text document", () => {
-  it("docs/help-text.md matches src/ui/helpText.ts (run npm run help-doc after editing)", () => {
-    const f = path.resolve(__dirname, "../../docs/help-text.md");
+  it("docs/reference/help-text.md matches src/ui/helpText.ts (run npm run help-doc after editing)", () => {
+    const f = path.resolve(__dirname, "../../docs/reference/help-text.md");
     expect(fs.readFileSync(f, "utf8")).toBe(helpMarkdown());
   });
 });

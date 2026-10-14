@@ -1,4 +1,4 @@
-// Shared by tests/head.test.ts and tests/mars/head.test.ts: tab title and lab icon (PI round 6 item 4).
+// Shared by tests/head.test.ts and tests/mars/head.test.ts: tab title and lab icon.
 import { expect } from "vitest";
 import fs from "node:fs";
 import path from "node:path";

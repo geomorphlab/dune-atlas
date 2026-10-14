@@ -12,8 +12,14 @@ from dune_atlas_pipeline.mars import physics as P
 
 BACKENDS = ["numpy"] + (["numba"] if F.HAVE_NUMBA else [])
 EARTH_FIXTURE = os.environ.get("DUNE_ATLAS_EARTH_FIXTURE",
-                               "/Users/agun0034/Developer/research/projects/dune-atlas/staging/fixture/cells.zarr")
+                               os.path.join(os.path.dirname(__file__), "../../staging/fixture/cells.zarr"))
 RTOL = 1e-10
+
+
+def _synthetic_fixture() -> bool:
+    """the synthetic fixture (synthetic_fixture.py) stores fields from synthetic crest orientations, not the mode search"""
+    ref = os.path.join(os.path.dirname(EARTH_FIXTURE), "decode_reference.json")
+    return os.path.exists(ref) and bool(json.load(open(ref)).get("synthetic"))
 
 
 def _synthetic_hists(n=4, seed=1):
@@ -55,7 +61,9 @@ def test_synthetic_histograms_reproduce_qsat_compute(backend):
         _assert_equiv(F.earth_histogram_fields(H[c], backend=backend), ref, c)
 
 
-@pytest.mark.skipif(not os.path.exists(EARTH_FIXTURE), reason="Earth fixture cells.zarr not present")
+@pytest.mark.staging
+@pytest.mark.skipif(not os.path.exists(EARTH_FIXTURE) or _synthetic_fixture(),
+                    reason="Earth fixture cells.zarr built from the source data not present")
 def test_earth_fixture_cells_reproduce_qsat_compute():
     import zarr
     g = zarr.open_group(EARTH_FIXTURE, mode="r")

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Atlas stores of the ERA5 (0.25°) wind dataset, built locally from the land-cell source copies made on Gadi
-# (pipeline/gadi/era5/era5_atlas_prep.py). See docs/validation-era5.md ("Atlas stores").
+# (pipeline/gadi/era5/era5_atlas_prep.py). See docs/records/validation-era5.md ("Atlas stores").
 #
 #   ST=staging/era5/atlas scripts/build_era5_atlas.sh
 #
@@ -9,7 +9,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 ST=${ST:-staging/era5/atlas}
-DATA=${DUNE_WORLD_DATA:-$HOME/Documents/research/projects/dune-world/data}
+DATA=${DUNE_WORLD_DATA:?set DUNE_WORLD_DATA to the source data directory}
 export PYTHONPATH=$PWD/pipeline/src
 PY=${PY:-python}
 mkdir -p "$ST/stores/fields" "$ST/logs"

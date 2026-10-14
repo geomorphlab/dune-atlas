@@ -8,7 +8,7 @@ export const HELP_BUTTON_LABEL = "Help and tour";
 export const HELP_TITLE = "Help";
 export const HELP_RESTART = "Restart tour";
 export const HELP_ABOUT_LINK = "About, data sources & citation";
-/** the Wind dataset selector's ⓘ (Earth: PI text 3.16); one Mars dataset: no ⓘ */
+/** the Wind dataset selector's ⓘ (Earth has an info text here); one Mars dataset: no ⓘ */
 export const DATASET_INFO_TEXT = "";
 
 export const HELP_SECTIONS: HelpSection[] = [

@@ -395,7 +395,7 @@ def main(argv=None):
     ap.add_argument("--what", nargs="+", default=["cells", "fields", "dunes"],
                     choices=["cells", "fields", "dunes"])
     ap.add_argument("--data", default=os.environ.get(
-        "DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data")))
+        "DUNE_WORLD_DATA", ""))
     ap.add_argument("--dunes-dir", default=str(Path(__file__).resolve().parents[3] / "staging" / "dunes"))
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--rows", nargs=2, type=int, help="cell-store row range (testing)")

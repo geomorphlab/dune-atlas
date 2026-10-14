@@ -1,4 +1,4 @@
-// Mars app hook for the globe polar caps (map/polarcap.ts, Terrain track; docs/mars-app.md 5b).
+// Mars app hook for the globe polar caps (map/polarcap.ts; docs/guide/mars.md 5b).
 // The caps are installed while the map is in globe projection and removed in the flat (Mercator) map, so the
 // Mercator style (and the PNG export of it) carries no custom layers. installPolarCaps keeps the caps ordered
 // and mirrored on styledata / style.load / idle (basemap switches rebuild the basemap cap).

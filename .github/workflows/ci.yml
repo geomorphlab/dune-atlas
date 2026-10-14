@@ -1,0 +1,89 @@
+# Tests on every pull request and push; the site is deployed to GitHub Pages from main only after every
+# test job has passed.
+#   fixtures  synthetic test stores (pipeline/src/dune_atlas_pipeline/synthetic_fixture.py for Earth,
+#             scripts/mars/app/make_fixture.py for Mars), cached by the hash of their inputs
+#   app       registry validation, type check, Earth and Mars tests (8-position slider sweeps on pull requests,
+#             all 64 positions on main), both builds, Pages layout
+#   pipeline  pipeline tests (Python), syntax and undefined-name lint
+#   deploy    main only: the Pages artifact of the app job
+name: ci
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions: { contents: read }
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  fixtures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: cache
+        uses: actions/cache@v4
+        with: { path: "staging/fixture\nstaging/fixture-mars", key: "fixtures-v1-${{ hashFiles('pipeline/src/**/*.py', 'pipeline/pyproject.toml', 'scripts/mars/app/*.py', 'registry/**/qsat_field_metadata.json', 'registry/mars/**') }}" }
+      - if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: pipeline/pyproject.toml }
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: pip install -e "pipeline[test]"
+      - if: steps.cache.outputs.cache-hit != 'true'
+        name: synthetic fixtures
+        run: |
+          python -m dune_atlas_pipeline.synthetic_fixture --out staging/fixture
+          python scripts/mars/app/make_fixture.py --out staging/fixture-mars --workers 4
+
+  app:
+    needs: fixtures
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: app } }
+    env:
+      FULL_SWEEP: ${{ github.ref == 'refs/heads/main' && '1' || '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache/restore@v4
+        with: { path: "staging/fixture\nstaging/fixture-mars", key: "fixtures-v1-${{ hashFiles('pipeline/src/**/*.py', 'pipeline/pyproject.toml', 'scripts/mars/app/*.py', 'registry/**/qsat_field_metadata.json', 'registry/mars/**') }}", fail-on-cache-miss: true }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
+      - run: npm ci
+      - run: npm run validate-registry
+      - run: npm run validate-registry:mars
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run test:mars
+      - run: npm run build
+        env: { VITE_DATA_BASE: "https://data.geomorphlab.org" }
+      # Mars atlas: the same UI, VITE_BODY=mars, served at /mars/ of the same Pages site
+      - run: npm run build:mars
+        env: { VITE_BODY: mars, VITE_BASE: /mars/, VITE_DATA_BASE: "https://data.geomorphlab.org", VITE_SITE_URL: "https://map.geomorphlab.org/mars/" }
+      - run: bash scripts/check-pages-layout.sh
+      - if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with: { path: app/dist }
+
+  pipeline:
+    needs: fixtures
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache/restore@v4
+        with: { path: "staging/fixture\nstaging/fixture-mars", key: "fixtures-v1-${{ hashFiles('pipeline/src/**/*.py', 'pipeline/pyproject.toml', 'scripts/mars/app/*.py', 'registry/**/qsat_field_metadata.json', 'registry/mars/**') }}", fail-on-cache-miss: true }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: pipeline/pyproject.toml }
+      - run: pip install -e "pipeline[test,tiles,lint]"
+      # syntax errors and undefined names only (the code base is not formatted to a style yet)
+      - run: ruff check --select E9,F63,F7,F82 pipeline scripts app/scripts
+      - run: python -m pytest pipeline/tests -q -rs
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: [app, pipeline]
+    runs-on: ubuntu-latest
+    permissions: { pages: write, id-token: write }
+    concurrency: { group: pages, cancel-in-progress: false }
+    environment: { name: github-pages, url: "${{ steps.deployment.outputs.page_url }}" }
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

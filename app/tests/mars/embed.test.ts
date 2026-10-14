@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// Embed / panel layout (PI round 7 item 2), Mars. Shared checks in tests/embedlib.ts.
+// Embed / panel layout, Mars. Shared checks in tests/embedlib.ts.
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import { checkBudgets, checkCss, checkSlider, checkStructure } from "../embedlib";

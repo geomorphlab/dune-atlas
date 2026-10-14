@@ -28,7 +28,7 @@ describe("snap on the Mars grid (rows 89 -> -89, columns -179 -> 179, 2° centre
     expect(snapToCell(65.99, 7.99, MARS_GRID)).toMatchObject({ lat: 7, lon: 65 });
     expect(cellBounds(cellFromIndex(0, 0, MARS_GRID), MARS_GRID)[0]).toEqual([-180, 88]);
     expect(cellFeature(cellFromIndex(40, 179, MARS_GRID), MARS_GRID).features).toHaveLength(1); // edge at +180, no split
-    expect(cellFeature(cellFromIndex(0, 179, MARS_GRID), MARS_GRID).features).toHaveLength(0);  // 88–90 N: globe layers only (round 5)
+    expect(cellFeature(cellFromIndex(0, 179, MARS_GRID), MARS_GRID).features).toHaveLength(0);  // 88–90 N: globe layers only
   });
 });
 

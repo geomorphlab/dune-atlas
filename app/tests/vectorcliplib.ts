@@ -1,4 +1,4 @@
-// Shared by tests/vectorclip.test.ts and tests/mars/vectorclip.test.ts (PI round 6): 'Dunes only'
+// Shared by tests/vectorclip.test.ts and tests/mars/vectorclip.test.ts: 'Dunes only'
 // streamlines integrated on the unmasked field and clipped to the dune cells; arrows anchored at their base.
 import { expect } from "vitest";
 import * as zarr from "zarrita";
@@ -23,7 +23,7 @@ export function checkStreamlineClipping(dir: Grid, m: DuneMask, view: [number, n
   const lines = (g: Grid) => evenStreamlines(buildScreenField(sc.lon, sc.lat, sc.gx, sc.gy, sc.cell, false, (lo, la) => sampleUnitSphere(g, lo, la, false)), { width: sc.W, height: sc.H, dsep, maxLines: 2500 });
   const all = lines(dir);                                     // toggle off: the unmasked integration
   const clipped = clipStreamlines(all, inside, Math.max(6, dsep / 3));
-  const masked = lines(applyMask(copy(dir), dunes));          // round 5: integration on the masked field
+  const masked = lines(applyMask(copy(dir), dunes));          // integration on the masked field
   // every vertex of every kept piece lies in a dune cell; pieces have the minimum length
   for (const l of clipped) { expect(l.length).toBeGreaterThanOrEqual(Math.max(6, dsep / 3)); for (const p of l.pts) expect(inside(p[0], p[1])).toBe(true); }
   // arrowheads only on kept pieces: their tips are vertices of the pieces (inside the dune cells)

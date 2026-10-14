@@ -1,7 +1,7 @@
 """The 23 qsat fields x 64 thresholds for every cell of a wind histogram store.
 
 Fields are computed by dune_atlas_pipeline.qsat_compute.qsat_fields, the same code that reproduces the
-atlas's ERA5-Land fields (see docs/validation-era5.md), so both datasets follow one set of definitions.
+atlas's ERA5-Land fields (see docs/records/validation-era5.md), so both datasets follow one set of definitions.
 Output: float64 (ut 64, latitude, longitude), chunks 64^3, blosc lz4 (as the ERA5-Land qsat store).
 
   python era5_fields.py init  HIST.zarr OUT.zarr ATTRS.json

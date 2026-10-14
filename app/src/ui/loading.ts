@@ -1,9 +1,9 @@
-// "Loading map..." indicator (review U9 / L12): shown on the first draw and while the map redraws after a
+// "Loading map..." indicator: shown on the first draw and while the map redraws after a
 // dataset, projection or basemap change; hidden when the map is idle (all tiles loaded), or after `timeoutMs`.
 import { h } from "./dom";
 
 export const LOADING_TEXT = "Loading map\u2026";
-/** wheel zoom rate (MapLibre default 1/450): faster scroll zoom (review U9) */
+/** wheel zoom rate (MapLibre default 1/450): faster scroll zoom */
 export const WHEEL_ZOOM_RATE = 1 / 250;
 
 type IdleMap = { once(ev: "idle", fn: () => void): unknown; areTilesLoaded?(): boolean; loaded?(): boolean };

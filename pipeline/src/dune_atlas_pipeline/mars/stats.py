@@ -1,4 +1,4 @@
-"""FV3 statistics recomputed from the built Mars cells.zarr (docs/validation-mars-fields.md).
+"""FV3 statistics recomputed from the built Mars cells.zarr (docs/records/validation-mars-fields.md).
 
 Reads the stored (bit-rounded) hourly series and the stored fields, never the GCM file:
   * air density rho: range and percentiles over all hours of the dune cells (cover > 1 %) and of all cells

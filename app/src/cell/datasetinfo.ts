@@ -22,7 +22,7 @@ export interface DatasetInfo {
   /** what "dunes" means for a cell of this grid */
   dunesRule: string;
   /** About, Data sources: the dataset's item (HTML, after its bold title "Wind histograms and sand-flux fields
-   *  (<name> <resolution>)"); dataset facts live here, not in general text (PI text rules, Oct 2026) */
+   *  (<name> <resolution>)"); dataset facts live here, not in general text */
   sourceHtml: string;
   /** its bold title there; default "Wind histograms and sand-flux fields (<name> <resolution>)" */
   sourceTitle?: string;

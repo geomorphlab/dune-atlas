@@ -14,7 +14,7 @@ import { CONFIG } from "../config";
 import { isWindDerived, loadDuneMask, type DuneMaskProvider } from "./dunemask";
 import { ADAPTERS, StaleLayerError, type LayerHandle } from "./adapters";
 
-/** the dune map (vector polygons of the dunes group): drawn as outlines while Dunes only is on (review L8) */
+/** the dune map (vector polygons of the dunes group): drawn as outlines while Dunes only is on */
 export const isDuneMap = (l: LayerDef) => l.group === "dunes" && (l.type === "pmtiles-vector" || l.type === "geojson-points");
 
 /** Bottom-most map layer of the selected-cell outline (overlays go below it). */
@@ -214,7 +214,7 @@ export function ensureSelectedCellLayers(map: MlMap, feature: Selection) {
   syncSelectionRing(map, feature?.bbox ?? null, before);
 }
 
-/** Ring around the selected cell's centre while the cell is too small on screen to be seen (review L12): a
+/** Ring around the selected cell's centre while the cell is too small on screen to be seen: a
  *  0.1° cell is under 1 px at the opening zoom. Fixed screen size (radius 8 px, the outline colour), both
  *  projections; it fades out between the zooms where the cell is 12 and 24 px tall. */
 export const SELECTED_CELL_RING = "selected-cell-ring";

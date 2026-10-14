@@ -9,8 +9,8 @@ Built on NCI Gadi (project k10) from the NCI ERA5 replica; scripts in `pipeline/
 
 | store | variable(s) | shape | dtype | chunks | codec | size |
 |---|---|---|---|---|---|---|
-| `/scratch/k10/ag5517/dune-atlas/era5/era5_1950_2024_uam10_hist.zarr` | `histogram_um_ua` (latitude, longitude, um_bin, ua_bin) | 721 × 1440 × 128 × 128 | uint32 | 13 × 64 × 128 × 128 | blosc lz4-5 shuffle | 12.31 GB (1,304 files) |
-| `/scratch/k10/ag5517/dune-atlas/era5/era5_1950_2024_qsat_params.zarr` | 23 qsat variables (ut, latitude, longitude) | 64 × 721 × 1440 | float64 | 64 × 64 × 64 | blosc lz4-5 shuffle | 9.83 GB (6,405 files) |
+| `$DUNE_ATLAS_WORK/era5/era5_1950_2024_uam10_hist.zarr` | `histogram_um_ua` (latitude, longitude, um_bin, ua_bin) | 721 × 1440 × 128 × 128 | uint32 | 13 × 64 × 128 × 128 | blosc lz4-5 shuffle | 12.31 GB (1,304 files) |
+| `$DUNE_ATLAS_WORK/era5/era5_1950_2024_qsat_params.zarr` | 23 qsat variables (ut, latitude, longitude) | 64 × 721 × 1440 | float64 | 64 × 64 × 64 | blosc lz4-5 shuffle | 9.83 GB (6,405 files) |
 
 Grid: cell centres latitude 90 − 0.25 i (i = 0…720, 90° N to 90° S), longitude −180 + 0.25 j (j = 0…1439); cell
 edges ± 0.125°. The source files are already on this grid (asserted for every file read), so no re-indexing is
@@ -141,7 +141,7 @@ DP = 0 at 20 (ERA5-Land) and 12 (ERA5) dune cells. Globally, 1,000 ERA5 cells ha
 
 ## 4. Atlas stores
 
-Layout and object counts: `docs/storage-layout.md` §6. Code: `pipeline/src/dune_atlas_pipeline/grid.py` (grids and
+Layout and object counts: `docs/reference/storage-layout.md` §6. Code: `pipeline/src/dune_atlas_pipeline/grid.py` (grids and
 dataset descriptions, `lsm_land_above`), `cellmasks.py`, the dataset-aware `cellstore`, `fields`, `qsat_view`,
 `qsdiv`, `cellsaux`, `vegetation`, `cogs`, `dataset_registry.py`; Gadi steps `pipeline/gadi/era5/era5_atlas_prep.py`
 (lsm) and `era5_atlas_cells.py` (cell store next to the data, land-cell qsat copy, transfer parts); local steps
@@ -218,7 +218,7 @@ first build: all identical).
 
 ## 6. Retention copy
 
-The two source stores were copied from scratch to `/g/data/k10/ag5517/dune-atlas/era5/` in a `copyq` job (PBS
+The two source stores were copied from scratch to `/g/data/<project>/<user>/dune-atlas/era5/` in a `copyq` job (PBS
 181092154, 0.66 SU): `era5_1950_2024_uam10_hist.zarr` 1,304 files, 12,313,456,213 bytes; `era5_1950_2024_qsat_params.zarr`
 6,405 files, 9,834,740,885 bytes of file data; `diff -rq` identical for both. k10 gdata after the copy: 110.38 TiB of
 111.00 TiB (7,540,307 of 8,250,000 inodes). The scratch copies are kept (scratch purges files unread for 100 days).

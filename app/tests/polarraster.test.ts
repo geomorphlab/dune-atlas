@@ -275,7 +275,7 @@ describe("globe raster geometry: pole and antimeridian (patched zarr-layer)", ()
     }
   });
 
-  it("selected-cell highlight of a pole-row cell: nothing in the flat map, globe geometry to ±90 (round 5: tests/selection.test.ts)", () => {
+  it("selected-cell highlight of a pole-row cell: nothing in the flat map, globe geometry to ±90 (see tests/selection.test.ts)", () => {
     for (const g of [{ lat0: 90, dlat: -0.25, lon0: -180, dlon: 0.25, ny: 721, nx: 1440 }, { lat0: 90, dlat: -0.1, lon0: -180, dlon: 0.1, ny: 1801, nx: 3600 }]) {
       for (const i of [0, g.ny - 1]) {
         const fc = cellFeature(cellFromIndex(i, 100, g), g);

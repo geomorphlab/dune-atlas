@@ -100,7 +100,7 @@ export function mapStripItems(c: MapStripContext): StripItem[] {
     { kind: "heading", text: "Dune Atlas · map.geomorphlab.org" },
     { kind: "text", text: `${PROJECTION_TEXT[view.proj]} · centre ${fmtLat(view.lat)}, ${fmtLon(view.lon)} · zoom ${view.zoom.toFixed(1)} · wind dataset ${ds.name} ${ds.resolution}, ${ds.period}${anyThr ? ` · threshold friction velocity ${utTex(ut)}` : ""}` },
   ];
-  // the Dunes only toggle changes what the wind-derived layers show: say so on the image (round 7)
+  // the Dunes only toggle changes what the wind-derived layers show: say so on the image
   if (state.dunesOnly && visible.some((l) => isWindDerived(l))) text.push({ kind: "text", text: DUNES_ONLY_STRIP });
   // sources: the paper, the wind dataset with its Copernicus notice, other external sources shown
   text.push({ kind: "text", text: `Dune map: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}; wind-regime fields with the methods outlined there.` });
@@ -197,13 +197,13 @@ export function downloadBlob(name: string, blob: Blob) {
 
 /** Map PNG export request (camera button): basemap on/off, transparent background, progress stages */
 export interface MapExportRequest { basemap: boolean; transparent?: boolean; onProgress?: (stage: string) => void }
-/** progress messages of the map export (review U6: rendering took 30-45 s with no feedback) */
+/** progress messages for the map export: rendering can take 30-45 s with no other feedback */
 export const EXPORT_STAGES = {
   capture: "Drawing the map at export resolution (loading tiles; this can take up to a minute)…",
   strip: "Adding colour bars, keys and sources…",
   encode: "Encoding the PNG…",
 } as const;
-/** Both builds' map export (layout of before Oct 2026: map on top, strip below across the full width; PI, Oct 2026):
+/** Map export (map on top, strip below across the full width):
  *  capture, strip, white or transparent background, download, with progress stages; returns the file name and size. */
 export async function exportMapPng(map: MlMap, d: {
   reg: Registry; state: MapStripContext["state"] & { projection: MapView["proj"] }; shareLink: string;

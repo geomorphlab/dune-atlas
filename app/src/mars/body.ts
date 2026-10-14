@@ -1,11 +1,11 @@
-// Mars body constants for the app (build with VITE_BODY=mars; see docs/mars-app.md). Physical
+// Mars body constants for the app (build with VITE_BODY=mars; see docs/guide/mars.md). Physical
 // constants come from src/generated/constants-mars.json (pipeline mars/constants.py) via
 // cell/marsphysics.ts; nothing here duplicates the physics.
 import { M } from "../cell/marsphysics";
 import type { Grid } from "../cell/snap";
 
 export const BODY = "mars" as const;
-/** mean radius (m): distances, scale bar, flux divergence (docs/mars-spec.md section 4) */
+/** mean radius (m): distances, scale bar, flux divergence (docs/reference/mars-spec.md section 4) */
 export const R_MARS = M.R_MARS;
 /** 2 pi R (m): the Web-Mercator "world circumference" of a Mars map */
 export const MARS_CIRCUMFERENCE_M = 2 * Math.PI * M.R_MARS;

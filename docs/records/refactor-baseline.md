@@ -32,7 +32,7 @@ happy-dom, plus the built-string inventory. The map canvas itself (MapLibre/WebG
 
 The local `index.html` of both builds is byte-identical to the live `https://map.geomorphlab.org/`
 and `https://map.geomorphlab.org/mars/` (same asset file names, so the same bundle contents).
-The built-string inventories have 17,056 (Earth) and 17,128 (Mars) entries.
+The built-string inventories have 17,053 (Earth) and 17,125 (Mars) entries (asset file names masked).
 
 ## Tests
 

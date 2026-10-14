@@ -1,6 +1,6 @@
 """Mars near-surface air state, friction velocity, cessation threshold and saturated transport rate.
 
-Pahtz & Duran (2023), J. Fluid Mech. 963:A20, as specified in docs/mars-spec.md section 3:
+Pahtz & Duran (2023), J. Fluid Mech. 963:A20, as specified in docs/reference/mars-spec.md section 3:
   threshold  eq. 5.1 (= 3.1 with (D*min, u+min) = (18, 2.3)), D* with the rarefaction factor of eq. 3.20
   transport  eq. 3.2 in '+' units (the printed dimensional eq. 5.2 has rho_p where rho_f is required)
   Knudsen    Kn = sqrt(pi k / 2) nu / (c d)   (the printed form carries a spurious factor s)

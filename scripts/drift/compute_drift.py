@@ -14,7 +14,7 @@ Usage:
 import json, os, sys, time
 import numpy as np, xarray as xr, zarr
 
-D = os.environ.get('DUNE_WORLD_DATA', os.path.expanduser('~/Documents/research/projects/dune-world/data'))
+D = os.environ.get('DUNE_WORLD_DATA', '')
 B = 64
 z, z0, kappa = 10, 1e-3, 0.41
 g, rho_s, rho_f = 9.8, 2650, 1.2

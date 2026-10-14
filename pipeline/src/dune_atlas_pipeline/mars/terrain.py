@@ -33,13 +33,14 @@ import time
 
 import numpy as np
 
-DEM_PATH = "/g/data/k10/ag5517/omega-claude/data/raw_mola/Mars_HRSC_MOLA_BlendDEM_Global_200mp_v2.tif"
+# the 200 m blended DEM (Mars_HRSC_MOLA_BlendDEM_Global_200mp_v2.tif, USGS Astrogeology); set DUNE_ATLAS_MARS_DEM
+DEM_PATH = os.environ.get("DUNE_ATLAS_MARS_DEM", "")
 R_MARS_2000 = 3396190.0           # Mars 2000 sphere radius of the DEM / dune shapefile (m)
 TILE = 512
 MAXZOOM = 8
 BLOCK_ZOOM = 4                    # unit of parallel work: one z4 tile and its subtree to MAXZOOM
 QUANT_M = 1.0                     # vertical quantisation of the terrarium tiles (m)
-# PIL save kwargs (lossless: quality/method = effort). Pilot (docs/validation-mars-terrain.md): q75/m4 is 1-2 %
+# PIL save kwargs (lossless: quality/method = effort). Pilot (docs/records/validation-mars-terrain.md): q75/m4 is 1-2 %
 # larger than q100/m6 and 19x faster to encode (0.12 vs 2.2 s per 512 px tile).
 WEBP = {"lossless": True, "quality": 75, "method": 4}
 MERC_LAT = 85.0511287798066
@@ -792,7 +793,7 @@ def registry_fragment() -> dict:
             "variable": "elevation", "thresholdAware": False, "units": "m",
             "description": ("Elevation $z$ of the surface relative to the Mars areoid (MOLA datum), from the Mars MGS "
                             "MOLA – MEX HRSC Blended DEM Global 200m v2. The colour scale saturates beyond its ends "
-                            "(Olympus Mons 21 km, Hellas −8.2 km)."),   # was the colour bar's note (PI, Oct 2026)
+                            "(Olympus Mons 21 km, Hellas −8.2 km)."),
             "citation": a["citation"],
             "attribution": {**{k: a[k] for k in ("source", "citation", "licence", "url")},
                             "changes": ("Area mean over 1/64° (~0.93 km) pixels of the 200 m DEM, rounded to 1 m; "

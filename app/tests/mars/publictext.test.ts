@@ -14,7 +14,7 @@ describe("Mars public text", () => {
     expect(Object.keys(t).length).toBeGreaterThan(300);
     expect(t["embed.bar"]).toBe("Open full screen ↗Best viewed full screen"); // pill + note (textContent joins them)
   });
-  it("site and download strings are written for visitors (round 7 item 3)", async () => {
+  it("site and download strings are written for visitors", async () => {
     const t = await collectMarsPublicText();
     const hits = devPhraseHits(t);
     if (process.env.TEXT_DENY_SOFT) { console.log(hits.join("\n")); return; }

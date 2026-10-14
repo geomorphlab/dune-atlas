@@ -1,4 +1,4 @@
-"""Mars dune fields: PI shapefile (aggregated from the USGS Mars Global Digital Dune Database, merged) ->
+"""Mars dune fields: shapefile (aggregated from the USGS Mars Global Digital Dune Database, merged) ->
 antimeridian-safe GeoJSON -> vector PMTiles (tippecanoe, Earth dunes-layer settings), and the dune overlap
 fraction on the 2-degree contract grid (cells.zarr `dunes` / `dune`).
 
@@ -38,8 +38,8 @@ MERC_LAT = 85.0511287798066
 # one tile unit inside (1/4096 of a tile, sub-pixel), so no geometry touches it.
 TILE_LAT_LIMIT = math.floor(MERC_LAT * 1e6) / 1e6     # 85.051128: the limit, rounded down to the 1e-6 coordinate grid
 GRID = {"lat0": 89, "dlat": -2, "lon0": -179, "dlon": 2, "ny": 90, "nx": 180, "cell_registration": "centre"}
-# The merged layer = MGD3 (Hayward et al. 2007, 2010, 2012, 2014) plus the small dune fields of Fenton (2020)
-# (PI round 5): MGD3 mapped fields > 1 km^2 only; Fenton (2020) updated the inventory equatorward of 65 deg and
+# The merged layer = MGD3 (Hayward et al. 2007, 2010, 2012, 2014) plus the small dune fields of Fenton (2020):
+# MGD3 mapped fields > 1 km^2 only; Fenton (2020) updated the inventory equatorward of 65 deg and
 # added many small fields (553 of the 3,514 merged polygons are < 1 km^2).
 FENTON_2020 = ("Fenton, L. K. (2020). Updating the global inventory of dune fields on Mars and identification of many "
                "small dune fields. Icarus, 352, 114018. https://doi.org/10.1016/j.icarus.2020.114018")
@@ -64,10 +64,10 @@ MGD3_REFERENCES = [
 DUNE_REFERENCES = [*MGD3_REFERENCES, FENTON_2020]
 ATTRIBUTION = ("Dune fields: USGS Mars Global Digital Dune Database (Hayward et al. 2007, 2010, 2012, 2014) and "
                "Fenton (2020), merged, compiled by A. Gunn")
-# R2 keys of the tiles (objects are create-only). The '-r2' archives (Terrain round 3, PI 2026-10-14) are the
+# R2 keys of the tiles (objects are create-only). The '-r2' archives are the
 # round-2 dunes.pmtiles / invert.pmtiles rebuilt with the MGD3 + Fenton (2020) metadata above: same input, same
 # tippecanoe arguments apart from --attribution/--description, same clip and nudge; decoded tiles identical
-# (docs/validation-mars-terrain.md section 10). polar-caps.json (no citation fields) is unchanged and stays
+# (docs/records/validation-mars-terrain.md section 10). polar-caps.json (no citation fields) is unchanged and stays
 # beside them (the app derives its URL from the directory of `source`).
 DUNES_KEY = "dune-atlas/mars/v1/dunes/dunes-r2.pmtiles"
 INVERT_KEY = "dune-atlas/mars/v1/dunes/invert-r2.pmtiles"

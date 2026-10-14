@@ -1,4 +1,4 @@
-// Shared by tests/jitter.test.ts and tests/mars/jitter.test.ts (slider-jitter sweep, PI round 5 item 2).
+// Shared by tests/jitter.test.ts and tests/mars/jitter.test.ts (slider-jitter sweep).
 import type { Store } from "../src/store";
 import { measuredWidthCh, type Measure } from "../src/ui/livenum";
 
@@ -24,10 +24,17 @@ export function signature(root: Element): { sig: string; overflow: string[] } {
   return { sig: walk(c), overflow };
 }
 
+/** Slider positions of a sweep over n values: all of them with FULL_SWEEP=1 (CI on main), else 8 evenly
+ *  spaced ones including both ends (pull requests and local runs). */
+export const sweepPositions = (n: number): number[] =>
+  (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env.FULL_SWEEP
+    ? Array.from({ length: n }, (_, k) => k)
+    : [...new Set(Array.from({ length: 8 }, (_, i) => Math.round((i * (n - 1)) / 7)))];
+
 export async function sweep(store: Store, roots: Element[], n: number): Promise<{ sigs: Set<string>; overflow: string[]; slots: number }> {
   const sigs = new Set<string>(); const overflow: string[] = [];
   let slots = 0;
-  for (let k = 0; k < n; k++) {
+  for (const k of sweepPositions(n)) {
     store.set({ utIndex: k });
     await new Promise((r) => setTimeout(r, 0));
     const s = roots.map(signature);

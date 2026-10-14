@@ -1,4 +1,4 @@
-// 'Dunes only' streamlines (integrate unmasked, clip to the dune cells) and base-anchored arrows (PI round 6), Mars:
+// 'Dunes only' streamlines (integrate unmasked, clip to the dune cells) and base-anchored arrows, Mars:
 // synthetic 2° field, and the fixture (or MARS_STORE_ROOT devroot) rdpa with cells.zarr/dune.
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";

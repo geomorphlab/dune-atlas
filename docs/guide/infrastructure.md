@@ -95,7 +95,7 @@ propagation. Do the sections in order. Tick each box.
        `map.geomorphlab.org` → after the cert is issued tick **Enforce HTTPS**.
 4. [ ] Cloudflare DNS → `CNAME map → geomorphlab.github.io` → **DNS only (grey cloud)**.
 
-## E. Google Sites (after the app is live; detailed in docs/google-sites.md)
+## E. Google Sites (after the app is live; detailed in docs/guide/google-sites.md)
 - New page "Dune Atlas" → Insert → **Embed → By URL** → `https://map.geomorphlab.org/?embed=1`
   → Whole page; plus a Button "Open full screen" → `https://map.geomorphlab.org`. Publish.
   Existing pages are untouched.

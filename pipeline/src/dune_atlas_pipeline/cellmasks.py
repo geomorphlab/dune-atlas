@@ -22,9 +22,10 @@ import json
 
 import numpy as np
 
+from . import constants as C
 from .grid import ERA5_GRID, ERA5_LAND_GRID, Grid
 
-R_EARTH_KM = 6371.0
+R_EARTH_KM = C.R_EARTH_ROUND_KM
 
 
 def lat_weights(dst: Grid, src: Grid):

@@ -12,7 +12,7 @@ from dune_atlas_pipeline import dunes as D
 
 REPO = Path(__file__).resolve().parents[2]
 LAYERS_NC = Path(os.environ.get("DUNE_WORLD_DATA",
-                                os.path.expanduser("~/Documents/research/projects/dune-world/data"))) / "layers.nc"
+                                "")) / "layers.nc"
 
 
 def grid(cells):

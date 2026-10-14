@@ -10,7 +10,7 @@ from dune_atlas_pipeline import fields as F
 from dune_atlas_pipeline.cellstore import FIELD_VARS
 
 REPO = Path(__file__).resolve().parents[2]
-D = os.environ.get("DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data"))
+D = os.environ.get("DUNE_WORLD_DATA", "")
 
 
 # --------------------------------------------------------------------------- coarsening
@@ -110,7 +110,7 @@ def test_registry_semantics():
         assert l["type"] == "zarr-field" and l["thresholdAware"] is True
         assert l["source"] == f"{{dataset}}/fields/{v}.zarr"  # ERA5-Land: dune-atlas/v1/fields/<v>.zarr
         assert "$" not in l["title"] and "\\" not in l["title"]
-        # definitions keep the source TeX for the app's KaTeX rendering (PI 2026-10-14): balanced $...$, no
+        # definitions keep the source TeX for the app's KaTeX rendering: balanced $...$, no
         # units / slider / processing sentences (info-popover rows), one citation format and a licence row
         assert l["description"].count("$") % 2 == 0 and "Shown at the selected" not in l["description"]
         assert l["attribution"] == F.fields_attribution() and l["citation"].startswith(F.PAPER_CITATION + "; ")

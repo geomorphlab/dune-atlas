@@ -1,6 +1,6 @@
 // Collect every user-facing string of the Mars site and its downloads (keyed), like
 // tests/publictext.ts for Earth: for the user-text checks (tests/usertext.ts) and the text audit
-// (docs/user-text-audit.md; TEXT_DUMP=<file> writes the collection).
+// (TEXT_DUMP=<file> writes the collection).
 import { loadRegistry } from "../../src/registry/load";
 import { Store, type AppState } from "../../src/store";
 import { renderLayerPanel } from "../../src/ui/layerPanel";

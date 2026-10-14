@@ -114,7 +114,7 @@
           "info": {
             "type": "object",
             "additionalProperties": false,
-            "description": "Content of the basemap's info (i) popover: definition, Source, Resolution, Coverage (optional), Licence, Link (docs/info-text-audit.md).",
+            "description": "Content of the basemap's info (i) popover: definition, Source, Resolution, Coverage (optional), Licence, Link.",
             "properties": {
               "description": {
                 "type": "string"

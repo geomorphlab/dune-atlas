@@ -1,20 +1,21 @@
 #!/bin/bash
 # Mars terrain: read back the terrarium PMTiles (full + z0-5 subset): header, per-zoom counts, decoded z8 tiles
 # vs independent bilinear DEM samples, parent = 2x2 mean of children.
-#PBS -P k10
+#PBS -P @PROJECT@
 #PBS -q normal
 #PBS -N mars_terrain_check
 #PBS -l ncpus=1
 #PBS -l mem=8GB
 #PBS -l walltime=01:00:00
-#PBS -l storage=gdata/k10+gdata/xp65+scratch/k10
+#PBS -l storage=@STORAGE@
 #PBS -j oe
-#PBS -o /scratch/k10/ag5517/dune-atlas/mars/logs/terrain_check.log
+#PBS -o @LOGS@/terrain_check.log
 set -eu
-PY=/g/data/k10/ag5517/apps/dune_atlas_venv/bin/python
+PY=@PYTHON@
+export DUNE_ATLAS_MARS_DEM=@MARS_DEM@
 CODE=@CODE@
-WORK=/scratch/k10/ag5517/dune-atlas/mars/work/terrain/tiles
-STORES=/scratch/k10/ag5517/dune-atlas/mars/stores
+WORK=@WORK@/terrain/tiles
+STORES=@STORES@
 test -x $PY || { echo "no interpreter"; exit 127; }
 export PYTHONPATH=$CODE
 cd $WORK

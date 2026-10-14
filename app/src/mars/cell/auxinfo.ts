@@ -65,7 +65,7 @@ export function auxSourceAttrs(aux: CellAux, v: string, deg = 2): Record<string,
   else if (str("source")) out.source = str("source")!;
   const cite = [str("citation"), str("doi") ? `data doi:${str("doi")}` : undefined].filter(Boolean).join("; ");
   if (cite) out.references = cite;
-  // FV3-derived values: the PI licence statement (the v1 store attrs say CC BY 4.0 for rho_mean; superseded)
+  // FV3-derived values: license comes from fieldsLicence() (the v1 store attrs say CC BY 4.0 for rho_mean; superseded)
   if (v === "rho_mean" || v === "qsdiv") out.license = fieldsLicence();
   else if (str("licence") && v !== "elev_mean") out.license = str("licence")!;
   if (str("url")) out.url = str("url")!;

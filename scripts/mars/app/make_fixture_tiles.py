@@ -1,10 +1,10 @@
-"""Fixture tiles for the Mars app (App track; environment with pmtiles, PIL/WebP, tippecanoe, geopandas):
+"""Fixture tiles for the Mars app (environment with pmtiles, PIL/WebP, tippecanoe, geopandas):
 
   basemaps/hrsc-mola-terrarium.pmtiles  FAKE low-zoom DEM: Terrarium-encoded 512 px lossless WebP tiles,
                                         z0-3, Web-Mercator, of the synthetic elevation (fixture_common.py)
-                                        - the real archive is built by the Terrain track from the MOLA–HRSC DEM
-  dunes/dunes-r2.pmtiles                the PI dune shapefile (3,514 polygons) as vector tiles z0-7, layer
-                                        `dunes` (tippecanoe) - a fixture stand-in for the Terrain track's archive
+                                        - the real archive is built from the MOLA–HRSC DEM
+  dunes/dunes-r2.pmtiles                the dune shapefile (3,514 polygons) as vector tiles z0-7, layer
+                                        `dunes` (tippecanoe) - a fixture stand-in for the real archive
 
     python scripts/mars/app/make_fixture_tiles.py --shp <dunes.shp> [--out staging/fixture-mars] [--maxzoom 3]
 """

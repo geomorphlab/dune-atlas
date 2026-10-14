@@ -3,7 +3,7 @@
 Every map layer is one entry in the **layer registry**: `registry/layers.yaml` (hand-written) plus
 `registry/generated/*.yaml` (written by pipeline commands). The app reads the merged registry at
 build time; CI (`npm run validate-registry`) rejects malformed entries. **Adding a layer of an existing
-type needs no JavaScript.** Adding a new *type* of layer is covered in `docs/architecture.md`.
+type needs no JavaScript.** Adding a new *type* of layer is covered in `docs/guide/architecture.md`.
 
 The workflow is always the same:
 
@@ -33,7 +33,7 @@ dune-atlas extra-registry                                            # registry/
 ```
 `upload-new` lists the bucket first and refuses any key that already exists (create-only puts). Per-cell values
 for the click panel go into a NEW array of `cells-aux.zarr` (`cellsaux.write_variable`), never into `cells.zarr`.
-Third-party data: fill `attribution: {source, citation, doi, licence, url, changes}` and `docs/sources.md`.
+Third-party data: fill `attribution: {source, citation, doi, licence, url, changes}` and `docs/reference/sources.md`.
 
 ## Example 1 — a static gridded field on the 0.1° grid
 
@@ -43,7 +43,7 @@ layer of Example 0, which uses the native Global-AI field. Use a new store name 
 ```bash
 conda activate dune-atlas
 PYTHONPATH=pipeline/src python -m dune_atlas_pipeline.static \
-    --nc ~/Documents/research/projects/dune-world/data/layers.nc --var aridity \
+    --nc $DUNE_WORLD_DATA/layers.nc --var aridity \
     --title "Aridity index (AI)" --colormap viridis --log \
     --out $STAGING/v1/fields/aridity.zarr          # prints build stats incl. clim
 rclone copy $STAGING/v1/fields/aridity.zarr r2:dune-atlas-data/dune-atlas/v1/fields/aridity.zarr \
@@ -89,9 +89,9 @@ cell-store rebuild and a new data version `v2/`.)
 Points with attributes (e.g. `inqua-luminescence.shp`, ~10⁴ points): vector tiles keep the page fast.
 
 ```bash
-conda activate dune-atlas-tiles          # has tippecanoe + gdal (see docs/validation-dunes.md)
+conda activate dune-atlas-tiles          # has tippecanoe + gdal (see docs/records/validation-dunes.md)
 ogr2ogr -f GeoJSONSeq -t_srs EPSG:4326 $STAGING/inqua-lum.geojsonl \
-    ~/Documents/research/projects/dune-world/data/inqua-luminescence.shp
+    $DUNE_WORLD_DATA/inqua-luminescence.shp
 tippecanoe -o $STAGING/v1/points/inqua-luminescence.pmtiles -l inqua_lum -zg \
     --drop-densest-as-needed --extend-zooms-if-still-dropping $STAGING/inqua-lum.geojsonl
 rclone copy $STAGING/v1/points r2:dune-atlas-data/dune-atlas/v1/points
@@ -124,4 +124,4 @@ put the required attribution in `attribution`.
 - [ ] Data uploaded under a **new or unused** versioned path, and suffix ranges work:
       `curl -s -o /dev/null -w "%{http_code}\n" -H "Range: bytes=-16" https://data.geomorphlab.org/<path>/zarr.json` prints `206`.
 - [ ] Licence/citation filled in; attribution for any new data provider.
-- [ ] Previewed locally (`docs/development.md`).
+- [ ] Previewed locally (`docs/guide/getting-started.md`).

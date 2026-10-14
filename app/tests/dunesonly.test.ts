@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// 'Dunes only' (PI round 5 item 6), Earth: wind-derived layers masked to the dataset's dune cells from the
+// 'Dunes only', Earth: wind-derived layers masked to the dataset's dune cells from the
 // published cells.zarr/dunes flag (map/dunemask.ts); synthetic pyramid + the ERA5 fixture when present.
 import { describe, expect, it, vi } from "vitest";
 import fs from "node:fs";

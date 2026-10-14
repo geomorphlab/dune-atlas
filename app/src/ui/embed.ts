@@ -1,5 +1,5 @@
 // Embed mode (?embed=1, the Google Sites iframe): an "Open full screen ↗" pill on the map, top left,
-// above the layer panel (round 7). Same in both atlases; the link opens the current view in a new tab.
+// above the layer panel. Same in both atlases; the link opens the current view in a new tab.
 import type { Store } from "../store";
 import { h } from "./dom";
 

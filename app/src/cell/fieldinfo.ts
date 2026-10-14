@@ -4,7 +4,7 @@
 // Which fields exist is decided by the cell store root attrs `field_vars`; fields in
 // constants.WITHHELD_VARS (currently none) are never displayed or exported (isPublishedField).
 import meta from "../../../registry/qsat_field_metadata.json";
-// one name per quantity (review L5): the registry title / titleTex, written by the pipeline with the registry
+// one name per quantity: the registry title / titleTex, written by the pipeline with the registry
 import names from "../../../registry/field_names.json";
 import { C } from "../util/constants";
 import { mathToAxisDeg, mathToBearingDeg } from "../util/angles";

@@ -1,5 +1,5 @@
 """Global Aridity Index (Global-AI_PET v3.1) at native 30-arc-second resolution, plus per-cell means on a
-wind grid (docs/sources.md, docs/data-audit.md "Aridity index").
+wind grid (docs/reference/sources.md, docs/reference/data-audit.md "Aridity index").
 
 Source: `ai_v31_yr.tif` (43200 x 18000, 90N-60S, 180W-180E, UInt16 = AI x 10^4, no declared nodata) and
 `Global-AI_ET0__annual_v3_1/et0_v31_yr.tif` (same grid, UInt16 mm/yr, nodata 65535).
@@ -253,7 +253,7 @@ def registry_layer() -> dict:
         "visible": False, "opacity": 0.85, "queryable": False,
         "display": {"transform": "none", "colormap": COLORMAP, "clim": CLIM, "log": True,
                     # UNEP aridity class limits as legend ticks; top of the scale is saturated in the source
-                    # (no legendNote: the classes, saturation and no-data areas are stated once, in the info; PI, Oct 2026)
+                    # (no legendNote: the classes, saturation and no-data areas are stated once, in the info)
                     "ticks": list(UNEP_LIMITS), "topLabel": "≥ 6.5"},
     }
 
@@ -263,7 +263,7 @@ def main(argv=None):
     p = argparse.ArgumentParser(prog="python -m dune_atlas_pipeline.aridity")
     sub = p.add_subparsers(dest="cmd", required=True)
     b = sub.add_parser("pyramid", help="native-resolution GeoZarr pyramid (fields/aridity.zarr)")
-    b.add_argument("--data", default=os.environ.get("DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data")))
+    b.add_argument("--data", default=os.environ.get("DUNE_WORLD_DATA", ""))
     b.add_argument("--out", required=True)
     b.add_argument("--keepbits", type=int, default=12)
     c = sub.add_parser("cellmeans", help="per-cell AI mean / valid fraction on a wind grid -> .npz")

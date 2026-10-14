@@ -70,7 +70,7 @@ export function checkOverlayManager(reg: Registry, prefix: string, cellStore: Re
   expect(om.cellStoreUrl()).toMatch(cellStore);
 }
 
-/** PNG map export (round 7 item 1): the strip says "Dunes only" while it is on and a wind-derived
+/** PNG map export: the strip says "Dunes only" while it is on and a wind-derived
  *  layer is shown; not when off, nor when only layers it does not affect are shown. */
 export function checkExportStrip(reg: Registry, dataset: string) {
   const wind = reg.layers.find((l) => isWindDerived(l) && l.type === "zarr-field")!;

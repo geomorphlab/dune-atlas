@@ -1,4 +1,4 @@
-// 'Centre map on this cell' (cell panel header button; PI round 6 item 3, both builds).
+// 'Centre map on this cell' (cell panel header button, both builds).
 // Eases the map (600 ms; an instant jump with prefers-reduced-motion) to the selected cell's centre, keeping
 // the projection, bearing and pitch and the current zoom - unless the cell would be smaller than MIN_CELL_PX
 // on screen, then just enough zoom to show it. On the globe the centre is the cell centre itself (also for

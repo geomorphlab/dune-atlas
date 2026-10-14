@@ -70,7 +70,7 @@ export function resolveInitialState(shared: ShareState | null, query: UrlState, 
 
 /** localStorage name (per body, body.ts storageKey) of the last view: the address query of the current view. */
 export const LAST_VIEW = "lastView";
-/** Planet button (review U11): the other atlas is opened with `?resume=1`; a link with that flag and no view
+/** Planet button: the other atlas is opened with `?resume=1`; a link with that flag and no view
  *  state of its own opens the last view stored by this atlas (camera, basemap, projection, layers with their
  *  opacity and display, threshold, cell, dataset, Dunes only), keeping the link's embed / tour flags. */
 export function resumeQuery(query: UrlState, stored: string | null | undefined): UrlState {

@@ -1,4 +1,4 @@
-"""Mars constants (docs/mars-spec.md sections 2-5). Single source of truth for the Mars pipeline AND the
+"""Mars constants (docs/reference/mars-spec.md sections 2-5). Single source of truth for the Mars pipeline AND the
 browser (exported to app/src/generated/constants-mars.json by app/scripts/export-constants-mars.py).
 The Earth constants in dune_atlas_pipeline/constants.py are unchanged and unrelated.
 """
@@ -19,7 +19,7 @@ PACKING = 0.6            # sand-bed packing fraction phi: atlas fluxes are volum
 # --- near-surface wind ----------------------------------------------------------------------------
 # u* from the GCM lowest-level wind at that hour's lowest-level height z (hydrostatic), through the smooth-wall
 # mixing-length profile of Pahtz & Duran (2023) eq. 2.2 under constant stress (profile_table.json); there is
-# no roughness length (per PI 2026-10-14; replaces the earlier neutral log law with z0 = 1 mm at z = 2 m).
+# no roughness length (this replaces the earlier neutral log law with z0 = 1 mm at z = 2 m).
 KAPPA = 0.40             # von Karman constant (Pahtz & Duran 2023)
 MIX_DAMP = 7.0           # viscous damping constant in eq. 2.2: dl/dz = kappa [1 - exp(-sqrt(u l / (7 nu)))]
 

@@ -7,11 +7,22 @@ name = "dune-atlas-pipeline"
 version = "0.1.0"
 description = "Convert dune-world research outputs into web-optimised stores for dune-atlas"
 requires-python = ">=3.11"
-dependencies = ["numpy", "xarray", "zarr>=3", "numcodecs", "dask", "rasterio",
-                "rioxarray", "geopandas", "shapely", "pyyaml", "jsonschema"]
+dependencies = ["numpy", "scipy", "xarray", "zarr>=3", "numcodecs", "dask", "netCDF4", "rasterio",
+                "rioxarray", "geopandas", "shapely", "pyproj", "pillow", "pyyaml", "jsonschema",
+                "topozarr>=0.1.11", "topozarr-core>=0.1.11", "xproj"]
 
 [project.optional-dependencies]
+# pmtiles: reading back PMTiles archives (tests, Mars terrain checks); tippecanoe (dune vector tiles) is a
+# system tool (conda-forge), not a Python package
+tiles = ["pmtiles"]
+fast = ["numba"]          # JIT kernels of the Mars cell builder (a NumPy fallback is used without it)
+upload = ["boto3"]        # create-only uploads to the R2 bucket
 test = ["pytest"]
+lint = ["ruff"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
 
 [project.scripts]
 dune-atlas = "dune_atlas_pipeline.cli:main"

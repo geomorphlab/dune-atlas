@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// Earth user-facing text: no implementation / failure-handling / internal / relict wording (round 7 item 3).
+// Earth user-facing text: no implementation / failure-handling / internal / relict wording.
 import { describe, expect, it, vi } from "vitest";
 import { collectPublicText } from "./publictext";
 import { devPhraseHits } from "./usertextlib";

@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// Mars "<quantity> vs grain diameter" plot (PI request 2026-10): same features as Earth, x = log10 d; the
+// Mars "<quantity> vs grain diameter" plot: same features as Earth, x = log10 d; the
 // last x label (1000) fits; the per-hour median threshold is offered.
 import { describe, expect, it, vi } from "vitest";
 import { CellPanel } from "../../src/mars/ui/cellPanel";

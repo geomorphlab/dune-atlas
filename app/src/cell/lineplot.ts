@@ -49,7 +49,7 @@ export function linePlotSvg(o: LinePlotOptions): string {
   const fin = ys.filter(ok).map(tv);
   const x0 = Math.min(...xs), x1 = Math.max(...xs);
   const xt = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6].filter((t) => t >= x0 - 1e-9 && t <= x1 + 1e-9);
-  // right margin: room for half of the last x tick label (review: "1000" was clipped to "100" on Mars)
+  // right margin: room for half of the last x tick label (e.g. "1000" was clipped to "100" on Mars)
   const last = xt.length ? xTick(xt[xt.length - 1]) : "";
   const lastAtEdge = xt.length > 0 && (x1 - xt[xt.length - 1]) / (x1 - x0 || 1) < 0.08;
   const m = { l: Math.round(46 * k), r: Math.max(10, lastAtEdge ? Math.ceil(0.31 * T.fs.tick * last.length) + 3 : 10), t: 10, b: Math.round(34 * k) };

@@ -102,7 +102,7 @@ describe("Mars build: planet toggle, header, storage", () => {
   });
 });
 
-// the Terrain track's invert tiles (devroot); skips until the archive exists
+// the invert tiles (devroot); skips until the archive exists
 const INVERT = path.resolve(__dirname, "../../../staging/mars/devroot/dune-atlas/mars/v1/dunes/invert-r2.pmtiles");
 const invertReady = fs.existsSync(INVERT) && !fs.existsSync(`${INVERT}-journal`) && (() => { const fd = fs.openSync(INVERT, "r"), b = Buffer.alloc(7); fs.readSync(fd, b, 0, 7, 0); fs.closeSync(fd); return b.toString() === "PMTiles"; })(); // not while Terrain is still writing it
 describe.skipIf(!invertReady)("Mars invert tiles (devroot)", () => {
@@ -116,7 +116,7 @@ describe.skipIf(!invertReady)("Mars invert tiles (devroot)", () => {
   });
 });
 
-describe("Mars round 4: texts at the source, one field citation, FV3 licence, basemap info, MOLA–HRSC", () => {
+describe("Mars: texts at the source, one field citation, FV3 licence, basemap info, MOLA–HRSC", () => {
   const REPO = path.resolve(__dirname, "../../..");
   it("Wind generator outputs: no repeated sentences; citation/licence of every FV3-derived field", async () => {
     for (const f of ["registry/mars/generated/qsat_fields.yaml", "registry/mars/generated/x_extra_fields.yaml"])
@@ -136,7 +136,7 @@ describe("Mars round 4: texts at the source, one field citation, FV3 licence, ba
     const reg = loadRegistry().registry;
     for (const b of reg.basemaps) expect([...basemapInfoHtml(b).matchAll(/<dt>([^<]+)<\/dt>/g)].map((m) => m[1]), b.id)
       .toEqual(b.id === "esri-hirise" ? ["Source", "Resolution", "Coverage", "Licence", "Link"] : ["Source", "Resolution", "Licence", "Link"]);
-    // HiRISE: polar coverage note (Terrain round 2, docs/mars-app.md 5a)
+    // HiRISE: polar coverage note (docs/guide/mars.md)
     expect(basemapInfoHtml(reg.basemaps.find((b) => b.id === "esri-hirise")!)).toContain("between about 65° S and 65° N; no imagery at higher latitudes in this mosaic (Esri OnMars).");
     const root = document.createElement("div");
     renderLayerPanel(root, reg, new Store({ basemap: "x", projection: "globe", utIndex: 29, layers: {}, order: [], dataset: DEFAULT_VIEW.dataset, cell: null, embed: false } as never));

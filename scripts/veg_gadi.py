@@ -1,10 +1,10 @@
 """NCI Gadi job (PBS): 2001-2025 mean total vegetation cover on the 0.1 deg atlas grid from the yearly monthly
 0.1 deg aggregates of the MODIS Fractional Cover v3.1 tiles (read-only), plus diagnostics and an independent
-per-cell recomputation from the tc43 500 m tiles (docs/validation-veg.md).
+per-cell recomputation from the tc43 500 m tiles (docs/records/validation-veg.md).
 
 Reads   $VEG_MONTHLY_DIR/monthly-tcov-geoglamrapp-YYYY.nc   (read-only; tot_cov(year, month, latitude, longitude) %)
-        /g/data/tc43/modis-fc/v310/tiles/monthly/cover/*.nc            (read-only)
-Writes  ./out/  (in the run directory under /scratch/k10/ag5517/dune-atlas/veg/)
+        /g/data/tc43/modis-fc/v310/tiles/monthly/cover/*.nc            (read-only; NCI collection tc43)
+Writes  ./out/  (or the directory given as the first argument)
 """
 import datetime as dt
 import glob
@@ -16,12 +16,12 @@ import time
 import netCDF4 as nc
 import numpy as np
 
-AUTH = os.environ.get("VEG_MONTHLY_DIR", "/g/data/k10/ag5517/ft27/data") + "/monthly-tcov-geoglamrapp-%d.nc"
+AUTH = os.environ["VEG_MONTHLY_DIR"] + "/monthly-tcov-geoglamrapp-%d.nc"
 SRC = "/g/data/tc43/modis-fc/v310/tiles/monthly/cover/"
 YEARS = list(range(2001, 2026))
 OUT = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else "out")
 os.makedirs(OUT, exist_ok=True)
-R = 6371007.181
+R = 6371007.181                # constants.R_EARTH_AUTHALIC (sphere of the MODIS sinusoidal grid); standalone job
 T = 1111950.5197665233          # MODIS tile size (m)
 XMIN, YMAX = -20015109.355798, 10007554.677899
 PX = T / 2400

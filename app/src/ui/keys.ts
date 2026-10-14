@@ -1,4 +1,4 @@
-// Keyboard: Escape closes the cell panel only when the key is meant for it (review L12: a visitor closing a
+// Keyboard: Escape closes the cell panel only when the key is meant for it (otherwise a visitor closing a
 // dropdown, an ⓘ popover or a slider in the layer panel with Escape lost the selected cell). Shared by both
 // builds (src/main.ts, src/mars/main.ts).
 

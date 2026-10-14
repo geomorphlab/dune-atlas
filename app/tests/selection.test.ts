@@ -1,4 +1,4 @@
-// Selected-cell highlight at the poles (PI round 5 item 7), Earth grids: ERA5-Land 0.1° and ERA5 0.25°.
+// Selected-cell highlight at the poles, Earth grids: ERA5-Land 0.1° and ERA5 0.25°.
 import { describe, it, expect } from "vitest";
 import { ERA5_LAND_GRID, cellFeature, cellFromIndex } from "../src/cell/snap";
 import { checkPolarCell, checkProjectionSwitch } from "./selectionlib";

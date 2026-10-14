@@ -37,7 +37,7 @@ const CONVENTIONS = {
   wind_direction: "u, v toward east/north; direction toward = arctan2(v, u), radians counter-clockwise from east; compass bearing toward = (90 - degrees) mod 360; from = toward + 180",
   friction_velocity: `u* from the smooth-wall mixing-length profile of Pähtz & Durán (2023) eq. 2.2, dl/dz = kappa [1 - exp(-sqrt(u l / (7 nu)))], under constant stress (no roughness length), evaluated at each hour's lowest-level height z with nu = mu(T)/rho; kappa = ${M.KAPPA}, damping constant ${M.MIX_DAMP}; tabulated universal profile u+ (X = z u*/nu), u* by bisection`,
   threshold: `per hour: u*,th(d, rho, T), Pähtz & Durán (2023) eq. 5.1 with the rarefaction correction of eq. 3.20 (rho_p = ${M.RHO_P} kg m-3, g = ${M.G} m s-2, R = ${M.R_AIR} J kg-1 K-1, Sutherland viscosity of CO2)`,
-  transport: "q = Q/(rho_p phi), the volume of packed sand (packing fraction phi = 0.6, pore space included), with the mass flux Q from Pähtz & Durán (2023) eq. 3.2 for u* > u*,th, else 0 (m2 s-1; x 31557600 = m2 yr-1)",   // PI text 2.3
+  transport: "q = Q/(rho_p phi), the volume of packed sand (packing fraction phi = 0.6, pore space included), with the mass flux Q from Pähtz & Durán (2023) eq. 3.2 for u* > u*,th, else 0 (m2 s-1; x 31557600 = m2 yr-1)",
   crest_flux: `u_c = u* (1 + beta A |sin(ua - alpha)|), beta = ${M.BETA}, A = 0.8/6; q_c = q(u_c) with the same hour's u*,th`,
   field_angles: "radians counter-clockwise from east, direction of transport (toward); compass bearing = (90 - degrees(value)) mod 360; alpha_h (NetCDF ab) is an axis",
   fluxes: "fields: m2 s-1 (multiply by 31557600 for m2 yr-1); flux_rose: m2 yr-1",
@@ -260,7 +260,7 @@ export function csvBundle(cell: MarsCellData, meta: ExportMeta, deflate?: Deflat
 }
 /** grain-size index of rose_16_sectors.csv (the panel's; default 200 um) */
 const rose16Index = (cell: MarsCellData, meta: ExportMeta) => Math.max(0, Math.min(cell.dValuesUm.length - 1, meta.utIndex ?? 29));
-/** rose_16_sectors.csv of a Mars cell at grain-size index `k` (review U7) */
+/** rose_16_sectors.csv of a Mars cell at grain-size index `k` */
 export function rose16CsvMars(cell: MarsCellData, k: number): string {
   const v = analyseMarsCell(cell, k, { windSectors: 16, fluxSectors: 16, fluxMode: "flat" });
   return rose16Csv(D_COLUMN, String(cell.dValuesUm[k]), v.windRose.freq.map((r) => r.reduce((a, x) => a + x, 0)), v.fluxSectors, v.fluxSectorsPct);

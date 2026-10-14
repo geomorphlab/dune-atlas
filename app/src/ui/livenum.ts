@@ -1,6 +1,6 @@
-// Live numbers that change with the u*,th / d slider (PI round 5 item 2, both builds). Moving the slider
+// Live numbers that change with the u*,th / d slider (both builds). Moving the slider
 // must not change the length of any wrapped text, or the layer and cell panels reflow and shift vertically.
-// Rules (docs/mars-app.md §2b):
+// Rules (docs/guide/mars.md §2b):
 //  * every live number is set in tabular figures (CSS `font-variant-numeric: tabular-nums` on both panels);
 //  * every live number is wrapped with its unit in one `span.live-num` (inline-block, nowrap) whose
 //    min-width (ch) is RESERVED for the longest value over the whole slider axis: from the 64 values
@@ -9,8 +9,7 @@
 //    "0.00 m/s"); the text around the slots is identical at every slider position;
 //  * the slot width is MEASURED in the UI font (canvas measureText, `measuredWidthCh`), so a slot is as wide
 //    as its widest value and no wider; in running text a slot ends its line or block where the values differ
-//    in length (left-aligned, nothing after it), so the room kept for longer values is never a hole mid-text
-//    (review U8 / L11, 2026-10);
+//    in length (left-aligned, nothing after it), so the room kept for longer values is never a hole mid-text;
 //  * slider readouts are padded to the widest value of the axis with figure spaces (U+2007).
 // With constant slot widths and constant surrounding text, line breaks (and the table's auto column
 // widths, which depend only on the cells' min/max-content widths) are the same at every position.

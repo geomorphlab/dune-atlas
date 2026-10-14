@@ -1,6 +1,6 @@
 // Mars cell store against the local fixture (scripts/mars/app/make_fixture.py -> staging/fixture-mars;
 // skipped when absent, e.g. CI). Mirrors tests/cellstore.test.ts. Later the same checks apply to
-// staging/mars/devroot (the Wind track's stores): set MARS_STORE_ROOT to that dataset directory.
+// staging/mars/devroot (the wind data stores): set MARS_STORE_ROOT to that dataset directory.
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";

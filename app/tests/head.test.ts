@@ -1,4 +1,4 @@
-// Tab title "MGL - Dune Atlas" and the lab icon (PI round 6 item 4), Earth (index.html as built).
+// Tab title "MGL - Dune Atlas" and the lab icon, Earth (index.html as built).
 import { describe, it } from "vitest";
 import { INDEX, checkHead } from "./headlib";
 

@@ -1,7 +1,7 @@
-# Mars dune atlas layer registry (hand-written part; App track). Same schema as
+# Mars dune atlas layer registry (hand-written part). Same schema as
 # registry/layers.yaml (registry/layers.schema.json); merged at build time (VITE_BODY=mars) with
-# every registry/mars/generated/*.yaml fragment ({groups, layers}) written by the Wind and Terrain
-# tracks; a generated layer with the same id REPLACES the placeholder here
+# every registry/mars/generated/*.yaml fragment ({groups, layers}) written by the pipeline
+# (pipeline/src/dune_atlas_pipeline/mars/); a generated layer with the same id REPLACES the placeholder here
 # (app/src/registry/merge.ts). Validate: cd app && npm run validate-registry:mars
 #
 # Differences from Earth: one wind dataset (MCMC FV3 beta release 1), the slider is the median
@@ -24,14 +24,14 @@ threshold:
   dim: d
   label: "Median grain diameter d"
   units: µm
-  defaultIndex: 29          # 200 µm (docs/mars-spec.md section 5)
+  defaultIndex: 29          # 200 µm (docs/reference/mars-spec.md section 5)
   values: [50, 52, 55, 58, 60, 63, 67, 70, 73, 77, 80, 84, 88, 93, 97, 102, 107, 112, 118, 123, 129, 136, 142, 149, 157, 164, 172, 181, 189, 200, 208, 218, 229, 240, 252, 264, 277, 290, 305, 319, 335, 351, 368, 386, 405, 425, 446, 467, 490, 514, 539, 565, 593, 622, 652, 684, 717, 752, 788, 827, 867, 909, 954, 1000]
 
 basemaps:
   - id: hrsc-mola-hillshade
     title: Shaded relief (MOLA–HRSC, 2D)
     kind: hillshade
-    # self-built Terrarium 512 px lossless WebP tiles in one PMTiles archive (Terrain track);
+    # self-built Terrarium 512 px lossless WebP tiles in one PMTiles archive;
     # a relative pmtiles:// path is resolved against the data base by the Mars app
     tiles: ["pmtiles://dune-atlas/mars/v1/basemaps/hrsc-mola-terrarium.pmtiles/{z}/{x}/{y}"]
     encoding: terrarium
@@ -60,7 +60,7 @@ basemaps:
       url: "https://www.openplanetary.org/opm"
   # Esri OnMars imagery services (geographic tiling, reprojected to Web Mercator in the browser by the
   # esri-mars:// protocol, src/mars/map/esri.ts); maxzoom = deepest service level + 1. Attributions follow
-  # each ArcGIS item page's licence field (Esri credit + data credit); PI decision 2026-10-14.
+  # each ArcGIS item page's licence field (Esri credit + data credit).
   - id: esri-ctx1
     title: CTX mosaic, 5 m (Murray Lab V01, Esri)
     imagery: true
@@ -145,7 +145,7 @@ layers:
   # PLACEHOLDERS (same ids as the generated fragments, which replace them): the dunes and a few
   # wind-regime fields, enough for the default view and for development on the local fixture
   # (scripts/mars/app/make_fixture.py). The full set of the 23 fields comes from
-  # registry/mars/generated/qsat_fields.yaml (Wind track).
+  # registry/mars/generated/qsat_fields.yaml.
   # -------------------------------------------------------------------------------------------
   - id: dunes
     title: Dune fields
@@ -156,9 +156,9 @@ layers:
     visible: true
     opacity: 1
     queryable: true
-    # 'invert' view (as Earth's nondune-land): the global surface minus the dune polygons, built by the Terrain
-    # track with its polar dune fix. Key and source-layer are the App track's default until Terrain reports them
-    # (PI 2026-10-14). Kept on the merged layer even when the Terrain fragment (generated/dunes.yaml) replaces
+    # 'invert' view (as Earth's nondune-land): the global surface minus the dune polygons, built with
+    # a polar dune fix. Key and source-layer default to placeholder values until replaced by the
+    # generated fragment. Kept on the merged layer even when that fragment (generated/dunes.yaml) replaces
     # this placeholder without them (src/mars/registry/invert.ts).
     invertSource: dune-atlas/mars/v1/dunes/invert-r2.pmtiles
     invertSourceLayer: invert

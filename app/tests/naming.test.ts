@@ -1,4 +1,4 @@
-// One name per quantity (review L5, U12): the layer list (titleTex), the cell table (title), the info title,
+// One name per quantity: the layer list (titleTex), the cell table (title), the info title,
 // the rose legend (MODE_STYLE) and the CSV / NetCDF long names (fieldInfo) use the same name; αH is the
 // bed-instability-mode crest orientation (an axis), never labelled with a compass point.
 import { describe, expect, it } from "vitest";
@@ -25,14 +25,14 @@ describe("one name per quantity", () => {
     const q = reg.layers.find((l) => l.id === "qsdiv")!;
     expect(textOnly(q.titleTex!).trim()).toBe("Saturated flux divergence");
   });
-  it("αH: crest orientation of the bed-instability mode everywhere (PI text 3.7), its own definition, rose legend without compass word", () => {
+  it("αH: crest orientation of the bed-instability mode everywhere, its own definition, rose legend without compass word", () => {
     const ab = reg.layers.find((l) => l.id === "ab")!;
     expect(ab.title).toBe("Crest orientation, bed-instability mode (αH)");
     expect(ab.description).toMatch(/^Crest orientation \$\\alpha_H\$ of the bed-instability mode: the axis \(0–180°\)/);
     expect(ab.description).not.toMatch(/unsigned direction/);
     expect(MODE_STYLE.ab.label).toBe("αH (crest orientation, bed-instability mode)");
     const ao = reg.layers.find((l) => l.id === "ao")!;
-    expect(ao.title).toBe("Along-crest transport direction (αO)");   // PI text 3.9
+    expect(ao.title).toBe("Along-crest transport direction (αO)");
     expect(MODE_STYLE.ao.label).toBe("αO (along-crest transport direction)");
     for (const k of ["at", "ae", "ao", "rdpa"] as const) {
       const l = reg.layers.find((x) => x.id === k)!;

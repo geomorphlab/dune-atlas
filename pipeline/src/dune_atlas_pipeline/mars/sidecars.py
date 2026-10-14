@@ -4,7 +4,7 @@
                                                  p2/p98/frac_finite at d index 29 (200 um) over all cells
   <devroot>/.../fv3-beta1/fields/<var>.zarr      23 field pyramids (d, y, x) + qsdiv (d, y, x) + rho_mean (y, x)
   <devroot>/.../fv3-beta1/cells-aux.zarr         qsdiv (lat, lon, d) m/yr, rho_mean (lat, lon) kg m^-3 and elev_mean
-                                                 (lat, lon) m (Terrain track's elev_mean.npz, added with
+                                                 (lat, lon) m (elev_mean.npz, added with
                                                  cellsaux.write_variable), Earth cellsaux conventions
   registry/mars/generated/qsat_fields.yaml       fragment {groups, layers}: the 23 field layers
   registry/mars/generated/x_extra_fields.yaml    fragment: qsdiv and rho_mean
@@ -44,7 +44,7 @@ EARTH_UT_TEXT = (f" Shown at the selected threshold friction velocity u*,th "
 THRESHOLD_NOTE = (r" The threshold is that hour's cessation threshold $u_{\ast,th}(d, \rho_f, T)$ of Pähtz & Durán "
                   r"(2023).")
 # Citation of the atlas-derived fields, one format with Earth (fields.fields_citation; app mars/cell/citation.ts
-# fieldsCitation): "Gunn, A. (2026). ... doi:...; transport law: ...; winds: ..." (PI 2026-10-14).
+# fieldsCitation): "Gunn, A. (2026). ... doi:...; transport law: ...; winds: ...".
 GCM_WINDS = ("MCMC FV3-based Mars GCM Beta Output Release 1, one Mars year of hourly lowest-level winds (NASA Ames "
              "Mars Climate Modeling Center (2023), https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model "
              "physics: Haberle, R. M. et al. (2019). Icarus 333, 130–164. doi:10.1016/j.icarus.2019.03.026)")
@@ -54,7 +54,7 @@ CITATION = (f"{EF.PAPER_CITATION}; transport law: Pähtz, T. & Durán, O. (2023)
 GCM_CITATION = ("NASA Ames Mars Climate Modeling Center (2023). MCMC FV3-based Mars GCM Beta Output Release 1. "
                 "https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics: Haberle, R. M. et al. "
                 "(2019). Icarus 333, 130–164. doi:10.1016/j.icarus.2019.03.026")
-# Licence row of everything derived from the FV3 output (PI 2026-10-14)
+# Licence row of everything derived from the FV3 output
 LICENCE = "NASA Ames MCMC output; no licence stated (NASA open data)"
 ATTRIBUTION = {"citation": CITATION, "licence": LICENCE}
 
@@ -141,7 +141,7 @@ def elev_attrs(source: str) -> dict:
     from .terrain import DEM_ATTRIBUTION as A
     return {"long_name": "Mean elevation of the cell", "long_name_latex": r"\overline{z}", "units": "m",
             "description": ("Spherical-area-weighted mean over the 2° cell of the 1/64° area-mean grid of the MGS MOLA – MEX "
-                            "HRSC blended DEM (200 m), heights above the Mars 2000 areoid (Terrain track, mars/terrain.py)."),
+                            "HRSC blended DEM (200 m), heights above the Mars 2000 areoid (mars/terrain.py)."),
             "source": source, "citation": A["citation"], "url": A["url"], "licence": A["licence"],
             "changes": A["changes"]}
 
@@ -191,7 +191,7 @@ def qsat_fragment(meta: dict) -> dict:
         assert "Shown at the selected" not in lay["description"], lay["id"]   # units/slider are popover rows
         lay["citation"] = CITATION
         lay["attribution"] = dict(ATTRIBUTION)
-        if lay["id"] in EF.MARS_FIELD_DEFINITIONS:            # Mars wording (PI text 3.2)
+        if lay["id"] in EF.MARS_FIELD_DEFINITIONS:            # Mars wording
             lay["description"] = EF.MARS_FIELD_DEFINITIONS[lay["id"]]
         assert lay["source"] == f"{{dataset}}/fields/{lay['id']}.zarr", lay["source"]
     return frag
@@ -209,8 +209,8 @@ def extra_fragment(qsdiv_clim, rho_clim) -> dict:
                          r"values (flux convergence) imply deposition and positive values (flux divergence) erosion. The "
                          r"values assume a saturated flux and an unlimited supply of loose sand, so on rock, crusted or "
                          r"vegetated surfaces actual erosion is limited by the sand available."),
-         # PI text 3.14 minus its last sentence ("No data at coasts ... ±90° rows"): Mars has no land mask and the
-         # divergence is defined in every cell (one-sided differences at the ±89° rows); see docs/user-text-audit-2.md
+         # Mars has no land mask, and the
+         # divergence is defined in every cell (one-sided differences at the ±89° rows).
          "citation": CITATION, "attribution": dict(ATTRIBUTION), "visible": False, "opacity": 0.85, "queryable": False,
          "display": {"transform": "scale", "scale": 1000.0, "colormap": "piyg", "clim": list(qsdiv_clim)}},
         {"id": "rho_mean", "title": "Near-surface air density", "titleTex": r"Near-surface air density $\overline{\rho_f}$",
@@ -230,7 +230,7 @@ def _sig(x, n=2):
 def write_fragments(meta: dict, qsdiv_clim, rho_clim, gen=GEN) -> list[Path]:
     import yaml
     gen = Path(gen); gen.mkdir(parents=True, exist_ok=True)
-    hdr = ("# GENERATED by `python -m dune_atlas_pipeline.mars.sidecars` (Wind track) from fields.FIELD_META and\n"
+    hdr = ("# GENERATED by `python -m dune_atlas_pipeline.mars.sidecars` from fields.FIELD_META and\n"
            "# registry/mars/qsat_field_metadata.json. Do not edit by hand. Fragment {groups, layers}; layer objects\n"
            "# validate against registry/layers.schema.json $defs/layer. Sources are dataset-relative ('{dataset}' =\n"
            f"# {PREFIX}); clim in display units (after display.transform), fluxes in m²/yr,\n"

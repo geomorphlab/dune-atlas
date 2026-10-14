@@ -6,7 +6,7 @@
     dune-atlas dunes   --data DIR --out STAGING/dunes      (geojson + vector/raster PMTiles; needs tippecanoe)
     dune-atlas fixture --data DIR --out STAGING/fixture      (Namib / southern Africa subset)
 
-  New layers (2026-10-13; docs/sources.md, docs/validation-qsdiv.md):
+  New layers (2026-10-13; docs/reference/sources.md, docs/records/validation-qsdiv.md):
     dune-atlas aridity        --data DIR --out STAGING/fields/aridity.zarr   (native 30" GeoZarr pyramid)
     dune-atlas aridity-cells  --data DIR --out STAGING/ai_cellmeans.npz [--grid era5-land|era5]
     dune-atlas qsdiv          --data DIR --out STAGING/qsdiv_native.zarr     (64 ut, m/yr)
@@ -19,14 +19,14 @@
         aborts if any key exists (the live listing covers all of dune-atlas/ when --prefix is given)
 
   Wind datasets (grid.DATASETS): era5-land (0.1°, default) and era5 (0.25°). For era5, DIR holds the land-cell
-  source stores and era5_cellmasks.nc (cellmasks.py); see docs/validation-era5.md.
+  source stores and era5_cellmasks.nc (cellmasks.py); see docs/records/validation-era5.md.
     dune-atlas era5-masks     --lsm era5_lsm.npy --data DIR --out STAGING/era5/era5_cellmasks.nc
 """
 import argparse
 import json
 import os
 
-DEFAULT_DATA = os.environ.get("DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data"))
+DEFAULT_DATA = os.environ.get("DUNE_WORLD_DATA", "")
 FIXTURE_CELLS = (1056, 1216, 1904, 2000)                 # ~ -15.5..-31.5 lat, 10.4..20 lon (shard-aligned)
 FIXTURE_FIELDS = dict(latitude=slice(1000, 1250), longitude=slice(1900, 2200))  # -10..-35 lat, 10..40 lon
 FIXTURE_VARS = ["qacb", "at", "sige_sigh", "ae", "uft"]
@@ -92,7 +92,7 @@ def main(argv=None):
                                        land=land)
     elif a.cmd == "dunes":
         # --out is a directory: dunes.geojson, dunes.pmtiles, dunes-raster.pmtiles, dunes_summary.json.
-        # Needs tippecanoe >= 2.17 on PATH (conda-forge; not pip-installable) - see docs/validation-dunes.md.
+        # Needs tippecanoe >= 2.17 on PATH (conda-forge; not pip-installable) - see docs/records/validation-dunes.md.
         print(json.dumps(dunes.build_all(f"{a.data}/layers.nc", a.out), indent=1))
     elif a.cmd == "fixture":
         import xarray as xr

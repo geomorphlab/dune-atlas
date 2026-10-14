@@ -1,6 +1,6 @@
 # Mars terrain track: validation
 
-Terrain products of the Mars atlas (docs/mars-spec.md §1, §6): the MOLA–HRSC terrarium basemap (PMTiles), the
+Terrain products of the Mars atlas (docs/reference/mars-spec.md §1, §6): the MOLA–HRSC terrarium basemap (PMTiles), the
 elevation field (`fields/elevation.zarr`), the 2° cell mean elevation (`cells-aux.zarr` `elev_mean`), the dune
 PMTiles and the dune overlap fraction on the contract grid (`cells.zarr` `dunes`/`dune`).
 
@@ -12,7 +12,7 @@ Gadi jobs `pipeline/gadi/mars_terrain/*.pbs` (staged by `stage_and_submit.sh`); 
 
 ## 1. DEM facts (read in place on Gadi, never copied or modified)
 
-`/g/data/k10/ag5517/omega-claude/data/raw_mola/Mars_HRSC_MOLA_BlendDEM_Global_200mp_v2.tif`, 11,384,463,908 bytes.
+`$(dirname $DUNE_ATLAS_MARS_DEM)/Mars_HRSC_MOLA_BlendDEM_Global_200mp_v2.tif`, 11,384,463,908 bytes.
 
 | property | value (rasterio, 2026-10-13) |
 |---|---|
@@ -222,7 +222,7 @@ extends to the pole: 49 before, 0 after; blue = the globe cap triangles).
 grid (short chords on the sphere) and triangulates each piece (shapely constrained Delaunay) →
 `dune-atlas/mars/v1/dunes/polar-caps.json` (551,365 bytes; `layers.dunes` and `layers.invert`, N and S, flat lon/lat
 triangles). Drawn by `app/src/mars/map/polarcap.ts` as a globe-only custom layer directly above its fill layer
-with the same colour, opacity and visibility (`docs/mars-app.md` §5b).
+with the same colour, opacity and visibility (`docs/guide/mars.md` §5b).
 
 | cap | dune area, source (km²) | dune area, mesh | triangles | invert area, source | invert, mesh | triangles |
 |---|---|---|---|---|---|---|
@@ -266,10 +266,10 @@ while MapLibre blends (`projectionTransition < 0.999`).
 
 Total ≈ 10.8 SU. Temporaries removed after the build (4.9 GB tile blobs, the 1 GB float grid, transfer tars).
 
-Paths: code `/scratch/k10/ag5517/dune-atlas/mars/code/terrain-{465a1cd,40f3a1b,5ebfc90}/`; work
-`/scratch/k10/ag5517/dune-atlas/mars/work/terrain/{pilot,elevation,tiles}/`; logs
-`/scratch/k10/ag5517/dune-atlas/mars/logs/terrain_*.log`; stores
-`/scratch/k10/ag5517/dune-atlas/mars/stores/{basemaps/hrsc-mola-terrarium.pmtiles,basemaps/hrsc-mola-polar/,fields/elevation.zarr}`; round-2 code `code/terrain-ad4b176/`.
+Paths: code `$DUNE_ATLAS_WORK/mars/code/terrain-{465a1cd,40f3a1b,5ebfc90}/`; work
+`$DUNE_ATLAS_WORK/mars/work/terrain/{pilot,elevation,tiles}/`; logs
+`$DUNE_ATLAS_WORK/mars/logs/terrain_*.log`; stores
+`$DUNE_ATLAS_WORK/mars/stores/{basemaps/hrsc-mola-terrarium.pmtiles,basemaps/hrsc-mola-polar/,fields/elevation.zarr}`; round-2 code `code/terrain-ad4b176/`.
 
 Local dev mirror (`staging/mars/devroot/dune-atlas/mars/v1/`): `dunes/{dunes.pmtiles,invert.pmtiles,polar-caps.json}`, `basemaps/hrsc-mola-polar/`, `fields/elevation.zarr`,
 `basemaps/hrsc-mola-terrarium.pmtiles` (**the z0–5 subset**, 200 MB; the full z0–8 archive stays on Gadi); local work files `staging/mars/terrain/{dunes,elevation}/`.
@@ -286,7 +286,7 @@ bilinear DEM at 85.05° (decoded check §4), `esri-mars` fills rows to the top e
 HiRISE is transparent there (no smear, background).
 
 **Fix (Mars):** `app/src/mars/map/polarcap.ts` `basemap-polarcap`, a globe-only custom layer directly above the
-basemap layers and below all data layers (hook in `docs/mars-app.md` §5b):
+basemap layers and below all data layers (hook in `docs/guide/mars.md` §5b):
 
 * MOLA–HRSC hillshade: DEM textures per pole from `mars/terrain_polar.py` (PBS 181226105, 4 cpu, ~6 min):
   polar azimuthal-equidistant, radius 5.05° (to 84.95°, so the 3 × 3 stencil has real neighbours at the seam),
@@ -332,7 +332,7 @@ radius in `maplibreDeriv` (k = 1).
 
 Source, not ours: the Esri OnMars HiRISE service has no imagery poleward of ±65.24° (level 3 complete coverage
 map; levels 6 and 9 sampled at 72–82° N/S all answer HTTP 404), while CTX1 returns opaque tiles for the same
-geographic tiles our protocol requests. Evidence and the protocol check: `docs/mars-app.md` §5a. Whether to state
+geographic tiles our protocol requests. Evidence and the protocol check: `docs/guide/mars.md` §5a. Whether to state
 this in the HiRISE attribution / info is left to the PI.
 
 ## 10. Dune tiles with MGD3 + Fenton (2020) metadata (round 3, PI 2026-10-14)
@@ -374,7 +374,7 @@ the PMTiles viewer) and was not rebuilt.
 * HRSC component licence is CC BY-SA 3.0 IGO (share-alike); the PI should confirm that publishing derived tiles
   under the same terms with attribution is acceptable.
 * Web-Mercator excludes |lat| > 85.05° in the flat map; on the globe the dune / invert caps and the basemap caps
-  draw it (§5b, §8) once the App track installs `installPolarCaps` (hook in `docs/mars-app.md` §5b).
+  draw it (§5b, §8) once the App track installs `installPolarCaps` (hook in `docs/guide/mars.md` §5b).
 * The globe cap layers are not yet checked in a browser (no WebGL here); a possible 1-px fill-antialias line of the
   dune / invert tiles at 85.05° (MapLibre outlines every polygon edge inside a tile) is to be looked at in the
   screenshots.

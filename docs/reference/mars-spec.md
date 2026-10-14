@@ -1,7 +1,7 @@
 # Mars dune atlas: specification (v1)
 
-Single source of truth for the Mars build. Approved by the PI on 2026-10-14 (constants, law variant, grain-size
-slider, repo strategy, Gadi venv, Esri basemaps: CTX1, HiRISE, MDIM and MColorDEM ship live per the PI, 2026-10-14; licence and attributions in mars-app.md §3). Anything not stated here follows the Earth atlas unchanged.
+Single source of truth for the Mars build (constants, law variant, grain-size
+slider, repo strategy, Gadi venv, Esri basemaps: CTX1, HiRISE, MDIM and MColorDEM ship live; licence and attributions in docs/guide/mars.md §3). Anything not stated here follows the Earth atlas unchanged.
 Ask before changing any value in sections 2–4.
 
 ## 1. Inputs
@@ -9,16 +9,16 @@ Ask before changing any value in sections 2–4.
 | input | location | notes |
 |---|---|---|
 | Winds | MCMC FV3-based Mars GCM, Beta Output Release 1, c48 reference run, 6th simulated year: `03340.atmos_daily.nc` (5.19 GB), `03340.fixed.nc`, `README_BETARELEASE.txt` from `https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/` (the folder has no checksum file; byte sizes were checked and md5s recorded locally after download) | 2°×2° (lat −89…89, lon 1…359 °E), hourly instantaneous, 16,032 steps; variables `ucomp_bot`, `vcomp_bot`, `temp_bot`, `ps`, `ts`, `areo`; hybrid coordinate `ak`, `bk`. The server ignores HTTP range requests, so download whole files. |
-| Dunes | PI shapefile `dunes.{shp,shx,dbf,prj,cpg}` (artifact c594ddf0…): the USGS Mars Global Digital Dune Database (MGD3; Hayward et al. 2007, 2010, 2012, 2014) plus the small dune fields of Fenton (2020), merged. Fenton, L. K. (2020). Updating the global inventory of dune fields on Mars and identification of many small dune fields. Icarus, 352, 114018. https://doi.org/10.1016/j.icarus.2020.114018 | 3,514 polygons, Mars 2000 sphere R = 3,396,190 m, lon −180…180; no attributes. 553 polygons < 1 km² (MGD3 mapped only fields > 1 km²); equatorward of 65° (area centroid) 2,634 polygons, 120,072 km² (MGD3 equatorial ≈ 70,000 km² plus Fenton's 52,032 km², merged) |
-| Topography | `/g/data/k10/ag5517/omega-claude/data/raw_mola/Mars_HRSC_MOLA_BlendDEM_Global_200mp_v2.tif` (11.38 GB, read in place, never modified) | USGS Astrogeology MGS MOLA–MEX HRSC blended DEM, global, 200 m/px. Citation and licence to be copied from https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m |
+| Dunes | Shapefile `dunes.{shp,shx,dbf,prj,cpg}` (artifact c594ddf0…): the USGS Mars Global Digital Dune Database (MGD3; Hayward et al. 2007, 2010, 2012, 2014) plus the small dune fields of Fenton (2020), merged. Fenton, L. K. (2020). Updating the global inventory of dune fields on Mars and identification of many small dune fields. Icarus, 352, 114018. https://doi.org/10.1016/j.icarus.2020.114018 | 3,514 polygons, Mars 2000 sphere R = 3,396,190 m, lon −180…180; no attributes. 553 polygons < 1 km² (MGD3 mapped only fields > 1 km²); equatorward of 65° (area centroid) 2,634 polygons, 120,072 km² (MGD3 equatorial ≈ 70,000 km² plus Fenton's 52,032 km², merged) |
+| Topography | `$DUNE_ATLAS_MARS_DEM` (`Mars_HRSC_MOLA_BlendDEM_Global_200mp_v2.tif`) (11.38 GB, read in place, never modified) | USGS Astrogeology MGS MOLA–MEX HRSC blended DEM, global, 200 m/px. Citation and licence to be copied from https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m |
 
 ## 2. Per-hour atmospheric state (from the GCM, every cell and hour)
 
 * Lowest-layer mid pressure p = ½[(ak[−2] + bk[−2]·ps) + ps] (Pa).
 * ρ_f = p / (R T), with T = `temp_bot`.
-* Wind vector (u, v) = (`ucomp_bot`, `vcomp_bot`) at that hour's lowest-level height z = (R T/g) ln(p_lo/p), with p_lo = ak[−1] + bk[−1]·ps (the surface) and p the layer-mid pressure above (≈ 1.6–3 m; per PI 2026-10-14).
+* Wind vector (u, v) = (`ucomp_bot`, `vcomp_bot`) at that hour's lowest-level height z = (R T/g) ln(p_lo/p), with p_lo = ak[−1] + bk[−1]·ps (the surface) and p the layer-mid pressure above (≈ 1.6–3 m).
 * Direction ua = atan2(v, u) (toward, CCW from east, as on Earth).
-* u* from the smooth-wall mixing-length profile of Pähtz & Durán (2023) eq. 2.2, dl_m/dz = κ[1 − exp(−√(u l_m/(7ν)))], under constant total stress ρ(ν + l_m²|du/dz|)du/dz = ρu*² (no transport feedback, no roughness length; per PI 2026-10-14, replacing the earlier neutral log law with z₀ = 1 mm at a fixed 2 m).
+* u* from the smooth-wall mixing-length profile of Pähtz & Durán (2023) eq. 2.2, dl_m/dz = κ[1 − exp(−√(u l_m/(7ν)))], under constant total stress ρ(ν + l_m²|du/dz|)du/dz = ρu*² (no transport feedback, no roughness length; replacing the earlier neutral log law with z₀ = 1 mm at a fixed 2 m).
   * In "+" units this gives one universal profile u⁺ = u/u* as a function of X = z u*/ν. It is integrated once from the non-trivial wall branch (u⁺ = X, l⁺ = κ²X³/63 for X ≪ 1; l⁺ ≡ 0 is a spurious solution).
   * The result is tabulated in `pipeline/src/dune_atlas_pipeline/mars/profile_table.json` (1,201 points, ln X from ln 10⁻² to ln 10⁸). That table is the single source for the pipeline and the browser.
   * Below the table u⁺ = X; above it the log layer continues as u⁺ = ln(cX)/κ with c = 7.85 (the paper quotes ≈ 9 as approximate).
@@ -53,14 +53,14 @@ All quantities per hour; d is the slider value (§5).
 | symbol | value | notes |
 |---|---|---|
 | ρ_p | 3000 kg m⁻³ | basaltic sand |
-| φ | 0.6 | sand-bed packing fraction; fluxes are volumes of packed sand q = Q/(ρ_p φ), as Earth (per PI 2026-10-14) |
+| φ | 0.6 | sand-bed packing fraction; fluxes are volumes of packed sand q = Q/(ρ_p φ), as Earth |
 | g | 3.71 m s⁻² | |
 | R | 191.8 J kg⁻¹ K⁻¹ | Mars air, mean molar mass 43.34 g/mol |
 | μ₀, T₀, S | 1.370×10⁻⁵ Pa s, 273 K, 222 K | Sutherland law for CO₂ |
 | k | 1.33 | adiabatic exponent, Kn only |
 | κ | 0.40 | eq. 2.2 mixing length (paper value) |
-| z | lowest-level height, per hour from the GCM | per PI 2026-10-14 |
-| mixing-length damping | 7 | eq. 2.2; smooth wall, no z₀ (per PI 2026-10-14) |
+| z | lowest-level height, per hour from the GCM | |
+| mixing-length damping | 7 | eq. 2.2; smooth wall, no z₀ |
 | (D*ᵐⁱⁿ, u⁺ᵐⁱⁿ) | (18, 2.3) | eq. 5.1 |
 | transport coefficients | 1.7, 12 | eq. 3.2 |
 | β, A | 6, 0.8/6 | crest speed-up, as Earth |
@@ -70,7 +70,7 @@ All quantities per hour; d is the slider value (§5).
 ## 5. Slider: median grain diameter d (replaces u*,th on Mars)
 
 * 64 values, log-spaced from 50 µm to 1000 µm (d_k = 50·20^{k/63}, rounded to integer µm).
-* Default index 29 = 200 µm (exactly; the geometric value 198.5 µm would round to 199, PI 2026-10-14). Registry `threshold` block: `dim: d`, `units: µm`, `label: "Median grain diameter d"`, `defaultIndex: 29`.
+* Default index 29 = 200 µm (exactly; the geometric value 198.5 µm would round to 199). Registry `threshold` block: `dim: d`, `units: µm`, `label: "Median grain diameter d"`, `defaultIndex: 29`.
 * Values: 50, 52, 55, 58, 60, 63, 67, 70, 73, 77, 80, 84, 88, 93, 97, 102, 107, 112, 118, 123, 129, 136, 142, 149, 157, 164, 172, 181, 189, 200, 208, 218, 229, 240, 252, 264, 277, 290, 305, 319, 335, 351, 368, 386, 405, 425, 446, 467, 490, 514, 539, 565, 593, 622, 652, 684, 717, 752, 788, 827, 867, 909, 954, 1000.
 * Everything indexed by `ut` on Earth is indexed by `d` on Mars, with identical array shapes:
   * fields (64, y, x)
@@ -97,9 +97,9 @@ Grid: FV3 2° (`grid` attrs {lat0: −89, dlat: 2, lon0: 1, dlon: 2, ny: 90, nx:
 | place | path |
 |---|---|
 | R2 (later; create-only; separate ledger) | `dune-atlas/mars/v1/` → `datasets/fv3-beta1/{cells.zarr, cells-aux.zarr, fields/}`, `dunes/`, `fields/elevation.zarr`, `basemaps/` |
-| Gadi scratch (work) | `/scratch/k10/ag5517/dune-atlas/mars/{raw,code,work,logs,stores}` |
-| Gadi gdata (retention) | `/g/data/k10/ag5517/dune-atlas/mars/{raw,code}` (raw FV3 + code snapshots only; derived stores are regenerable) |
-| Gadi interpreter | `/g/data/k10/ag5517/apps/dune_atlas_venv/bin/python` (system-site-packages; adds `pmtiles` only). PBS needs `-l storage=gdata/k10+gdata/xp65+scratch/k10`. |
+| Gadi scratch (work) | `$DUNE_ATLAS_WORK/mars/{raw,code,work,logs,stores}` |
+| Gadi gdata (retention) | `/g/data/<project>/<user>/dune-atlas/mars/{raw,code}` (raw FV3 + code snapshots only; derived stores are regenerable) |
+| Gadi interpreter | `$DUNE_ATLAS_PYTHON` (system-site-packages; adds `pmtiles` only). PBS needs `-l storage=` with the project, xp65 and scratch (`DUNE_ATLAS_STORAGE` in `pipeline/gadi/site.example.env`). |
 | Code | branch `mars` in worktree `~/Developer/research/projects/dune-atlas-mars`; track branches `mars-data`, `mars-terrain`, `mars-app`. The Earth checkout is never touched. |
 | Local staging | `<worktree>/staging/mars/` (gitignored). The local disk is ~98 % full: stream large stores in parts and keep only low-zoom DEM tiles locally. |
 

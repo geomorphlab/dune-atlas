@@ -1,4 +1,4 @@
-// All text of the help panel and the guided tour (public; reviewed in docs/help-text.md, which is
+// All text of the help panel and the guided tour (public; reviewed in docs/reference/help-text.md, which is
 // generated from this file by scripts/write-help-doc.ts and checked by tests/help.test.ts).
 // Inline maths as $...$ (rendered with KaTeX); everything else plain text.
 
@@ -8,8 +8,8 @@ export const HELP_TITLE = "Help";
 export const HELP_RESTART = "Restart tour";
 export const HELP_ABOUT_LINK = "About, data sources & citation";
 
-/** the Wind dataset selector's ⓘ and the Help section "Wind datasets" (PI text 3.16, made dataset-agnostic by the PI,
- *  Oct 2026): the datasets, grids and period come from the dataset table; the reanalysis facts are examples */
+/** the Wind dataset selector's ⓘ and the Help section "Wind datasets" text is dataset-agnostic:
+ *  the datasets, grids and period come from the dataset table; the reanalysis facts are examples */
 export const DATASET_INFO_TEXT = `The Wind dataset selector switches between reanalysis wind statistics (${Object.values(DATASET_INFO).map((d) => `${d.name}, ${d.resolution}`).join("; ")}; ${datasetFacts("period")}). ERA5-Land, used by Gunn (2026), is a land-surface rerun driven by ERA5 atmospheric fields interpolated to its grid (Muñoz-Sabater et al. 2021), so its winds are not an independent estimate, and the datasets can still differ: e.g., Baas (2026) reports ERA5-Land 10 m wind speeds 20–30 % below those of ERA5. Where the datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune map, aridity and vegetation layers are the same for every dataset.`;
 
 export interface HelpSection { id: string; title: string; body: string }

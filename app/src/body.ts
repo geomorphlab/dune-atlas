@@ -1,6 +1,6 @@
 // Which planet this build shows, and the link to the other one. The same UI is built twice: Earth
 // (default) at the site root and Mars (VITE_BODY=mars, VITE_BASE=/mars/) at /mars/ on the same origin
-// (docs/mars-app.md). Used by the header label, the planet toggle and the browser-storage keys.
+// (docs/guide/mars.md). Used by the header label, the planet toggle and the browser-storage keys.
 export type Body = "earth" | "mars";
 
 const env = (import.meta.env ?? {}) as Partial<Record<string, string>>;

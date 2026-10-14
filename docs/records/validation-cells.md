@@ -1,7 +1,7 @@
 # Cell store (`cells.zarr`) — conversion and validation
 
 Status (2026-10-12): **full global conversion not yet run** — the external staging drive
-(`/Volumes/MGL2TB/dune-atlas-staging`) was not accessible to the app. Everything below was
+(`$STAGING`) was not accessible to the app. Everything below was
 measured on a shard-aligned **regional store** (120,638 land cells, 5.5 % of land) written to
 `staging/regional/cells.zarr`, plus a 24-block random timing sample. Full-run size and time are
 **extrapolations (provisional)** until the full run is done.
@@ -10,7 +10,7 @@ measured on a shard-aligned **regional store** (120,638 land cells, 5.5 % of lan
 
 ```bash
 conda activate dune-atlas
-STAGING=/Volumes/MGL2TB/dune-atlas-staging WORKERS=4 scripts/run_cells_full.sh
+STAGING=$STAGING WORKERS=4 scripts/run_cells_full.sh
 ```
 
 Writes `$STAGING/cells.zarr` + `cells.zarr.manifest.json`, logs to `$STAGING/logs/`, then runs

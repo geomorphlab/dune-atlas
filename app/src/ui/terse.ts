@@ -1,4 +1,4 @@
-// Terse row labels of the cell summary table (PI round 5 item 4, both builds): the quantity only, no
+// Terse row labels of the cell summary table (both builds): the quantity only, no
 // parentheses (unless a unit) and no trailing symbol (the Symbol column shows it); the details live in the
 // layer info buttons and the row's hover title.
 /** "Net across-crest flux, bed-instability mode ⟨Q⊥(αH)⟩" -> "Net across-crest flux, bed-instability mode";

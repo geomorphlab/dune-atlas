@@ -1,5 +1,5 @@
 // The Mars build (VITE_BODY=mars) as data, applied by scripts/body-plugin.ts. The Earth build
-// never reads this file. See docs/mars-app.md.
+// never reads this file. See docs/guide/mars.md.
 //
 // MARS_SUBSTITUTES: Earth module -> Mars replacement (whole modules whose logic or text differs).
 //   A replacement exports every name the Earth module exports (shared modules import them) and

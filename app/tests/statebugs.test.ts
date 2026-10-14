@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
-// Review round 2026-10, state fixes: imagery-basemap hint (U10), Escape closes the cell panel only when meant
-// for it (L12: Escape in the layer panel closed the panel and lost the selected cell).
+// Imagery-basemap hint visibility, and Escape closing the cell panel only when meant
+// for it (Escape in the layer panel must not close the panel or lose the selected cell).
 import { describe, expect, it, vi } from "vitest";
 import { loadRegistry } from "../src/registry/load";
 import { Store, type AppState } from "../src/store";
@@ -10,7 +10,7 @@ import { escapeClosesCell } from "../src/ui/keys";
 const reg = loadRegistry().registry;
 vi.stubGlobal("localStorage", { getItem: () => null, setItem: () => {}, removeItem: () => {} });
 
-describe("imagery basemap hint (review U10)", () => {
+describe("imagery basemap hint", () => {
   it("shown only while an imagery basemap is chosen; opacities are not changed", () => {
     document.body.innerHTML = '<aside id="layer-panel"></aside>';
     const st: AppState = { basemap: reg.basemaps[0].id, projection: "globe", utIndex: 14, layers: Object.fromEntries(reg.layers.map((l) => [l.id, { visible: !!l.visible, opacity: l.opacity ?? 1 }])), order: reg.layers.map((l) => l.id), dataset: "era5-land", cell: null, embed: false };
@@ -30,7 +30,7 @@ describe("imagery basemap hint (review U10)", () => {
   });
 });
 
-describe("Escape and the cell panel (review L12)", () => {
+describe("Escape and the cell panel", () => {
   const key = (target: Element, prevented = false) => { const e = new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true }); if (prevented) e.preventDefault(); Object.defineProperty(e, "target", { value: target }); return e; };
   it("closes from the map or the cell panel; not from the layer panel, a list, a popover or after another handler", () => {
     document.body.innerHTML = '<div id="map"><canvas></canvas></div><aside id="layer-panel"><select id="s"></select><input id="r" type="range"></aside><aside id="cell-panel"><button id="b"></button><input id="cr" type="range"></aside><div class="tool-pop"><button id="t"></button></div>';
@@ -47,7 +47,7 @@ describe("Escape and the cell panel (review L12)", () => {
 });
 
 import { citationFile, latLonText } from "../src/cell/downloads";
-describe("Citation TXT (review U14)", () => {
+describe("Citation TXT", () => {
   it("centre as 23.25° S, 15.00° E; wind dataset and threshold recorded; the dune map named as the file in the Code record", () => {
     expect(latLonText(-23.25, 15)).toBe("23.25° S, 15.00° E");
     expect(latLonText(79, -97.5)).toBe("79.00° N, 97.50° W");

@@ -166,11 +166,11 @@ within ±90°, texture coordinates in [0, 1]; the unpatched code fails these che
   `export/`): a MapLibre control under the zoom buttons (never under the side panels or the mobile
   bottom sheet) with Help and tour (?), Share / copy link and Export map image; each opens a small
   dialog (Esc / × / click outside close it). All help, tour, share and export text is in
-  `ui/helpText.ts`; `docs/help-text.md` is generated from it (`npm run help-doc`, checked by a test)
+  `ui/helpText.ts`; `docs/reference/help-text.md` is generated from it (`npm run help-doc`, checked by a test)
   and the public-text test covers it. The tour (8 steps, no tour library) runs once on the first visit
   (localStorage `duneAtlas.tourSeen`; never in embed mode unless `?tour=1`) when the map first reports
   idle, or after 8 s if it never does (`autostartTour`, `ui/tourBubble.ts`). A "Start tour" bubble points
-  at the help button (`ui/tourBubble.ts`, PI request Oct 2026) until the visitor has started the tour once
+  at the help button (`ui/tourBubble.ts`) until the visitor has started the tour once
   (`duneAtlas.tourStarted`; also in embed mode); the tour popover is placed below / above / right / left of
   its highlight, whichever stays on screen and off the highlight (`tourPlacement`). A "Loading map…" pill
   (`ui/loading.ts`) shows on the first draw and after dataset, projection and basemap changes; step 1 highlights the
@@ -425,23 +425,25 @@ Adding a layer of an existing type needs no code: a YAML entry (or a pipeline-ge
 
 | env | default | meaning |
 |---|---|---|
-| `VITE_DATA_BASE` | `registry.dataBase` | base URL for relative sources |
-| `VITE_CELL_STORE` | `dune-atlas/v1/cells.zarr` | cell store path under the data base |
-| `VITE_SUFFIX_RANGE` | `1` | `0` → HEAD + range instead of `Range: bytes=-N` for shard indexes |
+| `VITE_BODY` | (Earth) | `mars` builds the Mars atlas (output `dist-mars/`, tests `tests/mars/`) |
+| `VITE_BASE` | `/` | base path of the build (`/mars/` for the Mars atlas on the Pages site) |
+| `VITE_SITE_URL` | `https://map.geomorphlab.org/` (Earth), `…/mars/` (Mars) | site URL used in texts and downloads |
+| `VITE_DATA_BASE` | `registry.dataBase` | base URL of the data (relative sources are resolved against it) |
+| `VITE_CELL_STORE` | `{dataset}/cells.zarr` | cell store path when the dataset declares no `cellStore` |
+| `VITE_CELL_AUX_STORES` | `{dataset}/cells-aux.zarr,{dataset}/cells-aux-veg.zarr` (Mars: `{dataset}/cells-aux.zarr`) | per-cell sidecars when the dataset declares no `cellAuxStores` |
+| `VITE_SUFFIX_RANGE` | `1` | `0`: HEAD + range instead of `Range: bytes=-N` for shard indexes |
+| `VITE_OTHER_BODY_URL` | derived | URL of the other atlas for the planet button (e.g. a second dev server) |
 
-Local dev against the fixture: the generated fragments use `dune-atlas/v1/...` paths, so serve a
-directory that maps that prefix onto the fixture, e.g.
-`mkdir -p staging/devroot/dune-atlas && ln -s ../../fixture staging/devroot/dune-atlas/v1 &&
-python scripts/serve_data.py staging/devroot --port 8787`, then
-`cd app && VITE_DATA_BASE=http://127.0.0.1:8787 npm run dev`. Only the five fixture fields and
-the fixture region exist there (`at ae qacb sige_sigh uft`); other layers log a load error.
+Local development against a fixture: see [getting-started.md](getting-started.md).
 
 ### Tests
 
-`npm run test:ci` (scripts/test-ci.sh) reproduces the CI job from a clean `git archive` (no `notes/`,
-no `staging/`): `npm ci`, `validate-registry`, `npm test`, build, and lists the tests skipped
-because the fixture data are absent; `CI_NODE=<dir of node 22>` runs it with the CI Node version.
-Test timeout 20 s (shared runners are slower than a laptop).
+CI (`.github/workflows/ci.yml`) builds synthetic test stores, then runs the registry validation, the type
+check, the Earth and Mars app tests, both builds and the Pages layout check, and the pipeline tests; the site
+is deployed from `main` after all of them pass. `npm run test:ci` (scripts/test-ci.sh) runs the app checks
+from a clean `git archive` without `staging/` and lists the tests skipped there; `CI_NODE=<dir of node 22>`
+runs it with the CI Node version. The default test timeout is 20 s; the full 64-position slider sweeps
+(`FULL_SWEEP=1`, on `main`) have 120 s.
 
 `npm test` (vitest): flux parity vs `flux.py`, the crest flux rose (both modes) and the excess-shear split (flat + elongation, 2 cells × 3 thresholds; classes match Python and sum to the unstacked rose and sector totals, rtol 1e-12) (7 cells incl. one synthetic with 40
 empty direction bins × 6 thresholds; rtol 1e-12 on DP and the per-direction rose, 1e-10 on RDP,
@@ -463,4 +465,4 @@ refresh; per-level bounds of the ERA5 pyramids in `georef.test.ts`), drawing ord
 the fixture pyramids, KaTeX rendering, DOM tests of both panels (happy-dom:
 pinned threshold, colormap chooser, render modes, spacing slider (Finer/Coarser labels, km steps) + km→px/clamp/legacy migration, dune fill/invert without outline controls, invert, drawing order (× and re-tick on top), dataset selector, flux modes, visibility rule, resize handle, AI notice, sector
 sliders, flux axis toggle, Symbol/Quantity/Value table), and the cell store against
-`staging/fixture` (fixture-dependent tests are skipped when it is absent, e.g. in CI).
+`staging/fixture` (fixture-dependent tests are skipped when it is absent).

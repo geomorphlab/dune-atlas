@@ -2,7 +2,7 @@
 
 One store per variable (each registry layer maps to one store; coarsening differs per
 variable). Values are converted to display units and stored float32
-(docs/storage-layout.md): fluxes m^2/s -> m^2/yr, angles kept in radians, ratios clipped
+(docs/reference/storage-layout.md): fluxes m^2/s -> m^2/yr, angles kept in radians, ratios clipped
 to +-6e4 where denominators -> 0. Exact per-cell values for clicks come from cells.zarr.
 
 Layout: topozarr (GeoZarr `multiscales` + `proj` + `spatial` conventions, EPSG:4326,
@@ -12,7 +12,7 @@ Level count is chosen so the coarsest level is <= 256 px wide (global: 5 levels,
 mantissa is rounded to 12 bits (rel. error <= 1.2e-4): 2.25x smaller than topozarr's default
 zstd-0 at the same chunking (DP, ut=14: 7.97 -> 3.54 MB per threshold slice).
 
-Coarsening (docs/validation-fields.md, "Coastal NaN behaviour"). topozarr writes the
+Coarsening (docs/records/validation-fields.md, "Coastal NaN behaviour"). topozarr writes the
 store and its metadata, then levels >= 1 are *recomputed from native resolution* here:
 
 * magnitudes / ratios -- **count-weighted nan-mean** over every finite native cell in the
@@ -70,7 +70,7 @@ def dataset_citation(dataset=None) -> str:
             f"{ds.info['data_citation']}) with the methods outlined in Gunn, A. (2026) The distribution of Earth's wind-blown "
             "sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y")
 # Registry (info popover) citation of the atlas-derived fields: one format for every dataset and body,
-# "Gunn, A. (2026). ... doi:...; [data: ...;] winds: ..." (PI 2026-10-14; the app's cell/citation.ts
+# "Gunn, A. (2026). ... doi:...; [data: ...;] winds: ..." (the app's cell/citation.ts
 # fieldsCitation() returns the same strings and tests compare them). Store attrs keep dataset_citation().
 PAPER_CITATION = ("Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications. "
                   "doi:10.1038/s41467-026-75466-y")
@@ -88,7 +88,7 @@ def fields_citation(dataset=None) -> str:
 
 
 def fields_licence(dataset=None) -> str:
-    """Licence row of the atlas-derived fields (PI 2026-10-14): ERA5-Land fields = the Zenodo Supplementary Data
+    """Licence row of the atlas-derived fields: ERA5-Land fields = the Zenodo Supplementary Data
     licence; fields computed from ERA5 = the Copernicus licence."""
     ds = get_dataset(dataset)
     return "CC BY 4.0 (Zenodo Supplementary Data)" if ds.id == "era5-land" else ds.info["licence"]
@@ -98,7 +98,7 @@ def fields_attribution(dataset=None) -> dict:
     return {"citation": fields_citation(dataset), "licence": fields_licence(dataset)}
 
 
-# Info-popover definitions (PI text, docs/earth-physics-text_AG.md section 3, Oct 2026; review L5): used instead of
+# Info-popover definitions used instead of
 # the source descriptions for the registry layers, the cell table and the CSV / NetCDF descriptions. Both planets
 # unless MARS_FIELD_DEFINITIONS gives a Mars text (written by mars.sidecars and field_names.json `descriptionMars`).
 FIELD_DEFINITIONS = {
@@ -169,7 +169,7 @@ FIELD_DEFINITIONS = {
                    r"(Courrech du Pont et al. 2024). The ratio goes to infinity where its denominator (a net flux) goes "
                    r"to zero (shown clipped to ±60,000)."),
 }
-# Mars wording (PI text 3.2): DP is averaged over the hours of the Mars year with a grain-size threshold.
+# Mars wording: DP is averaged over the hours of the Mars year with a grain-size threshold.
 MARS_FIELD_DEFINITIONS = {
     "dpm": (r"Time-averaged flat-bed saturated sand flux, $DP = \sum q / N$ over all N hours of the Mars year: the "
             r"volume of packed sand per metre width that the wind could move per Earth year over a flat bed fully "
@@ -221,7 +221,7 @@ def field_names(meta: dict | None = None) -> dict:
 
 
 def rename_modes(text: str) -> str:
-    """The mode of αH is the bed-instability mode (PI, Oct 2026), not the "migration mode", in every name and
+    """The mode of αH is the bed-instability mode, not the "migration mode", in every name and
     definition; the source metadata (Supplementary Data attributes) keep their wording."""
     return (text.replace("bed-mode (migration-mode, $\\alpha_H$)", "bed-instability-mode ($\\alpha_H$)")
             .replace("migration-mode", "bed-instability-mode").replace("Migration-mode", "Bed-instability-mode")
@@ -259,7 +259,7 @@ GROUPS = [
 
 # Per-variable presentation. `title` is plain text (Unicode, no TeX) derived from the source
 # long_name/description: THE name of the quantity everywhere (layer list, info title, cell table, rose legend,
-# CSV/NetCDF long names; review L5). `titleTex` = the same name with the source symbol in TeX (title_tex).
+# CSV/NetCDF long names). `titleTex` = the same name with the source symbol in TeX (title_tex).
 # Order = cellstore.FIELD_VARS.
 FIELD_META = {
     "ab":   dict(group="orientation", title="Crest orientation, bed-instability mode (αH)",
@@ -314,7 +314,7 @@ FIELD_META["qsdiv"] = dict(group="derived", title="Saturated flux divergence (�
 
 
 # Earth: DP and RDP get one fixed log range (m²/yr, display units) for every wind dataset, so the ERA5-Land and
-# ERA5 maps compare by eye (review L15: ERA5-Land's p2 of 5e-4 m²/yr, from its many calm land cells, made its
+# ERA5 maps compare by eye (ERA5-Land's p2 of 5e-4 m²/yr, from its many calm land cells, made its
 # map almost uniformly bright). Mars keeps its own p2/p98 (registry_fragment(shared_clim=False)).
 EARTH_SHARED_CLIM = {"dpm": [0.01, 300.0], "rdpm": [0.01, 300.0]}
 
@@ -646,7 +646,7 @@ def registry_fragment(meta: dict | None = None, var_order=None, dataset=None, sh
         units = "°" if v in ANGLE_VARS else display_units(v)
         # definition only: units, the slider and the wind dataset are rows of the info popover (app)
         desc = field_definition(v, m["description"])
-        if v in CLIPPED_RATIO_VARS and "±60,000" not in desc:   # the PI definitions (Oct 2026) state it
+        if v in CLIPPED_RATIO_VARS and "±60,000" not in desc:   # some definitions already state it
             desc += (f" The ratio is infinite where its denominator (a net flux) is exactly zero; such values are"
                      f" shown as ±{F16_MAX:,.0f}.")
         display = {"transform": tr, "colormap": fm["colormap"],
@@ -693,7 +693,7 @@ def main(argv=None):
     r.add_argument("--out", default=str(REPO / "registry" / "generated" / "qsat_fields.yaml"))
     b = sub.add_parser("build", help="build global pyramids, one store per variable (resumable)")
     b.add_argument("--data", default=os.environ.get("DUNE_WORLD_DATA",
-                                                   os.path.expanduser("~/Documents/research/projects/dune-world/data")))
+                                                   ""))
     b.add_argument("--out", required=True, help="directory receiving <var>.zarr")
     b.add_argument("--vars", nargs="*")
     b.add_argument("--levels", type=int)

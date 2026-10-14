@@ -1,19 +1,20 @@
 #!/bin/bash
 # Mars terrain: 1/64-degree area-mean elevation grid -> fields/elevation.zarr (GeoZarr native pyramid) + elev_mean npz.
-#PBS -P k10
+#PBS -P @PROJECT@
 #PBS -q normal
 #PBS -N mars_terrain_elev
 #PBS -l ncpus=4
 #PBS -l mem=16GB
 #PBS -l walltime=04:00:00
-#PBS -l storage=gdata/k10+gdata/xp65+scratch/k10
+#PBS -l storage=@STORAGE@
 #PBS -j oe
-#PBS -o /scratch/k10/ag5517/dune-atlas/mars/logs/terrain_elevation.log
+#PBS -o @LOGS@/terrain_elevation.log
 set -eu
-PY=/g/data/k10/ag5517/apps/dune_atlas_venv/bin/python
+PY=@PYTHON@
+export DUNE_ATLAS_MARS_DEM=@MARS_DEM@
 CODE=@CODE@
-WORK=/scratch/k10/ag5517/dune-atlas/mars/work/terrain/elevation
-STORES=/scratch/k10/ag5517/dune-atlas/mars/stores
+WORK=@WORK@/terrain/elevation
+STORES=@STORES@
 test -x $PY || { echo "no interpreter"; exit 127; }
 test -f $CODE/dune_atlas_pipeline/mars/terrain.py || { echo "no code"; exit 3; }
 mkdir -p $WORK $STORES/fields

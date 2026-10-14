@@ -1,4 +1,4 @@
-// Port of pipeline/src/dune_atlas_pipeline/mars/physics.py (docs/mars-spec.md section 3).
+// Port of pipeline/src/dune_atlas_pipeline/mars/physics.py (docs/reference/mars-spec.md section 3).
 // Keep line-for-line equivalent: tests/marsphysics.test.ts checks it against the Python output
 // (tests/fixtures/mars-physics-parity.json from scripts/make-mars-physics-fixture.py).
 // Pahtz & Duran (2023) J. Fluid Mech. 963:A20: threshold eq. 5.1 with the rarefaction factor of eq. 3.20,

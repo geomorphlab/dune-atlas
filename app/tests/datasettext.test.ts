@@ -1,4 +1,4 @@
-// PI decisions on audit §4 (2026-10-14): dataset text and map attribution follow the dataset table.
+// Dataset text and map attribution follow the dataset table.
 import { describe, expect, it } from "vitest";
 import { DATASET_INFO, datasetFacts } from "../src/cell/datasetinfo";
 import { mapAttributionHtml } from "../src/cell/citation";

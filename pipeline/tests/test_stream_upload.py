@@ -4,10 +4,11 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+from conftest import have_drift_store, have_source_data
 
 from dune_atlas_pipeline import stream_upload as su
 
-D = os.environ.get("DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data"))
+D = os.environ.get("DUNE_WORLD_DATA", "")
 
 
 class FlakyTarget(su.LocalTarget):
@@ -45,7 +46,9 @@ def test_local_kept_when_upload_never_succeeds(tmp_path, monkeypatch):
     assert f.exists() and not led.has("p/a.bin")
 
 
-@pytest.mark.skipif(not os.path.isdir(D), reason="source data not available")
+@pytest.mark.data
+@pytest.mark.staging
+@pytest.mark.skipif(not (have_source_data() and have_drift_store()), reason="source data or drift store not available")
 def test_cells_band_roundtrip_and_resume(tmp_path):
     import zarr
     from dune_atlas_pipeline import cellstore as cs

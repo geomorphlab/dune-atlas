@@ -1,155 +1,130 @@
 {
-  "_about": "Earth modules the Mars build substitutes, patches or was adapted from, with the git blob id of the Earth source last reconciled and that commit. Checked by tests/mars/upstream.test.ts; updated with scripts/mars/app/reconcile.mjs. See docs/mars-app.md.",
+  "_about": "Earth modules the Mars build substitutes, patches or was adapted from, with the git blob id of the Earth source last reconciled. Checked by tests/mars/upstream.test.ts; updated with scripts/mars/app/reconcile.mjs. See docs/guide/mars.md.",
   "modules": {
     "src/cell/analysis.ts": {
       "kind": "derived",
       "mars": "src/mars/cell/analysis.ts",
-      "blob": "2194995390175da5f400a74bfacf6829f858adc2",
-      "commit": "4b8a690fe4e54cf2b966e314f7126e88404a6c01"
+      "blob": "4311901690754b8a9df8c5154d65bf306b76402c"
     },
     "src/cell/auxinfo.ts": {
       "kind": "substituted",
       "mars": "src/mars/cell/auxinfo.ts",
-      "blob": "83ce86c3a81bda23c77d3337b6a6eee0027a1e69",
-      "commit": "4b8a690fe4e54cf2b966e314f7126e88404a6c01"
+      "blob": "83ce86c3a81bda23c77d3337b6a6eee0027a1e69"
     },
     "src/cell/cellstore.ts": {
       "kind": "derived",
       "mars": "src/mars/cell/cellstore.ts",
-      "blob": "357580de85e3d32e7f3f04bd11c2a42153317d3a",
-      "commit": "0a5bb7de65914ecc862b5d98af5d405f9f1f9811"
+      "blob": "36a606a763fed7269d747c443ee327f49d73a1c9"
     },
     "src/cell/citation.ts": {
       "kind": "substituted",
       "mars": "src/mars/cell/citation.ts",
-      "blob": "fd3365d218c7a92118e0a6fc84ec035b65e9870f",
-      "commit": "41a6495cf12140eeff18f42008ffb0f0b40de529"
+      "blob": "ef17a53e5e5ecb0f8e35b8794bbe8d2b91c92efd"
     },
     "src/cell/datasetinfo.ts": {
       "kind": "substituted",
       "mars": "src/mars/cell/datasetinfo.ts",
-      "blob": "041ece4aa344496936ff4a4efceb71851c385112",
-      "commit": "41a6495cf12140eeff18f42008ffb0f0b40de529"
+      "blob": "dcb0d3ee675a805a577e3b214243c5ac79f2c28e"
     },
     "src/cell/export.ts": {
       "kind": "derived",
       "mars": "src/mars/cell/export.ts",
-      "blob": "00da74cb7ba5fcc11ec61a0b32a4521062ed2b4f",
-      "commit": "87984c0b6d89279c40b1607908c19a3cf3250cc0"
+      "blob": "8e22beb024f45dc4d53eca8d7d7c6a3643053fcb"
     },
     "src/cell/fieldinfo.ts": {
       "kind": "substituted",
       "mars": "src/mars/cell/fieldinfo.ts",
-      "blob": "8b7d545487d0a809fd34b16c0c0bd7cc5e8b556d",
-      "commit": "4b8a690fe4e54cf2b966e314f7126e88404a6c01"
+      "blob": "fd465aeb55d3d630967d3f0f88b42075ccbe20e5"
     },
     "src/cell/flux.ts": {
       "kind": "derived",
       "mars": "src/mars/cell/marsflux.ts",
-      "blob": "8b0a3be3e203aae05ab3621f16901edfa147d2d5",
-      "commit": "0a5bb7de65914ecc862b5d98af5d405f9f1f9811"
+      "blob": "8b0a3be3e203aae05ab3621f16901edfa147d2d5"
     },
     "src/cell/lineplot.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (2 edits)",
-      "blob": "833c6bac395cadfb84bfa5b9ecd9eb1ea38aeba6",
-      "commit": "6a3152d79a1eac945e606e4c017b44e0850498f8"
+      "blob": "bb79487104a9d58ee37eacb0478281b953245d37"
     },
     "src/cell/modesplot.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (6 edits)",
-      "blob": "f6185cf690a7c4acff2035ff8b94a1439b57b8a0",
-      "commit": "0a5bb7de65914ecc862b5d98af5d405f9f1f9811"
+      "blob": "f6185cf690a7c4acff2035ff8b94a1439b57b8a0"
     },
     "src/config.ts": {
       "kind": "substituted",
       "mars": "src/mars/config.ts",
-      "blob": "c60ff6b9fcc29f2d6880e9f21b080224fa6975c9",
-      "commit": "0a5bb7de65914ecc862b5d98af5d405f9f1f9811"
+      "blob": "5228c45ee83d4efce1a0a7264f4ce678b8876b90"
     },
     "src/defaultview.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (1 edit)",
-      "blob": "588747690273a9f842922d4c4ec9b1e05a2ad5b1",
-      "commit": "6a3152d79a1eac945e606e4c017b44e0850498f8"
+      "blob": "3c1dc872fae1219ab81bfae5219649b157f06059"
     },
     "src/export/labels.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (1 edit)",
-      "blob": "85f2d45a47014ff2720eb96cfdede4900970cf48",
-      "commit": "0a5bb7de65914ecc862b5d98af5d405f9f1f9811"
+      "blob": "85f2d45a47014ff2720eb96cfdede4900970cf48"
     },
     "src/export/mapExport.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (10 edits)",
-      "blob": "eba91d156931a154d6a7310f4cd7d96101955571",
-      "commit": "4b8a690fe4e54cf2b966e314f7126e88404a6c01"
+      "blob": "946e6b044021cb5eb67f8265a867500cc316ec05"
     },
     "src/export/plotExport.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (5 edits)",
-      "blob": "ca085593d8bf74d712ca956adb6409df4290dc45",
-      "commit": "4b8a690fe4e54cf2b966e314f7126e88404a6c01"
+      "blob": "8d8cbcfde5349c29e45b6b8313560cd1e4967e24"
     },
     "src/layerconfig.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (1 edit)",
-      "blob": "7552bc31956cc69a475d4a70838bc8db0e4fb156",
-      "commit": "0a5bb7de65914ecc862b5d98af5d405f9f1f9811"
+      "blob": "7552bc31956cc69a475d4a70838bc8db0e4fb156"
     },
     "src/main.ts": {
       "kind": "substituted",
       "mars": "src/mars/main.ts",
-      "blob": "feebdd8bc59b9057dac7b0167ab27d57ac8d9b60",
-      "commit": "41a6495cf12140eeff18f42008ffb0f0b40de529"
+      "blob": "d5f3807cbbc73565af7060705316a05dc9f9f2c8"
     },
     "src/map/adapters.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (1 edit)",
-      "blob": "ff15de43080ebbebb80f6a6e1ddc8b21d622de4f",
-      "commit": "d247c65d18fa6a7efafbb622949573432fdff55a"
+      "blob": "4dc99dca771eedf77ebef118f9cf9435a039f88b"
     },
     "src/registry/load.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (6 edits)",
-      "blob": "01b0b32b33ae2f619f86b9a15b7510485323f6b8",
-      "commit": "0a5bb7de65914ecc862b5d98af5d405f9f1f9811"
+      "blob": "01b0b32b33ae2f619f86b9a15b7510485323f6b8"
     },
     "src/ui/cellPanel.ts": {
       "kind": "substituted",
       "mars": "src/mars/ui/cellPanel.ts",
-      "blob": "4086c66b09a64bb79059c6c088642cb598a81549",
-      "commit": "4b8a690fe4e54cf2b966e314f7126e88404a6c01"
+      "blob": "4d911d40ed0cce965e1ac5cc6fdda6f2d68c2a98"
     },
     "src/ui/coords.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (1 edit)",
-      "blob": "c85611db3f1c9155481cebaa68453c2a8cb078b5",
-      "commit": "0a5bb7de65914ecc862b5d98af5d405f9f1f9811"
+      "blob": "c85611db3f1c9155481cebaa68453c2a8cb078b5"
     },
     "src/ui/helpText.ts": {
       "kind": "substituted",
       "mars": "src/mars/ui/helpText.ts",
-      "blob": "354c140f6c24a2386d5d5eb6d03befb905212860",
-      "commit": "41a6495cf12140eeff18f42008ffb0f0b40de529"
+      "blob": "f7650df1c81b17a28818c0555bd26508a5e137b6"
     },
     "src/ui/layerPanel.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (9 edits)",
-      "blob": "0f820c6ce28d600d32bc104935aec1c0a76cbd8c",
-      "commit": "4b8a690fe4e54cf2b966e314f7126e88404a6c01"
+      "blob": "2fb5de3602ed71eb7087fbd89ab1517e6f792833"
     },
     "src/ui/legend.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (3 edits)",
-      "blob": "d70c35307436cc192eb51f9e7d4f06a5b84c3cd2",
-      "commit": "d247c65d18fa6a7efafbb622949573432fdff55a"
+      "blob": "c08520d6622d6cee12905248a58f0c89b48f2317"
     },
     "src/ui/threshold.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (3 edits)",
-      "blob": "f9430558d2a1873f2771d4758b6d0a85d468c129",
-      "commit": "41a6495cf12140eeff18f42008ffb0f0b40de529"
+      "blob": "a700e0cdafca91d099ebfe987a89bf6b7779f66d"
     }
   }
 }

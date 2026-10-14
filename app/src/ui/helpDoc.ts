@@ -1,4 +1,4 @@
-// Markdown copy of all help / tour text for review (docs/help-text.md; kept in sync by a test).
+// Markdown copy of all help / tour text for review (docs/reference/help-text.md; kept in sync by a test).
 import { TOUR_FALLBACK, EXPORT_TEXT, HELP_ABOUT_LINK, HELP_BUTTON_LABEL, HELP_RESTART, HELP_SECTIONS, HELP_TITLE, SHARE_TEXT, TOUR_LABELS, TOUR_STEPS } from "./helpText";
 
 export function helpMarkdown(): string {

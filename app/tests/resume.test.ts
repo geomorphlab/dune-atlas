@@ -1,4 +1,4 @@
-// Planet button return (review U11): each atlas stores its last view per body; the other atlas is opened with
+// Planet button return: each atlas stores its last view per body; the other atlas is opened with
 // ?resume=1 and, without view state of its own, reopens that view (camera, basemap, projection, opacities).
 import { describe, expect, it } from "vitest";
 import { parseUrlState, serializeUrlState } from "../src/urlstate";

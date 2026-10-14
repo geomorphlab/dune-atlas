@@ -1,4 +1,4 @@
-// Dunes only with the dune map shown (review L8): the dune polygons are drawn as outlines and the fill is
+// Dunes only with the dune map shown: the dune polygons are drawn as outlines and the fill is
 // hidden, so the dune fill no longer covers the wind-derived colours (now only in the dune cells). Off: the
 // fill as before, no outline. Uses the real adapters on a MapLibre stand-in (tests/fakemap.ts).
 import { describe, expect, it, vi } from "vitest";
@@ -26,7 +26,7 @@ async function settle(map: FakeMap, ov: OverlayManager) {
   throw new Error("did not settle");
 }
 
-describe("Dunes only draws the dune map as outlines (review L8)", () => {
+describe("Dunes only draws the dune map as outlines", () => {
   it("toggle on: outline visible, fill hidden, opacity and colour follow; off: fill only; invert unaffected", async () => {
     const dunes = reg.layers.find((l) => l.id === "dunes")!;
     expect(isDuneMap(dunes)).toBe(true);

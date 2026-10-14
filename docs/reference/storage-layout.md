@@ -40,9 +40,9 @@ fields (see below). **Per click ≈ 12 kB** (+4 kB index per new shard).
 ## 3. Totals and cost (updated after Phase 2 measurements)
 | store | size | basis |
 |---|---|---|
-| `cells.zarr` | ≈ 23.3 GB (hist 13.6 + fields 9.7), 21,055 objects | measured bytes/cell on 24 random land blocks × 2,212,863 land cells (docs/validation-cells.md) |
-| `fields/<var>.zarr` × 23 | ≈ 6.3 GB | 5 of 23 built globally; blosc-shuffle + 12-bit mantissa rounding (≤1.2e-4 rel, ≤0.03°) (docs/validation-fields.md) |
-| `dunes/*.pmtiles` | 6.5 MB | built (docs/validation-dunes.md) |
+| `cells.zarr` | ≈ 23.3 GB (hist 13.6 + fields 9.7), 21,055 objects | measured bytes/cell on 24 random land blocks × 2,212,863 land cells (docs/records/validation-cells.md) |
+| `fields/<var>.zarr` × 23 | ≈ 6.3 GB | 5 of 23 built globally; blosc-shuffle + 12-bit mantissa rounding (≤1.2e-4 rel, ≤0.03°) (docs/records/validation-fields.md) |
+| `dunes/*.pmtiles` | 6.5 MB | built (docs/records/validation-dunes.md) |
 | **total** | **≈ 30 GB** | ≈ US$0.30/month after the 10 GB free tier; egress free |
 
 Click cost measured on the fixture: first click in a shard 5 range reads ≈ 20 kB; later clicks in the
@@ -95,4 +95,4 @@ Build: `cells.zarr` in PBS on Gadi (`pipeline/gadi/era5/era5_atlas_cells.py`), s
 (`scripts/upload_era5_parts.py --prefix dune-atlas/v2/datasets/era5`); pyramids one variable at a time from per-variable
 tars (`scripts/build_era5_fields_pervar.py`), sidecars locally, then `dune-atlas upload-new --prefix
 dune-atlas/v2/datasets/era5`. Create-only puts after a live listing of all of `dune-atlas/` (57,566 objects before,
-67,105 after; nothing outside the new prefix changed). Checks: `docs/validation-era5.md` §5.
+67,105 after; nothing outside the new prefix changed). Checks: `docs/records/validation-era5.md` §5.

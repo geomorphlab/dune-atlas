@@ -1,4 +1,4 @@
-// 'Dunes only' streamlines (integrate unmasked, clip to the dune cells) and base-anchored arrows (PI round 6), Earth.
+// 'Dunes only' streamlines (integrate unmasked, clip to the dune cells) and base-anchored arrows, Earth.
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";

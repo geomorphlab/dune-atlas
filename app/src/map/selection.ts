@@ -1,4 +1,4 @@
-// Selected-cell highlight in both projections (both builds; PI round 5 item 7).
+// Selected-cell highlight in both projections (both builds).
 //  * Flat map (Mercator): the GeoJSON fill + line layers (map/overlays.ts) with the cell clipped at ±85.05°
 //    (cell/snap.ts cellFeature, FLAT_LAT; no vertex on the Mercator edge).
 //  * Globe: the GeoJSON layers are hidden (MapLibre clips them at 85.0511° and extends fill triangles on the

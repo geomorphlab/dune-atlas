@@ -14,7 +14,7 @@ export const ERA5_DOI = "10.24381/cds.adbb2d47";
 export const ERA5_PAPER_DOI = "10.1002/qj.3803";
 
 /** Citation of the atlas-derived map fields of a wind dataset, one format everywhere (info popover, About,
- *  downloads): "Gunn, A. (2026). ... doi:...; [data: ...;] winds: ..." (PI 2026-10-14). The registry citations
+ *  downloads): "Gunn, A. (2026). ... doi:...; [data: ...;] winds: ...". The registry citations
  *  (pipeline fields.fields_citation) are the same strings; tests compare them. */
 const PAPER_CITATION = `Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications. doi:${PAPER_DOI}`;
 export function fieldsCitation(datasetId: string): string {
@@ -22,7 +22,7 @@ export function fieldsCitation(datasetId: string): string {
     ? `${PAPER_CITATION}; winds: ERA5 hourly 10 m winds 1950–2024 (Hersbach, H. et al. (2020). The ERA5 global reanalysis. Quarterly Journal of the Royal Meteorological Society 146, 1999–2049. doi:${ERA5_PAPER_DOI}; data: Hersbach, H. et al. (2023). ERA5 hourly data on single levels from 1940 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). doi:${ERA5_DOI})`
     : `${PAPER_CITATION}; data: Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812; winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:${ERA5LAND_PAPER_DOI})`;
 }
-/** Map attribution line of the dune map and the wind-regime fields, following the selected dataset (PI, Oct 2026):
+/** Map attribution line of the dune map and the wind-regime fields, following the selected dataset:
  *  fields from the paper's data record (ERA5-Land) are Gunn (2026) data, CC BY 4.0; fields computed for the atlas
  *  (ERA5) carry the wind data's licence. */
 export function mapAttributionHtml(datasetId: string): string {
@@ -31,7 +31,7 @@ export function mapAttributionHtml(datasetId: string): string {
     ? `Dune and wind-regime data: ${paper}, CC BY 4.0`
     : `Dune map: ${paper}, CC BY 4.0; wind-regime fields computed for the atlas from ${escapeHtml(d.name)} ${escapeHtml(d.resolution)} with the methods outlined in ${paper}, ${escapeHtml(fieldsLicence(datasetId))}`;
 }
-/** Licence of the atlas-derived map fields of a wind dataset (PI 2026-10-14). */
+/** Licence of the atlas-derived map fields of a wind dataset. */
 export const fieldsLicence = (datasetId: string) => (datasetId === "era5" ? "Copernicus licence (Licence to use Copernicus products)" : "CC BY 4.0 (Zenodo Supplementary Data)");
 
 /** One citable work. */
@@ -41,7 +41,7 @@ export interface CitationSource { id: string; title: string; entries: CitationEn
 
 /** Supplementary Code record (v1.0.0, MIT), which contains the dune map (dune-mask-rev1.tif) */
 export const DUNE_MAP_DOI = "10.5281/zenodo.20054674";
-/** label of that entry: the record's Zenodo title is kept, the label says it is the dune map (review U14) */
+/** label of that entry: the record's Zenodo title is kept, the label says it is the dune map */
 export const DUNE_MAP_LABEL = "Data (dune map: dune-mask-rev1.tif, contained in the Supplementary Code record)";
 
 export const C3S_NOTICE = "Contains modified Copernicus Climate Change Service information (ERA5-Land, 1950–2024). Neither the European Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data it contains.";

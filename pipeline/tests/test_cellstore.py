@@ -6,8 +6,11 @@ import os
 import numpy as np
 import pytest
 
-D = os.environ.get("DUNE_WORLD_DATA", os.path.expanduser("~/Documents/research/projects/dune-world/data"))
-pytestmark = pytest.mark.skipif(not os.path.isdir(D), reason="source data not available")
+D = os.environ.get("DUNE_WORLD_DATA", "")
+from conftest import have_drift_store, have_source_data
+
+pytestmark = [pytest.mark.data, pytest.mark.staging,
+              pytest.mark.skipif(not (have_source_data() and have_drift_store()), reason="source data or drift store not available")]
 
 EDGE = (1792, 1801, 3584, 3600)   # last source chunk: 9 rows (1801 = 112*16 + 9) x last 16 columns, Antarctica
 OCEAN_BLOCK = (1088, 1152, 1856, 1920)  # South Atlantic, no land

@@ -6,8 +6,8 @@
 #         full:  every shard into cells.zarr.new, validate, statistics (stats.py), fixture (fixture.py), then swap
 #                (old store -> cells.zarr.v0); optional WORKNAME = work subdirectory (default full)
 set -euo pipefail
-PY=/g/data/k10/ag5517/apps/dune_atlas_venv/bin/python
-ROOT=/scratch/k10/ag5517/dune-atlas/mars
+PY=${DUNE_ATLAS_PYTHON:?set DUNE_ATLAS_PYTHON (pipeline/gadi/site.example.env)}
+ROOT=${DUNE_ATLAS_WORK:?set DUNE_ATLAS_WORK (pipeline/gadi/site.example.env)}/mars
 RAW=$ROOT/raw/fv3betaout1
 test -x "$PY" || { echo "no interpreter $PY"; exit 127; }
 test -f "$RAW/03340.atmos_daily.nc" || { echo "no FV3 file"; exit 2; }

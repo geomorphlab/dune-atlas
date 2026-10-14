@@ -1,4 +1,4 @@
-// Build-time configuration (Vite env vars; see docs/architecture.md).
+// Build-time configuration (Vite env vars; see docs/guide/architecture.md).
 const env = import.meta.env ?? ({} as ImportMetaEnv);
 
 export const CONFIG = {

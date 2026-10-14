@@ -1,4 +1,4 @@
-// Mars: summary-table groups follow the Mars registry's layer groups; no colour-bar notes (PI, Oct 2026).
+// Mars: summary-table groups follow the Mars registry's layer groups; no colour-bar notes.
 import { describe, it } from "vitest";
 import { loadRegistry } from "../../src/registry/load";
 import { checkGroupsMatchRegistry } from "../tablegroupslib";

@@ -1,4 +1,4 @@
-// CSV column headers of the per-cell downloads (both builds; PI round 5 item 3). Every CSV header is plain
+// CSV column headers of the per-cell downloads (both builds). Every CSV header is plain
 // ASCII snake_case [a-z0-9_]: no symbols, spaces, commas, quotes, slashes or asterisks, so the files open
 // cleanly in Excel and are valid identifiers in pandas / R. One map for Earth and Mars: the same quantity
 // has the same column name on both planets. The NetCDF variable names (short codes, unchanged) and the
@@ -25,7 +25,7 @@ export const CSV_NAMES: Readonly<Record<string, string>> = {
   // flux rose (both)
   rose_mode: "rose_mode",
   flux_rose: "flux",
-  // rose_16_sectors.csv (both; review U7)
+  // rose_16_sectors.csv (both)
   sector: "sector",
   sector_centre_bearing: "sector_centre_bearing",
   sector_start_bearing: "sector_start_bearing",

@@ -33,7 +33,7 @@ describe("Earth build: planet toggle and header", () => {
     // the test page runs on localhost: the live Mars site (production: <base>mars/, URL rules below)
     expect(location.hostname).toBe("localhost");
     b.click();
-    expect(nav).toHaveBeenCalledWith("https://map.geomorphlab.org/mars/?resume=1"); // the other atlas reopens its last view (review U11)
+    expect(nav).toHaveBeenCalledWith("https://map.geomorphlab.org/mars/?resume=1"); // the other atlas reopens its last view
     history.replaceState(null, "", "/?embed=1&lat=10&lon=20");
     b.click();
     expect(nav).toHaveBeenLastCalledWith("https://map.geomorphlab.org/mars/?embed=1&resume=1");
@@ -99,7 +99,7 @@ describe("Earth build: planet toggle and header", () => {
     expect(otherBodyUrl({ body: "mars", base: "/atlas/mars/", host: H })).toBe("/atlas/");
     expect(otherBodyUrl({ body: "mars", base: "/mars", host: H })).toBe("/");
     expect(otherBodyUrl({ body: "mars", base: "/mars/", embed: true, host: H })).toBe("/?embed=1");
-    // vite dev / preview on this machine: the other planet is the live site (round 5 item 1)
+    // vite dev / preview on this machine: the other planet is the live site
     for (const host of ["localhost", "127.0.0.1", "[::1]"]) {
       expect(otherBodyUrl({ body: "earth", base: "/", host })).toBe("https://map.geomorphlab.org/mars/");
       expect(otherBodyUrl({ body: "mars", base: "/mars/", host })).toBe("https://map.geomorphlab.org/");
@@ -117,7 +117,7 @@ describe("Earth build: planet toggle and header", () => {
   });
 });
 
-describe("round 4: info texts at the source, one field citation, licences, basemap info", () => {
+describe("info texts at the source, one field citation, licences, basemap info", () => {
   const REPO = path.resolve(__dirname, "../..");
   const gen = ["registry/generated/qsat_fields.yaml", "registry/datasets/era5/qsat_fields.yaml", "registry/generated/x_extra_fields.yaml", "registry/datasets/era5/x_extra_fields.yaml", "registry/generated/x_vegetation.yaml"];
   it("generated definitions carry no repeated units/slider/processing sentences; maths as TeX (KaTeX in the popover)", async () => {
@@ -130,7 +130,7 @@ describe("round 4: info texts at the source, one field citation, licences, basem
     expect(L("rdpa").description).toMatch(/compass bearing \(clockwise from north\)/);
     expect(L("rdpa").description).not.toMatch(/radians|CCW/);
     const veg = L("vegetation").description!;
-    expect(veg.length).toBeLessThan(700); // was 707; + the non-photosynthetic-cover sentence (PI text 3.15)
+    expect(veg.length).toBeLessThan(700); // was 707; + the non-photosynthetic-cover sentence
     expect(veg).toMatch(/Total cover includes non-photosynthetic vegetation \(dry and dead plant material\) as well as green vegetation, so it can be substantial where little green vegetation is visible; compare it with the aridity index\./);
     expect(veg).toMatch(/\[Explore the full monthly time series at GEOGLAM RAPP\]\(https:\/\/map\.geo-rapp\.org\/\)/);
   });

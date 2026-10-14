@@ -3,7 +3,7 @@
 import { CELL_SOURCE_IDS, citationSources, citationText } from "./citation";
 import { datasetInfo } from "./datasetinfo";
 
-/** "23.25° S, 15.00° E": cell centre with hemisphere letters, 2 decimals (review U14; never "-23.25 N") */
+/** "23.25° S, 15.00° E": cell centre with hemisphere letters, 2 decimals (never "-23.25 N") */
 export function latLonText(lat: number, lon: number): string {
   const f = (v: number, pos: string, neg: string) => `${Math.abs(v).toFixed(2)}° ${v < 0 ? neg : pos}`;
   return `${f(lat, "N", "S")}, ${f(lon, "E", "W")}`;
@@ -21,7 +21,7 @@ export function citationFile(cell?: { iy: number; ix: number; lat: number; lon: 
   return citationText(head, citationSources(CELL_SOURCE_IDS, datasetId));
 }
 
-/** document event of every download (detail: { name }): the page confirms it (ui/tools.ts; review L14) */
+/** document event of every download (detail: { name }): the page confirms it (ui/tools.ts) */
 export const DOWNLOAD_EVENT = "duneatlas:download";
 export function announceDownload(name: string): void {
   try { globalThis.document?.dispatchEvent(new CustomEvent(DOWNLOAD_EVENT, { detail: { name } })); } catch { /* no DOM */ }

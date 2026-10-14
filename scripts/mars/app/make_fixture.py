@@ -1,4 +1,4 @@
-"""Development fixture for the Mars app (App track): synthetic-but-schema-exact stores under
+"""Development fixture for the Mars app: synthetic-but-schema-exact stores under
 <repo>/staging/fixture-mars/dune-atlas/mars/ (the R2 key layout of the data contract; the dataset stores are under
 v2/ since the packed-sand fluxes, phi = 0.6, the body-level elevation pyramid stays under v1/):
 
@@ -13,11 +13,13 @@ The series are synthetic (fixture_common.py). Physics is pipeline mars/physics.p
 the 23 fields follow the Earth definitions (qsat_compute.py) with the per-hour Mars transport law:
   - in the fixture shards: every hour, except the crest-mode SEARCH (alpha_E, alpha_H) on every 25th hour;
   - elsewhere (map pyramids only): every 25th hour, flat-bed fields only.
-This is a fixture for UI development, not the atlas computation (that is the Wind track's).
+This is a fixture for UI development, not the atlas computation.
 Dunes: the real overlap fraction (assessment artifact fv3_dunefrac.npz, FV3 grid) flipped/rolled to the
 contract grid.
 
-    cd <repo> && nice python scripts/mars/app/make_fixture.py --dunefrac <npz> [--out staging/fixture-mars]
+    cd <repo> && nice python scripts/mars/app/make_fixture.py [--dunefrac <npz>] [--out staging/fixture-mars]
+
+Without --dunefrac the dune fraction is synthetic (synthetic_dunefrac), as in CI.
 """
 from __future__ import annotations
 
@@ -295,20 +297,35 @@ def write_pyramid(out: Path, var: str, arr: np.ndarray, lat, lon, levels: int, u
     pyr.write(str(out), mode="w")
 
 
+def synthetic_dunefrac(lat, lon):
+    """Dune fraction on the contract grid without the assessment artifact: dune fields at Nili Patera (9° N, 67° E)
+    and Proctor crater (48° S, 30° E), and a north polar erg ring (78-84° N, 120° E to 240° E)."""
+    la, lo = lat[:, None], lon[None, :]
+    def blob(c_lat, c_lon, r):
+        d = np.hypot(la - c_lat, ((lo - c_lon + 180) % 360 - 180) * np.cos(np.radians(c_lat)))
+        return np.clip(1 - d / r, 0, 1) * 0.3
+    erg = ((la > 77) & (la < 85) & (((lo - 120) % 360) < 120)) * 0.5
+    return np.clip(blob(9, 67, 5) + blob(-48, 30, 4) + erg, 0, 1)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", default=str(REPO / "staging" / "fixture-mars"))
-    ap.add_argument("--dunefrac", required=True, help="fv3_dunefrac.npz (frac on the FV3 grid lat -89..89, lon 1..359)")
+    ap.add_argument("--dunefrac", help="fv3_dunefrac.npz (frac on the FV3 grid lat -89..89, lon 1..359); "
+                    "default: a synthetic dune fraction (synthetic_dunefrac)")
     ap.add_argument("--shards", default="2,7;0,10;0,3", help="shard (row, col) list: Nili Patera; north polar erg x2")
     ap.add_argument("--workers", type=int, default=4)
     a = ap.parse_args(argv)
     root = Path(a.out)
     shards = [tuple(int(x) for x in s.split(",")) for s in a.shards.split(";")]
     t0 = time.time()
-    z = np.load(a.dunefrac)
-    frac = np.roll(z["frac"][::-1], 90, axis=1)                    # FV3 (lat asc, lon 1..359) -> contract grid
-    assert np.allclose(np.roll(z["lon"], 90)[0], 181) and z["lat"][::-1][0] == 89
     lat = FC.lat_of(np.arange(FC.NY)).astype("f8"); lon = FC.lon_of(np.arange(FC.NX)).astype("f8")
+    if a.dunefrac:
+        z = np.load(a.dunefrac)
+        frac = np.roll(z["frac"][::-1], 90, axis=1)                    # FV3 (lat asc, lon 1..359) -> contract grid
+        assert np.allclose(np.roll(z["lon"], 90)[0], 181) and z["lat"][::-1][0] == 89
+    else:
+        frac = synthetic_dunefrac(lat, lon)
     fld_all = write_cells(root, shards, frac, a.workers)
     print(f"cells.zarr {time.time() - t0:.0f}s", flush=True)
     # map fields on the whole grid (subsampled hours), the shards' exact values on top

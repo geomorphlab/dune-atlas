@@ -227,7 +227,7 @@ describe("cell exports", () => {
     expect(rd).toMatch(/sigma_e_over_sigma_h\s+\[1\] Stability of elongating dunes on starved beds σ_E\/σ_H \(NetCDF: sige_sigh\)/);
     const z = readZip(await csvBundle(c, META));
     expect([...z.keys()]).toEqual(["README.txt", "wind_histogram.csv", "fields_by_threshold.csv", "flux_rose.csv", "rose_16_sectors.csv", "metadata.json"]);
-    // rose_16_sectors.csv (review U7): 16 compass sectors in degrees at the panel's threshold; matches the panel roses
+    // rose_16_sectors.csv: 16 compass sectors in degrees at the panel's threshold; matches the panel roses
     const r16 = new TextDecoder().decode(z.get("rose_16_sectors.csv")!.data).replace(/^\uFEFF/, "").trim().split("\n").map((l) => l.split(","));
     expect(r16[0]).toEqual(["ustar_threshold", "sector", "sector_centre_bearing", "sector_start_bearing", "sector_end_bearing", "wind_from_percent", "sand_flux_toward", "sand_flux_toward_percent"]);
     expect(r16.length).toBe(17);
@@ -305,7 +305,7 @@ describe("attribute audit (NetCDF / metadata.json / README strings)", () => {
     for (const cols of Object.values(md.files) as { columns: { long_name: string }[] }[]) for (const col of cols.columns) plainOk(col.long_name);
     expect(readmeText(c, META)).not.toMatch(/\$|\\[a-zA-Z]/);
     expect(fieldMeta("ao").description).not.toMatch(/signed signed/);
-    expect(fieldMeta("qhef").longName).toBe("Fraction of elongation-mode flux while flat bed above threshold"); // the layer name (review L5)
+    expect(fieldMeta("qhef").longName).toBe("Fraction of elongation-mode flux while flat bed above threshold"); // the layer name
   });
 });
 

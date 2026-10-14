@@ -12,7 +12,8 @@ const { parseAst } = await import(require.resolve("rollup/parseAst"));
 
 const dir = process.argv[2];
 const out = new Set();
-const add = (s) => { if (typeof s === "string" && s.length) out.add(s.replace(/\\/g, "\\\\").replace(/\n/g, "\\n")); };
+// asset file names carry content hashes (name-XXXXXXXX.js); masked so that only text differences count
+const add = (s) => { if (typeof s === "string" && s.length) out.add(s.replace(/-[A-Za-z0-9_-]{8}\.(js|css|woff2?|ttf|png|wasm)\b/g, "-<hash>.$1").replace(/\\/g, "\\\\").replace(/\n/g, "\\n")); };
 function walk(n) {
   if (!n || typeof n !== "object") return;
   if (Array.isArray(n)) { n.forEach(walk); return; }

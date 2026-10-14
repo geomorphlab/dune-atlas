@@ -1,5 +1,5 @@
 """COG fallback prototype: drift potential (DP, m^2/yr) at preset thresholds as Cloud-Optimised
-GeoTIFFs, plus a byte/request benchmark against the GeoZarr pyramid (docs/validation-fields.md).
+GeoTIFFs, plus a byte/request benchmark against the GeoZarr pyramid (docs/records/validation-fields.md).
 
 Two flavours per threshold:
 * `dp_ut{k}_3857.tif` -- EPSG:3857 GoogleMapsCompatible tiling, 256 px blocks, DEFLATE +
@@ -147,7 +147,7 @@ def main(argv=None):
     import argparse
     p = argparse.ArgumentParser(prog="python -m dune_atlas_pipeline.cogs")
     p.add_argument("--data", default=os.environ.get("DUNE_WORLD_DATA",
-                                                   os.path.expanduser("~/Documents/research/projects/dune-world/data")))
+                                                   ""))
     p.add_argument("--out", required=True)
     p.add_argument("--ut", nargs="*", type=int, default=list(UT_PRESETS))
     p.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
