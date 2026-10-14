@@ -1,5 +1,5 @@
 diff --git a/node_modules/@carbonplan/zarr-layer/dist/index.js b/node_modules/@carbonplan/zarr-layer/dist/index.js
-index d4f9c22..11a10f8 100644
+index d4f9c22..b572f35 100644
 --- a/node_modules/@carbonplan/zarr-layer/dist/index.js
 +++ b/node_modules/@carbonplan/zarr-layer/dist/index.js
 @@ -1050,6 +1050,12 @@ var _ZarrStore = class _ZarrStore {
@@ -131,7 +131,30 @@ index d4f9c22..11a10f8 100644
      const pxXStart = regionX * regionW;
      const pxXEnd = Math.min(pxXStart + regionW, width);
      const pxYStart = regionY * regionH;
-@@ -6299,8 +6334,8 @@ var UntiledMode = class {
+@@ -6287,6 +6322,22 @@ var UntiledMode = class {
+       } else {
+         latSpanDegrees = Math.abs(geoBounds.yMax - geoBounds.yMin);
+       }
++      if (this.crs === "EPSG:4326") {
++        // dune-atlas patch: watertight seams - one subdivision count for every region of a level
++        // (from the nominal region size), so neighbouring regions share their edge vertices. With
++        // a count per region (from its own latitude span) the edges along a parallel had different
++        // vertices; on the globe the chords then sag differently, leaving thin gaps and double-drawn
++        // slivers along region boundaries (up to ~0.1° wide for 10° chords at mid-latitudes).
++        const lm = region.levelMeta, rsz = lm?.regionSize ?? this.regionSize;
++        const lw = lm?.width ?? this.width, lh = lm?.height ?? this.height;
++        const lim = rsz && lw && lh ? this.levelXYLimits(lw, lh) : null;
++        if (lim) {
++          latSpanDegrees = Math.max(
++            rsz[0] * Math.abs(lim.yMax - lim.yMin) / lh,
++            rsz[1] * Math.abs(lim.xMax - lim.xMin) / lw
++          );
++        }
++      }
+       const subdivisions = this.isGlobeProjection ? Math.max(
+         MIN_SUBDIVISIONS,
+         Math.min(MAX_SUBDIVISIONS, Math.ceil(latSpanDegrees))
+@@ -6299,8 +6350,8 @@ var UntiledMode = class {
          const latMin = geoBounds.yMin;
          const latMax = geoBounds.yMax;
          region.mercatorBounds = {
@@ -142,3 +165,21 @@ index d4f9c22..11a10f8 100644
            y0: latToMercatorNorm(latMax),
            y1: latToMercatorNorm(latMin),
            // Include lat bounds for fragment shader reprojection
+@@ -6979,12 +7030,15 @@ var UntiledMode = class {
+     };
+     if (useDirectEcef && this.crs === "EPSG:4326" && region.mercatorBounds?.latMin != null && region.mercatorBounds?.latMax != null) {
+       const mb = region.mercatorBounds;
++      // dune-atlas patch: poles - the mesh ends at ±90 (a pole-row cell edge at ±(90 + half cell)
++      // would fold the last mesh row over the pole: overlapping triangles crossing the pole with
++      // scrambled texture columns). The texture lookup keeps the cell-edge lat bounds (u_latBounds).
+       base.wgs84Bounds = {
+         lon0: mb.x0,
+         // lon mapping is linear, same as Mercator X
+-        lat0: latToWgs84Norm(mb.latMin),
++        lat0: latToWgs84Norm(Math.max(-90, mb.latMin)),
+         lon1: mb.x1,
+-        lat1: latToWgs84Norm(mb.latMax)
++        lat1: latToWgs84Norm(Math.min(90, mb.latMax))
+       };
+       base.positionSpace = "wgs84-ecef";
+       base.sampleMode = "wgs84-lookup";

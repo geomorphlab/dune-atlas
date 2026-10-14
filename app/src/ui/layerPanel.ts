@@ -14,6 +14,9 @@ import { datasetTooltip } from "../cell/datasetinfo";
 import { mathHtml } from "../util/math";
 import { AI_NOTICE, CITATIONS, citationHtml, citationSources } from "../cell/citation";
 import { canLog, COLORMAP_GROUPS, DEFAULT_SPACING_KM, effectiveDisplay, isDirectional, SPACING_KM_STEPS, vectorColors, type RenderMode } from "../layerconfig";
+
+/** screen-reader names of the spacing steps (finest to coarsest); no units, as on screen */
+export const SPACING_STEP_NAMES = ["finest", "finer", "fine", "medium", "coarse", "coarser", "coarsest"];
 import { COLORMAPS } from "../util/colormaps";
 
 export { AI_NOTICE } from "../cell/citation";
@@ -78,14 +81,16 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
       const vc = h("input", { type: "color", "aria-label": `Arrow / streamline colour for ${l.title}` }) as HTMLInputElement;
       vc.addEventListener("change", () => store.setLayerConfig(l.id, { vecColor: vc.value }));
       const vcRow = h("label", { class: "inline" }, "Line colour ", vc);
-      // spacing on the ground: km is the only state (store / URL); the screen px conversion is
-      // internal to the map adapter and never written back here. Fixed-width value label.
-      const ds = h("input", { type: "range", min: 0, max: SPACING_KM_STEPS.length - 1, step: 1, "aria-label": `Line spacing for ${l.title} (km)` }) as HTMLInputElement;
-      const dsKm = h("output", { class: "spacing-km" }, "");
+      // spacing: the km step is the only state (store / URL); the screen px conversion is internal
+      // to the map adapter and never written back here. No numeric readout (the on-screen spacing
+      // depends on the zoom): endpoint labels Finer (left, denser lines) / Coarser (right).
+      const ds = h("input", { type: "range", min: 0, max: SPACING_KM_STEPS.length - 1, step: 1, "aria-label": `Line spacing for ${l.title}, finer to coarser` }) as HTMLInputElement;
+      const valueText = () => `${SPACING_STEP_NAMES[Number(ds.value)] ?? ""}`;
       const kmAt = () => SPACING_KM_STEPS[Number(ds.value)];
-      ds.addEventListener("input", () => { dsKm.textContent = `${kmAt()} km`; });
+      ds.addEventListener("input", () => ds.setAttribute("aria-valuetext", valueText()));
       ds.addEventListener("change", () => store.setLayerConfig(l.id, { spacingKm: kmAt() === DEFAULT_SPACING_KM ? undefined : kmAt() }));
-      const dsRow = h("label", { class: "inline spacing", title: "Distance between arrows / streamlines on the ground (smaller = denser); limited to 8–120 px on screen" }, "Spacing (km) ", ds, dsKm);
+      const dsRow = h("label", { class: "inline spacing", title: "Spacing between arrows / streamlines: left finer (denser lines), right coarser" }, "Spacing ",
+        h("span", { class: "spacing-end", "aria-hidden": "true" }, "Finer"), ds, h("span", { class: "spacing-end", "aria-hidden": "true" }, "Coarser"));
       disp.append(h("label", { class: "inline" }, "Show as ", mode), vcRow, dsRow);
       refreshers.push((s) => {
         const e = effectiveDisplay(l, s.layers[l.id]?.cfg);
@@ -93,7 +98,7 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
         vc.value = e.vecColor;
         vcRow.hidden = e.mode === "colormap";
         dsRow.hidden = e.mode === "colormap";
-        if (document.activeElement !== ds) { ds.value = String(SPACING_KM_STEPS.indexOf(e.spacingKm)); dsKm.textContent = `${e.spacingKm} km`; }
+        if (document.activeElement !== ds) { ds.value = String(SPACING_KM_STEPS.indexOf(e.spacingKm)); ds.setAttribute("aria-valuetext", valueText()); }
         cmapBox.hidden = e.mode !== "colormap";
       });
     }

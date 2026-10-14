@@ -6,7 +6,7 @@ import fixture from "./fixtures/flux-parity.json";
 import { loadRegistry } from "../src/registry/load";
 import { Store, type AppState } from "../src/store";
 import { renderLayerPanel, AI_NOTICE } from "../src/ui/layerPanel";
-import { metersPerPixel, spacingToPx } from "../src/layerconfig";
+import { metersPerPixel, spacingToPx, SPACING_KM_STEPS } from "../src/layerconfig";
 import { CellPanel, MODES_OPEN_KEY, PANEL_SECTIONS, sameLocation, sectionOpenKey } from "../src/ui/cellPanel";
 import { CONFIG } from "../src/config";
 import type { CellData, CellStore } from "../src/cell/cellstore";
@@ -189,25 +189,42 @@ describe("layer panel", () => {
     inv.checked = false; fire(inv, "change");
     expect(store.state.layers.dunes.cfg?.invert).toBeUndefined();
   });
-  it("spacing slider in km steps (default 100 km), stored as spacingKm", () => {
+  it("spacing slider: endpoint labels Finer (left) / Coarser (right), no km or px readout; stored as spacingKm", () => {
     store.setLayer("at", { visible: true });
     store.setLayerConfig("at", { mode: "streamlines" });
-    const ds = item(root, "at").querySelector('input[aria-label^="Line spacing"]') as HTMLInputElement;
-    expect(ds.getAttribute("aria-label")).toMatch(/\(km\)$/);
-    expect(item(root, "at").querySelector(".spacing-km")!.textContent).toBe("100 km");
-    ds.value = "5"; fire(ds, "input"); fire(ds, "change");
-    expect(store.state.layers.at.cfg?.spacingKm).toBe(500);
-    expect(item(root, "at").textContent).toMatch(/Spacing \(km\)/);
-  });
-  it("spacing: no px readout; the stored km survives map zoom/move (px conversion is internal)", () => {
-    store.setLayer("at", { visible: true });
-    store.setLayerConfig("at", { mode: "streamlines", spacingKm: 500 });
     const it_ = item(root, "at");
     const ds = it_.querySelector('input[aria-label^="Line spacing"]') as HTMLInputElement;
-    expect(it_.querySelector(".spacing-px")).toBeNull();
-    expect(it_.textContent).not.toMatch(/px/);
+    const row = ds.closest("label")!;
+    // order in the row: "Spacing", Finer, slider, Coarser; finer = smaller ground spacing = left
+    const ends = [...row.querySelectorAll(".spacing-end")].map((e) => e.textContent);
+    expect(ends).toEqual(["Finer", "Coarser"]);
+    expect(row.firstElementChild!.textContent).toBe("Finer");
+    expect(row.lastElementChild!.textContent).toBe("Coarser");
+    expect(SPACING_KM_STEPS[0]).toBeLessThan(SPACING_KM_STEPS[SPACING_KM_STEPS.length - 1]);
+    expect(row.textContent).toBe("Spacing FinerCoarser");
+    expect(it_.textContent).not.toMatch(/\bkm\b|\bpx\b|\d+\s*km/);
+    expect(it_.querySelector(".spacing-km, .spacing-px, output")).toBeNull();
+    expect(ds.getAttribute("aria-label")).not.toMatch(/km|px/);
+    expect(row.getAttribute("title")).not.toMatch(/km|px/);
+    expect(ds.value).toBe("3"); // default 100 km step
+    expect(ds.getAttribute("aria-valuetext")).toBe("medium");
+    ds.value = "5"; fire(ds, "input"); fire(ds, "change");
+    expect(store.state.layers.at.cfg?.spacingKm).toBe(500);
+    expect(ds.getAttribute("aria-valuetext")).toBe("coarser");
+    ds.value = "3"; fire(ds, "input"); fire(ds, "change");
+    expect(store.state.layers.at.cfg?.spacingKm).toBeUndefined(); // default not stored
+  });
+  it("spacing: an old link's km value restores the same slider position; zoom/move never writes the store", () => {
+    store.setLayer("at", { visible: true });
+    const it_ = item(root, "at");
+    const ds = it_.querySelector('input[aria-label^="Line spacing"]') as HTMLInputElement;
+    for (const [km, pos] of [[10, "0"], [20, "1"], [50, "2"], [200, "4"], [500, "5"], [1000, "6"]] as const) {
+      // as decoded from ~km= (URL) / the share link
+      store.setLayerConfig("at", { mode: "streamlines", spacingKm: km });
+      expect(ds.value).toBe(pos);
+    }
+    store.setLayerConfig("at", { mode: "streamlines", spacingKm: 500 });
     const before = ds.value;
-    // a map zoom only changes the internal px value (spacingToPx); nothing writes to the store
     let changes = 0;
     store.subscribe((_, ch) => { if (ch.has("layers")) changes++; });
     for (const z of [1, 3, 6, 9]) spacingToPx(store.state.layers.at.cfg!.spacingKm!, metersPerPixel(-24.5, z));
@@ -215,7 +232,7 @@ describe("layer panel", () => {
     expect(changes).toBe(0);
     expect(store.state.layers.at.cfg?.spacingKm).toBe(500);
     expect(ds.value).toBe(before);
-    expect(it_.querySelector(".spacing-km")!.textContent).toBe("500 km");
+    expect(it_.textContent).not.toMatch(/km|px/);
   });
   it("legend follows the chosen colormap and arrows mode", () => {
     store.setLayer("at", { visible: true });

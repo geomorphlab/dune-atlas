@@ -25,7 +25,7 @@ pyramids and the click panel range-reads one cell from `cells.zarr`, both on R2
 | `src/map/vectors.ts`, `fieldreader.ts` | arrows and Jobard–Lefer evenly spaced streamlines in screen space on a unit-vector field (pure geometry) and a zarrita window reader for GeoZarr multiscale levels |
 | `src/map/shader.ts` | zarr-layer `customFrag` bodies: `rad-to-bearing`, `rad-to-axis`, `scale`, log colour scaling |
 | `src/map/overlays.ts` | lazily adds/removes overlays, keeps registry order below basemap labels, re-attaches after a basemap swap, fans out the threshold |
-| `src/ui/layerPanel.ts`, `legend.ts`, `threshold.ts` | registry-generated panel: dataset selector (> 1 dataset), pinned u\*,th control, 'Active layers' list (drawing order: drag / move buttons, opacity slider per row, × to hide), groups, toggles, display options (colormap chooser, reverse, clim + reset, log, render mode, line colour, spacing (km); fill colour + invert for vectors), legends, info popovers, basemap radio, globe toggle, About & citation |
+| `src/ui/layerPanel.ts`, `legend.ts`, `threshold.ts` | registry-generated panel: dataset selector (> 1 dataset), pinned u\*,th control, 'Active layers' list (drawing order: drag / move buttons, opacity slider per row, × to hide), groups, toggles, display options (colormap chooser, reverse, clim + reset, log, render mode, line colour, spacing (Finer … Coarser); fill colour + invert for vectors), legends, info popovers, basemap radio, globe toggle, About & citation |
 | `src/util/math.ts` | KaTeX rendering of `$…$` segments (titles, units, descriptions, table symbols) with a plain fallback (`tex.ts`) |
 | `src/ui/cellPanel.ts` | click-to-cell side panel / bottom sheet (resizable, width/height in localStorage, figures re-render to fit): compact synced u\*,th control, wind + flux roses (flux mode flat/elongation/transverse, petals stacked by excess shear, sector sliders, %/m²/yr axis), polar modes plot, flux divergence vs threshold (cells-aux), Symbol/Quantity/Value table, downloads; every section (wind rose, flux rose, modes, qsdiv, cell summary, download & cite) is a `<details class="section">` whose `<summary>` holds the section `<h3>`, open by default, state in localStorage `duneAtlas.cellPanel.<key>Open` (`PANEL_SECTIONS`) |
 | `src/cell/snap.ts` | lon/lat → nearest cell of the store's grid (root attrs `grid`; antimeridian wrap, polar clamp, any spacing / lon0) |
@@ -51,7 +51,18 @@ every pyramid level of an untiled (multiscales layout) store its own cell-edge b
 level's `spatial:transform` + `spatial:shape` (`level.xyLimits` in `_parseUntiledMultiscale`,
 looked up by level shape in `UntiledMode.levelXYLimits`, used by `getRegionBounds` and
 `getVisibleRegions`). `tests/georef.test.ts` runs the library's own patched methods on v1-like
-and fixture layouts and fails if an upgrade changes them.
+and fixture layouts and fails if an upgrade changes them. Globe (direct WGS84 → sphere path):
+the region mesh ends at ±90° (`regionToRenderable`; pole-row cells have edges at ±(90 + half
+cell), which folded the last mesh row over the pole — triangles crossing the pole with scrambled
+texture columns, seen as a speckled disc and a solid dot at the pole); the latitude lookup keeps
+the cell-edge bounds, so texels stay aligned. Every region of a level uses one subdivision count
+(from the nominal region size, `createRegionGeometry`), so neighbouring regions share edge
+vertices (per-region counts left gaps / double-drawn slivers along parallels where chords of
+different length sag differently). The globe path draws one world (no ±360° copies) and each
+region once. `tests/polarraster.test.ts` runs the library's region code and evaluates the
+shaders' sphere mapping and lookup in JS: covered solid angle = grid area, every sampled point
+near the poles and along ±180 covered exactly once, one triangle orientation, finite vertices
+within ±90°, texture coordinates in [0, 1]; the unpatched code fails these checks.
 
 ### Data flow
 
@@ -97,16 +108,17 @@ and fixture layouts and fails if an upgrade changes them.
   consecutive screen vertices are > 4·dsep apart (`splitByScreenGap`), the GeoJSON source is
   emptied while the globe layer draws, and the layer draws nothing in Mercator. Opacity and line
   colour apply to both layers. Recomputed on `moveend`, `projectiontransition` and threshold change.
-* **Arrow / streamline spacing** is set on the ground: slider 'Spacing (km)' with steps 10, 20,
-  50, 100, 200, 500, 1000 km (default 100; URL `~km=`). On every recompute it is converted to
-  screen px at the view centre with the measured ground resolution (great-circle distance between
-  points ±25 px about the centre, so the same in globe and mercator; fallback Web-Mercator
-  `40075016.686·cos(lat)/(512·2^zoom)` m/px — MapLibre zooms are 512-px tiles, half the 256-px
-  `156543.03` constant), then clamped to 8–120 px (`DSEP_PX_CLAMP`). The panel shows the
-  The km value is the only state (store + URL); the px value is internal to each recompute and
-  is never shown or written back (fixed-width tabular label, so the slider does not shift while
-  dragging). Old links with px spacing (`~ds=`) are migrated once to the nearest km step at
-  the initial view.
+* **Arrow / streamline spacing** is set on the ground: slider 'Spacing' labelled Finer (left,
+  denser lines) … Coarser (right), steps 10, 20, 50, 100, 200, 500, 1000 km internally (default
+  100; URL `~km=`); no numeric readout, since the spacing on screen depends on the zoom (screen
+  readers get the step names finest … coarsest as `aria-valuetext`). On every recompute it is
+  converted to screen px at the view centre with the measured ground resolution (great-circle
+  distance between points ±25 px about the centre, so the same in globe and mercator; fallback
+  Web-Mercator `40075016.686·cos(lat)/(512·2^zoom)` m/px — MapLibre zooms are 512-px tiles, half
+  the 256-px `156543.03` constant), then clamped to 8–120 px (`DSEP_PX_CLAMP`). The km step is
+  the only state (store + URL + share links, unchanged encoding); the px value is internal to each
+  recompute and is never shown or written back. Old links with px spacing (`~ds=`) are migrated
+  once to the nearest km step at the initial view.
 * **Datasets**: `registry.datasets[{id, title, prefix, …}]` + `defaultDataset`; a source containing
   `{dataset}` expands to the selected dataset's `prefix` (cell store: `{dataset}/cells.zarr`);
   sources without it (dunes, aridity, vegetation) are dataset-independent. The selector ("Wind
@@ -440,6 +452,6 @@ variants and sources, in-place swap and restore, config kept / limits reset, ini
 incl. the ocean message, overlays reloaded with ERA5 sources then a basemap switch, layer panel
 refresh; per-level bounds of the ERA5 pyramids in `georef.test.ts`), drawing order, the multiscale window reader on
 the fixture pyramids, KaTeX rendering, DOM tests of both panels (happy-dom:
-pinned threshold, colormap chooser, render modes, km spacing slider + km→px/clamp/legacy migration, dune fill/invert without outline controls, invert, drawing order (× and re-tick on top), dataset selector, flux modes, visibility rule, resize handle, AI notice, sector
+pinned threshold, colormap chooser, render modes, spacing slider (Finer/Coarser labels, km steps) + km→px/clamp/legacy migration, dune fill/invert without outline controls, invert, drawing order (× and re-tick on top), dataset selector, flux modes, visibility rule, resize handle, AI notice, sector
 sliders, flux axis toggle, Symbol/Quantity/Value table), and the cell store against
 `staging/fixture` (fixture-dependent tests are skipped when it is absent, e.g. in CI).
