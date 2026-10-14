@@ -114,10 +114,12 @@ export class MarsCellStore {
     return Array.isArray(this.attrs.d_values_um) && this.attrs.d_values_um.length ? this.attrs.d_values_um : M.D_VALUES_UM;
   }
 
-  async query(iy: number, ix: number): Promise<MarsCellData> {
+  /** `opts.wind: false` skips the hourly series (region exports without them: empty series; data = any field) */
+  async query(iy: number, ix: number, opts: { wind?: boolean } = {}): Promise<MarsCellData> {
     const ref = cellFromIndex(iy, ix, this.grid);
+    const noSeries = opts.wind === false;
     const [s, f, d, d1, time, aux] = await Promise.all([
-      zarr.get(this.#series, [iy, ix, null, null]),
+      noSeries ? Promise.resolve({ data: new Float32Array(0) }) : zarr.get(this.#series, [iy, ix, null, null]),
       zarr.get(this.#fields, [iy, ix, null, null]),
       zarr.get(this.#dunes, [iy, ix]),
       this.#dune ? zarr.get(this.#dune, [iy, ix]) : Promise.resolve(null),
@@ -132,7 +134,7 @@ export class MarsCellStore {
         return harmonizeAux(out);
       }),
     ]);
-    const sd = s.data as Float32Array, n = this.nHours;
+    const sd = s.data as Float32Array, n = noSeries ? 0 : this.nHours;
     const series: MarsSeries = { u: sd.subarray(0, n), v: sd.subarray(n, 2 * n), T: sd.subarray(2 * n, 3 * n), rho: sd.subarray(3 * n, 4 * n), z: sd.subarray(4 * n, 5 * n) };
     const fields = f.data as Float32Array;
     const frac = Number(d);
@@ -141,7 +143,7 @@ export class MarsCellStore {
     const dune = d1 !== null ? Number(d1) === 1 : frac > 0;
     return {
       ...ref, body: "mars", hist: new Uint32Array(0), fields, fieldVars: this.attrs.field_vars, bins: MARS_BINS, utValues: this.utValues, grid: this.grid,
-      dune, duneFrac: Number.isFinite(frac) ? frac : 0, hasData: valid > 0, totalHours: valid, series, ls: time.ls, sol: time.sol, dValuesUm: this.utValues,
+      dune, duneFrac: Number.isFinite(frac) ? frac : 0, hasData: noSeries ? (f.data as Float32Array).some((x) => Number.isFinite(x)) : valid > 0, totalHours: valid, series, ls: time.ls, sol: time.sol, dValuesUm: this.utValues,
       ...(aux ? { aux } : {}),
     };
   }

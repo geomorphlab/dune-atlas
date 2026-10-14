@@ -190,10 +190,11 @@ export class CellStore {
     return Array.isArray(this.attrs.ut_values) && this.attrs.ut_values.length ? this.attrs.ut_values : C.UT_VALUES;
   }
 
-  async query(iy: number, ix: number): Promise<CellData> {
+  /** `opts.wind: false` skips the wind histogram (region exports without it: `hist` is empty) */
+  async query(iy: number, ix: number, opts: { wind?: boolean } = {}): Promise<CellData> {
     const ref = cellFromIndex(iy, ix, this.grid);
     const [h, f, d, aux] = await Promise.all([
-      zarr.get(this.#hist, [iy, ix, null, null]),
+      opts.wind === false ? Promise.resolve({ data: new Uint32Array(0) }) : zarr.get(this.#hist, [iy, ix, null, null]),
       zarr.get(this.#fields, [iy, ix, null, null]),
       zarr.get(this.#dunes, [iy, ix]),
       this.#aux.then(async (stores) => {

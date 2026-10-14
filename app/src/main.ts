@@ -38,6 +38,16 @@ import { loadPlaces, placeBounds, type Place } from "./core/search/places";
 import { formatCoord } from "./core/search/coords";
 import { datasetInfo } from "./core/cell/datasetinfo";
 import { PROFILE } from "@body/profile";
+import { BoxDrawer } from "./core/map/boxdraw";
+import { boxCells, fetchRegion, normaliseBox, regionNetcdf, regionReadme, type Box, type RegionMeta, type RegionSelection } from "./core/export/region";
+import { REGION_TEXT, type RegionContext } from "./core/ui/regionExport";
+import { AUX_META } from "./core/cell/auxinfo";
+import { cfUnits } from "./core/cell/export";
+import { isPublishedField } from "./core/util/constants";
+import { writeZip } from "./core/cell/zip";
+import { triggerDownload } from "./core/cell/downloads";
+import { DATA_LICENSE_URL } from "./core/ui/bulkguide";
+import { BODY } from "./core/body";
 
 const { registry: reg, errors } = loadRegistry();
 if (errors.length) console.warn("registry merge:", errors);
@@ -195,9 +205,22 @@ const getCellStore = (): Promise<BodyCellStore> => (cellStore ??= (() => {
   p.then((s) => { if (cellStore === p) { grid = s.grid; updateSelectedCell(); } }).catch((e) => console.warn("[dune-atlas] cell store could not be opened", e));
   return p;
 })());
+const otherStores = new Map<string, Promise<BodyCellStore>>();
+function openOtherStore(id: string): Promise<BodyCellStore> {
+  let p = otherStores.get(id);
+  if (!p) {
+    const ds = selectDataset(reg, id);
+    p = HOOKS.openCellStore(resolveSource(ds?.cellStore ?? CONFIG.cellStorePath, dataBase, ds?.prefix), { useSuffixRequest: CONFIG.useSuffixRequest, aux: [] });
+    p.catch(() => otherStores.delete(id));   // retried on the next cell
+    otherStores.set(id, p);
+  }
+  return p;
+}
 const panel = new CellPanel(document.getElementById("cell-panel")!, init.utIndex, {
   windSectors: CONFIG.windRoseSectors, fluxSectors: CONFIG.fluxRoseSectors,
   onClose: () => store.set({ cell: null }), plot: { get: () => store.state.plotY, set: (id) => store.set({ plotY: id }) }, onCentre: (c) => { centreOnCell(map, c, Math.abs(grid.dlat)); }, fieldLabel, threshold: { def: reg.threshold, store }, shareLink: () => shareLinkNow(),
+  // the other wind datasets at the same location (Earth cell panel line), their stores opened on first use
+  otherDatasets: () => (reg.datasets ?? []).filter((d) => d.id !== store.state.dataset).map((d) => ({ id: d.id, open: () => openOtherStore(d.id) })),
   exportMeta: () => {
     const ds = selectDataset(reg, store.state.dataset);
     return { datasetId: ds?.id ?? "", datasetTitle: ds?.title ?? "", dataVersion: versionFromPrefix(ds?.prefix), permalink: fullScreenUrl() };
@@ -212,7 +235,46 @@ const tour = new Tour(TOUR_STEPS, { hooks: tourHooks({
   layerPanel: layerPanelEl, store, panel, cellRoot: document.getElementById("cell-panel")!,
   exampleCell: async () => { const c = snapToCell(EXAMPLE_CELL.lon, EXAMPLE_CELL.lat, (await getCellStore()).grid); return c ? [c.iy, c.ix] : null; },
 }) });
-const tools = new Tools({ startTour: () => tourStart.fromHelp(), shareLink: shareLinkNow, exportMap, openAbout });
+// "Download a region": the box drawn on the map or typed (map/boxdraw.ts, ui/regionExport.ts, export/region.ts)
+const boxDrawer = new BoxDrawer(map);
+async function regionContext(): Promise<RegionContext> {
+  const cs = await getCellStore();
+  const ds = datasetInfo(store.state.dataset);
+  const nHours = (cs as { nHours?: number }).nHours, series = nHours !== undefined, bins = cs.bins;
+  const n = cs.utValues.length;
+  const title = (v: string) => reg.layers.find((l) => l.type === "zarr-field" && l.variable === v)?.title ?? v;
+  return {
+    grid: cs.grid,
+    shape: { nThr: n, wind: series ? { kind: "series", nHours } : { kind: "hist", nUm: bins.umCentres.length, nUa: bins.uaCentres.length } },
+    fields: cs.fieldVars.filter((v) => isPublishedField(v)).map((v) => ({ id: v, label: title(v) })),
+    aux: Object.entries(AUX_META).map(([id, m]) => ({ id, label: m.longName })),
+    wind: { label: series ? REGION_TEXT.windSeries : REGION_TEXT.windHist },
+    axis: { name: PROFILE.control.exportName, count: n, current: Math.min(store.state.utIndex, n - 1), currentText: PROFILE.control.format(cs.utValues[Math.min(store.state.utIndex, n - 1)]) },
+    datasetName: `${ds.name} ${ds.resolution}`,
+  };
+}
+async function runRegion(box: Box, sel: RegionSelection, o: { onProgress: (d: number, n: number) => void; signal: AbortSignal }) {
+  const cs = await getCellStore();
+  const g = cs.grid, cells = boxCells(box, g);
+  const data = await fetchRegion(cs, cells, { onProgress: o.onProgress, signal: o.signal, wind: sel.wind });
+  const ds = selectDataset(reg, store.state.dataset);
+  const t = reg.threshold;
+  const meta: RegionMeta = {
+    datasetId: ds?.id ?? "", datasetTitle: ds?.title ?? "", dataVersion: versionFromPrefix(ds?.prefix), permalink: fullScreenUrl(), box, body: BODY,
+    axis: { name: t.dim ?? "ut", units: t.units === "µm" ? "um" : cfUnits(t.units), longName: PROFILE.control.exportName, values: cs.utValues },
+    storeAttrs: cs.attrs as RegionMeta["storeAttrs"], generated: new Date(),
+  };
+  const nc = regionNetcdf(data, cells, g, sel, meta);
+  const b = normaliseBox(box), f = (v: number) => String(Math.round(v * 100) / 100).replace("-", "m");
+  const name = `${PROFILE.filePrefix}_region_${meta.datasetId}_lat${f(b.south)}to${f(b.north)}_lon${f(b.west)}to${f(b.east)}`;
+  const withData = data.filter(Boolean).length;
+  const readme = regionReadme(sel, meta, { rows: cells.iys.length, cols: cells.ixs.length, withData }, `${name}.nc`, DATA_LICENSE_URL);
+  const zip = await writeZip([{ name: `${name}.nc`, data: nc }, { name: "README.txt", data: readme }]);
+  triggerDownload(`${name}.zip`, zip, "application/zip");
+  return { name: `${name}.zip`, cells: data.length, withData };
+}
+const tools = new Tools({ startTour: () => tourStart.fromHelp(), shareLink: shareLinkNow, exportMap, openAbout,
+  region: { lonRange: PROFILE.search.lonRange, context: regionContext, draw: () => boxDrawer.draw(), show: (b) => boxDrawer.show(b), run: runRegion } });
 map.addControl({ onAdd: () => tools.el, onRemove: () => tools.el.remove() }, "top-right");
 const autostart = shouldShowTour({ embed: init.embed, tourParam: !!url.tour, seen: tourSeen() });
 // "Start tour" bubble by the Help button; the automatic first-visit start also has a time-out
@@ -244,6 +306,7 @@ function goToPlace(p: Place): string {
 }
 
 map.on("click", async (e) => {
+  if (boxDrawer.active) return;   // the click that ends drawing a region box
   try { grid = (await getCellStore()).grid; } catch { /* keep the fallback grid */ }
   const c = snapToCell(e.lngLat.lng, e.lngLat.lat, grid);
   if (c) store.set({ cell: [c.iy, c.ix] });
@@ -287,7 +350,7 @@ if (query0.resume) scheduleUrl(); // drop resume=1 from the address
 store.subscribe((s, ch) => {
   if (ch.has("basemap") || ch.has("projection") || ch.has("dataset")) loading.begin();
   if (ch.has("basemap")) applyBasemap();
-  if (ch.has("projection")) { map.setProjection({ type: s.projection }); mapExtras?.onProjection?.(); }
+  if (ch.has("projection")) { map.setProjection({ type: s.projection }); mapExtras?.onProjection?.(); boxDrawer.refresh(); }
   if (ch.has("dataset")) {
     // re-resolve '{dataset}' sources and the cell store; keep the selected location by re-snapping
     const prev = s.cell ? (() => { try { return cellFromIndex(s.cell![0], s.cell![1], grid); } catch { return null; } })() : null;

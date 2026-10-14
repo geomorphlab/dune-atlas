@@ -142,3 +142,14 @@ export function analyseCell(cell: CellData, utIndex: number, opts: { windSectors
     utValues,
   };
 }
+
+/** DP (m²/yr), RDP/DP and the RDD bearing (° toward; NaN where RDD is not defined) of a cell at threshold index
+ *  `k` (the other-dataset line of the cell panel). */
+export function driftAt(cell: CellData, k: number): { dp: number; ratio: number; rddBearing: number } {
+  const a = fieldValue(cell, "rdpa", k);
+  return {
+    dp: fieldValue(cell, "dpm", k) * C.S2Y,
+    ratio: fieldValue(cell, "qha_rdp_dp", k),
+    rddBearing: modeDefined(cell, "rdpa", k) && Number.isFinite(a) ? mathToBearingDeg(a) : NaN,
+  };
+}

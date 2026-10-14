@@ -15,6 +15,7 @@
     "postinstall": "patch-package",
     "check-netcdf": "vite-node scripts/write-cell-exports.ts -- ../staging/fixture ../staging/check-netcdf && PYTHONPATH=../pipeline/src python scripts/check-netcdf.py ../staging/fixture ../staging/check-netcdf && vite-node scripts/write-cell-exports.ts -- ../staging/fixture/datasets/era5 ../staging/check-netcdf-era5 && PYTHONPATH=../pipeline/src python scripts/check-netcdf.py ../staging/fixture/datasets/era5 ../staging/check-netcdf-era5",
     "help-doc": "vite-node scripts/write-help-doc.ts",
+    "check-region": "vite-node scripts/write-region-export.ts -- ../staging/fixture ../staging/check-region && python scripts/check-region-netcdf.py ../staging/check-region",
     "test:ci": "bash scripts/test-ci.sh",
     "test:earth": "vitest run",
     "test:mars": "VITE_BODY=mars vitest run",
