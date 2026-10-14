@@ -1,7 +1,10 @@
 // Dune-field name labels ('Show names' in the Dunes group): a MapLibre symbol layer over a GeoJSON built from
 // the body's place list (registry/<body>/places.yaml, the same list as the search box). Large features
-// first: each label appears once its feature (labelRadius: radius and mapped dune area) is about LABEL_PX
-// pixels across, and collisions are resolved by that size (symbol-sort-key). Italic, pale sand on dark basemaps and dark brown on light ones (registry
+// first and biggest: the zoom at which a label appears falls with the feature's size (labelRadius: radius
+// and mapped dune area; every feature above LABEL_ZOOM.rAll from the whole-globe view, the smallest by
+// LABEL_ZOOM.max), and collisions are resolved by that size (symbol-sort-key). A dot marks each centre and
+// the name sits beside it (variable anchor). The toggle is for finding fields: while it is on, the
+// basemap's own labels other than countries and states give way (hidden) and come back when it is off. Italic, pale sand on dark basemaps and dark brown on light ones (registry
 // basemaps[].tone), with a soft halo. The layer sits above the data layers and below the selected-cell
 // highlight; basemap labels stay above it (MapLibre places the upper layer's symbols first, so the two
 // never overlap). A click on a label (only on the label: cell clicks elsewhere are unchanged) or a pick in
@@ -26,15 +29,21 @@ export const PLACE_SOURCE = "place-labels-src";
 export const PLACE_LABEL_FONT = ["Noto Sans Italic"];
 /** map option localIdeographFontFamily: CJK glyphs drawn from local fonts */
 export const LOCAL_IDEOGRAPH_FONTS = "'Noto Sans CJK SC', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans', 'Microsoft YaHei', 'Source Han Sans SC', sans-serif";
-/** a label shows once its feature is this many pixels across */
-export const LABEL_PX = 48;
-export const LABEL_MAX_MINZOOM = 9;
-/** text size range (px) from the smallest to the largest features */
-export const LABEL_SIZE = { min: 10, max: 14, rSmall: 10, rLarge: 400 } as const;
+/** zoom at which a label appears: 0 at labelRadius >= rAll (km), `max` at <= rLast, log-linear between */
+export const LABEL_ZOOM = { rAll: 100, rLast: 8, max: 4.5 } as const;
+/** text size range (px) from the smallest to the largest features; line 2 is LINE2_SMALLER px smaller */
+export const LABEL_SIZE = { min: 13, max: 20, rSmall: 10, rLarge: 400 } as const;
+export const LINE2_SMALLER = 2;
 export const LABEL_STYLE = {
-  dark: { text: "#e8d3a8", halo: "rgba(14, 11, 8, 0.82)" },
-  light: { text: "#4a2e12", halo: "rgba(255, 248, 236, 0.85)" },
+  dark: { text: "#e8d3a8", halo: "rgba(10, 8, 5, 0.95)" },
+  light: { text: "#4a2e12", halo: "rgba(255, 250, 240, 0.95)" },
 } as const;
+export const LABEL_HALO = { width: 2.2, blur: 0.4 } as const;
+/** the centre dot: an SDF disc (coloured and haloed like the text) */
+export const PLACE_DOT = "place-dot";
+export const DOT = { size: 24, radius: 3.5 } as const;
+/** basemap label layers that stay while the names are shown (countries, states / regions) */
+export const BASEMAP_LABELS_KEPT = /country|state|continent/i;
 export type Tone = keyof typeof LABEL_STYLE;
 
 
@@ -49,11 +58,11 @@ export const isRtl = (s: string) => RTL.test(s);
 export function labelRadius(p: Pick<Place, "radius_km" | "dune_km2">): number {
   return p.dune_km2 ? Math.sqrt(p.radius_km * Math.sqrt(p.dune_km2 / Math.PI)) : p.radius_km;
 }
-/** zoom at which a feature of radius `radiusKm` is LABEL_PX pixels across (512 px world at zoom 0) */
-export function labelMinZoom(radiusKm: number, bodyRadiusKm: number): number {
-  const diamDeg = ((2 * radiusKm) / bodyRadiusKm) * (180 / Math.PI);
-  const z = Math.log2((LABEL_PX * 360) / (512 * diamDeg));
-  return Math.round(Math.max(0, Math.min(LABEL_MAX_MINZOOM, z)) * 100) / 100;
+/** zoom at which the label of a feature of size `radiusKm` (labelRadius) appears */
+export function labelMinZoom(radiusKm: number): number {
+  const { rAll, rLast, max } = LABEL_ZOOM;
+  const t = (Math.log(rAll) - Math.log(Math.max(radiusKm, 1e-6))) / (Math.log(rAll) - Math.log(rLast));
+  return Math.round(max * Math.max(0, Math.min(1, t)) * 100) / 100;
 }
 /** text size (px), log-scaled with the radius */
 export function labelSize(radiusKm: number): number {
@@ -63,7 +72,7 @@ export function labelSize(radiusKm: number): number {
 }
 
 /** GeoJSON of the labels: a point per place with its label lines, zoom threshold, size and priority */
-export function placeFeatures(list: PlaceList, bodyRadiusKm: number): GeoJSON.FeatureCollection<GeoJSON.Point> {
+export function placeFeatures(list: PlaceList): GeoJSON.FeatureCollection<GeoJSON.Point> {
   return {
     type: "FeatureCollection",
     features: list.places.map((p) => ({
@@ -72,7 +81,7 @@ export function placeFeatures(list: PlaceList, bodyRadiusKm: number): GeoJSON.Fe
       properties: {
         id: p.id, line1: p.line1,
         ...(p.line2 && mapDrawable(p.line2.text) ? { line2: p.line2.text } : {}),
-        minzoom: labelMinZoom(labelRadius(p), bodyRadiusKm),
+        minzoom: labelMinZoom(labelRadius(p)),
         size: labelSize(labelRadius(p)),
         // lower keys are placed first: larger (labelRadius), then larger mapped dune areas
         rank: -(labelRadius(p) * 1e6 + (p.dune_km2 ?? 0)) / 1e6,
@@ -89,22 +98,41 @@ export function placeLabelLayer(visible: boolean, tone: Tone) {
     filter: [">=", ["zoom"], ["get", "minzoom"]],
     layout: {
       "text-field": ["format", ["get", "line1"], {},
-        ["case", ["has", "line2"], ["concat", "\n", ["get", "line2"]], ""], { "font-scale": 0.86 }],
+        ["case", ["has", "line2"], ["concat", "\n", ["get", "line2"]], ""], { "font-scale": ["/", ["-", ["get", "size"], LINE2_SMALLER], ["get", "size"]] }],
       "text-font": PLACE_LABEL_FONT,
       "text-size": ["get", "size"],
       "text-letter-spacing": 0.03,
-      "text-line-height": 1.15,
+      "text-line-height": 1.1,
       "text-max-width": 10,
-      "text-padding": 4,
-      "text-anchor": "center",
-      "text-justify": "center",
+      "text-padding": 1,
+      // the name beside its centre dot, on whichever side has room
+      "text-variable-anchor": ["left", "right", "top", "bottom"],
+      "text-radial-offset": 0.5,
+      "text-justify": "auto",
+      "icon-image": PLACE_DOT,
+      "icon-size": 1,
+      "icon-padding": 0,
       "symbol-sort-key": ["get", "rank"],
       "text-rotation-alignment": "viewport",
       "text-pitch-alignment": "viewport",
       visibility: visible ? "visible" : "none",
     },
-    paint: { "text-color": s.text, "text-halo-color": s.halo, "text-halo-width": 1.3, "text-halo-blur": 0.8 },
+    paint: {
+      "text-color": s.text, "text-halo-color": s.halo, "text-halo-width": LABEL_HALO.width, "text-halo-blur": LABEL_HALO.blur,
+      "icon-color": s.text, "icon-halo-color": s.halo, "icon-halo-width": LABEL_HALO.width / 1.5, "icon-halo-blur": LABEL_HALO.blur,
+    },
   };
+}
+
+/** the centre dot as an SDF image (as TinySDF: alpha 0.75 at the disc edge, falling by 1/8 per pixel outward) */
+export function dotImage(): { width: number; height: number; data: Uint8Array } {
+  const n = DOT.size, c = (n - 1) / 2, data = new Uint8Array(n * n * 4);
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const d = Math.hypot(x - c, y - c) - DOT.radius;   // signed distance from the edge (px)
+    const a = Math.round(255 * Math.max(0, Math.min(1, 0.75 - d / 8)));
+    data.set([255, 255, 255, a], (y * n + x) * 4);
+  }
+  return { width: n, height: n, data };
 }
 
 /** the label's popup content: name, line 2, feature type or countries, aliases, mapped dune area, sources */
@@ -163,7 +191,7 @@ export class PlaceLabels {
   #popup: Popup | null = null;
   #byId: Map<string, Place>;
   constructor(private map: MlMap, private o: PlaceLabelOptions) {
-    this.data = placeFeatures(o.list, o.bodyRadiusKm);
+    this.data = placeFeatures(o.list);
     this.#byId = new Map(o.list.places.map((p) => [p.id, p]));
     map.on("mouseenter", PLACE_LABELS, () => { map.getCanvas().style.cursor = "pointer"; });
     map.on("mouseleave", PLACE_LABELS, () => { map.getCanvas().style.cursor = o.cursor ?? "crosshair"; });
@@ -175,21 +203,46 @@ export class PlaceLabels {
   attach() {
     if (!this.available) return;
     const m = this.map;
+    if (!m.hasImage(PLACE_DOT)) m.addImage(PLACE_DOT, dotImage(), { sdf: true });
     if (!m.getSource(PLACE_SOURCE)) m.addSource(PLACE_SOURCE, { type: "geojson", data: this.data });
     if (!m.getLayer(PLACE_LABELS)) {
       const before = m.getLayer(SELECTED_CELL_BOTTOM) ? SELECTED_CELL_BOTTOM : firstSymbolLayer(m);
       m.addLayer(placeLabelLayer(this.#visible, this.o.tone()) as never, before);
     }
     this.setTone(this.o.tone());
+    this.#yielded = [];   // a new style: its labels are all shown
+    this.#yieldBasemapLabels();
   }
   setVisible(on: boolean) {
     this.#visible = on && this.available;
     if (this.map.getLayer(PLACE_LABELS)) this.map.setLayoutProperty(PLACE_LABELS, "visibility", this.#visible ? "visible" : "none");
+    this.#yieldBasemapLabels();
   }
+  /** basemap label layers hidden while the names are shown (restored when they are hidden) */
+  #yielded: string[] = [];
+  #yieldBasemapLabels() {
+    const m = this.map;
+    if (this.#visible && m.getLayer(PLACE_LABELS)) {
+      if (this.#yielded.length) return;
+      for (const l of m.getStyle().layers) {
+        if (l.type !== "symbol" || l.id === PLACE_LABELS || BASEMAP_LABELS_KEPT.test(l.id)) continue;
+        if (m.getLayoutProperty(l.id, "visibility") === "none") continue;
+        m.setLayoutProperty(l.id, "visibility", "none");
+        this.#yielded.push(l.id);
+      }
+    } else if (!this.#visible) {
+      for (const id of this.#yielded) if (m.getLayer(id)) m.setLayoutProperty(id, "visibility", "visible");
+      this.#yielded = [];
+    }
+  }
+  /** basemap label layers currently hidden for the names (tests) */
+  get yielded(): readonly string[] { return this.#yielded; }
   setTone(tone: Tone) {
     if (!this.map.getLayer(PLACE_LABELS)) return;
     this.map.setPaintProperty(PLACE_LABELS, "text-color", LABEL_STYLE[tone].text);
     this.map.setPaintProperty(PLACE_LABELS, "text-halo-color", LABEL_STYLE[tone].halo);
+    this.map.setPaintProperty(PLACE_LABELS, "icon-color", LABEL_STYLE[tone].text);
+    this.map.setPaintProperty(PLACE_LABELS, "icon-halo-color", LABEL_STYLE[tone].halo);
   }
   /** the place whose label is under the point (none while hidden) */
   hit(point: PointLike): Place | null {

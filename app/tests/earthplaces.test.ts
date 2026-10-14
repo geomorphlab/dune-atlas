@@ -114,7 +114,7 @@ describe("Earth named search", () => {
 });
 
 describe("Earth name labels", () => {
-  const fc = placeFeatures(LIST, 6371);
+  const fc = placeFeatures(LIST);
   const f = (id: string) => fc.features.find((x) => x.properties!.id === id)!.properties!;
   it("second lines on the map: Arabic-script (RTL plugin), CJK, Cyrillic; Devanagari in the popup only", () => {
     expect(f("rub-al-khali-empty-quarter").line2).toBe("الربع الخالي");
@@ -129,10 +129,13 @@ describe("Earth name labels", () => {
   it("big ergs first: zoom threshold and priority by radius and mapped dune area", () => {
     const sorted = [...P].sort((a, b) => labelRadius(b) - labelRadius(a));
     expect(sorted.slice(0, 3).map((p) => p.id)).toEqual(["rub-al-khali-empty-quarter", "kalahari", "taklamakan-desert"]);
-    expect(f("rub-al-khali-empty-quarter").minzoom).toBeLessThan(2);
+    expect(f("rub-al-khali-empty-quarter").minzoom).toBe(0);
+    expect(f("rub-al-khali-empty-quarter").size).toBe(20);
     expect(f("rub-al-khali-empty-quarter").rank).toBeLessThan(f("great-sand-dunes").rank);
-    expect(f("great-sand-dunes").minzoom).toBeGreaterThan(6);
-    for (const p of P) expect(f(p.id).minzoom, p.id).toBeLessThanOrEqual(9);
+    expect(f("great-sand-dunes").minzoom).toBeGreaterThan(3);
+    // dense at low zoom: over 100 names eligible on the whole-globe view, every name by zoom 4.5
+    expect(P.filter((p) => f(p.id).minzoom <= 1.5).length).toBeGreaterThan(100);
+    for (const p of P) expect(f(p.id).minzoom, p.id).toBeLessThanOrEqual(4.5);
   });
   it("Great Sand Dunes popup: the Indigenous names with their languages", () => {
     const el = placePopupContent(byId("great-sand-dunes"));

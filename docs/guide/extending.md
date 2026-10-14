@@ -121,10 +121,16 @@ these names'); the user-text sweep skips it (tests/usertextlib.ts `VERBATIM_NOTE
 ### Name labels on the map ('Show names')
 
 The same list feeds the name labels (`core/map/placelabels.ts`): a symbol layer over a GeoJSON point per
-place, above the data layers and below the selected-cell highlight (basemap labels stay above it and win
-collisions). A label appears once its feature is about 48 px across, text 10–14 px with its size, and collisions
-are resolved by size, then `dune_km2` (`symbol-sort-key`); the size is `labelRadius`, the geometric mean of
-`radius_km` and the radius of a disc of `dune_km2`, so big ergs come first.
+place, above the data layers and below the selected-cell highlight. The toggle is for finding fields, so
+the names are obvious once it is on: a haloed centre dot (an SDF image, coloured like the text) with the
+name beside it on whichever side has room (`text-variable-anchor`), italic text 13–20 px with the
+feature's size (line 2 2 px smaller), a wide, nearly opaque halo, and dense placement (padding 1 px). The
+size is `labelRadius`, the geometric mean of `radius_km` and the radius of a disc of `dune_km2`: every
+feature of 100 km or more is labelled from the whole-globe view, smaller ones from a zoom falling
+log-linearly to 4.5 at 8 km (`LABEL_ZOOM`), and collisions are resolved by size, then `dune_km2`
+(`symbol-sort-key`). While the names are shown, the basemap's own labels other than countries and states
+(`BASEMAP_LABELS_KEPT`) are hidden, and shown again when the toggle is off; the kept basemap labels are
+drawn above the names and never overlap them.
 Colours follow the basemap's `tone` in the registry (`dark`: pale sand with a dark halo; `light`: dark
 brown with a light halo), so a new basemap needs a `tone`. The toggle sits in the Dunes group when the
 list is enabled; it is remembered per body and is part of both link forms (`names=1`; short-link flag 64).
