@@ -18,6 +18,10 @@ from the Geomorphology Lab, Monash University.
 - **Cell panel** (click any cell): wind and sand-flux roses, dune-orientation modes, a summary table, and
   downloads of the cell's data (NetCDF, CSV bundle) with citation text.
 - **Share and export**: short links to any view; map and plot images with colour bars, scale and sources.
+- **Search and Concepts**: go to typed coordinates; the Concepts panel explains the quantities, with
+  references.
+- **Bulk data**: every cell of a latitude-longitude box as one NetCDF file (Download a region), and the
+  public Zarr stores for whole grids (Get the whole grid, under Download & cite).
 
 ## How to cite
 
