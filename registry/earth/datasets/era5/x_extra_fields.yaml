@@ -77,7 +77,7 @@ layers:
       Journal of the Royal Meteorological Society 146, 1999–2049. doi:10.1002/qj.3803; data: Hersbach, H. et al.
       (2023). ERA5 hourly data on single levels from 1940 to present. Copernicus Climate Change Service (C3S) Climate
       Data Store (CDS). doi:10.24381/cds.adbb2d47)'
-    licence: Copernicus licence (Licence to use Copernicus products)
+    licence: CC BY 4.0
   visible: false
   opacity: 0.85
   queryable: false

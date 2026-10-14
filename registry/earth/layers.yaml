@@ -31,7 +31,7 @@ datasets:
       nonLandReason: This cell is mainly water
       dunesRule: the cell overlaps at least one 0.1° dune cell of the dune map (Gunn 2026)
       fieldsFrom: paper
-      sourceHtml: ERA5-Land 1950–2024 hourly 10 m winds (0.1°) and the qsat parameters of Gunn (2026), Supplementary
+      sourceHtml: ERA5-Land 1950–2024 hourly 10 m winds (0.1°; Copernicus Climate Change Service, CC BY 4.0) and the qsat parameters of Gunn (2026), Supplementary
         Data (Zenodo, CC BY 4.0). Drift potentials (DP, RDP, RDD, RDP/DP) and crest fluxes are averages over the hourly
         record.
     credits:
@@ -45,7 +45,8 @@ datasets:
         global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
       fieldsLicence: CC BY 4.0 (Zenodo Supplementary Data)
       windSourceText: 'Wind: ERA5-Land hourly 10 m wind 1950–2024 (Muñoz-Sabater et al. 2021, doi:10.5194/essd-13-4349-2021;
-        data doi:10.24381/cds.e2161bac); statistics from Gunn (2026). Contains modified Copernicus Climate Change Service
+        data doi:10.24381/cds.e2161bac,
+        CC BY 4.0); statistics from Gunn (2026). Contains modified Copernicus Climate Change Service
         information (ERA5-Land, 1950–2024). Neither the European Commission nor ECMWF is responsible for any use that
         may be made of the Copernicus information or data it contains.'
       notice: Contains modified Copernicus Climate Change Service information (ERA5-Land, 1950–2024). Neither the European
@@ -62,6 +63,7 @@ datasets:
         text: Muñoz Sabater, J. (2019). ERA5-Land hourly data from 1950 to present. Copernicus Climate Change Service
           (C3S) Climate Data Store (CDS).
         doi: 10.24381/cds.e2161bac
+        license: CC BY 4.0
       notice: Contains modified Copernicus Climate Change Service information (ERA5-Land, 1950–2024). Neither the European
         Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data it contains.
 defaultDataset: era5-land

@@ -40,7 +40,7 @@ describe("Get the whole grid", () => {
     const t = text(html);
     expect(t).toMatch(/^Get the whole grid The atlas reads public Zarr \(v3\) stores on data\.geomorphlab\.org/);
     expect(t).toContain("threshold friction velocity (ut, 64 values)");
-    expect(t).toContain("Licence of these map fields: Copernicus licence");
+    expect(t).toContain("Licence of these map fields: CC BY 4.0.");
     expect(html).toContain(`href="${DATA_LICENSE_URL}"`);
     expect(html).toContain('data-copy="t-code"');
     expect(html).toContain('<pre class="bulk-code" id="t-code">');

@@ -23,7 +23,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "search", title: "Search",
-    body: "Type a latitude and a longitude in the box at the top of the layer panel, in decimal degrees or in degrees, minutes and seconds, signed or with N, S, E or W (e.g. 4.5, 137.4 or 4°30′N 137°24′E). Latitude comes first unless the letters say otherwise. Longitudes are planetocentric and east-positive (0–360° E); a west longitude is converted. The line under the box shows how the text was read; Enter moves the map there and opens the cell panel when the cell has data.",
+    body: "Type a feature name (e.g. Gale crater or Olympia Undae) or a latitude and a longitude in the box at the top of the layer panel. Names are IAU-approved feature names from the Gazetteer of Planetary Nomenclature, with a few informal aliases (e.g. Bagnold Dunes); the list under the box shows each match with its feature type, the best matches first and, among equally good ones, the features with the largest mapped dune area. Coordinates can be in decimal degrees or in degrees, minutes and seconds, signed or with N, S, E or W (e.g. 4.5, 137.4 or 4°30′N 137°24′E). Latitude comes first unless the letters say otherwise. Longitudes are planetocentric and east-positive (0–360° E); a west longitude is converted. The line under the box shows how the text was read; Enter moves the map there and opens the cell panel when the cell has data.",
   },
   {
     id: "cell", title: "Clicking a cell",
@@ -85,8 +85,8 @@ export const TOUR_STEPS: TourStep[] = [
     body: "Clicking a cell opens the cell panel, shown here for the dune field of Nili Patera (9° N, 67° E): wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own grain-diameter slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The crosshair next to its title centres the map on the cell.",
   },
   {
-    id: "tools", targets: [".atlas-tools .share-btn", ".atlas-tools"], span: [".atlas-tools .share-btn", ".atlas-tools .export-btn"], title: "Share and export",
-    body: "Copy a short link to this view, or export the map as an image with colour bars, scale and data sources. Plots in the cell panel have their own Export menus.",
+    id: "tools", targets: [".atlas-tools .share-btn", ".atlas-tools"], span: [".atlas-tools .share-btn", ".atlas-tools .export-btn", ".atlas-tools .region-btn"], title: "Share and export",
+    body: "Copy a short link to this view, export the map as an image with colour bars, scale and data sources, or download the data of a region you draw on the map. Plots in the cell panel have their own Export menus.",
   },
   {
     id: "planet", targets: [".atlas-tools .planet-btn", ".atlas-tools"], title: "Switch planet",
@@ -103,8 +103,8 @@ export const SHARE_TEXT = { button: "Share / copy link", title: "Share this view
 export const ABOUT_INTRO_HTML = "<p>Click any cell to see its wind rose over the Mars year of the wind dataset, the sand-flux rose at the selected grain diameter, dune-orientation modes and all wind-regime parameters.</p>";
 /** About, Data sources: the items after the wind datasets' (HTML) */
 export const DATA_SOURCES_ITEMS_HTML = `<li><strong>Sand-flux fields</strong>: for every hour, the threshold and the saturated transport rate of Pähtz &amp; Durán (2023) at the selected median grain diameter d (grain density 3000 kg/m³, g = 3.71 m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in Gunn (2026). Fluxes are volumes of packed sand (packing fraction 0.6, pore space included) per metre width per Earth year (365.25 days), in m²/yr, as on Earth.</li>
-  <li><strong>Dune map</strong>: USGS Mars Global Digital Dune Database (MGD3; Hayward et al. 2007, 2010, 2012, 2014) plus the small dune fields of Fenton (2020, Icarus 352, 114018), merged into 3,514 dune-field polygons (Mars 2000 sphere).</li>
+  <li><strong>Dune map</strong>: USGS Mars Global Digital Dune Database (MGD3; Hayward et al. 2007, 2010, 2012, 2014) plus the small dune fields of Fenton (2020, Icarus 352, 114018), merged into 3,514 dune-field polygons (Mars 2000 sphere); MGD3 polygons: public domain (U.S. Geological Survey).</li>
   <li><strong>Saturated flux divergence</strong> ${mathHtml("$\\nabla\\cdot\\vec{q}_s$")}: divergence of the resultant drift potential vector (magnitude RDP, direction RDD) on the Mars sphere (R = 3389.5 km), following Gunn (2026), Methods M6, with central differences on the grid of the wind dataset (${datasetFacts("resolution")}). Negative values (convergence) imply deposition.</li>
-  <li><strong>Elevation and shaded relief</strong>: MGS MOLA – MEX HRSC blended DEM, 200 m, v2 (Fergason, Hare &amp; Laura 2018, USGS Astrogeology); licence: MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO). The atlas's MOLA–HRSC shaded-relief basemap tiles are released under CC BY-SA 3.0 IGO (derived from HRSC, CC BY-SA 3.0 IGO, and MOLA, CC0).</li>`;
+  <li><strong>Elevation and shaded relief</strong>: MGS MOLA – MEX HRSC blended DEM, 200 m, v2 (Fergason, Hare &amp; Laura 2018, USGS Astrogeology); licence: MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO). Derived elevation and relief tiles: CC BY-SA 3.0 IGO.</li>`;
 /** About: the closing note (HTML) */
 export const ABOUT_CREDITS_NOTE_HTML = "<p class=\"help\">Basemap credits are shown in the map attribution.</p>";

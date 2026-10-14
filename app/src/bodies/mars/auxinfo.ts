@@ -4,7 +4,7 @@ import type { CellAux } from "../../core/cell/cellstore";
 import { resolutionText } from "../../core/cell/datasetinfo";
 import type { AuxMeta } from "../../core/cell/auxinfo";
 import { R_MARS } from "./body";
-import { DEM_CITATION, DEM_LICENCE } from "./citation";
+import { DEM_CITATION, DEM_LICENCE, DERIVED_DEM_LICENCE } from "./citation";
 import { fieldsLicence } from "../../core/cell/citation";
 
 export const AUX_META: Record<string, AuxMeta> = {
@@ -54,7 +54,7 @@ export function auxSourceAttrs(aux: CellAux, v: string, deg = 2): Record<string,
   const str = (k: string) => (typeof a[k] === "string" ? (a[k] as string) : undefined);
   if (AUX_META[v]) out.description = auxDescription(v, deg);
   if (v === "qsdiv") { out.source = QSDIV_SOURCE; out.method = QSDIV_METHOD(deg); }
-  else if (v === "elev_mean") { out.source = str("source") ?? "Mars MGS MOLA - MEX HRSC Blended DEM Global 200m v2 (USGS Astrogeology Science Center)"; out.license = DEM_LICENCE; out.references = DEM_CITATION; }
+  else if (v === "elev_mean") { out.source = str("source") ?? "Mars MGS MOLA - MEX HRSC Blended DEM Global 200m v2 (USGS Astrogeology Science Center)"; out.license = `${DEM_LICENCE}. ${DERIVED_DEM_LICENCE}`; out.references = DEM_CITATION; }
   else if (v === "rho_mean") out.source = str("source") ?? "MCMC FV3 Mars GCM beta release 1: lowest-layer p/(R T)";
   else if (str("source")) out.source = str("source")!;
   const cite = [str("citation"), str("doi") ? `data doi:${str("doi")}` : undefined].filter(Boolean).join("; ");

@@ -106,7 +106,7 @@ Switch between the wind datasets; each option names the dataset and its grid. Th
 
 Highlights: `.atlas-tools .share-btn` or `.atlas-tools`
 
-Copy a short link to this view, or export the map as an image with colour bars, scale and data sources. Plots in the cell panel have their own Export menus.
+Copy a short link to this view, export the map as an image with colour bars, scale and data sources, or download the data of a region you draw on the map. Plots in the cell panel have their own Export menus.
 
 ### 10. Switch planet
 

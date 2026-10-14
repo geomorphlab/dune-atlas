@@ -45,14 +45,14 @@ QUANT_M = 1.0                     # vertical quantisation of the terrarium tiles
 WEBP = {"lossless": True, "quality": 75, "method": 4}
 MERC_LAT = 85.0511287798066
 
-DEM_ATTRIBUTION = {   # copied from the USGS product page (fetched 2026-10-13)
+DEM_ATTRIBUTION = {   # copied from the USGS product page (fetched 2026-10-13); licence: plus the derived products'
     "source": ("Mars MGS MOLA – MEX HRSC Blended DEM Global 200m v2 (USGS Astrogeology Science Center; originators "
                "DLR, NASA, Goddard Space Flight Center; publication date 2018-01-31)"),
     "citation": ("Fergason, R. L, Hare, T. M., & Laura, J. (2018). HRSC and MOLA Blended Digital Elevation Model "
                  "at 200m v2. Astrogeology PDS Annex, U.S. Geological Survey. "
                  "https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m"),
     "url": "https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m",
-    "licence": "CC0 (MOLA), CC BY-SA 3.0 IGO (HRSC)",
+    "licence": "CC0 (MOLA), CC BY-SA 3.0 IGO (HRSC). Derived elevation and relief tiles: CC BY-SA 3.0 IGO.",
     "use_constraints": "Please cite authors",
     "changes": ("Processed for the atlas: Web-Mercator Terrarium tiles (bilinear at z8, 2x2 means below, 1 m "
                 "rounding) and a 1/64-degree area-mean grid; Mars 2000 planetocentric lon/lat used as EPSG:4326."),

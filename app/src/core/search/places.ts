@@ -11,23 +11,32 @@ export interface Place {
   line1: string;
   /** name in a non-Latin script, with its language (BCP 47) */
   line2?: { text: string; lang: string };
+  /** feature type, shown with the name in the results (Mars: the IAU descriptor term, e.g. Crater) */
+  type?: string;
   aliases?: string[];
   lat: number;
   lon: number;
   radius_km: number;
+  /** mapped dune area of the place (km²): ranks equally good matches */
+  dune_km2?: number;
   countries?: string[];
   sources: string[];
 }
-export interface PlaceList { enabled: boolean; places: Place[] }
+export interface PlaceList { enabled: boolean; places: Place[]; note?: string }
 
 /** the body's place list (empty and disabled when the file is missing) */
 export function loadPlaces(files: Record<string, string> = placesFiles): PlaceList {
   const text = Object.values(files)[0];
   const p = (text ? yaml.load(text) : null) as Partial<PlaceList> | null;
-  return { enabled: !!p?.enabled, places: Array.isArray(p?.places) ? p!.places : [] };
+  return { enabled: !!p?.enabled, places: Array.isArray(p?.places) ? p!.places : [], ...(p?.note ? { note: p.note } : {}) };
 }
 
-/** The naming note for the dune layer's info, shown only with the named search (draft, under review). */
+/** the naming note of the dune layer's info: shown only with the named search, the list's own note if it has one */
+export function placesNote(list: PlaceList): string {
+  return list.enabled && list.places.length ? list.note ?? PLACES_DISCLAIMER : "";
+}
+
+/** The default naming note for the dune layer's info (Earth; draft, under review). */
 export const PLACES_DISCLAIMER = "Dune-field names in the search are for navigation only. Many dune fields have several names, including Indigenous and local names; the names shown are those we could source, and they imply no position on naming or boundaries.";
 
 /** Search key: lower case, without diacritics, apostrophes and ʿayn / hamza marks; other punctuation
@@ -82,7 +91,8 @@ export function nameScore(q: string, name: string): number {
 
 export interface PlaceHit { place: Place; score: number; matched: string }
 
-/** Places matching `query` (best first, at most `limit`): over line1, line2 and the aliases. */
+/** Places matching `query` (best first, at most `limit`): over line1, line2 and the aliases; equally good
+ *  matches by mapped dune area (largest first), then by name. */
 export function matchPlaces(query: string, places: Place[], limit = 8): PlaceHit[] {
   const q = searchKey(query);
   if (!q) return [];
@@ -96,7 +106,7 @@ export function matchPlaces(query: string, places: Place[], limit = 8): PlaceHit
     }
     if (best > 0) hits.push({ place: p, score: best, matched });
   }
-  return hits.sort((a, b) => b.score - a.score || a.place.line1.localeCompare(b.place.line1)).slice(0, limit);
+  return hits.sort((a, b) => b.score - a.score || (b.place.dune_km2 ?? 0) - (a.place.dune_km2 ?? 0) || a.place.line1.localeCompare(b.place.line1)).slice(0, limit);
 }
 
 /** [west, south, east, north] around a place (its radius on a sphere of radius `radiusKm`), for fitBounds */

@@ -89,7 +89,7 @@ def fields_citation(dataset=None) -> str:
 
 def fields_licence(dataset=None) -> str:
     """Licence row of the atlas-derived fields: ERA5-Land fields = the Zenodo Supplementary Data
-    licence; fields computed from ERA5 = the Copernicus licence."""
+    licence; fields computed from ERA5 = the ERA5 licence (CC BY 4.0)."""
     ds = get_dataset(dataset)
     return "CC BY 4.0 (Zenodo Supplementary Data)" if ds.id == "era5-land" else ds.info["licence"]
 

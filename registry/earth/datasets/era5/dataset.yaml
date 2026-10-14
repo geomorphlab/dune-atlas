@@ -25,10 +25,10 @@
     dunesRule: the cell overlaps at least one 0.1° dune cell of the dune map (Gunn 2026)
     fieldsFrom: atlas
     sourceHtml: ERA5 1950–2024 hourly 10 m winds on the 0.25° grid (Hersbach et al. 2020; Copernicus Climate Change
-      Service, accessed via the NCI Australia replica); the histograms and the 23 sand-flux fields are computed
-      for the atlas with the methods outlined in Gunn (2026). Cells with an ERA5 land–sea mask fraction above 0
-      (any land in the cell) carry wind data; a 0.25° cell counts as a dune cell where it overlaps a mapped 0.1°
-      dune cell.
+      Service, CC BY 4.0, accessed via the NCI Australia replica); the histograms and the 23 sand-flux fields are
+      computed for the atlas with the methods outlined in Gunn (2026). Cells with an ERA5 land–sea mask fraction
+      above 0 (any land in the cell) carry wind data; a 0.25° cell counts as a dune cell where it overlaps a mapped
+      0.1° dune cell.
   credits:
     sources:
     - dune-atlas-era5
@@ -39,11 +39,11 @@
       global reanalysis. Quarterly Journal of the Royal Meteorological Society 146, 1999–2049. doi:10.1002/qj.3803;
       data: Hersbach, H. et al. (2023). ERA5 hourly data on single levels from 1940 to present. Copernicus Climate
       Change Service (C3S) Climate Data Store (CDS). doi:10.24381/cds.adbb2d47)'
-    fieldsLicence: Copernicus licence (Licence to use Copernicus products)
-    windSourceText: 'Wind: ERA5 hourly 10 m wind 1950–2024 (Hersbach et al. 2020, doi:10.1002/qj.3803; data doi:10.24381/cds.adbb2d47);
-      statistics computed for the Dune Atlas with the methods outlined in Gunn (2026). Contains modified Copernicus
-      Climate Change Service information (ERA5, 1950–2024). Neither the European Commission nor ECMWF is responsible
-      for any use that may be made of the Copernicus information or data it contains.'
+    fieldsLicence: CC BY 4.0
+    windSourceText: 'Wind: ERA5 hourly 10 m wind 1950–2024 (Hersbach et al. 2020, doi:10.1002/qj.3803; data doi:10.24381/cds.adbb2d47,
+      CC BY 4.0); statistics computed for the Dune Atlas with the methods outlined in Gunn (2026). Contains modified
+      Copernicus Climate Change Service information (ERA5, 1950–2024). Neither the European Commission nor ECMWF
+      is responsible for any use that may be made of the Copernicus information or data it contains.'
     notice: Contains modified Copernicus Climate Change Service information (ERA5, 1950–2024). Neither the European
       Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data it
       contains.
@@ -73,6 +73,7 @@
       text: Hersbach, H. et al. (2023). ERA5 hourly data on single levels from 1940 to present. Copernicus Climate
         Change Service (C3S) Climate Data Store (CDS); accessed via the NCI Australia replica.
       doi: 10.24381/cds.adbb2d47
+      license: CC BY 4.0
     notice: Contains modified Copernicus Climate Change Service information (ERA5, 1950–2024). Neither the European
       Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data it
       contains.

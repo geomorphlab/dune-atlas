@@ -53,7 +53,7 @@ export function visibleTarget(step: TourStep, doc: Document = document): HTMLEle
 }
 
 /** Rectangle of the highlight: the target's, or (a step with `span`, its first target visible) the box around
- *  every visible element of the span selectors, e.g. the share and camera buttons of step 8. */
+ *  every visible element of the span selectors, e.g. the share, camera and region-download buttons of the Share and export step. */
 export function spanRect(step: TourStep, el: HTMLElement, doc: Document = document): { left: number; top: number; right: number; bottom: number; width: number; height: number } {
   const rects = [el, ...(step.span ?? []).flatMap((s) => [...doc.querySelectorAll(s)] as HTMLElement[])]
     .filter((e) => !e.closest("[hidden]")).map((e) => e.getBoundingClientRect()).filter((r) => r.width > 0 && r.height > 0);

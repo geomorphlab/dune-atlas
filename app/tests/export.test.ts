@@ -250,7 +250,7 @@ describe("cell exports", () => {
     expect(t.indexOf("Dune Atlas / dune map")).toBeLessThan(t.indexOf("ERA5-Land"));
     expect(t).toMatch(/Dune Atlas \/ dune map\n  Paper: .*10\.1038\/s41467-026-75466-y\n  Data \(wind histograms and sand-flux fields\): Gunn, A\. \(2026\)\. The distribution of Earth's wind-blown sand dunes - Supplementary Data\. Zenodo\. https:\/\/doi\.org\/10\.5281\/zenodo\.20046812 \(CC BY 4\.0\)\n  Data \(dune map: dune-mask-rev1\.tif, contained in the Supplementary Code record\): Gunn, A\. \(2026\)\. geomorphlab\/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code \(v1\.0\.0\)\. Zenodo\. https:\/\/doi\.org\/10\.5281\/zenodo\.20054674 \(MIT\)\n/);
     expect(t).not.toMatch(/Dune map and code|Data for '/);
-    expect(t).toMatch(/ERA5-Land\n  Paper: Muñoz-Sabater.*essd-13-4349-2021\n  Data: .*10\.24381\/cds\.e2161bac\n  Contains modified Copernicus/);
+    expect(t).toMatch(/ERA5-Land\n  Paper: Muñoz-Sabater.*essd-13-4349-2021\n  Data: .*10\.24381\/cds\.e2161bac \(CC BY 4\.0\)\n  Contains modified Copernicus/);
     expect(t).not.toContain("figshare");
     expect(citationSources(["aridity"]).map((s) => s.id)).toEqual(["dune-atlas", "era5-land", "aridity"]);
     expect(CITATION_SOURCES.aridity.entries.map((e) => e.doi)).toEqual(["10.1038/s41597-022-01493-1", "10.6084/m9.figshare.7504448.v7"]);

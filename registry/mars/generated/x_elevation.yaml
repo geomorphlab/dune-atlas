@@ -22,7 +22,7 @@ layers:
       NASA, Goddard Space Flight Center; publication date 2018-01-31)
     citation: Fergason, R. L, Hare, T. M., & Laura, J. (2018). HRSC and MOLA Blended Digital Elevation Model at
       200m v2. Astrogeology PDS Annex, U.S. Geological Survey. https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m
-    licence: CC0 (MOLA), CC BY-SA 3.0 IGO (HRSC)
+    licence: 'CC0 (MOLA), CC BY-SA 3.0 IGO (HRSC). Derived elevation and relief tiles: CC BY-SA 3.0 IGO.'
     url: https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m
     changes: Area mean over 1/64° (~0.93 km) pixels of the 200 m DEM, rounded to 1 m; zoomed-out map views show
       means (≤ 0.5 m rounding).

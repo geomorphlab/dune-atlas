@@ -18,19 +18,20 @@ describe("dataset-selector text (§4 item 1)", () => {
 });
 
 describe("map attribution follows the dataset (§4 item 4)", () => {
-  it("ERA5-Land: data from Gunn (2026)", () => {
+  it("ERA5-Land: dune map MIT (its source record), wind-regime data from Gunn (2026), CC BY 4.0", () => {
     const a = mapAttributionHtml("era5-land");
-    expect(a).toMatch(/^Dune and wind-regime data: <a [^>]*>Gunn \(2026\)<\/a>, CC BY 4\.0$/);
+    expect(a).toMatch(/^Dune map: <a [^>]*>Gunn \(2026\)<\/a>, MIT; wind-regime data: <a [^>]*>Gunn \(2026\)<\/a>, CC BY 4\.0$/);
   });
-  it("ERA5: fields computed for the atlas, Copernicus licence", () => {
+  it("ERA5: fields computed for the atlas, CC BY 4.0 (the ERA5 licence since 2 July 2025)", () => {
     const a = mapAttributionHtml("era5");
+    expect(a).toMatch(/^Dune map: <a [^>]*>Gunn \(2026\)<\/a>, MIT; /);
     expect(a).toMatch(/computed for the atlas from ERA5 /);
-    expect(a).toMatch(/Copernicus licence/);
+    expect(a).toMatch(/, CC BY 4\.0$/);
     expect(a).not.toMatch(/wind-regime data: /);
   });
   it("driven by the dataset metadata", () => {
     for (const [id, d] of Object.entries(DATASET_INFO))
-      expect(mapAttributionHtml(id).startsWith("Dune and wind-regime data")).toBe(d.fieldsFrom === "paper");
+      expect(mapAttributionHtml(id).includes("; wind-regime data: ")).toBe(d.fieldsFrom === "paper");
   });
 });
 

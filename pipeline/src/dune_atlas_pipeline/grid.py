@@ -141,7 +141,7 @@ ERA5_INFO = {
     "data_citation": "Hersbach, H. et al. (2023). ERA5 hourly data on single levels from 1940 to present. Copernicus "
                      "Climate Change Service (C3S) Climate Data Store (CDS). doi:10.24381/cds.adbb2d47",
     "doi": "10.24381/cds.adbb2d47",
-    "licence": "Copernicus licence (Licence to use Copernicus products)",
+    "licence": "CC BY 4.0",   # CDS licence of ERA5 since 2 July 2025 (the stores built before carry the earlier text)
     "copernicus_notice": COPERNICUS_NOTICE.format(name="ERA5", period="1950–2024"),
     "land_cells": "ERA5 land–sea mask fraction > 0 (invariant field lsm, given per cell in cells-aux.zarr)",
     "fields_method": "23 sand-flux fields at 64 threshold friction velocities from the per-cell wind histograms, "

@@ -86,8 +86,8 @@ export const TOUR_STEPS: TourStep[] = [
     body: "Switch between the wind datasets; each option names the dataset and its grid. The map layers and the cell panel follow the selection.",
   },
   {
-    id: "tools", targets: [".atlas-tools .share-btn", ".atlas-tools"], span: [".atlas-tools .share-btn", ".atlas-tools .export-btn"], title: "Share and export",
-    body: "Copy a short link to this view, or export the map as an image with colour bars, scale and data sources. Plots in the cell panel have their own Export menus.",
+    id: "tools", targets: [".atlas-tools .share-btn", ".atlas-tools"], span: [".atlas-tools .share-btn", ".atlas-tools .export-btn", ".atlas-tools .region-btn"], title: "Share and export",
+    body: "Copy a short link to this view, export the map as an image with colour bars, scale and data sources, or download the data of a region you draw on the map. Plots in the cell panel have their own Export menus.",
   },
   {
     id: "planet", targets: [".atlas-tools .planet-btn", ".atlas-tools"], title: "Switch planet",

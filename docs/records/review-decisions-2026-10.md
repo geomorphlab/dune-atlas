@@ -126,3 +126,15 @@ Not checked in a browser (none runs in the development sandbox): the search box,
 Start tour bubble, the step highlight, the region popover and box drawing on the globe and the flat map, and
 the other-dataset line. They are covered by DOM tests (happy-dom), geometry tests and, for the region
 NetCDF, an xarray read-back of fixture exports (`npm run check-region`).
+
+## Decisions after the browser check (PR #6)
+
+| decision | done |
+|---|---|
+| Mars named search enabled (Earth stays disabled) | `registry/mars/places.yaml`: IAU Gazetteer features whose official-diameter circle contains ≥ 10 km² of mapped dunes (from `mars-dune-features-draft.csv`), line1 = the label (craters "<name> crater"), feature type, aliases (Bagnold Dunes, north polar erg, Nili Patera dune field), lon east-positive 0–360°, radius = diameter/2 limited to 25–600 km, sources = the Gazetteer and the feature page. Every centre, diameter and approval status checked against the Gazetteer's `MARS_nomenclature_center_pts` (all within 0.005°, all "Adopted by IAU"); every feature has a dune cell of the atlas within its radius (or 90 km). Results show name and feature type, ranked by match, then mapped dune area. Mars naming note in the dune layer's ⓘ; Earth's stays hidden |
+| Share and export tour step | highlights the share, camera and region-download buttons; the text names the region download (both atlases) |
+| DATA_LICENSE note 1: ERA5 and ERA5-Land CC BY 4.0 | registry credits, layer licences, citation Data entries (with DOIs), About source lines, image-export wind lines, downloads (field licence, references; region NetCDF also carries the Copernicus notice); pipeline constants for future builds. Store attributes already on the data server unchanged (write-once) |
+| note 2: dune map MIT | map attribution "Dune map: Gunn (2026), MIT" (both datasets) and the map-export credit line |
+| note 3: aridity | no change |
+| note 4: derived Mars elevation | "Derived elevation and relief tiles: CC BY-SA 3.0 IGO." in the elevation and relief-basemap ⓘ, About and per-cell downloads |
+| note 5: Mars dune polygons | "MGD3 polygons: public domain (U.S. Geological Survey)"; Fenton (2020) listed as a source without a licence statement (pending the author's confirmation) |

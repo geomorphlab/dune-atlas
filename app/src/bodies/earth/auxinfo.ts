@@ -80,6 +80,13 @@ export const VEGETATION_LICENCE = "CC BY 4.0, © 2008–2019 CSIRO";
 export const VEGETATION_URL = "https://map.geo-rapp.org/";
 export const VEGETATION_CHANGES = "Processed for the atlas: monthly 500 m values averaged to the 0.1° cell and over the months 2001–2025 with a valid value (≤ 103 %).";
 
+/** Licence of a store attribute as stated today: stores built before 2 July 2025's change of the Climate Data
+ *  Store licence carry "Licence to use Copernicus products" (ERA5 `lsm`, which downloads do not include); ERA5 is
+ *  now distributed under CC BY 4.0, and any such attribute is restated. The stores themselves are not rewritten (DATA_LICENSE.md, note 1). */
+export function restateLicence(licence: string): string {
+  return /Licence to use Copernicus products/i.test(licence) ? "CC BY 4.0" : licence;
+}
+
 /** Attributes of an aux variable for the NetCDF / metadata.json: description, source and processing
  *  defined here; citation, DOI, licence and link from the store attrs. */
 export function auxSourceAttrs(aux: CellAux, v: string, deg = 0.1): Record<string, string> {
@@ -93,7 +100,7 @@ export function auxSourceAttrs(aux: CellAux, v: string, deg = 0.1): Record<strin
   } else if (str("source")) out.source = str("source")!;
   const cite = [str("citation"), str("doi") ? `data doi:${str("doi")}` : undefined].filter(Boolean).join("; ");
   if (cite) out.references = cite;
-  if (str("licence")) out.license = str("licence")!;
+  if (str("licence")) out.license = restateLicence(str("licence")!);
   if (str("url")) out.url = str("url")!;
   if (v.startsWith("ai_") && str("changes")) out.comment = ARIDITY_CHANGES;
   if (v.startsWith("tot_cov_")) {

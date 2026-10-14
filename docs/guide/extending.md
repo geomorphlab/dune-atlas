@@ -88,21 +88,28 @@ Earth longitudes -180..180, Mars planetocentric 0..360° east, set by `PROFILE.s
 
 ```yaml
 enabled: false        # the named search, and the naming note in the dune layer's ⓘ, are shown only when true
+note: "<naming note>" # optional: the note in the dune layer's ⓘ (default: the app's PLACES_DISCLAIMER)
 places:
   - id: rub-al-khali
     line1: Rubʿ al Khali                     # Latin-script name
     line2: { text: الربع الخالي, lang: ar }   # optional: non-Latin name and its language (BCP 47)
+    type: Erg                                # optional: feature type, shown with the name in the results
     aliases: [Empty Quarter]
     lat: 20.0
     lon: 50.0                                # Mars: planetocentric, east-positive 0..360
     radius_km: 500                           # sets the zoom
+    dune_km2: 250000                         # optional: mapped dune area; ranks equally good matches
     countries: [Saudi Arabia, Oman, United Arab Emirates, Yemen]
     sources: ["<where the name and the location come from>"]
 ```
 
 Matching (`core/search/places.ts`) ignores case, diacritics and apostrophe-like marks, covers both lines and
-the aliases and tolerates small typing errors. Both lists ship empty and disabled until the names are
-approved.
+the aliases and tolerates small typing errors; equally good matches are ordered by `dune_km2` (largest
+first), then by name. The Mars list is enabled: IAU-approved feature names of the Gazetteer of Planetary
+Nomenclature whose official-diameter circle contains mapped dunes, each with its feature type, the
+Gazetteer feature page as a source and a few informal names as aliases (e.g. Bagnold Dunes for Gale
+crater); its header says how it was made and checked. The Earth list stays empty and disabled until the
+names are approved.
 
 ## Concepts panel
 
