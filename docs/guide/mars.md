@@ -53,40 +53,28 @@ and per-body storage keys are shared Earth code, so the Earth build is no longer
   `cell/marsphysics.ts`, `generated/constants-mars.json`, package scripts, `vite.config.ts`, `.gitignore`):
   `app/src/body.ts` (new), `app/src/ui/layerPanel.ts` (header label, subtitle, selector with one dataset, info structure), `app/src/style.css` (body-name rule, overflow-wrap rules), `app/src/ui/tools.ts` (planet toggle), `app/src/ui/helpText.ts` (tour step `planet`), `docs/reference/help-text.md` (regenerated), `app/src/ui/tour.ts`, `app/src/ui/cellPanel.ts`, `app/src/main.ts` (storage keys via `storageKey`, Earth key strings unchanged), `registry/earth/layers.yaml`, `registry/earth/generated/x_extra_fields.yaml`, `registry/earth/datasets/era5/x_extra_fields.yaml`, `pipeline/src/dune_atlas_pipeline/extra_layers.py` (generator) and `vegetation.py` (comment) (group title "Related data"), `docs/guide/architecture.md`, `docs/records/validation-veg.md`, `app/tests/help.test.ts`, `app/tests/ui.test.ts`, `app/tests/vegetation.test.ts`, `app/tests/body.test.ts` (new), `.github/workflows/deploy.yml`, `app/scripts/test-ci.sh`.
 
-For Mars the plugin applies `app/src/mars/build.ts` in three ways.
+Per-body code lives in `app/src/bodies/<body>/`; shared modules import it through the `@body/` alias
+(`vite.config.ts` resolves `@body/<module>` to `src/bodies/earth/` or `src/bodies/mars/` by `VITE_BODY`;
+`tsconfig.json` and `tsconfig.mars.json` type-check the two bodies). Each body provides:
 
-**Module substitution** (`MARS_SUBSTITUTES`, 8 modules): an import that resolves to one of these Earth
-modules resolves to the Mars module instead (except inside the Mars module itself, which may import the
-Earth original). A replacement exports every name of the Earth module (`tests/mars/registry.test.ts`
-checks the export sets). Earth fixes to a substituted module do **not** reach Mars unless the Mars module
-is a thin wrapper; the drift guard (§6) flags every Earth change.
+| module | content |
+|---|---|
+| `profile.ts` | `PROFILE` (`BodyProfile`, `src/profile.ts`): radius and Web Mercator circumference, export names and strip texts, invert wording, the slider quantity (Earth u\*,th, Mars d: readout, TeX, ⓘ, plot axes; Mars plots use log10 d), coordinates tooltip, opening view |
+| `citation.ts` | cited sources per dataset / cell download / About, field citation and licence, map attribution, image-export credit lines (formatting: `src/cell/citation.ts`) |
+| `datasetinfo.ts` | the wind dataset table (functions: `src/cell/datasetinfo.ts`) |
+| `auxinfo.ts` | the per-cell sidecar variables (Earth: qsdiv, aridity, vegetation; Mars: qsdiv on R_MARS, rho_mean, elev_mean) |
+| `fieldinfo.ts` | source attributes of the qsat fields (`registry/<body>/qsat_field_metadata.json`) |
+| `helpText.ts` | help sections, tour steps, dataset ⓘ, share text and the About texts (shared labels: `src/ui/helpText.ts`) |
+| `config.ts` | build defaults (sidecar paths, site URL) |
+| `registry.ts` | the registry files `registry/<body>/{layers.yaml, generated/*.yaml, datasets/*/*.yaml}` |
 
-| Earth module | Mars module | form | what differs and why |
-|---|---|---|---|
-| `src/config.ts` | `src/mars/config.ts` | thin wrapper (`...EARTH`) | Mars defaults: one sidecar (`cells-aux.zarr`), site URL `VITE_SITE_URL` (deployment URL open). New Earth keys reach Mars automatically. |
-| `src/cell/fieldinfo.ts` | `src/mars/cell/fieldinfo.ts` | thin wrapper (`earthFieldInfo`) | long names, descriptions and source units from `registry/mars/qsat_field_metadata.json` (texts of the per-hour Mars threshold); kinds, units, transforms are Earth's (same S2Y). |
-| `src/cell/datasetinfo.ts` | `src/mars/cell/datasetinfo.ts` | partial wrapper (re-exports the Earth helpers and type) | one dataset (FV3 beta 1: 2°, 16,032 hours, one Mars year); no land mask (every cell valid); Mars dune rule (MGD3). |
-| `src/cell/auxinfo.ts` | `src/mars/cell/auxinfo.ts` | copy (74 lines) | the Mars sidecar variables qsdiv (divergence on R_MARS), rho_mean, elev_mean with the DEM citation and licence; Earth's aridity / vegetation variables do not exist. |
-| `src/cell/citation.ts` | `src/mars/cell/citation.ts` | copy (104 lines) | different sources: FV3, Pähtz & Durán (2023), MGD3 dunes, the MOLA–HRSC DEM (`DEM_CITATION`, `DEM_LICENCE`), Gunn (2026); no Copernicus notice (constants kept, empty). |
-| `src/ui/helpText.ts` | `src/mars/ui/helpText.ts` | copy (text only; types re-exported) | every help and tour text: grain diameter instead of u*,th, the FV3 dataset, Mars basemaps, Nili Patera tour cell, the planet step ("Switch to Earth"). Same exports and step ids, so `ui/tour.ts`/`tourHooks.ts` work unchanged. |
-| `src/ui/cellPanel.ts` | `src/mars/ui/cellPanel.ts` | adapted copy (~600 lines) | the panel's data path differs throughout: hourly series (u, v, T, rho, z) and the per-hour threshold instead of the wind histogram and one u*,th; d instead of u*,th in every label and file name; the series downloads; the height z. Same sections, controls, exports and CSS classes. A wrapper would need hooks in the Earth panel (refactor not done, by decision). |
-| `src/main.ts` | `src/mars/main.ts` | adapted copy (~270 lines) | the Earth shell line by line, with the Mars cell store, body-aware scale bar (R_MARS), Mars basemaps (pmtiles hillshade + archive-depth clamp, esri-mars:// protocol), its storage keys through `storageKey` (`duneAtlasMars.*`) and the Mars tour cell. |
+The Mars build additionally substitutes two Earth modules with Mars modules (`app/scripts/body-plugin.ts`,
+`MARS_SUBSTITUTES` in `src/bodies/mars/build.ts`): `src/main.ts` → `src/bodies/mars/main.ts` and
+`src/ui/cellPanel.ts` → `src/bodies/mars/ui/cellPanel.ts` (the hourly-series data path of the Mars cell
+panel), and sets the `index.html` title, description and noscript text. There are no source patches.
 
-**Source patches** (`src/mars/patches.json`, 51 exact find/replace edits in 13 Earth modules): the planet
-radius (`map/adapters.ts` viewMetersPerPixel, `layerconfig.ts` metersPerPixel, `export/mapExport.ts` scale
-bar: R = 3,389,500 m), the d axis of the modes and divergence plots (`cell/modesplot.ts`, `cell/lineplot.ts`:
-x = log10 d with 50–1000 µm ticks), `export/labels.ts` (`$d$ = 200 µm`), texts of `ui/layerPanel.ts`
-(data sources incl. the eq. 2.2 u* and the DEM licence), `ui/legend.ts`, `export/mapExport.ts`,
-`export/plotExport.ts`, the Mars `DEFAULT_VIEW` (`defaultview.ts`), the coordinate tooltip (`ui/coords.ts`), the Mars
-registry paths (`registry/load.ts`, 4 edits; was a substitute) and the grain-size control (`ui/threshold.ts`,
-4 edits: µm values, label from the registry, help text; was a substitute). Earth fixes to patched modules
-reach Mars automatically. Each `find` must match exactly once (or `count`) or the Mars build fails;
-`tests/mars/registry.test.ts` applies all patches to the current Earth sources.
-
-**`index.html`**: title, description and noscript text.
-
-New Mars-only code lives under `app/src/mars/` (cell store, per-hour rose computation, exports, scale bar,
-basemaps, Esri protocol). The physics is only `src/cell/marsphysics.ts` (port of
+New Mars-only code lives under `app/src/bodies/mars/` (cell store, per-hour rose computation, exports,
+scale bar, basemaps, Esri protocol). The physics is only `src/cell/marsphysics.ts` (port of
 `pipeline/.../mars/physics.py`); nothing in the app re-implements it.
 
 ### Commands (in `app/`)
@@ -111,7 +99,7 @@ Same panels and controls as Earth. The global control is the median grain diamet
 selects the `d` index of its `(d, y, x)` pyramid. Layers: dunes (vector), the 23 fields + qsdiv (d-aware),
 near-surface air density `rho_mean` and elevation (2-D, group "Related data" (id `environment`), the counterpart of Earth's "Related data" group (id `climate`)). No aridity, vegetation, land mask or ERA5 datasets.
 
-Cell panel (`src/mars/cell/analysis.ts`, `marsflux.ts`): reads `cells.zarr/series` (u, v, T, rho, z per
+Cell panel (`src/bodies/mars/cell/analysis.ts`, `marsflux.ts`): reads `cells.zarr/series` (u, v, T, rho, z per
 hour; z = the hour's lowest-level height, ≈ 1.6–3 m) and computes, at the selected d, everything the Earth
 panel computes from the histogram: per hour u* from |U| at height z through the smooth-wall mixing-length
 profile of Pähtz & Durán (2023) eq. 2.2 under constant stress (`frictionVelocity(u, v, z, ν)`, ν = μ(T)/ρ;
@@ -124,22 +112,21 @@ height z, % of hours above threshold and the fraction of hours outside the valid
 (Ga√s ≤ 81). Wind rose: lowest-level wind (z ≈ 2 m), classes 0–2.5–5–7.5–10–15 and > 15 m/s. One slider
 step costs ~10 ms on a full year (16,032 hours) in node.
 
-Downloads (`src/mars/cell/export.ts`): NetCDF with dims hour (16,032), d (64), ua_bin (128); variables u,
+Downloads (`src/bodies/mars/cell/export.ts`): NetCDF with dims hour (16,032), d (64), ua_bin (128); variables u,
 v, T, rho, **z (m)**, sol, ls, the 23 fields vs d, qsdiv vs d, rho_mean, elev_mean, dune_present,
 dune_fraction and flux_rose(rose_mode, d, ua_bin); CSV bundle wind_series.csv (`hour,sol,ls,u,v,T,rho,z`),
 fields_by_grain_size.csv, flux_rose.csv, metadata.json (constants incl. `mixing_length_damping` = 7, no
 z/z₀; the eq. 2.2 convention), README.txt.
 
-Distances: scale bar control `src/mars/map/scale.ts` (haversine on R_MARS, MapLibre rounding and element;
-Earth keeps the stock `ScaleControl`); arrow/streamline spacing and the export scale bar via the radius
-patches. Coordinates: planetocentric °N and °E, −180…180 (as Earth). Default view: globe over the north
+Distances: scale bar control `src/bodies/mars/map/scale.ts` (haversine on R_MARS, MapLibre rounding and element;
+Earth keeps the stock `ScaleControl`); arrow/streamline spacing and the export scale bar via the body
+profile radius. Coordinates: planetocentric °N and °E, −180…180 (as Earth). Default view: globe over the north
 polar erg (62° N, 160° E, zoom 2.2), RDD streamlines over the dunes over DP, d = 200 µm, MOLA–HRSC shaded
 relief. Tour example cell: Nili Patera (9° N, 67° E → cell (40, 123)). Dune layer: as Earth, a display option
 "invert (areas without dunes)" draws the complement from `invertSource: dune-atlas/mars/v1/dunes/invert-r2.pmtiles`,
 `invertSourceLayer: invert` (registry/mars/layers.yaml; generated separately; key and source-layer are
-the App default until Terrain reports them). Terrain's fragment replaces the dunes placeholder, so
-`src/mars/registry/invert.ts` (applied by the `registry/load.ts` patch) keeps the base layer's invert fields
-when the fragment has none. The Mars "Dark background" basemap is removed; old links with
+the App default until Terrain reports them). Terrain's fragment replaces the dunes placeholder and carries
+the same invert fields. The Mars "Dark background" basemap is removed; old links with
 `basemap=dark` open on the default basemap.
 
 ## 3. Basemaps: sources and licences
@@ -164,7 +151,7 @@ Esri). The terms and the beta status of the services apply to all four providers
 attribution is the data credit followed by "Esri" linked to the item page; the map attribution control
 shows it, and map PNG exports print it (tags stripped) in the source line.
 
-The basemap help section (`src/mars/ui/helpText.ts`, id `basemaps`) describes the choices, HiRISE's partial
+The basemap help section (`src/bodies/mars/ui/helpText.ts`, id `basemaps`) describes the choices, HiRISE's partial
 coverage and the background where a service has no data. The About text keeps "Basemap credits are shown
 in the map attribution".
 
@@ -210,8 +197,8 @@ cell-store checks on the real store. Screenshots without servers: `scripts/mars/
 
 | file | checks |
 |---|---|
-| `registry.test.ts` | merged Mars registry validates; threshold block = spec §5; layers/groups/basemaps; patches apply to the Earth sources; R_MARS in patches; substitutes export the Earth names |
-| `upstream.test.ts` | drift guard (§6): every substituted/patched Earth module is recorded; none changed since reconciled |
+| `registry.test.ts` | merged Mars registry validates; threshold block = spec §5; layers/groups/basemaps; R_MARS in the body profile; no Earth radius literal in shared modules; substitutes export the Earth names |
+| `upstream.test.ts` | drift guard (§6): every substituted Earth module is recorded; none changed since reconciled |
 | `rose-parity.test.ts` | per-bin flux roses and excess-shear classes (flat + crest, d = 50/200/1000 µm, eq. 2.2 u* at the hour's z) vs the Python reference (pipeline `mars/physics.py`) to 1e-12; threshold statistics; Ga√s validity |
 | `geometry.test.ts` | snap on the Mars grid; metersPerPixel and export scale bar on R_MARS; scale-bar control; Esri tile plan; pmtiles archive-depth clamp |
 | `esri.test.ts` | Esri basemaps in the registry and their attributions; graceful failure of `esri-mars://` (failing fetch, HTTP 500/400, JSON body, changed tiling, unknown service, cancellation); HiRISE empty quadtree; the registered protocol with a failing global fetch |
@@ -233,7 +220,7 @@ cell-store checks on the real store. Screenshots without servers: `scripts/mars/
 
 Esri's OnMars MapServers (`https://astro.arcgis.com/arcgis/rest/services/OnMars/<service>/MapServer`) are
 tiled in geographic Mars 2000 coordinates (wkid 104971, origin (−180, 90), 512 px, level-0 0.3515625°/px =
-2 × 1 tiles), not Web Mercator. `src/mars/map/esri.ts` registers `esri-mars://<service>/{z}/{x}/{y}`: for a
+2 × 1 tiles), not Web Mercator. `src/bodies/mars/map/esri.ts` registers `esri-mars://<service>/{z}/{x}/{y}`: for a
 Mercator tile it takes Esri level z − 1 (same longitude resolution and column boundaries) plus
 round(log₂(1/cos φ)) levels at high latitude (capped by the service depth), fetches the covering tiles (LRU
 cache shared between tiles; a cancelled tile aborts the source requests nobody else waits for), and draws
@@ -293,7 +280,7 @@ HiRISE's polar observations exist (e.g. the north polar erg), but the Esri mosai
 (probably because polar HiRISE products are distributed in polar stereographic projection). Whether to say
 so in the HiRISE attribution / info text is not decided (left unchanged).
 
-### 5b. Polar caps on the globe (`src/mars/map/polarcap.ts`)
+### 5b. Polar caps on the globe (`src/bodies/mars/map/polarcap.ts`)
 
 All basemaps and vector tiles end at the Web-Mercator limit 85.0511°. MapLibre 5.24's globe stretches the top
 tile row of raster/hillshade sources to the pole (`create_tile_mesh` `extendToNorthPole`; `raster.vertex` /
@@ -314,8 +301,8 @@ transition):
   85.0511° from `dune-atlas/mars/v1/dunes/polar-caps.json`, with the fill layer's colour, opacity and
   visibility mirrored on every style change.
 
-Hook: `src/mars/main.ts` calls `globePolarCaps(map, marsPolarCapOptions(dataBase,
-reg.basemaps, reg.layers))` (`src/mars/map/globecaps.ts`) right after the map is created, and `polarCaps.sync()`
+Hook: `src/bodies/mars/main.ts` calls `globePolarCaps(map, marsPolarCapOptions(dataBase,
+reg.basemaps, reg.layers))` (`src/bodies/mars/map/globecaps.ts`) right after the map is created, and `polarCaps.sync()`
 after every `setProjection`. It installs the caps below while the map is in globe projection and removes them
 in Mercator (no custom layers in the flat map or its PNG export); the fill specs are derived from the dunes
 layer (`ov-dunes-fill` / `ov-dunes-invert`, `polar-caps.json` beside `dunes-r2.pmtiles`; the invert view uses
@@ -337,25 +324,23 @@ installPolarCaps(map, {
 
 ## 6. Keeping Mars in sync with Earth
 
-Earth changes reach Mars in three ways: shared modules (most of `app/src/`) are used as they are; patched
-modules (§1) get the Earth change plus the Mars patches; substituted modules and the Mars counterparts of
-Earth modules (`src/mars/cell/export.ts` of `cell/export.ts`, `analysis.ts` of `cell/analysis.ts`,
+Earth changes reach Mars in two ways: shared modules (most of `app/src/`, with the per-body parts in
+`@body` modules, §1) are used as they are; the two substituted modules and the Mars counterparts of
+Earth modules (`src/bodies/mars/cell/export.ts` of `cell/export.ts`, `analysis.ts` of `cell/analysis.ts`,
 `marsflux.ts` of `cell/flux.ts`, `cellstore.ts` of `cell/cellstore.ts`) need porting by hand.
 
-**Drift guard.** `app/src/mars/upstream.json` records, for each of the 25 Earth modules that are
-substituted (8), patched (13) or derived (4), the git blob id of the Earth source last reconciled.
+**Drift guard.** `app/src/bodies/mars/upstream.json` records, for each of the 6 Earth modules that are
+substituted (2) or derived (4), the git blob id of the Earth source last reconciled.
 `tests/mars/upstream.test.ts` (part of `npm run test:mars`) hashes the current file (`git hash-object`),
 fails naming every module whose source changed, and prints the diff from the recorded blob (or the file's
-recent history when that blob is not in the clone). It also fails if a substituted or patched module is not
-recorded. `scripts/mars/app/reconcile.mjs` maintains the record:
+recent history when that blob is not in the clone). It also fails if a substituted module is not recorded. `scripts/mars/app/reconcile.mjs` maintains the record:
 
 ```
 node scripts/mars/app/reconcile.mjs --check [--rev <rev>]          # what changed (at the working tree or at <rev>)
 node scripts/mars/app/reconcile.mjs --record src/ui/cellPanel.ts ... # after porting: re-record (app-relative paths)
-node scripts/mars/app/reconcile.mjs --sync                         # add/drop entries after changing MARS_SUBSTITUTES / patches.json
+node scripts/mars/app/reconcile.mjs --sync                         # add/drop entries after changing MARS_SUBSTITUTES
 ```
 
 After an Earth change to a flagged module: port what applies to Mars (substituted copy: apply the change
-unless it is Earth-only; patched module: adjust the `find` text and decide whether new Earth wording needs a
-Mars replacement; derived module: port fixes to the Mars counterpart), re-record the module, then run
+unless it is Earth-only; derived module: port fixes to the Mars counterpart), re-record the module, then run
 `npm run test:all`, both builds and both registry validations.
