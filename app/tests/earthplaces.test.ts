@@ -31,7 +31,7 @@ describe("Earth place list", () => {
     const text = fs.readFileSync(FILE, "utf8");
     for (const col of ["confidence", "sensitivity", "pi_decision", "pi_note", "scores_source", "label_priority", "local_recognition", "aeolian_recognition", "single_dune", "verified", "reference_notes", "change_from_draft", "line2_reason"])
       expect(text, col).not.toContain(col);
-    expect(text).not.toMatch(/PI library/);
+    expect(text).not.toMatch(/scanned paper in/);   // an internal holding note of one reference
     for (const p of P) {
       expect(p.sources.length, p.id).toBeGreaterThan(0);
       expect(p.countries?.length, p.id).toBeGreaterThan(0);
