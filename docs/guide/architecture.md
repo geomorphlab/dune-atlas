@@ -9,6 +9,11 @@ pyramids and the click panel range-reads one cell from `cells.zarr`, both on R2
 
 ### Module map
 
+Shared modules are in `app/src/core/` (paths below), the per-planet modules in `app/src/bodies/<body>/`,
+imported by shared code as `@body/<module>` and selected by `VITE_BODY` at build time; the entry
+`app/src/main.ts` serves both atlases. The per-body modules and how to add a dataset or a planet:
+[extending.md](extending.md).
+
 | module | role |
 |---|---|
 | `src/main.ts` | bootstrap: merged registry → initial state (registry defaults + URL) → map, controls, panels; wires store changes to map/panels/URL |
@@ -18,7 +23,7 @@ pyramids and the click panel range-reads one cell from `cells.zarr`, both on R2
 | `src/core/config.ts` | build-time config from `VITE_*` env (data base, cell store path, suffix ranges) |
 | `src/core/registry/types.ts` | TS mirror of `registry/layers.schema.json` |
 | `src/core/registry/merge.ts` | merge `layers.yaml` + `generated/*.yaml` fragments; `resolveSource()` |
-| `src/core/registry/load.ts` | `import.meta.glob(..., {query: "?raw", eager: true})` inlines the YAML at build time |
+| `src/core/registry/load.ts` | merges the body's registry files, inlined at build time by `import.meta.glob(..., {query: "?raw", eager: true})` in `@body/registry` |
 | `src/core/registry/validate.ts` | ajv (2020-12) schema + semantic checks incl. rejecting `WITHHELD_VARS` (CI and tests only; not bundled) |
 | `src/core/map/basemaps.ts` | registry basemap → full MapLibre style on a dark background; `transformStyle` adds projection + dark `sky` (space/horizon/fog) so nothing light shows around the globe |
 | `src/core/map/adapters.ts` | **one adapter per layer `type`** (`zarr-field`, `pmtiles-vector`, `pmtiles-raster`, `cog`, `geojson-points`); handles accept config changes in place (`applyConfig`) or ask to be re-created |
@@ -27,7 +32,7 @@ pyramids and the click panel range-reads one cell from `cells.zarr`, both on R2
 | `src/core/map/overlays.ts` | lazily adds/removes overlays, keeps registry order below basemap labels, re-attaches after a basemap swap, fans out the threshold |
 | `src/core/ui/layerPanel.ts`, `legend.ts`, `threshold.ts` | registry-generated panel: dataset selector (> 1 dataset), pinned u\*,th control, 'Active layers' list (drawing order: drag / move buttons, opacity slider per row, × to hide), groups, toggles, display options (colormap chooser, reverse, clim + reset, log, render mode, line colour, spacing (Finer … Coarser); fill colour + invert for vectors), legends, info popovers, basemap radio, globe toggle, About & citation |
 | `src/core/util/math.ts` | KaTeX rendering of `$…$` segments (titles, units, descriptions, table symbols) with a plain fallback (`tex.ts`) |
-| `src/core/ui/cellPanel.ts` | click-to-cell side panel / bottom sheet (resizable, width/height in localStorage, figures re-render to fit): compact synced u\*,th control, wind + flux roses (flux mode flat/elongation/transverse, petals stacked by excess shear, sector sliders, %/m²/yr axis), polar modes plot, flux divergence vs threshold (cells-aux), Symbol/Quantity/Value table, downloads; every section (wind rose, flux rose, modes, qsdiv, cell summary, download & cite) is a `<details class="section">` whose `<summary>` holds the section `<h3>`, open by default, state in localStorage `duneAtlas.cellPanel.<key>Open` (`PANEL_SECTIONS`) |
+| `src/core/ui/cellPanel.ts` | the body's cell panel (`@body/cellPanel`: `src/bodies/earth/cellPanel.ts`, `src/bodies/mars/cellPanel.ts`; shared helpers `ui/panelcommon.ts`). Earth: click-to-cell side panel / bottom sheet (resizable, width/height in localStorage, figures re-render to fit): compact synced u\*,th control, wind + flux roses (flux mode flat/elongation/transverse, petals stacked by excess shear, sector sliders, %/m²/yr axis), polar modes plot, flux divergence vs threshold (cells-aux), Symbol/Quantity/Value table, downloads; every section (wind rose, flux rose, modes, qsdiv, cell summary, download & cite) is a `<details class="section">` whose `<summary>` holds the section `<h3>`, open by default, state in localStorage `duneAtlas.cellPanel.<key>Open` (`PANEL_SECTIONS`) |
 | `src/core/cell/snap.ts` | lon/lat → nearest cell of the store's grid (root attrs `grid`; antimeridian wrap, polar clamp, any spacing / lon0) |
 | `src/core/cell/cellstore.ts` | zarrita reader for `cells.zarr` (`hist`, `fields`, `dunes`) + caching store (shard indexes, metadata) |
 | `src/core/cell/flux.ts` | line-for-line port of `pipeline/.../flux.py` (bins from the store attrs): `fluxRose`, `dpRdpRdd` (time-averaged flat-bed flux), `crestFluxRose` (crest flux with speed-up), `fluxRoseByExcessShear` |

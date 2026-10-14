@@ -104,7 +104,7 @@ def test_registry_fragment_validates_and_is_2d():
     assert lay["group"] == "climate" and lay["thresholdAware"] is False and lay["display"]["log"] is False
     assert set(lay["attribution"]) == {"source", "citation", "doi", "licence", "url", "changes"}
     assert lay["attribution"]["url"] == "https://map.geo-rapp.org/"
-    cmaps = json.loads((REPO / "app" / "src" / "generated" / "colormaps.json").read_text())
+    cmaps = json.loads((REPO / "app" / "src" / "core" / "generated" / "colormaps.json").read_text())
     assert lay["display"]["colormap"] in cmaps
     import yaml
     frag = yaml.safe_load(VG.FRAGMENT.read_text())
