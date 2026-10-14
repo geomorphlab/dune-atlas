@@ -1,19 +1,19 @@
 // Mars per-cell downloads: NetCDF-3 (CF-1.8 style) and a CSV bundle (.zip), the counterpart of
 // cell/export.ts with the hourly series in place of the wind histogram and the grain diameter d in
 // place of u*,th. Pure builders (tested in node); the panel only triggers the download.
-import { M } from "../../cell/marsphysics";
-import { isPublishedField } from "../../util/constants";
-import { texToPlain } from "../../util/plaintext";
-import { mathToBearingDeg } from "../../util/angles";
-import { nUt } from "../../cell/cellstore";
-import { DEFAULT_BINS } from "../../cell/flux";
-import { csvColumnDoc, csvColumnJson, csvTable, fieldMeta, fmtF32, fmtF64, exportBaseName, versionFromPrefix, rose16Columns, rose16Csv, CSV_LAYOUT_TEXT, DIR_COLUMNS, INSTITUTION, LICENSE, ROSE16_FILE, ROSE_MODES, type CsvColumn, type ExportMeta } from "../../cell/export";
-import { latLonText } from "../../cell/downloads";
-import { AI_NOTICE, CELL_SOURCE_IDS, citationJson, citationSources, citationText, fieldsCitation, fieldsLicence, referencesLine } from "../../cell/citation";
-import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "../../cell/auxinfo";
-import { datasetInfo, resolutionText, type DatasetInfo } from "../../cell/datasetinfo";
-import { writeNetcdf3, type NcAttrs, type NcVariable } from "../../cell/netcdf3";
-import { writeZip, type DeflateRaw } from "../../cell/zip";
+import { M } from "../../../cell/marsphysics";
+import { isPublishedField } from "../../../util/constants";
+import { texToPlain } from "../../../util/plaintext";
+import { mathToBearingDeg } from "../../../util/angles";
+import { nUt } from "../../../cell/cellstore";
+import { DEFAULT_BINS } from "../../../cell/flux";
+import { csvColumnDoc, csvColumnJson, csvTable, fieldMeta, fmtF32, fmtF64, exportBaseName, versionFromPrefix, rose16Columns, rose16Csv, CSV_LAYOUT_TEXT, DIR_COLUMNS, INSTITUTION, LICENSE, ROSE16_FILE, ROSE_MODES, type CsvColumn, type ExportMeta } from "../../../cell/export";
+import { latLonText } from "../../../cell/downloads";
+import { AI_NOTICE, CELL_SOURCE_IDS, citationJson, citationSources, citationText, fieldsCitation, fieldsLicence, referencesLine } from "../../../cell/citation";
+import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "../../../cell/auxinfo";
+import { datasetInfo, resolutionText, type DatasetInfo } from "../../../cell/datasetinfo";
+import { writeNetcdf3, type NcAttrs, type NcVariable } from "../../../cell/netcdf3";
+import { writeZip, type DeflateRaw } from "../../../cell/zip";
 import type { MarsCellData } from "./cellstore";
 import { analyseMarsCell, marsModeRoses } from "./analysis";
 import { PD23_TEXT, PAHTZ_DURAN_DOI } from "./citation";

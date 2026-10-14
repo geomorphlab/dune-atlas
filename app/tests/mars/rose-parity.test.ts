@@ -1,8 +1,8 @@
-// Flux roses from the hourly series (src/mars/cell/marsflux.ts) against the Python reference of
+// Flux roses from the hourly series (src/bodies/mars/cell/marsflux.ts) against the Python reference of
 // scripts/mars/app/make_rose_fixture.py (pipeline mars/physics.py, numpy digitize/bincount).
 import { describe, expect, it } from "vitest";
-import { dirBin, hourState, marsFluxRoses, thresholdStats } from "../../src/mars/cell/marsflux";
-import { analyseMarsCell } from "../../src/mars/cell/analysis";
+import { dirBin, hourState, marsFluxRoses, thresholdStats } from "../../src/bodies/mars/cell/marsflux";
+import { analyseMarsCell } from "../../src/bodies/mars/cell/analysis";
 import { M } from "../../src/cell/marsphysics";
 import { ROSE_FIXTURE, seriesOf, makeMarsCell } from "./helpers";
 

@@ -55,7 +55,7 @@ const { CONFIG } = await import("../../app/src/config");
 const { CellPanel } = await import("../../app/src/ui/cellPanel");
 const { snapToCell } = await import("../../app/src/cell/snap");
 const { versionFromPrefix } = await import("../../app/src/cell/export");
-const cellStoreMod = BODY === "mars" ? await import("../../app/src/mars/cell/cellstore") : await import("../../app/src/cell/cellstore");
+const cellStoreMod = BODY === "mars" ? await import("../../app/src/bodies/mars/cell/cellstore") : await import("../../app/src/cell/cellstore");
 const StoreClass = (cellStoreMod as unknown as Record<string, { open: (s: string, o: unknown) => Promise<{ grid: unknown }> }>)[BODY === "mars" ? "MarsCellStore" : "CellStore"];
 
 const out: Record<string, unknown> = { body: BODY };

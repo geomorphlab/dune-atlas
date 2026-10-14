@@ -9,8 +9,8 @@ vi.mock("maplibre-gl", () => ({ default: { addProtocol: (name: string, fn: (type
 
 import { loadRegistry } from "../../src/registry/load";
 import { HELP_SECTIONS } from "../../src/ui/helpText";
-import { prepareMarsBasemaps } from "../../src/mars/map/basemaps";
-import { ensureEsriProtocol, ESRI_SERVICES, ESRI_STATS, esriTile, resetEsri, tilingMismatch, type EsriEnv } from "../../src/mars/map/esri";
+import { prepareMarsBasemaps } from "../../src/bodies/mars/map/basemaps";
+import { ensureEsriProtocol, ESRI_SERVICES, ESRI_STATS, esriTile, resetEsri, tilingMismatch, type EsriEnv } from "../../src/bodies/mars/map/esri";
 
 interface FakeImg { width: number; height: number; opaque: boolean; close: () => void }
 interface FakeOut { width: number; height: number; draws: number; opaque: boolean }

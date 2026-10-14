@@ -2,12 +2,12 @@
 // the body-aware scale bar and the Esri geographic -> Web-Mercator tile plan.
 import { describe, expect, it } from "vitest";
 import { cellBounds, cellFeature, cellFromIndex, snapToCell } from "../../src/cell/snap";
-import { MARS_GRID, EXAMPLE_CELL } from "../../src/mars/body";
+import { MARS_GRID, EXAMPLE_CELL } from "../../src/bodies/mars/body";
 import { metersPerPixel } from "../../src/layerconfig";
 import { scaleBar } from "../../src/export/mapExport";
-import { roundScale, scaleFor, sphereDistance } from "../../src/mars/map/scale";
-import { extraLevels, planTile, RES0, sourceUrl } from "../../src/mars/map/esri";
-import { clampPmtilesBasemaps, pmtilesArchive, resolvePmtilesTiles } from "../../src/mars/map/basemaps";
+import { roundScale, scaleFor, sphereDistance } from "../../src/bodies/mars/map/scale";
+import { extraLevels, planTile, RES0, sourceUrl } from "../../src/bodies/mars/map/esri";
+import { clampPmtilesBasemaps, pmtilesArchive, resolvePmtilesTiles } from "../../src/bodies/mars/map/basemaps";
 import { loadRegistry } from "../../src/registry/load";
 import { M } from "../../src/cell/marsphysics";
 

@@ -1,4 +1,4 @@
-// Globe polar caps (src/mars/map/polarcap.ts, esri.ts esriPolarCap): cap geometry and texture coordinates,
+// Globe polar caps (src/bodies/mars/map/polarcap.ts, esri.ts esriPolarCap): cap geometry and texture coordinates,
 // MapLibre's hillshade maths mirrored for the cap and its continuity with the tiles at 85.05°, texture level
 // choice, layer installation / ordering / style mirroring on a fake map, and the Esri cap composition.
 import { describe, expect, it, vi } from "vitest";
@@ -10,8 +10,8 @@ import {
   BASEMAP_CAP_ID, CAP_RHO_DEG, MERC_LAT, R_MARS_2000, MAPLIBRE_CIRCUMFERENCE, basemapCapKind, capFrame, capGrid, capLevel, capLonLat,
   capPixelM, capUV, exaggerationForZoom, fillMesh, gridTriangles, hexColor, installPolarCaps, maplibreDeriv, standardHillshade, trianglesArea,
   PolarCapLayer,
-} from "../../src/mars/map/polarcap";
-import { planPolarCap, esriPolarCap, resetEsri, type EsriEnv } from "../../src/mars/map/esri";
+} from "../../src/bodies/mars/map/polarcap";
+import { planPolarCap, esriPolarCap, resetEsri, type EsriEnv } from "../../src/bodies/mars/map/esri";
 
 const D2R = Math.PI / 180;
 

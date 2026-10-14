@@ -2,7 +2,7 @@
 // through the Mars build's HTML transform (scripts/body-plugin.ts, MARS_HTML).
 import { describe, expect, it } from "vitest";
 import { bodyPlugin } from "../../scripts/body-plugin";
-import { MARS_HTML } from "../../src/mars/build";
+import { MARS_HTML } from "../../src/bodies/mars/build";
 import { INDEX, checkHead } from "../headlib";
 
 describe("page head (Mars)", () => {

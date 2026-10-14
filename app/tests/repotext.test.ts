@@ -20,7 +20,7 @@ const ALLOW: Record<string, RegExp> = {
   "app/tests/repotext.test.ts": /./, // the patterns themselves
   "app/tests/usertextlib.ts": /by the PI/, // a site-text check pattern
   "app/tests/angles.test.ts": /\bPI\b/, // const PI = Math.PI
-  "app/src/mars/map/polarcap.ts": /\bPI\b/, // GLSL constant
+  "app/src/bodies/mars/map/polarcap.ts": /\bPI\b/, // GLSL constant
   // published store metadata (immutable data attributes of dune-atlas/mars/v2), written by the cell-store builder
   "pipeline/src/dune_atlas_pipeline/mars/cells.py": /PI shapefile aggregated from the/,
 };

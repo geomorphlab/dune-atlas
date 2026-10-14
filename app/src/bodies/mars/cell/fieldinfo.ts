@@ -2,11 +2,11 @@
 // transforms are Earth's (flux m^2/yr with the same S2Y, Julian year; checked in tests/mars/panel.test.ts);
 // only the long names / descriptions / source units come from registry/mars/qsat_field_metadata.json
 // (texts of the per-hour Mars threshold).
-import meta from "../../../../registry/mars/qsat_field_metadata.json";
-import { fieldInfo as earthFieldInfo, FIELD_NAMES, type FieldInfo } from "../../cell/fieldinfo";
-export { FIELD_NAMES } from "../../cell/fieldinfo";
+import meta from "../../../../../registry/mars/qsat_field_metadata.json";
+import { fieldInfo as earthFieldInfo, FIELD_NAMES, type FieldInfo } from "../../../cell/fieldinfo";
+export { FIELD_NAMES } from "../../../cell/fieldinfo";
 
-export type { FieldInfo, FieldKind } from "../../cell/fieldinfo";
+export type { FieldInfo, FieldKind } from "../../../cell/fieldinfo";
 
 type Meta = Record<string, { long_name: string; units: string; description: string }>;
 const M = meta as unknown as Meta;

@@ -1,6 +1,6 @@
 // Selected-cell highlight at the poles on Mars: 2° cells 84–86, 86–88, 88–90 N/S.
 import { describe, it, expect } from "vitest";
-import { MARS_GRID } from "../../src/mars/body";
+import { MARS_GRID } from "../../src/bodies/mars/body";
 import { checkPolarCell, checkProjectionSwitch } from "../selectionlib";
 
 describe("selected-cell highlight at the poles (Mars 2° grid)", () => {

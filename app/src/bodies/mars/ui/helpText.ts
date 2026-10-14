@@ -1,8 +1,8 @@
 // All text of the Mars help panel and guided tour (replaces ui/helpText.ts in the Mars build; same
 // exports, structure and step ids as Earth so ui/tour.ts and ui/tourHooks.ts work unchanged).
 // Inline maths as $...$ (KaTeX); everything else plain text.
-export type { HelpSection, TourStep } from "../../ui/helpText";
-import type { HelpSection, TourStep } from "../../ui/helpText";
+export type { HelpSection, TourStep } from "../../../ui/helpText";
+import type { HelpSection, TourStep } from "../../../ui/helpText";
 
 export const HELP_BUTTON_LABEL = "Help and tour";
 export const HELP_TITLE = "Help";

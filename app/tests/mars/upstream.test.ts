@@ -1,5 +1,5 @@
 // Drift guard: every Earth module the Mars build substitutes, patches or was adapted from is recorded in
-// src/mars/upstream.json with the git blob id of the Earth source last reconciled. When an Earth change
+// src/bodies/mars/upstream.json with the git blob id of the Earth source last reconciled. When an Earth change
 // touches one of them, this test fails naming every such module and printing the diff from the recorded
 // blob (when it is in the object store) and the recent history of the file: port what applies to the Mars copy / patch,
 // then re-record with `node scripts/mars/app/reconcile.mjs --record <path>` (docs/guide/mars.md,
@@ -8,8 +8,8 @@ import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { MARS_PATCHES, MARS_SUBSTITUTES } from "../../src/mars/build";
-import upstream from "../../src/mars/upstream.json";
+import { MARS_PATCHES, MARS_SUBSTITUTES } from "../../src/bodies/mars/build";
+import upstream from "../../src/bodies/mars/upstream.json";
 
 interface Entry { kind: "substituted" | "patched" | "derived"; mars: string; blob: string }
 const MODULES = (upstream as { modules: Record<string, Entry> }).modules;
@@ -18,7 +18,7 @@ const git = (...a: string[]): string => execFileSync("git", a, { cwd: APP, encod
 const hasGit = (() => { try { git("rev-parse", "--show-toplevel"); return true; } catch { return false; } })();
 const ROOT = hasGit ? git("rev-parse", "--show-toplevel") : "";
 
-describe("Mars drift guard (src/mars/upstream.json)", () => {
+describe("Mars drift guard (src/bodies/mars/upstream.json)", () => {
   it("records every substituted and every patched Earth module", () => {
     const missing = [...Object.keys(MARS_SUBSTITUTES), ...MARS_PATCHES.map((p) => p.file)].filter((p) => !MODULES[p]);
     expect(missing, "add with: node scripts/mars/app/reconcile.mjs --sync").toEqual([]);

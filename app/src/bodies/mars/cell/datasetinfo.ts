@@ -1,10 +1,10 @@
 // Mars wind dataset as described in the panel and the downloads (replaces cell/datasetinfo.ts in
 // the Mars build). One dataset: the MCMC FV3 beta release 1 (2°, hourly, one Mars year).
-import type { Grid } from "../../cell/snap";
-export type { DatasetInfo } from "../../cell/datasetinfo";
-export { resolutionText, pixelsPerCell, datasetSourceItem } from "../../cell/datasetinfo";
-import { datasetFacts as earthDatasetFacts } from "../../cell/datasetinfo";
-import type { DatasetInfo } from "../../cell/datasetinfo";
+import type { Grid } from "../../../cell/snap";
+export type { DatasetInfo } from "../../../cell/datasetinfo";
+export { resolutionText, pixelsPerCell, datasetSourceItem } from "../../../cell/datasetinfo";
+import { datasetFacts as earthDatasetFacts } from "../../../cell/datasetinfo";
+import type { DatasetInfo } from "../../../cell/datasetinfo";
 
 export const LAND_RULE = "every cell (Mars has no land mask: all 16,200 cells carry wind data)";
 /** Earth-only (ERA5 land mask); kept so the Mars module exports the Earth module's names. Unused on Mars. */

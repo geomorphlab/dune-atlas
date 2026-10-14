@@ -1,4 +1,4 @@
-// App hook of the globe polar caps (src/mars/map/globecaps.ts -> map/polarcap.ts): fill specs from the
+// App hook of the globe polar caps (src/bodies/mars/map/globecaps.ts -> map/polarcap.ts): fill specs from the
 // registry (dunes fill + invert, polar-caps.json beside the tiles), caps installed in globe projection and
 // absent in Mercator, and the basemap cap following every basemap of the Mars registry.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -6,8 +6,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("maplibre-gl", () => ({ default: { addProtocol: () => {} } }));
 
 import { loadRegistry } from "../../src/registry/load";
-import { globePolarCaps, marsCapFills, marsPolarCapOptions } from "../../src/mars/map/globecaps";
-import { BASEMAP_CAP_ID, basemapCapKind, type PolarCapLayer } from "../../src/mars/map/polarcap";
+import { globePolarCaps, marsCapFills, marsPolarCapOptions } from "../../src/bodies/mars/map/globecaps";
+import { BASEMAP_CAP_ID, basemapCapKind, type PolarCapLayer } from "../../src/bodies/mars/map/polarcap";
 
 const { registry: reg } = loadRegistry();
 const BASE = "https://data.test";

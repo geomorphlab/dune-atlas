@@ -21,8 +21,8 @@
 //
 // Pure mesh / texture-coordinate / shading helpers are exported for tests (tests/mars/polarcap.test.ts).
 import type { CustomLayerInterface, CustomRenderMethodInput, Map as MlMap } from "maplibre-gl";
-import type { BasemapDef } from "../../registry/types";
-import { mercatorXY, POLE_LAT } from "../../map/globelines";
+import type { BasemapDef } from "../../../registry/types";
+import { mercatorXY, POLE_LAT } from "../../../map/globelines";
 import { esriPolarCap, isEsriService } from "./esri";
 
 export const MERC_LAT = 85.0511287798066;
@@ -402,7 +402,7 @@ export class PolarCapLayer implements CustomLayerInterface {
 }
 
 // ---------------------------------------------------------------------------------------------------------
-// installation: one call after the map is created (src/mars/main.ts)
+// installation: one call after the map is created (src/bodies/mars/main.ts)
 // ---------------------------------------------------------------------------------------------------------
 /** Polar DEM textures per basemap id (data keys under the data base; pipeline mars/terrain_polar.py) */
 export const POLAR_DEM: Record<string, string> = { "hrsc-mola-hillshade": "dune-atlas/mars/v1/basemaps/hrsc-mola-polar" };

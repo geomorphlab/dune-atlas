@@ -1,9 +1,9 @@
 // Mars citations (replaces cell/citation.ts in the Mars build; every export of the Earth module
 // is still provided so shared modules keep compiling). Entries may have a DOI or only a URL.
 // No Copernicus notice applies to Mars data: the C3S notice constants are empty strings.
-import { richHtml } from "../../util/richtext";
-export { AI_NOTICE, PAPER_DOI, DATA_DOI, DUNE_MAP_DOI, DUNE_MAP_LABEL, ERA5LAND_DOI, ERA5LAND_PAPER_DOI, ERA5_DOI, ERA5_PAPER_DOI } from "../../cell/citation";
-import { PAPER_DOI } from "../../cell/citation";
+import { richHtml } from "../../../util/richtext";
+export { AI_NOTICE, PAPER_DOI, DATA_DOI, DUNE_MAP_DOI, DUNE_MAP_LABEL, ERA5LAND_DOI, ERA5LAND_PAPER_DOI, ERA5_DOI, ERA5_PAPER_DOI } from "../../../cell/citation";
+import { PAPER_DOI } from "../../../cell/citation";
 
 /** One citable work: DOI (preferred) or URL. */
 export interface CitationEntry { label: string; text: string; doi: string; url?: string; license?: string }
@@ -117,7 +117,7 @@ export function citationHtml(sources: CitationSource[] = citationSources()): str
 }
 
 /** Map attribution of the wind-regime fields (Earth: follows the selected dataset); the Mars map attribution is
- *  set in src/mars/main.ts. Exported so the Mars module has the Earth module's names. */
+ *  set in src/bodies/mars/main.ts. Exported so the Mars module has the Earth module's names. */
 export function mapAttributionHtml(datasetId: string): string {
   void datasetId;
   return "";

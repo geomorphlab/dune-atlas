@@ -246,8 +246,8 @@
       },
       {
         "find": "import yaml from \"js-yaml\";",
-        "replace": "import yaml from \"js-yaml\";\nimport { withBaseInvert } from \"../mars/registry/invert\";",
-        "note": "Mars dune invert view kept from the base registry (src/mars/registry/invert.ts)"
+        "replace": "import yaml from \"js-yaml\";\nimport { withBaseInvert } from \"../bodies/mars/registry/invert\";",
+        "note": "Mars dune invert view kept from the base registry (src/bodies/mars/registry/invert.ts)"
       },
       {
         "find": "  return addDatasets(mergeRegistry(base, frags), base, frags, datasetDirs());",

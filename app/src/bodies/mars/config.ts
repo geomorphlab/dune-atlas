@@ -1,7 +1,7 @@
 // Build-time configuration of the Mars build (replaces config.ts): a thin wrapper - Earth's keys and env
 // vars (new Earth keys reach Mars automatically), with the Mars defaults of the per-cell sidecars (one:
 // cells-aux.zarr) and of the site URL.
-import { CONFIG as EARTH } from "../config";
+import { CONFIG as EARTH } from "../../config";
 
 const env = import.meta.env ?? ({} as ImportMetaEnv);
 
