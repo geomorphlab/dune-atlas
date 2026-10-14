@@ -150,7 +150,7 @@ describe("info texts at the source, one field citation, licences, basemap info",
       expect(fieldsCitation(ds)).toMatch(/^Gunn, A\. \(2026\)\. The distribution of Earth's wind-blown sand dunes\. Nature Communications\. doi:10\.1038\/s41467-026-75466-y; .*winds: /);
     }
     expect(fieldsLicence("era5-land")).toBe("CC BY 4.0 (Zenodo Supplementary Data)");
-    expect(fieldsLicence("era5")).toMatch(/Copernicus/);
+    expect(fieldsLicence("era5")).toBe("CC BY 4.0");
   });
   it("basemaps have an info button with definition, Source, Resolution, Licence, Link; About cites the map fields", async () => {
     const { basemapInfoHtml } = await import("../src/core/ui/layerPanel");

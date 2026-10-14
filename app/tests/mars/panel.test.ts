@@ -167,7 +167,7 @@ describe("Mars public text", () => {
     expect(t).not.toMatch(/log law|z₀ = 1 mm/);
     expect(t).toMatch(/eq\. 2\.2/);
     expect(t).toMatch(/MOLA \(CC0\) and HRSC \(CC BY-SA 3\.0 IGO\)/);
-    expect(t).toMatch(/shaded-relief basemap tiles are released under CC BY-SA 3\.0 IGO/);
+    expect(t).toMatch(/Derived elevation and relief tiles: CC BY-SA 3\.0 IGO\./);
     const strings = [EARTH_OK(t), ...reg.layers.map((l) => legendHtml(l)), ...HELP.HELP_SECTIONS.map((s) => s.body + s.title), ...HELP.TOUR_STEPS.map((s) => s.body + s.title)];
     const strip = mapStripItems({ reg, state: { ...initState(), layers: Object.fromEntries(reg.layers.map((l) => [l.id, { visible: true, opacity: 1 }])) }, view: { lon: 67, lat: 9, zoom: 4, bearing: 0, pitch: 0, proj: "mercator" }, width: 1600, includeBasemap: true, shareLink: "L", date: new Date("2026-10-14") });
     strings.push(...strip.map((i) => EARTH_OK("text" in i ? i.text : "title" in i ? `${i.title} ${i.detail ?? ""}` : "")));

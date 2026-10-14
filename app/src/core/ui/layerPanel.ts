@@ -18,7 +18,7 @@ import { fieldInfo } from "../cell/fieldinfo";
 import { isDatasetDependent } from "../registry/merge";
 import { mathHtml } from "../util/math";
 import { aboutSourceIds, AI_NOTICE, citationHtml, citationSources, fieldsCitation, fieldsLicence } from "../cell/citation";
-import { loadPlaces, PLACES_DISCLAIMER } from "../search/places";
+import { loadPlaces, placesNote } from "../search/places";
 import { conceptLinkHtml } from "./concepts";
 import { bulkGuideHtml, wireBulkGuide } from "./bulkguide";
 import { PROFILE } from "@body/profile";
@@ -109,7 +109,8 @@ export function infoHtml(l: LayerDef, datasetId?: string): string {
   const sources = sharesFieldsCitation(l, datasetId) ? row("Citation", SHARED_CITATION_LINK)
     : l.attribution ? attributionRows(l.attribution) : l.citation ? row("Citation", richHtml(l.citation)) : "";
   const def = l.description ? infoDefinition(l.description) : "";
-  const naming = l.invertSource && PLACES.enabled ? `<p class="help places-note">${escapeHtml(PLACES_DISCLAIMER)}</p>` : "";
+  const note = l.group === "dunes" && (l.type === "pmtiles-vector" || l.type === "geojson-points") ? placesNote(PLACES) : "";   // the dune map (map/overlays isDuneMap)
+  const naming = note ? `<p class="help places-note">${escapeHtml(note)}</p>` : "";
   return `${def ? `<p class="info-def">${richHtml(def, mathHtml)}</p>` : ""}${conceptLinkHtml(l.id)}${l.invertSource ? `<p class="help">${escapeHtml(INVERT_NOTE)}</p>` : ""}${naming}${facts || sources ? `<dl class="attribution info-facts">${facts}${sources}</dl>` : ""}`;
 }
 

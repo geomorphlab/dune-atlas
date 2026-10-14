@@ -201,8 +201,8 @@ describe("help text document", () => {
   });
 });
 
-// Regression (October 2026 review): the highlight of the "Share and export" step covers both the share-link and the
-// camera buttons.
+// Regression (October 2026 review): the highlight of the "Share and export" step covers the share-link, the camera
+// and (where the atlas has it) the region-download buttons.
 describe("tour highlight of the Share and export step", () => {
   it("covers the share and the camera buttons", () => {
     rect(tools.el.querySelector(".export-btn")!, { left: 980, top: 158, width: 29, height: 29 });
@@ -215,7 +215,22 @@ describe("tour highlight of the Share and export step", () => {
     expect(parseFloat(spot.style.top)).toBe(129 - pad);
     expect(parseFloat(spot.style.height)).toBe(158 + 29 - 129 + 2 * pad);   // share top to camera bottom
     expect(parseFloat(spot.style.width)).toBe(29 + 2 * pad);
-    expect(TOUR_STEPS[i].span).toEqual([".atlas-tools .share-btn", ".atlas-tools .export-btn"]);
+    expect(TOUR_STEPS[i].span).toEqual([".atlas-tools .share-btn", ".atlas-tools .export-btn", ".atlas-tools .region-btn"]);
+    t.end(false);
+  });
+  it("covers the region-download button too, and the text names it", () => {
+    tools.el.remove();
+    tools = new Tools({ ...opts, region: { lonRange: 180, context: () => null, draw: vi.fn(), show: vi.fn(), run: vi.fn() } } as never);
+    document.getElementById("map")!.append(tools.el);
+    for (const [c, top] of [["help-btn", 100], ["share-btn", 129], ["export-btn", 158], ["region-btn", 187]] as const)
+      rect(tools.el.querySelector(`.${c}`)!, { left: 980, top, width: 29, height: 29 });
+    const i = TOUR_STEPS.findIndex((s) => s.id === "tools");
+    const t = new Tour();
+    t.start(i);
+    const spot = document.querySelector(".tour-spot") as HTMLElement;
+    expect(parseFloat(spot.style.top)).toBe(129 - 6);
+    expect(parseFloat(spot.style.height)).toBe(187 + 29 - 129 + 12);   // share top to region-download bottom
+    expect(TOUR_STEPS[i].body).toMatch(/download the data of a region you draw on the map/);
     t.end(false);
   });
   it("spanRect: the target alone for steps without a span", async () => {

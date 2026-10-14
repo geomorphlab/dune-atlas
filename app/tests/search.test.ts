@@ -7,7 +7,7 @@ import path from "node:path";
 import yaml from "js-yaml";
 import Ajv2020 from "ajv/dist/2020";
 import { describe, expect, it, vi } from "vitest";
-import { editDistance, loadPlaces, matchPlaces, nameScore, PLACES_DISCLAIMER, placeBounds, searchKey, type Place } from "../src/core/search/places";
+import { editDistance, loadPlaces, matchPlaces, nameScore, PLACES_DISCLAIMER, placeBounds, placesNote, searchKey, type Place } from "../src/core/search/places";
 import { SearchBox, searchZoom, SEARCH_TEXT } from "../src/core/ui/search";
 import { infoHtml } from "../src/core/ui/layerPanel";
 import { loadRegistry } from "../src/core/registry/load";
@@ -60,10 +60,15 @@ describe("place matching", () => {
 describe("place lists in the registry", () => {
   const schema = JSON.parse(fs.readFileSync(path.join(REG_DIR, "places.schema.json"), "utf8"));
   const validate = new Ajv2020({ allErrors: true, strict: false }).compile(schema);
-  it.each(["earth", "mars"])("registry/%s/places.yaml is schema-valid, disabled and empty (names under review)", (b) => {
+  it.each(["earth", "mars"])("registry/%s/places.yaml is schema-valid", (b) => {
     const doc = yaml.load(fs.readFileSync(path.join(REG_DIR, b, "places.yaml"), "utf8"));
     expect(validate(doc), JSON.stringify(validate.errors)).toBe(true);
-    expect(doc).toEqual({ enabled: false, places: [] });
+  });
+  it("Earth: disabled and empty (names under review); Mars: enabled", () => {
+    expect(yaml.load(fs.readFileSync(path.join(REG_DIR, "earth", "places.yaml"), "utf8"))).toEqual({ enabled: false, places: [] });
+    const mars = yaml.load(fs.readFileSync(path.join(REG_DIR, "mars", "places.yaml"), "utf8")) as { enabled: boolean; places: Place[] };
+    expect(mars.enabled).toBe(true);
+    expect(mars.places.length).toBeGreaterThan(100);
   });
   it("the schema accepts a full entry and rejects a bad one", () => {
     expect(validate({ enabled: true, places: [PLACES[1]] })).toBe(true);
@@ -74,6 +79,18 @@ describe("place lists in the registry", () => {
     expect(loadPlaces()).toEqual({ enabled: false, places: [] });
     expect(loadPlaces({ x: "enabled: true\nplaces: []\n" }).enabled).toBe(true);
     expect(loadPlaces({})).toEqual({ enabled: false, places: [] });
+  });
+  it("equally good matches: larger mapped dune area first, then the name", () => {
+    const L = [P({ id: "a", line1: "Alpha crater", dune_km2: 10 }), P({ id: "b", line1: "Beta crater", dune_km2: 500 }), P({ id: "c", line1: "Gamma crater" })];
+    expect(matchPlaces("crater", L).map((h) => h.place.id)).toEqual(["b", "a", "c"]);
+    expect(matchPlaces("alpha", L)[0].place.id).toBe("a");   // a better match wins over a larger area
+  });
+  it("the naming note: none while disabled or empty; the list's own note, else the default", () => {
+    expect(placesNote({ enabled: false, places: PLACES, note: "N" })).toBe("");
+    expect(placesNote({ enabled: true, places: [], note: "N" })).toBe("");
+    expect(placesNote({ enabled: true, places: PLACES, note: "N" })).toBe("N");
+    expect(placesNote({ enabled: true, places: PLACES })).toBe(PLACES_DISCLAIMER);
+    expect(loadPlaces({ x: "enabled: true\nnote: N\nplaces: []\n" }).note).toBe("N");
   });
   it("the naming note is drafted but not shown in the dune layer's ⓘ while the named search is disabled", () => {
     const dunes = loadRegistry().registry.layers.find((l) => l.invertSource)!;

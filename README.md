@@ -65,7 +65,7 @@ cell panel's downloads are the simplest route to the data.
 ## Data and licences
 
 The code is released under the MIT licence ([`LICENSE`](LICENSE)). The data products carry the licences of
-their sources, which differ between products (for example CC BY 4.0 for the Earth ERA5-Land products and
+their sources, which differ between products (for example CC BY 4.0 for the Earth ERA5 and ERA5-Land products and
 CC BY-SA 3.0 IGO for the Mars relief tiles); see the per-product table in
 [`DATA_LICENSE.md`](DATA_LICENSE.md). Basemap tiles are subject to their providers' terms.
 

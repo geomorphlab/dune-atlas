@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 // Mars: the Concepts entries of the Mars atlas (Mars and both), the grain-size entry linked from the slider,
-// the search convention (planetocentric, east-positive) and the place list (empty, disabled).
+// the search convention (planetocentric, east-positive) and the place list (enabled; tests/mars/places.test.ts).
 import { describe, expect, it } from "vitest";
 import { CONCEPTS, conceptFor } from "../../src/core/ui/concepts";
 import { loadRegistry } from "../../src/core/registry/load";
@@ -21,9 +21,9 @@ describe("Mars concepts and search", () => {
     const reg = loadRegistry().registry;
     for (const l of reg.layers.filter((x) => x.type === "zarr-field" && x.thresholdAware)) expect(conceptFor(l.id), l.id).toBeDefined();
   });
-  it("search: planetocentric latitude, east-positive longitude 0-360; the named search is disabled", () => {
+  it("search: planetocentric latitude, east-positive longitude 0-360; the named search is enabled", () => {
     expect(PROFILE.search.lonRange).toBe(360);
     expect(PROFILE.search.conventionNote).toMatch(/Planetocentric latitude, east-positive longitude \(0–360° E\)/);
-    expect(loadPlaces()).toEqual({ enabled: false, places: [] });
+    expect(loadPlaces().enabled).toBe(true);
   });
 });

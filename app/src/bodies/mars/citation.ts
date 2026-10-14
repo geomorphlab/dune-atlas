@@ -9,6 +9,8 @@ export const DEM_URL = "https://astrogeology.usgs.gov/search/map/mars_mgs_mola_m
 /** exact wording used by pipeline mars/terrain.py DEM_ATTRIBUTION and registry/mars/generated/x_elevation.yaml */
 export const DEM_CITATION = "Fergason, R. L, Hare, T. M., & Laura, J. (2018). HRSC and MOLA Blended Digital Elevation Model at 200m v2. Astrogeology PDS Annex, U.S. Geological Survey.";
 export const DEM_LICENCE = "MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO)";
+/** licence of the atlas products derived from the DEM (elevation field and per-cell mean, relief tiles) */
+export const DERIVED_DEM_LICENCE = "Derived elevation and relief tiles: CC BY-SA 3.0 IGO.";
 /** licence of the self-built MOLA–HRSC hillshade (terrarium) tiles */
 export const HILLSHADE_LICENCE = "the MOLA–HRSC hillshade tiles are released under CC BY-SA 3.0 IGO (derived from HRSC CC BY-SA 3.0 IGO and MOLA CC0)";
 export const MGD3_2007_DOI = "10.1029/2007JE002943";
@@ -54,7 +56,7 @@ export const plotDataCredit = (windText: string) => `Methods outlined in Gunn, A
 export const MAP_DUNE_CREDIT = `Dune map: USGS Mars Global Digital Dune Database (Hayward et al. 2007, 2010, 2012, 2014) and Fenton (2020), merged. Wind-regime methods outlined in Gunn, A. (2026) Nature Communications, doi:${PAPER_DOI}; transport law: Pähtz & Durán (2023) J. Fluid Mech. 963, A20, doi:10.1017/jfm.2023.343.`;
 /** map exports: the credit line of an external layer, written when that layer is visible (in this order) */
 export const MAP_LAYER_CREDITS: Record<string, string> = {
-  elevation: "Elevation: MGS MOLA – MEX HRSC blended DEM 200 m v2 (Fergason, Hare & Laura 2018, USGS Astrogeology); MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO).",
+  elevation: "Elevation: MGS MOLA – MEX HRSC blended DEM 200 m v2 (Fergason, Hare & Laura 2018, USGS Astrogeology); MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO); derived elevation: CC BY-SA 3.0 IGO.",
   rho_mean: "Air density: MCMC FV3 Mars GCM beta release 1, lowest layer p/(R T), mean over the Mars year.",
 };
 /** About, Citation: the body's sources listed besides the datasets' (cell/citation.ts aboutSourceIds) */

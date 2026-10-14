@@ -95,6 +95,7 @@ export class SearchBox {
       const p = x.place;
       const li = h("li", { id: `${this.list.id}-${i}`, role: "option", class: "search-hit", "aria-selected": String(i === this.#active) },
         h("span", { class: "hit-line1" }, p.line1),
+        ...(p.type ? [h("span", { class: "hit-type" }, p.type)] : []),
         ...(p.line2 ? [h("span", { class: "hit-line2", lang: p.line2.lang }, p.line2.text)] : []),
         ...(p.countries?.length ? [h("span", { class: "hit-country" }, p.countries.join(", "))] : []));
       li.addEventListener("pointerdown", (e) => { e.preventDefault(); void this.#pick(i); });

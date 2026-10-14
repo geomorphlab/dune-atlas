@@ -12,7 +12,7 @@ import type { Grid } from "../cell/snap";
 import { writeNetcdf3, type NcAttrs, type NcVariable } from "../cell/netcdf3";
 import { fieldMeta, INSTITUTION, LICENSE, type ExportMeta } from "../cell/export";
 import { AUX_META, auxDescription, auxSourceAttrs } from "../cell/auxinfo";
-import { AI_NOTICE, citationSources, citationText, fieldsCitation, fieldsLicence, referencesLine } from "../cell/citation";
+import { AI_NOTICE, citationSources, citationText, datasetNotice, fieldsCitation, fieldsLicence, referencesLine } from "../cell/citation";
 import { CELL_SOURCE_IDS } from "@body/citation";
 import { datasetInfo, resolutionText } from "../cell/datasetinfo";
 import { texToPlain } from "../util/plaintext";
@@ -239,6 +239,7 @@ export function regionNetcdf(cells: (CellData | null)[], grid: { iys: number[]; 
       references: referencesLine(citationSources(CELL_SOURCE_IDS, ds.id)),
       fields_citation: fieldsCitation(ds.id),
       fields_license: fieldsLicence(ds.id),
+      ...(datasetNotice(ds.id) ? { copernicus_notice: datasetNotice(ds.id) } : {}),
       license: LICENSE,
       geospatial_lat_min: b.south, geospatial_lat_max: b.north, geospatial_lon_min: b.west, geospatial_lon_max: b.east,
       geospatial_lat_resolution: resolutionText(dlat).replace("°", " degree"),

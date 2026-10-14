@@ -6,14 +6,15 @@ import { datasetCredits, datasetInfo } from "../../core/cell/datasetinfo";
 import type { CitationSource } from "../../core/cell/citation";
 import { PAPER_DOI } from "../../core/cell/paper";
 
-/** Map attribution line of the dune map and the wind-regime fields, following the selected dataset:
- *  fields from the paper's data record (ERA5-Land) are Gunn (2026) data, CC BY 4.0; fields computed for the atlas
- *  (ERA5) carry the wind data's licence. */
+/** Map attribution line of the dune map and the wind-regime fields, following the selected dataset: the dune
+ *  map has the licence of its source record (Supplementary Code, MIT); fields from the paper's data record
+ *  (ERA5-Land) are Gunn (2026) data, CC BY 4.0; fields computed for the atlas (ERA5) carry the dataset's
+ *  field licence (registry credits.fieldsLicence). */
 export function mapAttributionHtml(datasetId: string): string {
   const d = datasetInfo(datasetId), licence = datasetCredits(datasetId).fieldsLicence, paper = `<a href="https://doi.org/${PAPER_DOI}" target="_blank" rel="noopener">Gunn (2026)</a>`;
   return d.fieldsFrom === "paper"
-    ? `Dune and wind-regime data: ${paper}, CC BY 4.0`
-    : `Dune map: ${paper}, CC BY 4.0; wind-regime fields computed for the atlas from ${escapeHtml(d.name)} ${escapeHtml(d.resolution)} with the methods outlined in ${paper}, ${escapeHtml(licence)}`;
+    ? `Dune map: ${paper}, MIT; wind-regime data: ${paper}, CC BY 4.0`
+    : `Dune map: ${paper}, MIT; wind-regime fields computed for the atlas from ${escapeHtml(d.name)} ${escapeHtml(d.resolution)} with the methods outlined in ${paper}, ${escapeHtml(licence)}`;
 }
 
 /** Supplementary Data record (CC BY 4.0): wind histograms and qsat parameter fields */
@@ -62,7 +63,7 @@ export const CELL_SOURCE_IDS = ["aridity", "vegetation"];
 /** image exports: the data line of a plot (the wind line appended) */
 export const plotDataCredit = (windText: string) => `Data: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}. ${windText}`;
 /** map exports: the dune-map line */
-export const MAP_DUNE_CREDIT = `Dune map: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}; wind-regime fields with the methods outlined there.`;
+export const MAP_DUNE_CREDIT = `Dune map: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}; data doi:${DUNE_MAP_DOI}, MIT; wind-regime fields with the methods outlined there.`;
 /** map exports: the credit line of an external layer, written when that layer is visible (in this order) */
 export const MAP_LAYER_CREDITS: Record<string, string> = {
   aridity: "Aridity: Global Aridity Index v3.1 (Zomer, Xu & Trabucco 2022, doi:10.1038/s41597-022-01493-1; data doi:10.6084/m9.figshare.7504448.v7), CC BY 4.0.",

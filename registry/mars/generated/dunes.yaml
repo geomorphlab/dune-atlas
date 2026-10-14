@@ -43,7 +43,7 @@ layers:
       Fenton, L. K. (2020). Updating the global inventory of dune fields on Mars and identification of many small
       dune fields. Icarus, 352, 114018. https://doi.org/10.1016/j.icarus.2020.114018'
     doi: 10.3133/ofr20121259
-    licence: Public domain (U.S. Geological Survey)
+    licence: 'MGD3 polygons: public domain (U.S. Geological Survey)'
     url: https://www.usgs.gov/centers/astrogeology-science-center/science/mars-global-digital-dune-database
     changes: MGD3 and Fenton (2020) merged into one polygon layer; invalid geometries repaired; coordinates rounded
       to 1e-6°.
