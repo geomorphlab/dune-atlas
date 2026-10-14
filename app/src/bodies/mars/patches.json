@@ -36,18 +36,6 @@
         "replace": "{ kind: \"heading\", text: \"Mars Dune Atlas\" }"
       },
       {
-        "find": "text: `Dune map: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}; wind-regime fields with the methods outlined there.` });",
-        "replace": "text: `Dune map: USGS Mars Global Digital Dune Database (Hayward et al. 2007, 2010, 2012, 2014) and Fenton (2020), merged. Wind-regime methods outlined in Gunn, A. (2026) Nature Communications, doi:${PAPER_DOI}; transport law: Pähtz & Durán (2023) J. Fluid Mech. 963, A20, doi:10.1017/jfm.2023.343.` });"
-      },
-      {
-        "find": "if (visible.some((l) => l.id === \"aridity\")) text.push({ kind: \"text\", text: \"Aridity: Global Aridity Index v3.1 (Zomer, Xu & Trabucco 2022, doi:10.1038/s41597-022-01493-1; data doi:10.6084/m9.figshare.7504448.v7), CC BY 4.0.\" });",
-        "replace": "if (visible.some((l) => l.id === \"elevation\")) text.push({ kind: \"text\", text: \"Elevation: MGS MOLA – MEX HRSC blended DEM 200 m v2 (Fergason, Hare & Laura 2018, USGS Astrogeology); MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO).\" });"
-      },
-      {
-        "find": "if (visible.some((l) => l.id === \"vegetation\")) text.push({ kind: \"text\", text: \"Vegetation cover: CSIRO MODIS Fractional Cover v3.1 (Guerschman et al. 2015, doi:10.1016/j.rse.2015.01.021; data doi:10.4225/08/5848a3f19a7b3), CC BY 4.0, © 2008–2019 CSIRO.\" });",
-        "replace": "if (visible.some((l) => l.id === \"rho_mean\")) text.push({ kind: \"text\", text: \"Air density: MCMC FV3 Mars GCM beta release 1, lowest layer p/(R T), mean over the Mars year.\" });"
-      },
-      {
         "find": ": land without mapped dunes`",
         "replace": ": areas without mapped dunes`"
       },
@@ -68,15 +56,6 @@
   {
     "file": "src/export/plotExport.ts",
     "edits": [
-      {
-        "find": "export function windSourceText(datasetId: string): string {\n  const d = datasetInfo(datasetId);\n  return datasetId === \"era5\"\n    ? `Wind: ${d.name} hourly 10 m wind ${d.period} (Hersbach et al. 2020, doi:${ERA5_PAPER_DOI}; data doi:${ERA5_DOI}); statistics computed for the Dune Atlas with the methods outlined in Gunn (2026). ${C3S_NOTICE_ERA5}`\n    : `Wind: ${d.name} hourly 10 m wind ${d.period} (Muñoz-Sabater et al. 2021, doi:${ERA5LAND_PAPER_DOI}; data doi:${ERA5LAND_DOI}); statistics from Gunn (2026). ${C3S_NOTICE}`;\n}\n",
-        "replace": "export function windSourceText(datasetId: string): string {\n  void datasetId;\n  return `Wind: MCMC FV3 Mars GCM beta release 1 (NASA Ames Mars Climate Modeling Center), hourly lowest-level wind, one Mars year, 2°; https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/`;\n}\n",
-        "note": "no Copernicus notice on Mars"
-      },
-      {
-        "find": "text: `Data: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}. ${windSourceText(d.id)}`",
-        "replace": "text: `Methods outlined in Gunn, A. (2026) Nature Communications, doi:${PAPER_DOI}; transport law: Pähtz & Durán (2023) J. Fluid Mech. 963, A20, doi:10.1017/jfm.2023.343. ${windSourceText(d.id)}`"
-      },
       {
         "find": "` · threshold friction velocity ${utTex(c.ut)}`",
         "replace": "` · median grain diameter ${utTex(c.ut)}`"

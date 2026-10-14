@@ -2,8 +2,8 @@
 // SVG or PNG: re-rendered in the LIGHT theme with a transparent background and the on-screen
 // settings, with an information strip below. Composition and names are pure (tested).
 import { exportPlotTheme, LIGHT_THEME, type PlotTheme } from "../cell/plottheme";
-import { datasetInfo, type DatasetInfo } from "../cell/datasetinfo";
-import { C3S_NOTICE, C3S_NOTICE_ERA5, ERA5_DOI, ERA5_PAPER_DOI, ERA5LAND_DOI, ERA5LAND_PAPER_DOI, PAPER_DOI } from "../cell/citation";
+import type { DatasetInfo } from "../cell/datasetinfo";
+import { plotDataCredit, windSourceText } from "@body/citation";
 import { texToPlain } from "../util/plaintext";
 import { stripSvg, STRIP_COLORS, STRIP_FONT, STRIP_PAD, STRIP_UNITS, type StripItem } from "./strip";
 import { isoDate, svgToImage } from "./mapExport";
@@ -42,13 +42,6 @@ export function plotFilename(key: PlotKey, datasetId: string, cell: { lat: numbe
   return `dune-atlas_${key}_${datasetId}_${n(cell.lat)}_${n(cell.lon)}${ut === null ? "" : `_ut${ut.toFixed(2)}`}.${ext}`;
 }
 
-/** the wind line of image exports (map and plots): name and period from the dataset table (cell/datasetinfo.ts) */
-export function windSourceText(datasetId: string): string {
-  const d = datasetInfo(datasetId);
-  return datasetId === "era5"
-    ? `Wind: ${d.name} hourly 10 m wind ${d.period} (Hersbach et al. 2020, doi:${ERA5_PAPER_DOI}; data doi:${ERA5_DOI}); statistics computed for the Dune Atlas with the methods outlined in Gunn (2026). ${C3S_NOTICE_ERA5}`
-    : `Wind: ${d.name} hourly 10 m wind ${d.period} (Muñoz-Sabater et al. 2021, doi:${ERA5LAND_PAPER_DOI}; data doi:${ERA5LAND_DOI}); statistics from Gunn (2026). ${C3S_NOTICE}`;
-}
 
 /** legends first (directly below the plot), then the descriptive text */
 export function plotStripItems(spec: PlotExportSpec, c: PlotExportContext): StripItem[] {
@@ -58,7 +51,7 @@ export function plotStripItems(spec: PlotExportSpec, c: PlotExportContext): Stri
     { kind: "heading", text: spec.title },
     { kind: "text", text: `Cell centre ${fmtLat(c.cell.lat)}, ${fmtLon(c.cell.lon)} · ${d.name} ${d.resolution}, ${d.period}${spec.thresholdDependent ? ` · threshold friction velocity ${utTex(c.ut)}` : ""}` },
     ...(spec.caption ? [{ kind: "text", text: spec.caption } as StripItem] : []),
-    { kind: "text", text: `Data: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}. ${windSourceText(d.id)}` },
+    { kind: "text", text: plotDataCredit(windSourceText(d.id)) },
     { kind: "text", text: `View: ${c.shareLink}`, muted: true },
     { kind: "text", text: `Exported ${isoDate(c.date)} from the Dune Atlas (map.geomorphlab.org).`, muted: true },
   ];

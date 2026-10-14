@@ -9,8 +9,7 @@ import { effectiveDisplay, isAxis, vectorColors } from "../layerconfig";
 import { legendTicks, tickLabel, tickPosition } from "../ui/legend";
 import { texToPlain } from "../util/plaintext";
 import { datasetInfo } from "../cell/datasetinfo";
-import { PAPER_DOI } from "../cell/citation";
-import { windSourceText } from "./plotExport";
+import { MAP_DUNE_CREDIT, MAP_LAYER_CREDITS, windSourceText } from "@body/citation";
 import { STRIP_UNITS, stripSvg, type StripItem } from "./strip";
 import type { MathRenderer } from "./texsvg";
 import { exportTitleTex, exportUnits, utTex } from "./labels";
@@ -103,10 +102,9 @@ export function mapStripItems(c: MapStripContext): StripItem[] {
   // the Dunes only toggle changes what the wind-derived layers show: say so on the image
   if (state.dunesOnly && visible.some((l) => isWindDerived(l))) text.push({ kind: "text", text: DUNES_ONLY_STRIP });
   // sources: the paper, the wind dataset with its Copernicus notice, other external sources shown
-  text.push({ kind: "text", text: `Dune map: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}; wind-regime fields with the methods outlined there.` });
+  text.push({ kind: "text", text: MAP_DUNE_CREDIT });
   text.push({ kind: "text", text: windSourceText(state.dataset) });
-  if (visible.some((l) => l.id === "aridity")) text.push({ kind: "text", text: "Aridity: Global Aridity Index v3.1 (Zomer, Xu & Trabucco 2022, doi:10.1038/s41597-022-01493-1; data doi:10.6084/m9.figshare.7504448.v7), CC BY 4.0." });
-  if (visible.some((l) => l.id === "vegetation")) text.push({ kind: "text", text: "Vegetation cover: CSIRO MODIS Fractional Cover v3.1 (Guerschman et al. 2015, doi:10.1016/j.rse.2015.01.021; data doi:10.4225/08/5848a3f19a7b3), CC BY 4.0, © 2008–2019 CSIRO." });
+  for (const [id, credit] of Object.entries(MAP_LAYER_CREDITS)) if (visible.some((l) => l.id === id)) text.push({ kind: "text", text: credit });
   const bm = reg.basemaps.find((b) => b.id === state.basemap);
   if (c.includeBasemap && bm) text.push({ kind: "text", text: `Basemap: ${bm.title}${bm.attribution ? `, ${plain(bm.attribution.replace(/<[^>]+>/g, ""))}` : ""}.` });
   text.push({ kind: "text", text: `View: ${c.shareLink}`, muted: true });

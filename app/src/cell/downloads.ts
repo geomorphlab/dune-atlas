@@ -1,6 +1,7 @@
 // Download helpers for a clicked cell: citation text and the browser download trigger. The data
 // downloads (NetCDF, CSV bundle) are built in ./export.ts.
-import { CELL_SOURCE_IDS, citationSources, citationText } from "./citation";
+import { CELL_SOURCE_IDS } from "@body/citation";
+import { citationSources, citationText } from "./citation";
 import { datasetInfo } from "./datasetinfo";
 
 /** "23.25° S, 15.00° E": cell centre with hemisphere letters, 2 decimals (never "-23.25 N") */

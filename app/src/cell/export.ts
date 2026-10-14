@@ -11,7 +11,8 @@ import { analyseCell, modeDefined } from "./analysis";
 import { compassPoint } from "../util/angles";
 import { latLonText } from "./downloads";
 import { fieldInfo } from "./fieldinfo";
-import { AI_NOTICE, C3S_NOTICE, C3S_NOTICE_ERA5, CELL_SOURCE_IDS, citationJson, citationSources, citationText, fieldsCitation, fieldsLicence, referencesLine } from "./citation";
+import { AI_NOTICE, citationJson, citationSources, citationText, referencesLine } from "./citation";
+import { C3S_NOTICE, C3S_NOTICE_ERA5, CELL_SOURCE_IDS, fieldsCitation, fieldsLicence } from "@body/citation";
 import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "./auxinfo";
 import { DATASET_INFO, datasetInfo, resolutionText, type DatasetInfo } from "./datasetinfo";
 

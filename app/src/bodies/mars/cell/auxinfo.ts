@@ -5,7 +5,7 @@ import { resolutionText } from "../../../cell/datasetinfo";
 export type { AuxMeta } from "../../../cell/auxinfo";
 import type { AuxMeta } from "../../../cell/auxinfo";
 import { R_MARS } from "../body";
-import { DEM_CITATION, DEM_LICENCE, fieldsLicence } from "./citation";
+import { DEM_CITATION, DEM_LICENCE, fieldsLicence } from "../citation";
 
 export const AUX_META: Record<string, AuxMeta> = {
   qsdiv: {
