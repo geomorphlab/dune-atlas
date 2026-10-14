@@ -85,7 +85,13 @@ for (const s of [`${DS}/cells.zarr`, `${DS}/cells-aux.zarr`]) {
     { status: head.r.status, acao: head.r.headers.get("access-control-allow-origin"), listing: listing.r.status });
 }
 // pmtiles
-for (const p of ["dune-atlas/mars/v1/dunes/dunes.pmtiles", "dune-atlas/mars/v1/basemaps/hrsc-mola-terrarium.pmtiles"]) {
+// every PMTiles archive the registry references (layer sources, invert sources, pmtiles:// basemap tiles)
+const pmKeys = new Set();
+JSON.stringify(reg, (k, v) => {
+  if (typeof v === "string" && v.includes(".pmtiles")) pmKeys.add(v.replace(/^pmtiles:\/\//, "").replace(/\/\{z\}.*$/, "").replace("{dataset}", DS));
+  return v;
+});
+for (const p of [...pmKeys].sort()) {
   try {
     const src = FILE ? { getKey: () => p, getBytes: async (off, len) => { const fd = fs.openSync(path.join(DATA, p), "r"); const b = Buffer.alloc(len); const n = fs.readSync(fd, b, 0, len, off); fs.closeSync(fd); return { data: b.buffer.slice(b.byteOffset, b.byteOffset + n) }; } }
       : new FetchSource(`${DATA}/${p}`);
