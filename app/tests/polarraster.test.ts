@@ -42,9 +42,10 @@ function makeLib(unpatched: "" | "pole" | "seam" = ""): { lib: Lib; computeWorld
     fnSrc("lonToMercatorNorm"), fnSrc("lonToMercatorNormUnclamped"), fnSrc("latToMercatorNorm"), fnSrc("latToWgs84Norm"),
     fnSrc("boundsToMercatorNorm"), fnSrc("geoToArrayIndex"), fnSrc("flipTexCoordV"), method("function computeWorldOffsets(map, isGlobe) {", "// src/render-helpers.ts"),
   ].join("\n")
-    // topology checks: 0.1° regions of more than 300 cells a side get a vertex line every d cells (d | cells) to keep the
-    // test meshes small; smaller regions keep the production mesh (a line on every cell edge)
-    .replace("function globeMeshCount(cells, cellDeg) {", "function globeMeshCount(cells, cellDeg) {\n  if (cells > 300 && cellDeg < 0.15) { for (let d = 2; d <= cells; d++) if (cells % d === 0 && cells / d <= 48) return cells / d; }");
+    // topology checks (pole fold, seams, single coverage): to keep the test meshes CI-sized (a 2-core runner), a
+    // vertex line every d cells, d the largest divisor of the region's cells with d x cell size <= 2° (the library's
+    // original mesh had ~1° steps); the production count is checked in globemesh.test.ts
+    .replace("function globeMeshCount(cells, cellDeg) {", "function globeMeshCount(cells, cellDeg) {\n  { let best = 1; for (let d = 2; d <= cells; d++) if (cells % d === 0 && d * cellDeg <= 2 + 1e-9) best = d; if (best > 1) return Math.max(MIN_SUBDIVISIONS, cells / best); }");
   const members = [
     method("_parseUntiledMultiscale(metadata) {", "  static clearCache() {"),
     method("levelXYLimits(width, height) {", "  getVisibleRegions(map) {"),
@@ -80,7 +81,15 @@ const GRIDS = [
 ];
 
 /** the library's regions of one level, as the GPU sees them (vertex shader + fragment lookup in JS) */
+const MESHES = new WeakMap<object, Map<string, ReturnType<typeof buildLevelMesh>>>();
+/** the mesh of a level, built once per (layout, level, region size, mode) */
 function levelMesh(lay: ReturnType<typeof layout>, k: number, rs: number[], ecef: boolean, unpatched: "" | "pole" | "seam" = "") {
+  let m = MESHES.get(lay); if (!m) MESHES.set(lay, (m = new Map()));
+  const key = `${k}|${rs}|${ecef}|${unpatched}`;
+  let v = m.get(key); if (!v) m.set(key, (v = buildLevelMesh(lay, k, rs, ecef, unpatched)));
+  return v;
+}
+function buildLevelMesh(lay: ReturnType<typeof layout>, k: number, rs: number[], ecef: boolean, unpatched: "" | "pole" | "seam" = "") {
   const { lib } = makeLib(unpatched);
   lib._parseUntiledMultiscale({ layout: lay });
   const levels = lib.untiledLevels as { shape?: number[] }[];
@@ -138,7 +147,7 @@ function sphArea(a: number[], b: number[], c: number[]) {
   return Math.abs(2 * Math.atan2(dot(A, cross(B, C)), 1 + dot(A, B) + dot(B, C) + dot(C, A)));
 }
 /** number of triangles whose (geodesic) interior contains p */
-function coverCount(tris: ReturnType<typeof levelMesh>["tris"], p: number[]) {
+function coverCount(tris: ReturnType<typeof buildLevelMesh>["tris"], p: number[]) {
   let n = 0;
   for (const t of tris) {
     if (dot(p, t.a) < 0.99) continue; // far away (> 8°)
