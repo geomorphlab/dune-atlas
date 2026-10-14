@@ -95,4 +95,15 @@ only, not in a real browser. Items that most need a look in a browser are marked
 
 ## Deployment
 
-See the section added after publishing below.
+* Published 14 October 2026 as `geomorphlab/dune-atlas` main d9e8860 (tree identical to branch `mars` at
+  5037830); GitHub Actions run 38556701274 (build-and-deploy) succeeded. This log's deployment note followed
+  in a documentation-only commit.
+* Live checks after the deploy: https://map.geomorphlab.org/ and https://map.geomorphlab.org/mars/ return 200
+  and serve the new bundles (they contain the Start tour bubble, the loading indicator, the quantity-plot
+  setting and `rose_16_sectors.csv`); the Mars smoke check against the live site and data
+  (`scripts/mars/app/preview_smoke.mjs`) passed 34 of 34 checks; the Earth data stores (ERA5-Land
+  `dune-atlas/v1`, ERA5 `dune-atlas/v2/datasets/era5`) answer on https://data.geomorphlab.org/. No data
+  were uploaded in this track (the fixed DP colour range is in the app registry).
+* Not checked: the pages in a real browser (none available in the development sandbox).
+* `tests/repotext.test.ts` (run only where the maintainer's local word list exists) reports 36 hits in files
+  that predate this track (Mars physics constants and specification); this log was reworded to add none.
