@@ -2,12 +2,12 @@
 // Slider jitter on Mars: the grain-size slider over all 64 d values must not change the
 // layout of the layer panel or the cell panel (same invariant as tests/jitter.test.ts, tests/jitterlib.ts).
 import { describe, expect, it, vi } from "vitest";
-import { loadRegistry } from "../../src/registry/load";
-import { Store, type AppState } from "../../src/store";
-import { renderLayerPanel } from "../../src/ui/layerPanel";
-import { CellPanel } from "../../src/bodies/mars/ui/cellPanel";
+import { loadRegistry } from "../../src/core/registry/load";
+import { Store, type AppState } from "../../src/core/store";
+import { renderLayerPanel } from "../../src/core/ui/layerPanel";
+import { CellPanel } from "../../src/bodies/mars/cellPanel";
 import type { MarsCellStore } from "../../src/bodies/mars/cell/cellstore";
-import { measuredWidthCh, reserveCh, setMeasurer } from "../../src/ui/livenum";
+import { measuredWidthCh, reserveCh, setMeasurer } from "../../src/core/ui/livenum";
 import { fakeMeasure, holes, sweep, sweepFields } from "../jitterlib";
 import { makeMarsCell, FIELD_VARS } from "./helpers";
 

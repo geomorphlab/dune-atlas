@@ -2,7 +2,7 @@
 # registry/earth/layers.yaml (registry/layers.schema.json); merged at build time (VITE_BODY=mars) with
 # every registry/mars/generated/*.yaml fragment ({groups, layers}) written by the pipeline
 # (pipeline/src/dune_atlas_pipeline/mars/); a generated layer with the same id REPLACES the placeholder here
-# (app/src/registry/merge.ts). Validate: cd app && npm run validate-registry:mars
+# (app/src/core/registry/merge.ts). Validate: cd app && npm run validate-registry:mars
 #
 # Differences from Earth: one wind dataset (MCMC FV3 beta release 1), the slider is the median
 # grain diameter d (64 log-spaced values, 50-1000 µm, default 200 µm) and every d-dependent
@@ -18,6 +18,61 @@ datasets:
     description: "MCMC FV3-based Mars GCM, beta release 1 (2°, hourly, one Mars year): lowest-level winds, temperature and air density, 16,032 hourly samples."
     citation: "NASA Ames Mars Climate Modeling Center, FV3-based Mars GCM Beta Output Release 1 (fv3betaout1), https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/"
     cellAuxStores: ["{dataset}/cells-aux.zarr"]
+    # what the panel, About, downloads and image exports say about this dataset (app: cell/datasetinfo.ts,
+    # cell/citation.ts): `info` (name, grid, period, land and dune rules, About item), `credits` (sources
+    # cited for it, its wind-data source, the map-field citation and licence, the image-export wind line,
+    # the data notice) and the citation sources it defines
+    info:
+      name: MCMC FV3
+      resolution: 2°
+      resDeg: 2
+      period: one Mars year (6th simulated year, 668 sols)
+      nHours: 16032
+      landRule: 'every cell (Mars has no land mask: all 16,200 cells carry wind data)'
+      landThreshold: 0
+      nonLandReason: ''
+      dunesRule: the cell overlaps at least one dune polygon of the merged dune map (USGS Mars Global Digital Dune Database
+        and Fenton 2020)
+      fieldsFrom: atlas
+      sourceTitle: Winds (MCMC FV3 Mars GCM, beta release 1)
+      sourceHtml: 'hourly lowest-level winds, temperature and surface pressure of the NASA Ames Mars Climate Modeling
+        Center FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to 2° ×
+        2° (a cell is about 120 km across at the equator, larger than most dune fields): 16,032 hourly samples, one
+        Mars year. The map draws each cell as one square, so a field that changes strongly from cell to cell, as DP
+        often does at low latitudes, looks blocky. Air density of the lowest layer ρ = p/(R T); the height z of the
+        lowest-level wind follows from the hourly pressure and temperature (1.5–3.2 m over all cells and hours; 1.6–3.0
+        m in 98 % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction
+        velocity u* comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (2023, eq. 2.2) under constant
+        stress at that height (no roughness length).'
+    credits:
+      sources:
+      - dune-atlas-mars
+      - fv3
+      - pahtz-duran
+      - dunes
+      dataSource: fv3
+      fieldsCitation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+        transport law: Pähtz, T. & Durán, O. (2023). Scaling laws for planetary sediment transport from DEM-RANS numerical
+        simulations. Journal of Fluid Mechanics 963, A20. doi:10.1017/jfm.2023.343; winds: MCMC FV3-based Mars GCM Beta
+        Output Release 1, one Mars year of hourly lowest-level winds (NASA Ames Mars Climate Modeling Center (2023),
+        https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics: Haberle, R. M. et al. (2019). Icarus
+        333, 130–164. doi:10.1016/j.icarus.2019.03.026)'
+      fieldsLicence: NASA Ames MCMC output; no licence stated (NASA open data)
+      windSourceText: 'Wind: MCMC FV3 Mars GCM beta release 1 (NASA Ames Mars Climate Modeling Center), hourly lowest-level
+        wind, one Mars year, 2°; https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/'
+    citationSources:
+    - id: fv3
+      title: MCMC FV3 Mars GCM, beta release 1
+      entries:
+      - label: Data
+        text: 'NASA Ames Mars Climate Modeling Center (MCMC). FV3-based Mars Global Climate Model, Beta Output Release
+          1 (fv3betaout1): c48 reference simulation, 6th simulated year, 2° × 2°, hourly.'
+        doi: ''
+        url: https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/
+      - label: Model physics
+        text: 'Haberle, R. M. et al. (2019). Documentation of the NASA/Ames Legacy Mars Global Climate Model: simulations
+          of the present seasonal water cycle. Icarus 333, 130–164.'
+        doi: 10.1016/j.icarus.2019.03.026
 defaultDataset: fv3-beta1
 
 threshold:

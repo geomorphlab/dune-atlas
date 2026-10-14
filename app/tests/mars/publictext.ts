@@ -1,17 +1,17 @@
 // Collect every user-facing string of the Mars site and its downloads (keyed), like
 // tests/publictext.ts for Earth: for the user-text checks (tests/usertext.ts) and the text audit
 // (TEXT_DUMP=<file> writes the collection).
-import { loadRegistry } from "../../src/registry/load";
-import { Store, type AppState } from "../../src/store";
-import { renderLayerPanel } from "../../src/ui/layerPanel";
-import { legendHtml } from "../../src/ui/legend";
-import { CellPanel } from "../../src/ui/cellPanel";
+import { loadRegistry } from "../../src/core/registry/load";
+import { Store, type AppState } from "../../src/core/store";
+import { renderLayerPanel } from "../../src/core/ui/layerPanel";
+import { legendHtml } from "../../src/core/ui/legend";
+import { CellPanel } from "../../src/core/ui/cellPanel";
 import type { MarsCellStore } from "../../src/bodies/mars/cell/cellstore";
 import { cellNetcdf, csvColumns, metadataJson, readmeText } from "../../src/bodies/mars/cell/export";
-import * as HELP from "../../src/ui/helpText";
-import { mapStripItems } from "../../src/export/mapExport";
-import { plotStripItems } from "../../src/export/plotExport";
-import { datasetInfo } from "../../src/cell/datasetinfo";
+import * as HELP from "../../src/core/ui/helpText";
+import { mapStripItems } from "../../src/core/export/mapExport";
+import { plotStripItems } from "../../src/core/export/plotExport";
+import { datasetInfo } from "../../src/core/cell/datasetinfo";
 import { readNc } from "../ncreader";
 import { FIELD_VARS, makeMarsCell } from "./helpers";
 

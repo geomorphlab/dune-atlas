@@ -1,20 +1,20 @@
 // @vitest-environment happy-dom
 // Mars cell panel, downloads and public text (mirrors tests/ui.test.ts, tests/export.test.ts and
 // tests/publictext.test.ts for the Mars build).
-import { fieldsCitation } from "@body/citation";
+import { fieldsCitation } from "../../src/core/cell/citation";
 import { describe, expect, it, vi } from "vitest";
-import { CellPanel } from "../../src/bodies/mars/ui/cellPanel";
-import { renderLayerPanel } from "../../src/ui/layerPanel";
-import { legendHtml } from "../../src/ui/legend";
-import { loadRegistry } from "../../src/registry/load";
-import { Store, type AppState } from "../../src/store";
-import * as HELP from "../../src/ui/helpText";
-import { DEFAULT_VIEW } from "../../src/defaultview";
-import { mapStripItems } from "../../src/export/mapExport";
-import { plotFilename, plotStripItems } from "../../src/export/plotExport";
-import { datasetInfo } from "../../src/cell/datasetinfo";
-import { citationSources, citationText } from "../../src/cell/citation";
-import { CSV_NAMES, CSV_NAME_RE, csvName } from "../../src/cell/csvnames";
+import { CellPanel } from "../../src/bodies/mars/cellPanel";
+import { renderLayerPanel } from "../../src/core/ui/layerPanel";
+import { legendHtml } from "../../src/core/ui/legend";
+import { loadRegistry } from "../../src/core/registry/load";
+import { Store, type AppState } from "../../src/core/store";
+import * as HELP from "../../src/core/ui/helpText";
+import { DEFAULT_VIEW } from "../../src/core/defaultview";
+import { mapStripItems } from "../../src/core/export/mapExport";
+import { plotFilename, plotStripItems } from "../../src/core/export/plotExport";
+import { datasetInfo } from "../../src/core/cell/datasetinfo";
+import { citationSources, citationText } from "../../src/core/cell/citation";
+import { CSV_NAMES, CSV_NAME_RE, csvName } from "../../src/core/cell/csvnames";
 import { cellNetcdf, csvBundle, csvColumns, fieldsByGrainSizeCsv, fluxRoseCsv, metadataJson, readmeText, windSeriesCsv, marsFluxRoseTable } from "../../src/bodies/mars/cell/export";
 import { analyseMarsCell } from "../../src/bodies/mars/cell/analysis";
 import type { MarsCellStore } from "../../src/bodies/mars/cell/cellstore";
@@ -185,7 +185,7 @@ describe("Mars public text", () => {
 
 describe("Mars field metadata", () => {
   it("panel/export field texts come from registry/mars/qsat_field_metadata.json (per-hour Mars threshold)", async () => {
-    const { fieldInfo } = await import("../../src/cell/fieldinfo");
+    const { fieldInfo } = await import("../../src/core/cell/fieldinfo");
     expect(fieldInfo("uft").description).toMatch(/Pähtz & Durán \(2023\)/);
     expect(fieldInfo("dpm").displayUnits).toBe("m$^2$/yr");
   });

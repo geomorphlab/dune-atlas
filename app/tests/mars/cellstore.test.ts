@@ -5,11 +5,11 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import { MarsCellStore } from "../../src/bodies/mars/cell/cellstore";
-import { fieldValue } from "../../src/cell/cellstore";
-import { snapToCell } from "../../src/cell/snap";
+import { fieldValue } from "../../src/core/cell/cellstore";
+import { snapToCell } from "../../src/core/cell/snap";
 import { analyseMarsCell } from "../../src/bodies/mars/cell/analysis";
 import { EXAMPLE_CELL, MARS_GRID } from "../../src/bodies/mars/body";
-import { M } from "../../src/cell/marsphysics";
+import { M } from "../../src/bodies/mars/marsphysics";
 import { FIELD_VARS, FIXTURE_DS, RangeFileStore } from "./helpers";
 
 const DS = process.env.MARS_STORE_ROOT ?? FIXTURE_DS;

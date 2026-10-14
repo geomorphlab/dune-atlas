@@ -1,6 +1,6 @@
 // Shared by tests/jitter.test.ts and tests/mars/jitter.test.ts (slider-jitter sweep).
-import type { Store } from "../src/store";
-import { measuredWidthCh, type Measure } from "../src/ui/livenum";
+import type { Store } from "../src/core/store";
+import { measuredWidthCh, type Measure } from "../src/core/ui/livenum";
 
 /** a cell whose fields span 11 decades, change sign and go undefined, so every format width is exercised */
 export function sweepFields(nVars: number, n = 64): Float32Array {

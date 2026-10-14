@@ -3,8 +3,8 @@
 //   vite-node scripts/write-cell-exports.ts -- <fixture dir> <out dir> [iy,ix ...]
 import fs from "node:fs";
 import path from "node:path";
-import { CellStore } from "../src/cell/cellstore";
-import { cellNetcdf, csvBundle, exportBaseName } from "../src/cell/export";
+import { CellStore } from "../src/core/cell/cellstore";
+import { cellNetcdf, csvBundle, exportBaseName } from "../src/core/cell/export";
 
 const args = process.argv.slice(2).filter((a) => a !== "--");
 const base = path.resolve(args[0] ?? "../staging/fixture");

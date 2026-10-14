@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("maplibre-gl", () => ({ default: { addProtocol: () => {} } }));
 
-import { loadRegistry } from "../../src/registry/load";
+import { loadRegistry } from "../../src/core/registry/load";
 import { globePolarCaps, marsCapFills, marsPolarCapOptions } from "../../src/bodies/mars/map/globecaps";
 import { BASEMAP_CAP_ID, basemapCapKind, type PolarCapLayer } from "../../src/bodies/mars/map/polarcap";
 

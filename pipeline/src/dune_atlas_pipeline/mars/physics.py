@@ -7,7 +7,7 @@ Pahtz & Duran (2023), J. Fluid Mech. 963:A20, as specified in docs/reference/mar
   wind       u* from the lowest-level wind at that hour's lowest-level height through the smooth-wall
              mixing-length profile of eq. 2.2 under constant stress (profile_table.json), no roughness length
 All functions are numpy-vectorised and broadcast over their arguments. SI units throughout.
-app/src/cell/marsphysics.ts is a line-for-line port (checked by app/tests/marsphysics.test.ts).
+app/src/bodies/mars/marsphysics.ts is a line-for-line port (checked by app/tests/marsphysics.test.ts).
 """
 import json
 import pathlib

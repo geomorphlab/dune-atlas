@@ -98,9 +98,9 @@ stores are uploaded once to the data bucket, and the pipeline writes the matchin
 
 | path | contents |
 |---|---|
-| `app/` | the web app: TypeScript, Vite, MapLibre GL JS; one code base for both atlases |
+| `app/` | the web app: TypeScript, Vite, MapLibre GL JS; one code base for both atlases (`app/src/core/` shared, `app/src/bodies/earth/` and `app/src/bodies/mars/` per planet) |
 | `pipeline/` | Python package `dune_atlas_pipeline` (data conversion) and the HPC jobs |
-| `registry/` | layer, basemap and dataset registry (YAML, validated against `registry/layers.schema.json`) |
+| `registry/` | layer, basemap and dataset registry per planet (`registry/earth/`, `registry/mars/`; YAML, validated against `registry/layers.schema.json`) |
 | `scripts/` | build, upload and verification scripts |
 | `tools/checks/` | equivalence checks used when refactoring (build hashes, snapshots, share links) |
 | `docs/` | `guide/` (how to develop and extend), `reference/` (sources, physics, storage), `records/` (dated build and validation records) |
@@ -114,8 +114,8 @@ stores are uploaded once to the data bucket, and the pipeline writes the matchin
 
 Every pull request and push runs the app tests of both atlases, the registry validation, the type check,
 both builds and the pipeline tests (on synthetic data) in GitHub Actions (`.github/workflows/ci.yml`).
-The site is deployed to GitHub Pages from `main` only after these checks pass
-(`.github/workflows/deploy.yml`).
+The site is deployed to GitHub Pages from `main` only after these checks pass (the `deploy` job of
+the same workflow). Changes reach `main` through pull requests; see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Contact
 

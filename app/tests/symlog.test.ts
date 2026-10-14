@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { effectiveDisplay, scaleFor, scaleNorm, symlog, symlogCentred, symlogThreshold } from "../src/layerconfig";
-import { legendHtml, legendTicks, tickPosition } from "../src/ui/legend";
-import { fragmentFor, symlogUniforms } from "../src/map/shader";
-import { zarrLayerSource } from "../src/map/adapters";
-import { loadRegistry } from "../src/registry/load";
-import type { LayerDef } from "../src/registry/types";
+import { effectiveDisplay, scaleFor, scaleNorm, symlog, symlogCentred, symlogThreshold } from "../src/core/layerconfig";
+import { legendHtml, legendTicks, tickPosition } from "../src/core/ui/legend";
+import { fragmentFor, symlogUniforms } from "../src/core/map/shader";
+import { zarrLayerSource } from "../src/core/map/adapters";
+import { loadRegistry } from "../src/core/registry/load";
+import type { LayerDef } from "../src/core/registry/types";
 
 const lay = (clim: [number, number], colormap = "piyg"): LayerDef => ({ id: "q", title: "q", group: "g", type: "zarr-field", source: "s", variable: "qsdiv", display: { clim, colormap } });
 

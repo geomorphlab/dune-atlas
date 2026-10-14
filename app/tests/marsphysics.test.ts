@@ -1,7 +1,7 @@
 // TS Mars physics vs pipeline mars/physics.py (fixture: tests/fixtures/mars-physics-parity.json).
 import { describe, expect, it } from "vitest";
 import fixture from "./fixtures/mars-physics-parity.json";
-import { airState, D_VALUES, flux, frictionVelocity, layerHeight, M, threshold, uPlus, viscosity } from "../src/cell/marsphysics";
+import { airState, D_VALUES, flux, frictionVelocity, layerHeight, M, threshold, uPlus, viscosity } from "../src/bodies/mars/marsphysics";
 
 interface Row { [k: string]: number }
 const F = fixture as unknown as { ak: [number, number, number, number]; n_positive: number; rows: Row[]; profile: { x: number[]; u_plus: number[] } };

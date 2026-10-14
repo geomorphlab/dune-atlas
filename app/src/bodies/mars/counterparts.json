@@ -1,0 +1,25 @@
+{
+  "_about": "Earth modules whose Mars counterpart is kept in step by hand, with the git blob id of the Earth source last reconciled. Checked by tests/mars/counterparts.test.ts; updated with scripts/mars/app/counterparts.mjs. See docs/guide/mars.md.",
+  "modules": {
+    "src/bodies/earth/cellPanel.ts": {
+      "mars": "src/bodies/mars/cellPanel.ts",
+      "blob": "07d5dddcf46d4425b1ca2ca8bdceeeb8fdc97399"
+    },
+    "src/core/cell/analysis.ts": {
+      "mars": "src/bodies/mars/cell/analysis.ts",
+      "blob": "4311901690754b8a9df8c5154d65bf306b76402c"
+    },
+    "src/core/cell/cellstore.ts": {
+      "mars": "src/bodies/mars/cell/cellstore.ts",
+      "blob": "36a606a763fed7269d747c443ee327f49d73a1c9"
+    },
+    "src/core/cell/export.ts": {
+      "mars": "src/bodies/mars/cell/export.ts",
+      "blob": "02a395e92aa847f7f97db72e0c6b08d2a29e29f5"
+    },
+    "src/core/cell/flux.ts": {
+      "mars": "src/bodies/mars/cell/marsflux.ts",
+      "blob": "8b0a3be3e203aae05ab3621f16901edfa147d2d5"
+    }
+  }
+}

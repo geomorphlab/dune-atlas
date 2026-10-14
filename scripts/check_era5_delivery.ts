@@ -1,5 +1,5 @@
 // Delivery-path check of a published wind dataset: reads cells and pyramid windows over HTTP with the app's own
-// readers (src/cell/cellstore.ts CellStore + sidecars, zarrita FetchStore with suffix range requests) and writes the
+// readers (src/core/cell/cellstore.ts CellStore + sidecars, zarrita FetchStore with suffix range requests) and writes the
 // decoded values as JSON for scripts/verify_era5_r2.py to compare with the local / source values.
 //   cd app && NODE_USE_ENV_PROXY=1 npx vite-node ../scripts/check_era5_delivery.ts <base-url> <request.json> <out.json>
 // request.json: {cells: [[iy, ix], ...], windows: [{store, level, var, ut, y0, y1, x0, x1}, ...],

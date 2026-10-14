@@ -4,8 +4,8 @@
 // 85-90°, no segment longer than the guard), the read window (not clamped to ±85.05° when a pole
 // is visible), and the globe line mesh (finite at the poles, across the antimeridian).
 import { describe, expect, it } from "vitest";
-import { buildScreenField, ecef, enFrame, evenStreamlines, gcDeg, readWindow, sampleUnit, sampleUnitSphere, splitByScreenGap, type Grid } from "../src/map/vectors";
-import { lineMesh, MESH_STRIDE, mercatorXY } from "../src/map/globelines";
+import { buildScreenField, ecef, enFrame, evenStreamlines, gcDeg, readWindow, sampleUnit, sampleUnitSphere, splitByScreenGap, type Grid } from "../src/core/map/vectors";
+import { lineMesh, MESH_STRIDE, mercatorXY } from "../src/core/map/globelines";
 
 const D2R = Math.PI / 180;
 /** global grid with pole rows (lat0 = 90, dlat = -res), bearing (deg, toward) per node */

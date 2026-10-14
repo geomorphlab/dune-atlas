@@ -5,9 +5,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import yaml from "js-yaml";
-import { mergeRegistry } from "../src/registry/merge";
-import { validateRegistry } from "../src/registry/validate";
-import type { Registry, RegistryFragment } from "../src/registry/types";
+import { mergeRegistry } from "../src/core/registry/merge";
+import { validateRegistry } from "../src/core/registry/validate";
+import type { Registry, RegistryFragment } from "../src/core/registry/types";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const regDir = path.resolve(here, "../../registry");

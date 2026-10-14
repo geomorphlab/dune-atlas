@@ -1,20 +1,20 @@
 // Per-cell downloads: NetCDF-3 writer (parsed back by a minimal reader here; scripts/check-netcdf.py
 // reads real files with xarray), store-only zip writer, CSV / metadata builders.
-import { analyseCell } from "../src/cell/analysis";
+import { analyseCell } from "../src/core/cell/analysis";
 import { describe, expect, it } from "vitest";
-import { writeNetcdf3 } from "../src/cell/netcdf3";
-import { crc32, deflateRawAvailable, writeZip } from "../src/cell/zip";
+import { writeNetcdf3 } from "../src/core/cell/netcdf3";
+import { crc32, deflateRawAvailable, writeZip } from "../src/core/cell/zip";
 import zlib from "node:zlib";
 import katex from "katex";
-import { CSV_NAMES, CSV_NAME_RE, csvName } from "../src/cell/csvnames";
-import { cellNetcdf, csvBundle, csvColumns, exportBaseName, fieldMeta, fieldsByThresholdCsv, fluxRoseCsv, fluxRoseTable, fmtF32, metadataJson, readmeText, versionFromPrefix, windHistogramCsv, cfUnits } from "../src/cell/export";
-import { citationSources, citationText, referencesLine } from "../src/cell/citation";
-import { CITATION_SOURCES } from "@body/citation";
-import { citationFile } from "../src/cell/downloads";
-import { fluxRose, crestFluxRose } from "../src/cell/flux";
-import { fieldValue } from "../src/cell/cellstore";
-import { C } from "../src/util/constants";
-import { AI_NOTICE } from "../src/cell/citation";
+import { CSV_NAMES, CSV_NAME_RE, csvName } from "../src/core/cell/csvnames";
+import { cellNetcdf, csvBundle, csvColumns, exportBaseName, fieldMeta, fieldsByThresholdCsv, fluxRoseCsv, fluxRoseTable, fmtF32, metadataJson, readmeText, versionFromPrefix, windHistogramCsv, cfUnits } from "../src/core/cell/export";
+import { citationSources, citationText, referencesLine } from "../src/core/cell/citation";
+import { CITATION_SOURCES } from "../src/core/cell/citation";
+import { citationFile } from "../src/core/cell/downloads";
+import { fluxRose, crestFluxRose } from "../src/core/cell/flux";
+import { fieldValue } from "../src/core/cell/cellstore";
+import { C } from "../src/core/util/constants";
+import { AI_NOTICE } from "../src/core/cell/citation";
 import { makeCell, FIELD_VARS } from "./helpers";
 import fixture from "./fixtures/flux-parity.json";
 

@@ -2,9 +2,9 @@
 // streamlines integrated on the unmasked field and clipped to the dune cells; arrows anchored at their base.
 import { expect } from "vitest";
 import * as zarr from "zarrita";
-import { applyMask, arrowFeatures, buildScreenField, clipStreamlines, evenStreamlines, gcDeg, sampleNearest, sampleUnitSphere, arrowheadsAlong, type Grid } from "../src/map/vectors";
-import { maskGrid, type DuneMask } from "../src/map/dunemask";
-import { mathToBearingDeg } from "../src/util/angles";
+import { applyMask, arrowFeatures, buildScreenField, clipStreamlines, evenStreamlines, gcDeg, sampleNearest, sampleUnitSphere, arrowheadsAlong, type Grid } from "../src/core/map/vectors";
+import { maskGrid, type DuneMask } from "../src/core/map/dunemask";
+import { mathToBearingDeg } from "../src/core/util/angles";
 
 /** equirectangular "screen" over [w, e] x [s, n] at ppd px per degree: node lon/lat and the inverse */
 function screen(w: number, s: number, e: number, n: number, ppd: number, cell = 2) {

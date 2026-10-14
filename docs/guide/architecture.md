@@ -9,34 +9,39 @@ pyramids and the click panel range-reads one cell from `cells.zarr`, both on R2
 
 ### Module map
 
+Shared modules are in `app/src/core/` (paths below), the per-planet modules in `app/src/bodies/<body>/`,
+imported by shared code as `@body/<module>` and selected by `VITE_BODY` at build time; the entry
+`app/src/main.ts` serves both atlases. The per-body modules and how to add a dataset or a planet:
+[extending.md](extending.md).
+
 | module | role |
 |---|---|
 | `src/main.ts` | bootstrap: merged registry → initial state (registry defaults + URL) → map, controls, panels; wires store changes to map/panels/URL |
-| `src/store.ts` | minimal observable state (`basemap, projection, utIndex, layers{visible,opacity,cfg}, order, dataset, cell, embed`); `moveInOrder` / `normaliseOrder` |
-| `src/layerconfig.ts` | per-layer user config on top of registry defaults (colormap, reverse, clim, log, render mode, line colour, spacing in km + km→px conversion, fill colour, invert); effective display; URL tokens |
-| `src/urlstate.ts` | permalink parse/serialise: `lon lat zoom basemap layers(id[:opacity][~key=value]*,…) ut cell(iy,ix) proj embed order dataset`; layer keys `cm rev lo hi log mode vc km fc inv` (legacy `ds` migrated, `lc`/`ol` ignored) |
-| `src/config.ts` | build-time config from `VITE_*` env (data base, cell store path, suffix ranges) |
-| `src/registry/types.ts` | TS mirror of `registry/layers.schema.json` |
-| `src/registry/merge.ts` | merge `layers.yaml` + `generated/*.yaml` fragments; `resolveSource()` |
-| `src/registry/load.ts` | `import.meta.glob(..., {query: "?raw", eager: true})` inlines the YAML at build time |
-| `src/registry/validate.ts` | ajv (2020-12) schema + semantic checks incl. rejecting `WITHHELD_VARS` (CI and tests only; not bundled) |
-| `src/map/basemaps.ts` | registry basemap → full MapLibre style on a dark background; `transformStyle` adds projection + dark `sky` (space/horizon/fog) so nothing light shows around the globe |
-| `src/map/adapters.ts` | **one adapter per layer `type`** (`zarr-field`, `pmtiles-vector`, `pmtiles-raster`, `cog`, `geojson-points`); handles accept config changes in place (`applyConfig`) or ask to be re-created |
-| `src/map/vectors.ts`, `fieldreader.ts` | arrows and Jobard–Lefer evenly spaced streamlines in screen space on a unit-vector field (pure geometry) and a zarrita window reader for GeoZarr multiscale levels |
-| `src/map/shader.ts` | zarr-layer `customFrag` bodies: `rad-to-bearing`, `rad-to-axis`, `scale`, log colour scaling |
-| `src/map/overlays.ts` | lazily adds/removes overlays, keeps registry order below basemap labels, re-attaches after a basemap swap, fans out the threshold |
-| `src/ui/layerPanel.ts`, `legend.ts`, `threshold.ts` | registry-generated panel: dataset selector (> 1 dataset), pinned u\*,th control, 'Active layers' list (drawing order: drag / move buttons, opacity slider per row, × to hide), groups, toggles, display options (colormap chooser, reverse, clim + reset, log, render mode, line colour, spacing (Finer … Coarser); fill colour + invert for vectors), legends, info popovers, basemap radio, globe toggle, About & citation |
-| `src/util/math.ts` | KaTeX rendering of `$…$` segments (titles, units, descriptions, table symbols) with a plain fallback (`tex.ts`) |
-| `src/ui/cellPanel.ts` | click-to-cell side panel / bottom sheet (resizable, width/height in localStorage, figures re-render to fit): compact synced u\*,th control, wind + flux roses (flux mode flat/elongation/transverse, petals stacked by excess shear, sector sliders, %/m²/yr axis), polar modes plot, flux divergence vs threshold (cells-aux), Symbol/Quantity/Value table, downloads; every section (wind rose, flux rose, modes, qsdiv, cell summary, download & cite) is a `<details class="section">` whose `<summary>` holds the section `<h3>`, open by default, state in localStorage `duneAtlas.cellPanel.<key>Open` (`PANEL_SECTIONS`) |
-| `src/cell/snap.ts` | lon/lat → nearest cell of the store's grid (root attrs `grid`; antimeridian wrap, polar clamp, any spacing / lon0) |
-| `src/cell/cellstore.ts` | zarrita reader for `cells.zarr` (`hist`, `fields`, `dunes`) + caching store (shard indexes, metadata) |
-| `src/cell/flux.ts` | line-for-line port of `pipeline/.../flux.py` (bins from the store attrs): `fluxRose`, `dpRdpRdd` (time-averaged flat-bed flux), `crestFluxRose` (crest flux with speed-up), `fluxRoseByExcessShear` |
-| `src/cell/analysis.ts` | per cell × threshold: wind rose, time-averaged flux rose (flat bed or crest flux about αE / αH; m²/yr and %), stored DP/RDP/RDP/DP/RDD, αT/αE/αO/αH/RDD bearings and series with the mode-visibility rule (`modeDefined`) |
-| `src/cell/roses.ts`, `modesplot.ts` | pure SVG-string renderers (unit-tested in node): gapless roses with 8/16/32/64/128 sectors (divisors of the 128 source bins), polar modes-vs-u\*,th plot |
-| `src/cell/export.ts`, `netcdf3.ts`, `zip.ts` | per-cell downloads: NetCDF-3 (64-bit offset, CF-1.8 style; pure-TS writer) and the CSV bundle (store-only zip writer) |
-| `src/cell/downloads.ts`, `citation.ts`, `fieldinfo.ts` | citation text + download trigger; AI notice; display units for the fields |
-| `src/generated/constants.json` | **generated** from `pipeline/.../constants.py` by `scripts/export-constants.py` (incl. `QSAT_VARS`, `WITHHELD_VARS`) |
-| `src/generated/colormaps.json` | **generated** (matplotlib) by `scripts/gen-colormaps.py` |
+| `src/core/store.ts` | minimal observable state (`basemap, projection, utIndex, layers{visible,opacity,cfg}, order, dataset, cell, embed`); `moveInOrder` / `normaliseOrder` |
+| `src/core/layerconfig.ts` | per-layer user config on top of registry defaults (colormap, reverse, clim, log, render mode, line colour, spacing in km + km→px conversion, fill colour, invert); effective display; URL tokens |
+| `src/core/urlstate.ts` | permalink parse/serialise: `lon lat zoom basemap layers(id[:opacity][~key=value]*,…) ut cell(iy,ix) proj embed order dataset`; layer keys `cm rev lo hi log mode vc km fc inv` (legacy `ds` migrated, `lc`/`ol` ignored) |
+| `src/core/config.ts` | build-time config from `VITE_*` env (data base, cell store path, suffix ranges) |
+| `src/core/registry/types.ts` | TS mirror of `registry/layers.schema.json` |
+| `src/core/registry/merge.ts` | merge `layers.yaml` + `generated/*.yaml` fragments; `resolveSource()` |
+| `src/core/registry/load.ts` | merges the body's registry files, inlined at build time by `import.meta.glob(..., {query: "?raw", eager: true})` in `@body/registry` |
+| `src/core/registry/validate.ts` | ajv (2020-12) schema + semantic checks incl. rejecting `WITHHELD_VARS` (CI and tests only; not bundled) |
+| `src/core/map/basemaps.ts` | registry basemap → full MapLibre style on a dark background; `transformStyle` adds projection + dark `sky` (space/horizon/fog) so nothing light shows around the globe |
+| `src/core/map/adapters.ts` | **one adapter per layer `type`** (`zarr-field`, `pmtiles-vector`, `pmtiles-raster`, `cog`, `geojson-points`); handles accept config changes in place (`applyConfig`) or ask to be re-created |
+| `src/core/map/vectors.ts`, `fieldreader.ts` | arrows and Jobard–Lefer evenly spaced streamlines in screen space on a unit-vector field (pure geometry) and a zarrita window reader for GeoZarr multiscale levels |
+| `src/core/map/shader.ts` | zarr-layer `customFrag` bodies: `rad-to-bearing`, `rad-to-axis`, `scale`, log colour scaling |
+| `src/core/map/overlays.ts` | lazily adds/removes overlays, keeps registry order below basemap labels, re-attaches after a basemap swap, fans out the threshold |
+| `src/core/ui/layerPanel.ts`, `legend.ts`, `threshold.ts` | registry-generated panel: dataset selector (> 1 dataset), pinned u\*,th control, 'Active layers' list (drawing order: drag / move buttons, opacity slider per row, × to hide), groups, toggles, display options (colormap chooser, reverse, clim + reset, log, render mode, line colour, spacing (Finer … Coarser); fill colour + invert for vectors), legends, info popovers, basemap radio, globe toggle, About & citation |
+| `src/core/util/math.ts` | KaTeX rendering of `$…$` segments (titles, units, descriptions, table symbols) with a plain fallback (`tex.ts`) |
+| `src/core/ui/cellPanel.ts` | the body's cell panel (`@body/cellPanel`: `src/bodies/earth/cellPanel.ts`, `src/bodies/mars/cellPanel.ts`; shared helpers `ui/panelcommon.ts`). Earth: click-to-cell side panel / bottom sheet (resizable, width/height in localStorage, figures re-render to fit): compact synced u\*,th control, wind + flux roses (flux mode flat/elongation/transverse, petals stacked by excess shear, sector sliders, %/m²/yr axis), polar modes plot, flux divergence vs threshold (cells-aux), Symbol/Quantity/Value table, downloads; every section (wind rose, flux rose, modes, qsdiv, cell summary, download & cite) is a `<details class="section">` whose `<summary>` holds the section `<h3>`, open by default, state in localStorage `duneAtlas.cellPanel.<key>Open` (`PANEL_SECTIONS`) |
+| `src/core/cell/snap.ts` | lon/lat → nearest cell of the store's grid (root attrs `grid`; antimeridian wrap, polar clamp, any spacing / lon0) |
+| `src/core/cell/cellstore.ts` | zarrita reader for `cells.zarr` (`hist`, `fields`, `dunes`) + caching store (shard indexes, metadata) |
+| `src/core/cell/flux.ts` | line-for-line port of `pipeline/.../flux.py` (bins from the store attrs): `fluxRose`, `dpRdpRdd` (time-averaged flat-bed flux), `crestFluxRose` (crest flux with speed-up), `fluxRoseByExcessShear` |
+| `src/core/cell/analysis.ts` | per cell × threshold: wind rose, time-averaged flux rose (flat bed or crest flux about αE / αH; m²/yr and %), stored DP/RDP/RDP/DP/RDD, αT/αE/αO/αH/RDD bearings and series with the mode-visibility rule (`modeDefined`) |
+| `src/core/cell/roses.ts`, `modesplot.ts` | pure SVG-string renderers (unit-tested in node): gapless roses with 8/16/32/64/128 sectors (divisors of the 128 source bins), polar modes-vs-u\*,th plot |
+| `src/core/cell/export.ts`, `netcdf3.ts`, `zip.ts` | per-cell downloads: NetCDF-3 (64-bit offset, CF-1.8 style; pure-TS writer) and the CSV bundle (store-only zip writer) |
+| `src/core/cell/downloads.ts`, `citation.ts`, `fieldinfo.ts` | citation text + download trigger; AI notice; display units for the fields |
+| `src/core/generated/constants.json` | **generated** from `pipeline/.../constants.py` by `scripts/export-constants.py` (incl. `QSAT_VARS`, `WITHHELD_VARS`) |
+| `src/core/generated/colormaps.json` | **generated** (matplotlib) by `scripts/gen-colormaps.py` |
 
 Scripts: `validate-registry.ts` (CI gate), `make-parity-fixture.py` (Python reference →
 `tests/fixtures/flux-parity.json`), `check-cell-query.ts` (exercises the cell path against a
@@ -101,7 +106,7 @@ within ±90°, texture coordinates in [0, 1]; the unpatched code fails these che
   any step longer than 4·dsep in degrees or a non-finite vertex; arrows use the spherical
   destination (`offset`, exact near the poles) and the same split; drawn as a GeoJSON line layer
   `ov-<id>-vec`. *Globe:* GeoJSON layers cannot be drawn beyond ±85.05° in MapLibre's globe, so the
-  lines go to a custom WebGL layer `ov-<id>-vec-globe` (`src/map/globelines.ts`, `GlobeLinesLayer`):
+  lines go to a custom WebGL layer `ov-<id>-vec-globe` (`src/core/map/globelines.ts`, `GlobeLinesLayer`):
   vertices as unclamped Mercator x/y (latitudes up to ±89.9999°), projected with MapLibre's
   `projectTile` shader prelude, extruded in screen space (line width in px, 1 px antialiasing,
   premultiplied alpha, per-vertex alpha for the arrows' magnitude scaling); lines are split where
@@ -197,7 +202,7 @@ within ±90°, texture coordinates in [0, 1]; the unpatched code fails these che
   (2 decimals, hemisphere letters, longitude wrapped). Mouse: follows the cursor, keeps the last
   value dimmed when the cursor leaves the map. Touch screens (`hover: none`): hidden until a tap,
   then the last tapped point. DOM only, so never in image exports.
-* **Opening view** (`src/defaultview.ts`): without view state in the URL (no `#v=`, no view keys in
+* **Opening view** (`src/core/defaultview.ts`): without view state in the URL (no `#v=`, no view keys in
   `?query`; `embed=1` / `tour=1` alone do not count, so embeds open the same way) the atlas opens
   in `DEFAULT_VIEW`, the decoded author link `#v=AQXirhW4wRLgAgIBDgMJVSACAWQAB1UA`: globe centred
   at 15.1644° N, 17.5025° E, zoom 3.52; ERA5 0.25°; u*,th = 0.15 m/s (index 14); dark basemap;
@@ -276,7 +281,7 @@ within ±90°, texture coordinates in [0, 1]; the unpatched code fails these che
   dataset prefix, references grouped by source, CC BY 4.0, CF-1.8, history with the permalink,
   comment = AI notice). 'CSV bundle (.zip)' (DEFLATE via CompressionStream('deflate-raw'), stored
   fallback) — every CSV is UTF-8 with a BOM and has ONE header row of plain ASCII snake_case names
-  (`src/cell/csvnames.ts` CSV_NAMES, shared by Earth and Mars: e.g. sige_sigh -> sigma_e_over_sigma_h,
+  (`src/core/cell/csvnames.ts` CSV_NAMES, shared by Earth and Mars: e.g. sige_sigh -> sigma_e_over_sigma_h,
   ufm -> ustar_mean_above_threshold_over_ustar_th, ut -> ustar_threshold, d -> grain_diameter; units,
   long names with symbols and the NetCDF name per column in README.txt and metadata.json
   files.<csv>.columns {name, netcdf_name, units, long_name}; pandas `pd.read_csv(f)`, R
@@ -398,7 +403,7 @@ within ±90°, texture coordinates in [0, 1]; the unpatched code fails these che
   merged order (later on top), always below basemap labels and the selected-cell outline.
 * `source` is a URL or a path relative to `VITE_DATA_BASE` (default `registry.dataBase`).
 * `display.clim` is in display units (after `transform`); `log: true` needs `clim[0] > 0`.
-  `colormap` names come from `src/generated/colormaps.json`. These are defaults; users can
+  `colormap` names come from `src/core/generated/colormaps.json`. These are defaults; users can
   change colormap/clim/log in the panel. Optional `display.magnitudeVar` pairs a directional
   field with the variable scaling its arrows; optional `invertSource`/`invertSourceLayer` give a
   vector layer an 'invert' complement tileset.
@@ -411,13 +416,13 @@ within ±90°, texture coordinates in [0, 1]; the unpatched code fails these che
 
 ### Adding a layer type
 
-1. Write an adapter in `src/map/adapters.ts`: `(layer, ctx, opacity) => LayerHandle` that adds its
+1. Write an adapter in `src/core/map/adapters.ts`: `(layer, ctx, opacity) => LayerHandle` that adds its
    MapLibre source/layers *before `ctx.beforeId`* and returns `{layerIds, setOpacity, remove,
    setThreshold?}`. Register it in `ADAPTERS`.
 2. Add the type to `registry/layers.schema.json` → `$defs/layer/properties/type/enum` and to
-   `LayerType` in `src/registry/types.ts` (TypeScript then forces the `ADAPTERS` entry).
-3. Add semantic checks to `src/registry/validate.ts` and a negative case to
-   `tests/registry.test.ts`; add legend handling in `src/ui/legend.ts` if needed.
+   `LayerType` in `src/core/registry/types.ts` (TypeScript then forces the `ADAPTERS` entry).
+3. Add semantic checks to `src/core/registry/validate.ts` and a negative case to
+   `tests/registry.test.ts`; add legend handling in `src/core/ui/legend.ts` if needed.
 
 Adding a layer of an existing type needs no code: a YAML entry (or a pipeline-generated fragment).
 

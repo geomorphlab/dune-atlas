@@ -125,7 +125,7 @@ def test_registry_semantics():
         assert frag[v]["display"]["colormap"] == "rdbu" and lo == -hi
     # DP p98 = 4.43e-6 m^2/s -> ~140 m^2/yr
     assert frag["qacb"]["units"] == "m²/yr"  # flux converted m²/s -> m²/yr (dpm withheld: constants.WITHHELD_VARS)
-    cmaps = set(json.loads((REPO / "app" / "src" / "generated" / "colormaps.json").read_text())) - {"_comment"}
+    cmaps = set(json.loads((REPO / "app" / "src" / "core" / "generated" / "colormaps.json").read_text())) - {"_comment"}
     assert {l["display"]["colormap"] for l in frag.values()} <= cmaps
 
 

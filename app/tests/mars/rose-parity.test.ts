@@ -3,7 +3,7 @@
 import { describe, expect, it } from "vitest";
 import { dirBin, hourState, marsFluxRoses, thresholdStats } from "../../src/bodies/mars/cell/marsflux";
 import { analyseMarsCell } from "../../src/bodies/mars/cell/analysis";
-import { M } from "../../src/cell/marsphysics";
+import { M } from "../../src/bodies/mars/marsphysics";
 import { ROSE_FIXTURE, seriesOf, makeMarsCell } from "./helpers";
 
 const rel = (a: number, b: number) => (a === b ? 0 : Math.abs(a - b) / Math.max(Math.abs(a), Math.abs(b), 1e-300));

@@ -10,7 +10,7 @@
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { cellFeature, cellFromIndex } from "../src/cell/snap";
+import { cellFeature, cellFromIndex } from "../src/core/cell/snap";
 
 const LIB = fs.readFileSync(path.resolve(__dirname, "../node_modules/@carbonplan/zarr-layer/dist/index.js"), "utf8");
 function method(start: string, end: string): string {

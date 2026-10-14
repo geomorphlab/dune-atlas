@@ -6,14 +6,14 @@ import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import { FakeMap } from "./fakemap";
-import { loadRegistry } from "../src/registry/load";
-import { OverlayManager, restoreOverlays, SELECTED_CELL_BOTTOM, SELECTED_CELL_LINE, firstSymbolLayer } from "../src/map/overlays";
-import { setBasemap } from "../src/map/basemaps";
-import type { LayerState } from "../src/store";
+import { loadRegistry } from "../src/core/registry/load";
+import { OverlayManager, restoreOverlays, SELECTED_CELL_BOTTOM, SELECTED_CELL_LINE, firstSymbolLayer } from "../src/core/map/overlays";
+import { setBasemap } from "../src/core/map/basemaps";
+import type { LayerState } from "../src/core/store";
 import type { Map as MlMap } from "maplibre-gl";
 
 // no tile / chunk reads in this test: streamline data loading fails fast (layers are still added)
-vi.mock("../src/map/fieldreader", () => ({ FieldReader: { open: () => Promise.reject(new Error("no field data in this test")) } }));
+vi.mock("../src/core/map/fieldreader", () => ({ FieldReader: { open: () => Promise.reject(new Error("no field data in this test")) } }));
 
 const reg = loadRegistry().registry;
 const STYLES = JSON.parse(fs.readFileSync(path.resolve(__dirname, "fixtures/basemap-styles.json"), "utf8"));

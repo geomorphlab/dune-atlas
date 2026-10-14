@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 // 'Centre map on this cell', Mars: 2° cells (polar cell 88–90° N on the globe / clamped flat).
 import { describe, it, vi } from "vitest";
-import { CellPanel } from "../../src/bodies/mars/ui/cellPanel";
+import { CellPanel } from "../../src/bodies/mars/cellPanel";
 import type { MarsCellStore } from "../../src/bodies/mars/cell/cellstore";
 import { makeMarsCell, FIELD_VARS } from "./helpers";
 import { checkCentre, checkHeaderButton } from "../centrelib";

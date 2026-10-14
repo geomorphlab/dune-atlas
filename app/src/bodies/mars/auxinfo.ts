@@ -1,10 +1,11 @@
 // Mars per-cell auxiliary variables (cells-aux.zarr: qsdiv (lat, lon, d), rho_mean, elev_mean) as
 // shown in the panel and written to the downloads. The divergence uses the Mars radius.
-import type { CellAux } from "../../cell/cellstore";
-import { resolutionText } from "../../cell/datasetinfo";
-import type { AuxMeta } from "../../cell/auxinfo";
+import type { CellAux } from "../../core/cell/cellstore";
+import { resolutionText } from "../../core/cell/datasetinfo";
+import type { AuxMeta } from "../../core/cell/auxinfo";
 import { R_MARS } from "./body";
-import { DEM_CITATION, DEM_LICENCE, fieldsLicence } from "./citation";
+import { DEM_CITATION, DEM_LICENCE } from "./citation";
+import { fieldsLicence } from "../../core/cell/citation";
 
 export const AUX_META: Record<string, AuxMeta> = {
   qsdiv: {
@@ -65,5 +66,3 @@ export function auxSourceAttrs(aux: CellAux, v: string, deg = 2): Record<string,
   return out;
 }
 
-/** aridity classes: Earth only (the Earth cell panel imports this name until the panels are unified) */
-export function aridityClass(_ai: number): string { void _ai; return ""; }

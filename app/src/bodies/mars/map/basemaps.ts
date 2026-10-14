@@ -1,7 +1,7 @@
 // Mars basemaps: resolve relative `pmtiles://<key>/{z}/{x}/{y}` tiles of the registry against the
 // data base (the MOLA–HRSC terrarium archive lives next to the other Mars stores), and register the
 // esri-mars:// protocol for the Esri OnMars basemaps of the registry (see docs/guide/mars.md).
-import type { BasemapDef } from "../../../registry/types";
+import type { BasemapDef } from "../../../core/registry/types";
 import { PMTiles, type Protocol } from "pmtiles";
 import { ensureEsriProtocol } from "./esri";
 

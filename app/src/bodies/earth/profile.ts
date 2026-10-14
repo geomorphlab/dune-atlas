@@ -1,6 +1,6 @@
 // Earth profile (see profile.ts).
-import type { BodyProfile } from "../../profile";
-import { mathHtml } from "../../util/math";
+import type { BodyProfile } from "../../core/profile";
+import { mathHtml } from "../../core/util/math";
 
 /** Earth mean radius (IUGG, m): great-circle distances on the map */
 export const R_EARTH_MEAN = 6371008.8;

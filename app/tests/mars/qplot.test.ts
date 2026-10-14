@@ -2,11 +2,11 @@
 // Mars "<quantity> vs grain diameter" plot: same features as Earth, x = log10 d; the
 // last x label (1000) fits; the per-hour median threshold is offered.
 import { describe, expect, it, vi } from "vitest";
-import { CellPanel } from "../../src/bodies/mars/ui/cellPanel";
+import { CellPanel } from "../../src/bodies/mars/cellPanel";
 import type { MarsCellStore } from "../../src/bodies/mars/cell/cellstore";
 import { makeMarsCell } from "./helpers";
-import { DEFAULT_PLOT, PLOT_STORAGE } from "../../src/cell/qplot";
-import { linePlotSvg } from "../../src/cell/lineplot";
+import { DEFAULT_PLOT, PLOT_STORAGE } from "../../src/core/cell/qplot";
+import { linePlotSvg } from "../../src/core/cell/lineplot";
 import { checkLinePlotOptions, xTickFit } from "../qplotlib";
 
 const mem = new Map<string, string>();

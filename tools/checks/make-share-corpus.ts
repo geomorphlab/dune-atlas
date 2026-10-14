@@ -7,11 +7,11 @@
 //   npx vite-node ../tools/checks/make-share-corpus.ts -- tests/fixtures/share-links-earth.json
 //   VITE_BODY=mars npx vite-node ../tools/checks/make-share-corpus.ts -- tests/fixtures/share-links-mars.json
 import fs from "node:fs";
-import { loadRegistry } from "../../app/src/registry/load";
-import { BODY } from "../../app/src/body";
-import { DEFAULT_VIEW } from "../../app/src/defaultview";
-import { SHARE_IDS, encodeShare } from "../../app/src/share/shortlink";
-import { SPACING_KM_STEPS, type LayerConfig } from "../../app/src/layerconfig";
+import { loadRegistry } from "../../app/src/core/registry/load";
+import { BODY } from "../../app/src/core/body";
+import { DEFAULT_VIEW } from "../../app/src/core/defaultview";
+import { SHARE_IDS, encodeShare } from "../../app/src/core/share/shortlink";
+import { SPACING_KM_STEPS, type LayerConfig } from "../../app/src/core/layerconfig";
 import { openShareCode } from "../../app/tests/shareopen";
 
 const out = process.argv.slice(2).filter((a) => a !== "--")[0];

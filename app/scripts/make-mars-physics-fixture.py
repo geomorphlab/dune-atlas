@@ -1,5 +1,5 @@
 """Build tests/fixtures/mars-physics-parity.json: reference values of the Mars physics (pipeline mars/physics.py)
-on a deterministic grid of states (u, v, T, rho, ps) x grain diameters, for the TS port (src/cell/marsphysics.ts).
+on a deterministic grid of states (u, v, T, rho, ps) x grain diameters, for the TS port (src/bodies/mars/marsphysics.ts).
 
     PYTHONPATH=pipeline/src python app/scripts/make-mars-physics-fixture.py
 """

@@ -5,12 +5,12 @@
 // group / Display open states, layer-panel scroll and collapsed state, the previously selected cell
 // (or none) and its panel scroll, the bottom-sheet height. No layer is ever added.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { Tour } from "../src/ui/tour";
-import { TOUR_FALLBACK, TOUR_STEPS } from "../src/ui/helpText";
-import { DEMO_LAYER, tourHooks } from "../src/ui/tourHooks";
-import { renderLayerPanel } from "../src/ui/layerPanel";
-import { loadRegistry } from "../src/registry/load";
-import { Store, type AppState } from "../src/store";
+import { Tour } from "../src/core/ui/tour";
+import { TOUR_FALLBACK, TOUR_STEPS } from "../src/core/ui/helpText";
+import { DEMO_LAYER, tourHooks } from "../src/core/ui/tourHooks";
+import { renderLayerPanel } from "../src/core/ui/layerPanel";
+import { loadRegistry } from "../src/core/registry/load";
+import { Store, type AppState } from "../src/core/store";
 
 vi.stubGlobal("localStorage", (() => { const m = new Map<string, string>(); return { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => { m.set(k, v); }, removeItem: (k: string) => { m.delete(k); }, clear: () => m.clear() }; })());
 const reg = loadRegistry().registry;

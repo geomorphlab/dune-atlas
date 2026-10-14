@@ -1,6 +1,6 @@
 // Tour popover placement: fully on screen, never over its own highlight when there is room.
 import { describe, it, expect } from "vitest";
-import { tourPlacement } from "../src/ui/tour";
+import { tourPlacement } from "../src/core/ui/tour";
 
 const inView = (p: { left: number; top: number }, pop: { w: number; h: number }, v: { w: number; h: number }) =>
   p.left >= 12 && p.top >= 12 && p.left + pop.w <= v.w - 12 && p.top + pop.h <= v.h - 12;

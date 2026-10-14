@@ -18,3 +18,4 @@ are kept at the git tag `records-2026-10`.
 | [validation-mars-terrain.md](validation-mars-terrain.md) | Mars relief tiles, elevation and dune tiles | `dune-atlas/mars/v1/` |
 | [validation-mars.md](validation-mars.md) | Mars atlas integration and first release | `dune-atlas/mars/v1/` |
 | [refactor-baseline.md](refactor-baseline.md) | baseline of the 2026 code restructuring (builds, tests, snapshots) | — |
+| [refactor-equivalence.md](refactor-equivalence.md) | equivalence checks of the restructuring into a shared core and per-planet folders (phases 2 and 3) | — |

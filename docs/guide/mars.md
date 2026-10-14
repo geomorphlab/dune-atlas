@@ -1,28 +1,31 @@
-# Mars app: body-switch build, basemaps, development and keeping Mars in sync with Earth
+# Mars atlas: what differs from Earth, basemaps, development
 
-Constants and formulas: [mars-spec.md](mars-spec.md) (approved; not repeated here). This document covers
-the app side of the Mars atlas.
+Constants and formulas: [mars-spec.md](../reference/mars-spec.md) (approved; not repeated here). How the
+two atlases share one app and how a body is added: [extending.md](extending.md). This document covers the
+Mars side.
 
-## 1. Body switch
+## 1. The Mars build
 
-`VITE_BODY=mars` builds the Mars atlas; anything else (the default) builds the Earth atlas. The Earth
-build does not load any Mars code: `vite.config.ts` only adds the body plugin (`app/scripts/body-plugin.ts`)
-when `VITE_BODY=mars`. Both builds share one UI (§1a): the header label, the planet toggle, its tour step
-and per-body storage keys are shared Earth code, so the Earth build is no longer byte-identical to
-`earth/main`; its source differs from `earth/main` only in the files listed in §1a.
+`VITE_BODY=mars` builds the Mars atlas from the shared app (`app/src/main.ts`, `app/src/core/`) with the
+Mars modules of `app/src/bodies/mars/` behind the `@body/` alias and the Mars registry `registry/mars/`
+([extending.md](extending.md), Layout). Mars-specific code besides the `@body` modules: the cell store,
+per-hour analysis, flux roses and downloads (`bodies/mars/cell/`), the scale bar, basemap preparation,
+Esri protocol and polar caps (`bodies/mars/map/`), the registry checks (`bodies/mars/registry/validate.ts`),
+the body constants (`bodies/mars/body.ts`) and the physics (`bodies/mars/marsphysics.ts`, port of
+`pipeline/.../mars/physics.py`, constants generated into `bodies/mars/generated/constants-mars.json`);
+nothing else in the app re-implements the physics.
 
 ### 1a. One UI for both planets (Earth at `/`, Mars at `/mars/`)
 
-* `app/src/body.ts`: `BODY` (`"earth"`, or `"mars"` when `VITE_BODY=mars`), `BODY_NAME`, `storageKey(name)`,
+* `app/src/core/body.ts`: `BODY` (`"earth"`, or `"mars"` when `VITE_BODY=mars`), `BODY_NAME`, `storageKey(name)`,
   `otherBodyUrl()`.
 * Header (`ui/layerPanel.ts`): h1 "Dune Atlas" followed by the body name ("Earth" / "Mars", class `body-name`,
   `var(--muted)` as the subtitle). Subtitle (`SUBTITLE_HTML`, identical in both builds, two lines, no planet
   name): "Interactive explorer for aeolian geomorphology" / "Developed by the Monash Geomorphology Lab" (link
-  https://www.geomorphlab.org/). The Gunn (2026) citation stays in About, citations and downloads. The Mars
-  title and subtitle patches are gone; meta description, exports and citations keep "Mars Dune Atlas" in the
-  Mars build. The tab title is "MGL - Dune Atlas" in both builds.
+  https://www.geomorphlab.org/). The Gunn (2026) citation stays in About, citations and downloads. Meta
+  description, exports and citations say "Mars Dune Atlas" in the Mars build. The tab title is "MGL - Dune Atlas" in both builds.
 * Wind dataset selector: shown whenever the registry has a dataset (`>= 1`), so Mars shows "MCMC FV3 2°" (option text = name + grid, `datasetOptionLabel`; tooltip
-  from `datasetTooltip`); Earth unchanged (ERA5-Land, ERA5).
+  from `datasetTooltip`); Earth: ERA5-Land, ERA5.
 * Planet toggle (`ui/tools.ts`): a `tool-btn planet-btn` directly under the camera button, 18 px inline SVG
   (line icon of a ringed planet: disc plus a tilted elliptical ring whose back arcs stop at the disc;
   `currentColor`, stroke 1.6 as the other tool icons), label/title "Switch to Mars" (Earth) or "Switch to Earth" (Mars).
@@ -39,43 +42,16 @@ and per-body storage keys are shared Earth code, so the Earth build is no longer
   the Mars first-visit tour still shows after visiting Earth (`tests/mars/body.test.ts` also checks that no
   source writes an un-namespaced key). No sessionStorage, no service worker; assets are emitted under the
   Vite base and data URLs are absolute (`VITE_DATA_BASE`), so nothing breaks under `/mars/`.
-* Deployment (`.github/workflows/deploy.yml`, not pushed): Earth steps as before, plus
-  `validate-registry:mars`, `test:mars`, `build:mars` with `VITE_BODY=mars VITE_BASE=/mars/
-  VITE_DATA_BASE=https://data.geomorphlab.org VITE_SITE_URL=https://map.geomorphlab.org/mars/`, then
-  `app/dist-mars` copied to `app/dist/mars` before the Pages upload. `npm run test:ci` runs the same from a
-  clean `git archive` export (no `staging/`, no `.git`: the local-store test and the drift guard skip).
+* Deployment (`.github/workflows/ci.yml`, job `app`): `validate-registry:mars`, `test:mars`, `build:mars` with
+  `VITE_BODY=mars VITE_BASE=/mars/ VITE_DATA_BASE=https://data.geomorphlab.org
+  VITE_SITE_URL=https://map.geomorphlab.org/mars/`, then `scripts/check-pages-layout.sh` copies
+  `app/dist-mars` to `app/dist/mars` before the Pages upload. `npm run test:ci` runs the same from a clean
+  `git archive` export (no `staging/`, no `.git`: the local-store test and the counterpart guard skip).
 * Shared text boxes wrap long unbroken text (URLs, DOIs, code): `overflow-wrap: anywhere` on the layer and
   cell panels, info popovers, About, legends and the tool/tour popovers (`style.css`), both builds.
 * Info popovers (ⓘ): one structure for every layer of both builds — definition, invert note, then Units, Wind
   data, Slider, Source, Citation, Data DOI, Licence, Link, Changes (`infoHtml`).
 * Group titles: Earth `climate` and Mars `environment` are both "Related data" (ids kept for permalinks).
-* Earth source diff vs `earth/main` from this (outside the Mars-only infrastructure: body plugin, Mars scripts,
-  `cell/marsphysics.ts`, `generated/constants-mars.json`, package scripts, `vite.config.ts`, `.gitignore`):
-  `app/src/body.ts` (new), `app/src/ui/layerPanel.ts` (header label, subtitle, selector with one dataset, info structure), `app/src/style.css` (body-name rule, overflow-wrap rules), `app/src/ui/tools.ts` (planet toggle), `app/src/ui/helpText.ts` (tour step `planet`), `docs/reference/help-text.md` (regenerated), `app/src/ui/tour.ts`, `app/src/ui/cellPanel.ts`, `app/src/main.ts` (storage keys via `storageKey`, Earth key strings unchanged), `registry/earth/layers.yaml`, `registry/earth/generated/x_extra_fields.yaml`, `registry/earth/datasets/era5/x_extra_fields.yaml`, `pipeline/src/dune_atlas_pipeline/extra_layers.py` (generator) and `vegetation.py` (comment) (group title "Related data"), `docs/guide/architecture.md`, `docs/records/validation-veg.md`, `app/tests/help.test.ts`, `app/tests/ui.test.ts`, `app/tests/vegetation.test.ts`, `app/tests/body.test.ts` (new), `.github/workflows/deploy.yml`, `app/scripts/test-ci.sh`.
-
-Per-body code lives in `app/src/bodies/<body>/`; shared modules import it through the `@body/` alias
-(`vite.config.ts` resolves `@body/<module>` to `src/bodies/earth/` or `src/bodies/mars/` by `VITE_BODY`;
-`tsconfig.json` and `tsconfig.mars.json` type-check the two bodies). Each body provides:
-
-| module | content |
-|---|---|
-| `profile.ts` | `PROFILE` (`BodyProfile`, `src/profile.ts`): radius and Web Mercator circumference, export names and strip texts, invert wording, the slider quantity (Earth u\*,th, Mars d: readout, TeX, ⓘ, plot axes; Mars plots use log10 d), coordinates tooltip, opening view |
-| `citation.ts` | cited sources per dataset / cell download / About, field citation and licence, map attribution, image-export credit lines (formatting: `src/cell/citation.ts`) |
-| `datasetinfo.ts` | the wind dataset table (functions: `src/cell/datasetinfo.ts`) |
-| `auxinfo.ts` | the per-cell sidecar variables (Earth: qsdiv, aridity, vegetation; Mars: qsdiv on R_MARS, rho_mean, elev_mean) |
-| `fieldinfo.ts` | source attributes of the qsat fields (`registry/<body>/qsat_field_metadata.json`) |
-| `helpText.ts` | help sections, tour steps, dataset ⓘ, share text and the About texts (shared labels: `src/ui/helpText.ts`) |
-| `config.ts` | build defaults (sidecar paths, site URL) |
-| `registry.ts` | the registry files `registry/<body>/{layers.yaml, generated/*.yaml, datasets/*/*.yaml}` |
-
-The Mars build additionally substitutes two Earth modules with Mars modules (`app/scripts/body-plugin.ts`,
-`MARS_SUBSTITUTES` in `src/bodies/mars/build.ts`): `src/main.ts` → `src/bodies/mars/main.ts` and
-`src/ui/cellPanel.ts` → `src/bodies/mars/ui/cellPanel.ts` (the hourly-series data path of the Mars cell
-panel), and sets the `index.html` title, description and noscript text. There are no source patches.
-
-New Mars-only code lives under `app/src/bodies/mars/` (cell store, per-hour rose computation, exports,
-scale bar, basemaps, Esri protocol). The physics is only `src/cell/marsphysics.ts` (port of
-`pipeline/.../mars/physics.py`); nothing in the app re-implements it.
 
 ### Commands (in `app/`)
 
@@ -83,9 +59,9 @@ scale bar, basemaps, Esri protocol). The physics is only `src/cell/marsphysics.t
 |---|---|
 | `npm run build:mars` | typecheck + Mars build to `app/dist-mars/` (gitignored) |
 | `npm run dev:mars` | Vite dev server of the Mars build |
-| `npm run test:mars` | Mars tests (`tests/mars/*.test.ts`, run with the plugin), including the drift guard |
+| `npm run test:mars` | Mars tests (`tests/mars/*.test.ts`), including the counterpart guard (§6) |
 | `npm run validate-registry:mars` | merged Mars registry vs `registry/layers.schema.json` + Mars checks |
-| `npm test` / `npm run build` | Earth, unchanged (Mars tests are excluded from the Earth run) |
+| `npm test` / `npm run build` | Earth (Mars tests are excluded from the Earth run) |
 | `npm run test:all` | both |
 
 Build-time env: `VITE_DATA_BASE` (as Earth), `VITE_BASE` (public path, e.g. `/mars/`; default `/`),
@@ -197,8 +173,8 @@ cell-store checks on the real store. Screenshots without servers: `scripts/mars/
 
 | file | checks |
 |---|---|
-| `registry.test.ts` | merged Mars registry validates; threshold block = spec §5; layers/groups/basemaps; R_MARS in the body profile; no Earth radius literal in shared modules; substitutes export the Earth names |
-| `upstream.test.ts` | drift guard (§6): every substituted Earth module is recorded; none changed since reconciled |
+| `registry.test.ts` | merged Mars registry validates; threshold block = spec §5; layers/groups/basemaps; R_MARS in the body profile; no Earth radius literal in shared modules; body contract (both bodies provide every `@body` module and name shared code imports) |
+| `counterparts.test.ts` | counterpart guard (§6): the five Earth modules with a Mars counterpart are recorded; none changed since reconciled |
 | `rose-parity.test.ts` | per-bin flux roses and excess-shear classes (flat + crest, d = 50/200/1000 µm, eq. 2.2 u* at the hour's z) vs the Python reference (pipeline `mars/physics.py`) to 1e-12; threshold statistics; Ga√s validity |
 | `geometry.test.ts` | snap on the Mars grid; metersPerPixel and export scale bar on R_MARS; scale-bar control; Esri tile plan; pmtiles archive-depth clamp |
 | `esri.test.ts` | Esri basemaps in the registry and their attributions; graceful failure of `esri-mars://` (failing fetch, HTTP 500/400, JSON body, changed tiling, unknown service, cancellation); HiRISE empty quadtree; the registered protocol with a failing global fetch |
@@ -210,7 +186,7 @@ cell-store checks on the real store. Screenshots without servers: `scripts/mars/
 | `selection.test.ts` | selected-cell highlight of 84–86°, 86–88°, 88–90° N/S cells: flat source clipped (no vertex on the Mercator edge), globe geometry from the true bounds, layer switch by projection |
 | `vectorclip.test.ts` | streamlines with Dunes only: unmasked integration then clipping (every vertex in a dune cell, pieces >= min length, a head on long pieces), fixture / devroot counts vs masked integration; arrows anchored at the base, seeds in dune cells |
 | `centre.test.ts` | Centre on cell: button in the title row, ease to the cell (duration, zoom floor, bearing/pitch kept), reduced motion -> jumpTo, polar cell on flat (clamped) and globe |
-| `head.test.ts` | tab title "MGL - Dune Atlas" after the Mars HTML transform, `%BASE_URL%` icon links, icon files and sizes |
+| `head.test.ts` | tab title "MGL - Dune Atlas" after the body HTML transform (`scripts/body-html.ts`, Mars texts; the Earth texts leave `index.html` unchanged), `%BASE_URL%` icon links, icon files and sizes |
 | `embed.test.ts` | embed layout (shared `tests/embedlib.ts`): DOM signature of header and slider block (same in both builds), full-screen pill on the map only in embed mode, follows the view, no duplicate; CSS rules; width budgets at 360–800 px embed and 1280 px |
 | `publictext.test.ts` | Mars user-facing text collected (site + downloads, `TEXT_DUMP`); no implementation / failure / internal / relict phrases (`tests/usertextlib.ts`) |
 | `globecaps.test.ts` | polar-cap hook: dune fill/invert specs from the registry (`invert-r2.pmtiles`, layer `invert`); caps in globe projection, absent in Mercator; every Mars basemap switch keeps a matching basemap cap |
@@ -322,25 +298,32 @@ installPolarCaps(map, {
 });
 ```
 
-## 6. Keeping Mars in sync with Earth
+## 6. Keeping Mars in step with Earth
 
-Earth changes reach Mars in two ways: shared modules (most of `app/src/`, with the per-body parts in
-`@body` modules, §1) are used as they are; the two substituted modules and the Mars counterparts of
-Earth modules (`src/bodies/mars/cell/export.ts` of `cell/export.ts`, `analysis.ts` of `cell/analysis.ts`,
-`marsflux.ts` of `cell/flux.ts`, `cellstore.ts` of `cell/cellstore.ts`) need porting by hand.
+Shared modules (`app/src/core/`, `app/src/main.ts`) serve both atlases, so Earth changes there reach Mars
+directly; per-body differences are in the `@body` modules ([extending.md](extending.md)). Five Mars modules
+are counterparts of Earth modules, written after them for the hourly-series data path, and are kept in step
+by hand:
 
-**Drift guard.** `app/src/bodies/mars/upstream.json` records, for each of the 6 Earth modules that are
-substituted (2) or derived (4), the git blob id of the Earth source last reconciled.
-`tests/mars/upstream.test.ts` (part of `npm run test:mars`) hashes the current file (`git hash-object`),
-fails naming every module whose source changed, and prints the diff from the recorded blob (or the file's
-recent history when that blob is not in the clone). It also fails if a substituted module is not recorded. `scripts/mars/app/reconcile.mjs` maintains the record:
+| Earth module (`app/`) | Mars counterpart |
+|---|---|
+| `src/core/cell/cellstore.ts` | `src/bodies/mars/cell/cellstore.ts` |
+| `src/core/cell/analysis.ts` | `src/bodies/mars/cell/analysis.ts` |
+| `src/core/cell/flux.ts` | `src/bodies/mars/cell/marsflux.ts` |
+| `src/core/cell/export.ts` | `src/bodies/mars/cell/export.ts` |
+| `src/bodies/earth/cellPanel.ts` | `src/bodies/mars/cellPanel.ts` |
+
+**Counterpart guard.** `app/src/bodies/mars/counterparts.json` records the git blob id of each Earth module
+when it was last reconciled. `tests/mars/counterparts.test.ts` (part of `npm run test:mars`) hashes the
+current file (`git hash-object`), fails naming every module whose source changed, and prints the diff from
+the recorded blob (or the file's recent history when that blob is not in the clone).
+`scripts/mars/app/counterparts.mjs` maintains the record:
 
 ```
-node scripts/mars/app/reconcile.mjs --check [--rev <rev>]          # what changed (at the working tree or at <rev>)
-node scripts/mars/app/reconcile.mjs --record src/ui/cellPanel.ts ... # after porting: re-record (app-relative paths)
-node scripts/mars/app/reconcile.mjs --sync                         # add/drop entries after changing MARS_SUBSTITUTES
+node scripts/mars/app/counterparts.mjs --check [--rev <rev>]     # what changed (working tree or <rev>)
+node scripts/mars/app/counterparts.mjs --record src/core/cell/export.ts ...   # after porting: re-record
+node scripts/mars/app/counterparts.mjs --record-all              # re-record all five
 ```
 
-After an Earth change to a flagged module: port what applies to Mars (substituted copy: apply the change
-unless it is Earth-only; derived module: port fixes to the Mars counterpart), re-record the module, then run
-`npm run test:all`, both builds and both registry validations.
+After an Earth change to a flagged module: port what applies to the Mars counterpart, re-record the module,
+then run `npm run test:all`, both builds and both registry validations.

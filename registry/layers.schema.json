@@ -110,7 +110,11 @@
           },
           "default": {
             "type": "boolean"
-          }, "imagery": { "type": "boolean", "description": "photographic imagery: the layer panel suggests lowering the colour layers' opacity when it is chosen" },
+          },
+          "imagery": {
+            "type": "boolean",
+            "description": "photographic imagery: the layer panel suggests lowering the colour layers' opacity when it is chosen"
+          },
           "info": {
             "type": "object",
             "additionalProperties": false,
@@ -214,6 +218,125 @@
               "type": "string"
             },
             "description": "Per-cell sidecar stores on the cells.zarr grid, merged in order (cells-aux.zarr, cells-aux-<name>.zarr); default ['{dataset}/cells-aux.zarr', '{dataset}/cells-aux-veg.zarr']."
+          },
+          "info": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "How the panel, About and downloads describe the dataset (app cell/datasetinfo.ts).",
+            "required": [
+              "name",
+              "resolution",
+              "resDeg",
+              "period",
+              "nHours",
+              "landRule",
+              "landThreshold",
+              "nonLandReason",
+              "dunesRule",
+              "fieldsFrom",
+              "sourceHtml"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "reanalysis / model name, e.g. ERA5-Land"
+              },
+              "resolution": {
+                "type": "string",
+                "description": "grid spacing as text, e.g. 0.1°"
+              },
+              "resDeg": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "period": {
+                "type": "string"
+              },
+              "nHours": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "hours in the record"
+              },
+              "landRule": {
+                "type": "string",
+                "description": "which cells carry wind data"
+              },
+              "landThreshold": {
+                "type": "number",
+                "description": "land–sea mask fraction above which a cell carries wind data"
+              },
+              "nonLandReason": {
+                "type": "string",
+                "description": "why a cell outside the land mask has no statistics; empty: no land mask (every cell has data)"
+              },
+              "dunesRule": {
+                "type": "string",
+                "description": "what 'dunes' means for a cell of this grid"
+              },
+              "fieldsFrom": {
+                "enum": [
+                  "paper",
+                  "atlas"
+                ],
+                "description": "map fields from the paper's data record or computed for the atlas"
+              },
+              "sourceTitle": {
+                "type": "string",
+                "description": "bold title of its About item (default 'Wind histograms and sand-flux fields (<name> <resolution>)')"
+              },
+              "sourceHtml": {
+                "type": "string",
+                "description": "About, Data sources: the dataset's item (HTML)"
+              }
+            }
+          },
+          "credits": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Citations and notices of the dataset (app cell/citation.ts).",
+            "required": [
+              "sources",
+              "dataSource",
+              "fieldsCitation",
+              "fieldsLicence",
+              "windSourceText"
+            ],
+            "properties": {
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "description": "citation source ids cited for this dataset (the body's or citationSources), in order"
+              },
+              "dataSource": {
+                "type": "string",
+                "description": "id of its wind-data citation source (listed in About for every dataset)"
+              },
+              "fieldsCitation": {
+                "type": "string",
+                "description": "citation of the atlas-derived map fields (= pipeline fields.fields_citation)"
+              },
+              "fieldsLicence": {
+                "type": "string"
+              },
+              "windSourceText": {
+                "type": "string",
+                "description": "wind line of image exports"
+              },
+              "notice": {
+                "type": "string",
+                "description": "data notice written into downloads (e.g. the Copernicus notice)"
+              }
+            }
+          },
+          "citationSources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/citationSource"
+            },
+            "description": "citation sources defined by this dataset"
           }
         }
       }
@@ -282,7 +405,7 @@
         },
         "windDerived": {
           "type": "boolean",
-          "description": "Computed from the wind data ('Dunes only' restricts it to the dataset's dune cells). Default: true for zarr-field layers with thresholdAware, false otherwise (app/src/map/dunemask.ts)."
+          "description": "Computed from the wind data ('Dunes only' restricts it to the dataset's dune cells). Default: true for zarr-field layers with thresholdAware, false otherwise (app/src/core/map/dunemask.ts)."
         },
         "units": {
           "type": "string",
@@ -352,7 +475,7 @@
             },
             "colormap": {
               "type": "string",
-              "description": "Default named colormap from app/src/generated/colormaps.json (users can change it in the panel)"
+              "description": "Default named colormap from app/src/core/generated/colormaps.json (users can change it in the panel)"
             },
             "clim": {
               "type": "array",
@@ -411,6 +534,62 @@
         "invertSourceLayer": {
           "type": "string",
           "description": "Source-layer name inside invertSource."
+        }
+      }
+    },
+    "citationSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "entries"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "title": {
+          "type": "string"
+        },
+        "notice": {
+          "type": "string"
+        },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "label",
+              "text",
+              "doi"
+            ],
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "doi": {
+                "type": "string",
+                "description": "DOI (preferred) or empty with url"
+              },
+              "url": {
+                "type": "string"
+              },
+              "license": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string",
+                "description": "metadata.json key (default: from the label)"
+              }
+            }
+          }
         }
       }
     }

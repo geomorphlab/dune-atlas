@@ -1,13 +1,13 @@
 // Shared by tests/selection.test.ts and tests/mars/selection.test.ts (selected-cell highlight at the poles):
 // the flat-map source (clipped, no vertex on the Mercator edge) and the globe geometry
 // (true bounds; outline without an edge at a pole) of polar cells, and the layer switch by projection.
-import { SELECTED_CELL_RING, zoomForCellPx } from "../src/map/overlays";
+import { SELECTED_CELL_RING, zoomForCellPx } from "../src/core/map/overlays";
 import { expect } from "vitest";
-import { cellFeature, cellFromIndex, FLAT_LAT, type Grid } from "../src/cell/snap";
-import { globeCellGeometry, SELECTED_CELL_GLOBE_FILL, SELECTED_CELL_GLOBE_LINE } from "../src/map/selection";
-import { ensureSelectedCellLayers, SELECTED_CELL_BOTTOM, SELECTED_CELL_LINE } from "../src/map/overlays";
-import type { GlobeFillLayer } from "../src/map/globefill";
-import type { GlobeLinesLayer } from "../src/map/globelines";
+import { cellFeature, cellFromIndex, FLAT_LAT, type Grid } from "../src/core/cell/snap";
+import { globeCellGeometry, SELECTED_CELL_GLOBE_FILL, SELECTED_CELL_GLOBE_LINE } from "../src/core/map/selection";
+import { ensureSelectedCellLayers, SELECTED_CELL_BOTTOM, SELECTED_CELL_LINE } from "../src/core/map/overlays";
+import type { GlobeFillLayer } from "../src/core/map/globefill";
+import type { GlobeLinesLayer } from "../src/core/map/globelines";
 
 export const MERC = 85.0511287798066;
 const coords = (fc: GeoJSON.FeatureCollection): number[][] => fc.features.flatMap((f) => (JSON.stringify(f.geometry).match(/-?\d+(\.\d+)?(e-?\d+)?,-?\d+(\.\d+)?(e-?\d+)?/g) ?? []).map((p) => p.split(",").map(Number)));

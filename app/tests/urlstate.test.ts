@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseUrlState, serializeUrlState } from "../src/urlstate";
+import { parseUrlState, serializeUrlState } from "../src/core/urlstate";
 
 describe("URL state", () => {
   it("round-trips", () => {

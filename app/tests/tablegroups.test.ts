@@ -2,8 +2,8 @@
 // Summary table groups: collapsible group rows, state remembered per body; titles and members
 // as the layer panel's groups; colour bars without notes.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { loadRegistry } from "../src/registry/load";
-import { groupedBody, resetTableGroups, TABLE_GROUPS_KEY, wireTableGroups } from "../src/ui/tablegroups";
+import { loadRegistry } from "../src/core/registry/load";
+import { groupedBody, resetTableGroups, TABLE_GROUPS_KEY, wireTableGroups } from "../src/core/ui/tablegroups";
 import { checkGroupsMatchRegistry } from "./tablegroupslib";
 
 const mem = new Map<string, string>();

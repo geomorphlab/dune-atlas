@@ -45,21 +45,21 @@ URL.revokeObjectURL = () => {};
 const sortKeys = (v: unknown): unknown => Array.isArray(v) ? v.map(sortKeys)
   : v && typeof v === "object" ? Object.fromEntries(Object.keys(v as object).sort().map((k) => [k, sortKeys((v as Record<string, unknown>)[k])])) : v;
 
-const { BODY } = await import("../../app/src/body");
-const { loadRegistry } = await import("../../app/src/registry/load");
-const { applyDatasetLayers, resolveSource, selectDataset } = await import("../../app/src/registry/merge");
-const { infoHtml, renderLayerPanel } = await import("../../app/src/ui/layerPanel");
-const help = await import("../../app/src/ui/helpText");
-const { Store } = await import("../../app/src/store");
-const { initialAppState } = await import("../../app/src/defaultview");
-const { parseUrlState } = await import("../../app/src/urlstate");
-const { CONFIG } = await import("../../app/src/config");
-const { CellPanel } = await import("../../app/src/ui/cellPanel");
-const { snapToCell } = await import("../../app/src/cell/snap");
-const { versionFromPrefix } = await import("../../app/src/cell/export");
+const { BODY } = await import("../../app/src/core/body");
+const { loadRegistry } = await import("../../app/src/core/registry/load");
+const { applyDatasetLayers, resolveSource, selectDataset } = await import("../../app/src/core/registry/merge");
+const { infoHtml, renderLayerPanel } = await import("../../app/src/core/ui/layerPanel");
+const help = await import("../../app/src/core/ui/helpText");
+const { Store } = await import("../../app/src/core/store");
+const { initialAppState } = await import("../../app/src/core/defaultview");
+const { parseUrlState } = await import("../../app/src/core/urlstate");
+const { CONFIG } = await import("../../app/src/core/config");
+const { CellPanel } = await import("../../app/src/core/ui/cellPanel");
+const { snapToCell } = await import("../../app/src/core/cell/snap");
+const { versionFromPrefix } = await import("../../app/src/core/cell/export");
 // the Mars cell store moved with the refactor (src/mars -> src/bodies/mars); either layout is read
 const marsCellStore = async () => { try { return await import("../../app/src/bodies/mars/cell/cellstore"); } catch { return await import(/* @vite-ignore */ "../../app/src/mars/cell/cellstore"); } };
-const cellStoreMod = BODY === "mars" ? await marsCellStore() : await import("../../app/src/cell/cellstore");
+const cellStoreMod = BODY === "mars" ? await marsCellStore() : await import("../../app/src/core/cell/cellstore");
 const StoreClass = (cellStoreMod as unknown as Record<string, { open: (s: string, o: unknown) => Promise<{ grid: unknown }> }>)[BODY === "mars" ? "MarsCellStore" : "CellStore"];
 
 const out: Record<string, unknown> = { body: BODY };
@@ -92,17 +92,17 @@ out.urls = Object.fromEntries(datasets.map((ds) => {
 }));
 
 {
-  const ex = await import("../../app/src/export/mapExport");
-  const px = await import("../../app/src/export/plotExport");
-  const lab = await import("../../app/src/export/labels");
-  const th = await import("../../app/src/ui/threshold");
-  const lg = await import("../../app/src/ui/legend");
-  const lc = await import("../../app/src/layerconfig");
-  const mp = await import("../../app/src/cell/modesplot");
-  const lp = await import("../../app/src/cell/lineplot");
-  const ad = await import("../../app/src/map/adapters");
-  const co = await import("../../app/src/ui/coords");
-  const di = await import("../../app/src/cell/datasetinfo");
+  const ex = await import("../../app/src/core/export/mapExport");
+  const px = await import("../../app/src/core/export/plotExport");
+  const lab = await import("../../app/src/core/export/labels");
+  const th = await import("../../app/src/core/ui/threshold");
+  const lg = await import("../../app/src/core/ui/legend");
+  const lc = await import("../../app/src/core/layerconfig");
+  const mp = await import("../../app/src/core/cell/modesplot");
+  const lp = await import("../../app/src/core/cell/lineplot");
+  const ad = await import("../../app/src/core/map/adapters");
+  const co = await import("../../app/src/core/ui/coords");
+  const di = await import("../../app/src/core/cell/datasetinfo");
   const date = new Date();
   const views = [
     { lon: 15.2, lat: -24.5, zoom: 5.3, bearing: 0, pitch: 0, proj: "mercator" as const },

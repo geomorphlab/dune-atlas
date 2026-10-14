@@ -1,6 +1,6 @@
 // Selected-cell highlight at the poles, Earth grids: ERA5-Land 0.1° and ERA5 0.25°.
 import { describe, it, expect } from "vitest";
-import { ERA5_LAND_GRID, cellFeature, cellFromIndex } from "../src/cell/snap";
+import { ERA5_LAND_GRID, cellFeature, cellFromIndex } from "../src/core/cell/snap";
 import { checkPolarCell, checkProjectionSwitch } from "./selectionlib";
 
 const ERA5 = { lat0: 90, dlat: -0.25, lon0: -180, dlon: 0.25, ny: 721, nx: 1440 };

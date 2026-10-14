@@ -5,8 +5,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { expect } from "vitest";
-import type { Registry } from "../src/registry/types";
-import { decodeShare, encodeShare, type ShareState } from "../src/share/shortlink";
+import type { Registry } from "../src/core/registry/types";
+import { decodeShare, encodeShare, type ShareState } from "../src/core/share/shortlink";
 import { openShareCode } from "./shareopen";
 
 export function checkShareCorpus(body: string, reg: Registry) {

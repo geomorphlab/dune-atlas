@@ -2,9 +2,9 @@
 // scripts/make-parity-fixture.py), 7 cells x 6 thresholds.
 import { describe, expect, it } from "vitest";
 import fixture from "./fixtures/flux-parity.json";
-import { crestFluxRose, dpRdpRdd, fluxRoseByExcessShear, EXCESS_SHEAR_EDGES, fluxRose, flatFlux, flatFrictionVelocity } from "../src/cell/flux";
-import { sectorSums } from "../src/cell/roses";
-import { C } from "../src/util/constants";
+import { crestFluxRose, dpRdpRdd, fluxRoseByExcessShear, EXCESS_SHEAR_EDGES, fluxRose, flatFlux, flatFrictionVelocity } from "../src/core/cell/flux";
+import { sectorSums } from "../src/core/cell/roses";
+import { C } from "../src/core/util/constants";
 
 interface PyRes { dp: number; rdp: number; rdd: number; qd: (number | null)[] }
 interface PyCell {

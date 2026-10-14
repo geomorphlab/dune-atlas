@@ -2,10 +2,10 @@
 // Imagery-basemap hint visibility, and Escape closing the cell panel only when meant
 // for it (Escape in the layer panel must not close the panel or lose the selected cell).
 import { describe, expect, it, vi } from "vitest";
-import { loadRegistry } from "../src/registry/load";
-import { Store, type AppState } from "../src/store";
-import { IMAGERY_HINT, renderLayerPanel } from "../src/ui/layerPanel";
-import { escapeClosesCell } from "../src/ui/keys";
+import { loadRegistry } from "../src/core/registry/load";
+import { Store, type AppState } from "../src/core/store";
+import { IMAGERY_HINT, renderLayerPanel } from "../src/core/ui/layerPanel";
+import { escapeClosesCell } from "../src/core/ui/keys";
 
 const reg = loadRegistry().registry;
 vi.stubGlobal("localStorage", { getItem: () => null, setItem: () => {}, removeItem: () => {} });
@@ -46,7 +46,7 @@ describe("Escape and the cell panel", () => {
   });
 });
 
-import { citationFile, latLonText } from "../src/cell/downloads";
+import { citationFile, latLonText } from "../src/core/cell/downloads";
 describe("Citation TXT", () => {
   it("centre as 23.25° S, 15.00° E; wind dataset and threshold recorded; the dune map named as the file in the Code record", () => {
     expect(latLonText(-23.25, 15)).toBe("23.25° S, 15.00° E");

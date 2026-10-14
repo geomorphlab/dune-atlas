@@ -9,12 +9,12 @@ import { describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import fixture from "./fixtures/flux-parity.json";
-import { loadRegistry } from "../src/registry/load";
-import { Store, type AppState } from "../src/store";
-import { renderLayerPanel } from "../src/ui/layerPanel";
-import { CellPanel } from "../src/ui/cellPanel";
-import type { CellData, CellStore } from "../src/cell/cellstore";
-import { measuredWidthCh, reserveCh, setMeasurer } from "../src/ui/livenum";
+import { loadRegistry } from "../src/core/registry/load";
+import { Store, type AppState } from "../src/core/store";
+import { renderLayerPanel } from "../src/core/ui/layerPanel";
+import { CellPanel } from "../src/core/ui/cellPanel";
+import type { CellData, CellStore } from "../src/core/cell/cellstore";
+import { measuredWidthCh, reserveCh, setMeasurer } from "../src/core/ui/livenum";
 import { fakeMeasure, holes, sweep, sweepFields } from "./jitterlib";
 import { makeCell, FIELD_VARS } from "./helpers";
 
@@ -50,7 +50,7 @@ describe("slider jitter (Earth): layer panel and cell panel keep their layout ov
     expect(holes([lp, cp])).toEqual([]);   // no reserved room in the middle of running text
     expect(r.slots).toBeGreaterThan(30);   // readouts, meta, legend, DP/RDP/RDD, caption, heading, table values
     // tabular figures on both panels and the slots (style.css)
-    const css = fs.readFileSync(path.resolve(__dirname, "../src/style.css"), "utf8");
+    const css = fs.readFileSync(path.resolve(__dirname, "../src/core/style.css"), "utf8");
     expect(css).toMatch(/#layer-panel, #cell-panel, \.legend \{ font-variant-numeric: tabular-nums; \}/);
     expect(css).toMatch(/\.live-num \{ display: inline-block; white-space: nowrap;[^}]*tabular-nums/);
     setMeasurer(undefined);

@@ -4,9 +4,9 @@
 // over the side panel, the cell panel or the planet button; plus the tour auto-start fallback and the loading
 // indicator.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { TOUR_STARTED_KEY, TOUR_BUBBLE_LABEL, bubbleAfterTour, bubbleOnArrival, bubblePlacement, autostartTour, tourStarted, wireTourBubble } from "../src/ui/tourBubble";
-import { LoadingIndicator, WHEEL_ZOOM_RATE } from "../src/ui/loading";
-import type { TourEvent } from "../src/ui/tour";
+import { TOUR_STARTED_KEY, TOUR_BUBBLE_LABEL, bubbleAfterTour, bubbleOnArrival, bubblePlacement, autostartTour, tourStarted, wireTourBubble } from "../src/core/ui/tourBubble";
+import { LoadingIndicator, WHEEL_ZOOM_RATE } from "../src/core/ui/loading";
+import type { TourEvent } from "../src/core/ui/tour";
 
 const mem = new Map<string, string>();
 vi.stubGlobal("localStorage", { getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => { mem.set(k, v); }, removeItem: (k: string) => { mem.delete(k); }, clear: () => mem.clear() });

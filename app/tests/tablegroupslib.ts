@@ -1,7 +1,7 @@
 // Shared checks (both builds): summary-table groups follow the registry's layer groups; no colour-bar notes.
 import { expect } from "vitest";
-import type { Registry } from "../src/registry/types";
-import { TABLE_GROUPS } from "../src/ui/tablegroups";
+import type { Registry } from "../src/core/registry/types";
+import { TABLE_GROUPS } from "../src/core/ui/tablegroups";
 
 export function checkGroupsMatchRegistry(reg: Registry) {
   const title = (id: string) => reg.groups.find((g) => g.id === id)?.title;
