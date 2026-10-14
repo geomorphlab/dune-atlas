@@ -63,20 +63,69 @@ describe("readout control", () => {
     expect(el.textContent).toBe("24.50° S, 15.20° E");
     expect(el.title).toMatch(/tapped/);
   });
-  it("placed bottom left beside the scale bar, styled like it (dark box, legible on any basemap), not clickable", () => {
+  it("placed bottom left on the SAME row as the scale bar, immediately to its right, styled like it, not clickable", () => {
     const main = fs.readFileSync(path.resolve(__dirname, "../src/main.ts"), "utf8");
-    const iScale = main.indexOf('new maplibregl.ScaleControl'), iCoords = main.indexOf('new CoordsControl()');
+    const iScale = main.indexOf("new maplibregl.ScaleControl"), iCoords = main.indexOf("new CoordsControl()");
     expect(iScale).toBeGreaterThan(0);
-    expect(iCoords).toBeGreaterThan(iScale); // added right after the scale bar, same corner
+    expect(iCoords).toBeGreaterThan(iScale);
     expect(main.slice(iCoords, main.indexOf("\n", iCoords))).toContain('"bottom-left"');
+    const scaleMax = Number(/ScaleControl\(\{ maxWidth: (\d+) \}\)/.exec(main)![1]);
     const css = fs.readFileSync(path.resolve(__dirname, "../src/style.css"), "utf8");
-    const rule = css.slice(css.indexOf(".maplibregl-ctrl.atlas-coords {"), css.indexOf("}", css.indexOf(".maplibregl-ctrl.atlas-coords {")));
-    expect(rule).toMatch(/clear: none/); // floats beside the scale bar, not below it
-    expect(rule).toMatch(/background: rgba\(20, 26, 33, \.75\)/); // = .maplibregl-ctrl-scale
-    expect(rule).toMatch(/font-size: 10px/);
-    expect(rule).toMatch(/pointer-events: none/);
-    // narrow screens: the bottom controls move above the cell sheet together (no overlap)
-    expect(css).toMatch(/body\.cell-open \.maplibregl-ctrl-bottom-left/);
+    const rule = (sel: string) => { const k = css.indexOf(`\n${sel} {`) + 1; expect(k, sel).toBeGreaterThan(0); return css.slice(k, css.indexOf("}", k)); };
+    const px = (r: string, prop: string) => { const m = new RegExp(`${prop}: ([^;]+);`).exec(r); expect(m, prop).not.toBeNull(); return m![1].trim(); };
+    // one flex row aligned to the bottom (MapLibre floats bottom controls with clear: both and inserts
+    // each new one BEFORE the existing ones, which stacked the readout above the scale bar)
+    const row = rule(".maplibregl-ctrl-bottom-left");
+    expect(px(row, "display")).toBe("flex");
+    expect(px(row, "flex-direction")).toBe("row");
+    expect(px(row, "align-items")).toBe("flex-end");
+    expect(px(row, "flex-wrap")).toBe("nowrap");
+    expect(rule(".maplibregl-ctrl-bottom-left .maplibregl-ctrl")).toMatch(/float: none; clear: none/);
+    // visual order: scale bar first, readout to its right (whatever the DOM order)
+    const scaleOrder = Number(px(rule(".maplibregl-ctrl-bottom-left .maplibregl-ctrl-scale"), "order"));
+    const cr = rule(".maplibregl-ctrl-bottom-left .maplibregl-ctrl.atlas-coords");
+    expect(Number(px(cr, "order"))).toBeGreaterThan(scaleOrder);
+    const [mt, mr, mb, ml] = px(cr, "margin").split(/\s+/).map((v) => parseFloat(v));
+    expect([mt, mr, mb]).toEqual([0, 0, 10]); // same bottom margin as MapLibre's scale bar (10 px)
+    expect(ml).toBeGreaterThan(0); expect(ml).toBeLessThanOrEqual(8); // small gap
+    // same height: both inherit the map's 20 px line height, 10 px text, 2 px bottom border, no top border
+    const look = rule(".maplibregl-ctrl.atlas-coords");
+    expect(look).toMatch(/font-size: 10px; padding: 0 5px;/);
+    expect(look).toMatch(/border: 2px solid transparent; border-top: none;/);
+    expect(look).toMatch(/box-sizing: border-box/);
+    expect(look).toMatch(/background: rgba\(20, 26, 33, \.75\)/); // = .maplibregl-ctrl-scale
+    expect(look).toMatch(/pointer-events: none/);
+    expect(look).toMatch(/white-space: nowrap/);
+    // vertical clearance from the layer panel: the row (10 px margin + 22 px) fits in the strip the
+    // panel leaves free (top 10 px + max-height calc(100% - N px) -> N - 10 px), open or collapsed
+    const rowTop = 10 + 22;
+    const panel = rule("#layer-panel");
+    expect(px(panel, "top")).toBe("10px");
+    const free = Number(/max-height: calc\(100% - (\d+)px\)/.exec(panel)![1]) - 10;
+    expect(free).toBeGreaterThan(rowTop);
+    // narrow screens with the cell sheet open: the control row sits on the sheet (bottom: --cell-h)
+    // and the panel stops N - 10 px above the sheet
+    expect(css).toMatch(/body\.cell-open \.maplibregl-ctrl-bottom-left, body\.cell-open \.maplibregl-ctrl-bottom-right \{ bottom: var\(--cell-h, 60vh\); \}/);
+    const sheet = Number(/body\.cell-open #layer-panel \{ max-height: calc\(100vh - var\(--cell-h, 60vh\) - (\d+)px\); \}/.exec(css)![1]) - 10;
+    expect(sheet).toBeGreaterThan(rowTop);
+    // horizontally: never under the attribution (bottom right); the row is at most the scale bar
+    // (maxWidth + 10 px margin) + the widest readout ("90.00° S, 180.00° W": 20 chars of 10 px text)
+    const widest = formatLatLon(-89.999, -179.999);
+    const rowWidth = scaleMax + 10 + ml + 10 + 2 * 5 + widest.length * 6.5;
+    const attribGap = Number(/\.maplibregl-ctrl-bottom-right \.maplibregl-ctrl-attrib \{ max-width: calc\(100vw - (\d+)px\); \}/.exec(css)![1]);
+    expect(attribGap).toBeGreaterThan(rowWidth + 10); // + 10 px attribution margin
+    expect(px(row, "max-width")).toMatch(/calc\(100% - \d+px\)/); // and the row itself never spans the map
+    // the layer panel is no wider than the map minus the controls on narrow screens (unchanged)
+    expect(css).toMatch(/--panel-w: calc\(100vw - 70px\)/);
+  });
+  it("DOM order does not matter: MapLibre inserts the readout before the scale bar, CSS order puts it to the right", () => {
+    const box = document.createElement("div");
+    box.className = "maplibregl-ctrl-bottom-left";
+    const scale = document.createElement("div"); scale.className = "maplibregl-ctrl maplibregl-ctrl-scale";
+    box.append(scale);
+    const c = new CoordsControl({ touch: false });
+    box.insertBefore(c.onAdd(fakeMap() as never), box.firstChild); // MapLibre's bottom-corner insertion
+    expect([...box.children].map((e) => e.className)).toEqual(["maplibregl-ctrl atlas-coords", "maplibregl-ctrl maplibregl-ctrl-scale"]);
   });
   it("not part of image exports: exports draw the map canvas and the strip only; the strip has no cursor position", () => {
     const src = fs.readFileSync(path.resolve(__dirname, "../src/export/mapExport.ts"), "utf8");

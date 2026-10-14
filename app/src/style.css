@@ -154,7 +154,18 @@ body.resizing { user-select: none; cursor: ew-resize; }
 .maplibregl-ctrl-attrib a { color: var(--link) !important; }
 .maplibregl-ctrl-attrib-button { filter: invert(1); }
 .maplibregl-ctrl-scale { background: rgba(20, 26, 33, .75); color: var(--fg); border-color: var(--muted); }
-/* cursor coordinates: same look as the scale bar, on the same line (floats beside it) */
+/* bottom-left controls on ONE row, aligned to the bottom: scale bar, then the cursor coordinates
+   immediately to its right. MapLibre inserts bottom controls before existing ones and floats them
+   with clear: both (stacked); a flex row with explicit order keeps both within the 50 px strip that
+   the layer panel leaves free at the bottom (#layer-panel max-height). */
+.maplibregl-ctrl-bottom-left { display: flex; flex-direction: row; align-items: flex-end; flex-wrap: nowrap; max-width: calc(100% - 60px); }
+.maplibregl-ctrl-bottom-left .maplibregl-ctrl { float: none; clear: none; flex: none; }
+.maplibregl-ctrl-bottom-left .maplibregl-ctrl-scale { order: 0; }
+.maplibregl-ctrl-bottom-left .maplibregl-ctrl.atlas-coords { order: 1; margin: 0 0 10px 6px; }
+/* the expanded attribution (bottom right) stops short of the bottom-left row (scale bar <= 130 px
+   incl. margin + coordinates <= 150 px): it wraps upwards instead of running under them */
+.maplibregl-ctrl-bottom-right .maplibregl-ctrl-attrib { max-width: calc(100vw - 300px); }
+/* cursor coordinates: same look and height as the scale bar */
 .maplibregl-ctrl.atlas-coords { clear: none; box-sizing: border-box; background: rgba(20, 26, 33, .75); color: var(--fg); border: 2px solid transparent; border-top: none;
   font-size: 10px; padding: 0 5px; margin: 0 0 10px 8px; font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none; }
 .maplibregl-ctrl.atlas-coords.stale { opacity: .6; }
@@ -173,7 +184,8 @@ body.embed .atlas-header h1 { font-size: 15px; }
   .resize-handle:hover, .resize-handle:focus-visible, body.resizing .resize-handle { background: none; }
   body.resizing { cursor: ns-resize; }
   body.cell-open .maplibregl-ctrl-bottom-left, body.cell-open .maplibregl-ctrl-bottom-right { bottom: var(--cell-h, 60vh); }
-  body.cell-open #layer-panel { max-height: calc(100vh - var(--cell-h, 60vh) - 20px); }
+  /* stops 50 px above the sheet: the bottom-left control row (raised onto the sheet) stays free */
+  body.cell-open #layer-panel { max-height: calc(100vh - var(--cell-h, 60vh) - 60px); }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 .order-item .remove { border: 1px solid var(--line); background: var(--bg3); border-radius: 3px; padding: 0 6px; font-size: 13px; line-height: 1.2; cursor: pointer; color: var(--muted); }
