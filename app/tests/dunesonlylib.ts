@@ -10,6 +10,7 @@ import { parseUrlState, serializeUrlState } from "../src/urlstate";
 import { appShareState, initialAppState, resolveInitialState } from "../src/defaultview";
 import { isWindDerived } from "../src/map/dunemask";
 import { OverlayManager } from "../src/map/overlays";
+import { DUNES_ONLY_STRIP, mapStripItems, mapStripSvg } from "../src/export/mapExport";
 
 export const state = (reg: Registry, dataset: string): AppState => ({ basemap: reg.basemaps[0].id, projection: "globe", utIndex: reg.threshold.defaultIndex,
   layers: Object.fromEntries(reg.layers.map((l) => [l.id, { visible: !!l.visible, opacity: l.opacity ?? 1 }])), order: reg.layers.map((l) => l.id), dataset, cell: null, embed: false });
@@ -67,4 +68,27 @@ export function checkOverlayManager(reg: Registry, prefix: string, cellStore: Re
   expect(typeof om.duneMaskFor(byId("dpm"))).toBe("function");
   expect(om.duneMaskFor(byId("dunes"))).toBeUndefined();
   expect(om.cellStoreUrl()).toMatch(cellStore);
+}
+
+/** PNG map export (round 7 item 1): the strip says "Dunes only" while it is on and a wind-derived
+ *  layer is shown; not when off, nor when only layers it does not affect are shown. */
+export function checkExportStrip(reg: Registry, dataset: string) {
+  const wind = reg.layers.find((l) => isWindDerived(l) && l.type === "zarr-field")!;
+  const other = reg.layers.find((l) => !isWindDerived(l) && l.type === "zarr-field");
+  const dunes = reg.layers.find((l) => l.id === "dunes")!;
+  const ctx = (ids: string[], dunesOnly: boolean) => ({ reg, width: 1000, includeBasemap: false, shareLink: "https://x/#v=AQ", date: new Date(0),
+    view: { lon: 10, lat: 10, zoom: 3, bearing: 0, pitch: 0, proj: "mercator" as const },
+    state: { basemap: reg.basemaps[0].id, dataset, utIndex: reg.threshold.defaultIndex, order: ids, dunesOnly,
+      layers: Object.fromEntries(ids.map((id) => [id, { visible: true, opacity: 1 }])) } });
+  const lines = (ids: string[], on: boolean) => mapStripItems(ctx(ids, on)).filter((i) => "text" in i).map((i) => (i as { text: string }).text);
+  expect(DUNES_ONLY_STRIP).toBe("Dunes only: wind-derived layers shown in cells with dunes.");
+  const on = lines([wind.id, dunes.id], true);
+  expect(on.filter((t) => t === DUNES_ONLY_STRIP)).toHaveLength(1);
+  expect(on.indexOf(DUNES_ONLY_STRIP)).toBe(2); // after the heading and the view line, before the sources
+  expect(lines([wind.id, dunes.id], false)).not.toContain(DUNES_ONLY_STRIP);
+  expect(lines([dunes.id, ...(other ? [other.id] : [])], true)).not.toContain(DUNES_ONLY_STRIP);
+  // and in the rendered strip SVG (wrapped text lines joined)
+  const { svg } = mapStripSvg(ctx([wind.id], true));
+  const txt = [...svg.matchAll(/<text[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]).join(" ");
+  expect(txt).toContain("Dunes only: wind-derived layers shown");
 }

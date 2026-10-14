@@ -62,8 +62,8 @@ ATTRIBUTION = {
     "licence": "CC BY 4.0, © 2008–2019 CSIRO",
     "url": MAP_URL,
     "changes": ("Processed for the atlas: monthly 500 m tiles averaged to 0.1° and over 2001–2025 (valid tot_cov "
-                "≤ 103 %; months without valid data skipped); coarser zoom levels are means of the valid 0.1° cells; "
-                "values rounded to a relative precision of 1.2e-4 for compression."),
+                "≤ 103 %; months without valid data skipped); zoomed-out map views show means of the valid 0.1° "
+                "cells; values rounded to a relative precision of 1.2e-4."),
 }
 
 DESCRIPTION = (   # shortened for the info popover (PI 2026-10-14); source, licence and processing are attribution rows
@@ -263,7 +263,7 @@ def build_cells_aux_regridded(out, nc_path, data_dir, dataset="era5") -> dict:
                        f"(centre ± {g.res / 2:g}°), exact spherical overlap areas"),
     })
     a = ATTRIBUTION
-    changes = a["changes"].replace("coarser zoom levels are means of the valid 0.1° cells; ",
+    changes = a["changes"].replace("zoomed-out map views show means of the valid 0.1° cells; ",
                                    f"{g.label} cell values are area-weighted means of the valid 0.1° cells; ")
     common = {"source": a["source"], "citation": a["citation"], "doi": a["doi"], "licence": a["licence"],
               "url": a["url"], "changes": changes}

@@ -82,12 +82,12 @@ describe("Esri Mars basemaps in the registry", () => {
     expect(att("esri-mcolordem")).toContain("MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO)");
     expect(JSON.stringify(reg.basemaps)).not.toMatch(/prototype/i);
   });
-  it("the help explains the basemaps, HiRISE's partial coverage and the background where a service has no data", () => {
+  it("the help explains the basemaps and HiRISE's partial coverage (dark elsewhere), without implementation detail", () => {
     const h = HELP_SECTIONS.find((x) => x.id === "basemaps")!;
     expect(h.body).toMatch(/CTX/);
-    expect(h.body).toMatch(/HiRISE \(.*only where HiRISE has imaged\)/);
+    expect(h.body).toMatch(/HiRISE covers only the small part of the surface it has imaged; elsewhere the map is dark/);
     expect(h.body).toMatch(/MDIM 2\.1/);
-    expect(h.body).toMatch(/background shows/);
+    expect(h.body).not.toMatch(/respond|browser|tiled|served with/);
   });
   it("the protocol is registered when Esri basemaps are listed; without canvas support they are left out", () => {
     const register = vi.fn();

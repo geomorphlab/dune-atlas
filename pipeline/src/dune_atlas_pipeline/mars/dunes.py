@@ -64,6 +64,15 @@ MGD3_REFERENCES = [
 DUNE_REFERENCES = [*MGD3_REFERENCES, FENTON_2020]
 ATTRIBUTION = ("Dune fields: USGS Mars Global Digital Dune Database (Hayward et al. 2007, 2010, 2012, 2014) and "
                "Fenton (2020), merged, compiled by A. Gunn")
+# R2 keys of the tiles (objects are create-only). The '-r2' archives (Terrain round 3, PI 2026-10-14) are the
+# round-2 dunes.pmtiles / invert.pmtiles rebuilt with the MGD3 + Fenton (2020) metadata above: same input, same
+# tippecanoe arguments apart from --attribution/--description, same clip and nudge; decoded tiles identical
+# (docs/validation-mars-terrain.md section 10). polar-caps.json (no citation fields) is unchanged and stays
+# beside them (the app derives its URL from the directory of `source`).
+DUNES_KEY = "dune-atlas/mars/v1/dunes/dunes-r2.pmtiles"
+INVERT_KEY = "dune-atlas/mars/v1/dunes/invert-r2.pmtiles"
+POLAR_CAPS_KEY = "dune-atlas/mars/v1/dunes/polar-caps.json"
+DESCRIPTION = "Mars dune fields (USGS MGD3 and Fenton 2020, merged), Mars 2000 planetocentric lon/lat"
 
 
 def geod():
@@ -241,7 +250,7 @@ def tippecanoe_args() -> list[str]:
         elif a.startswith("--name="):
             a = "--name=dune-atlas Mars dunes"
         elif a.startswith("--description="):
-            a = "--description=Mars dune fields (USGS MGD3 compilation), Mars 2000 planetocentric lon/lat"
+            a = "--description=" + DESCRIPTION
         out.append(a)
     return out
 
@@ -412,7 +421,7 @@ def registry_fragment(summary: dict) -> dict:
                                     f"2020, {n:,} polygons, {area / 1e6:.2f} million km²).")}],
         "layers": [{
             "id": "dunes", "title": "Dune fields", "group": "dunes", "type": "pmtiles-vector",
-            "source": "dune-atlas/mars/v1/dunes/dunes.pmtiles", "sourceLayer": "dunes",
+            "source": DUNES_KEY, "sourceLayer": "dunes",
             "visible": True, "opacity": 1, "queryable": True, "minzoom": 0, "maxzoom": 24,
             "description": (f"Mapped aeolian dune fields of Mars: the USGS Mars Global Digital Dune Database (MGD3; "
                             f"equatorial MC2–MC29, north polar MC-1, south polar MC-30; Hayward et al. 2007, 2010, 2012, "
@@ -422,12 +431,11 @@ def registry_fragment(summary: dict) -> dict:
             "attribution": {"source": "USGS Mars Global Digital Dune Database (MGD3) and Fenton (2020), merged, compiled by A. Gunn",
                             "citation": "; ".join(DUNE_REFERENCES), "doi": "10.3133/ofr20121259",
                             "licence": "Public domain (U.S. Geological Survey)",
-                            "url": "https://pubs.usgs.gov/publication/ofr20181164",
-                            "changes": ("Merged into one polygon layer by the PI; made valid, exterior rings "
-                                        "counter-clockwise, coordinates rounded to 1e-6°; id 1 = largest field.")},
+                            "url": "https://www.usgs.gov/centers/astrogeology-science-center/science/mars-global-digital-dune-database",
+                            "changes": "MGD3 and Fenton (2020) merged into one polygon layer; invalid geometries repaired; coordinates rounded to 1e-6°."},
             # 'invert' view: the Mars surface without mapped dunes (complement of this layer, polar caps
             # included); built by dunes.invert_features / build_invert_pmtiles
-            "invertSource": "dune-atlas/mars/v1/dunes/invert.pmtiles",
+            "invertSource": INVERT_KEY,
             "invertSourceLayer": "invert",
             "style": {"fill": {"fill-color": "#a0a0a0", "fill-opacity": 0.55}},
         }],

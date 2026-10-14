@@ -95,6 +95,11 @@ Every object was written with `If-None-Match: *` (no overwrite possible) after a
 | `dunes/{dunes,invert}.pmtiles`, `dunes/polar-caps.json` | 3 | 21,578,242 | local devroot (Terrain round 2) |
 | **Total** | **628** | **7,353,837,094** | |
 
+Added 2026-10-14 (create-only, ETag = md5): `dunes/dunes-r2.pmtiles` (13,174,988 B, md5 ca48b57a…) and
+`dunes/invert-r2.pmtiles` (7,852,169 B, md5 0ae6aca7…): the same tiles (decoded tile by tile) with
+MGD3 + Fenton (2020) metadata; the registry points at them. The round-2 `dunes.pmtiles` / `invert.pmtiles`
+stay on R2 (immutable, no longer referenced). Prefix total: 630 objects.
+
 Verification: the listing of the prefix equals the planned set (628 keys, nothing missing or extra); every
 object's ETag equals the md5 of its source (no multipart objects). Delivery through `data.geomorphlab.org`
 (`preview_smoke.mjs --data https://data.geomorphlab.org --origin http://localhost:5173`): 31/31 checks,

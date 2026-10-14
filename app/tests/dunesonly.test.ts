@@ -6,7 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { loadRegistry } from "../src/registry/load";
 import { checkRealStores, checkSynthetic } from "./dunemasklib";
-import { checkClassification, checkOverlayManager, checkToggleAndLinks } from "./dunesonlylib";
+import { checkClassification, checkExportStrip, checkOverlayManager, checkToggleAndLinks } from "./dunesonlylib";
 import { RangeFileStore } from "./mars/helpers";
 import { levelFactor } from "../src/map/dunemask";
 
@@ -39,6 +39,9 @@ describe("Dunes only (Earth)", () => {
   });
   it("toggle next to the Wind dataset selector; round trip through short and long links", () => {
     checkToggleAndLinks(reg, "era5-land");
+  });
+  it("map export strip names Dunes only while it is on and a wind-derived layer is shown", () => {
+    checkExportStrip(reg, "era5-land");
   });
   it("overlay manager: mask only for wind-derived layers while on, from the dataset's cells.zarr", () => {
     checkOverlayManager(reg, "dune-atlas/v1", /^https:\/\/data\.test\/dune-atlas\/v1\/cells\.zarr$/);

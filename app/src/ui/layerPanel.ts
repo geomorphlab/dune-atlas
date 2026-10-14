@@ -9,6 +9,7 @@ import type { Store, AppState } from "../store";
 import { h, nextId } from "./dom";
 import { legendHtml } from "./legend";
 import { thresholdControl } from "./threshold";
+import { embedBar } from "./embed";
 import { escapeHtml } from "../util/format";
 import { BODY_NAME } from "../body";
 import { DATASET_INFO, datasetInfo, datasetTooltip } from "../cell/datasetinfo";
@@ -37,7 +38,7 @@ export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class="sources">
 export function fieldsCitationHtml(): string {
   return `<h4>Citing the map fields</h4><ul class="sources">${Object.values(DATASET_INFO).map((d) => `<li><strong>${escapeHtml(`${d.name} ${d.resolution}`)}</strong>: ${richHtml(fieldsCitation(d.id))}. Licence: ${escapeHtml(fieldsLicence(d.id))}.</li>`).join("")}</ul>`;
 }
-export const INVERT_NOTE = "Invert colours land WITHOUT mapped dunes. Vector tiles end at ±85.05° latitude, so interior Antarctica south of 85°S is not coloured.";
+export const INVERT_NOTE = "Invert: colour the land WITHOUT mapped dunes instead of the dunes. Latitudes beyond ±85.05° (interior Antarctica) are not coloured.";
 
 const safeUrl = (u: string) => (/^https?:\/\//i.test(u) ? u : "");
 /** Rows of the structured attribution (registry `attribution`), in the fixed order Source, Citation,
@@ -156,7 +157,7 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
     const disp = h("details", { class: "display-opts" }, h("summary", {}, "Display"));
     // render mode (directional fields)
     if (isDirectional(l)) {
-      const mode = h("select", { "aria-label": `Render ${l.title} as` },
+      const mode = h("select", { "aria-label": `Display ${l.title} as` },
         h("option", { value: "colormap" }, "colour map"), h("option", { value: "arrows" }, "arrows"), h("option", { value: "streamlines" }, "streamlines")) as HTMLSelectElement;
       mode.addEventListener("change", () => store.setLayerConfig(l.id, { mode: mode.value === "colormap" ? undefined : (mode.value as RenderMode) }));
       const vc = h("input", { type: "color", "aria-label": `Arrow / streamline colour for ${l.title}` }) as HTMLInputElement;
@@ -359,6 +360,12 @@ export function setLayerPanelOpen(root: HTMLElement, open: boolean) {
 }
 export const layerPanelOpen = (root: HTMLElement) => !root.classList.contains("collapsed");
 
+/** Wind dataset option text: reanalysis / model name and grid ("ERA5-Land 0.1°", "MCMC FV3 2°") */
+export function datasetOptionLabel(id: string, fallback: string): string {
+  const d = DATASET_INFO[id];
+  return d ? `${d.name} ${d.resolution}` : fallback;
+}
+
 /** the header subtitle, identical in both atlases (the Gunn (2026) citation is in About) */
 export const SUBTITLE_HTML = `Interactive explorer for aeolian geomorphology<br>Developed by the <a href="https://www.geomorphlab.org/" target="_blank" rel="noopener">Monash Geomorphology Lab</a>`;
 
@@ -374,17 +381,19 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
   const header = h("header", { class: "atlas-header" },
     h("div", { class: "title-row" }, h("h1", {}, "Dune Atlas", " ", h("span", { class: "body-name" }, BODY_NAME)), toggle),
     h("p", { class: "subtitle", html: SUBTITLE_HTML }));
-  if (opts.fullScreenUrl) {
-    const a = h("a", { class: "fullscreen-link", href: opts.fullScreenUrl(), target: "_blank", rel: "noopener" }, "Open full screen ↗");
-    store.subscribe(() => { a.href = opts.fullScreenUrl!(); });
-    header.append(a);
+  if (opts.fullScreenUrl) { // embed: a pill on the map above the panel, not in the header
+    root.parentElement?.querySelector(":scope > .embed-bar")?.remove();
+    root.before(embedBar(opts.fullScreenUrl, store));
   }
   const datasets = reg.datasets ?? [];
   if (datasets.length >= 1) { // shown with a single dataset too (Mars: MCMC FV3)
-    const sel = h("select", { id: "dataset-select", "aria-label": "Wind dataset" }, ...datasets.map((d) => h("option", { value: d.id, title: datasetTooltip(d.id) || d.title }, d.title))) as HTMLSelectElement;
+    // short option text (name and grid) that fits the narrow embed panel; the tooltip has the details
+    const sel = h("select", { id: "dataset-select", "aria-label": "Wind dataset" }, ...datasets.map((d) => h("option", { value: d.id, title: datasetTooltip(d.id) || d.title }, datasetOptionLabel(d.id, d.title)))) as HTMLSelectElement;
     sel.value = store.state.dataset;
+    const tip = () => { sel.title = datasetTooltip(sel.value) || ""; };
+    tip();
     sel.addEventListener("change", () => store.set({ dataset: sel.value }));
-    store.subscribe((s, ch) => { if (ch.has("dataset")) sel.value = s.dataset; });
+    store.subscribe((s, ch) => { if (ch.has("dataset")) { sel.value = s.dataset; tip(); } });
     header.append(h("label", { class: "inline dataset-row", for: "dataset-select" }, "Wind dataset ", sel));
   }
   header.append(dunesOnlyToggle(store));

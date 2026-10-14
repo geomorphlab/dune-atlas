@@ -14,11 +14,12 @@ import { STRIP_UNITS, stripSvg, type StripItem } from "./strip";
 import type { MathRenderer } from "./texsvg";
 import { exportTitleTex, exportUnits, utTex } from "./labels";
 import { blobWithDpi, EXPORT_DPI, mapExportPixelRatio, stripPlacement } from "./png";
+import { isWindDerived } from "../map/dunemask";
 
 export interface MapView { lon: number; lat: number; zoom: number; bearing: number; pitch: number; proj: "globe" | "mercator" }
 export interface MapStripContext {
   reg: Registry;
-  state: Pick<AppState, "layers" | "order" | "utIndex" | "dataset" | "basemap">;
+  state: Pick<AppState, "layers" | "order" | "utIndex" | "dataset" | "basemap" | "dunesOnly">;
   view: MapView;
   /** CSS px width of the image (the strip wraps to it) */
   width: number;
@@ -38,7 +39,7 @@ export function mapExportFilename(dataset: string, v: Pick<MapView, "lat" | "lon
   return `dune-atlas_map_${dataset}_${v.lat.toFixed(2)}_${lon.toFixed(2)}_z${v.zoom.toFixed(1)}_${isoDate(date)}.png`;
 }
 
-export const PROJECTION_TEXT = { globe: "Globe (MapLibre globe)", mercator: "Web Mercator EPSG:3857" } as const;
+export const PROJECTION_TEXT = { globe: "Globe (perspective view)", mercator: "Web Mercator EPSG:3857" } as const;
 
 /** Scale bar at the view centre (MapLibre: 512 px tiles), or null below zoom 2.5 where the scale
  *  varies strongly across the view. */
@@ -59,6 +60,9 @@ function colorbarFor(l: LayerDef, cfg: AppState["layers"][string]["cfg"], ut: nu
   const detail = [exportUnits(l.units), l.thresholdAware ? `at ${utTex(ut)}` : ""].filter(Boolean).join(" · ");
   return { kind: "colorbar", title: exportTitleTex(l), detail, colors: e.colors, ticks };
 }
+
+/** strip line while Dunes only is on and a wind-derived layer is shown */
+export const DUNES_ONLY_STRIP = "Dunes only: wind-derived layers shown in cells with dunes.";
 
 /** Strip items for the active layers and the view: colour bars, legends and map keys first, then
  *  the descriptive text. */
@@ -91,6 +95,8 @@ export function mapStripItems(c: MapStripContext): StripItem[] {
     { kind: "heading", text: "Dune Atlas · map.geomorphlab.org" },
     { kind: "text", text: `${PROJECTION_TEXT[view.proj]} · centre ${fmtLat(view.lat)}, ${fmtLon(view.lon)} · zoom ${view.zoom.toFixed(1)} · wind dataset ${ds.name} ${ds.resolution}, ${ds.period}${anyThr ? ` · threshold friction velocity ${utTex(ut)}` : ""}` },
   ];
+  // the Dunes only toggle changes what the wind-derived layers show: say so on the image (round 7)
+  if (state.dunesOnly && visible.some((l) => isWindDerived(l))) text.push({ kind: "text", text: DUNES_ONLY_STRIP });
   // sources: the paper, the wind dataset with its Copernicus notice, other external sources shown
   text.push({ kind: "text", text: `Dune map and wind-regime method: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}.` });
   text.push({ kind: "text", text: state.dataset === "era5"

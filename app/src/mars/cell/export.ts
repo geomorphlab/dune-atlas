@@ -222,7 +222,7 @@ flux_rose.csv  Flux rose vs d: one row per (rose_mode, grain_diameter, direction
   speed-up about the mode direction alpha_E / alpha_H at that d.
 ${colDoc("flux_rose.csv")}
 
-Physics (docs/mars-spec.md), all from Pähtz & Durán (2023) J. Fluid Mech. 963:A20: u* from the smooth-wall
+Physics, all from Pähtz & Durán (2023) J. Fluid Mech. 963:A20: u* from the smooth-wall
 mixing-length profile of eq. 2.2 (kappa = ${M.KAPPA}, damping constant ${M.MIX_DAMP}) under constant stress, no roughness
 length, at each hour's lowest-level height z (column wind_height) with nu = mu(T)/rho; threshold eq. 5.1 with the
 rarefaction correction of eq. 3.20; transport eq. 3.2; grain density ${M.RHO_P} kg m-3, g = ${M.G} m s-2.

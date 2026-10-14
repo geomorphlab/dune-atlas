@@ -106,12 +106,12 @@ describe("layer panel", () => {
   });
   it("directional fields offer colour map / arrows / streamlines; angles have no log option", () => {
     const it_ = item(root, "at");
-    const mode = it_.querySelector('select[aria-label^="Render"]') as HTMLSelectElement;
+    const mode = it_.querySelector('select[aria-label^="Display"]') as HTMLSelectElement;
     expect([...mode.options].map((o) => o.value)).toEqual(["colormap", "arrows", "streamlines"]);
     mode.value = "streamlines"; fire(mode, "change");
     expect(store.state.layers.at.cfg?.mode).toBe("streamlines");
     expect(it_.querySelector('input[aria-label^="Logarithmic"]')).toBeNull();
-    expect(item(root, "ab").querySelector('select[aria-label^="Render"]')).not.toBeNull(); // axis
+    expect(item(root, "ab").querySelector('select[aria-label^="Display"]')).not.toBeNull(); // axis
   });
   it("no 'not available' badges anywhere (availability checks removed)", () => {
     expect(root.querySelector(".badge.na")).toBeNull();
@@ -168,7 +168,10 @@ describe("layer panel", () => {
   });
   it("dataset selector is shown for the two wind datasets (ERA5-Land, ERA5)", () => {
     const sel = root.querySelector("#dataset-select") as HTMLSelectElement;
-    expect([...sel.options].map((o) => o.textContent)).toEqual(["ERA5-Land 0.1°, 1950–2024", "ERA5 0.25°, 1950–2024"]);
+    // short option text (fits the embed panel); the period and land rule are in the tooltips
+    expect([...sel.options].map((o) => o.textContent)).toEqual(["ERA5-Land 0.1°", "ERA5 0.25°"]);
+    expect([...sel.options].map((o) => o.title)).toEqual(["ERA5-Land 0.1°, 1950–2024; land cells: land–sea mask fraction > 0.5", "ERA5 0.25°, 1950–2024; land cells: land–sea mask fraction > 0"]);
+    expect(sel.title).toBe(sel.options[sel.selectedIndex].title);
   });
   it("dunes: fill colour picker and invert only (no outline controls, no colour swatch)", () => {
     const it_ = item(root, "dunes");
@@ -185,7 +188,7 @@ describe("layer panel", () => {
     inv.checked = true; fire(inv, "change");
     expect(store.state.layers.dunes.cfg?.invert).toBe(true);
     expect(it_.querySelector(".legend-note")!.textContent).toMatch(/Land without mapped dunes/);
-    expect(it_.querySelector(".info-popover")!.textContent).toMatch(/85°S/);
+    expect(it_.querySelector(".info-popover")!.textContent).toMatch(/beyond ±85\.05° \(interior Antarctica\)/);
     inv.checked = false; fire(inv, "change");
     expect(store.state.layers.dunes.cfg?.invert).toBeUndefined();
   });
@@ -491,9 +494,11 @@ describe("cell panel", () => {
     expect(root.querySelector(".empty-state")).not.toBeNull();
     expect(root.querySelector("svg.rose")).toBeNull();
   });
-  it("load errors are reported", async () => {
+  it("load errors are reported (visitor text; the error itself in the tooltip)", async () => {
     const p = new CellPanel(root, 14, { windSectors: 16, fluxSectors: 32, onClose: () => {} });
     await p.show({ query: async () => { throw new Error("HTTP 403"); } } as unknown as CellStore, 1, 1);
-    expect(root.querySelector('[role="alert"]')!.textContent).toContain("HTTP 403");
+    const al = root.querySelector('[role="alert"]')!;
+    expect(al.textContent).toBe("The data for this cell could not be loaded. Click the cell again to retry.");
+    expect(al.getAttribute("title")).toContain("HTTP 403");
   });
 });

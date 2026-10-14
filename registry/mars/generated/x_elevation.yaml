@@ -23,7 +23,7 @@ layers:
       200m v2. Astrogeology PDS Annex, U.S. Geological Survey. https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m
     licence: CC0 (MOLA), CC BY-SA 3.0 IGO (HRSC)
     url: https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m
-    changes: Area mean over 1/64° (~0.93 km) pixels of the 200 m DEM, rounded to 1 m; coarser zoom levels are means
+    changes: Area mean over 1/64° (~0.93 km) pixels of the 200 m DEM, rounded to 1 m; zoomed-out map views show means
       (≤ 0.5 m rounding).
   visible: false
   opacity: 0.85

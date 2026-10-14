@@ -40,7 +40,7 @@ describe("Mars registry", () => {
       expect(!!l.thresholdAware, l.id).toBe(!twoD);
       expect(l.source, l.id).toMatch(/^(\{dataset\}\/fields\/|dune-atlas\/mars\/v1\/)/);
     }
-    expect(reg.layers.find((l) => l.id === "dunes")!.source).toBe("dune-atlas/mars/v1/dunes/dunes.pmtiles");
+    expect(reg.layers.find((l) => l.id === "dunes")!.source).toBe("dune-atlas/mars/v1/dunes/dunes-r2.pmtiles");
     expect(reg.layers.find((l) => l.id === "elevation")!.source).toBe("dune-atlas/mars/v1/fields/elevation.zarr");
   });
   it("groups: Earth's groups; 'Related data' (id environment: density and elevation)", () => {

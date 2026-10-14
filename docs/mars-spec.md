@@ -88,7 +88,7 @@ Grid: FV3 2° (`grid` attrs {lat0: −89, dlat: 2, lon0: 1, dlon: 2, ny: 90, nx:
 | `cells-aux.zarr` | `qsdiv` (lat, lon, 64); scalars `rho_mean`, `elev_mean` |
 | `fields/rho_mean.zarr` | 2-D near-surface air density |
 | `fields/elevation.zarr` | 2-D native pyramid (~1/64°, m) from the DEM |
-| `dunes/dunes.pmtiles` | vector, as Earth's dunes |
+| `dunes/dunes-r2.pmtiles` | vector, as Earth's dunes (round-3 key: metadata citing MGD3 + Fenton 2020; `dunes.pmtiles` = same tiles, old metadata); `dunes/invert-r2.pmtiles` the invert view, `dunes/polar-caps.json` the globe caps |
 | `basemaps/hrsc-mola-terrarium.pmtiles` | 512-px Terrarium lossless WebP, Web-Mercator lon/lat tiling, maxzoom from the pilot |
 
 ## 7. Where things live

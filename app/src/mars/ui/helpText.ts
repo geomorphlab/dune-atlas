@@ -24,11 +24,11 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "datasets", title: "Wind dataset",
-    body: "The winds are the lowest-level winds of the MCMC FV3-based Mars Global Climate Model, beta release 1 (2°, hourly, one Mars year: 16,032 hourly samples). The wind and sand-flux layers and the cell panel use this dataset; more Mars wind datasets may be added later.",
+    body: "The winds are the lowest-level winds of the MCMC FV3-based Mars Global Climate Model, beta release 1 (2°, hourly, one Mars year: 16,032 hourly samples). The wind and sand-flux layers and the cell panel use this dataset.",
   },
   {
     id: "basemaps", title: "Basemaps",
-    body: "The opening basemap is a shaded relief of the MOLA–HRSC blended elevation model (Fergason, Hare & Laura 2018), served with the atlas; its tiles are released under CC BY-SA 3.0 IGO (derived from HRSC, CC BY-SA 3.0 IGO, and MOLA, CC0). Under Basemap you can also choose OpenPlanetaryMap and Esri's Mars imagery services: the global CTX mosaic (about 5 m per pixel; The Murray Lab), HiRISE (down to about 25 cm per pixel, only where HiRISE has imaged), the Viking MDIM 2.1 colour mosaic and the MOLA–HRSC colour shaded relief. Esri's services are tiled in latitude and longitude and are reprojected in your browser. Where a service has no data (most of the planet for HiRISE) or does not respond, the dark map background shows. Credits are in the map attribution.",
+    body: "The opening basemap is a shaded relief of the MOLA–HRSC blended elevation model (Fergason, Hare & Laura 2018), released under CC BY-SA 3.0 IGO (derived from HRSC, CC BY-SA 3.0 IGO, and MOLA, CC0). Under Basemap you can also choose OpenPlanetaryMap and Esri's Mars imagery: the global CTX mosaic (about 5 m per pixel; The Murray Lab), HiRISE (down to about 25 cm per pixel), the Viking MDIM 2.1 colour mosaic and the MOLA–HRSC colour shaded relief. HiRISE covers only the small part of the surface it has imaged; elsewhere the map is dark. Credits are in the map attribution.",
   },
   {
     id: "downloads", title: "Downloads and citation",
@@ -79,7 +79,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
 ];
 
-export const TOUR_FALLBACK = { cell: "The example cell could not be loaded just now (are you offline?). Click any cell on the map to open its panel." };
+export const TOUR_FALLBACK = { cell: "The example cell could not be loaded. Click any cell on the map to open its panel." };
 
 export const TOUR_LABELS = { back: "Back", next: "Next", done: "Done", skip: "Skip tour", step: (i: number, n: number) => `Step ${i} of ${n}` };
 

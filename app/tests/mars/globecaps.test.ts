@@ -52,7 +52,7 @@ afterEach(() => { vi.unstubAllGlobals(); });
 describe("globe polar caps hook (main.ts)", () => {
   it("fill specs: dunes fill and invert from the dunes layer's polar-caps.json; invert view from dunes.yaml", () => {
     const dunes = reg.layers.find((l) => l.id === "dunes")!;
-    expect(dunes.invertSource).toBe("dune-atlas/mars/v1/dunes/invert.pmtiles");
+    expect(dunes.invertSource).toBe("dune-atlas/mars/v1/dunes/invert-r2.pmtiles");
     expect(dunes.invertSourceLayer).toBe("invert");
     expect(marsCapFills(reg.layers, `${BASE}/`)).toEqual([
       { layerId: "ov-dunes-fill", url: `${BASE}/dune-atlas/mars/v1/dunes/polar-caps.json`, part: "dunes" },

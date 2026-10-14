@@ -131,8 +131,8 @@
         "replace": "export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class=\"sources\">\n  <li><strong>Winds (MCMC FV3 Mars GCM, beta release 1)</strong>: hourly lowest-level winds, temperature and surface pressure of the NASA Ames Mars Climate Modeling Center FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to 2° × 2°: 16,032 hourly samples, one Mars year. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind (≈ 1.6–3 m) follows from the hourly pressure and temperature, and the friction velocity u* comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (2023, eq. 2.2) under constant stress at that height (no roughness length).</li>\n  <li><strong>Sand-flux fields</strong>: for every hour, the threshold and the saturated transport rate of Pähtz &amp; Durán (2023, J. Fluid Mech. 963, A20) at the selected median grain diameter d (grain density 3000 kg/m³, g = 3.71 m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the method of Gunn (2026). Fluxes are per Earth year (365.25 days).</li>\n  <li><strong>Dune map</strong>: USGS Mars Global Digital Dune Database (MGD3; Hayward et al. 2007, 2010, 2012, 2014) plus the small dune fields of Fenton (2020, Icarus 352, 114018), merged into 3,514 dune-field polygons (Mars 2000 sphere).</li>\n  <li><strong>Saturated flux divergence</strong> ${mathHtml(\"$\\\\nabla\\\\cdot\\\\vec{q}_s$\")}: divergence of the resultant drift potential vector (magnitude RDP, direction RDD) on the Mars sphere (R = 3389.5 km), following Gunn (2026), Methods M6, with central differences on the 2° grid. Negative values (convergence) imply deposition.</li>\n  <li><strong>Elevation and shaded relief</strong>: MGS MOLA – MEX HRSC blended DEM, 200 m, v2 (Fergason, Hare &amp; Laura 2018, USGS Astrogeology); licence: MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO). The atlas's MOLA–HRSC shaded-relief basemap tiles are released under CC BY-SA 3.0 IGO (derived from HRSC, CC BY-SA 3.0 IGO, and MOLA, CC0).</li>\n</ul>`;"
       },
       {
-        "find": "export const INVERT_NOTE = \"Invert colours land WITHOUT mapped dunes. Vector tiles end at ±85.05° latitude, so interior Antarctica south of 85°S is not coloured.\";",
-        "replace": "export const INVERT_NOTE = \"Invert colours areas WITHOUT mapped dunes.\";"
+        "find": "export const INVERT_NOTE = \"Invert: colour the land WITHOUT mapped dunes instead of the dunes. Latitudes beyond ±85.05° (interior Antarctica) are not coloured.\";",
+        "replace": "export const INVERT_NOTE = \"Invert: colour the areas WITHOUT mapped dunes instead of the dunes.\";"
       },
       {
         "find": "`<p class=\"help\">Updates with the ${mathHtml(\"$u_{*,th}$\")} control.</p>`",
@@ -268,17 +268,14 @@
         "note": "Mars: the control is the median grain diameter d (integer µm values)"
       },
       {
-        "find": "`default ${t.values[t.defaultIndex].toFixed(2)}`",
-        "replace": "`default ${formatUt(t.values[t.defaultIndex])}`"
-      },
-      {
         "find": "  const label = h(\"label\", { for: sid, class: \"ut-label\", html: opts.compact ? mathHtml(\"$u_{*,th}$\") : `Threshold friction velocity ${mathHtml(\"$u_{*,th}$\")}` });\n  const sec = h(\"section\", { class: `threshold${opts.compact ? \" compact\" : \"\"}`, \"aria-label\": \"Threshold friction velocity\" },",
         "replace": "  const name = t.label.replace(/\\s+d$/, \"\");\n  const label = h(\"label\", { for: sid, class: \"ut-label\", html: opts.compact ? mathHtml(\"$d$\") : `${name} ${mathHtml(\"$d$\")}` });\n  const sec = h(\"section\", { class: `threshold${opts.compact ? \" compact\" : \"\"}`, \"aria-label\": name },",
         "note": "label from the registry threshold block (\"Median grain diameter d\")"
       },
       {
-        "find": "html: `Drives every threshold-dependent map layer and the cell panel (${formatUt(t.values[0])}–${formatUt(t.values[t.values.length - 1])}; default ${formatUt(t.values[t.defaultIndex])}).` }",
-        "replace": "html: `Drives every grain-size-dependent map layer and the cell panel (${formatUt(t.values[0])}–${formatUt(t.values[t.values.length - 1])}, ${t.values.length} log-spaced steps; default ${formatUt(t.values[t.defaultIndex])}). The threshold ${mathHtml(\"$u_{*,th}$\")} is computed for every hour from d and the hour's air density and temperature (Pähtz & Durán 2023).` }"
+        "find": "  return `<p>The friction velocity ${mathHtml(\"$u_{*,th}$\")} above which the wind moves sand. Every threshold-dependent map layer (its ⓘ says so) and the cell panel use the value set here.</p>`\n    + `<p>${t.values.length} values from",
+        "replace": "  return `<p>The median diameter ${mathHtml(\"$d$\")} of the sand grains. Every grain-size-dependent map layer (its ⓘ says so) and the cell panel use the value set here. The threshold friction velocity ${mathHtml(\"$u_{*,th}$\")} is computed for every hour from ${mathHtml(\"$d$\")} and that hour's air density and temperature (Pähtz & Durán 2023).</p>`\n    + `<p>${t.values.length} log-spaced values from",
+        "note": "Mars: the control is the grain diameter d; u*,th follows per hour"
       }
     ]
   }

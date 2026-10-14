@@ -30,16 +30,40 @@ export function thresholdControl(t: ThresholdDef, store: Store, opts: { compact?
   sync(store.state.utIndex);
   input.addEventListener("input", () => store.set({ utIndex: Number(input.value) }));
   store.subscribe((s, ch) => { if (ch.has("utIndex")) sync(s.utIndex); });
-  const reset = h("button", { type: "button", class: "link-button", title: `Reset to the default ${formatUt(t.values[t.defaultIndex])}` }, `default ${t.values[t.defaultIndex].toFixed(2)}`);
+  const reset = h("button", { type: "button", class: "link-button", title: `Reset to the default ${formatUt(t.values[t.defaultIndex])}` }, `default ${formatUt(t.values[t.defaultIndex])}`);
   reset.addEventListener("click", () => store.set({ utIndex: t.defaultIndex }));
   const pct = (100 * t.defaultIndex) / (t.values.length - 1);
   const track = h("div", { class: "ut-track" }, input, ticks, h("span", { class: "ut-default-mark", style: `left: calc(${pct}% + ${(0.5 - pct / 100) * 16}px)`, title: `default ${formatUt(t.values[t.defaultIndex])}`, "aria-hidden": "true" }));
   const label = h("label", { for: sid, class: "ut-label", html: opts.compact ? mathHtml("$u_{*,th}$") : `Threshold friction velocity ${mathHtml("$u_{*,th}$")}` });
   const sec = h("section", { class: `threshold${opts.compact ? " compact" : ""}`, "aria-label": "Threshold friction velocity" },
-    h("div", { class: "threshold-head" }, label, out, reset),
-    track);
-  if (!opts.compact) {
-    sec.append(h("p", { id: hid, class: "help", html: `Drives every threshold-dependent map layer and the cell panel (${formatUt(t.values[0])}–${formatUt(t.values[t.values.length - 1])}; default ${formatUt(t.values[t.defaultIndex])}).` }));
+    /* children below */);
+  if (opts.compact) { // cell panel: one line (label, value, default) above the slider
+    sec.append(h("div", { class: "threshold-head" }, label, out, reset), track);
+    return sec;
   }
+  // layer panel, identical structure in both builds: label line (with ⓘ) | value + default |
+  // slider | one short description line; the details are in the ⓘ popover (and Help)
+  const popId = `${p}ut-info`;
+  const info = h("button", { type: "button", class: "info-button", "aria-expanded": "false", "aria-controls": popId, "aria-label": "About this control" }, "i") as HTMLButtonElement;
+  const pop = h("div", { id: popId, class: "info-popover", hidden: true, role: "note", html: thresholdInfoHtml(t) });
+  info.addEventListener("click", () => {
+    const open = info.getAttribute("aria-expanded") !== "true";
+    info.setAttribute("aria-expanded", String(open));
+    pop.hidden = !open;
+  });
+  sec.append(
+    h("div", { class: "threshold-head" }, label, info),
+    h("div", { class: "threshold-readout" }, out, reset),
+    track,
+    h("p", { id: hid, class: "help", html: THRESHOLD_HELP }),
+    pop);
   return sec;
+}
+
+/** the one description line under the slider (same in both builds; details in the ⓘ) */
+export const THRESHOLD_HELP = "Applies to the map layers and the cell panel.";
+/** the slider's ⓘ: what the control is, its range and default */
+export function thresholdInfoHtml(t: ThresholdDef): string {
+  return `<p>The friction velocity ${mathHtml("$u_{*,th}$")} above which the wind moves sand. Every threshold-dependent map layer (its ⓘ says so) and the cell panel use the value set here.</p>`
+    + `<p>${t.values.length} values from ${formatUt(t.values[0])} to ${formatUt(t.values[t.values.length - 1])}; default ${formatUt(t.values[t.defaultIndex])} (the mark under the slider). The compact copy at the top of the cell panel sets the same value.</p>`;
 }

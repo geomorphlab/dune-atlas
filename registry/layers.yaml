@@ -34,8 +34,8 @@ basemaps:
     default: true             # the atlas UI is dark-themed
     info:
       description: "Dark vector basemap of OpenStreetMap roads, places, water and land cover, styled to sit under the atlas colours."
-      source: "OpenFreeMap vector tiles of OpenStreetMap data (OpenMapTiles schema), dark style"
-      resolution: "Vector tiles to zoom 14, drawn sharp at any zoom"
+      source: "OpenFreeMap, from OpenStreetMap data (OpenMapTiles schema), dark style"
+      resolution: "Vector map, sharp at every zoom (street-level detail)"
       licence: "Map data © OpenStreetMap contributors (ODbL 1.0); © OpenMapTiles"
       url: "https://openfreemap.org/"
   - id: esri-imagery
@@ -48,7 +48,7 @@ basemaps:
     info:
       description: "Mosaic of satellite and aerial imagery of the land surface."
       source: "Esri World Imagery (Esri, Maxar, Earthstar Geographics and the GIS User Community)"
-      resolution: "15 m worldwide, 1 m or finer in many regions; tiles to zoom 19"
+      resolution: "15 m worldwide, 1 m or finer in many regions"
       licence: "Esri service under the Esri Master License Agreement / Terms of Use"
       url: "https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9"
   - id: hillshade
@@ -62,9 +62,9 @@ basemaps:
     maxzoom: 12
     attribution: '<a href="https://mapterhorn.com/attribution" target="_blank" rel="noopener">© Mapterhorn</a>'
     info:
-      description: "Shaded relief computed in the browser from terrain tiles (elevations encoded as Terrarium RGB)."
-      source: "Mapterhorn open terrain tiles: Copernicus DEM GLO-30 worldwide and national open elevation models where available"
-      resolution: "About 30 m worldwide (zoom 12), finer in some countries"
+      description: "Shaded relief of an open global elevation model (Mapterhorn)."
+      source: "Mapterhorn open elevation data: Copernicus DEM GLO-30 worldwide and national open elevation models where available"
+      resolution: "About 30 m worldwide, finer in some countries"
       licence: "Each source's open licence (for example the Copernicus DEM licence), listed by Mapterhorn"
       url: "https://mapterhorn.com/attribution"
   - id: opentopomap
@@ -80,7 +80,7 @@ basemaps:
     info:
       description: "Topographic map with contour lines and hill shading."
       source: "OpenTopoMap, from OpenStreetMap data and SRTM elevation"
-      resolution: "Raster tiles to zoom 17"
+      resolution: "About 1.2 m per pixel at the equator at the closest zoom"
       licence: "Map data © OpenStreetMap contributors (ODbL 1.0); map style © OpenTopoMap (CC BY-SA 3.0)"
       url: "https://opentopomap.org/"
   - id: openfreemap-light
@@ -90,8 +90,8 @@ basemaps:
     attribution: "OpenFreeMap © OpenMapTiles Data from OpenStreetMap"   # shown by the style's own sources
     info:
       description: "Light vector basemap of OpenStreetMap roads, places, water and land cover (Positron style)."
-      source: "OpenFreeMap vector tiles of OpenStreetMap data (OpenMapTiles schema), Positron style"
-      resolution: "Vector tiles to zoom 14, drawn sharp at any zoom"
+      source: "OpenFreeMap, from OpenStreetMap data (OpenMapTiles schema), Positron style"
+      resolution: "Vector map, sharp at every zoom (street-level detail)"
       licence: "Map data © OpenStreetMap contributors (ODbL 1.0); © OpenMapTiles"
       url: "https://openfreemap.org/"
 

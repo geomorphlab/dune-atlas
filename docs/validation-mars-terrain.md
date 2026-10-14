@@ -335,6 +335,40 @@ map; levels 6 and 9 sampled at 72–82° N/S all answer HTTP 404), while CTX1 re
 geographic tiles our protocol requests. Evidence and the protocol check: `docs/mars-app.md` §5a. Whether to state
 this in the HiRISE attribution / info is left to the PI.
 
+## 10. Dune tiles with MGD3 + Fenton (2020) metadata (round 3, PI 2026-10-14)
+
+The uploaded `dunes.pmtiles` / `invert.pmtiles` carried the pre-Fenton tippecanoe metadata
+(attribution "… (Hayward et al. 2007, 2010, 2012), compiled by A. Gunn"; dunes description "USGS MGD3
+compilation"). R2 objects are create-only, so both were rebuilt under new keys with `scripts/mars/terrain/build_dunes.sh`
+(same shapefile, same `mars/dunes.py` clip at the Mercator limit and pole-edge nudge, same tippecanoe v2.79.0
+arguments apart from the metadata). Metadata now: attribution = `dunes.ATTRIBUTION` "Dune fields: USGS Mars Global
+Digital Dune Database (Hayward et al. 2007, 2010, 2012, 2014) and Fenton (2020), merged, compiled by A. Gunn"
+(both archives); dunes description "Mars dune fields (USGS MGD3 and Fenton 2020, merged), Mars 2000 planetocentric
+lon/lat"; the names and the invert description are unchanged.
+
+| key (`dune-atlas/mars/v1/dunes/`) | bytes | md5 | vs. round 2 |
+|---|---|---|---|
+| `dunes-r2.pmtiles` | 13,174,988 | ca48b57aa1620ccfd608eb8ef724b740 | 103,123 tiles, all decompressed MVT bytes identical to `dunes.pmtiles` (134,462 features); header identical; metadata differs in attribution, description, generator_options |
+| `invert-r2.pmtiles` | 7,852,169 | 0ae6aca711b1a314325dfce3a48c02be | 1,338,185 tiles, all decompressed MVT bytes identical to `invert.pmtiles`; header identical except tile_contents_count 43,215 vs 43,213 (tippecanoe deduplication, storage only); metadata differs in attribution, generator_options |
+| `polar-caps.json` | 551,365 | b1a4e774597bb982caa2195ec6ca929f | unchanged (no citation fields; rewritten byte-identical by the build), same key |
+
+Check: `scripts/mars/terrain/compare_tiles.py OLD NEW` decodes every tile id of both archives (gzip-decompressed
+bytes; on a difference, layers and features with id, type, resolved tags and geometry commands, in order and as a
+multiset); result files `staging/mars/terrain/dunes/compare_{dunes,invert}_r2.json`. Two successive builds give
+archives with different md5s (gzip / deduplication) but identical decoded tiles, so the comparison is on
+decoded tiles, not on archive bytes. The work GeoJSONs and the 2° grid arrays are byte-identical to round 2 (the
+grid npz `citation` string now includes Hayward et al. 2014 and Fenton 2020). Registry:
+`registry/mars/generated/dunes.yaml` `source: dune-atlas/mars/v1/dunes/dunes-r2.pmtiles`,
+`invertSource: dune-atlas/mars/v1/dunes/invert-r2.pmtiles` (`mars/dunes.py` `DUNES_KEY` / `INVERT_KEY`); the app
+fetches `polar-caps.json` from the directory of `source`, so its key stays. The old objects stay in place.
+
+Archive metadata in the app: none of it is user-visible. The pmtiles protocol is created as `new Protocol()`
+(`src/map/adapters.ts`), without `metadata: true`, so the vector sources' TileJSON is built from the header only
+(no `attribution`/`description` from the archive); basemaps use `tiles: [pmtiles://…/{z}/{x}/{y}]` templates
+with the registry `attribution`, and `clampPmtilesBasemaps` reads only the header maxZoom. The Gadi terrarium
+archive's internal "HRSC-MOLA" name/attribution is therefore shown only by archive tools (e.g. `pmtiles show`,
+the PMTiles viewer) and was not rebuilt.
+
 ## 7. Open issues
 
 * HRSC component licence is CC BY-SA 3.0 IGO (share-alike); the PI should confirm that publishing derived tiles
@@ -345,7 +379,7 @@ this in the HiRISE attribution / info is left to the PI.
   dune / invert tiles at 85.05° (MapLibre outlines every polygon edge inside a tile) is to be looked at in the
   screenshots.
 * The Gadi terrarium PMTiles metadata still says "HRSC-MOLA" (built before the naming decision); the code now writes
-  "MOLA–HRSC"; changing the 4.9 GB archive's metadata needs a rewrite job (not done).
+  "MOLA–HRSC"; changing the 4.9 GB archive's metadata needs a rewrite job (not done; not shown in the app, §10).
 * The local dev mirror's basemap is the z0–5 subset under the full archive's name: MapLibre overzooms z5 beyond
   zoom 5 locally only if the source maxzoom is read from the PMTiles header (registry says 8).
 * 14 degenerate source polygons (< 0.001 km²) are kept as in the source; the PI may want them removed upstream.

@@ -43,11 +43,12 @@ describe("Mars build: planet toggle, header, storage", () => {
     expect(sub.querySelector("a")!.getAttribute("target")).toBe("_blank");
     // the Wind dataset selector is shown with the single Mars dataset
     const sel = root.querySelector("#dataset-select") as HTMLSelectElement;
-    expect([...sel.options].map((o) => [o.value, o.textContent, o.title])).toEqual([["fv3-beta1", "MCMC FV3", "MCMC FV3 2°, one Mars year (6th simulated year, 668 sols)"]]);
+    expect([...sel.options].map((o) => [o.value, o.textContent, o.title])).toEqual([["fv3-beta1", "MCMC FV3 2°", "MCMC FV3 2°, one Mars year (6th simulated year, 668 sols)"]]);
+    expect(sel.title).toBe("MCMC FV3 2°, one Mars year (6th simulated year, 668 sols)");
     expect(root.querySelector(".dataset-row")!.textContent).toMatch(/^Wind dataset/);
     // dune invert toggle (Terrain's invert tiles; key is the default until reported)
     const dunes = reg.layers.find((l) => l.id === "dunes")!;
-    expect([dunes.invertSource, dunes.invertSourceLayer]).toEqual(["dune-atlas/mars/v1/dunes/invert.pmtiles", "invert"]);
+    expect([dunes.invertSource, dunes.invertSourceLayer]).toEqual(["dune-atlas/mars/v1/dunes/invert-r2.pmtiles", "invert"]);
     expect(root.querySelector('.layer-item[data-layer="dunes"]')!.textContent).toMatch(/invert \(areas without dunes\)/);
     expect(sub.querySelector("a")!.getAttribute("href")).toBe("https://www.geomorphlab.org/");
     const css = fs.readFileSync(path.resolve(__dirname, "../../src/style.css"), "utf8");
@@ -101,7 +102,7 @@ describe("Mars build: planet toggle, header, storage", () => {
 });
 
 // the Terrain track's invert tiles (devroot); skips until the archive exists
-const INVERT = path.resolve(__dirname, "../../../staging/mars/devroot/dune-atlas/mars/v1/dunes/invert.pmtiles");
+const INVERT = path.resolve(__dirname, "../../../staging/mars/devroot/dune-atlas/mars/v1/dunes/invert-r2.pmtiles");
 const invertReady = fs.existsSync(INVERT) && !fs.existsSync(`${INVERT}-journal`) && (() => { const fd = fs.openSync(INVERT, "r"), b = Buffer.alloc(7); fs.readSync(fd, b, 0, 7, 0); fs.closeSync(fd); return b.toString() === "PMTiles"; })(); // not while Terrain is still writing it
 describe.skipIf(!invertReady)("Mars invert tiles (devroot)", () => {
   it("the archive has the registry's source-layer", async () => {

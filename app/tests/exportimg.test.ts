@@ -44,7 +44,7 @@ describe("map export: information strip", () => {
     expect(bars[0].ticks.every((t) => t.pos >= 0 && t.pos <= 1)).toBe(true);
     for (const b of bars) expect(texToPlain(b.title + b.detail)).not.toMatch(/[$\\]/); // TeX only inside $...$ (rendered as paths)
     const t = texts(items);
-    expect(t).toContain("Globe (MapLibre globe) · centre 24.50° S, 15.25° E · zoom 6.2 · wind dataset ERA5-Land 0.1°, 1950–2024 · threshold friction velocity $u_{*,th}$ = 0.15 $\\mathrm{m\\,s^{-1}}$");
+    expect(t).toContain("Globe (perspective view) · centre 24.50° S, 15.25° E · zoom 6.2 · wind dataset ERA5-Land 0.1°, 1950–2024 · threshold friction velocity $u_{*,th}$ = 0.15 $\\mathrm{m\\,s^{-1}}$");
     const sw = items.find((i) => i.kind === "swatches") as Extract<(typeof items)[number], { kind: "swatches" }>;
     expect(sw.items.map((s) => [s.color, s.shape])).toEqual([["#c08040", "box"], ["#112233", "line"]]);
     expect(sw.items[1].label).toMatch(/\(streamlines, direction of transport\) at \$u_\{\*,th\}\$ = 0\.15 \$\\mathrm\{m\\,s\^\{-1\}\}\$/);

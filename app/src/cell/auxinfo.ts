@@ -83,7 +83,7 @@ export function auxVars(aux: CellAux | undefined): string[] {
 }
 
 /** Source statement of the flux divergence (derived by the atlas from the Gunn (2026) data). */
-export const QSDIV_SOURCE = "Derived by dune-atlas from rdpm and rdpa of Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y; data doi:10.5281/zenodo.20046812";
+export const QSDIV_SOURCE = "Computed for the Dune Atlas from rdpm and rdpa of Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y; data doi:10.5281/zenodo.20046812";
 /** Processing of the aridity data (as in the registry attribution of the aridity layer). */
 export const ARIDITY_CHANGES = "Processed for the atlas: source integers (AI x 10^4) converted to decimal AI; ocean (no ET0 data) and ET0 = 0 pixels set to no data; the source maximum 65535 kept as 6.5535 (AI >= 6.5535); 0.1° cell means of the valid 30-arc-second pixels.";
 

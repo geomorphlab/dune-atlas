@@ -21,7 +21,7 @@ and per-body storage keys are shared Earth code, so the Earth build is no longer
   https://www.geomorphlab.org/). The Gunn (2026) citation stays in About, citations and downloads. The Mars
   title and subtitle patches are gone; meta description, exports and citations keep "Mars Dune Atlas" in the
   Mars build. The tab title is "MGL - Dune Atlas" in both builds (round 6, §2c).
-* Wind dataset selector: shown whenever the registry has a dataset (`>= 1`), so Mars shows "MCMC FV3" (tooltip
+* Wind dataset selector: shown whenever the registry has a dataset (`>= 1`), so Mars shows "MCMC FV3 2°" (round 7: option text = name + grid, `datasetOptionLabel`; tooltip
   from `datasetTooltip`); Earth unchanged (ERA5-Land, ERA5).
 * Planet toggle (`ui/tools.ts`): a `tool-btn planet-btn` directly under the camera button, 18 px inline SVG
   (line icon of a ringed planet: disc plus a tilted elliptical ring whose back arcs stop at the disc;
@@ -136,7 +136,7 @@ Earth keeps the stock `ScaleControl`); arrow/streamline spacing and the export s
 patches. Coordinates: planetocentric °N and °E, −180…180 (as Earth). Default view: globe over the north
 polar erg (62° N, 160° E, zoom 2.2), RDD streamlines over the dunes over DP, d = 200 µm, MOLA–HRSC shaded
 relief. Tour example cell: Nili Patera (9° N, 67° E → cell (40, 123)). Dune layer: as Earth, a display option
-"invert (areas without dunes)" draws the complement from `invertSource: dune-atlas/mars/v1/dunes/invert.pmtiles`,
+"invert (areas without dunes)" draws the complement from `invertSource: dune-atlas/mars/v1/dunes/invert-r2.pmtiles`,
 `invertSourceLayer: invert` (registry/mars/layers.yaml; built by the Terrain track; key and source-layer are
 the App default until Terrain reports them). Terrain's fragment replaces the dunes placeholder, so
 `src/mars/registry/invert.ts` (applied by the `registry/load.ts` patch) keeps the base layer's invert fields
@@ -211,8 +211,11 @@ fields of Fenton (2020, Icarus 352, 114018, doi:10.1016/j.icarus.2020.114018; ch
 553 polygons < 1 km² (MGD3 maps only fields > 1 km²); equatorward of 65° 2,634 polygons, 120,072 km²
 (recomputed from the shapefile with `mars/dunes.py`). In the dunes ⓘ (`registry/mars/generated/dunes.yaml`
 from `mars/dunes.py` via `scripts/mars/terrain/write_registry.py`), About, the cell-panel citations and the
-downloads, `docs/mars-spec.md` and `docs/validation-mars-terrain.md`. The uploaded `dunes.pmtiles` metadata
-(tippecanoe attribution) keeps the old text until the next tile build.
+downloads, `docs/mars-spec.md` and `docs/validation-mars-terrain.md`. The archive metadata (tippecanoe
+attribution/description) cites MGD3 + Fenton (2020) from the round-3 rebuild `dunes-r2.pmtiles` /
+`invert-r2.pmtiles` (new keys, R2 is create-only; tiles identical to `dunes.pmtiles` / `invert.pmtiles`,
+`docs/validation-mars-terrain.md` §10). The app does not show archive metadata (pmtiles `Protocol()` without
+`metadata: true`; attribution comes from the registry and `main.ts`).
 
 **Dunes only** (`src/map/dunemask.ts`; tests `tests/dunesonly.test.ts`, `tests/mars/dunesonly.test.ts`): one
 switch under the Wind dataset selector (default off; `dunesonly=1` in ?query links, flag bit 16 of the
@@ -280,6 +283,43 @@ Links use `%BASE_URL%`, so Earth links `/favicon.ico` and Mars `/mars/favicon.ic
 (asserted in `scripts/test-ci.sh`; tests `tests/head.test.ts`, `tests/mars/head.test.ts`, shared
 `tests/headlib.ts`).
 
+### 2d. Round 7 (PI 2026-10-14, both builds)
+
+**Map export strip with Dunes only** (`src/export/mapExport.ts` `DUNES_ONLY_STRIP`; tests
+`tests/dunesonly.test.ts`, `tests/mars/dunesonly.test.ts`, shared `checkExportStrip` in `tests/dunesonlylib.ts`):
+while Dunes only is on and a wind-derived layer is visible, the strip has the line "Dunes only: wind-derived
+layers shown in cells with dunes." after the view line (not when off, not with only unaffected layers).
+
+**Embed layout** (`?embed=1`, the Google Sites frame; `src/ui/embed.ts`, `src/ui/layerPanel.ts`,
+`src/ui/threshold.ts`, `src/style.css`; tests `tests/embed.test.ts`, `tests/mars/embed.test.ts`, shared
+`tests/embedlib.ts`). One layout for both builds:
+* "Open full screen ↗" is a pill on the map, top left (accent colour), with the note "Best viewed full screen"
+  beside it from 440 px; below 440 px the pill alone (its tooltip has the note). It links to the current view
+  (updates with the state) and opens a new tab. The layer panel starts 34 px lower in embed mode. The panel
+  header is "Dune Atlas ⟨Body⟩" + Layers only (subtitle hidden in embed, as before).
+* Wind dataset and Dunes only: one row each; the selector fills the row; option text is name + grid
+  ("ERA5-Land 0.1°", "ERA5 0.25°", "MCMC FV3 2°"); the option and the selector tooltip carry period and land
+  rule (`datasetTooltip`).
+* Slider block, same DOM in both builds: label line (label + ⓘ) | value + "default ⟨value unit⟩" link |
+  slider | one help line "Applies to the map layers and the cell panel." The ⓘ has the definition, range,
+  steps, default and (Mars) the per-hour threshold from d. The value keeps its fixed-width slot (no jitter).
+  The compact copy in the cell panel is unchanged.
+* Embed panel width: `min(330 px, 100vw − 70 px)` (`body.embed`). Before, below 720 px the panel was
+  100vw − 70 px: 570 px of a 640 px frame (the PI's "panel takes most of it"). Full-screen layout unchanged.
+* Default embed state: list collapsed (as before), at every embed width. Reason: collapsed, the panel shows
+  the title, Wind dataset, Dunes only and the slider block in roughly the top 190 px (estimate), and the
+  full-width map is visible below it; opened, the panel covers the whole frame height and 290–330 px of the
+  width (81 % of a 360 px frame, 69 % of 480, 52 % of 640, 41 % of 800). Layers opens it in one click.
+* Checks without a browser (the sandbox cannot start Chrome): DOM signature identical in both builds, the
+  CSS rules, and width budgets at 360, 480, 640, 800 px (embed) and 1280 px (full screen) with the export's
+  Helvetica metrics × 1.1: every row fits on one line (tightest: Earth slider label + ⓘ and the help line,
+  259 of 264 px at 360 px). Screenshots and in-page measurements (boxes, overlaps, line counts) on a desktop:
+  `scripts/mars/app/embed-shots.mjs` (both builds; writes `report.json`).
+
+**User-facing text audit**: `docs/user-text-audit.md` (34 changes, 2 strings for the Terrain track, 4 PI
+questions). Guard: `tests/usertextlib.ts` (`DEV_PHRASES`) in `tests/usertext.test.ts` and
+`tests/mars/publictext.test.ts` (new Mars text collector `tests/mars/publictext.ts`, `TEXT_DUMP=<file>`).
+
 ## 3. Basemaps: sources and licences
 
 | id | source | licence / credit shown | notes |
@@ -329,7 +369,7 @@ python scripts/mars/app/make_rose_fixture.py                                    
   at, ae, ab, qacb, qace, qsdiv, rho_mean; `fields/elevation.zarr` (0.25°, 3 levels).
 * `basemaps/hrsc-mola-terrarium.pmtiles`: FAKE z0–3 terrarium of the synthetic topography (clamped to z3 by
   the archive-depth check).
-* `dunes/dunes.pmtiles`: the PI shapefile, z0–7, layer `dunes`.
+* `dunes/dunes-r2.pmtiles`: the PI shapefile, z0–7, layer `dunes` (the registry key since Terrain round 3).
 
 Serve and run (on a desktop; the agent sandbox cannot bind sockets or start Chrome):
 
@@ -362,7 +402,9 @@ cell-store checks on the real store. Screenshots without servers: `scripts/mars/
 | `vectorclip.test.ts` | streamlines with Dunes only: unmasked integration then clipping (every vertex in a dune cell, pieces >= min length, a head on long pieces), fixture / devroot counts vs masked integration; arrows anchored at the base, seeds in dune cells |
 | `centre.test.ts` | Centre on cell: button in the title row, ease to the cell (duration, zoom floor, bearing/pitch kept), reduced motion -> jumpTo, polar cell on flat (clamped) and globe |
 | `head.test.ts` | tab title "MGL - Dune Atlas" after the Mars HTML transform, `%BASE_URL%` icon links, icon files and sizes |
-| `globecaps.test.ts` | polar-cap hook: dune fill/invert specs from the registry (`invert.pmtiles`, layer `invert`); caps in globe projection, absent in Mercator; every Mars basemap switch keeps a matching basemap cap |
+| `embed.test.ts` | embed layout (shared `tests/embedlib.ts`): DOM signature of header and slider block (same in both builds), full-screen pill on the map only in embed mode, follows the view, no duplicate; CSS rules; width budgets at 360–800 px embed and 1280 px |
+| `publictext.test.ts` | Mars user-facing text collected (site + downloads, `TEXT_DUMP`); no implementation / failure / internal / relict phrases (`tests/usertextlib.ts`) |
+| `globecaps.test.ts` | polar-cap hook: dune fill/invert specs from the registry (`invert-r2.pmtiles`, layer `invert`); caps in globe projection, absent in Mercator; every Mars basemap switch keeps a matching basemap cap |
 | `polarcap.test.ts` | (Terrain) cap geometry, hillshade maths, installation/ordering on a fake map, Esri cap composition |
 
 ## 5. Esri OnMars basemaps: method, failure handling, evaluation
@@ -454,7 +496,7 @@ Hook (App track, wired in round 4): `src/mars/main.ts` calls `globePolarCaps(map
 reg.basemaps, reg.layers))` (`src/mars/map/globecaps.ts`) right after the map is created, and `polarCaps.sync()`
 after every `setProjection`. It installs the caps below while the map is in globe projection and removes them
 in Mercator (no custom layers in the flat map or its PNG export); the fill specs are derived from the dunes
-layer (`ov-dunes-fill` / `ov-dunes-invert`, `polar-caps.json` beside `dunes.pmtiles`; the invert view uses
+layer (`ov-dunes-fill` / `ov-dunes-invert`, `polar-caps.json` beside `dunes-r2.pmtiles`; the invert view uses
 `dunes.yaml` `invertSource` / `invertSourceLayer`). A disposed installation's event handlers are disabled
 (MapLibre fires a snapshot of the listener list, so its own sync later in the same event would re-add the
 caps). Tests: `tests/mars/globecaps.test.ts` (globe / Mercator / back, every Mars basemap keeps a matching cap).

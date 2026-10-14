@@ -20,9 +20,9 @@ layers:
     minzoom: 0
     maxzoom: 24
     description: >-
-      Dune presence (layers.nc `dunes`) dissolved into 1,428 dune fields of 8-connected
-      0.1° cells; polygon edges follow grid-cell boundaries exactly (tiles z0–10, overzoomed
-      beyond). Area is the sum of spherical cell areas.
+      The 0.1° dune cells of the dune map grouped into 1,428 dune fields of 8-connected
+      cells; polygon edges follow the grid-cell boundaries exactly. Area is the sum of
+      spherical cell areas.
     citation: "Gunn, A. (2026). geomorphlab/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code (v1.0.0). Zenodo. doi:10.5281/zenodo.20054674 (dune map: dune-mask-rev1.tif; MIT)"
     # 'invert' view: land cells without dunes (land & ~dunes), cell-exact; built by dunes.build_nondune_pmtiles
     invertSource: dune-atlas/v1/dunes/nondune-land.pmtiles

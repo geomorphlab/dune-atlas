@@ -96,7 +96,7 @@ Highlights: `.atlas-tools .planet-btn` or `.atlas-tools`
 
 Earth and Mars share this atlas: the planet button below the camera swaps between them and opens the Mars atlas at its default view. This is the end of the tour.
 
-Fallback (example cell not loaded): The example cell could not be loaded just now (are you offline?). Click any land cell on the map to open its panel.
+Fallback (example cell not loaded): The example cell could not be loaded. Click any land cell on the map to open its panel.
 
 ## Share
 

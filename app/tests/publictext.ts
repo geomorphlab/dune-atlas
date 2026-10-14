@@ -65,6 +65,8 @@ export async function collectPublicText(auxAttrs: Record<string, Record<string, 
   out["panel.about"] = (lp.querySelector(".about")?.textContent ?? "").replace(/\s+/g, " ").trim();
   out["panel.pinned"] = (lp.querySelector(".pinned")?.textContent ?? "").replace(/\s+/g, " ").trim();
   lp.querySelectorAll("[title]").forEach((e, k) => { out[`panel.title.${k}`] = e.getAttribute("title") ?? ""; });
+  lp.querySelectorAll("[aria-label]").forEach((e, k) => { out[`panel.aria.${k}`] = e.getAttribute("aria-label") ?? ""; });
+  for (const b of reg.basemaps) { out[`basemap.${b.id}.title`] = b.title; if (b.attribution) out[`basemap.${b.id}.attribution`] = textOf(b.attribution); }
   lp.querySelectorAll("#dataset-select option").forEach((e) => { out[`panel.dataset-option.${(e as HTMLOptionElement).value}`] = e.getAttribute("title") ?? ""; });
   lp.querySelectorAll(".help").forEach((e, k) => { out[`panel.help.${k}`] = (e.textContent ?? "").trim(); });
   // cell panel

@@ -32,8 +32,8 @@ layers:
     licence: CC BY 4.0
     url: https://figshare.com/articles/dataset/Global_Aridity_Index_and_Potential_Evapotranspiration_ET0_Climate_Database_v2/7504448
     changes: 'Processed for the atlas: source integers (AI x 10^4) converted to decimal AI; ocean (no ET0 data)
-      and ET0 = 0 pixels set to no data; the source maximum 65535 kept as 6.5535 (AI >= 6.5535); coarser zoom levels
-      are means of the valid native pixels; values rounded to a relative precision of 1.2e-4 for compression.'
+      and ET0 = 0 pixels set to no data; the source maximum 65535 kept as 6.5535 (AI >= 6.5535); zoomed-out map
+      views show means of the valid native pixels; values rounded to a relative precision of 1.2e-4.'
   visible: false
   opacity: 0.85
   queryable: false

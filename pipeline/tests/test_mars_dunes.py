@@ -74,6 +74,24 @@ def test_tippecanoe_args_follow_earth():
     assert "--maximum-zoom=10" in a and "--use-attribute-for-id=id" in a
 
 
+def test_tile_metadata_cites_mgd3_and_fenton():
+    """Round 3: archive metadata (tippecanoe --attribution/--description) = MGD3 (2007, 2010, 2012, 2014) plus
+    Fenton (2020), merged; the rebuilt archives have new R2 keys (create-only), the registry points at them."""
+    for args in (D.tippecanoe_args(), D.invert_tippecanoe_args()):
+        att = next(x for x in args if x.startswith("--attribution="))
+        assert att == "--attribution=" + D.ATTRIBUTION
+        assert all(y in att for y in ("2007", "2010", "2012", "2014", "Fenton (2020)", "merged"))
+    desc = next(x for x in D.tippecanoe_args() if x.startswith("--description="))
+    assert "Fenton 2020" in desc and "MGD3" in desc
+    assert D.FENTON_2020 in D.DUNE_REFERENCES and "10.1016/j.icarus.2020.114018" in D.CITATION
+    summ = {"n_features": 3514, "total_area_km2": 1047155.6, "n_lt_1km2": 553, "n_equatorward_65": 2634,
+            "area_equatorward_65_km2": 120071.8}
+    L = D.registry_fragment(summ)["layers"][0]
+    assert (L["source"], L["invertSource"]) == (D.DUNES_KEY, D.INVERT_KEY)
+    assert D.DUNES_KEY.endswith("/dunes-r2.pmtiles") and D.INVERT_KEY.endswith("/invert-r2.pmtiles")
+    assert D.POLAR_CAPS_KEY.rsplit("/", 1)[0] == D.DUNES_KEY.rsplit("/", 1)[0]   # app: caps beside `source`
+
+
 def _polar_feats():
     from shapely.geometry import mapping, Polygon
     # a field crossing the Web-Mercator limit (84-86.5 N) and one wholly beyond it; plus a southern one
@@ -204,17 +222,23 @@ def test_invert_tiles_no_pole_edge(tmp_path):
 
 
 def test_built_mars_dune_products():
-    """The locally built dunes.pmtiles / invert.pmtiles / polar-caps.json (staging devroot; skipped if absent)."""
+    """The locally built dunes-r2.pmtiles / invert-r2.pmtiles / polar-caps.json (staging devroot; skipped if absent)."""
     import os
     pytest.importorskip("pmtiles")
     root = os.path.join(os.path.dirname(__file__), "..", "..", "staging", "mars", "devroot", "dune-atlas", "mars",
                         "v1", "dunes")
-    if not os.path.exists(os.path.join(root, "dunes.pmtiles")):
-        pytest.skip("dunes.pmtiles not built locally")
-    for name, nfeat in (("dunes.pmtiles", 3000), ("invert.pmtiles", 1)):
+    dunes, invert = (os.path.basename(k) for k in (D.DUNES_KEY, D.INVERT_KEY))
+    if not os.path.exists(os.path.join(root, dunes)):
+        pytest.skip(f"{dunes} not built locally")
+    from pmtiles.reader import MmapSource, Reader
+    for name, nfeat in ((dunes, 3000), (invert, 1)):
         path = os.path.join(root, name)
         if not os.path.exists(path):
             continue
+        with open(path, "rb") as f:
+            meta = Reader(MmapSource(f)).metadata()
+        assert meta["attribution"] == D.ATTRIBUTION and "Fenton (2020)" in meta["attribution"]
+        assert "2014" in meta["attribution"]
         p = D.polar_tile_check(path, maxzoom=8)
         assert all(d["verts_on_or_beyond_pole_edge"] == 0 and d["edges_on_pole_edge"] == 0 for d in p.values()), (name, p)
         # longest polar-row edge not on a clip line: source segments (a 0.37-deg straight segment at 85 N is

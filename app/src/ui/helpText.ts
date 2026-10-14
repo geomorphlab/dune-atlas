@@ -86,7 +86,7 @@ export const TOUR_STEPS: TourStep[] = [
 ];
 
 /** shown under a step whose demonstration could not be prepared */
-export const TOUR_FALLBACK = { cell: "The example cell could not be loaded just now (are you offline?). Click any land cell on the map to open its panel." };
+export const TOUR_FALLBACK = { cell: "The example cell could not be loaded. Click any land cell on the map to open its panel." };
 
 export const TOUR_LABELS = { back: "Back", next: "Next", done: "Done", skip: "Skip tour", step: (i: number, n: number) => `Step ${i} of ${n}` };
 

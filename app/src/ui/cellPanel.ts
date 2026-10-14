@@ -282,7 +282,7 @@ export class CellPanel {
     this.#root.hidden = false;
     document.body.classList.add("cell-open");
     const prev = this.#cell && this.#content?.isConnected && this.#scroll ? { cell: this.#cell, scrollTop: this.#scroll.scrollTop } : null;
-    const loading = () => { this.#frame({ iy, ix }).innerHTML = `<p class="status" role="status">Loading ${this.#ds().name} cell ${iy}, ${ix}…</p>`; };
+    const loading = () => { this.#frame({ iy, ix }).innerHTML = `<p class="status" role="status">Loading ${this.#ds().name} data for this cell…</p>`; };
     if (prev) this.#setBusy(true);
     else loading();
     try {
@@ -302,7 +302,7 @@ export class CellPanel {
     } catch (e) {
       if (req !== this.#req) return;
       this.#setBusy(false);
-      this.#frame({ iy, ix }).innerHTML = `<p class="status error" role="alert">Could not load this cell: ${escapeHtml(String((e as Error)?.message ?? e))}</p>`;
+      this.#frame({ iy, ix }).innerHTML = `<p class="status error" role="alert" title="${escapeHtml(String((e as Error)?.message ?? e))}">The data for this cell could not be loaded. Click the cell again to retry.</p>`;
     }
   }
 
@@ -479,7 +479,7 @@ export class CellPanel {
       : `saturated crest flux with speed-up about the mode direction ${mathHtml(v.fluxMode === "elongation" ? "$\\alpha_E$" : "$\\alpha_H$")} at this threshold, ${mathHtml("$u_c = u_{*f}(1 + \\beta \\, h/w \\, |\\sin(\\theta - \\alpha)|)$")}`;
     // one slot for the total (or —); the note on — is part of the fixed text of the crest modes
     const totalTxt = live(Number.isFinite(v.fluxTotal) ? `${fmtNum(v.fluxTotal)}&nbsp;m²/yr` : MISSING, R.total, "left");
-    D.fluxCap.innerHTML = `<strong>${escapeHtml(fm.label)}</strong>: ${mathHtml(fm.totalTex)} = ${totalTxt}${v.fluxMode === "flat" ? "" : ` (${MISSING} = mode direction undefined at this threshold)`}. Direction sand moves TOWARD; ${v.fluxSectors.length} sectors of ${w}°. Radius = ${pct ? "% of the total flux in each sector (sums to 100 %)" : `time-averaged flux in each sector, m²/yr (sums to ${escapeHtml(fm.totalText)})`}. Time-averaged ${what}, Σ<sub>speed</sub> n·q / Σ<sub>all</sub> n from the wind histogram, computed in your browser. Colours split each sector by the excess shear ${mathHtml(ratioTex)} of the winds carrying the flux (only ${mathHtml(v.fluxMode === "flat" ? "$u_{*f} > u_{*,th}$" : "$u_c > u_{*,th}$")} transports sand). DP, RDP, RDP/DP, RDD and the arrows are the map fields at this threshold; a direction is hidden where the flux defining it is zero.`;
+    D.fluxCap.innerHTML = `<strong>${escapeHtml(fm.label)}</strong>: ${mathHtml(fm.totalTex)} = ${totalTxt}${v.fluxMode === "flat" ? "" : ` (${MISSING} = mode direction undefined at this threshold)`}. Direction sand moves TOWARD; ${v.fluxSectors.length} sectors of ${w}°. Radius = ${pct ? "% of the total flux in each sector (sums to 100 %)" : `time-averaged flux in each sector, m²/yr (sums to ${escapeHtml(fm.totalText)})`}. Time-averaged ${what}, Σ<sub>speed</sub> n·q / Σ<sub>all</sub> n from the wind histogram. Colours split each sector by the excess shear ${mathHtml(ratioTex)} of the winds carrying the flux (only ${mathHtml(v.fluxMode === "flat" ? "$u_{*f} > u_{*,th}$" : "$u_c > u_{*,th}$")} transports sand). DP, RDP, RDP/DP, RDD and the arrows are the map fields at this threshold; a direction is hidden where the flux defining it is zero.`;
     D.modesCap.innerHTML = `Mode bearings (toward) for ${mathHtml("$u_{*,th}$")} = ${v.utValues[0].toFixed(2)} m/s (centre) to ${v.utValues[v.utValues.length - 1].toFixed(2)} m/s (rim); ${mathHtml("$\\alpha_H$")} is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current threshold.`;
     const modesOpts = (t: PlotTheme) => ({ x: v.utValues, currentIndex: v.utIndex, size: Math.min(size, 420), theme: t, series: MODE_KEYS.map((k) => ({ label: s[k].label, color: seriesColor(s[k].color, t), dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined, values: v.modeSeries[k], axis: k === "ab", width: k === "ao" ? 2.8 : undefined })) });
     D.modesSvg.innerHTML = modesPlotSvg(modesOpts(DARK_THEME));

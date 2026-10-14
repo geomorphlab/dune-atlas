@@ -6,7 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { loadRegistry } from "../../src/registry/load";
 import { checkRealStores, checkSynthetic } from "../dunemasklib";
-import { checkClassification, checkOverlayManager, checkToggleAndLinks } from "../dunesonlylib";
+import { checkClassification, checkExportStrip, checkOverlayManager, checkToggleAndLinks } from "../dunesonlylib";
 import { FIXTURE_DS, RangeFileStore, haveFixture } from "./helpers";
 
 const reg = loadRegistry().registry;
@@ -35,6 +35,9 @@ describe("Dunes only (Mars)", () => {
   });
   it("toggle next to the Wind dataset selector; round trip through short and long links", () => {
     checkToggleAndLinks(reg, "fv3-beta1");
+  });
+  it("map export strip names Dunes only while it is on and a wind-derived layer is shown", () => {
+    checkExportStrip(reg, "fv3-beta1");
   });
   it("overlay manager: mask only for wind-derived layers while on, from the dataset's cells.zarr", () => {
     checkOverlayManager(reg, "dune-atlas/mars/v1/datasets/fv3-beta1", /^https:\/\/data\.test\/dune-atlas\/mars\/v1\/datasets\/fv3-beta1\/cells\.zarr$/);

@@ -41,12 +41,16 @@ label.inline { display: inline-flex; align-items: center; gap: 4px; margin: 2px 
 .panel-toggle::before { content: "▾ "; }
 .panel-toggle[aria-expanded="false"]::before { content: "▸ "; }
 #layer-panel.collapsed .panel-body, #layer-panel.collapsed .subtitle { display: none; }
-.fullscreen-link { display: inline-block; margin-bottom: 6px; font-weight: 600; }
 .pinned { position: sticky; top: 0; z-index: 1; background: var(--bg2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 8px 12px 6px; }
 #layer-panel .panel-body { overflow-y: auto; padding: 0 12px 12px; min-height: 0; }
 
-/* threshold control */
+/* threshold control. Layer panel (both builds): label + ⓘ | value + default | slider | one help line.
+   Cell panel (.compact): label, value and default on one line. */
 .threshold-head { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.threshold:not(.compact) .threshold-head { flex-wrap: nowrap; align-items: center; gap: 6px; }
+.threshold:not(.compact) .threshold-head .ut-label { min-width: 0; }
+.threshold-readout { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+.threshold .info-popover { margin-top: 4px; }
 .ut-label { font-weight: 600; font-size: 13.5px; }
 .ut-value { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 18px; color: var(--accent); }
 .threshold.compact .ut-value { font-size: 15px; }
@@ -67,7 +71,9 @@ label.inline { display: inline-flex; align-items: center; gap: 4px; margin: 2px 
 .order-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .order-item .move { border: 1px solid var(--line); background: var(--bg3); border-radius: 3px; padding: 0 5px; font-size: 10px; cursor: pointer; }
 .order-item .move[disabled] { opacity: 0.35; cursor: default; }
-.dataset-row { margin: 2px 0 6px; }
+/* Wind dataset and Dunes only: one row each, the same in both builds; the selector takes the row */
+label.inline.dataset-row { display: flex; align-items: center; gap: 6px; margin: 2px 0 6px; white-space: nowrap; }
+.dataset-row select { flex: 1 1 auto; min-width: 0; width: 100%; }
 .layer-group { margin: 8px 0; }
 .layer-group summary { font-weight: 600; cursor: pointer; padding: 4px 0; }
 .layer-list { list-style: none; margin: 0; padding: 0; }
@@ -179,10 +185,21 @@ body.resizing { user-select: none; cursor: ew-resize; }
 /* embed (Google Sites iframe) */
 body.embed .atlas-header .subtitle { display: none; }
 body.embed .atlas-header h1 { font-size: 15px; }
+/* embed: "Open full screen ↗" pill on the map, top left; the layer panel starts below it */
+.embed-bar { position: absolute; top: 10px; left: 10px; z-index: 3; display: flex; align-items: center; gap: 8px; max-width: calc(100% - 70px); }
+.fullscreen-pill { background: var(--accent); color: #141a21; font-weight: 600; font-size: 12.5px; line-height: 18px; padding: 3px 11px; border-radius: 999px;
+  text-decoration: none; white-space: nowrap; box-shadow: 0 1px 6px rgba(0,0,0,.6); }
+.fullscreen-pill:hover, .fullscreen-pill:focus-visible { filter: brightness(1.1); text-decoration: underline; }
+.embed-note { font-size: 11.5px; color: var(--fg); background: rgba(20, 26, 33, .75); padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+body.embed #layer-panel { top: 44px; max-height: calc(100% - 94px); }
+/* narrowest frames: the pill alone (its tooltip carries the note) */
+@media (max-width: 439px) { .embed-note { display: none; } }
 
 /* narrow screens: cell panel becomes a bottom sheet */
 @media (max-width: 720px) {
   :root { --panel-w: calc(100vw - 70px); }
+  /* embed: never wider than on the desktop, so the map stays visible beside the panel */
+  body.embed { --panel-w: min(330px, calc(100vw - 70px)); }
   #cell-panel { left: 0; right: 0; top: auto; bottom: 0; width: auto; max-width: none; height: var(--cell-h, 60vh); max-height: 90vh; border-radius: 10px 10px 0 0; flex-direction: column; }
   .resize-handle { width: auto; height: 14px; cursor: ns-resize; }
   .resize-handle::after { content: ""; display: block; width: 40px; height: 4px; background: var(--muted); border-radius: 2px; margin: 5px auto 0; }
@@ -191,6 +208,7 @@ body.embed .atlas-header h1 { font-size: 15px; }
   body.cell-open .maplibregl-ctrl-bottom-left, body.cell-open .maplibregl-ctrl-bottom-right { bottom: var(--cell-h, 60vh); }
   /* stops 50 px above the sheet: the bottom-left control row (raised onto the sheet) stays free */
   body.cell-open #layer-panel { max-height: calc(100vh - var(--cell-h, 60vh) - 60px); }
+  body.embed.cell-open #layer-panel { max-height: calc(100vh - var(--cell-h, 60vh) - 94px); }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 .order-item .remove { border: 1px solid var(--line); background: var(--bg3); border-radius: 3px; padding: 0 6px; font-size: 13px; line-height: 1.2; cursor: pointer; color: var(--muted); }
@@ -267,6 +285,7 @@ body.embed .atlas-header h1 { font-size: 15px; }
 .tour-pop.tour-loading .tour-body::after { content: "Loading…"; color: var(--muted); font-size: 12px; }
 .tour-outline { outline: 2px solid var(--accent); outline-offset: -2px; }
 /* 'Dunes only' switch under the Wind dataset selector (ui/layerPanel.ts dunesOnlyToggle) */
+label.inline.dunes-only-row { display: flex; width: max-content; max-width: 100%; }
 .dunes-only-row { margin: 0 0 6px; color: var(--text, inherit); cursor: pointer; }
 .dunes-only-row input { margin: 0 4px 0 0; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

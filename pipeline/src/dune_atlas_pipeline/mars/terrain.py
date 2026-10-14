@@ -795,7 +795,7 @@ def registry_fragment() -> dict:
             "citation": a["citation"],
             "attribution": {**{k: a[k] for k in ("source", "citation", "licence", "url")},
                             "changes": ("Area mean over 1/64° (~0.93 km) pixels of the 200 m DEM, rounded to 1 m; "
-                                        "coarser zoom levels are means (≤ 0.5 m rounding).")},
+                                        "zoomed-out map views show means (≤ 0.5 m rounding).")},
             "visible": False, "opacity": 0.85, "queryable": True,
             "display": {"transform": "none", "colormap": "turbo", "clim": [-8000, 12000],
                         "legendNote": "Colour scale saturates beyond the ends (Olympus Mons 21 km, Hellas −8.2 km)."},

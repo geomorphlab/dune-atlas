@@ -37,8 +37,8 @@ layers:
     licence: CC BY 4.0, © 2008–2019 CSIRO
     url: https://map.geo-rapp.org/
     changes: 'Processed for the atlas: monthly 500 m tiles averaged to 0.1° and over 2001–2025 (valid tot_cov ≤
-      103 %; months without valid data skipped); coarser zoom levels are means of the valid 0.1° cells; values rounded
-      to a relative precision of 1.2e-4 for compression.'
+      103 %; months without valid data skipped); zoomed-out map views show means of the valid 0.1° cells; values rounded
+      to a relative precision of 1.2e-4.'
   visible: false
   opacity: 0.85
   queryable: false

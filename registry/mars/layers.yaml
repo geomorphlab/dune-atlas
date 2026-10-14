@@ -40,9 +40,9 @@ basemaps:
     attribution: 'Relief: <a href="https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m" target="_blank" rel="noopener">MGS MOLA – MEX HRSC blended DEM v2 (Fergason, Hare &amp; Laura 2018, USGS Astrogeology)</a>, MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO); hillshade tiles released under <a href="https://creativecommons.org/licenses/by-sa/3.0/igo/" target="_blank" rel="noopener">CC BY-SA 3.0 IGO</a> (derived from HRSC CC BY-SA 3.0 IGO and MOLA CC0)'
     default: true             # the atlas UI is dark-themed
     info:
-      description: "Shaded relief computed in the browser from the MOLA–HRSC blended elevation model (Terrarium tiles built for the atlas)."
+      description: "Shaded relief of the MOLA–HRSC blended elevation model."
       source: "Mars MGS MOLA – MEX HRSC Blended DEM Global 200m v2 (USGS Astrogeology; Fergason, Hare & Laura 2018)"
-      resolution: "200 m DEM; tiles to zoom 8 (about 160 m per pixel at the equator)"
+      resolution: "200 m DEM, shown at up to about 160 m per pixel at the equator"
       licence: "Hillshade tiles CC BY-SA 3.0 IGO (derived from HRSC CC BY-SA 3.0 IGO and MOLA CC0)"
       url: "https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m"
   - id: opm-mars
@@ -55,7 +55,7 @@ basemaps:
     info:
       description: "OpenPlanetaryMap basemap of Mars: shaded relief and colour with feature names."
       source: "OpenPlanetaryMap / CARTO; data NASA/JPL/GSFC (MOLA), NASA/JPL/ASU (THEMIS), USGS"
-      resolution: "Raster tiles to zoom 9"
+      resolution: "About 160 m per pixel at the equator at the closest zoom"
       licence: "OpenPlanetaryMap terms (see link); NASA and USGS data in the public domain"
       url: "https://www.openplanetary.org/opm"
   # Esri OnMars imagery services (geographic tiling, reprojected to Web Mercator in the browser by the
@@ -69,7 +69,7 @@ basemaps:
     maxzoom: 13
     attribution: 'Global CTX Mosaic of Mars V01: NASA/JPL/MSSS/The Murray Lab · <a href="https://www.arcgis.com/home/item.html?id=30c4acfe36284b1784bf07d5d73f9e4d" target="_blank" rel="noopener">Esri</a>'
     info:
-      description: "Global greyscale mosaic of Context Camera (CTX) images of Mars Reconnaissance Orbiter, reprojected to the web map in the browser."
+      description: "Global greyscale mosaic of Context Camera (CTX) images of Mars Reconnaissance Orbiter."
       source: "Global CTX Mosaic of Mars V01 (The Murray Lab, Caltech; NASA/JPL/MSSS), Esri OnMars service CTX1"
       resolution: "About 5 m per pixel"
       licence: "Free use for all purposes, credit NASA/JPL/MSSS/The Murray Lab; Esri service under the Esri Master License Agreement / Terms of Use"
@@ -82,7 +82,7 @@ basemaps:
     maxzoom: 18
     attribution: 'HiRISE: NASA/JPL/University of Arizona/USGS · <a href="https://www.arcgis.com/home/item.html?id=c1c4c750a2154842ae523c984cc14fa5" target="_blank" rel="noopener">Esri</a>'
     info:
-      description: "HiRISE images of Mars Reconnaissance Orbiter where HiRISE has imaged; elsewhere the map background shows."
+      description: "HiRISE images of Mars Reconnaissance Orbiter, where HiRISE has imaged (a small part of the surface); elsewhere the map is dark."
       source: "Mars HiRISE Image Mosaic (NASA/JPL/University of Arizona/USGS), Esri OnMars service HiRISE"
       resolution: "Down to about 25 cm per pixel; sparse coverage"
       coverage: "HiRISE footprints between about 65° S and 65° N; no imagery at higher latitudes in this mosaic (Esri OnMars)."
@@ -111,7 +111,7 @@ basemaps:
     info:
       description: "Colour-coded shaded relief of the MOLA–HRSC blended elevation model."
       source: "MOLA–HRSC colorized shaded relief (USGS Astrogeology, from the Mars MGS MOLA – MEX HRSC Blended DEM Global 200m v2), Esri OnMars service MColorDEM"
-      resolution: "200 m DEM; service to about 160 m per pixel"
+      resolution: "200 m DEM, shown at up to about 160 m per pixel"
       licence: "Public domain (USGS Astrogeology); cite the DEM (Fergason, Hare & Laura 2018); Esri service under the Esri Master License Agreement / Terms of Use"
       url: "https://www.arcgis.com/home/item.html?id=07b33bb3067747abbebd1ce34c29816e"
 
@@ -148,7 +148,7 @@ layers:
     title: Dune fields
     group: dunes
     type: pmtiles-vector
-    source: dune-atlas/mars/v1/dunes/dunes.pmtiles
+    source: dune-atlas/mars/v1/dunes/dunes-r2.pmtiles
     sourceLayer: dunes
     visible: true
     opacity: 1
@@ -157,7 +157,7 @@ layers:
     # track with its polar dune fix. Key and source-layer are the App track's default until Terrain reports them
     # (PI 2026-10-14). Kept on the merged layer even when the Terrain fragment (generated/dunes.yaml) replaces
     # this placeholder without them (src/mars/registry/invert.ts).
-    invertSource: dune-atlas/mars/v1/dunes/invert.pmtiles
+    invertSource: dune-atlas/mars/v1/dunes/invert-r2.pmtiles
     invertSourceLayer: invert
     units: "Mapped dune fields"
     description: "Dune fields of the USGS Mars Global Digital Dune Database (Hayward et al. 2007, 2010, 2012, 2014) plus the small dune fields of Fenton (2020), merged into 3,514 polygons."
