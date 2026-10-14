@@ -58,13 +58,15 @@ export function wrapText(text: string, width: number, fs: number): string[] {
 }
 
 /** colour bars per row (3: fixed relative size) */
-export const colorbarsPerRow = () => Math.max(1, Math.floor((U - 2 * STRIP_PAD.side + COLORBAR.gap + 1e-6) / (COLORBAR.width + COLORBAR.gap)));
+export const colorbarsPerRow = (width: number = U) => Math.max(1, Math.floor((width - 2 * STRIP_PAD.side + COLORBAR.gap + 1e-6) / (COLORBAR.width + COLORBAR.gap)));
 
 /** Build the strip, laid out STRIP_UNITS wide. `pxWidth` sets the pixel size (width / height
  *  attributes; viewBox in units): `height` is in units, `pxHeight` = height x pxWidth / units. */
-export function stripSvg(items: StripItem[], opts: { pxWidth?: number; math?: MathRenderer | null } = {}): { svg: string; height: number; pxHeight: number } {
+export function stripSvg(items: StripItem[], opts: { pxWidth?: number; math?: MathRenderer | null; units?: number } = {}): { svg: string; height: number; pxHeight: number } {
   const math = opts.math ?? null;
-  const width = U, pad = STRIP_PAD.side, inner = width - 2 * pad, FS = STRIP_FS;
+  // layout width in units (default STRIP_UNITS); the font sizes stay in STRIP_UNITS terms, so a narrower layout
+  // (the side column of the landscape map export) wraps more and its text is larger relative to its width
+  const width = opts.units ?? U, pad = STRIP_PAD.side, inner = width - 2 * pad, FS = STRIP_FS;
   const LW = { rule: STRIP_REL.line.rule * U, bold: STRIP_REL.line.bold * U, swatch: STRIP_REL.line.swatch * U };
   const p: string[] = [];
   // text may contain TeX ($...$): formulas become SVG paths when a renderer is given
@@ -90,7 +92,7 @@ export function stripSvg(items: StripItem[], opts: { pxWidth?: number; math?: Ma
       // consecutive colour bars: a grid of fixed-size bars, as many per row as fit, then wrap
       const bars: Extract<StripItem, { kind: "colorbar" }>[] = [];
       while (k < items.length && items[k].kind === "colorbar") bars.push(items[k++] as Extract<StripItem, { kind: "colorbar" }>);
-      const cols = colorbarsPerRow(), bw = COLORBAR.width, bh = COLORBAR.height;
+      const cols = colorbarsPerRow(width), bw = COLORBAR.width, bh = COLORBAR.height;
       for (let r = 0; r < bars.length; r += cols) {
         let rowH = 0;
         const row = bars.slice(r, r + cols);

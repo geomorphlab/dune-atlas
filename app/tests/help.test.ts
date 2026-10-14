@@ -184,8 +184,10 @@ describe("help button and panel", () => {
     (pop.querySelector('input[type="checkbox"]') as HTMLInputElement).checked = false;
     (pop.querySelector(".run-export") as HTMLButtonElement).click();
     await new Promise((r) => setTimeout(r, 0));
-    expect(opts.exportMap).toHaveBeenCalledWith({ basemap: false });
-    expect(document.querySelector(".tool-pop")).toBeNull();
+    expect(opts.exportMap).toHaveBeenCalledWith(expect.objectContaining({ basemap: false, transparent: false }));
+    // the popover stays open with a completion line (review U6)
+    expect(document.querySelector(".tool-pop")).not.toBeNull();
+    expect(pop.querySelector(".export-status")!.textContent).toMatch(/^Saved/);
   });
 });
 

@@ -186,7 +186,7 @@ def write_cells_aux(out: str, qsdiv: np.ndarray, rho_mean: np.ndarray, elev_mean
 
 # ---------------------------------------------------------------------------------------------- registry
 def qsat_fragment(meta: dict) -> dict:
-    frag = EF.registry_fragment(meta, dataset="era5")         # '{dataset}/fields/<var>.zarr' sources, Earth rules
+    frag = EF.registry_fragment(meta, dataset="era5", shared_clim=False)  # Mars keeps its own p2/p98 colour limits         # '{dataset}/fields/<var>.zarr' sources, Earth rules
     for lay in frag["layers"]:
         assert "Shown at the selected" not in lay["description"], lay["id"]   # units/slider are popover rows
         lay["citation"] = CITATION
@@ -197,7 +197,7 @@ def qsat_fragment(meta: dict) -> dict:
 
 def extra_fragment(qsdiv_clim, rho_clim) -> dict:
     return {"groups": [], "layers": [
-        {"id": "qsdiv", "title": "Saturated flux divergence (∇·qs)", "titleTex": r"$\nabla\cdot\vec{q}_s$",
+        {"id": "qsdiv", "title": "Saturated flux divergence (∇·qs)", "titleTex": r"Saturated flux divergence $\nabla\cdot\vec{q}_s$",
          "group": "drift", "type": "zarr-field", "source": "{dataset}/fields/qsdiv.zarr", "variable": "qsdiv",
          "thresholdAware": True, "units": "m/kyr",
          "description": ("Divergence of the time-averaged saturated sand-flux vector (magnitude RDP, direction RDD) "

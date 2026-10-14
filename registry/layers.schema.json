@@ -110,7 +110,7 @@
           },
           "default": {
             "type": "boolean"
-          },
+          }, "imagery": { "type": "boolean", "description": "photographic imagery: the layer panel suggests lowering the colour layers' opacity when it is chosen" },
           "info": {
             "type": "object",
             "additionalProperties": false,

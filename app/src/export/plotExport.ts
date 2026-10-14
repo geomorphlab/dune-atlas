@@ -70,7 +70,9 @@ export const plotFraction = (pw: number, ph: number) => (pw / ph >= 1.3 ? 0.96 :
  *  background. Laid out STRIP_UNITS wide; all text relative to the image width W: plot labels and
  *  the strip's text 0.018 W, headings 0.024 W. `pxWidth` sets the width / height attributes (PNG
  *  pixel size; the SVG has the same proportions). */
-export function composePlotSvg(spec: PlotExportSpec, c: PlotExportContext, pxWidth = PLOT_EXPORT_WIDTH, math: MathRenderer | null = null): { svg: string; width: number; height: number; plotHeight: number; pxWidth: number; pxHeight: number } {
+/** default background of plot exports (review U6: transparent images lost their dark text on dark slides) */
+export const PLOT_BACKGROUND = "#ffffff";
+export function composePlotSvg(spec: PlotExportSpec, c: PlotExportContext, pxWidth = PLOT_EXPORT_WIDTH, math: MathRenderer | null = null, background: string | null = PLOT_BACKGROUND): { svg: string; width: number; height: number; plotHeight: number; pxWidth: number; pxHeight: number } {
   const U = STRIP_UNITS;
   const probe = spec.svg(LIGHT_THEME);
   const pw0 = attr(probe, "width"), ph0 = attr(probe, "height");
@@ -86,7 +88,7 @@ export function composePlotSvg(spec: PlotExportSpec, c: PlotExportContext, pxWid
   const inner = plot.replace(/^<svg ([^>]*?)\swidth="[\d.]+"([^>]*?)\sheight="[\d.]+"/, (_m, a, b) => `<svg x="${f3((U - dw) / 2)}" y="${f3(top)}" ${a} width="${f3(dw)}"${b} height="${f3(dh)}"`);
   const st = strip.svg.replace(/^<svg ([^>]*?)\swidth="[\d.]+" height="[\d.]+"/, (_m, a) => `<svg x="0" y="${f3(plotHeight)}" ${a} width="${U}" height="${strip.height}"`);
   const pxHeight = (H * pxWidth) / U;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${f3(pxWidth)}" height="${f3(pxHeight)}" viewBox="0 0 ${U} ${f3(H)}" font-family="${STRIP_FONT}" color="${STRIP_COLORS.text}" style="color:${STRIP_COLORS.text}">${inner}${st}</svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${f3(pxWidth)}" height="${f3(pxHeight)}" viewBox="0 0 ${U} ${f3(H)}" font-family="${STRIP_FONT}" color="${STRIP_COLORS.text}" style="color:${STRIP_COLORS.text}">${background ? `<rect class="export-background" x="0" y="0" width="${U}" height="${f3(H)}" fill="${background}"/>` : ""}${inner}${st}</svg>`;
   return { svg, width: U, height: H, plotHeight, pxWidth, pxHeight };
 }
 const f3 = (v: number) => (Math.round(v * 1000) / 1000).toString();

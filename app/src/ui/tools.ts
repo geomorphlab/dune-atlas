@@ -4,13 +4,14 @@
 // button that opens the other atlas (Earth <-> Mars; body.ts) at its default view.
 import { h, nextId } from "./dom";
 import { BODY, bodyName, isEmbedded, otherBody, otherBodyUrl } from "../body";
+import { DOWNLOAD_EVENT } from "../cell/downloads";
 import { mathHtml } from "../util/math";
 import { EXPORT_TEXT, HELP_ABOUT_LINK, HELP_BUTTON_LABEL, HELP_RESTART, HELP_SECTIONS, HELP_TITLE, SHARE_TEXT } from "./helpText";
 
 export interface ToolsOptions {
   startTour: () => void;
   shareLink: () => string;
-  exportMap: (o: { basemap: boolean }) => Promise<void>;
+  exportMap: (o: { basemap: boolean; transparent?: boolean; onProgress?: (stage: string) => void }) => Promise<{ name: string; width: number; height: number } | void>;
   openAbout: () => void;
   /** open a URL (default: location.assign); tests replace it */
   navigate?: (url: string) => void;
@@ -43,6 +44,8 @@ export class Tools {
       btn("share-btn", SHARE_TEXT.button, ICONS.share, (b) => this.openShare(b)),
       btn("export-btn", EXPORT_TEXT.button, ICONS.camera, (b) => this.openExport(b)),
       this.#planetButton());
+    // every download confirms itself on the page (review L14)
+    globalThis.document?.addEventListener(DOWNLOAD_EVENT, (e) => { const n = (e as CustomEvent<{ name: string }>).detail?.name; if (n) toast(`${EXPORT_TEXT.downloaded} ${n}`, 4000); });
   }
 
   /** the planet toggle: "Switch to Mars" on Earth, "Switch to Earth" on Mars; carries ?embed=1 */
@@ -51,7 +54,7 @@ export class Tools {
     const b = h("button", { type: "button", class: "tool-btn planet-btn", "aria-label": label, title: label, html: ICONS.planet }) as HTMLButtonElement;
     b.addEventListener("click", () => {
       this.close();
-      const url = otherBodyUrl({ embed: isEmbedded() });
+      const url = otherBodyUrl({ embed: isEmbedded(), resume: true }); // the other atlas reopens its last view (review U11)
       (this.#opts.navigate ?? ((u: string) => globalThis.location.assign(u)))(url);
     });
     return b;
@@ -79,10 +82,7 @@ export class Tools {
       h("header", {}, h("h2", { id: tid }, title), close), ...body);
     pop.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); this.close(); } });
     document.body.append(pop);
-    // anchored to the left of the tools column, top aligned with the button
-    const r = owner.getBoundingClientRect(), vw = globalThis.innerWidth || 1024, vh = globalThis.innerHeight || 768;
-    pop.style.top = `${Math.max(8, Math.min(r.top, vh - 120))}px`;
-    pop.style.right = `${Math.max(8, vw - r.left + 8)}px`;
+    placeToolPop(pop, owner);
     this.#pop = pop;
     this.#owner = owner;
     owner.setAttribute("aria-expanded", "true");
@@ -116,15 +116,30 @@ export class Tools {
   }
 
   openExport(owner = this.el.querySelector(".export-btn") as HTMLButtonElement) {
-    const bmId = nextId("exp-bm");
+    const bmId = nextId("exp-bm"), trId = nextId("exp-tr");
     const bm = h("input", { type: "checkbox", id: bmId, checked: true }) as HTMLInputElement;
+    const tr = h("input", { type: "checkbox", id: trId }) as HTMLInputElement;
     const run = h("button", { type: "button", class: "run-export" }, EXPORT_TEXT.run) as HTMLButtonElement;
-    const status = h("p", { class: "help", role: "status" });
+    // progress (review U6): an indeterminate bar, the current stage and the elapsed time; then a completion line
+    const bar = h("progress", { class: "export-progress", "aria-label": EXPORT_TEXT.working, hidden: true }) as HTMLProgressElement;
+    const status = h("p", { class: "help export-status", role: "status", "aria-live": "polite" });
     run.addEventListener("click", async () => {
-      run.disabled = true; status.textContent = EXPORT_TEXT.working;
-      try { await this.#opts.exportMap({ basemap: bm.checked }); this.close(); } catch (e) { status.textContent = `Export failed: ${(e as Error)?.message ?? e}`; run.disabled = false; }
+      run.disabled = true; bar.hidden = false;
+      const t0 = Date.now();
+      let stage: string = EXPORT_TEXT.working;
+      const show = () => { status.textContent = `${stage} ${Math.round((Date.now() - t0) / 1000)} s`; };
+      show();
+      const tick = setInterval(show, 1000);
+      try {
+        const r = await this.#opts.exportMap({ basemap: bm.checked, transparent: tr.checked, onProgress: (s) => { stage = s; show(); } });
+        status.textContent = r ? `${EXPORT_TEXT.done} ${r.name} (${r.width} × ${r.height} px).` : EXPORT_TEXT.done.replace(/:$/, ".");
+      } catch (e) { status.textContent = `Export failed: ${(e as Error)?.message ?? e}`; }
+      finally { clearInterval(tick); bar.hidden = true; run.disabled = false; }
     });
-    this.#openPop("export", owner, EXPORT_TEXT.title, h("label", { for: bmId, class: "inline" }, bm, ` ${EXPORT_TEXT.basemap}`), h("p", { class: "help" }, EXPORT_TEXT.note), run, status);
+    this.#openPop("export", owner, EXPORT_TEXT.title,
+      h("label", { for: bmId, class: "inline" }, bm, ` ${EXPORT_TEXT.basemap}`),
+      h("label", { for: trId, class: "inline" }, tr, ` ${EXPORT_TEXT.transparent}`),
+      h("p", { class: "help" }, EXPORT_TEXT.note), run, bar, status);
   }
 }
 
@@ -132,4 +147,25 @@ export function toast(text: string, ms = 2000) {
   const t = h("div", { class: "toast", role: "status" }, text);
   document.body.append(t);
   setTimeout(() => t.remove(), ms);
+}
+
+/** Anchor a tool popover to the left of the tools column, top aligned with its button, and keep it off an open
+ *  cell panel (review U15 / L16): on the desktop it moves left of the panel when there is room (else it stays and
+ *  may overlap); with the bottom sheet (narrow screens) its height stops above the sheet. */
+export function placeToolPop(pop: HTMLElement, owner: HTMLElement, doc: Document = document) {
+  const r = owner.getBoundingClientRect(), vw = globalThis.innerWidth || 1024, vh = globalThis.innerHeight || 768;
+  const top = Math.max(8, Math.min(r.top, vh - 120));
+  let right = Math.max(8, vw - r.left + 8);
+  let maxH = vh - top - 12;
+  const cell = doc.getElementById("cell-panel");
+  const cr = cell && !cell.hidden ? cell.getBoundingClientRect() : null;
+  if (cr && cr.width > 0 && cr.height > 0) {
+    const w = pop.getBoundingClientRect().width || Math.min(340, vw - 70);
+    const sheet = cr.top > vh * 0.25 && cr.width >= vw * 0.9;   // narrow layout: the panel is a bottom sheet
+    if (sheet) maxH = Math.max(160, Math.min(maxH, cr.top - top - 8));
+    else if (vw - right > cr.left - 8 && cr.left - 8 - w >= 8) right = vw - cr.left + 8;   // left of the cell panel
+  }
+  pop.style.top = `${top}px`;
+  pop.style.right = `${right}px`;
+  pop.style.maxHeight = `${maxH}px`;
 }

@@ -40,6 +40,7 @@ basemaps:
       url: "https://openfreemap.org/"
   - id: esri-imagery
     title: Satellite imagery (Esri)
+    imagery: true
     kind: raster
     tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"]
     tileSize: 256

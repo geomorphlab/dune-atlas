@@ -24,12 +24,14 @@ export function fieldsCitation(datasetId: string): string {
 export const fieldsLicence = (datasetId: string) => (datasetId === "era5" ? "Copernicus licence (Licence to use Copernicus products)" : "CC BY 4.0 (Zenodo Supplementary Data)");
 
 /** One citable work. */
-export interface CitationEntry { label: string; text: string; doi: string; license?: string }
+export interface CitationEntry { label: string; text: string; doi: string; license?: string; /** metadata.json key (default: from the label) */ key?: string }
 /** Citations grouped by SOURCE (each with Paper / Data entries), optionally a usage notice. */
 export interface CitationSource { id: string; title: string; entries: CitationEntry[]; notice?: string }
 
 /** Supplementary Code record (v1.0.0, MIT), which contains the dune map (dune-mask-rev1.tif) */
 export const DUNE_MAP_DOI = "10.5281/zenodo.20054674";
+/** label of that entry: the record's Zenodo title is kept, the label says it is the dune map (review U14) */
+export const DUNE_MAP_LABEL = "Data (dune map: dune-mask-rev1.tif, contained in the Supplementary Code record)";
 
 export const C3S_NOTICE = "Contains modified Copernicus Climate Change Service information (ERA5-Land, 1950–2024). Neither the European Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data it contains.";
 export const C3S_NOTICE_ERA5 = "Contains modified Copernicus Climate Change Service information (ERA5, 1950–2024). Neither the European Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data it contains.";
@@ -45,7 +47,7 @@ export const CITATION_SOURCES: Record<string, CitationSource> = {
       // Supplementary Data record: the wind histograms and qsat parameter fields
       { label: "Data (wind histograms and sand-flux fields)", text: "Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes - Supplementary Data. Zenodo.", doi: DATA_DOI, license: "CC BY 4.0" },
       // Supplementary Code record: contains the dune map (dune-mask-rev1.tif)
-      { label: "Data (dune map)", text: "Gunn, A. (2026). geomorphlab/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code (v1.0.0). Zenodo.", doi: DUNE_MAP_DOI, license: "MIT" },
+      { label: DUNE_MAP_LABEL, text: "Gunn, A. (2026). geomorphlab/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code (v1.0.0). Zenodo.", doi: DUNE_MAP_DOI, license: "MIT", key: "data_dune_map" },
     ],
   },
   // ERA5 dataset: wind histograms and sand-flux fields computed for the atlas (not in the
@@ -54,7 +56,7 @@ export const CITATION_SOURCES: Record<string, CitationSource> = {
     id: "dune-atlas-era5", title: "Dune Atlas / dune map",
     entries: [
       { label: "Paper", text: "Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications.", doi: PAPER_DOI },
-      { label: "Data (dune map)", text: "Gunn, A. (2026). geomorphlab/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code (v1.0.0). Zenodo.", doi: DUNE_MAP_DOI, license: "MIT" },
+      { label: DUNE_MAP_LABEL, text: "Gunn, A. (2026). geomorphlab/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code (v1.0.0). Zenodo.", doi: DUNE_MAP_DOI, license: "MIT", key: "data_dune_map" },
     ],
     notice: "ERA5 wind histograms and sand-flux fields computed for the Dune Atlas from ERA5 hourly 10 m winds with the method of Gunn (2026).",
   },
@@ -136,7 +138,7 @@ export function citationJson(sources: CitationSource[] = citationSources()) {
 function entryKeys(s: CitationSource): string[] {
   const seen = new Map<string, number>();
   return s.entries.map((e) => {
-    const k = e.label.toLowerCase().replace(/[^a-z0-9]+/g, "_");
+    const k = e.key ?? e.label.toLowerCase().replace(/[^a-z0-9]+/g, "_");
     const n = (seen.get(k) ?? 0) + 1;
     seen.set(k, n);
     return n === 1 ? k : `${k}_${n}`;

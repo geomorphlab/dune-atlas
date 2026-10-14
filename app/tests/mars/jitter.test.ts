@@ -7,7 +7,8 @@ import { Store, type AppState } from "../../src/store";
 import { renderLayerPanel } from "../../src/ui/layerPanel";
 import { CellPanel } from "../../src/mars/ui/cellPanel";
 import type { MarsCellStore } from "../../src/mars/cell/cellstore";
-import { sweep, sweepFields } from "../jitterlib";
+import { measuredWidthCh, reserveCh, setMeasurer } from "../../src/ui/livenum";
+import { fakeMeasure, holes, sweep, sweepFields } from "../jitterlib";
 import { makeMarsCell, FIELD_VARS } from "./helpers";
 
 const reg = loadRegistry().registry;
@@ -15,7 +16,8 @@ const mem = new Map<string, string>();
 vi.stubGlobal("localStorage", { getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => { mem.set(k, v); }, removeItem: (k: string) => { mem.delete(k); }, clear: () => mem.clear() });
 
 describe("slider jitter (Mars): layer panel and cell panel keep their layout over all 64 grain diameters", () => {
-  it("text outside the live slots is constant; every live value fits its reserved slot; readout padded", async () => {
+  it.each([["estimated", null], ["measured", fakeMeasure]] as const)("text outside the live slots is constant; every live value fits its reserved slot; readout padded (%s slot widths)", async (_mode, measure) => {
+    setMeasurer(measure);
     document.body.innerHTML = '<aside id="layer-panel"></aside><aside id="cell-panel"></aside>';
     const st: AppState = { basemap: reg.basemaps[0].id, projection: "globe", utIndex: 29, layers: Object.fromEntries(reg.layers.map((l) => [l.id, { visible: !!l.visible, opacity: l.opacity ?? 1 }])), order: reg.layers.map((l) => l.id), dataset: "fv3-beta1", cell: null, embed: false };
     const store = new Store(st);
@@ -32,6 +34,7 @@ describe("slider jitter (Mars): layer panel and cell panel keep their layout ove
     const r = await sweep(store, [lp, cp], 64);
     expect(r.overflow).toEqual([]);
     expect(r.sigs.size).toBe(1);
+    expect(holes([lp, cp])).toEqual([]);   // review U8 / L11: no reserved room in the middle of running text
     expect(r.slots).toBeGreaterThan(30);
     // the readout keeps its character count: " 50 µm" ... "1000 µm" (leading figure spaces)
     const out = lp.querySelector("output.ut-value")!;
@@ -39,5 +42,16 @@ describe("slider jitter (Mars): layer panel and cell panel keep their layout ove
     store.set({ utIndex: 63 }); const b = out.textContent!;
     expect([...a].length).toBe([...b].length);
     expect(a).toMatch(/^\u2007+50 µm$/); expect(b).toBe("1000 µm");
+    setMeasurer(undefined);
   }, 120_000); // 64-position sweep: ~5 s locally, over 20 s on a 2-core CI runner with the full suite
+  it("measured slot widths are tight: the widest value plus at most 0.3 ch (review U8 / L11)", () => {
+    setMeasurer(fakeMeasure);
+    const vals = ["31.4&nbsp;m²/yr", "8.76&nbsp;m²/yr", "112&nbsp;m²/yr"];
+    const w = reserveCh(vals), widest = Math.max(...vals.map((v) => measuredWidthCh(v)));
+    expect(w).toBeGreaterThanOrEqual(widest);
+    expect(w - widest).toBeLessThanOrEqual(0.3);
+    setMeasurer(null);
+    expect(reserveCh(vals)).toBeGreaterThan(w);   // the conservative estimate (no canvas) is wider
+    setMeasurer(undefined);
+  });
 });

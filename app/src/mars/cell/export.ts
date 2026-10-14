@@ -7,14 +7,15 @@ import { texToPlain } from "../../util/plaintext";
 import { mathToBearingDeg } from "../../util/angles";
 import { nUt } from "../../cell/cellstore";
 import { DEFAULT_BINS } from "../../cell/flux";
-import { csvColumnDoc, csvColumnJson, csvTable, fieldMeta, fmtF32, fmtF64, exportBaseName, versionFromPrefix, CSV_LAYOUT_TEXT, DIR_COLUMNS, INSTITUTION, LICENSE, ROSE_MODES, type CsvColumn, type ExportMeta } from "../../cell/export";
+import { csvColumnDoc, csvColumnJson, csvTable, fieldMeta, fmtF32, fmtF64, exportBaseName, versionFromPrefix, rose16Columns, rose16Csv, CSV_LAYOUT_TEXT, DIR_COLUMNS, INSTITUTION, LICENSE, ROSE16_FILE, ROSE_MODES, type CsvColumn, type ExportMeta } from "../../cell/export";
+import { latLonText } from "../../cell/downloads";
 import { AI_NOTICE, CELL_SOURCE_IDS, citationJson, citationSources, citationText, fieldsCitation, fieldsLicence, referencesLine } from "../../cell/citation";
 import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "../../cell/auxinfo";
 import { datasetInfo, resolutionText, type DatasetInfo } from "../../cell/datasetinfo";
 import { writeNetcdf3, type NcAttrs, type NcVariable } from "../../cell/netcdf3";
 import { writeZip, type DeflateRaw } from "../../cell/zip";
 import type { MarsCellData } from "./cellstore";
-import { marsModeRoses } from "./analysis";
+import { analyseMarsCell, marsModeRoses } from "./analysis";
 import { PD23_TEXT, PAHTZ_DURAN_DOI } from "./citation";
 
 export { exportBaseName, versionFromPrefix, type ExportMeta };
@@ -141,6 +142,7 @@ export function csvColumns(cell: MarsCellData, attrs?: ExportMeta["storeAttrs"])
       ...DIR_COLUMNS,
       { name: "flux_rose", units: "m2 yr-1", longName: "time-averaged sand flux per direction bin (toward)" },
     ],
+    [ROSE16_FILE]: rose16Columns(D_COLUMN),
   };
 }
 
@@ -200,7 +202,7 @@ export function readmeText(cell: MarsCellData, meta: ExportMeta): string {
   const colDoc = (f: string) => cols[f].map(csvColumnDoc).join("\n");
   return `Mars Dune Atlas cell export
 ===========================
-Cell: ${cell.lat}° N, ${cell.lon}° E (grid row ${cell.iy}, column ${cell.ix}); dataset ${meta.datasetTitle} (${meta.datasetId}, ${meta.dataVersion}).
+Cell: centre ${latLonText(cell.lat, cell.lon)} (grid row ${cell.iy}, column ${cell.ix}); dataset ${meta.datasetTitle} (${meta.datasetId}, ${meta.dataVersion}).
 Generated ${(meta.generated ?? new Date()).toISOString()} from ${meta.permalink}
 
 ${CSV_LAYOUT_TEXT}
@@ -221,6 +223,11 @@ flux_rose.csv  Flux rose vs d: one row per (rose_mode, grain_diameter, direction
   hour's air density and temperature. flat_bed: q(u*); elongation / transverse: crest flux with
   speed-up about the mode direction alpha_E / alpha_H at that d.
 ${colDoc("flux_rose.csv")}
+
+${ROSE16_FILE}  The panel's wind rose and flat-bed sand flux rose in 16 compass sectors (degrees), at
+  d = ${cell.dValuesUm[rose16Index(cell, meta)]} um: one row per sector. Wind: % of the hours blowing FROM the sector (lowest-level
+  wind); sand flux: m2 yr-1 moving TOWARD the sector. For other grain sizes or sectors use flux_rose.csv.
+${colDoc(ROSE16_FILE)}
 
 Physics, all from Pähtz & Durán (2023) J. Fluid Mech. 963:A20: u* from the smooth-wall
 mixing-length profile of eq. 2.2 (kappa = ${M.KAPPA}, damping constant ${M.MIX_DAMP}) under constant stress, no roughness
@@ -247,6 +254,14 @@ export function csvBundle(cell: MarsCellData, meta: ExportMeta, deflate?: Deflat
     { name: "wind_series.csv", data: windSeriesCsv(cell) },
     { name: "fields_by_grain_size.csv", data: fieldsByGrainSizeCsv(cell, meta.storeAttrs) },
     { name: "flux_rose.csv", data: fluxRoseCsv(cell) },
+    { name: ROSE16_FILE, data: rose16CsvMars(cell, rose16Index(cell, meta)) },
     { name: "metadata.json", data: metadataJson(cell, meta) },
   ], meta.generated, deflate);
+}
+/** grain-size index of rose_16_sectors.csv (the panel's; default 200 um) */
+const rose16Index = (cell: MarsCellData, meta: ExportMeta) => Math.max(0, Math.min(cell.dValuesUm.length - 1, meta.utIndex ?? 29));
+/** rose_16_sectors.csv of a Mars cell at grain-size index `k` (review U7) */
+export function rose16CsvMars(cell: MarsCellData, k: number): string {
+  const v = analyseMarsCell(cell, k, { windSectors: 16, fluxSectors: 16, fluxMode: "flat" });
+  return rose16Csv(D_COLUMN, String(cell.dValuesUm[k]), v.windRose.freq.map((r) => r.reduce((a, x) => a + x, 0)), v.fluxSectors, v.fluxSectorsPct);
 }

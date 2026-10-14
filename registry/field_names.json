@@ -1,0 +1,95 @@
+{
+ "ab": {
+  "title": "Migration-mode crest orientation (αH)",
+  "titleTex": "Migration-mode crest orientation $\\alpha_H$",
+  "description": "Orientation of the crests of dunes in the migration (bed-instability) mode: an axis from 0° to 180°, perpendicular to the migration direction $\\alpha_T$."
+ },
+ "ae": {
+  "title": "Elongation direction (αE)",
+  "titleTex": "Elongation direction $\\alpha_E$"
+ },
+ "at": {
+  "title": "Transverse migration direction (αT)",
+  "titleTex": "Transverse migration direction $\\alpha_T$"
+ },
+ "ao": {
+  "title": "Oblique elongation direction (αO)",
+  "titleTex": "Oblique elongation direction $\\alpha_O$"
+ },
+ "rdpa": {
+  "title": "Resultant drift direction (RDD)",
+  "titleTex": "Resultant drift direction $RDD$"
+ },
+ "dpm": {
+  "title": "Drift potential (DP)",
+  "titleTex": "Drift potential $DP$"
+ },
+ "rdpm": {
+  "title": "Resultant drift potential (RDP)",
+  "titleTex": "Resultant drift potential $RDP$"
+ },
+ "qnlb": {
+  "title": "Net along-crest flux, migration mode ⟨Q∥(αH)⟩",
+  "titleTex": "Net along-crest flux, migration mode $\\langle Q_{\\parallel}(\\alpha_H)\\rangle$"
+ },
+ "qncb": {
+  "title": "Net across-crest flux, migration mode ⟨Q⊥(αH)⟩",
+  "titleTex": "Net across-crest flux, migration mode $\\langle Q_{\\bot}(\\alpha_H)\\rangle$"
+ },
+ "qalb": {
+  "title": "Absolute along-crest flux, migration mode ⟨|Q∥(αH)|⟩",
+  "titleTex": "Absolute along-crest flux, migration mode $\\langle |Q_{\\parallel}(\\alpha_H)|\\rangle$"
+ },
+ "qacb": {
+  "title": "Absolute across-crest flux, migration mode ⟨|Q⊥(αH)|⟩",
+  "titleTex": "Absolute across-crest flux, migration mode $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$"
+ },
+ "qnle": {
+  "title": "Net along-crest flux, elongation mode ⟨Q∥(αE)⟩",
+  "titleTex": "Net along-crest flux, elongation mode $\\langle Q_{\\parallel}(\\alpha_E)\\rangle$"
+ },
+ "qale": {
+  "title": "Absolute along-crest flux, elongation mode ⟨|Q∥(αE)|⟩",
+  "titleTex": "Absolute along-crest flux, elongation mode $\\langle |Q_{\\parallel}(\\alpha_E)|\\rangle$"
+ },
+ "qace": {
+  "title": "Absolute across-crest flux, elongation mode ⟨|Q⊥(αE)|⟩",
+  "titleTex": "Absolute across-crest flux, elongation mode $\\langle |Q_{\\bot}(\\alpha_E)|\\rangle$"
+ },
+ "qha_rdp_dp": {
+  "title": "Flux directionality (RDP/DP)",
+  "titleTex": "Flux directionality $RDP/DP$"
+ },
+ "sige_sigh": {
+  "title": "Stability of elongating dunes on starved beds (σE/σH)",
+  "titleTex": "Stability of elongating dunes on starved beds $\\sigma_E/\\sigma_H$"
+ },
+ "qhab_nl_nc": {
+  "title": "Crest straightness vs sinuosity, migration mode (Q̂∥/⊥,H)",
+  "titleTex": "Crest straightness vs sinuosity, migration mode $\\hat{Q}_{\\parallel/\\bot,H}$"
+ },
+ "qhab_ac_nc": {
+  "title": "Growth-in-height vs migration balance (Q̂|⊥|/⊥,H)",
+  "titleTex": "Growth-in-height vs migration balance $\\hat{Q}_{|\\bot|/\\bot,H}$"
+ },
+ "qhne_ac_nl": {
+  "title": "Morphology of elongating dunes (Q̂|⊥|/∥,E)",
+  "titleTex": "Morphology of elongating dunes $\\hat{Q}_{|\\bot|/\\parallel,E}$"
+ },
+ "ufm": {
+  "title": "Mean above-threshold friction velocity / threshold (⟨u*f | u*f > u*th⟩ / u*th)",
+  "titleTex": "Mean above-threshold friction velocity / threshold $\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$"
+ },
+ "uft": {
+  "title": "Fraction of time above threshold (T | u*f > u*th / T)",
+  "titleTex": "Fraction of time above threshold $T|u_{\\ast,f}>u_{\\ast,th}/T$"
+ },
+ "qhbf": {
+  "title": "Fraction of bed-mode flux while flat bed above threshold",
+  "titleTex": "Fraction of bed-mode flux while flat bed above threshold"
+ },
+ "qhef": {
+  "title": "Fraction of elongation-mode flux while flat bed above threshold",
+  "titleTex": "Fraction of elongation-mode flux while flat bed above threshold"
+ }
+}

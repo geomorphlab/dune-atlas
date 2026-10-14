@@ -105,7 +105,7 @@ describe("exports contain math groups and no raw TeX in visible text", () => {
       "wind-rose": ["\\mathrm{m\\,s^{-1}}"],
       "flux-rose": ["u_{*f}" /* caption, from the on-screen KaTeX source */, "DP", "RDP", "RDP/DP", "RDD", "u_{*f}/u_{*,th}", "u_{*,th}", "\\alpha_H", "\\alpha_E", "\\alpha_T"],
       modes: ["\\alpha_T", "\\alpha_E", "\\alpha_O", "\\alpha_H", "RDD", "u_{*,th}"],
-      qsdiv: ["\\nabla\\cdot\\vec{q}_s", "u_{*,th}"],
+      qsdiv: ["DP", "u_{*,th}", "\\mathrm{m^{2}\\,yr^{-1}}"],   // the quantity plot, DP by default
     };
     for (const k of PLOT_KEYS) {
       const x = p.plotExport(k, 1600, math)!;

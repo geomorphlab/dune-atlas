@@ -41,8 +41,8 @@ describe("registry: aridity and qsdiv", () => {
     expect(a.display).toMatchObject({ colormap: "brbg", clim: [0.003, 6.5], log: true, ticks: [0.03, 0.2, 0.5, 0.65], topLabel: "≥ 6.5" });
     expect(q.thresholdAware).toBe(true);
     expect(q.display).toMatchObject({ colormap: "piyg", clim: [-0.3, 0.3], transform: "scale", scale: 1000 });
-    expect(q.titleTex).toBe("$\\nabla\\cdot\\vec{q}_s$");
-    expect(() => katex.renderToString(q.titleTex!.slice(1, -1), { throwOnError: true })).not.toThrow();
+    expect(q.titleTex).toBe("Saturated flux divergence $\\nabla\\cdot\\vec{q}_s$"); // name and symbol (review U12)
+    expect(() => katex.renderToString(q.titleTex!.split("$")[1], { throwOnError: true })).not.toThrow();
     expect(q.description).toMatch(/following Gunn \(2026\), Methods M6/);
     expect(q.description).toMatch(/No data at coasts/);
   });
@@ -172,7 +172,7 @@ describe("panel and downloads with cells-aux values", () => {
     expect([...root.querySelectorAll(".cell-body details.section")].map((d) => (d as HTMLElement).dataset.section)).toEqual([...PANEL_SECTIONS]);
     const qd = root.querySelector('details[data-section="qsdiv"]') as HTMLDetailsElement;
     expect(qd.open).toBe(true);
-    expect(qd.querySelector(":scope > summary > h3")!.textContent!.replace(/\s+/g, " ")).toMatch(/^Flux divergence .* vs threshold$/);
+    expect(qd.querySelector(":scope > summary > h3")!.textContent!.replace(/\s+/g, " ")).toMatch(/^Drift potential DP vs threshold$/);   // the quantity plot, DP by default (PI request 2026-10)
     p.setThreshold(3);
     expect(row("qsdiv").querySelector("td.num")!.textContent).toBe("—");
     expect(aridityClass(0.02)).toBe("hyper-arid");

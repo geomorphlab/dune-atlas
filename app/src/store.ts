@@ -16,6 +16,8 @@ export interface AppState {
   embed: boolean;
   /** 'Dunes only': wind-derived layers drawn only in cells with dunes (map/dunemask.ts) */
   dunesOnly?: boolean;
+  /** quantity of the cell panel's "<quantity> vs threshold" plot (cell/qplot.ts; undefined = default DP) */
+  plotY?: string;
 }
 
 type Key = keyof AppState;

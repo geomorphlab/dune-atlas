@@ -63,6 +63,7 @@ basemaps:
   # each ArcGIS item page's licence field (Esri credit + data credit); PI decision 2026-10-14.
   - id: esri-ctx1
     title: CTX mosaic, 5 m (Murray Lab V01, Esri)
+    imagery: true
     kind: raster
     tiles: ["esri-mars://CTX1/{z}/{x}/{y}"]
     tileSize: 512
@@ -76,6 +77,7 @@ basemaps:
       url: "https://www.arcgis.com/home/item.html?id=30c4acfe36284b1784bf07d5d73f9e4d"
   - id: esri-hirise
     title: HiRISE, where imaged (Esri)
+    imagery: true
     kind: raster
     tiles: ["esri-mars://HiRISE/{z}/{x}/{y}"]
     tileSize: 512
@@ -90,6 +92,7 @@ basemaps:
       url: "https://www.arcgis.com/home/item.html?id=c1c4c750a2154842ae523c984cc14fa5"
   - id: esri-mdim
     title: Viking MDIM 2.1 colour (Esri)
+    imagery: true
     kind: raster
     tiles: ["esri-mars://MDIM/{z}/{x}/{y}"]
     tileSize: 512

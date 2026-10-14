@@ -86,6 +86,8 @@ export const TOUR_LABELS = { back: "Back", next: "Next", done: "Done", skip: "Sk
 export const SHARE_TEXT = { button: "Share / copy link", title: "Share this view", copy: "Copy link", copied: "Link copied", note: "The link restores the position, zoom, grain diameter, basemap, active layers and the selected cell." };
 export const EXPORT_TEXT = {
   button: "Export map image", title: "Export map image", basemap: "Include basemap", run: "Export PNG", working: "Rendering…",
-  note: "PNG of the current view, 1600–2400 pixels wide, without the panels. Colour bars, legends, scale and data sources are added below the map, sized for slides.",
-  plotMenu: "Export", png: "PNG", svg: "SVG",
+  transparent: "Transparent background (default white)",
+  note: "Landscape PNG of the current view, without the panels: the map on the left, colour bars, legends, north arrow, scale and data sources in a column on the right (about 2,900–3,600 pixels wide). It fits the width of a 16:9 slide, with text at about 11 pt. The selected cell is outlined in red.",
+  done: "Saved:", downloaded: "Download started:",
+  plotMenu: "Export", png: "PNG", svg: "SVG", plotTransparent: "Transparent background",
 };

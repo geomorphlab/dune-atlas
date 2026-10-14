@@ -43,6 +43,9 @@ const openPanel = async () => {
   return { p, root };
 };
 
+/** the plot export without its white background rect (layout checks) */
+const noBg = <T extends { svg: string }>(x: T): T => ({ ...x, svg: x.svg.replace(/<rect class="export-background"[^>]*\/>/, "") });
+
 describe("one output size, tagged 300 dpi", () => {
   it("map width = clamp(on-screen width x 1.5, 1600, 2400) px; plots 1600 px", () => {
     for (const [css, w] of [[400, 1600], [1000, 1600], [1066, 1600], [1300, 1950], [1440, 2160], [1600, 2400], [2560, 2400]] as const) {
@@ -84,7 +87,7 @@ describe("one output size, tagged 300 dpi", () => {
     const { p, root } = await openPanel();
     for (const m of root.querySelectorAll(".export-menu")) expect([...m.querySelectorAll("button")].map((b) => b.textContent)).toEqual([EXPORT_TEXT.png, EXPORT_TEXT.svg]);
     for (const k of PLOT_KEYS) {
-      const x = p.plotExport(k)!;
+      const x = noBg(p.plotExport(k)!);
       expect(x.pxWidth).toBe(PLOT_EXPORT_WIDTH);
       expect(x.width).toBe(STRIP_UNITS);
       expect(x.svg).toMatch(new RegExp(`^<svg[^>]* width="${PLOT_EXPORT_WIDTH}" height="${+x.pxHeight.toFixed(3)}" viewBox="0 0 ${STRIP_UNITS} ${+x.height.toFixed(3)}"`));
@@ -170,7 +173,7 @@ describe("sizes relative to the image width (slide-legible), colour-bar grid", (
   it("plots: tick / axis / compass labels 0.018 W, legends 0.018 W, title 0.024 W (fonts in the plot x its scale)", async () => {
     const { p } = await openPanel();
     for (const k of PLOT_KEYS) {
-      const x = p.plotExport(k)!;
+      const x = noBg(p.plotExport(k)!);
       const m = x.svg.match(/^<svg[^>]*>(<svg x="([\d.]+)" y="([\d.]+)" ([^>]*)>)/)!;
       const dw = Number(m[4].match(/ width="([\d.]+)"/)![1]), vb = Number(m[4].match(/viewBox="0 0 ([\d.]+) /)![1]);
       const kk = dw / vb;
@@ -217,7 +220,7 @@ describe("no grid indices in exported text", () => {
     expect(svgText(mapStripSvg(ctx(1300, [...RASTERS, "rdpa"])).svg)).not.toMatch(/\brow\b|\bcolumn\b|grid index|\biy\b|\bix\b/i);
     const { p } = await openPanel();
     for (const k of PLOT_KEYS) {
-      const t = svgText(p.plotExport(k)!.svg.split(/<svg x="0" y="[\d.]+" /)[1]);
+      const t = svgText(noBg(p.plotExport(k)!).svg.split(/<svg x="0" y="[\d.]+" /)[1]);
       expect(t, k).toMatch(/Cell centre 24\.50° S, 15\.20° E/);
       expect(t, k).not.toMatch(/\brow\b|\bcolumn\b|grid\b|1145|1952/i);
     }
@@ -227,7 +230,7 @@ describe("no grid indices in exported text", () => {
 describe("no halo around rose tick labels (on screen and in exports)", () => {
   it("no halo class, no stroked text, no paint-order on any plot text, dark (screen) and light (export)", async () => {
     const { p, root } = await openPanel();
-    const svgs = [...[...root.querySelectorAll(".fig-svg")].map((e) => e.innerHTML), ...PLOT_KEYS.map((k) => p.plotExport(k)!.svg)];
+    const svgs = [...[...root.querySelectorAll(".fig-svg")].map((e) => e.innerHTML), ...PLOT_KEYS.map((k) => noBg(p.plotExport(k)!).svg)];
     expect(svgs.length).toBeGreaterThanOrEqual(8);
     for (const s of svgs) {
       expect(s).not.toMatch(/halo/);
@@ -263,7 +266,7 @@ describe("layout: separator, image then legends then text, nothing above or besi
   it("plot exports: plot at the top, centred; the whole strip below it; legends before text", async () => {
     const { p } = await openPanel();
     for (const k of PLOT_KEYS) {
-      const x = p.plotExport(k)! as ReturnType<CellPanel["plotExport"]> & { plotHeight: number };
+      const x = noBg(p.plotExport(k)!) as ReturnType<CellPanel["plotExport"]> & { plotHeight: number };
       const outer = x.svg.match(/^<svg[^>]*>/)![0];
       const parts = x.svg.slice(outer.length).match(/^<svg x="([\d.]+)" y="([\d.]+)" [^>]*width="([\d.]+)"/)!;
       expect(parts, k).not.toBeNull();

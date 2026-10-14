@@ -14,6 +14,9 @@ import { CONFIG } from "../config";
 import { isWindDerived, loadDuneMask, type DuneMaskProvider } from "./dunemask";
 import { ADAPTERS, StaleLayerError, type LayerHandle } from "./adapters";
 
+/** the dune map (vector polygons of the dunes group): drawn as outlines while Dunes only is on (review L8) */
+export const isDuneMap = (l: LayerDef) => l.group === "dunes" && (l.type === "pmtiles-vector" || l.type === "geojson-points");
+
 /** Bottom-most map layer of the selected-cell outline (overlays go below it). */
 export const SELECTED_CELL_BOTTOM = "selected-cell-fill";
 
@@ -48,7 +51,7 @@ export class OverlayManager {
   setDunesOnly(on: boolean) {
     if (on === this.#dunesOnly) return;
     this.#dunesOnly = on;
-    if (this.reg.layers.some((l) => isWindDerived(l) && (this.#handles.has(l.id) || this.#pending.has(l.id)))) this.reattach(this.#desired);
+    if (this.reg.layers.some((l) => (isWindDerived(l) || isDuneMap(l)) && (this.#handles.has(l.id) || this.#pending.has(l.id)))) this.reattach(this.#desired);
   }
   get dunesOnly() { return this.#dunesOnly; }
 
@@ -110,7 +113,7 @@ export class OverlayManager {
       const h = await ADAPTERS[layer.type](layer, {
         map: this.map, dataBase: this.dataBase, resolve: this.#resolve, threshold: this.reg.threshold, utIndex: this.#utIndex,
         beforeId: this.#beforeId(layer.id), cfg: st.cfg, sourceOfVariable: this.#sourceOfVariable,
-        duneMask: this.duneMaskFor(layer),
+        duneMask: this.duneMaskFor(layer), outlineOnly: this.#dunesOnly && isDuneMap(layer),
         onDataError: (e) => this.onError(layer, e),
         alive: () => gen === this.#generation,
       }, st.opacity);
@@ -208,6 +211,33 @@ export function ensureSelectedCellLayers(map: MlMap, feature: Selection) {
   // (map/selection.ts), directly above the GeoJSON layers
   (map.getSource("selected-cell") as unknown as { setData(d: unknown): void }).setData(feature ?? { type: "FeatureCollection", features: [] });
   syncGlobeSelection(map, feature?.bbox ?? null, [SELECTED_CELL_BOTTOM, SELECTED_CELL_LINE], before);
+  syncSelectionRing(map, feature?.bbox ?? null, before);
+}
+
+/** Ring around the selected cell's centre while the cell is too small on screen to be seen (review L12): a
+ *  0.1° cell is under 1 px at the opening zoom. Fixed screen size (radius 8 px, the outline colour), both
+ *  projections; it fades out between the zooms where the cell is 12 and 24 px tall. */
+export const SELECTED_CELL_RING = "selected-cell-ring";
+export const RING_STYLE = { radius: 8, width: 2.5, showBelowPx: 12, hideAbovePx: 24 } as const;
+/** zoom at which a cell `deg` degrees tall is `px` pixels tall (512 px world at zoom 0, at the equator) */
+export const zoomForCellPx = (deg: number, px: number) => Math.log2((px * 360) / (512 * deg));
+export function ringCentre(bbox: ArrayLike<number>): [number, number] {
+  let e = bbox[2];
+  if (e < bbox[0]) e += 360;
+  let lon = (bbox[0] + e) / 2;
+  if (lon > 180) lon -= 360;
+  return [lon, Math.max(-85, Math.min(85, (bbox[1] + bbox[3]) / 2))];
+}
+function syncSelectionRing(map: MlMap, bbox: ArrayLike<number> | null, before?: string) {
+  if (!map.getSource(SELECTED_CELL_RING)) {
+    map.addSource(SELECTED_CELL_RING, { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+    map.addLayer({ id: SELECTED_CELL_RING, type: "circle", source: SELECTED_CELL_RING, paint: { "circle-radius": RING_STYLE.radius, "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": SELECTION_STYLE.line, "circle-stroke-width": RING_STYLE.width, "circle-pitch-alignment": "viewport" } }, before);
+  }
+  const deg = bbox ? Math.max(1e-6, Math.abs(bbox[3] - bbox[1])) : 1;
+  const z0 = zoomForCellPx(deg, RING_STYLE.showBelowPx), z1 = zoomForCellPx(deg, RING_STYLE.hideAbovePx);
+  map.setPaintProperty(SELECTED_CELL_RING, "circle-stroke-opacity", ["interpolate", ["linear"], ["zoom"], z0, 1, z1, 0]);
+  const data: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: bbox ? [{ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: ringCentre(bbox) } }] : [] };
+  (map.getSource(SELECTED_CELL_RING) as unknown as { setData(d: unknown): void }).setData(data);
 }
 export const SELECTED_CELL_LINE = "selected-cell-line";
 

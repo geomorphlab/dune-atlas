@@ -180,7 +180,7 @@ def registry_layer(clim_m_per_kyr=(-0.1, 0.1), colormap="piyg", group="drift", d
     from .fields import DATASET_SOURCE_PREFIX, fields_attribution, fields_citation
     ds = get_dataset(dataset)
     return {
-        "id": VAR, "title": "Saturated flux divergence (∇·qs)", "titleTex": r"$\nabla\cdot\vec{q}_s$",
+        "id": VAR, "title": "Saturated flux divergence (∇·qs)", "titleTex": r"Saturated flux divergence $\nabla\cdot\vec{q}_s$",
         "group": group, "type": "zarr-field", "source": f"{DATASET_SOURCE_PREFIX[ds.id]}/qsdiv.zarr", "variable": VAR,
         "thresholdAware": True, "units": "m/kyr",
         "description": ("Divergence of the time-averaged saturated sand-flux vector (magnitude RDP, direction RDD) "

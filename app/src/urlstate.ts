@@ -23,6 +23,10 @@ export interface UrlState {
   dunesOnly?: boolean;
   /** `tour=1`: show the guided tour (also in embed mode / after it was seen) */
   tour?: boolean;
+  /** `plot=<id>`: quantity of the cell panel's "<quantity> vs threshold" plot (cell/qplot.ts) */
+  plot?: string;
+  /** `resume=1` (planet button): open this atlas's last view when the link has no view of its own */
+  resume?: boolean;
 }
 
 const num = (s: string | null) => (s === null || s.trim() === "" ? undefined : Number.isFinite(Number(s)) ? Number(s) : undefined);
@@ -61,6 +65,9 @@ export function parseUrlState(search: string): UrlState {
   if (q.get("embed") === "1") st.embed = true;
   if (q.get("dunesonly") === "1") st.dunesOnly = true;
   if (q.get("tour") === "1") st.tour = true;
+  if (q.get("resume") === "1") st.resume = true;
+  const pl = q.get("plot");
+  if (pl && /^[a-z0-9_]+$/.test(pl)) st.plot = pl;
   return st;
 }
 
@@ -78,5 +85,6 @@ export function serializeUrlState(st: UrlState): string {
   if (st.order?.length) put("order", st.order.join(","));
   if (st.dataset) put("dataset", st.dataset);
   if (st.dunesOnly) put("dunesonly", "1");
+  if (st.plot) put("plot", st.plot);
   return q.length ? `?${q.join("&")}` : "";
 }

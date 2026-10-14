@@ -13,7 +13,7 @@ import { defaultBasemap, setBasemap } from "./map/basemaps";
 import { OverlayManager, ensureSelectedCellLayers, restoreOverlays } from "./map/overlays";
 import { setLayerPanelOpen, renderLayerPanel } from "./ui/layerPanel";
 import { versionFromPrefix } from "./cell/export";
-import { CellPanel, defaultFieldLabel, type FieldLabel } from "./ui/cellPanel";
+import { CellPanel, readPlotChoice, defaultFieldLabel, type FieldLabel } from "./ui/cellPanel";
 import { CellStore } from "./cell/cellstore";
 import { cellFeature, cellFromIndex, snapToCell, ERA5_LAND_GRID, type Grid } from "./cell/snap";
 import { C3S_NOTICE } from "./cell/citation";
@@ -21,14 +21,17 @@ import { centreOnCell } from "./map/centre";
 import { terseQuantity } from "./ui/terse";
 import { mathOnly } from "./util/math";
 import { shareFromHash, shareUrl, type ShareState } from "./share/shortlink";
-import { appShareState, DEFAULT_VIEW, initialAppState, resolveInitialState } from "./defaultview";
+import { appShareState, DEFAULT_VIEW, initialAppState, LAST_VIEW, resolveInitialState, resumeQuery } from "./defaultview";
 import { mapExportPixelRatio } from "./export/png";
 import { loadMathRenderer } from "./export/texsvg";
-import { captureMap, composeWithStrip, downloadBlob, mapExportFilename, mapStripSvg } from "./export/mapExport";
+import { exportMapPng, type MapExportRequest } from "./export/mapExport";
 import { Tour, shouldShowTour, tourSeen } from "./ui/tour";
+import { autostartTour, wireTourBubble } from "./ui/tourBubble";
+import { LoadingIndicator, WHEEL_ZOOM_RATE } from "./ui/loading";
 import { TOUR_STEPS } from "./ui/helpText";
 import { Tools } from "./ui/tools";
 import { CoordsControl } from "./ui/coords";
+import { escapeClosesCell } from "./ui/keys";
 import { tourHooks } from "./ui/tourHooks";
 
 const { registry: reg, errors } = loadRegistry();
@@ -40,7 +43,11 @@ const dataBase = CONFIG.dataBase ?? reg.dataBase;
 // user's explicit choice (localStorage) or the default view's. Layer definitions follow it.
 const DATASET_KEY = storageKey("dataset"); // "duneAtlas.dataset" (Earth; body.ts)
 const storedDataset = (() => { try { return localStorage.getItem(DATASET_KEY) ?? undefined; } catch { return undefined; } })();
-const start = resolveInitialState(shareFromHash(location.hash), parseUrlState(location.search), reg.defaultDataset, storedDataset);
+// planet button return (?resume=1, review U11): this atlas's last view, stored per body on every view change
+const LAST_VIEW_KEY = storageKey(LAST_VIEW);
+const storedView = (() => { try { return localStorage.getItem(LAST_VIEW_KEY); } catch { return null; } })();
+const query0 = parseUrlState(location.search);
+const start = resolveInitialState(shareFromHash(location.hash), resumeQuery(query0, storedView), reg.defaultDataset, storedDataset);
 const url: UrlState = start.url;
 const initDataset = selectDataset(reg, start.dataset)?.id ?? "";
 applyDatasetLayers(reg, initDataset);
@@ -48,6 +55,8 @@ applyDatasetLayers(reg, initDataset);
 // ---- initial state (the resolved view over the registry's layer defaults) ----
 const registryOrder = reg.layers.map((l) => l.id);
 const init: AppState = initialAppState(reg, url, initDataset);
+// plotted quantity of the cell panel: the link's, else the visitor's last choice (per body), else DP
+if (!init.plotY) { const p = readPlotChoice(); if (p) init.plotY = p; }
 const store = new Store(init);
 // a dataset switch swaps the layer definitions (sources, colour limits, citations) and resets
 // colour-limit overrides of the swapped layers in the same state change
@@ -76,6 +85,9 @@ const map = new maplibregl.Map({
   maxCanvasSize: [16384, 16384],
 });
 map.touchZoomRotate.disableRotation();
+map.scrollZoom.setWheelZoomRate(WHEEL_ZOOM_RATE); // faster wheel zoom (review U9)
+const loading = new LoadingIndicator(map); // first draw; again on dataset / projection / basemap changes
+loading.begin();
 map.keyboard.disableRotation();
 map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 if (!init.embed) map.addControl(new maplibregl.FullscreenControl(), "top-right");
@@ -133,15 +145,12 @@ function shareState(): ShareState {
   return appShareState(store.state, { lon: c.lng, lat: c.lat, zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() }, !layerPanelEl.classList.contains("collapsed"));
 }
 const shareLinkNow = () => shareUrl(`${location.origin}${location.pathname}`, shareState());
-async function exportMap(o: { basemap: boolean }) {
-  const c = map.getCenter();
-  const view = { lon: c.lng, lat: c.lat, zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch(), proj: store.state.projection };
-  const link = shareLinkNow(), date = new Date(), cssWidth = map.getCanvas().clientWidth;
-  // one size: W = clamp(on-screen width x 1.5, 1600, 2400) px, text relative to W, tagged 300 dpi
-  const canvas = await captureMap(map, { scale: mapExportPixelRatio(cssWidth), includeBasemap: o.basemap, isOwnLayer: (id) => id.startsWith("ov-"), settle: () => overlays.settled() });
-  const math = await loadMathRenderer(); // symbols as SVG paths (lazy chunk); null: plain text
-  const { blob } = await composeWithStrip(canvas, (pxWidth) => mapStripSvg({ reg, state: store.state, view, width: cssWidth, includeBasemap: o.basemap, shareLink: link, date }, pxWidth, math));
-  downloadBlob(mapExportFilename(store.state.dataset, view, date), blob);
+/** map PNG (camera button): landscape, selected cell outlined, white or transparent background (export/mapExport.ts) */
+function exportMap(o: MapExportRequest) {
+  const sc = store.state.cell;
+  let selectedCell: { lat: number; lon: number } | null = null;
+  try { if (sc) { const c = cellFromIndex(sc[0], sc[1], grid); selectedCell = { lat: c.lat, lon: c.lon }; } } catch { /* outside the grid */ }
+  return exportMapPng(map, { reg, state: store.state, shareLink: shareLinkNow(), settle: () => overlays.settled(), selectedCell }, o);
 }
 function openAbout() {
   setLayerPanelOpen(layerPanelEl, true);
@@ -172,7 +181,7 @@ const getCellStore = (): Promise<CellStore> => (cellStore ??= (() => {
 })());
 const panel = new CellPanel(document.getElementById("cell-panel")!, init.utIndex, {
   windSectors: CONFIG.windRoseSectors, fluxSectors: CONFIG.fluxRoseSectors,
-  onClose: () => store.set({ cell: null }), onCentre: (c) => { centreOnCell(map, c, Math.abs(grid.dlat)); }, fieldLabel, threshold: { def: reg.threshold, store }, shareLink: () => shareLinkNow(),
+  onClose: () => store.set({ cell: null }), plot: { get: () => store.state.plotY, set: (id) => store.set({ plotY: id }) }, onCentre: (c) => { centreOnCell(map, c, Math.abs(grid.dlat)); }, fieldLabel, threshold: { def: reg.threshold, store }, shareLink: () => shareLinkNow(),
   exportMeta: () => {
     const ds = selectDataset(reg, store.state.dataset);
     return { datasetId: ds?.id ?? "", datasetTitle: ds?.title ?? "", dataVersion: versionFromPrefix(ds?.prefix), permalink: fullScreenUrl() };
@@ -187,16 +196,20 @@ const tour = new Tour(TOUR_STEPS, { hooks: tourHooks({
   layerPanel: layerPanelEl, store, panel, cellRoot: document.getElementById("cell-panel")!,
   exampleCell: async () => { const c = snapToCell(EXAMPLE_CELL.lon, EXAMPLE_CELL.lat, (await getCellStore()).grid); return c ? [c.iy, c.ix] : null; },
 }) });
-const tools = new Tools({ startTour: () => tour.start(), shareLink: shareLinkNow, exportMap, openAbout });
+const tools = new Tools({ startTour: () => tourStart.fromHelp(), shareLink: shareLinkNow, exportMap, openAbout });
 map.addControl({ onAdd: () => tools.el, onRemove: () => tools.el.remove() }, "top-right");
-if (shouldShowTour({ embed: init.embed, tourParam: !!url.tour, seen: tourSeen() })) map.once("idle", () => setTimeout(() => { if (!tour.active) tour.start(); }, 500));
+const autostart = shouldShowTour({ embed: init.embed, tourParam: !!url.tour, seen: tourSeen() });
+// "Start tour" bubble by the Help button (PI request); the automatic first-visit start also has a time-out
+// fallback in case the map never reports idle
+const tourStart = wireTourBubble(tour, { autostart });
+if (autostart) autostartTour(map, () => { if (!tour.active) tour.start(); });
 
 map.on("click", async (e) => {
   try { grid = (await getCellStore()).grid; } catch { /* keep the fallback grid */ }
   const c = snapToCell(e.lngLat.lng, e.lngLat.lat, grid);
   if (c) store.set({ cell: [c.iy, c.ix] });
 });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape" && store.state.cell && !tour.active && !tools.open) store.set({ cell: null }); });
+document.addEventListener("keydown", (e) => { if (escapeClosesCell(e) && store.state.cell && !tour.active && !tools.open && !tourStart.bubble.shown) store.set({ cell: null }); });
 
 // ---- state -> map/panels/URL ----
 function currentUrlState(): UrlState {
@@ -214,6 +227,7 @@ function currentUrlState(): UrlState {
     // always explicit: permalinks without a dataset are read as the registry defaultDataset
     dataset: (reg.datasets?.length ?? 0) > 1 ? s.dataset : undefined,
     dunesOnly: s.dunesOnly || undefined,
+    plot: s.plotY && s.plotY !== "dpm" ? s.plotY : undefined,
   };
 }
 // opened without view state: the address stays bare (map.geomorphlab.org) while the state equals
@@ -225,11 +239,14 @@ function scheduleUrl() {
   urlTimer = window.setTimeout(() => {
     const q = serializeUrlState(currentUrlState());
     history.replaceState(null, "", q === openingQuery ? (store.state.embed ? "?embed=1" : location.pathname) : q || location.pathname);
+    try { localStorage.setItem(LAST_VIEW_KEY, q); } catch { /* private mode */ }
   }, 250);
 }
 map.on("moveend", scheduleUrl);
+if (query0.resume) scheduleUrl(); // drop resume=1 from the address
 
 store.subscribe((s, ch) => {
+  if (ch.has("basemap") || ch.has("projection") || ch.has("dataset")) loading.begin();
   if (ch.has("basemap")) applyBasemap();
   if (ch.has("projection")) map.setProjection({ type: s.projection });
   if (ch.has("dataset")) {
@@ -251,6 +268,7 @@ store.subscribe((s, ch) => {
   if (ch.has("order")) overlays.setOrder(s.order);
   if (ch.has("layers")) overlays.sync(s.layers);
   if (ch.has("utIndex")) { overlays.setThreshold(s.utIndex); panel.setThreshold(s.utIndex); }
+  if (ch.has("plotY")) panel.setPlotQuantity(s.plotY);
   if (ch.has("cell")) {
     updateSelectedCell();
     if (s.cell) void panel.show(getCellStore(), s.cell[0], s.cell[1]);

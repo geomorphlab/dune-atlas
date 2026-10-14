@@ -32,6 +32,9 @@ export interface AdapterContext {
   /** 'Dunes only' (map/dunemask.ts): set for wind-derived layers while the toggle is on; cells without
    *  dunes are NaN (transparent) in colour maps and carry no arrows / streamlines */
   duneMask?: DuneMaskProvider;
+  /** 'Dunes only' with the dune map shown (review L8): its polygons are drawn as outlines (fill hidden), so the
+   *  dune fill does not cover the wind-derived colours that are now only in the dune cells */
+  outlineOnly?: boolean;
   /** report a runtime data error (marks the layer 'not available' in the panel) */
   onDataError?: (err: unknown) => void;
   /** false once the style this layer was requested for has been replaced (basemap switch):
@@ -399,6 +402,8 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
 const DEFAULT_VECTOR_STYLE: Record<string, Record<string, unknown>> = {
   fill: { "fill-color": DEFAULT_VECTOR_FILL, "fill-opacity": 0.55 },
 };
+/** outline width (px) of the dune polygons while Dunes only is on */
+export const OUTLINE_WIDTH = 1.2;
 const OPACITY_PROP: Record<string, string> = { fill: "fill-opacity", circle: "circle-opacity", raster: "raster-opacity" };
 const GEOM_FILTER: Record<string, unknown> = {
   fill: ["==", ["geometry-type"], "Polygon"],
@@ -438,11 +443,18 @@ function addStyledLayers(layer: LayerDef, ctx: AdapterContext, opacity: number, 
     own.addLayer({ id, type: kind, source: sourceId, paint, minzoom: layer.minzoom ?? 0, maxzoom: layer.maxzoom ?? 24, ...extra(kind) } as AddLayerObject, ctx.beforeId);
     ids.push(id);
   }
+  // Dunes only (review L8): the polygons as outlines above the fill's place, the fill hidden
+  const outId = `ov-${layer.id}-outline`;
+  if (ctx.outlineOnly && ids.includes(`ov-${layer.id}-fill`)) {
+    own.addLayer({ id: outId, type: "line", source: sourceId, paint: { "line-color": col.fill, "line-width": OUTLINE_WIDTH, "line-opacity": op }, minzoom: layer.minzoom ?? 0, maxzoom: layer.maxzoom ?? 24, ...extra("fill") } as AddLayerObject, ctx.beforeId);
+    ids.push(outId);
+  }
   const applyVisibility = () => {
     const fillId = `ov-${layer.id}-fill`;
     if (col.invert) ensureInvert();
     if (own.has(invId)) map.setLayoutProperty(invId, "visibility", col.invert ? "visible" : "none");
-    if (own.has(fillId)) map.setLayoutProperty(fillId, "visibility", col.invert ? "none" : "visible");
+    if (own.has(fillId)) map.setLayoutProperty(fillId, "visibility", col.invert || own.has(outId) ? "none" : "visible");
+    if (own.has(outId)) map.setLayoutProperty(outId, "visibility", col.invert ? "none" : "visible");
   };
   applyVisibility();
   return {
@@ -451,10 +463,12 @@ function addStyledLayers(layer: LayerDef, ctx: AdapterContext, opacity: number, 
       op = o;
       for (const kind of Object.keys(base)) if (own.has(`ov-${layer.id}-${kind}`)) map.setPaintProperty(`ov-${layer.id}-${kind}`, OPACITY_PROP[kind], base[kind] * o);
       if (own.has(invId)) map.setPaintProperty(invId, "fill-opacity", fillBase * o);
+      if (own.has(outId)) map.setPaintProperty(outId, "line-opacity", o);
     },
     applyConfig: (cfg) => {
       col = vectorColors(layer, cfg);
       if (own.has(`ov-${layer.id}-fill`)) map.setPaintProperty(`ov-${layer.id}-fill`, "fill-color", col.fill);
+      if (own.has(outId)) map.setPaintProperty(outId, "line-color", col.fill);
       if (own.has(`ov-${layer.id}-circle`)) map.setPaintProperty(`ov-${layer.id}-circle`, "circle-color", col.fill);
       applyVisibility();
       if (own.has(invId)) map.setPaintProperty(invId, "fill-color", col.fill);

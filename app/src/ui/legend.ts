@@ -6,11 +6,20 @@ import { mathHtml } from "../util/math";
 import { escapeHtml } from "../util/format";
 import { richHtml } from "../util/richtext";
 
+/** Colour-bar tick text: plain decimals (0.0005, 0.01, 300, 60000; review U17), at most 3 significant digits;
+ *  powers of ten only outside 1e-4 .. 1e6, written 10⁻⁵ / 2×10⁶ (never "5e-4"). */
+const SUPS: Record<string, string> = { "-": "⁻", 0: "⁰", 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵", 6: "⁶", 7: "⁷", 8: "⁸", 9: "⁹" };
 export function tickLabel(v: number): string {
   const a = Math.abs(v);
-  if (a !== 0 && (a >= 1e4 || a < 1e-2)) return v.toExponential(0).replace("e+", "e");
+  if (a !== 0 && (a >= 1e6 || a < 1e-4)) {
+    const [m, e] = v.toExponential(0).split("e");
+    const pow = `10${String(Number(e)).replace(/./g, (c) => SUPS[c] ?? c)}`;
+    return Math.abs(Number(m)) === 1 ? `${Number(m) < 0 ? "-" : ""}${pow}` : `${m}×${pow}`;
+  }
   return Number(v.toPrecision(3)).toString();
 }
+/** interior ticks closer than this (fraction of the bar) to a kept tick are dropped, so end labels never overlap */
+export const TICK_MIN_GAP = 0.12;
 
 export function legendTicks(layer: LayerDef, cfg?: LayerConfig): number[] {
   const e = effectiveDisplay(layer, cfg);
@@ -34,9 +43,15 @@ export function legendTicks(layer: LayerDef, cfg?: LayerConfig): number[] {
     return kept.sort((x, y) => x - y);
   }
   if (e.log) {
-    const ticks: number[] = [];
-    for (let k = Math.ceil(Math.log10(a)); k <= Math.floor(Math.log10(b)); k++) ticks.push(10 ** k);
-    return [a, ...ticks.filter((x) => x > a * 1.5 && x < b / 1.5), b];
+    // decades inside the limits; one that would sit within TICK_MIN_GAP of an end (or of the last kept
+    // decade) is dropped rather than staggered (review U17: the ERA5-Land DP end labels overlapped)
+    const pos = (x: number) => tickPosition(layer, x, cfg);
+    const kept = [a];
+    for (let k = Math.ceil(Math.log10(a)); k <= Math.floor(Math.log10(b)); k++) {
+      const x = 10 ** k;
+      if (x > a && x < b && pos(x) - pos(kept[kept.length - 1]) >= TICK_MIN_GAP && pos(b) - pos(x) >= TICK_MIN_GAP) kept.push(x);
+    }
+    return [...kept, b];
   }
   return [a, (a + b) / 2, b];
 }

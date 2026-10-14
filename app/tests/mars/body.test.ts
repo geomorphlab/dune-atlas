@@ -24,7 +24,8 @@ describe("Mars build: planet toggle, header, storage", () => {
     expect(b.previousElementSibling?.classList.contains("export-btn")).toBe(true);
     expect([b.getAttribute("aria-label"), b.title]).toEqual(["Switch to Earth", "Switch to Earth"]);
     b.click();
-    expect(nav).toHaveBeenCalledWith(otherBodyUrl());
+    expect(nav).toHaveBeenCalledWith(otherBodyUrl({ resume: true }));
+    expect(otherBodyUrl({ resume: true })).toMatch(/[?&]resume=1$/);
     // production (/mars/ on map.geomorphlab.org): the site root; localhost dev/preview: the live Earth site
     expect(otherBodyUrl({ base: "/mars/", host: "map.geomorphlab.org" })).toBe("/");
     expect(otherBodyUrl({ base: "/mars/", embed: true, host: "map.geomorphlab.org" })).toBe("/?embed=1");

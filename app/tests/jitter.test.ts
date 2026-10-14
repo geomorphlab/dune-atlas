@@ -14,7 +14,8 @@ import { Store, type AppState } from "../src/store";
 import { renderLayerPanel } from "../src/ui/layerPanel";
 import { CellPanel } from "../src/ui/cellPanel";
 import type { CellData, CellStore } from "../src/cell/cellstore";
-import { sweep, sweepFields } from "./jitterlib";
+import { measuredWidthCh, reserveCh, setMeasurer } from "../src/ui/livenum";
+import { fakeMeasure, holes, sweep, sweepFields } from "./jitterlib";
 import { makeCell, FIELD_VARS } from "./helpers";
 
 const reg = loadRegistry().registry;
@@ -30,7 +31,8 @@ function cell(): CellData {
 }
 
 describe("slider jitter (Earth): layer panel and cell panel keep their layout over all 64 u*,th positions", () => {
-  it("text outside the live slots is constant; every live value fits its reserved slot", async () => {
+  it.each([["estimated", null], ["measured", fakeMeasure]] as const)("text outside the live slots is constant; every live value fits its reserved slot (%s slot widths)", async (_mode, measure) => {
+    setMeasurer(measure);
     document.body.innerHTML = '<aside id="layer-panel"></aside><aside id="cell-panel"></aside>';
     const st: AppState = { basemap: reg.basemaps[0].id, projection: "globe", utIndex: 14, layers: Object.fromEntries(reg.layers.map((l) => [l.id, { visible: !!l.visible, opacity: l.opacity ?? 1 }])), order: reg.layers.map((l) => l.id), dataset: "era5-land", cell: null, embed: false };
     const store = new Store(st);
@@ -45,10 +47,22 @@ describe("slider jitter (Earth): layer panel and cell panel keep their layout ov
     expect(reg.threshold.values.length).toBe(64);
     expect(r.overflow).toEqual([]);
     expect(r.sigs.size).toBe(1);
+    expect(holes([lp, cp])).toEqual([]);   // review U8 / L11: no reserved room in the middle of running text
     expect(r.slots).toBeGreaterThan(30);   // readouts, meta, legend, DP/RDP/RDD, caption, heading, table values
     // tabular figures on both panels and the slots (style.css)
     const css = fs.readFileSync(path.resolve(__dirname, "../src/style.css"), "utf8");
     expect(css).toMatch(/#layer-panel, #cell-panel, \.legend \{ font-variant-numeric: tabular-nums; \}/);
     expect(css).toMatch(/\.live-num \{ display: inline-block; white-space: nowrap;[^}]*tabular-nums/);
+    setMeasurer(undefined);
   }, 120_000); // 64-position sweep: ~5 s locally, over 20 s on a 2-core CI runner with the full suite
+  it("measured slot widths are tight: the widest value plus at most 0.3 ch (review U8 / L11)", () => {
+    setMeasurer(fakeMeasure);
+    const vals = ["31.4&nbsp;m²/yr", "8.76&nbsp;m²/yr", "112&nbsp;m²/yr"];
+    const w = reserveCh(vals), widest = Math.max(...vals.map((v) => measuredWidthCh(v)));
+    expect(w).toBeGreaterThanOrEqual(widest);
+    expect(w - widest).toBeLessThanOrEqual(0.3);
+    setMeasurer(null);
+    expect(reserveCh(vals)).toBeGreaterThan(w);   // the conservative estimate (no canvas) is wider
+    setMeasurer(undefined);
+  });
 });

@@ -190,8 +190,15 @@ Moving the u*,th / d slider no longer changes the length of wrapped text, so nei
   the "— = mode direction undefined" note is part of the fixed caption text of the crest modes;
 * text around the slots is identical at every position: the test sweeps all 64 positions in both builds
   and asserts that the panels' text and element structure outside the slots are constant and that every
-  value fits its slot (conservative width estimate in ch). SVG plots are fixed-size boxes (their labels
-  move inside them but cause no reflow).
+  value fits its slot. SVG plots are fixed-size boxes (their labels move inside them but cause no reflow).
+* **slot widths are measured** (review fixes, Oct 2026; review U8 / L11): the conservative character-width
+  estimate left visible blank gaps in captions ("DP = 31.4 m²/yr [gap] ."). `livenum.ts` now measures the
+  widest text with the page font (canvas `measureText`, `measuredWidthCh`) and reserves that width in ch
+  (+0.2 ch); the estimate is the fallback where no canvas is available (tests run with both). Slots in
+  captions stand at the end of a line (a bold lead sentence, `.cap-lead`), not mid-sentence, so a reserved
+  width never opens a gap inside the text. The key numbers (DP, RDP, RDP/DP, RDD, threshold, dataset,
+  period) are in a box at the top of the panel; the full summary table is behind "More: full cell summary
+  at …" (section `summary`, closed by default).
 
 **CSV headers** (`src/cell/csvnames.ts`, shared): every CSV is UTF-8 with a BOM and has one header row of
 plain ASCII snake_case names [a-z0-9_] — e.g. `sige_sigh` → `sigma_e_over_sigma_h`, `ufm` →

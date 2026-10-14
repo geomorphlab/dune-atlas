@@ -69,7 +69,9 @@ ATTRIBUTION = {
 DESCRIPTION = (   # shortened for the info popover (PI 2026-10-14); source, licence and processing are attribution rows
     "Mean total vegetation cover (green plus dry vegetation, including trees; % of the ground), 2001–2025, from the "
     "CSIRO MODIS Fractional Cover v3.1 (500 m, monthly) averaged onto the 0.1° cells over the months with valid data. "
-    "Calibrated against Australian field sites; saturates under closed canopies. No data over ocean, Antarctica, "
+    "Calibrated against Australian field sites; saturates under closed canopies. As it includes dry vegetation, "
+    "it can read high on bare desert. "  # review L7
+    "No data over ocean, Antarctica, "
     "land north of 70° N and the 180° meridian cells. "
     f"[Explore the full monthly time series at GEOGLAM RAPP]({MAP_URL}).")
 

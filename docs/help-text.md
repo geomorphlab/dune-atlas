@@ -108,5 +108,5 @@ Fallback (example cell not loaded): The example cell could not be loaded. Click 
 
 - Button: Export map image
 - Popover: Export map image; Include basemap; Export PNG; while rendering "Rendering…"
-- Note: PNG of the current view, 1600–2400 pixels wide, without the panels. Colour bars, legends, scale and data sources are added below the map, sized for slides.
+- Note: Landscape PNG of the current view, without the panels: the map on the left, colour bars, legends, north arrow, scale and data sources in a column on the right (about 2,900–3,600 pixels wide). It fits the width of a 16:9 slide, with text at about 11 pt. The selected cell is outlined in red.
 - Cell-panel plots: menu "Export" with PNG, SVG

@@ -28,4 +28,4 @@ export const D_DEFAULT_INDEX: number = M.D_DEFAULT_INDEX;
 export const EXAMPLE_CELL = { lon: 67, lat: 9 };
 export const SITE_TITLE = "Mars Dune Atlas";
 /** the GCM lowest-level wind height varies per hour (series variable z, ~1.6-3 m) */
-export const WIND_HEIGHT_TEXT = "lowest model level (z ≈ 1.6–3 m)";
+export const WIND_HEIGHT_TEXT = "lowest model level (z = 1.5–3.2 m over all cells and hours)";

@@ -57,7 +57,10 @@ describe("registry: ERA5 dataset", () => {
     const v = reg.datasetLayers!.era5;
     expect(Object.keys(v).sort()).toEqual([...fieldIds].sort()); // dunes, aridity, vegetation: shared
     for (const id of ["dunes", "aridity", "vegetation"]) expect(reg.layers.find((x) => x.id === id)!.source).not.toContain("{dataset}");
-    expect(v.dpm.display!.clim).not.toEqual(reg.layers.find((x) => x.id === "dpm")!.display!.clim);
+    expect(v.qacb.display!.clim).not.toEqual(reg.layers.find((x) => x.id === "qacb")!.display!.clim);
+    // DP and RDP: one fixed colour range for both datasets, so the maps compare by eye (review L15)
+    for (const id of ["dpm", "rdpm"]) expect(v[id].display!.clim, id).toEqual(reg.layers.find((x) => x.id === id)!.display!.clim);
+    expect(v.dpm.display!.clim).toEqual([0.01, 300]);
     expect(v.dpm.citation).toContain("10.1002/qj.3803");
   });
   it("applyDatasetLayers swaps definitions in place and restores the default", () => {
@@ -373,7 +376,7 @@ describe("layer panel follows the dataset", () => {
     document.body.innerHTML = '<aside id="layer-panel"></aside>';
     const root = document.getElementById("layer-panel")!;
     const layers: Record<string, LayerState> = {};
-    for (const l of reg.layers) layers[l.id] = { visible: l.id === "dpm", opacity: 1 };
+    for (const l of reg.layers) layers[l.id] = { visible: l.id === "qacb", opacity: 1 };
     const st: AppState = { basemap: reg.basemaps[0].id, projection: "globe", utIndex: 14, layers, order: reg.layers.map((l) => l.id), dataset: "era5-land", cell: null, embed: false };
     const store = new Store(st);
     store.intercept((patch, cur) => {
@@ -383,7 +386,7 @@ describe("layer panel follows the dataset", () => {
     });
     renderLayerPanel(root, reg, store);
     expect(root.querySelector(".dataset-row")!.textContent).toMatch(/^Wind dataset/);
-    const item = root.querySelector('.layer-item[data-layer="dpm"]')!;
+    const item = root.querySelector('.layer-item[data-layer="qacb"]')!;   // limits differ between the datasets
     const legend0 = item.querySelector(".legend-wrap")!.innerHTML;
     const sel = root.querySelector("#dataset-select") as HTMLSelectElement;
     sel.value = "era5"; sel.dispatchEvent(new Event("change"));

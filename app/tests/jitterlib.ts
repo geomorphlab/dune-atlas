@@ -1,6 +1,6 @@
 // Shared by tests/jitter.test.ts and tests/mars/jitter.test.ts (slider-jitter sweep, PI round 5 item 2).
 import type { Store } from "../src/store";
-import { textWidthCh } from "../src/ui/livenum";
+import { measuredWidthCh, type Measure } from "../src/ui/livenum";
 
 /** a cell whose fields span 11 decades, change sign and go undefined, so every format width is exercised */
 export function sweepFields(nVars: number, n = 64): Float32Array {
@@ -16,7 +16,8 @@ export function signature(root: Element): { sig: string; overflow: string[] } {
   c.querySelectorAll(".live-num").forEach((e) => {
     const w = parseFloat((e as HTMLElement).style.minWidth);
     const t = e.tagName === "OUTPUT" ? e.textContent ?? "" : e.innerHTML;
-    if (!(textWidthCh(t) <= w)) overflow.push(`${t} > ${w}ch`);
+    const bold = !!e.closest("strong, b, h2") || e.tagName === "OUTPUT";
+    if (!(measuredWidthCh(t, bold) <= w)) overflow.push(`${t} > ${w}ch`);
     e.replaceWith(`[slot ${w}ch${e.tagName === "OUTPUT" ? ` ${[...(e.textContent ?? "")].length} chars` : ""}]`);
   });
   const walk = (e: Element): string => `<${e.tagName}${e.getAttribute("class") ? `.${e.getAttribute("class")}` : ""}>${[...e.childNodes].map((n) => (n.nodeType === 3 ? (n.textContent ?? "").replace(/\s+/g, " ") : n.nodeType === 1 ? walk(n as Element) : "")).join("")}`;
@@ -37,3 +38,25 @@ export async function sweep(store: Store, roots: Element[], n: number): Promise<
   return { sigs, overflow, slots };
 }
 
+
+/** A stand-in for canvas measureText (happy-dom has no canvas): proportional advances (em) of a sans-serif
+ *  UI font, bold 6 % wider; digits all 0.55 em (tabular). Used to check the measured slot widths. */
+export const fakeMeasure: Measure = (text, font) => {
+  const px = Number(/(\d+(?:\.\d+)?)px/.exec(font)?.[1] ?? 16), bold = /^700/.test(font);
+  const adv = (c: string) => /[0-9\u2007]/.test(c) ? 0.55 : /[ \u00a0]/.test(c) ? 0.28 : /[mwMW%—]/.test(c) ? 0.85 : /[ijlft.,:;'!|()[\]/]/.test(c) ? 0.3
+    : /[A-Z]/.test(c) ? 0.68 : 0.52;
+  return [...text].reduce((a, c) => a + adv(c), 0) * px * (bold ? 1.06 : 1);
+};
+
+/** Live slots whose reserved room could show as a hole: every slot must end its line block (key-number dd,
+ *  legend item, caption lead, heading) or be a right-aligned table value or a padded readout. */
+export function holes(roots: Element[]): string[] {
+  const out: string[] = [];
+  for (const root of roots) for (const e of root.querySelectorAll(".live-num")) {
+    if (e.tagName === "OUTPUT" || e.closest("td.num")) continue;
+    const block = e.closest("dd, li, .cap-lead, h3, p");
+    const tail = (block?.textContent ?? "").replace(/\s+$/, "");
+    if (!block || !e.classList.contains("left") || !tail.endsWith((e.textContent ?? "").replace(/\s+$/, ""))) out.push(`${block?.tagName ?? "?"}: ${(block?.textContent ?? "").slice(0, 80)}`);
+  }
+  return out;
+}

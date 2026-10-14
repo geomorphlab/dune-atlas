@@ -18,6 +18,29 @@ export function tourSeen(): boolean {
 }
 function markSeen() { try { localStorage.setItem(TOUR_SEEN_KEY, "1"); } catch { /* private mode */ } }
 
+/** Popover position next to the highlight `sr`: the first of below / above / right / left that lies fully on
+ *  screen (12 px margin) and does not overlap the highlight; else the one with the least overlap (review U15,
+ *  L16: steps 8 and 9 ran off the right edge and step 3 covered its own target). `pop` is the border-box size. */
+export function tourPlacement(sr: { left: number; top: number; width: number; height: number }, pop: { w: number; h: number }, view: { w: number; h: number }, gap = 10, margin = 12): { left: number; top: number; side: string } {
+  const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
+  const cx = sr.left + sr.width / 2 - pop.w / 2, cy = sr.top + sr.height / 2 - pop.h / 2;
+  const cands = [
+    { side: "below", left: cx, top: sr.top + sr.height + gap },
+    { side: "above", left: cx, top: sr.top - gap - pop.h },
+    { side: "right", left: sr.left + sr.width + gap, top: cy },
+    { side: "left", left: sr.left - gap - pop.w, top: cy },
+  ].map((c) => {
+    const fits = c.top >= margin && c.top + pop.h <= view.h - margin && c.left >= margin && c.left + pop.w <= view.w - margin;
+    const left = clamp(c.left, margin, Math.max(margin, view.w - pop.w - margin)), top = clamp(c.top, margin, Math.max(margin, view.h - pop.h - margin));
+    const ox = Math.max(0, Math.min(left + pop.w, sr.left + sr.width) - Math.max(left, sr.left));
+    const oy = Math.max(0, Math.min(top + pop.h, sr.top + sr.height) - Math.max(top, sr.top));
+    return { side: c.side, left, top, fits, overlap: ox * oy };
+  });
+  const best = cands.find((c) => c.fits && c.overlap === 0) ?? cands.find((c) => c.overlap === 0)
+    ?? [...cands].sort((a, b) => a.overlap - b.overlap)[0];
+  return { left: best.left, top: best.top, side: best.side };
+}
+
 /** first target of the step that is rendered and visible */
 export function visibleTarget(step: TourStep, doc: Document = document): HTMLElement | null {
   for (const sel of step.targets) {
@@ -34,6 +57,8 @@ export function visibleTarget(step: TourStep, doc: Document = document): HTMLEle
  *  previous state. `leave` runs whenever the step is left: Next, Back, Skip, Esc, click outside. */
 export interface TourHooks { enter?: () => void | string | Promise<void | string>; leave?: () => void | Promise<void> }
 
+export type TourEvent = { type: "step"; index: number } | { type: "end"; completed: boolean; index: number };
+
 export class Tour {
   #steps: TourStep[];
   #i = 0;
@@ -47,6 +72,10 @@ export class Tour {
   #entered: string | null = null;
   #seq = 0;
   #reposition = () => this.#place();
+  #listeners: ((ev: TourEvent) => void)[] = [];
+  /** step shown / tour closed (used by the "Start tour" bubble, ui/tourBubble.ts) */
+  listen(fn: (ev: TourEvent) => void) { this.#listeners.push(fn); }
+  #emit(ev: TourEvent) { for (const f of this.#listeners) { try { f(ev); } catch (e) { console.warn("[dune-atlas] tour listener", e); } } }
 
   constructor(steps: TourStep[] = TOUR_STEPS, opts: { onEnd?: (completed: boolean) => void; hooks?: Record<string, TourHooks> } = {}) {
     this.#steps = steps;
@@ -101,7 +130,7 @@ export class Tour {
     this.ready = this.ready.then(() => this.#leave());
     markSeen();
     if (this.#prevFocus instanceof HTMLElement) this.#prevFocus.focus();
-    if (!silent) this.#onEnd?.(completed);
+    if (!silent) { this.#onEnd?.(completed); this.#emit({ type: "end", completed, index: this.#i }); }
   }
 
   #show(i: number) {
@@ -129,6 +158,7 @@ export class Tour {
     q(".tour-next").textContent = i === n - 1 ? TOUR_LABELS.done : TOUR_LABELS.next;
     this.#pop.dataset.step = s.id;
     this.#place();
+    this.#emit({ type: "step", index: i });
     q(".tour-next").focus();
   }
 
@@ -153,15 +183,8 @@ export class Tour {
     const big = r.width > 0.8 * vw && r.height > 0.8 * vh;
     const sr = big ? { left: vw * 0.3, top: vh * 0.25, width: vw * 0.4, height: vh * 0.5 } : { left: r.left - pad, top: r.top - pad, width: r.width + 2 * pad, height: r.height + 2 * pad };
     Object.assign(this.#spot.style, { left: `${sr.left}px`, top: `${sr.top}px`, width: `${sr.width}px`, height: `${sr.height}px` });
-    const ph = this.#pop.offsetHeight || 180;
-    let top: number, left: number;
-    if (sr.top + sr.height + 10 + ph <= vh) top = sr.top + sr.height + 10;
-    else if (sr.top - 10 - ph >= 0) top = sr.top - 10 - ph;
-    else top = Math.max(12, (vh - ph) / 2);
-    left = sr.left + sr.width / 2 - pw / 2;
-    if (top === Math.max(12, (vh - ph) / 2)) left = sr.left + sr.width + 10 + pw <= vw ? sr.left + sr.width + 10 : sr.left - 10 - pw;
-    left = Math.max(12, Math.min(vw - pw - 12, left));
-    top = Math.max(12, Math.min(vh - ph - 12, top));
+    const ph = this.#pop.getBoundingClientRect().height || this.#pop.offsetHeight || 180;
+    const { left, top } = tourPlacement(sr, { w: pw, h: ph }, { w: vw, h: vh });
     Object.assign(this.#pop.style, { left: `${left}px`, top: `${top}px` });
     this.#pop.dataset.anchor = s.targets.find((t) => document.querySelector(t) === el) ?? "";
   }

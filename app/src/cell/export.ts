@@ -7,7 +7,9 @@ import { mathToBearingDeg } from "../util/angles";
 import { texToPlain } from "../util/plaintext";
 import { fieldValue, nUt, type CellData, type CellStoreAttrs } from "./cellstore";
 import { crestFluxRose, fluxRose, DEFAULT_BINS } from "./flux";
-import { modeDefined } from "./analysis";
+import { analyseCell, modeDefined } from "./analysis";
+import { compassPoint } from "../util/angles";
+import { latLonText } from "./downloads";
 import { fieldInfo } from "./fieldinfo";
 import { AI_NOTICE, C3S_NOTICE, C3S_NOTICE_ERA5, CELL_SOURCE_IDS, citationJson, citationSources, citationText, fieldsCitation, fieldsLicence, referencesLine } from "./citation";
 import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "./auxinfo";
@@ -34,6 +36,36 @@ export interface ExportMeta {
   generated?: Date;
   /** cell store root attrs (long names, units) */
   storeAttrs?: Partial<CellStoreAttrs> & { field_descriptions?: Record<string, string> };
+  /** slider position of the panel (rose_16_sectors.csv is at this threshold / grain size; default: the default) */
+  utIndex?: number;
+}
+
+/** rose_16_sectors.csv (review U7): the wind and sand-flux roses of the panel in 16 compass sectors, degrees,
+ *  at the panel's threshold (Earth) or grain size (Mars); both builds. */
+export const ROSE16_FILE = "rose_16_sectors.csv";
+export const rose16Columns = (axis: CsvColumn): CsvColumn[] => [
+  axis,
+  { name: "sector", units: "1", longName: "compass sector (16 sectors of 22.5 degrees, centred on N, NNE, NE, ...)" },
+  { name: "sector_centre_bearing", units: "degree", longName: "bearing of the sector centre, clockwise from north" },
+  { name: "sector_start_bearing", units: "degree", longName: "bearing of the sector's first edge (centre - 11.25)" },
+  { name: "sector_end_bearing", units: "degree", longName: "bearing of the sector's second edge (centre + 11.25)" },
+  { name: "wind_from_percent", units: "percent", longName: "wind rose: % of the counted hours with the wind blowing FROM this sector" },
+  { name: "sand_flux_toward", units: "m2 yr-1", longName: "sand flux rose: time-averaged flat-bed saturated sand flux moving TOWARD this sector" },
+  { name: "sand_flux_toward_percent", units: "percent", longName: "sand flux rose: % of the total flat-bed sand flux (sums to 100)" },
+];
+/** rows of rose_16_sectors.csv from per-sector wind (% of hours, FROM) and flux (m2/yr, TOWARD) values */
+export function rose16Csv(axis: CsvColumn, axisValue: string, windFromPct: number[], flux: number[], fluxPct: number[]): string {
+  const b3 = (v: number) => String(Math.round(((v % 360) + 360) % 360 * 100) / 100);
+  const rows = windFromPct.map((w, k) => {
+    const c = k * 22.5;
+    return [axisValue, compassPoint(c), b3(c), b3(c - 11.25), b3(c + 11.25), Number(w.toFixed(4)).toString(), fmtF32(flux[k]), Number(fluxPct[k].toFixed(4)).toString()];
+  });
+  return csvTable(rose16Columns(axis), rows);
+}
+/** rose_16_sectors.csv of an Earth cell at slider position `k` */
+export function rose16CsvEarth(cell: CellData, k: number): string {
+  const v = analyseCell(cell, k, { windSectors: 16, fluxSectors: 16, fluxMode: "flat" });
+  return rose16Csv(UT_COLUMN, ut2(v.ut).toFixed(2), v.windRose.freq.map((r) => r.reduce((a, x) => a + x, 0)), v.fluxSectors, v.fluxSectorsPct);
 }
 
 export const INSTITUTION = "Geomorphology Lab, Monash University";
@@ -247,6 +279,7 @@ export function csvColumns(cell: CellData, attrs?: ExportMeta["storeAttrs"]): Re
       ...DIR_COLUMNS,
       { name: "flux_rose", units: "m2 yr-1", longName: "time-averaged sand flux per direction bin (toward)" },
     ],
+    [ROSE16_FILE]: rose16Columns(UT_COLUMN),
   };
 }
 
@@ -328,7 +361,7 @@ export function readmeText(cell: CellData, meta: ExportMeta): string {
   const colDoc = (f: string) => cols[f].map(csvColumnDoc).join("\n");
   return `Dune Atlas cell export
 ======================
-Cell: ${cell.lat}° N, ${cell.lon}° E (grid row ${cell.iy}, column ${cell.ix}); dataset ${meta.datasetTitle} (${meta.datasetId}, ${meta.dataVersion}).
+Cell: centre ${latLonText(cell.lat, cell.lon)} (grid row ${cell.iy}, column ${cell.ix}); dataset ${meta.datasetTitle} (${meta.datasetId}, ${meta.dataVersion}).
 Generated ${(meta.generated ?? new Date()).toISOString()} from ${meta.permalink}
 
 ${CSV_LAYOUT_TEXT}
@@ -350,6 +383,11 @@ flux_rose.csv  Flux rose vs threshold: one row per (rose_mode, ustar_threshold, 
   crest flux with speed-up about the mode direction alpha_E / alpha_H at that threshold. Crest-mode rows
   are empty where the defining crest flux is zero.
 ${colDoc("flux_rose.csv")}
+
+${ROSE16_FILE}  The panel's wind rose and flat-bed sand flux rose in 16 compass sectors (degrees), at
+  ${utText(cell, meta)}: one row per sector. Wind: % of the counted hours blowing FROM the sector; sand flux:
+  m2 yr-1 moving TOWARD the sector. For other thresholds or sectors use flux_rose.csv.
+${colDoc(ROSE16_FILE)}
 
 metadata.json  Cell coordinates, grid, conventions, column definitions, field long names
   (plain and LaTeX), descriptions, citation; "aux" holds the per-cell auxiliary values
@@ -376,13 +414,17 @@ ${AI_NOTICE}
 }
 
 /** CSV bundle (.zip, DEFLATE where supported): README.txt, wind_histogram.csv,
- *  fields_by_threshold.csv, flux_rose.csv, metadata.json. */
+ *  fields_by_threshold.csv, flux_rose.csv, rose_16_sectors.csv, metadata.json. */
 export function csvBundle(cell: CellData, meta: ExportMeta, deflate?: DeflateRaw | null): Promise<Uint8Array> {
   return writeZip([
     { name: "README.txt", data: readmeText(cell, meta) },
     { name: "wind_histogram.csv", data: windHistogramCsv(cell) },
     { name: "fields_by_threshold.csv", data: fieldsByThresholdCsv(cell, meta.storeAttrs) },
     { name: "flux_rose.csv", data: fluxRoseCsv(cell) },
+    { name: ROSE16_FILE, data: rose16CsvEarth(cell, rose16Index(cell, meta)) },
     { name: "metadata.json", data: metadataJson(cell, meta) },
   ], meta.generated, deflate);
 }
+/** slider position of rose_16_sectors.csv */
+const rose16Index = (cell: CellData, meta: ExportMeta) => Math.max(0, Math.min(nUt(cell) - 1, meta.utIndex ?? C.UT_DEFAULT_INDEX));
+const utText = (cell: CellData, meta: ExportMeta) => `u*,th = ${ut2((cell.utValues ?? C.UT_VALUES)[rose16Index(cell, meta)]).toFixed(2)} m/s`;

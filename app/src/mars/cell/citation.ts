@@ -2,7 +2,7 @@
 // is still provided so shared modules keep compiling). Entries may have a DOI or only a URL.
 // No Copernicus notice applies to Mars data: the C3S notice constants are empty strings.
 import { richHtml } from "../../util/richtext";
-export { AI_NOTICE, PAPER_DOI, DATA_DOI, DUNE_MAP_DOI, ERA5LAND_DOI, ERA5LAND_PAPER_DOI, ERA5_DOI, ERA5_PAPER_DOI } from "../../cell/citation";
+export { AI_NOTICE, PAPER_DOI, DATA_DOI, DUNE_MAP_DOI, DUNE_MAP_LABEL, ERA5LAND_DOI, ERA5LAND_PAPER_DOI, ERA5_DOI, ERA5_PAPER_DOI } from "../../cell/citation";
 import { PAPER_DOI } from "../../cell/citation";
 
 /** One citable work: DOI (preferred) or URL. */

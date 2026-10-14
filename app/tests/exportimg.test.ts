@@ -2,6 +2,7 @@
 // Image exports: the information strip below the map (contents per active layer set, scale bar,
 // north arrow, sources), the file names, transparency and no dark colours (strip rasterised with
 // resvg), and the panel plots re-rendered in the light theme with the on-screen settings.
+import { PLOT_EXPORT_WIDTH } from "../src/export/png";
 import { describe, expect, it, vi } from "vitest";
 import { Resvg } from "@resvg/resvg-js";
 import { loadRegistry } from "../src/registry/load";
@@ -135,7 +136,7 @@ describe("cell-panel plot exports (light theme, same settings as on screen)", ()
     expect([...root.querySelectorAll(".export-menu")].map((m) => m.getAttribute("data-plot"))).toEqual(PLOT_KEYS);
     for (const m of root.querySelectorAll(".export-menu")) expect([...m.querySelectorAll("button")].map((b) => b.textContent)).toEqual(["PNG", "SVG"]);
   });
-  it("SVG: light theme (no dark-theme colours), transparent, strip with title, cell, dataset, threshold, source, link; file names", async () => {
+  it("SVG: light theme (no dark-theme colours), white background (transparent option), strip with title, cell, dataset, threshold, source, link; file names", async () => {
     const { p } = await open();
     for (const k of PLOT_KEYS) {
       const x = p.plotExport(k)!;
@@ -150,8 +151,12 @@ describe("cell-panel plot exports (light theme, same settings as on screen)", ()
       expect(svgText(x.svg).includes(texToPlain("threshold friction velocity $u_{*,th}$ = 0.15 $\\mathrm{m\\,s^{-1}}$")), k).toBe(k !== "wind-rose"); // plain fallback (no math renderer)
       expect(x.svg).not.toMatch(/\$|\\[a-z]+\{/); // no raw LaTeX in the strip
       const png = new Resvg(x.svg, { font: { loadSystemFonts: true }, background: "rgba(0,0,0,0)" }).render();
-      expect(png.pixels[3], `${k} corner transparent`).toBe(0);
+      // white background by default (review U6); transparent on request
+      expect([...png.pixels.slice(0, 4)], `${k} corner white`).toEqual([255, 255, 255, 255]);
       expect(png.width).toBe(x.pxWidth);
+      const xt = p.plotExport(k, PLOT_EXPORT_WIDTH, null, true)!;
+      expect(xt.svg).not.toContain("export-background");
+      expect(new Resvg(xt.svg, { font: { loadSystemFonts: true }, background: "rgba(0,0,0,0)" }).render().pixels[3], `${k} corner transparent`).toBe(0);
     }
     expect(p.plotExport("wind-rose")!.name("svg")).toBe("dune-atlas_wind-rose_era5-land_-24.5_15.2.svg");
     expect(p.plotExport("flux-rose")!.name("png")).toBe("dune-atlas_flux-rose_era5-land_-24.5_15.2_ut0.15.png");

@@ -21,7 +21,7 @@ describe("Earth build: planet toggle and header", () => {
     expect(BODY).toBe("earth");
     expect(BODY_NAME).toBe("Earth");
   });
-  it("the toggle sits directly under the camera button and opens <base>mars/ (default view, embed carried)", () => {
+  it("the toggle sits directly under the camera button and opens <base>mars/ (its last view via resume=1, embed carried)", () => {
     const nav = vi.fn();
     const t = tools(nav);
     const btns = [...t.el.querySelectorAll("button.tool-btn")].map((b) => b.className.replace("tool-btn ", ""));
@@ -33,10 +33,10 @@ describe("Earth build: planet toggle and header", () => {
     // the test page runs on localhost: the live Mars site (production: <base>mars/, URL rules below)
     expect(location.hostname).toBe("localhost");
     b.click();
-    expect(nav).toHaveBeenCalledWith("https://map.geomorphlab.org/mars/");
+    expect(nav).toHaveBeenCalledWith("https://map.geomorphlab.org/mars/?resume=1"); // the other atlas reopens its last view (review U11)
     history.replaceState(null, "", "/?embed=1&lat=10&lon=20");
     b.click();
-    expect(nav).toHaveBeenLastCalledWith("https://map.geomorphlab.org/mars/?embed=1");
+    expect(nav).toHaveBeenLastCalledWith("https://map.geomorphlab.org/mars/?embed=1&resume=1");
     history.replaceState(null, "", "/");
   });
   it("header: 'Dune Atlas' + grey 'Earth'; two-line subtitle (no planet) linking the Monash Geomorphology Lab; dataset selector", () => {
@@ -130,7 +130,8 @@ describe("round 4: info texts at the source, one field citation, licences, basem
     expect(L("rdpa").description).toMatch(/compass bearing \(clockwise from north\)/);
     expect(L("rdpa").description).not.toMatch(/radians|CCW/);
     const veg = L("vegetation").description!;
-    expect(veg.length).toBeLessThan(500); // was 707
+    expect(veg.length).toBeLessThan(560); // was 707; + the dry-vegetation caveat (review L7)
+    expect(veg).toMatch(/As it includes dry vegetation, it can read high on bare desert\./);
     expect(veg).toMatch(/\[Explore the full monthly time series at GEOGLAM RAPP\]\(https:\/\/map\.geo-rapp\.org\/\)/);
   });
   it("every atlas-derived field: one citation format (= fieldsCitation) and the dataset licence row", async () => {

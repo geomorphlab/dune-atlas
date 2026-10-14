@@ -9,7 +9,7 @@ groups: []
 layers:
 - id: qsdiv
   title: Saturated flux divergence (∇·qs)
-  titleTex: $\nabla\cdot\vec{q}_s$
+  titleTex: Saturated flux divergence $\nabla\cdot\vec{q}_s$
   group: drift
   type: zarr-field
   source: '{dataset}/fields/qsdiv.zarr'

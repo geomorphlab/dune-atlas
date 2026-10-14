@@ -44,16 +44,17 @@ async function openPanel() {
 describe("Mars cell panel", () => {
   it("same sections as Earth; grain-size control, 2 m winds, d axes, Mars table rows", async () => {
     const { root } = await openPanel();
-    expect([...root.querySelectorAll("details.section")].map((d) => d.getAttribute("data-section"))).toEqual(["windRose", "fluxRose", "modes", "qsdiv", "summary", "downloads"]);
+    expect([...root.querySelectorAll("details.section")].map((d) => d.getAttribute("data-section"))).toEqual(["summary", "windRose", "fluxRose", "modes", "qsdiv", "downloads"]);
     const t = text(root);
-    expect(t).toMatch(/Grain diameter d = 200 µm/);
+    expect(t).toMatch(/Grain diameter d\s*200 µm/);
     expect(t).toMatch(/median over the hours/);
-    expect(t).toMatch(/lowest model level \(z ≈ 2 m\)/);
+    expect(t).toMatch(/m\/s, lowest model level/);
+    expect(t).toMatch(/lowest-level wind \(height in this cell \d\.\d\d–\d\.\d\d m\)/);   // review L17: the cell's range, About gives all cells
     expect(t).not.toMatch(/Height of the lowest-level wind|Grid cell|Hours counted/);   // removed rows (round 5)
     for (const th of root.querySelectorAll(".summary tbody th")) expect(th.textContent).not.toMatch(/[()]/);
     expect(t).not.toMatch(/z₀|z0|log law/);
     expect(t).toMatch(/Modes vs grain diameter/);
-    expect(t).toMatch(/Cell summary at d = 200 µm/);
+    expect(t).toMatch(/More: full cell summary at d = 200 µm/);
     expect(t).toMatch(/Mean air density/);
     expect(root.querySelector('.summary tr[data-field="elev_mean"] th')!.textContent).toBe("Elevation");
     expect(t).not.toMatch(/16,032 hourly samples \(one Mars year/);   // 'Hours counted' row removed (downloads keep it)
@@ -66,7 +67,7 @@ describe("Mars cell panel", () => {
     const { root, panel, cell } = await openPanel();
     const before = root.querySelector('[data-section="fluxRose"] .kv')!.textContent;
     panel.setThreshold(5);
-    expect(text(root)).toMatch(/Grain diameter d = 63 µm/);
+    expect(root.querySelector(".key-numbers")!.textContent!.replace(/\u00a0/g, " ")).toMatch(/Grain diameter d\s*63 µm/);
     const v = analyseMarsCell(cell, 5, { fluxSectors: 32 });
     expect(text(root)).toContain(`${v.stats.utMedian.toFixed(2)} m/s`);
     expect(root.querySelector('[data-section="fluxRose"] .kv')!.textContent).toBe(before); // DP etc. are the fields (constant here)
@@ -126,7 +127,7 @@ describe("Mars downloads", () => {
     expect(fg[0]).toContain(",sigma_e_over_sigma_h,");
     expect(fg[0]).toContain(",ustar_mean_above_threshold_over_ustar_th,");
     expect(fluxRoseCsv(cell).split("\n")[0]).toBe("\ufeffrose_mode,grain_diameter,direction_bin_centre,direction_bin_lower,direction_bin_upper,bearing_toward,bearing_from,flux");
-    expect(Object.keys(csvColumns(cell))).toEqual(["wind_series.csv", "fields_by_grain_size.csv", "flux_rose.csv"]);
+    expect(Object.keys(csvColumns(cell))).toEqual(["wind_series.csv", "fields_by_grain_size.csv", "flux_rose.csv", "rose_16_sectors.csv"]);   // + 16-sector table (review U7)
     const md = JSON.parse(metadataJson(cell, meta));
     expect(md.planet).toBe("Mars");
     expect(md.fields_citation).toBe(fieldsCitation("fv3-beta1"));

@@ -1,6 +1,7 @@
 // Shared by tests/selection.test.ts and tests/mars/selection.test.ts (selected-cell highlight at the poles,
 // PI round 5 item 7): the flat-map source (clipped, no vertex on the Mercator edge) and the globe geometry
 // (true bounds; outline without an edge at a pole) of polar cells, and the layer switch by projection.
+import { SELECTED_CELL_RING, zoomForCellPx } from "../src/map/overlays";
 import { expect } from "vitest";
 import { cellFeature, cellFromIndex, FLAT_LAT, type Grid } from "../src/cell/snap";
 import { globeCellGeometry, SELECTED_CELL_GLOBE_FILL, SELECTED_CELL_GLOBE_LINE } from "../src/map/selection";
@@ -59,9 +60,13 @@ export function checkProjectionSwitch(g: Grid, lat: number) {
   const handlers: Record<string, (() => void)[]> = {};
   let projection = "globe";
   let data: unknown = null;
+  const sources: Record<string, unknown> = {};
+  const paint: Record<string, unknown> = {};
   const map = {
-    getSource: (id: string) => (id === "selected-cell" && data !== null ? { setData: (d: unknown) => { data = d; } } : undefined),
-    addSource: () => { data = { type: "FeatureCollection", features: [] }; },
+    getSource: (id: string) => (id === "selected-cell" ? (data !== null ? { setData: (d: unknown) => { data = d; } } : undefined)
+      : id in sources ? { setData: (d: unknown) => { sources[id] = d; } } : undefined),
+    addSource: (id: string) => { if (id === "selected-cell") data = { type: "FeatureCollection", features: [] }; else sources[id] = { type: "FeatureCollection", features: [] }; },
+    setPaintProperty: (id: string, k: string, v: unknown) => { paint[`${id}.${k}`] = v; },
     getLayer: (id: string) => { const l = layers.find((x) => x.id === id); return l ? { id, implementation: l.impl } : undefined; },
     addLayer: (l: { id: string }) => { layers.push({ id: l.id, impl: "render" in l ? l : undefined, layout: {} }); },
     getStyle: () => ({ layers: layers.map((l) => ({ id: l.id, type: "fill" })) }),
@@ -72,7 +77,14 @@ export function checkProjectionSwitch(g: Grid, lat: number) {
   };
   const c = cellFromIndex(rowAt(g, lat), 10, g);
   ensureSelectedCellLayers(map as never, cellFeature(c, g));
-  expect(layers.map((l) => l.id)).toEqual([SELECTED_CELL_BOTTOM, SELECTED_CELL_LINE, SELECTED_CELL_GLOBE_FILL, SELECTED_CELL_GLOBE_LINE]);
+  expect(layers.map((l) => l.id)).toEqual([SELECTED_CELL_BOTTOM, SELECTED_CELL_LINE, SELECTED_CELL_GLOBE_FILL, SELECTED_CELL_GLOBE_LINE, SELECTED_CELL_RING]);
+  // ring at the cell centre (review L12), shown while the cell is under 12 px, gone above 24 px
+  const ring = (sources[SELECTED_CELL_RING] as GeoJSON.FeatureCollection).features[0].geometry as GeoJSON.Point;
+  expect(ring.coordinates[0]).toBeCloseTo(c.lon, 6);
+  expect(ring.coordinates[1]).toBeCloseTo(Math.max(-85, Math.min(85, c.lat)), 6);
+  const op = paint[`${SELECTED_CELL_RING}.circle-stroke-opacity`] as unknown[];
+  const fb = cellFeature(c, g).bbox!, deg = Math.abs(fb[3] - fb[1]);   // the cell's own height (half cells at the poles)
+  expect(op).toEqual(["interpolate", ["linear"], ["zoom"], zoomForCellPx(deg, 12), 1, zoomForCellPx(deg, 24), 0]);
   const vis = (id: string) => layers.find((x) => x.id === id)!.layout.visibility;
   expect([vis(SELECTED_CELL_BOTTOM), vis(SELECTED_CELL_LINE)]).toEqual(["none", "none"]);   // globe: GeoJSON hidden
   expect((layers[2].impl as GlobeFillLayer).triangleCount).toBeGreaterThan(0);

@@ -300,7 +300,7 @@ describe("cell panel", () => {
     mini.value = "40"; fire(mini, "input");
     expect(store.state.utIndex).toBe(40);
     expect(root.querySelector("#cell-ut-value")!.textContent).toBe("0.41 m/s");
-    expect(root.querySelector(".cell-meta")!.textContent).toContain("0.41 m/s");
+    expect(root.querySelector(".key-numbers")!.textContent).toContain("0.41 m/s");
     expect(root.querySelector("#cell-ut-slider")).toBe(mini); // not rebuilt while dragging
   });
   it("modes plot: a collapse is remembered in localStorage for new panels", async () => {
@@ -314,12 +314,12 @@ describe("cell panel", () => {
     d2.open = true; d2.dispatchEvent(new Event("toggle"));
     expect(memStorage.getItem(MODES_OPEN_KEY)).toBe("1");
   });
-  it("every section heading is a disclosure (same markup as Modes); open by default; each state remembered", async () => {
+  it("every section heading is a disclosure (same markup as Modes); open by default (the full table behind More closed); each state remembered", async () => {
     await open();
     const body = root.querySelector(".cell-body")!;
     const secs = [...body.querySelectorAll("details.section")] as HTMLDetailsElement[];
-    // this synthetic cell has no cells-aux qsdiv series (that section is checked in newlayers.test.ts)
-    const present = PANEL_SECTIONS.filter((k) => k !== "qsdiv");
+    // the quantity plot (section id "qsdiv") is present for every cell (DP by default)
+    const present = [...PANEL_SECTIONS];
     expect(secs.map((d) => d.dataset.section)).toEqual(present);
     // no heading outside a disclosure summary; one h3 per summary; same classes as Modes
     for (const h3 of body.querySelectorAll("h3")) expect(h3.parentElement!.matches("details.section > summary")).toBe(true);
@@ -327,10 +327,10 @@ describe("cell panel", () => {
       expect(d.classList.contains("section")).toBe(true);
       expect(d.firstElementChild!.tagName).toBe("SUMMARY");
       expect(d.firstElementChild!.querySelectorAll("h3").length).toBe(1);
-      expect(d.open).toBe(true);
+      expect(d.open).toBe(d.dataset.section !== "summary");
     }
     const title = (k: string) => body.querySelector(`details[data-section="${k}"] > summary`)!.textContent!.replace(/\s+/g, " ");
-    expect(title("summary")).toMatch(/^Cell summary at u.*= 0\.\d\d m\/s/);
+    expect(title("summary")).toMatch(/^More: full cell summary at u.*= 0\.\d\d m\/s/);
     expect(title("downloads")).toBe("Download & cite");
     // collapse each; a new panel (another cell) keeps every choice
     for (const d of secs) { d.open = false; d.dispatchEvent(new Event("toggle")); }
@@ -455,7 +455,7 @@ describe("cell panel", () => {
     const cap = () => root.querySelectorAll(".fig")[1].querySelector(".caption")!.textContent!.replace(/\u00a0/g, " ");
     expect(cap()).toMatch(/^Flat bed: DP = /);
     sel.value = "elongation"; fire(sel, "change");
-    expect(cap()).toMatch(/^Elongation \(αE\): .* = [0-9.]+ m²\/yr/);
+    expect(cap()).toMatch(/^Elongation \(αE\) \(— = mode direction undefined at this threshold\): .* = [0-9.]+ m²\/yr\./);
     expect(root.querySelectorAll(".fig")[1].querySelector(".caption .katex")).not.toBeNull(); // ⟨|Q(αE)|⟩ in KaTeX
     sel.value = "transverse"; fire(sel, "change");
     expect(cap()).toMatch(/^Transverse migration \(αH\)/);

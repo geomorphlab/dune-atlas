@@ -25,6 +25,14 @@ export const CSV_NAMES: Readonly<Record<string, string>> = {
   // flux rose (both)
   rose_mode: "rose_mode",
   flux_rose: "flux",
+  // rose_16_sectors.csv (both; review U7)
+  sector: "sector",
+  sector_centre_bearing: "sector_centre_bearing",
+  sector_start_bearing: "sector_start_bearing",
+  sector_end_bearing: "sector_end_bearing",
+  wind_from_percent: "wind_from_percent",
+  sand_flux_toward: "sand_flux_toward",
+  sand_flux_toward_percent: "sand_flux_toward_percent",
   // hourly series (Mars)
   hour: "hour",
   sol: "sol",

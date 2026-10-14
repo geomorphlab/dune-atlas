@@ -3,7 +3,8 @@
 // only the long names / descriptions / source units come from registry/mars/qsat_field_metadata.json
 // (Wind track; texts of the per-hour Mars threshold).
 import meta from "../../../../registry/mars/qsat_field_metadata.json";
-import { fieldInfo as earthFieldInfo, type FieldInfo } from "../../cell/fieldinfo";
+import { fieldInfo as earthFieldInfo, FIELD_NAMES, type FieldInfo } from "../../cell/fieldinfo";
+export { FIELD_NAMES } from "../../cell/fieldinfo";
 
 export type { FieldInfo, FieldKind } from "../../cell/fieldinfo";
 
@@ -16,5 +17,7 @@ const fix = (t: string) => TEXT_FIXES.reduce((a, [re, r]) => a.replace(re, r), t
 
 export function fieldInfo(id: string): FieldInfo {
   const m = M[id] ?? { long_name: id, units: "", description: "" };
-  return { ...earthFieldInfo(id), longName: fix(m.long_name), description: fix(m.description), sourceUnits: m.units };
+  // long name: the atlas name (same quantity, same name on both planets; review L5); Mars descriptions
+  const n = FIELD_NAMES[id];
+  return { ...earthFieldInfo(id), longName: n?.titleTex ?? fix(m.long_name), description: n?.description ?? fix(m.description), sourceUnits: m.units };
 }

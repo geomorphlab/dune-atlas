@@ -98,10 +98,51 @@ def fields_attribution(dataset=None) -> dict:
     return {"citation": fields_citation(dataset), "licence": fields_licence(dataset)}
 
 
+# Definitions written here where the source description only repeats the source name (review L5).
+FIELD_DEFINITIONS = {
+    "ab": (r"Orientation of the crests of dunes in the migration (bed-instability) mode: an axis from 0° to 180°,"
+           r" perpendicular to the migration direction $\alpha_T$."),
+}
+
+
+def field_name(title: str) -> str:
+    """The quantity name of a FIELD_META title without its trailing symbol (a trailing parenthesis, or a trailing
+    ⟨...⟩ term), e.g. 'Drift potential', 'Absolute across-crest flux, migration mode'."""
+    t = title.strip()
+    if t.endswith("⟩") and "⟨" in t:
+        return t[:t.rindex("⟨")].rstrip()
+    return re.sub(r"\s*\([^()]*(?:\([^()]*\)[^()]*)*\)\s*$", "", t)
+
+
+def title_tex(title: str, long_name: str) -> str:
+    """The title with its symbol in TeX: the name of `title` plus the (last) math of the source long_name;
+    the name alone when the title carries no symbol."""
+    name = field_name(title)
+    sym = re.findall(r"\$([^$]+)\$", long_name)
+    return f"{name} ${sym[-1]}$" if name != title and sym else name
+
+
+def field_names(meta: dict | None = None) -> dict:
+    """{var: {title, titleTex[, description]}}: the one name per quantity, for the app's downloads and cell
+    table (registry/field_names.json; the registry layers carry the same title / titleTex)."""
+    meta = meta or load_metadata()
+    out = {}
+    for v, fm in FIELD_META.items():
+        if v not in meta:
+            continue
+        e = {"title": fm["title"], "titleTex": title_tex(fm["title"], meta[v]["long_name"])}
+        if v in FIELD_DEFINITIONS:
+            e["description"] = FIELD_DEFINITIONS[v]
+        out[v] = e
+    return out
+
+
 def field_definition(var: str, description: str) -> str:
     """Info-popover definition from the source description: TeX kept for the app's KaTeX rendering (the
     `units` row states the display units, so the stored units and radians are dropped); directions in the
     displayed convention (compass bearing; the stored convention stays in the downloads / metadata)."""
+    if var in FIELD_DEFINITIONS:
+        return FIELD_DEFINITIONS[var]
     d = description.replace(", in m$^2$/s.", ".").replace(" in m$^2$/s.", ".").replace(" in radians.", ".")
     d = d.replace(", radians CCW from east, direction of transport.",
                   ", the direction sand moves, as a compass bearing (clockwise from north).")
@@ -126,7 +167,9 @@ GROUPS = [
 ]
 
 # Per-variable presentation. `title` is plain text (Unicode, no TeX) derived from the source
-# long_name/description; `titleTex` is the source long_name verbatim. Order = cellstore.FIELD_VARS.
+# long_name/description: THE name of the quantity everywhere (layer list, info title, cell table, rose legend,
+# CSV/NetCDF long names; review L5). `titleTex` = the same name with the source symbol in TeX (title_tex).
+# Order = cellstore.FIELD_VARS.
 FIELD_META = {
     "ab":   dict(group="orientation", title="Migration-mode crest orientation (αH)",
                  colormap="twilight", transform="rad-to-axis"),
@@ -177,6 +220,12 @@ FIELD_META = {
 DERIVED_UNITS = {"qsdiv": "m/yr"}
 FIELD_META["qsdiv"] = dict(group="derived", title="Saturated flux divergence (∇·qs)", colormap="piyg",
                            clim=[-3.0e-4, 3.0e-4])  # stored units m/yr (= ±0.3 m/kyr, extra_layers.QSDIV_CLIM)
+
+
+# Earth: DP and RDP get one fixed log range (m²/yr, display units) for every wind dataset, so the ERA5-Land and
+# ERA5 maps compare by eye (review L15: ERA5-Land's p2 of 5e-4 m²/yr, from its many calm land cells, made its
+# map almost uniformly bright). Mars keeps its own p2/p98 (registry_fragment(shared_clim=False)).
+EARTH_SHARED_CLIM = {"dpm": [0.01, 300.0], "rdpm": [0.01, 300.0]}
 
 
 # Ratios that actually exceed ±F16_MAX (infinite where the net-flux denominator is 0); measured over all
@@ -487,7 +536,7 @@ def bitround(a: np.ndarray, keepbits: int) -> np.ndarray:
 
 
 # ----------------------------------------------------------------------------- registry
-def registry_fragment(meta: dict | None = None, var_order=None, dataset=None) -> dict:
+def registry_fragment(meta: dict | None = None, var_order=None, dataset=None, shared_clim: bool = True) -> dict:
     """{groups, layers}: one zarr-field layer per variable, validating against
     registry/layers.schema.json $defs/layer. `dataset` selects the source prefix and citation."""
     from .cellstore import FIELD_VARS
@@ -509,7 +558,8 @@ def registry_fragment(meta: dict | None = None, var_order=None, dataset=None) ->
         if v in CLIPPED_RATIO_VARS:
             desc += (f" The ratio is infinite where its denominator (a net flux) is exactly zero; such values are"
                      f" shown as ±{F16_MAX:,.0f}.")
-        display = {"transform": tr, "colormap": fm["colormap"], "clim": display_clim(v, meta)}
+        display = {"transform": tr, "colormap": fm["colormap"],
+                   "clim": list(EARTH_SHARED_CLIM[v]) if shared_clim and v in EARTH_SHARED_CLIM else display_clim(v, meta)}
         if v in MAGNITUDE_VAR:  # arrow/streamline length & opacity pairing for directional fields
             display["magnitudeVar"] = MAGNITUDE_VAR[v]
         if v in ANGLE_VARS:
@@ -517,7 +567,7 @@ def registry_fragment(meta: dict | None = None, var_order=None, dataset=None) ->
         if fm.get("log"):
             display["log"] = True
         layers.append({
-            "id": v, "title": fm["title"], "titleTex": m["long_name"], "group": fm["group"],
+            "id": v, "title": fm["title"], "titleTex": title_tex(fm["title"], m["long_name"]), "group": fm["group"],
             "type": "zarr-field", "source": f"{prefix}/{v}.zarr", "variable": v,
             "thresholdAware": True, "units": units, "description": desc, "citation": citation,
             "attribution": fields_attribution(dset),
@@ -539,6 +589,8 @@ def write_registry_fragment(path=REPO / "registry" / "generated" / "qsat_fields.
               "# Fragment {groups, layers}; layer objects validate against layers.schema.json $defs/layer.\n"
               "# clim are in display units (after display.transform); fluxes in m²/yr.\n")
     path.write_text(header + yaml.safe_dump(frag, sort_keys=False, allow_unicode=True, width=110))
+    names = REPO / "registry" / "field_names.json"
+    names.write_text(json.dumps(field_names(), ensure_ascii=False, indent=1) + "\n")
     return path
 
 

@@ -1,5 +1,6 @@
 // Per-cell downloads: NetCDF-3 writer (parsed back by a minimal reader here; scripts/check-netcdf.py
 // reads real files with xarray), store-only zip writer, CSV / metadata builders.
+import { analyseCell } from "../src/cell/analysis";
 import { describe, expect, it } from "vitest";
 import { writeNetcdf3 } from "../src/cell/netcdf3";
 import { crc32, deflateRawAvailable, writeZip } from "../src/cell/zip";
@@ -217,15 +218,26 @@ describe("cell exports", () => {
     expect(Object.keys(md).sort()).toEqual(["ai_notice", "aux", "cell", "citation", "conventions", "copernicus_notice", "dataset", "fields", "fields_citation", "fields_license", "files", "generated", "grid", "institution", "license", "permalink", "ut"]);
     expect(md.ut[14]).toBe(0.15);
     expect(md.files["flux_rose.csv"].columns.map((x: { name: string }) => x.name)).toEqual(csvColumns(c)["flux_rose.csv"].map((x) => csvName(x.name)));
-    expect(md.files["fields_by_threshold.csv"].columns.find((x: { netcdf_name: string }) => x.netcdf_name === "sige_sigh")).toEqual({ name: "sigma_e_over_sigma_h", netcdf_name: "sige_sigh", units: "1", long_name: "σ_E/σ_H" });
+    expect(md.files["fields_by_threshold.csv"].columns.find((x: { netcdf_name: string }) => x.netcdf_name === "sige_sigh")).toEqual({ name: "sigma_e_over_sigma_h", netcdf_name: "sige_sigh", units: "1", long_name: "Stability of elongating dunes on starved beds σ_E/σ_H" });
     expect(md.citation.map((x: { source: string }) => x.source)).toEqual(["Dune Atlas / dune map", "ERA5-Land", "Global Aridity Index (Global-AI_PET v3.1)", "Vegetation cover (CSIRO MODIS Fractional Cover v3.1)"]);
     const rd = readmeText(c, META);
     expect(rd).toContain(AI_NOTICE);
     expect(rd).toContain("pd.read_csv(f)");
     expect(rd).toContain('read.csv(f, fileEncoding = "UTF-8-BOM")');
-    expect(rd).toMatch(/sigma_e_over_sigma_h\s+\[1\] σ_E\/σ_H \(NetCDF: sige_sigh\)/);
+    expect(rd).toMatch(/sigma_e_over_sigma_h\s+\[1\] Stability of elongating dunes on starved beds σ_E\/σ_H \(NetCDF: sige_sigh\)/);
     const z = readZip(await csvBundle(c, META));
-    expect([...z.keys()]).toEqual(["README.txt", "wind_histogram.csv", "fields_by_threshold.csv", "flux_rose.csv", "metadata.json"]);
+    expect([...z.keys()]).toEqual(["README.txt", "wind_histogram.csv", "fields_by_threshold.csv", "flux_rose.csv", "rose_16_sectors.csv", "metadata.json"]);
+    // rose_16_sectors.csv (review U7): 16 compass sectors in degrees at the panel's threshold; matches the panel roses
+    const r16 = new TextDecoder().decode(z.get("rose_16_sectors.csv")!.data).replace(/^\uFEFF/, "").trim().split("\n").map((l) => l.split(","));
+    expect(r16[0]).toEqual(["ustar_threshold", "sector", "sector_centre_bearing", "sector_start_bearing", "sector_end_bearing", "wind_from_percent", "sand_flux_toward", "sand_flux_toward_percent"]);
+    expect(r16.length).toBe(17);
+    expect(r16.slice(1).map((r) => r[1])).toEqual(["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]);
+    expect(r16[1].slice(2, 5)).toEqual(["0", "348.75", "11.25"]);
+    const kk = (META as { utIndex?: number }).utIndex ?? 14, vv = analyseCell(c, kk, { windSectors: 16, fluxSectors: 16, fluxMode: "flat" });
+    expect(r16.every((r, i) => i === 0 || r[0] === vv.ut.toFixed(2))).toBe(true);
+    expect(r16.slice(1).reduce((a, r) => a + Number(r[7]), 0)).toBeCloseTo(vv.fluxSectors.some((x) => x > 0) ? 100 : 0, 2);
+    r16.slice(1).forEach((r, i) => expect(Number(r[6])).toBeCloseTo(vv.fluxSectors[i], 3));
+    expect(new TextDecoder().decode(z.get("README.txt")!.data)).toMatch(/rose_16_sectors\.csv  The panel's wind rose and flat-bed sand flux rose in 16 compass sectors/);
     expect(z.get("flux_rose.csv")!.method).toBe(8);
     const whBytes = z.get("wind_histogram.csv")!.data;
     expect(Array.from(whBytes.slice(0, 3))).toEqual([0xef, 0xbb, 0xbf]);             // UTF-8 BOM in the file
@@ -235,7 +247,7 @@ describe("cell exports", () => {
     const c0 = cell();
     const t = citationText();
     expect(t.indexOf("Dune Atlas / dune map")).toBeLessThan(t.indexOf("ERA5-Land"));
-    expect(t).toMatch(/Dune Atlas \/ dune map\n  Paper: .*10\.1038\/s41467-026-75466-y\n  Data \(wind histograms and sand-flux fields\): Gunn, A\. \(2026\)\. The distribution of Earth's wind-blown sand dunes - Supplementary Data\. Zenodo\. https:\/\/doi\.org\/10\.5281\/zenodo\.20046812 \(CC BY 4\.0\)\n  Data \(dune map\): Gunn, A\. \(2026\)\. geomorphlab\/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code \(v1\.0\.0\)\. Zenodo\. https:\/\/doi\.org\/10\.5281\/zenodo\.20054674 \(MIT\)\n/);
+    expect(t).toMatch(/Dune Atlas \/ dune map\n  Paper: .*10\.1038\/s41467-026-75466-y\n  Data \(wind histograms and sand-flux fields\): Gunn, A\. \(2026\)\. The distribution of Earth's wind-blown sand dunes - Supplementary Data\. Zenodo\. https:\/\/doi\.org\/10\.5281\/zenodo\.20046812 \(CC BY 4\.0\)\n  Data \(dune map: dune-mask-rev1\.tif, contained in the Supplementary Code record\): Gunn, A\. \(2026\)\. geomorphlab\/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code \(v1\.0\.0\)\. Zenodo\. https:\/\/doi\.org\/10\.5281\/zenodo\.20054674 \(MIT\)\n/);
     expect(t).not.toMatch(/Dune map and code|Data for '/);
     expect(t).toMatch(/ERA5-Land\n  Paper: Muñoz-Sabater.*essd-13-4349-2021\n  Data: .*10\.24381\/cds\.e2161bac\n  Contains modified Copernicus/);
     expect(t).not.toContain("figshare");
@@ -254,7 +266,7 @@ describe("cell exports", () => {
 describe("attribute audit (NetCDF / metadata.json / README strings)", () => {
   const c = cell();
   const r = readNc(cellNetcdf(c, META));
-  const UDUNITS_OK = new Set(["1", "m s-1", "m2 s-1", "m2 yr-1", "radian", "degree", "degrees_north", "degrees_east", "h"]);
+  const UDUNITS_OK = new Set(["1", "percent", "m s-1", "m2 s-1", "m2 yr-1", "radian", "degree", "degrees_north", "degrees_east", "h"]);
   const balanced = (t: string) => { let d = 0; for (const ch of t.replace(/\\[{}]/g, "")) { if (ch === "{") d++; else if (ch === "}" && --d < 0) return false; } return d === 0; };
   const latexOk = (t: string) => {
     expect(t, t).not.toMatch(/\\\\/); // no doubled backslashes (escaping artefacts)
@@ -293,7 +305,7 @@ describe("attribute audit (NetCDF / metadata.json / README strings)", () => {
     for (const cols of Object.values(md.files) as { columns: { long_name: string }[] }[]) for (const col of cols.columns) plainOk(col.long_name);
     expect(readmeText(c, META)).not.toMatch(/\$|\\[a-zA-Z]/);
     expect(fieldMeta("ao").description).not.toMatch(/signed signed/);
-    expect(fieldMeta("qhef").longName).toBe("Fraction of elongation-mode flux while flat-bed u*,f>u*,th");
+    expect(fieldMeta("qhef").longName).toBe("Fraction of elongation-mode flux while flat bed above threshold"); // the layer name (review L5)
   });
 });
 

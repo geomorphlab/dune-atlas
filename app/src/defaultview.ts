@@ -9,7 +9,7 @@
 // no view state. Pure (tested).
 import type { ShareState } from "./share/shortlink";
 import { shareToUrlState } from "./share/shortlink";
-import type { UrlState } from "./urlstate";
+import { parseUrlState, type UrlState } from "./urlstate";
 import type { Registry } from "./registry/types";
 import { normaliseOrder, type AppState, type LayerState } from "./store";
 import { migrateLegacySpacing } from "./layerconfig";
@@ -55,7 +55,7 @@ export interface InitialState {
  * @param stored  the user's last explicit dataset choice (localStorage), if any
  */
 export function resolveInitialState(shared: ShareState | null, query: UrlState, legacyDataset: string | undefined, stored: string | undefined, def: ShareState = DEFAULT_VIEW): InitialState {
-  const extras: UrlState = { ...(query.embed ? { embed: true } : {}), ...(query.tour ? { tour: true } : {}) };
+  const extras: UrlState = { ...(query.embed ? { embed: true } : {}), ...(query.tour ? { tour: true } : {}), ...(query.plot ? { plot: query.plot } : {}) };
   const defUrl = shareToUrlState(def);
   if (shared) return { url: { ...shareToUrlState(shared), ...extras }, dataset: shared.dataset, source: "share", panel: shared.panel, bearing: shared.bearing ?? 0, pitch: shared.pitch ?? 0 };
   if (hasViewState(query)) {
@@ -66,6 +66,19 @@ export function resolveInitialState(shared: ShareState | null, query: UrlState, 
     return { url: merged, dataset: query.dataset ?? legacyDataset, source: "query", bearing: 0, pitch: 0 };
   }
   return { url: { ...defUrl, ...extras }, dataset: stored ?? def.dataset, source: "default", bearing: def.bearing ?? 0, pitch: def.pitch ?? 0 };
+}
+
+/** localStorage name (per body, body.ts storageKey) of the last view: the address query of the current view. */
+export const LAST_VIEW = "lastView";
+/** Planet button (review U11): the other atlas is opened with `?resume=1`; a link with that flag and no view
+ *  state of its own opens the last view stored by this atlas (camera, basemap, projection, layers with their
+ *  opacity and display, threshold, cell, dataset, Dunes only), keeping the link's embed / tour flags. */
+export function resumeQuery(query: UrlState, stored: string | null | undefined): UrlState {
+  if (!query.resume || hasViewState(query) || !stored) return query;
+  const last = parseUrlState(stored);
+  if (!hasViewState(last)) return query;
+  delete last.embed; delete last.tour;
+  return { ...last, ...(query.embed ? { embed: true } : {}), ...(query.tour ? { tour: true } : {}), resume: true };
 }
 
 const stripUndef = <T extends object>(o: T): Partial<T> => Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined)) as Partial<T>;
@@ -93,6 +106,7 @@ export function initialAppState(reg: Registry, url: UrlState, dataset: string): 
     cell: url.cell ?? null,
     embed: !!url.embed,
     dunesOnly: !!url.dunesOnly,
+    ...(url.plot ? { plotY: url.plot } : {}),
   };
 }
 
@@ -104,5 +118,7 @@ export function appShareState(s: AppState, cam: { lon: number; lat: number; zoom
     layers: s.order.filter((id) => s.layers[id]?.visible).map((id) => ({ id, opacity: Number(s.layers[id].opacity.toFixed(2)), ...(s.layers[id].cfg ? { cfg: s.layers[id].cfg } : {}) })),
     panel,
     ...(s.dunesOnly ? { dunesOnly: true } : {}),
+    // the plotted quantity only when it is not the default (DP), so default links stay as they were
+    ...(s.plotY && s.plotY !== "dpm" ? { plotY: s.plotY } : {}),
   };
 }
