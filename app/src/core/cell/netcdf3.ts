@@ -31,9 +31,11 @@ const pad4 = (n: number) => (4 - (n % 4)) % 4;
 const enc = new TextEncoder();
 
 class Writer {
-  buf = new Uint8Array(1 << 16);
-  dv = new DataView(this.buf.buffer);
+  buf: Uint8Array;
+  dv: DataView;
   n = 0;
+  /** `cap`: the final size when known (region exports: no regrowth, no copy at the end) */
+  constructor(cap = 1 << 16) { this.buf = new Uint8Array(cap); this.dv = new DataView(this.buf.buffer); }
   ensure(k: number) {
     if (this.n + k <= this.buf.length) return;
     let cap = this.buf.length;
@@ -51,7 +53,7 @@ class Writer {
   bytes(b: Uint8Array) { this.ensure(b.length); this.buf.set(b, this.n); this.n += b.length; }
   pad() { const k = pad4(this.n); this.ensure(k); this.n += k; } // zero padding (buffer is zero-initialised)
   name(s: string) { const b = enc.encode(s); this.u32(b.length); this.bytes(b); this.pad(); }
-  out() { return this.buf.slice(0, this.n); }
+  out() { return this.n === this.buf.length ? this.buf : this.buf.slice(0, this.n); }
 }
 
 function attrTyped(v: NcAttrValue): { type: NcType; values: number[] | Uint8Array } {
@@ -135,7 +137,7 @@ export function writeNetcdf3(f: NcFile, version: 1 | 2 = 2): Uint8Array {
   let off = hlen;
   for (const s of vsize) { begins.push(off); off += s; }
   if (version === 1 && off > 2 ** 31 - 1) throw new Error("file too large for CDF-1");
-  const w = new Writer();
+  const w = new Writer(off);
   w.bytes(header(begins));
   f.vars.forEach((v, k) => {
     if (v.type === "char") {

@@ -111,6 +111,23 @@ read at build time (`core/ui/concepts.ts`); entries are tagged Earth, Mars or bo
 each layer ⓘ (and the slider and dataset ⓘ, `@threshold`, `@dataset`) to its entry; a new layer that should
 link to an entry is added there.
 
+## Bulk data and region export
+
+* **Get the whole grid** (`core/ui/bulkguide.ts`; Download & cite and About): the public store URLs, the
+  variable list, the slider axis and the licence come from the registry for the selected dataset (map-field
+  sources `{dataset}/fields/<var>.zarr`, level `0`; `cellStore`; `credits.fieldsLicence`), so a new dataset
+  appears there without text changes.
+* **Download a region** (`core/export/region.ts` builders, `core/map/boxdraw.ts` drawing,
+  `core/ui/regionExport.ts` popover): the cells of the selected dataset whose centres lie in a box, read with the
+  cell store's `query(iy, ix, { wind })` (`wind: false` skips the histogram / hourly series), written as one
+  CF-1.8 NetCDF-3 file with a README. What the file holds follows the cells: sand-flux fields, the wind
+  histogram (cells with `hist`) or the hourly series (cells with `series`), `AUX_META` variables, the dune
+  flag. Limits: `REGION_LIMITS` (cells and bytes). `npm run check-region` reads a fixture export back with
+  xarray and compares it with the per-cell exports.
+* **Other-dataset line** (Earth cell panel): every other dataset of the registry gets one line (its DP, RDD and
+  RDP/DP at the same location and threshold); the cell panel option `otherDatasets` (main.ts) opens their cell
+  stores on first use. The Mars cell panel accepts the option and shows nothing (one dataset).
+
 ## Add a planet
 
 1. **Registry**: `registry/<body>/layers.yaml` (same schema; `threshold` is the slider, e.g. Mars grain

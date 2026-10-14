@@ -16,6 +16,10 @@ export const DEV_PHRASES: [string, RegExp][] = [
 /** known strings outside this file (owned by registry/mars/generated/dunes.yaml): reported
  *  elsewhere with the new text; allowed until rebuilt, then removed here */
 export const PENDING_OTHER_TRACK: string[] = [];
+/** the "Get the whole grid" guide (bulk.*) explains the public Zarr stores and points to the licence file:
+ *  storage words and file names are its subject there; every other rule applies */
+const DATA_GUIDE = /^(E|M)?:?bulk\./;
+const DATA_GUIDE_ALLOWED = new Set(["storage", "internal decisions / files"]);
 /** download keys that are machine-readable names, not prose (file / variable names are expected there) */
 const MACHINE = /^(E|M)?:?(metadata\.(files|aux\.[^.]+\.in_file|citation\.\d+\.id)|csv\.)/;
 
@@ -25,7 +29,7 @@ export function devPhraseHits(t: Record<string, string>): string[] {
     if (MACHINE.test(k)) continue;
     let v = v0;
     for (const p of PENDING_OTHER_TRACK) v = v.split(p).join("");
-    for (const [what, re] of DEV_PHRASES) if (re.test(v)) out.push(`${k} [${what}]: ${v.slice(Math.max(0, v.search(re) - 60), v.search(re) + 80)}`);
+    for (const [what, re] of DEV_PHRASES) if (!(DATA_GUIDE.test(k) && DATA_GUIDE_ALLOWED.has(what)) && re.test(v)) out.push(`${k} [${what}]: ${v.slice(Math.max(0, v.search(re) - 60), v.search(re) + 80)}`);
   }
   return out;
 }

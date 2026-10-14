@@ -24,6 +24,7 @@ import { AUX_META } from "../../core/cell/auxinfo";
 import { datasetInfo, type DatasetInfo } from "../../core/cell/datasetinfo";
 import { fieldInfo } from "../../core/cell/fieldinfo";
 import { latLonText, triggerDownload } from "../../core/cell/downloads";
+import { bulkGuideHtml, wireBulkGuide } from "../../core/ui/bulkguide";
 import { cellDataset, cellNetcdf, csvBundle, exportBaseName, type ExportMeta } from "./cell/export";
 import { CELL_SOURCE_IDS } from "./citation";
 import { citationHtml, citationSources, citationText } from "../../core/cell/citation";
@@ -75,6 +76,8 @@ export interface CellPanelOptions {
   onCentre?: (c: { lon: number; lat: number }) => void;
   /** quantity of the "<quantity> vs grain diameter" plot (app state plotY: share links; cell/qplot.ts) */
   plot?: { get(): string | undefined; set(id: string): void };
+  /** the other wind datasets (Earth panel: the other-dataset line); Mars has one dataset and does not show it */
+  otherDatasets?: () => { id: string; open: () => Promise<MarsCellStore> }[];
 }
 
 const deg = (v: number) => (Number.isFinite(v) ? `${v.toFixed(0)}° (${compassPoint(v)})` : MISSING);
@@ -227,6 +230,7 @@ export class CellPanel {
   #roTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor(root: HTMLElement, utIndex: number, opts: CellPanelOptions) {
+    wireBulkGuide(root);   // copy buttons of the "Get the whole grid" guide (Download & cite)
     this.#root = root;
     this.#utIndex = utIndex;
     this.#opts = opts;
@@ -712,6 +716,7 @@ export class CellPanel {
         btn("CSV bundle (.zip)", "wind_series.csv, fields_by_grain_size.csv, flux_rose.csv, rose_16_sectors.csv (16 sectors, degrees), metadata.json and README.txt", () => { void csvBundle(cell, this.#exportMeta()).then((z) => triggerDownload(`${base()}.zip`, z, "application/zip")); }),
         btn("Citation (TXT)", "Citation text file", () => triggerDownload(`${base()}_citation.txt`, citationFile(cell, this.#exportMeta().datasetId, this.#citeSetting()), "text/plain")),
         copy),
-      h("div", { class: "cite-wrap", html: citationHtml(citationSources(CELL_SOURCE_IDS, this.#exportMeta().datasetId)) }));
+      h("div", { class: "cite-wrap", html: citationHtml(citationSources(CELL_SOURCE_IDS, this.#exportMeta().datasetId)) }),
+      h("div", { class: "bulk-wrap", html: bulkGuideHtml(this.#exportMeta().datasetId, "cell-bulk") }));
   }
 }

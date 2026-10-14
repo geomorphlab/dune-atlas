@@ -360,3 +360,28 @@ label.inline.dunes-only-row { display: flex; width: max-content; max-width: 100%
 .tool-pop-concepts .concept-reflist { margin: 0 0 8px; padding-left: 16px; font-size: 12px; color: var(--muted); }
 .tool-pop-concepts .concept-reflist li { margin: 2px 0; }
 .info-popover .concept-link, .threshold .concept-link { margin: 2px 0 6px; }
+/* "Get the whole grid" (ui/bulkguide.ts): Download & cite and About */
+.bulk-guide { margin: 8px 0; }
+.bulk-guide > summary { cursor: pointer; font-weight: 600; font-size: 12.5px; }
+.bulk-guide p { font-size: 12.5px; }
+.bulk-guide pre.bulk-code { margin: 4px 0; padding: 6px 8px; background: var(--bg3); border: 1px solid var(--line); border-radius: 4px; overflow-x: auto; font-size: 11px; line-height: 1.4; white-space: pre; }
+.bulk-guide code { overflow-wrap: anywhere; }
+.bulk-guide pre code { overflow-wrap: normal; }
+.bulk-guide .copy-code { border: 1px solid var(--line); background: var(--bg2); color: var(--fg); border-radius: 4px; padding: 2px 8px; cursor: pointer; }
+/* "Download a region" popover (ui/regionExport.ts) and the box being drawn (map/boxdraw.ts) */
+.tool-pop.tool-pop-region { width: min(380px, calc(100vw - 70px)); }
+.region-bounds { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; margin: 4px 0; }
+.region-bound-row { display: flex; align-items: center; gap: 4px; font-size: 12.5px; }
+.region-bound-row > span:first-child { flex: 0 0 3.2em; color: var(--muted); }
+.region-bound { width: 100%; min-width: 0; box-sizing: border-box; background: var(--bg3); color: var(--fg); border: 1px solid var(--line); border-radius: 3px; padding: 2px 4px; font: inherit; font-size: 12.5px; }
+.region-params { border: 1px solid var(--line); border-radius: 4px; padding: 4px 8px 6px; margin: 6px 0; }
+.region-params legend { font-size: 12.5px; padding: 0 4px; }
+.region-fields-head { font-size: 12.5px; margin: 2px 0; }
+.region-fields { max-height: 150px; overflow-y: auto; border-bottom: 1px solid var(--line); margin-bottom: 4px; padding-bottom: 2px; }
+label.inline.region-param, label.inline.region-range { display: flex; margin: 1px 0; color: var(--fg); }
+.region-ranges { margin-top: 4px; }
+.region-estimate { font-size: 12.5px; }
+.region-estimate[data-kind="error"] { color: #ffb3b3; }
+.region-run { display: flex; gap: 6px; }
+.region-progress { width: 100%; }
+.maplibregl-map.drawing-box .maplibregl-canvas { cursor: crosshair !important; }

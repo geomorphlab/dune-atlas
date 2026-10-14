@@ -294,7 +294,8 @@ describe("cell panel", () => {
     for (const th of root.querySelectorAll(".summary tbody.tgroup-rows th")) expect(th.textContent).not.toMatch(/[()]/);
     expect(root.querySelector('.summary tr[data-field="cell"]')).toBeNull();
     expect(root.querySelector('.summary tr[data-field="hours"]')).toBeNull();
-    expect([...root.querySelectorAll(".downloads button")].map((b) => b.textContent)).toEqual(["NetCDF (.nc)", "CSV bundle (.zip)", "Citation (TXT)", "Copy citation"]);
+    expect([...root.querySelectorAll(".downloads .buttons button")].map((b) => b.textContent)).toEqual(["NetCDF (.nc)", "CSV bundle (.zip)", "Citation (TXT)", "Copy citation"]);
+    expect(root.querySelector(".downloads .bulk-guide summary")!.textContent).toBe("Get the whole grid");
     const mini = root.querySelector("#cell-ut-slider") as HTMLInputElement;
     expect(mini).not.toBeNull();
     mini.value = "40"; fire(mini, "input");

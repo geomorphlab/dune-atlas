@@ -43,6 +43,7 @@ export async function collectMarsPublicText(): Promise<Record<string, string>> {
   out["embed.bar"] = norm(document.querySelector(".embed-bar")?.textContent);
   out["panel.header"] = norm(lp.querySelector(".atlas-header")?.textContent);
   lp.querySelectorAll(".info-popover").forEach((e, k) => { out[`popover.${k}.${e.closest(".layer-item")?.getAttribute("data-layer") ?? e.closest("[data-basemap]")?.getAttribute("data-basemap") ?? e.id}`] = norm(e.textContent); });
+  lp.querySelectorAll(".bulk-guide").forEach((e, k) => { out[`bulk.about.${k}`] = norm(e.textContent); e.remove(); });   // usertextlib.ts
   out["panel.about"] = norm(lp.querySelector(".about")?.textContent);
   out["panel.pinned"] = norm(lp.querySelector(".pinned")?.textContent);
   document.querySelectorAll("#app [title]").forEach((e, k) => { out[`panel.title.${k}`] = e.getAttribute("title") ?? ""; });
@@ -54,6 +55,7 @@ export async function collectMarsPublicText(): Promise<Record<string, string>> {
   const meta = { datasetId: "fv3-beta1", datasetTitle: reg.datasets![0].title, dataVersion: "v1", permalink: "https://map.geomorphlab.org/mars/?cell=40,123", generated: new Date(0) };
   const p = new CellPanel(cp, 29, { windSectors: 16, fluxSectors: 32, onClose: () => {}, threshold: { def: reg.threshold, store }, exportMeta: () => meta, shareLink: () => "x" });
   await p.show({ query: async () => cell, attrs: { grid: cell.grid, field_vars: FIELD_VARS }, grid: cell.grid } as unknown as MarsCellStore as never, cell.iy, cell.ix);
+  cp.querySelectorAll(".bulk-guide").forEach((e, k) => { out[`bulk.cell.${k}`] = norm(e.textContent); e.remove(); });   // usertextlib.ts
   cp.querySelectorAll(".caption, .help, h2, h3, summary, th, td, .fig-legend li, label, button, .empty-state, p").forEach((e, k) => { const t = norm(e.textContent); if (t) out[`cell.${e.tagName.toLowerCase()}.${k}`] = t; });
   cp.querySelectorAll("[title]").forEach((e, k) => { out[`cell.title.${k}`] = e.getAttribute("title") ?? ""; });
   cp.querySelectorAll("[aria-label]").forEach((e, k) => { out[`cell.aria.${k}`] = e.getAttribute("aria-label") ?? ""; });

@@ -20,6 +20,7 @@ import { mathHtml } from "../util/math";
 import { aboutSourceIds, AI_NOTICE, citationHtml, citationSources, fieldsCitation, fieldsLicence } from "../cell/citation";
 import { loadPlaces, PLACES_DISCLAIMER } from "../search/places";
 import { conceptLinkHtml } from "./concepts";
+import { bulkGuideHtml, wireBulkGuide } from "./bulkguide";
 import { PROFILE } from "@body/profile";
 import { canLog, COLORMAP_GROUPS, DEFAULT_SPACING_KM, effectiveDisplay, isDirectional, SPACING_KM_STEPS, vectorColors, type RenderMode } from "../layerconfig";
 
@@ -475,6 +476,10 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
   fs.append(hint);
   body.append(fs);
 
+  // "Get the whole grid" for the selected wind dataset (ui/bulkguide.ts), re-rendered on a dataset switch
+  const bulk = h("div", { class: "bulk-wrap", html: bulkGuideHtml(store.state.dataset, "about-bulk") });
+  store.subscribe((s, ch) => { if (ch.has("dataset")) bulk.innerHTML = bulkGuideHtml(s.dataset, "about-bulk"); });
+  wireBulkGuide(bulk);
   const notice = AI_NOTICE.replace(AUTHOR_EMAIL, `<a href="mailto:${AUTHOR_EMAIL}">${AUTHOR_EMAIL}</a>`);
   body.append(h("details", { class: "about" }, h("summary", {}, "About, data sources & citation"),
     h("div", { html: `<p class="ai-notice">${notice}</p>
@@ -483,7 +488,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
       ${COMPARE_HTML}
       ${fieldsCitationHtml()}
       ${citationHtml(citationSources(aboutSourceIds()))}
-      ${ABOUT_CREDITS_NOTE_HTML}` })));
+      ${ABOUT_CREDITS_NOTE_HTML}` }), bulk));
   root.append(header, pinned, body);
   // links to a section of About (data-about = element id), e.g. the shared map-field citation of the ⓘ popovers
   root.addEventListener("click", (e) => {

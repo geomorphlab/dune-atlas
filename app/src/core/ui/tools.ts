@@ -6,6 +6,7 @@ import { h, nextId } from "./dom";
 import { BODY, bodyName, isEmbedded, otherBody, otherBodyUrl } from "../body";
 import { DOWNLOAD_EVENT } from "../cell/downloads";
 import { mathHtml } from "../util/math";
+import { newRegionState, regionForm, REGION_TEXT, type RegionOptions } from "./regionExport";
 import { CONCEPT_EVENT, CONCEPTS, conceptBodyHtml, conceptTitleHtml } from "./concepts";
 import { CONCEPTS_TEXT, EXPORT_TEXT, HELP_ABOUT_LINK, HELP_BUTTON_LABEL, HELP_RESTART, HELP_SECTIONS, HELP_TITLE, SHARE_TEXT } from "./helpText";
 
@@ -14,6 +15,8 @@ export interface ToolsOptions {
   shareLink: () => string;
   exportMap: (o: { basemap: boolean; transparent?: boolean; onProgress?: (stage: string) => void }) => Promise<{ name: string; width: number; height: number } | void>;
   openAbout: () => void;
+  /** "Download a region" (ui/regionExport.ts); the button is shown when given */
+  region?: RegionOptions;
   /** open a URL (default: location.assign); tests replace it */
   navigate?: (url: string) => void;
 }
@@ -25,6 +28,8 @@ const ICONS = {
   planet: '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="4.7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M17.79 6.85A8.4 2.7 -22 0 1 2.21 13.15M2.21 13.15A8.4 2.7 -22 0 1 5.35 9.33M12.88 6.29A8.4 2.7 -22 0 1 17.79 6.85" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
   // academic cap (mortarboard): the board, the cap below it and the tassel
   concepts: '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M10 4.2L1.8 8 10 11.8 18.2 8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.2 9.7v3.6c1.3 1.3 3 1.9 4.8 1.9s3.5-.6 4.8-1.9V9.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M17 8.6v4.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="17" cy="14" r=".9" fill="currentColor"/></svg>',
+  // dashed box with a downward arrow: a region of the grid to download
+  region: '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="2.6" y="2.6" width="14.8" height="12.2" rx="1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2.6 1.8"/><path d="M10 6v8.6M6.8 11.4L10 14.6l3.2-3.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   camera: '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M3 7h3l1.4-2h5.2L14 7h3v8.5H3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="10" cy="11" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
 };
 
@@ -33,6 +38,8 @@ export class Tools {
   #pop: HTMLElement | null = null;
   #owner: HTMLButtonElement | null = null;
   #opts: ToolsOptions;
+  #closeHook: (() => void) | null = null;
+  #region = newRegionState();
   #outside = (e: Event) => { if (this.#pop && !this.#pop.contains(e.target as Node) && !this.#owner?.contains(e.target as Node)) this.close(); };
 
   constructor(opts: ToolsOptions) {
@@ -47,6 +54,7 @@ export class Tools {
       btn("concepts-btn", CONCEPTS_TEXT.button, ICONS.concepts, (b) => this.openConcepts(undefined, b)),
       btn("share-btn", SHARE_TEXT.button, ICONS.share, (b) => this.openShare(b)),
       btn("export-btn", EXPORT_TEXT.button, ICONS.camera, (b) => this.openExport(b)),
+      ...(opts.region ? [btn("region-btn", REGION_TEXT.button, ICONS.region, (b) => void this.openRegion(b))] : []),
       this.#planetButton());
     // "Concept" links in the ⓘ popovers (data-concept) and other callers open the panel at an entry
     globalThis.document?.addEventListener("click", (e) => {
@@ -73,6 +81,9 @@ export class Tools {
   get open(): string | null { return this.#pop?.dataset.kind ?? null; }
 
   close() {
+    const hook = this.#closeHook;
+    this.#closeHook = null;
+    hook?.();
     if (!this.#pop) return;
     this.#pop.remove();
     this.#pop = null;
@@ -126,6 +137,34 @@ export class Tools {
     if (target) target.scrollIntoView?.({ block: "start" });
     ((target ?? items[0])?.querySelector("summary") as HTMLElement | null)?.focus();
     return pop;
+  }
+
+  /** "Download a region": bounds typed or drawn on the map (the popover closes while drawing and reopens with
+   *  the box), parameters, range, size estimate and download. The box is shown while the popover is open. */
+  async openRegion(owner = this.el.querySelector(".region-btn") as HTMLButtonElement) {
+    const o = this.#opts.region;
+    if (!o) return;
+    const wait = h("p", { class: "help", role: "status" }, REGION_TEXT.loading);
+    const pop = this.#openPopWith({ fit: true }, "region", owner, REGION_TEXT.title, wait);
+    let drawing = false;
+    this.#closeHook = () => { if (!drawing) o.show(null); };
+    try {
+      const ctx = await o.context();
+      if (this.#pop !== pop) return;
+      wait.replaceWith(regionForm(o, this.#region, ctx, async () => {
+        drawing = true;
+        this.close();
+        toast(REGION_TEXT.drawHint, 4000);
+        const b = await o.draw();
+        drawing = false;
+        if (b) this.#region.box = b;
+        void this.openRegion(owner);
+      }));
+      (pop.querySelector("input") as HTMLElement | null)?.focus();
+    } catch (e) {
+      console.warn("[dune-atlas] region export: grid not available", e);
+      wait.textContent = REGION_TEXT.loadFailed;
+    }
   }
 
   openShare(owner = this.el.querySelector(".share-btn") as HTMLButtonElement) {

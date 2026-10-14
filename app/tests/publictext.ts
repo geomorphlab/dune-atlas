@@ -62,6 +62,8 @@ export async function collectPublicText(auxAttrs: Record<string, Record<string, 
   const lp = document.getElementById("layer-panel")!;
   renderLayerPanel(lp, reg, store);
   lp.querySelectorAll(".info-popover").forEach((e, k) => { out[`popover.${k}.${e.closest(".layer-item")?.getAttribute("data-layer")}`] = (e.textContent ?? "").replace(/\s+/g, " ").trim(); });
+  // the "Get the whole grid" guide is for data users (Zarr stores, licence file): collected under bulk.* (usertextlib.ts)
+  lp.querySelectorAll(".bulk-guide").forEach((e, k) => { out[`bulk.about.${k}`] = (e.textContent ?? "").replace(/\s+/g, " ").trim(); e.remove(); });
   out["panel.about"] = (lp.querySelector(".about")?.textContent ?? "").replace(/\s+/g, " ").trim();
   out["panel.pinned"] = (lp.querySelector(".pinned")?.textContent ?? "").replace(/\s+/g, " ").trim();
   lp.querySelectorAll("[title]").forEach((e, k) => { out[`panel.title.${k}`] = e.getAttribute("title") ?? ""; });
@@ -75,6 +77,7 @@ export async function collectPublicText(auxAttrs: Record<string, Record<string, 
   for (const [v, a] of Object.entries(auxAttrs)) cell.aux!.attrs[v] = a;
   const p = new CellPanel(cp, 14, { windSectors: 16, fluxSectors: 32, onClose: () => {} });
   await p.show({ query: async () => cell, attrs: storeAttrs, fieldVars: FIELD_VARS } as unknown as CellStore, cell.iy, cell.ix);
+  cp.querySelectorAll(".bulk-guide").forEach((e, k) => { out[`bulk.cell.${k}`] = (e.textContent ?? "").replace(/\s+/g, " ").trim(); e.remove(); });   // usertextlib.ts
   cp.querySelectorAll(".caption, .help, h3, summary, th, .fig-legend li, label").forEach((e, k) => { out[`cell.${e.tagName.toLowerCase()}.${k}`] = (e.textContent ?? "").replace(/\s+/g, " ").trim(); });
   cp.querySelectorAll("[title]").forEach((e, k) => { out[`cell.title.${k}`] = e.getAttribute("title") ?? ""; });
   // the non-land message of each dataset
