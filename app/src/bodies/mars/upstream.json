@@ -26,11 +26,6 @@
       "mars": "src/bodies/mars/main.ts",
       "blob": "5b1e3bdcf00abcbbf142be9aafc39bee2c926492"
     },
-    "src/registry/load.ts": {
-      "kind": "patched",
-      "mars": "src/bodies/mars/patches.json (6 edits)",
-      "blob": "01b0b32b33ae2f619f86b9a15b7510485323f6b8"
-    },
     "src/ui/cellPanel.ts": {
       "kind": "substituted",
       "mars": "src/bodies/mars/ui/cellPanel.ts",

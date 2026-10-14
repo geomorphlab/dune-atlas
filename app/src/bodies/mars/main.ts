@@ -7,7 +7,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import "katex/dist/katex.min.css";
 import "../../style.css";
 import maplibregl from "maplibre-gl";
-import { loadRegistry } from "../../registry/load"; // Mars registry via the checked patches of registry/load.ts
+import { loadRegistry } from "../../registry/load"; // Mars registry via @body/registry
 import { applyDatasetLayers, layersForDatasetSwitch, resolveSource, selectDataset } from "../../registry/merge";
 import { CONFIG } from "../../config";
 import { parseUrlState, serializeUrlState, type UrlState } from "../../urlstate";

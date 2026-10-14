@@ -8,7 +8,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { MARS_PATCHES, MARS_SUBSTITUTES } from "../../src/bodies/mars/build";
+import { MARS_SUBSTITUTES } from "../../src/bodies/mars/build";
 import upstream from "../../src/bodies/mars/upstream.json";
 
 interface Entry { kind: "substituted" | "patched" | "derived"; mars: string; blob: string }
@@ -19,8 +19,8 @@ const hasGit = (() => { try { git("rev-parse", "--show-toplevel"); return true; 
 const ROOT = hasGit ? git("rev-parse", "--show-toplevel") : "";
 
 describe("Mars drift guard (src/bodies/mars/upstream.json)", () => {
-  it("records every substituted and every patched Earth module", () => {
-    const missing = [...Object.keys(MARS_SUBSTITUTES), ...MARS_PATCHES.map((p) => p.file)].filter((p) => !MODULES[p]);
+  it("records every substituted Earth module", () => {
+    const missing = Object.keys(MARS_SUBSTITUTES).filter((p) => !MODULES[p]);
     expect(missing, "add with: node scripts/mars/app/reconcile.mjs --sync").toEqual([]);
     for (const [p, e] of Object.entries(MODULES)) {
       expect(e.blob, p).toMatch(/^[0-9a-f]{40}$/);

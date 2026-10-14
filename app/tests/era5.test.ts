@@ -35,7 +35,7 @@ const ERA5_GRID: Grid = { lat0: 90, dlat: -0.25, lon0: -180, dlon: 0.25, ny: 721
 
 describe("registry: ERA5 dataset", () => {
   const reg = loadRegistry().registry;
-  it("two datasets; ERA5 entry from registry/datasets/era5; merged registry validates", () => {
+  it("two datasets; ERA5 entry from registry/earth/datasets/era5; merged registry validates", () => {
     expect(reg.datasets!.map((d) => [d.id, d.title, d.prefix])).toEqual([
       ["era5-land", "ERA5-Land 0.1°, 1950–2024", "dune-atlas/v1"],
       ["era5", "ERA5 0.25°, 1950–2024", "dune-atlas/v2/datasets/era5"], // rebuilt: land = lsm > 0
@@ -45,7 +45,7 @@ describe("registry: ERA5 dataset", () => {
     expect(validateRegistry(reg, schema)).toEqual([]);
   });
   it("ERA-Land field sources resolve to the existing keys; ERA5 to its own; shared layers unchanged", () => {
-    const head = (f: string) => (yaml.load(fs.readFileSync(path.join(REPO, "registry/generated", f), "utf8")) as { layers: { id: string; source: string }[] }).layers;
+    const head = (f: string) => (yaml.load(fs.readFileSync(path.join(REPO, "registry/earth/generated", f), "utf8")) as { layers: { id: string; source: string }[] }).layers;
     const fieldIds = [...head("qsat_fields.yaml"), ...head("x_extra_fields.yaml").filter((l) => l.id === "qsdiv")].map((l) => l.id);
     expect(fieldIds.length).toBe(24);
     for (const id of fieldIds) {

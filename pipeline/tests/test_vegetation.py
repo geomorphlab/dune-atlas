@@ -108,7 +108,7 @@ def test_registry_fragment_validates_and_is_2d():
     assert lay["display"]["colormap"] in cmaps
     import yaml
     frag = yaml.safe_load(VG.FRAGMENT.read_text())
-    assert frag == VG.fragment(), "registry/generated/x_vegetation.yaml is stale: rerun `vegetation registry`"
+    assert frag == VG.fragment(), "registry/earth/generated/x_vegetation.yaml is stale: rerun `vegetation registry`"
 
 
 @pytest.mark.skipif(not STAGED_NC.exists(), reason="staged vegetation NetCDF not present")

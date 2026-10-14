@@ -189,7 +189,7 @@ def test_extra_registry_fragment_validates():
     assert ids["qsdiv"]["display"]["transform"] == "scale" and ids["qsdiv"]["display"]["scale"] == 1000.0
     assert set(ids["aridity"]["attribution"]) >= {"source", "citation", "doi", "licence", "url"}
     import yaml
-    assert yaml.safe_load((REPO / "registry" / "generated" / "x_extra_fields.yaml").read_text()) == frag
+    assert yaml.safe_load((REPO / "registry" / "earth" / "generated" / "x_extra_fields.yaml").read_text()) == frag
 
 
 def test_bitround_bound_used_for_reports():

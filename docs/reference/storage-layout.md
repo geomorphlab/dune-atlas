@@ -71,7 +71,7 @@ dune-atlas/v1`); every further wind dataset gets its own prefix `dune-atlas/<ver
 relative layout, so registry sources written as `{dataset}/...` resolve for either dataset. Published objects are
 immutable (and edge-cached as such), so a rebuilt dataset goes to a new version prefix.
 
-- **Current ERA5 stores: `dune-atlas/v2/datasets/era5/`** (registry `registry/datasets/era5/dataset.yaml`), land
+- **Current ERA5 stores: `dune-atlas/v2/datasets/era5/`** (registry `registry/earth/datasets/era5/dataset.yaml`), land
   cells = ERA5 land–sea mask fraction lsm > 0 (394,899 cells, 38.0 %), built 2026-10-14.
 - First build, `dune-atlas/v1/datasets/era5/` (land = lsm > 0.5, 351,848 cells; same layout, 8,663 objects,
   5.064 GB): kept until the app has switched to v2.

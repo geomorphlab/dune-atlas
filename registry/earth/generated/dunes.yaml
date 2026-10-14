@@ -1,5 +1,5 @@
 # Dune map registry fragment (dune-atlas track: dune map PMTiles; raster fallback layer retired 2026-10-12).
-# Fragment merged into registry/layers.yaml: {groups, layers}; each layer validates against
+# Fragment merged into registry/earth/layers.yaml: {groups, layers}; each layer validates against
 # registry/layers.schema.json $defs/layer. Vector features: MVT feature id = field id
 # (1 = largest); properties cells, area_km2, lon, lat (centroid), west/south/east/north (bbox).
 # `style` keys: fill -> MapLibre fill-layer paint (the app draws vector layers as fills only).

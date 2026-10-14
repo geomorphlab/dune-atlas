@@ -1,5 +1,5 @@
-// Merge the hand-written registry (registry/layers.yaml) with generated fragments
-// (registry/generated/*.yaml, written by the pipeline). Pure; used by the app
+// Merge the hand-written registry (registry/earth/layers.yaml) with generated fragments
+// (registry/earth/generated/*.yaml, written by the pipeline). Pure; used by the app
 // (via import.meta.glob), by scripts/validate-registry.ts and by the tests.
 //
 // Rules
@@ -69,7 +69,7 @@ export function selectDataset(reg: Registry, id?: string): DatasetDef | undefine
 /** Does this source depend on the selected dataset? */
 export const isDatasetDependent = (source: string) => source.includes("{dataset}");
 
-/** Registry files of an additional wind dataset (registry/datasets/<id>/): `dataset.yaml` (a list
+/** Registry files of an additional wind dataset (registry/earth/datasets/<id>/): `dataset.yaml` (a list
  *  with its `datasets` entry) and fragments named like the generated ones (qsat_fields.yaml,
  *  x_extra_fields.yaml) that replace them for that dataset. */
 export interface DatasetFiles { id: string; entries: DatasetDef[]; fragments: [string, RegistryFragment][] }

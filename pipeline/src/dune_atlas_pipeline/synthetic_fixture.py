@@ -97,8 +97,8 @@ class Synth:
     def __init__(self, ds, land):
         self.ds, self.land = ds, land
         self.salt = 1 if ds.id == "era5-land" else 2
-        self.meta = fields.load_metadata(REPO / "registry" / ("qsat_field_metadata.json" if ds.id == "era5-land"
-                                                              else "datasets/era5/qsat_field_metadata.json"))
+        self.meta = fields.load_metadata(REPO / "registry" / "earth" / ("qsat_field_metadata.json" if ds.id == "era5-land"
+                                                                       else "datasets/era5/qsat_field_metadata.json"))
 
     @functools.lru_cache(maxsize=32)
     def hist_tile(self, ty, tx):

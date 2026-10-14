@@ -12,10 +12,10 @@ import C from "../src/generated/constants.json";
 
 const regDir = path.resolve(__dirname, "../../registry");
 const schema = JSON.parse(fs.readFileSync(path.join(regDir, "layers.schema.json"), "utf8"));
-const base = yaml.load(fs.readFileSync(path.join(regDir, "layers.yaml"), "utf8")) as Registry;
+const base = yaml.load(fs.readFileSync(path.join(regDir, "earth", "layers.yaml"), "utf8")) as Registry;
 const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
 
-describe("registry/layers.yaml", () => {
+describe("registry/earth/layers.yaml", () => {
   it("validates against layers.schema.json + semantic checks", () => {
     expect(validateRegistry(base, schema)).toEqual([]);
   });
@@ -39,7 +39,7 @@ describe("registry/layers.yaml", () => {
   });
 });
 
-describe("merged registry (layers.yaml + registry/generated/*.yaml via import.meta.glob)", () => {
+describe("merged registry (layers.yaml + registry/earth/generated/*.yaml via import.meta.glob)", () => {
   it("validates and contains no withheld field", () => {
     const m = loadRegistry();
     for (const w of C.WITHHELD_VARS) expect(m.registry.layers.some((l) => l.id === w || l.variable === w)).toBe(false);

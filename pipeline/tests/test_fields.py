@@ -131,7 +131,7 @@ def test_registry_semantics():
 
 def test_generated_yaml_is_current(tmp_path):
     import yaml
-    committed = REPO / "registry" / "generated" / "qsat_fields.yaml"
+    committed = REPO / "registry" / "earth" / "generated" / "qsat_fields.yaml"
     fresh = F.write_registry_fragment(tmp_path / "q.yaml")
     assert yaml.safe_load(committed.read_text()) == yaml.safe_load(fresh.read_text()), \
         "regenerate: python -m dune_atlas_pipeline.fields registry"

@@ -24,7 +24,7 @@ vi.stubGlobal("localStorage", { getItem: () => null, setItem: () => {}, removeIt
 const reg = loadRegistry().registry;
 const math = createMathRenderer();
 const mathSegs = (s: string | undefined) => (s ?? "").split("$").filter((_, k, a) => k % 2 === 1 && k < a.length - 1);
-const META = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../registry/qsat_field_metadata.json"), "utf8")) as Record<string, Record<string, unknown>>;
+const META = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../registry/earth/qsat_field_metadata.json"), "utf8")) as Record<string, Record<string, unknown>>;
 /** visible text: the contents of <text> elements */
 const visible = (svg: string) => [...svg.matchAll(/<text[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]).join(" ");
 const texOf = (svg: string) => [...svg.matchAll(/<g class="math[^"]*" data-tex="([^"]*)"/g)].map((m) => m[1].replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">"));

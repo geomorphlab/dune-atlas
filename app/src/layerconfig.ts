@@ -115,8 +115,8 @@ export const DEFAULT_SPACING_KM = 100;
 export const DSEP_PX_CLAMP: [number, number] = [8, 120];
 
 /** Web-Mercator ground resolution (m per CSS px) at latitude `lat` (deg), zoom `zoom`. MapLibre
- *  zoom levels are defined on 512-px tiles: 40075016.686 cos(lat) / (512 * 2^z) = 78271.52
- *  cos(lat) / 2^z (the 156543.03 constant is for 256-px tiles, one zoom level apart). */
+ *  zoom levels are defined on 512-px tiles: 2 pi R cos(lat) / (512 * 2^z), with R the body's Web
+ *  Mercator radius (Earth: 78271.52 cos(lat) / 2^z; the 156543.03 constant is for 256-px tiles). */
 export function metersPerPixel(lat: number, zoom: number, tileSize = 512): number {
   return (PROFILE.mercatorCircumferenceM * Math.cos((lat * Math.PI) / 180)) / (tileSize * 2 ** zoom);
 }

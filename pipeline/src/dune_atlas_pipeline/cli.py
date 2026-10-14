@@ -12,7 +12,7 @@
     dune-atlas qsdiv          --data DIR --out STAGING/qsdiv_native.zarr     (64 ut, m/yr)
     dune-atlas qsdiv-pyramid  --native STAGING/qsdiv_native.zarr --out STAGING/fields/qsdiv.zarr
     dune-atlas cells-aux      --data DIR --qsdiv STAGING/qsdiv_native.zarr --ai STAGING/ai_cellmeans.npz --out STAGING/cells-aux.zarr
-    dune-atlas extra-registry                                (registry/generated/x_extra_fields.yaml)
+    dune-atlas extra-registry                                (registry/earth/generated/x_extra_fields.yaml)
     dune-atlas upload-new --version v1 --work STAGING --store LOCAL=REL [...] [--target r2|local:DIR] [--resume]
                           [--prefix dune-atlas/v1/datasets/era5]
         uploads locally built stores to NEW keys <prefix>/<REL>/... (default prefix dune-atlas/<version>);

@@ -135,7 +135,7 @@ def test_registry_fragment_validates():
     yaml = pytest.importorskip("yaml")
     jsonschema = pytest.importorskip("jsonschema")
     schema = json.loads((REPO / "registry/layers.schema.json").read_text())
-    frag = yaml.safe_load((REPO / "registry/generated/dunes.yaml").read_text())
+    frag = yaml.safe_load((REPO / "registry/earth/generated/dunes.yaml").read_text())
     assert set(frag) == {"groups", "layers"}
     layer_schema = {**schema["$defs"]["layer"], "$defs": schema["$defs"]}
     group_schema = schema["properties"]["groups"]["items"]

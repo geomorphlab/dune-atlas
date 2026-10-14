@@ -1,14 +1,10 @@
-// Build-time registry assembly: registry/layers.yaml + registry/generated/*.yaml are inlined
-// by Vite (import.meta.glob, ?raw) and merged at startup. Validation runs in CI
-// (npm run validate-registry) and in tests, not in the browser.
+// Build-time registry assembly: the body's registry files (@body/registry: registry/<body>/layers.yaml,
+// generated/*.yaml, datasets/<id>/*.yaml) are inlined by Vite and merged at startup. Validation runs
+// in CI (npm run validate-registry, validate-registry:mars) and in tests, not in the browser.
 import yaml from "js-yaml";
+import { baseFiles, datasetFiles, generatedFiles, REGISTRY_DIR } from "@body/registry";
 import { addDatasets, mergeRegistry, type DatasetFiles, type MergeResult } from "./merge";
 import type { DatasetDef, Registry, RegistryFragment } from "./types";
-
-const baseFiles = import.meta.glob("../../../registry/layers.yaml", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
-const generatedFiles = import.meta.glob("../../../registry/generated/*.yaml", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
-// additional wind datasets: registry/datasets/<id>/{dataset.yaml, <fragment>.yaml}
-const datasetFiles = import.meta.glob("../../../registry/datasets/*/*.yaml", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
 
 function datasetDirs(): DatasetFiles[] {
   const by = new Map<string, DatasetFiles>();
@@ -23,7 +19,7 @@ function datasetDirs(): DatasetFiles[] {
 
 export function loadRegistry(): MergeResult {
   const baseText = Object.values(baseFiles)[0];
-  if (!baseText) throw new Error("registry/layers.yaml not found at build time");
+  if (!baseText) throw new Error(`${REGISTRY_DIR}/layers.yaml not found at build time`);
   const base = yaml.load(baseText) as Registry;
   const frags = Object.entries(generatedFiles).map(([path, text]) => [path.split("/").pop()!, yaml.load(text) as RegistryFragment] as [string, RegistryFragment]);
   return addDatasets(mergeRegistry(base, frags), base, frags, datasetDirs());

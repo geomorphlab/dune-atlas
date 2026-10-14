@@ -122,7 +122,7 @@ export interface Registry {
   layers: LayerDef[];
 }
 
-/** A generated fragment (registry/generated/*.yaml): only groups and layers. */
+/** A generated fragment (registry/earth/generated/*.yaml): only groups and layers. */
 export interface RegistryFragment {
   groups?: GroupDef[];
   layers?: LayerDef[];

@@ -17,7 +17,7 @@ export default defineConfig({
   resolve: { alias: [{ find: /^@body\//, replacement: `${BODY_DIR}/` }] },
   server: {
     port: 5173,
-    // registry/*.yaml and registry/qsat_field_metadata.json live one level above app/
+    // registry/*.yaml and registry/earth/qsat_field_metadata.json live one level above app/
     fs: { allow: [".."] },
   },
   build: {

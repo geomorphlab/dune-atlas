@@ -1,6 +1,6 @@
 # dune-atlas layer registry (hand-written part). Validated against layers.schema.json by
 # `npm run validate-registry` (CI). At build time the app merges this file with every
-# registry/generated/*.yaml fragment ({groups, layers}) written by the pipeline; a generated
+# registry/earth/generated/*.yaml fragment ({groups, layers}) written by the pipeline; a generated
 # layer with the same id REPLACES the entry here (see app/src/registry/merge.ts).
 version: 1
 dataBase: https://data.geomorphlab.org   # overridden by VITE_DATA_BASE at build time
@@ -97,7 +97,7 @@ basemaps:
       url: "https://openfreemap.org/"
 
 groups:
-  # ids match registry/generated/*.yaml so the generated fragments update these in place
+  # ids match registry/earth/generated/*.yaml so the generated fragments update these in place
   - id: dunes
     title: Dunes
   - id: orientation
@@ -120,8 +120,8 @@ groups:
 layers:
   # ---------------------------------------------------------------------------------------
   # PLACEHOLDERS matching staging/fixture (fields/<var>.zarr for at ae qacb sige_sigh uft,
-  # dunes.geojson). Superseded by registry/generated/qsat_fields.yaml and
-  # registry/generated/dunes.yaml (same ids) when those exist.
+  # dunes.geojson). Superseded by registry/earth/generated/qsat_fields.yaml and
+  # registry/earth/generated/dunes.yaml (same ids) when those exist.
   # Withheld fields (constants.WITHHELD_VARS, currently none) must not appear here;
   # validate-registry rejects them.
   # ---------------------------------------------------------------------------------------
