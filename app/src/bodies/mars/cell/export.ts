@@ -9,14 +9,15 @@ import { nUt } from "../../../cell/cellstore";
 import { DEFAULT_BINS } from "../../../cell/flux";
 import { csvColumnDoc, csvColumnJson, csvTable, fieldMeta, fmtF32, fmtF64, exportBaseName, versionFromPrefix, rose16Columns, rose16Csv, CSV_LAYOUT_TEXT, DIR_COLUMNS, INSTITUTION, LICENSE, ROSE16_FILE, ROSE_MODES, type CsvColumn, type ExportMeta } from "../../../cell/export";
 import { latLonText } from "../../../cell/downloads";
-import { AI_NOTICE, CELL_SOURCE_IDS, citationJson, citationSources, citationText, fieldsCitation, fieldsLicence, referencesLine } from "../../../cell/citation";
+import { AI_NOTICE, citationJson, citationSources, citationText, referencesLine } from "../../../cell/citation";
+import { CELL_SOURCE_IDS, fieldsCitation, fieldsLicence } from "@body/citation";
 import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "../../../cell/auxinfo";
 import { datasetInfo, resolutionText, type DatasetInfo } from "../../../cell/datasetinfo";
 import { writeNetcdf3, type NcAttrs, type NcVariable } from "../../../cell/netcdf3";
 import { writeZip, type DeflateRaw } from "../../../cell/zip";
 import type { MarsCellData } from "./cellstore";
 import { analyseMarsCell, marsModeRoses } from "./analysis";
-import { PD23_TEXT, PAHTZ_DURAN_DOI } from "./citation";
+import { PD23_TEXT, PAHTZ_DURAN_DOI } from "../citation";
 
 export { exportBaseName, versionFromPrefix, type ExportMeta };
 

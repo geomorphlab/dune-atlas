@@ -1,13 +1,8 @@
-// Mars citations (replaces cell/citation.ts in the Mars build; every export of the Earth module
-// is still provided so shared modules keep compiling). Entries may have a DOI or only a URL.
-// No Copernicus notice applies to Mars data: the C3S notice constants are empty strings.
-import { richHtml } from "../../../util/richtext";
-export { AI_NOTICE, PAPER_DOI, DATA_DOI, DUNE_MAP_DOI, DUNE_MAP_LABEL, ERA5LAND_DOI, ERA5LAND_PAPER_DOI, ERA5_DOI, ERA5_PAPER_DOI } from "../../../cell/citation";
-import { PAPER_DOI } from "../../../cell/citation";
-
-/** One citable work: DOI (preferred) or URL. */
-export interface CitationEntry { label: string; text: string; doi: string; url?: string; license?: string }
-export interface CitationSource { id: string; title: string; entries: CitationEntry[]; notice?: string }
+// Mars citations: the sources cited for the wind dataset, cell downloads and layers (entries may have
+// a DOI or only a URL), the citation of the atlas-derived fields and the credit lines of image exports.
+// Formatting: cell/citation.ts. No Copernicus notice applies to Mars data (the notices are empty).
+import type { CitationSource } from "../../cell/citation";
+import { PAPER_DOI } from "../../cell/paper";
 
 /** Mars data are not Copernicus information: no notice (kept for the shared imports). */
 export const C3S_NOTICE = "";
@@ -42,7 +37,7 @@ export const CITATION_SOURCES: Record<string, CitationSource> = {
   "dune-atlas-mars": {
     id: "dune-atlas-mars", title: "Mars Dune Atlas (method)",
     entries: [
-      { label: "Method (wind-regime and dune-orientation fields)", text: "Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications.", doi: PAPER_DOI },
+      { label: "Method (wind-regime and dune-orientation fields)", key: "method_wind_regime_and_dune_orientation_fields", text: "Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications.", doi: PAPER_DOI },
     ],
     notice: "Mars wind series, sand-flux fields and flux divergence computed for the Mars Dune Atlas from the FV3 lowest-level winds with the transport law of Pähtz & Durán (2023) and the methods outlined in Gunn (2026).",
   },
@@ -76,49 +71,26 @@ export function datasetSourceIds(_datasetId?: string): string[] { void _datasetI
 /** sources of a cell download besides the dataset ones (elevation: the DEM) */
 export const CELL_SOURCE_IDS = ["dem"];
 
-export function citationSources(extra: string[] = [], datasetId?: string): CitationSource[] {
-  const base = datasetSourceIds(datasetId);
-  const ids = [...base, ...extra.filter((x) => !base.includes(x))];
-  return ids.map((id) => CITATION_SOURCES[id]).filter((x): x is CitationSource => !!x);
-}
-
-export const CITATIONS: (CitationEntry & { source: string })[] = citationSources().flatMap((s) => s.entries.map((e) => ({ ...e, source: s.title })));
-
-/** link of an entry: https://doi.org/<doi>, else its URL */
-export const entryLink = (e: CitationEntry) => (e.doi ? `https://doi.org/${e.doi}` : e.url ?? "");
-
-export function citationText(extra = "", sources: CitationSource[] = citationSources()): string {
-  const lines: string[] = [...(extra ? [extra, ""] : []), "Please cite:", ""];
-  for (const s of sources) {
-    lines.push(s.title);
-    for (const e of s.entries) lines.push(`  ${e.label}: ${e.text} ${entryLink(e)}${e.license ? ` (${e.license})` : ""}`);
-    if (s.notice) lines.push(`  ${s.notice}`);
-    lines.push("");
-  }
-  return lines.join("\n");
-}
-
-export function referencesLine(sources: CitationSource[] = citationSources()): string {
-  return sources.map((s) => `${s.title}: ${s.entries.map((e) => `${e.label}: ${e.text} ${entryLink(e)}`).join(" ")}${s.notice ? ` ${s.notice}` : ""}`).join(" | ");
-}
-
-export function citationJson(sources: CitationSource[] = citationSources()) {
-  return sources.map((s) => {
-    const seen = new Map<string, number>();
-    const keys = s.entries.map((e) => { const k = e.label.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/_+$/, ""); const n = (seen.get(k) ?? 0) + 1; seen.set(k, n); return n === 1 ? k : `${k}_${n}`; });
-    return { source: s.title, id: s.id, ...Object.fromEntries(s.entries.map((e, i) => [keys[i], { text: e.text, ...(e.doi ? { doi: e.doi } : {}), url: entryLink(e), ...(e.license ? { license: e.license } : {}) }])), ...(s.notice ? { notice: s.notice } : {}) };
-  });
-}
-
-const esc = (t: string) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-export function citationHtml(sources: CitationSource[] = citationSources()): string {
-  const link = (e: CitationEntry) => (e.doi ? `<a href="https://doi.org/${e.doi}" target="_blank" rel="noopener">doi:${e.doi}</a>` : e.url ? `<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.url.replace(/^https?:\/\//, ""))}</a>` : "");
-  return `<ul class="cite-list">${sources.map((s) => `<li><strong>${esc(s.title)}</strong><ul>${s.entries.map((e) => `<li>${esc(e.label)}: ${esc(e.text)} ${link(e)}</li>`).join("")}</ul>${s.notice ? `<p class="help">${richHtml(s.notice)}</p>` : ""}</li>`).join("")}</ul>`;
-}
-
 /** Map attribution of the wind-regime fields (Earth: follows the selected dataset); the Mars map attribution is
- *  set in src/bodies/mars/main.ts. Exported so the Mars module has the Earth module's names. */
+ *  set in src/bodies/mars/main.ts. */
 export function mapAttributionHtml(datasetId: string): string {
   void datasetId;
   return "";
 }
+
+/** the wind line of image exports (map and plots) */
+export function windSourceText(datasetId: string): string {
+  void datasetId;
+  return `Wind: MCMC FV3 Mars GCM beta release 1 (NASA Ames Mars Climate Modeling Center), hourly lowest-level wind, one Mars year, 2°; https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/`;
+}
+/** image exports: the data line of a plot (the wind line appended) */
+export const plotDataCredit = (windText: string) => `Methods outlined in Gunn, A. (2026) Nature Communications, doi:${PAPER_DOI}; transport law: Pähtz & Durán (2023) J. Fluid Mech. 963, A20, doi:10.1017/jfm.2023.343. ${windText}`;
+/** map exports: the dune-map line */
+export const MAP_DUNE_CREDIT = `Dune map: USGS Mars Global Digital Dune Database (Hayward et al. 2007, 2010, 2012, 2014) and Fenton (2020), merged. Wind-regime methods outlined in Gunn, A. (2026) Nature Communications, doi:${PAPER_DOI}; transport law: Pähtz & Durán (2023) J. Fluid Mech. 963, A20, doi:10.1017/jfm.2023.343.`;
+/** map exports: the credit line of an external layer, written when that layer is visible (in this order) */
+export const MAP_LAYER_CREDITS: Record<string, string> = {
+  elevation: "Elevation: MGS MOLA – MEX HRSC blended DEM 200 m v2 (Fergason, Hare & Laura 2018, USGS Astrogeology); MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO).",
+  rho_mean: "Air density: MCMC FV3 Mars GCM beta release 1, lowest layer p/(R T), mean over the Mars year.",
+};
+/** About, Citation: the sources listed besides the default dataset's */
+export const ABOUT_SOURCE_IDS = ["dem"];

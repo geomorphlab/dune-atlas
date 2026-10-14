@@ -8,7 +8,9 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "paths": { "@body/*": ["./src/bodies/earth/*"] }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/bodies/mars"]
 }

@@ -1,7 +1,7 @@
 // Dataset text and map attribution follow the dataset table.
 import { describe, expect, it } from "vitest";
 import { DATASET_INFO, datasetFacts } from "../src/cell/datasetinfo";
-import { mapAttributionHtml } from "../src/cell/citation";
+import { mapAttributionHtml } from "@body/citation";
 import { DATASET_INFO_TEXT } from "../src/ui/helpText";
 import { THRESHOLD_INFO_DEFAULT } from "../src/ui/threshold";
 import { storedNote } from "../src/cell/export";

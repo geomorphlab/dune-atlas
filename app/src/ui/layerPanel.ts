@@ -17,7 +17,8 @@ import { DATASET_INFO, datasetFacts, datasetInfo, datasetSourceItem, datasetTool
 import { fieldInfo } from "../cell/fieldinfo";
 import { isDatasetDependent } from "../registry/merge";
 import { mathHtml } from "../util/math";
-import { AI_NOTICE, citationHtml, citationSources, fieldsCitation, fieldsLicence } from "../cell/citation";
+import { AI_NOTICE, citationHtml, citationSources } from "../cell/citation";
+import { fieldsCitation, fieldsLicence } from "@body/citation";
 import { canLog, COLORMAP_GROUPS, DEFAULT_SPACING_KM, effectiveDisplay, isDirectional, SPACING_KM_STEPS, vectorColors, type RenderMode } from "../layerconfig";
 
 /** screen-reader names of the spacing steps (finest to coarsest); no units, as on screen */

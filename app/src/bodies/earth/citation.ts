@@ -1,0 +1,127 @@
+// Earth citations: the sources cited for each wind dataset, cell download and layer, the citation
+// of the atlas-derived fields and the credit lines of image exports. Formatting: cell/citation.ts.
+import { escapeHtml } from "../../util/format";
+import { datasetInfo } from "../../cell/datasetinfo";
+import type { CitationSource } from "../../cell/citation";
+import { PAPER_DOI } from "../../cell/paper";
+
+/** Supplementary Data record (CC BY 4.0): wind histograms and qsat parameter fields */
+export const DATA_DOI = "10.5281/zenodo.20046812";
+export const ERA5LAND_DOI = "10.24381/cds.e2161bac";
+export const ERA5LAND_PAPER_DOI = "10.5194/essd-13-4349-2021";
+export const ERA5_DOI = "10.24381/cds.adbb2d47";
+export const ERA5_PAPER_DOI = "10.1002/qj.3803";
+
+/** Citation of the atlas-derived map fields of a wind dataset, one format everywhere (info popover, About,
+ *  downloads): "Gunn, A. (2026). ... doi:...; [data: ...;] winds: ...". The registry citations
+ *  (pipeline fields.fields_citation) are the same strings; tests compare them. */
+const PAPER_CITATION = `Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications. doi:${PAPER_DOI}`;
+export function fieldsCitation(datasetId: string): string {
+  return datasetId === "era5"
+    ? `${PAPER_CITATION}; winds: ERA5 hourly 10 m winds 1950–2024 (Hersbach, H. et al. (2020). The ERA5 global reanalysis. Quarterly Journal of the Royal Meteorological Society 146, 1999–2049. doi:${ERA5_PAPER_DOI}; data: Hersbach, H. et al. (2023). ERA5 hourly data on single levels from 1940 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). doi:${ERA5_DOI})`
+    : `${PAPER_CITATION}; data: Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812; winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:${ERA5LAND_PAPER_DOI})`;
+}
+/** Map attribution line of the dune map and the wind-regime fields, following the selected dataset:
+ *  fields from the paper's data record (ERA5-Land) are Gunn (2026) data, CC BY 4.0; fields computed for the atlas
+ *  (ERA5) carry the wind data's licence. */
+export function mapAttributionHtml(datasetId: string): string {
+  const d = datasetInfo(datasetId), paper = `<a href="https://doi.org/${PAPER_DOI}" target="_blank" rel="noopener">Gunn (2026)</a>`;
+  return d.fieldsFrom === "paper"
+    ? `Dune and wind-regime data: ${paper}, CC BY 4.0`
+    : `Dune map: ${paper}, CC BY 4.0; wind-regime fields computed for the atlas from ${escapeHtml(d.name)} ${escapeHtml(d.resolution)} with the methods outlined in ${paper}, ${escapeHtml(fieldsLicence(datasetId))}`;
+}
+/** Licence of the atlas-derived map fields of a wind dataset. */
+export const fieldsLicence = (datasetId: string) => (datasetId === "era5" ? "Copernicus licence (Licence to use Copernicus products)" : "CC BY 4.0 (Zenodo Supplementary Data)");
+
+/** Supplementary Code record (v1.0.0, MIT), which contains the dune map (dune-mask-rev1.tif) */
+export const DUNE_MAP_DOI = "10.5281/zenodo.20054674";
+/** label of that entry: the record's Zenodo title is kept, the label says it is the dune map */
+export const DUNE_MAP_LABEL = "Data (dune map: dune-mask-rev1.tif, contained in the Supplementary Code record)";
+
+export const C3S_NOTICE = "Contains modified Copernicus Climate Change Service information (ERA5-Land, 1950–2024). Neither the European Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data it contains.";
+export const C3S_NOTICE_ERA5 = "Contains modified Copernicus Climate Change Service information (ERA5, 1950–2024). Neither the European Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data it contains.";
+
+/** All known sources. Only those in DEFAULT_SOURCE_IDS (plus ids requested by active layers via
+ *  citationSources(extra)) are cited; 'aridity' is the hook for the aridity-index layer (add its
+ *  id to the layer's citation list / DEFAULT_SOURCE_IDS when that layer lands). */
+export const CITATION_SOURCES: Record<string, CitationSource> = {
+  "dune-atlas": {
+    id: "dune-atlas", title: "Dune Atlas / dune map",
+    entries: [
+      { label: "Paper", text: "Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications.", doi: PAPER_DOI },
+      // Supplementary Data record: the wind histograms and qsat parameter fields
+      { label: "Data (wind histograms and sand-flux fields)", text: "Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes - Supplementary Data. Zenodo.", doi: DATA_DOI, license: "CC BY 4.0" },
+      // Supplementary Code record: contains the dune map (dune-mask-rev1.tif)
+      { label: DUNE_MAP_LABEL, text: "Gunn, A. (2026). geomorphlab/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code (v1.0.0). Zenodo.", doi: DUNE_MAP_DOI, license: "MIT", key: "data_dune_map" },
+    ],
+  },
+  // ERA5 dataset: wind histograms and sand-flux fields computed for the atlas (not in the
+  // Supplementary Data record), with the method of the paper; the dune map as for ERA5-Land
+  "dune-atlas-era5": {
+    id: "dune-atlas-era5", title: "Dune Atlas / dune map",
+    entries: [
+      { label: "Paper", text: "Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications.", doi: PAPER_DOI },
+      { label: DUNE_MAP_LABEL, text: "Gunn, A. (2026). geomorphlab/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code (v1.0.0). Zenodo.", doi: DUNE_MAP_DOI, license: "MIT", key: "data_dune_map" },
+    ],
+    notice: "ERA5 wind histograms and sand-flux fields computed for the Dune Atlas from ERA5 hourly 10 m winds with the methods outlined in Gunn (2026).",
+  },
+  "era5-land": {
+    id: "era5-land", title: "ERA5-Land",
+    entries: [
+      { label: "Paper", text: "Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383.", doi: ERA5LAND_PAPER_DOI },
+      { label: "Data", text: "Muñoz Sabater, J. (2019). ERA5-Land hourly data from 1950 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS).", doi: ERA5LAND_DOI },
+    ],
+    notice: C3S_NOTICE,
+  },
+  era5: {
+    id: "era5", title: "ERA5",
+    entries: [
+      { label: "Paper", text: "Hersbach, H. et al. (2020). The ERA5 global reanalysis. Quarterly Journal of the Royal Meteorological Society 146, 1999–2049.", doi: ERA5_PAPER_DOI },
+      { label: "Data", text: "Hersbach, H. et al. (2023). ERA5 hourly data on single levels from 1940 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS); accessed via the NCI Australia replica.", doi: ERA5_DOI },
+    ],
+    notice: C3S_NOTICE_ERA5,
+  },
+  aridity: {
+    id: "aridity", title: "Global Aridity Index (Global-AI_PET v3.1)",
+    entries: [
+      { label: "Paper", text: "Zomer, R. J., Xu, J. & Trabucco, A. (2022). Version 3 of the Global Aridity Index and Potential Evapotranspiration Database. Scientific Data 9, 409.", doi: "10.1038/s41597-022-01493-1" },
+      { label: "Data", text: "Zomer, R. J. & Trabucco, A. Global Aridity Index and Potential Evapotranspiration (ET0) Database: Version 3.1 (Global-AI_PET v3.1). Figshare.", doi: "10.6084/m9.figshare.7504448.v7", license: "CC BY 4.0" },
+    ],
+  },
+  vegetation: {
+    id: "vegetation", title: "Vegetation cover (CSIRO MODIS Fractional Cover v3.1)",
+    entries: [
+      { label: "Paper", text: "Guerschman, J. P. et al. (2015). Assessing the effects of site heterogeneity and soil properties when unmixing photosynthetic vegetation, non-photosynthetic vegetation and bare soil fractions from Landsat and MODIS data. Remote Sensing of Environment 161, 12–26.", doi: "10.1016/j.rse.2015.01.021" },
+      { label: "Paper", text: "Guerschman, J. P. & Hill, M. J. (2018). Calibration and validation of the Australian fractional cover product for MODIS collection 6. Remote Sensing Letters 9, 696–705.", doi: "10.1080/2150704X.2018.1465611" },
+      { label: "Data", text: "Guerschman, J. (2014). Fractional cover - MODIS, CSIRO algorithm (v3.1). CSIRO; hosted by NCI.", doi: "10.4225/08/5848a3f19a7b3", license: "CC BY 4.0, © 2008–2019 CSIRO" },
+    ],
+    notice: "Full monthly time series: GEOGLAM RAPP Map, https://map.geo-rapp.org/",
+  },
+};
+export const DEFAULT_SOURCE_IDS = ["dune-atlas", "era5-land"];
+/** the atlas + reanalysis sources of a wind dataset (default: ERA5-Land) */
+export function datasetSourceIds(datasetId?: string): string[] {
+  return datasetId === "era5" ? ["dune-atlas-era5", "era5"] : DEFAULT_SOURCE_IDS;
+}
+/** sources of a cell download (the cells-aux sidecars carry the aridity and vegetation cell means) */
+export const CELL_SOURCE_IDS = ["aridity", "vegetation"];
+
+/** the wind line of image exports (map and plots): name and period from the dataset table (cell/datasetinfo.ts) */
+export function windSourceText(datasetId: string): string {
+  const d = datasetInfo(datasetId);
+  return datasetId === "era5"
+    ? `Wind: ${d.name} hourly 10 m wind ${d.period} (Hersbach et al. 2020, doi:${ERA5_PAPER_DOI}; data doi:${ERA5_DOI}); statistics computed for the Dune Atlas with the methods outlined in Gunn (2026). ${C3S_NOTICE_ERA5}`
+    : `Wind: ${d.name} hourly 10 m wind ${d.period} (Muñoz-Sabater et al. 2021, doi:${ERA5LAND_PAPER_DOI}; data doi:${ERA5LAND_DOI}); statistics from Gunn (2026). ${C3S_NOTICE}`;
+}
+
+/** image exports: the data line of a plot (the wind line appended) */
+export const plotDataCredit = (windText: string) => `Data: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}. ${windText}`;
+/** map exports: the dune-map line */
+export const MAP_DUNE_CREDIT = `Dune map: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}; wind-regime fields with the methods outlined there.`;
+/** map exports: the credit line of an external layer, written when that layer is visible (in this order) */
+export const MAP_LAYER_CREDITS: Record<string, string> = {
+  aridity: "Aridity: Global Aridity Index v3.1 (Zomer, Xu & Trabucco 2022, doi:10.1038/s41597-022-01493-1; data doi:10.6084/m9.figshare.7504448.v7), CC BY 4.0.",
+  vegetation: "Vegetation cover: CSIRO MODIS Fractional Cover v3.1 (Guerschman et al. 2015, doi:10.1016/j.rse.2015.01.021; data doi:10.4225/08/5848a3f19a7b3), CC BY 4.0, © 2008–2019 CSIRO.",
+};
+/** About, Citation: the sources listed besides the default dataset's */
+export const ABOUT_SOURCE_IDS = ["era5", "aridity", "vegetation"];

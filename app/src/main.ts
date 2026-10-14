@@ -16,7 +16,7 @@ import { versionFromPrefix } from "./cell/export";
 import { CellPanel, readPlotChoice, defaultFieldLabel, type FieldLabel } from "./ui/cellPanel";
 import { CellStore } from "./cell/cellstore";
 import { cellFeature, cellFromIndex, snapToCell, ERA5_LAND_GRID, type Grid } from "./cell/snap";
-import { C3S_NOTICE, mapAttributionHtml } from "./cell/citation";
+import { C3S_NOTICE, mapAttributionHtml } from "@body/citation";
 import { centreOnCell } from "./map/centre";
 import { terseQuantity } from "./ui/terse";
 import { mathOnly } from "./util/math";

@@ -8,7 +8,7 @@
     "build": "npm run typecheck && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.node.json",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.node.json && tsc -p tsconfig.mars.json",
     "validate-registry": "vite-node scripts/validate-registry.ts",
     "check-cell-query": "vite-node scripts/check-cell-query.ts --",
     "check-decode": "node scripts/check-decode.mjs",
