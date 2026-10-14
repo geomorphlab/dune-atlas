@@ -138,3 +138,11 @@ NetCDF, an xarray read-back of fixture exports (`npm run check-region`).
 | note 3: aridity | no change |
 | note 4: derived Mars elevation | "Derived elevation and relief tiles: CC BY-SA 3.0 IGO." in the elevation and relief-basemap ⓘ, About and per-cell downloads |
 | note 5: Mars dune polygons | "MGD3 polygons: public domain (U.S. Geological Survey)"; Fenton (2020) listed as a source without a licence statement (pending the author's confirmation) |
+
+## Dune-field name labels and the Mars longitude convention (PR #7)
+
+| decision | done |
+|---|---|
+| 'Show names' labels | symbol layer from the place list (Mars; Earth hidden while its list is disabled), default off, remembered per body, in both link forms; label from 48 px feature size, 10–14 px italic text, priority by size; pale sand / dark brown by the basemap `tone` (new registry field); above data, below the selected-cell highlight and the basemap labels; label click (or search pick) zooms and opens a popup; in map exports with a source line |
+| Earth preparation | fixture list with Arabic, Persian, Urdu, Chinese, Cyrillic and Tibetan names: RTL text plugin bundled and lazily registered, CJK via `localIdeographFontFamily`, Tibetan (complex shaping) in the popup only |
+| Mars longitudes −180° to 180° everywhere | place list, search echo (0–360° E input converted, e.g. 354.80 → −5.20), region bounds and export titles, help text |

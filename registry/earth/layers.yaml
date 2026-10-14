@@ -79,6 +79,7 @@ basemaps:
   - id: openfreemap-dark
     title: Dark (OpenFreeMap)
     kind: style
+    tone: dark              # dune-name labels: pale on dark, dark brown on light (map/placelabels.ts)
     style: https://tiles.openfreemap.org/styles/dark
     attribution: "OpenFreeMap © OpenMapTiles Data from OpenStreetMap"
     default: true             # the atlas UI is dark-themed
@@ -92,6 +93,7 @@ basemaps:
     title: Satellite imagery (Esri)
     imagery: true
     kind: raster
+    tone: light
     tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"]
     tileSize: 256
     maxzoom: 19
@@ -105,6 +107,7 @@ basemaps:
   - id: hillshade
     title: Shaded relief (Mapterhorn, 2D)
     kind: hillshade
+    tone: dark              # dune-name labels: pale on dark, dark brown on light (map/placelabels.ts)
     # Mapterhorn: Terrarium-encoded 512 px WebP tiles, global ~30 m (z12), finer in some countries.
     # Alternative: AWS Terrain Tiles https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png (256 px, z15).
     tiles: ["https://tiles.mapterhorn.com/{z}/{x}/{y}.webp"]
@@ -121,6 +124,7 @@ basemaps:
   - id: opentopomap
     title: Topographic (OpenTopoMap)
     kind: raster
+    tone: light
     tiles:
       - "https://a.tile.opentopomap.org/{z}/{x}/{y}.png"
       - "https://b.tile.opentopomap.org/{z}/{x}/{y}.png"
@@ -137,6 +141,7 @@ basemaps:
   - id: openfreemap-light
     title: Light (OpenFreeMap Positron)
     kind: style
+    tone: light
     style: https://tiles.openfreemap.org/styles/positron
     attribution: "OpenFreeMap © OpenMapTiles Data from OpenStreetMap"   # shown by the style's own sources
     info:

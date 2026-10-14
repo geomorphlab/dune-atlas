@@ -1,4 +1,4 @@
-// Mars region export: the 2° grid across 0° E (0-360 east bounds), hourly series in the file (lat, lon, hour),
+// Mars region export: the 2° grid across 0° E (bounds -180..180 east-positive; 0-360 input gives the same box), hourly series in the file (lat, lon, hour),
 // the dune fraction, the grain-diameter axis d, east longitudes in the title.
 import { describe, expect, it } from "vitest";
 import { boxCells, boxText, regionNetcdf, type RegionMeta } from "../../src/core/export/region";
@@ -24,7 +24,8 @@ describe("Mars region export", () => {
     const c = boxCells({ west: 350, east: 10, south: 0, north: 4 }, MARS_GRID);
     expect(c.lons).toEqual([-9, -7, -5, -3, -1, 1, 3, 5, 7, 9]);
     expect(c.lats).toEqual([3, 1]);
-    expect(boxText({ west: 350, east: 10, south: 0, north: 4 })).toBe("0.00° N to 4.00° N, 350.00° E to 10.00° E");
+    expect(boxText({ west: 350, east: 10, south: 0, north: 4 })).toBe("0.00° N to 4.00° N, 10.00° W to 10.00° E");
+    expect(boxCells({ west: -10, east: 10, south: 0, north: 4 }, MARS_GRID)).toEqual(c);
   });
   it("hourly series (lat, lon, hour), dune fraction, the d axis", () => {
     const box = { west: 350, east: 354, south: 0, north: 4 };
@@ -38,7 +39,7 @@ describe("Mars region export", () => {
     expect((r.vars.d.data as number[])[29]).toBe(200);
     expect(r.vars.dpm.dims).toEqual(["d", "lat", "lon"]);
     expect(String(r.vars.lat.attrs.long_name)).toContain("planetocentric");
-    expect(String(r.gatts.title)).toContain("350.00° E to 354.00° E");
+    expect(String(r.gatts.title)).toContain("10.00° W to 6.00° W");
     expect(String(r.gatts.references)).toContain("NASA Ames");
   });
 });

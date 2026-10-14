@@ -18,7 +18,7 @@ export const PROFILE: BodyProfile = {
     plotExportedFrom: "the Mars Dune Atlas",
   },
   coordsTitle: { pointer: "Cursor position (planetocentric latitude, east longitude)", touch: "Last tapped point (planetocentric latitude, east longitude)" },
-  search: { lonRange: 360, example: "e.g. 4.5, 137.4 or 4°30′N 137°24′E", conventionNote: "Planetocentric latitude, east-positive longitude (0–360° E)." },
+  search: { lonRange: 180, example: "e.g. 4.5, 137.4 or 4°30′N 137°24′E", conventionNote: "Planetocentric latitude, east-positive longitude (−180° to 180°; 0–360° E is converted)." },
   invert: {
     note: "Invert: colour the areas WITHOUT mapped dunes instead of the dunes.",
     toggleAria: "Invert: colour areas without dunes",

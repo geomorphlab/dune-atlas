@@ -82,6 +82,8 @@ export interface BasemapDef {
   default?: boolean;
   /** photographic imagery: the layer panel suggests lowering the colour layers' opacity */
   imagery?: boolean;
+  /** overall lightness: dune-name labels pale on dark basemaps, dark brown on light ones (default dark) */
+  tone?: "dark" | "light";
   /** info (i) popover: definition, Source, Resolution, Licence, Link */
   info?: { description?: string; source?: string; resolution?: string; coverage?: string; licence?: string; url?: string };
 }

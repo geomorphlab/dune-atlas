@@ -13,6 +13,7 @@ import { resolveSource } from "../registry/merge";
 import { CONFIG } from "../config";
 import { isWindDerived, loadDuneMask, type DuneMaskProvider } from "./dunemask";
 import { ADAPTERS, StaleLayerError, type LayerHandle } from "./adapters";
+import { PLACE_LABELS } from "./layerids";
 
 /** the dune map (vector polygons of the dunes group): drawn as outlines while Dunes only is on */
 export const isDuneMap = (l: LayerDef) => l.group === "dunes" && (l.type === "pmtiles-vector" || l.type === "geojson-points");
@@ -20,8 +21,11 @@ export const isDuneMap = (l: LayerDef) => l.group === "dunes" && (l.type === "pm
 /** Bottom-most map layer of the selected-cell outline (overlays go below it). */
 export const SELECTED_CELL_BOTTOM = "selected-cell-fill";
 
+export { PLACE_LABELS };
+
+/** the basemap's first label layer (the app's own name labels are not the basemap's) */
 export function firstSymbolLayer(map: MlMap): string | undefined {
-  return map.getStyle().layers.find((l) => l.type === "symbol")?.id;
+  return map.getStyle().layers.find((l) => l.type === "symbol" && l.id !== PLACE_LABELS)?.id;
 }
 
 export class OverlayManager {
@@ -68,6 +72,7 @@ export class OverlayManager {
 
   /** the anchor all overlays stay below */
   #topAnchor(): string | undefined {
+    if (this.map.getLayer(PLACE_LABELS)) return PLACE_LABELS;   // the name labels stay above the data layers
     if (this.map.getLayer(SELECTED_CELL_BOTTOM)) return SELECTED_CELL_BOTTOM;
     return firstSymbolLayer(this.map);
   }

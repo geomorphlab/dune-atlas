@@ -16,13 +16,16 @@ import type { MathRenderer } from "./texsvg";
 import { exportTitleTex, exportUnits, utTex } from "./labels";
 import { blobWithDpi, EXPORT_DPI, mapExportPixelRatio, stripPlacement } from "./png";
 import { isWindDerived } from "../map/dunemask";
+import { PLACE_LABELS } from "../map/layerids";
 import { announceDownload } from "../cell/downloads";
 import { PROFILE } from "@body/profile";
 
 export interface MapView { lon: number; lat: number; zoom: number; bearing: number; pitch: number; proj: "globe" | "mercator" }
 export interface MapStripContext {
   reg: Registry;
-  state: Pick<AppState, "layers" | "order" | "utIndex" | "dataset" | "basemap" | "dunesOnly">;
+  state: Pick<AppState, "layers" | "order" | "utIndex" | "dataset" | "basemap" | "dunesOnly" | "names">;
+  /** source line of the dune-field names (place list `credit`), written while the names are shown */
+  namesCredit?: string;
   view: MapView;
   /** CSS px width of the image (the strip wraps to it) */
   width: number;
@@ -107,6 +110,7 @@ export function mapStripItems(c: MapStripContext): StripItem[] {
   text.push({ kind: "text", text: MAP_DUNE_CREDIT });
   text.push({ kind: "text", text: windSourceText(state.dataset) });
   for (const [id, credit] of Object.entries(MAP_LAYER_CREDITS)) if (visible.some((l) => l.id === id)) text.push({ kind: "text", text: credit });
+  if (state.names && c.namesCredit) text.push({ kind: "text", text: c.namesCredit });
   const bm = reg.basemaps.find((b) => b.id === state.basemap);
   if (c.includeBasemap && bm) text.push({ kind: "text", text: `Basemap: ${bm.title}${bm.attribution ? `, ${plain(bm.attribution.replace(/<[^>]+>/g, ""))}` : ""}.` });
   text.push({ kind: "text", text: `View: ${c.shareLink}`, muted: true });
@@ -125,8 +129,9 @@ const waitIdle = (map: MlMap) => new Promise<void>((res) => { if (map.loaded() &
 
 /** Capture the map canvas at `scale` (x CSS px; default: the export width, mapExportWidth). Basemap layers (and the selected-cell outline)
  *  are hidden while capturing when not wanted; everything is restored afterwards. */
-export async function captureMap(map: MlMap, o: { scale?: number; includeBasemap: boolean; isOwnLayer: (id: string) => boolean; settle: () => Promise<void> }): Promise<HTMLCanvasElement> {
+export async function captureMap(map: MlMap, o: { scale?: number; includeBasemap: boolean; isOwnLayer: (id: string) => boolean; settle: () => Promise<void>; prepare?: (includeBasemap: boolean) => (() => void) | void }): Promise<HTMLCanvasElement> {
   const scale = o.scale ?? mapExportPixelRatio(map.getCanvas().clientWidth || map.getContainer().clientWidth);
+  const restore = o.prepare?.(o.includeBasemap);   // e.g. the name labels in their light-background colours
   const hidden: string[] = [];
   for (const l of map.getStyle().layers) {
     const own = o.isOwnLayer(l.id);
@@ -154,6 +159,7 @@ export async function captureMap(map: MlMap, o: { scale?: number; includeBasemap
   } finally {
     if (Math.abs(map.getPixelRatio() - ratio) > 1e-6) map.setPixelRatio(ratio);
     for (const id of hidden) if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", "visible");
+    restore?.();
   }
 }
 
@@ -208,18 +214,22 @@ export const EXPORT_STAGES = {
 export async function exportMapPng(map: MlMap, d: {
   reg: Registry; state: MapStripContext["state"] & { projection: MapView["proj"] }; shareLink: string;
   settle: () => Promise<void>;
+  /** source line of the dune-field names (shown while 'Show names' is on) */
+  namesCredit?: string;
+  /** before capturing (restored after): e.g. the name labels' colours on an export without the basemap */
+  prepare?: (includeBasemap: boolean) => (() => void) | void;
 }, o: MapExportRequest): Promise<{ name: string; width: number; height: number }> {
   const c = map.getCenter();
   const view: MapView = { lon: c.lng, lat: c.lat, zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch(), proj: d.state.projection };
   const date = new Date(), cssWidth = map.getCanvas().clientWidth;
   o.onProgress?.(EXPORT_STAGES.capture);
   // one size: W = clamp(on-screen width x 1.5, 1600, 2400) px, text relative to W, tagged 300 dpi
-  const canvas = await captureMap(map, { scale: mapExportPixelRatio(cssWidth), includeBasemap: o.basemap, isOwnLayer: (id) => id.startsWith("ov-"), settle: d.settle });
+  const canvas = await captureMap(map, { scale: mapExportPixelRatio(cssWidth), includeBasemap: o.basemap, isOwnLayer: (id) => id.startsWith("ov-") || id === PLACE_LABELS, settle: d.settle, prepare: d.prepare });
   o.onProgress?.(EXPORT_STAGES.strip);
   const { loadMathRenderer } = await import("./texsvg");
   const math = await loadMathRenderer(); // symbols as SVG paths (lazy chunk); null: plain text
   o.onProgress?.(EXPORT_STAGES.encode);
-  const out = await composeWithStrip(canvas, (pxWidth) => mapStripSvg({ reg: d.reg, state: d.state, view, width: cssWidth, includeBasemap: o.basemap, shareLink: d.shareLink, date }, pxWidth, math),
+  const out = await composeWithStrip(canvas, (pxWidth) => mapStripSvg({ reg: d.reg, state: d.state, view, width: cssWidth, includeBasemap: o.basemap, shareLink: d.shareLink, date, namesCredit: d.namesCredit }, pxWidth, math),
     { background: o.transparent ? null : EXPORT_BACKGROUND });
   const name = mapExportFilename(d.state.dataset, view, date);
   downloadBlob(name, out.blob);

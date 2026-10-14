@@ -2,7 +2,7 @@
 // CF-1.8 NetCDF-3 file with a README (zip). Pure builders (tested in node); the popover (ui/regionExport.ts) and
 // the box drawing (map/boxdraw.ts) call them.
 //   * a box is { west, south, east, north } in degrees; west > east (after wrapping) crosses the antimeridian
-//     (Earth) or 0° E (Mars, 0-360); a box can reach a pole;
+//     (both atlases use -180..180 east-positive); a box can reach a pole;
 //   * the parameters are chosen from what the cells hold: every sand-flux field, the wind histogram (Earth) or
 //     the hourly wind and air series (Mars), the per-cell auxiliary variables and the dune flag, for every
 //     threshold (grain diameter) or the current one only;
@@ -254,7 +254,7 @@ export function regionNetcdf(cells: (CellData | null)[], grid: { iys: number[]; 
   });
 }
 
-/** "24.50° S to 20.00° S, 13.00° E to 17.50° E" (Mars: east longitudes 0-360) */
+/** "24.50° S to 20.00° S, 13.00° E to 17.50° W" (range 360: east longitudes 0-360) */
 export function boxText(b0: Box, lonRange: 180 | 360 = PROFILE.search.lonRange): string {
   const b = normaliseBox(b0);
   const la = (v: number) => `${Math.abs(v).toFixed(2)}° ${v < 0 ? "S" : "N"}`;

@@ -111,6 +111,10 @@
           "default": {
             "type": "boolean"
           },
+          "tone": {
+            "enum": ["dark", "light"],
+            "description": "overall lightness of the basemap: the dune-name labels are pale with a dark halo on dark basemaps and dark brown with a light halo on light ones (default dark)"
+          },
           "imagery": {
             "type": "boolean",
             "description": "photographic imagery: the layer panel suggests lowering the colour layers' opacity when it is chosen"

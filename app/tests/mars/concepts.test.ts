@@ -21,9 +21,9 @@ describe("Mars concepts and search", () => {
     const reg = loadRegistry().registry;
     for (const l of reg.layers.filter((x) => x.type === "zarr-field" && x.thresholdAware)) expect(conceptFor(l.id), l.id).toBeDefined();
   });
-  it("search: planetocentric latitude, east-positive longitude 0-360; the named search is enabled", () => {
-    expect(PROFILE.search.lonRange).toBe(360);
-    expect(PROFILE.search.conventionNote).toMatch(/Planetocentric latitude, east-positive longitude \(0–360° E\)/);
+  it("search: planetocentric latitude, east-positive longitude -180..180 (0-360 converted); the named search is enabled", () => {
+    expect(PROFILE.search.lonRange).toBe(180);
+    expect(PROFILE.search.conventionNote).toBe("Planetocentric latitude, east-positive longitude (−180° to 180°; 0–360° E is converted).");
     expect(loadPlaces().enabled).toBe(true);
   });
 });
