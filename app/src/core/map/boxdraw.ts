@@ -143,6 +143,7 @@ export class BoxDrawer {
     const data = boxFeature(this.#box, flat);
     const src = m.getSource(BOX_SOURCE) as GeoJSONSource | undefined;
     if (src) { src.setData(data); return; }
+    if (!this.#box) return;   // no layers on the map until a box exists
     try {
       m.addSource(BOX_SOURCE, { type: "geojson", data });
       m.addLayer({ id: BOX_LAYERS[0], type: "fill", source: BOX_SOURCE, paint: { "fill-color": this.#accent, "fill-opacity": 0.12 } });
