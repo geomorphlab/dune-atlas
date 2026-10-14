@@ -177,7 +177,7 @@ def dune_stats(data_dir, arr_ut: np.ndarray, ut_index=C.UT_DEFAULT_INDEX, datase
 
 
 def registry_layer(clim_m_per_kyr=(-0.1, 0.1), colormap="piyg", group="drift", dataset=None) -> dict:
-    from .fields import CITATION, DATASET_SOURCE_PREFIX, dataset_citation
+    from .fields import DATASET_SOURCE_PREFIX, fields_attribution, fields_citation
     ds = get_dataset(dataset)
     return {
         "id": VAR, "title": "Saturated flux divergence (∇·qs)", "titleTex": r"$\nabla\cdot\vec{q}_s$",
@@ -186,9 +186,8 @@ def registry_layer(clim_m_per_kyr=(-0.1, 0.1), colormap="piyg", group="drift", d
         "description": ("Divergence of the time-averaged saturated sand-flux vector (magnitude RDP, direction RDD) "
                         "on the sphere, following Gunn (2026), Methods M6. Negative values (flux convergence) imply "
                         "deposition, positive values (flux divergence) erosion. No data at coasts (a neighbouring "
-                        "cell has no wind data) and on the ±90° rows. Shown in m/kyr at the selected threshold "
-                        f"friction velocity u*,th (default {C.UT_VALUES[C.UT_DEFAULT_INDEX]:.2f} m/s)."),
-        "citation": CITATION if ds.id == "era5-land" else dataset_citation(ds),
+                        "cell has no wind data) and on the ±90° rows."),
+        "citation": fields_citation(ds), "attribution": fields_attribution(ds),
         "visible": False, "opacity": 0.85, "queryable": False,
         "display": {"transform": "scale", "scale": 1000.0, "colormap": colormap, "clim": list(clim_m_per_kyr)},
     }

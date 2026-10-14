@@ -31,11 +31,18 @@ layers:
   variable: dpm
   thresholdAware: true
   units: m²/yr
-  description: Time-averaged flat-bed saturated flux magnitude, DP = sum n q / sum n over all speed and direction
-    bins, in m²/yr. Shown at the selected threshold friction velocity u*,th (default 0.15 m/s). Converted from m²/s
-    to m²/yr.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Time-averaged flat-bed saturated flux magnitude, $DP = \sum n q / \sum n$ over all speed and direction
+    bins.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: true
   opacity: 0.85
   queryable: true
@@ -55,10 +62,17 @@ layers:
   variable: rdpm
   thresholdAware: true
   units: m²/yr
-  description: Magnitude of the time-averaged flat-bed flux vector, RDP = |sum n q e^itheta| / sum n, in m²/yr.
-    Shown at the selected threshold friction velocity u*,th (default 0.15 m/s). Converted from m²/s to m²/yr.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Magnitude of the time-averaged flat-bed flux vector, $RDP = |\sum n q e^{i\theta}| / \sum n$.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -78,11 +92,18 @@ layers:
   variable: rdpa
   thresholdAware: true
   units: °
-  description: Direction of the time-averaged flat-bed flux vector, arg sum n q e^itheta, radians CCW from east,
-    direction of transport. Shown at the selected threshold friction velocity u*,th (default 0.15 m/s). Displayed
-    as the compass bearing (degrees clockwise from north) toward which sand/crests move.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Direction of the time-averaged flat-bed flux vector, $\arg \sum n q e^{i\theta}$, the direction sand
+    moves, as a compass bearing (clockwise from north).
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -103,11 +124,18 @@ layers:
   variable: qha_rdp_dp
   thresholdAware: true
   units: dimensionless
-  description: 'Directional variability of sand flux: ratio of resultant to total drift potential, RDP/DP (0 = multidirectional,
-    1 = unidirectional). Undefined where there is no sand flux (DP = 0). Shown at the selected threshold friction
-    velocity u*,th (default 0.15 m/s).'
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: 'Directional variability of sand flux: ratio of resultant to total drift potential, $RDP/DP$ (0 =
+    multidirectional, 1 = unidirectional). Undefined where there is no sand flux ($DP = 0$).'
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -126,11 +154,17 @@ layers:
   variable: at
   thresholdAware: true
   units: °
-  description: Migration signed direction αT. The direction transverse crests migrate. Shown at the selected threshold
-    friction velocity u*,th (default 0.15 m/s). Displayed as the compass bearing (degrees clockwise from north)
-    toward which sand/crests move.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Migration signed direction $\alpha_T$. The direction transverse crests migrate.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -151,10 +185,17 @@ layers:
   variable: ab
   thresholdAware: true
   units: °
-  description: Migration mode unsigned direction αH. Shown at the selected threshold friction velocity u*,th (default
-    0.15 m/s). Displayed as a compass axis 0–180°.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Migration mode unsigned direction $\alpha_H$.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -175,11 +216,17 @@ layers:
   variable: ae
   thresholdAware: true
   units: °
-  description: Elongation mode signed direction αE. The direction longitudinal crests elongate. Shown at the selected
-    threshold friction velocity u*,th (default 0.15 m/s). Displayed as the compass bearing (degrees clockwise from
-    north) toward which sand/crests move.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Elongation mode signed direction $\alpha_E$. The direction longitudinal crests elongate.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -200,11 +247,17 @@ layers:
   variable: ao
   thresholdAware: true
   units: °
-  description: Oblique signed direction αO. The direction oblique dune crests elongate. Shown at the selected threshold
-    friction velocity u*,th (default 0.15 m/s). Displayed as the compass bearing (degrees clockwise from north)
-    toward which sand/crests move.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Oblique signed direction $\alpha_O$. The direction oblique dune crests elongate.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -225,10 +278,17 @@ layers:
   variable: qncb
   thresholdAware: true
   units: m²/yr
-  description: Net across-crest migration-mode flux ⟨Q⊥(αH)⟩ in m²/yr. Shown at the selected threshold friction
-    velocity u*,th (default 0.15 m/s). Converted from m²/s to m²/yr.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Net across-crest migration-mode flux $\langle Q_{\bot}(\alpha_H)\rangle$.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -247,10 +307,17 @@ layers:
   variable: qacb
   thresholdAware: true
   units: m²/yr
-  description: Absolute across-crest migration-mode flux ⟨|Q⊥(αH)|⟩ in m²/yr. Shown at the selected threshold friction
-    velocity u*,th (default 0.15 m/s). Converted from m²/s to m²/yr.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Absolute across-crest migration-mode flux $\langle |Q_{\bot}(\alpha_H)|\rangle$.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -270,10 +337,17 @@ layers:
   variable: qnlb
   thresholdAware: true
   units: m²/yr
-  description: Net along-crest migration-mode flux ⟨Q∥(αH)⟩ in m²/yr. Shown at the selected threshold friction velocity
-    u*,th (default 0.15 m/s). Converted from m²/s to m²/yr.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Net along-crest migration-mode flux $\langle Q_{\parallel}(\alpha_H)\rangle$.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -292,10 +366,17 @@ layers:
   variable: qalb
   thresholdAware: true
   units: m²/yr
-  description: Absolute along-crest migration-mode flux ⟨|Q∥(αH)|⟩ in m²/yr. Shown at the selected threshold friction
-    velocity u*,th (default 0.15 m/s). Converted from m²/s to m²/yr.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Absolute along-crest migration-mode flux $\langle |Q_{\parallel}(\alpha_H)|\rangle$.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -315,10 +396,17 @@ layers:
   variable: qnle
   thresholdAware: true
   units: m²/yr
-  description: Net along-crest elongation-mode flux ⟨Q∥(αE)⟩ in m²/yr. Shown at the selected threshold friction
-    velocity u*,th (default 0.15 m/s). Converted from m²/s to m²/yr.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Net along-crest elongation-mode flux $\langle Q_{\parallel}(\alpha_E)\rangle$.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -337,10 +425,17 @@ layers:
   variable: qale
   thresholdAware: true
   units: m²/yr
-  description: Absolute along-crest elongation-mode flux ⟨|Q∥(αE)|⟩ in m²/yr. Shown at the selected threshold friction
-    velocity u*,th (default 0.15 m/s). Converted from m²/s to m²/yr.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Absolute along-crest elongation-mode flux $\langle |Q_{\parallel}(\alpha_E)|\rangle$.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -360,10 +455,17 @@ layers:
   variable: qace
   thresholdAware: true
   units: m²/yr
-  description: Absolute across-crest elongation-mode flux ⟨|Q⊥(αE)|⟩ in m²/yr. Shown at the selected threshold friction
-    velocity u*,th (default 0.15 m/s). Converted from m²/s to m²/yr.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Absolute across-crest elongation-mode flux $\langle |Q_{\bot}(\alpha_E)|\rangle$.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -383,10 +485,17 @@ layers:
   variable: sige_sigh
   thresholdAware: true
   units: dimensionless
-  description: Stability of elongating dunes on starved beds ⟨|Q⊥(αE)|⟩/⟨|Q⊥(αH)|⟩. Shown at the selected threshold
-    friction velocity u*,th (default 0.15 m/s).
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Stability of elongating dunes on starved beds $\langle|Q_{\bot}(\alpha_E)|\rangle/\langle|Q_{\bot}(\alpha_H)|\rangle$.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -406,11 +515,18 @@ layers:
   thresholdAware: true
   units: dimensionless
   description: Straightness vs. sinuosity of periodic long-crested dunes on covered bed (bed instability mode, growth
-    in height dominates), asymmetry of migrating dunes |⟨Q∥(αH)⟩/⟨Q⊥(αH)⟩|. Shown at the selected threshold friction
-    velocity u*,th (default 0.15 m/s). The ratio is infinite where its denominator (a net flux) is exactly zero;
-    such values are shown as ±60,000.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+    in height dominates), asymmetry of migrating dunes $|\langle Q_{\parallel}(\alpha_H)\rangle/\langle Q_{\bot}(\alpha_H)\rangle|$.
+    The ratio is infinite where its denominator (a net flux) is exactly zero; such values are shown as ±60,000.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -430,11 +546,19 @@ layers:
   variable: qhab_ac_nc
   thresholdAware: true
   units: dimensionless
-  description: Relative balance between growth in height and migration dynamics |⟨|Q⊥(αH)|⟩/⟨Q⊥(αH)⟩|. Shown at
-    the selected threshold friction velocity u*,th (default 0.15 m/s). The ratio is infinite where its denominator
-    (a net flux) is exactly zero; such values are shown as ±60,000.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Relative balance between growth in height and migration dynamics $|\langle |Q_{\bot}(\alpha_H)|\rangle/\langle
+    Q_{\bot}(\alpha_H)\rangle|$. The ratio is infinite where its denominator (a net flux) is exactly zero; such
+    values are shown as ±60,000.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -454,11 +578,18 @@ layers:
   variable: qhne_ac_nl
   thresholdAware: true
   units: dimensionless
-  description: Morphology of elongating dunes ⟨|Q⊥(αE)|⟩/⟨Q∥(αE)⟩. Shown at the selected threshold friction velocity
-    u*,th (default 0.15 m/s). The ratio is infinite where its denominator (a net flux) is exactly zero; such values
-    are shown as ±60,000.
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Morphology of elongating dunes $\langle |Q_{\bot}(\alpha_E)|\rangle/\langle Q_{\parallel}(\alpha_E)\rangle$.
+    The ratio is infinite where its denominator (a net flux) is exactly zero; such values are shown as ±60,000.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -478,10 +609,17 @@ layers:
   variable: uft
   thresholdAware: true
   units: dimensionless
-  description: Fraction of time flat-bed friction velocity is above threshold T|u*,f>u*,th/T. Shown at the selected
-    threshold friction velocity u*,th (default 0.15 m/s).
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Fraction of time flat-bed friction velocity is above threshold $T|u_{\ast,f}>u_{\ast,th}/T$.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -500,10 +638,17 @@ layers:
   variable: ufm
   thresholdAware: true
   units: dimensionless
-  description: Average above-threshold flat-bed friction velocity, normalised by threshold ⟨u*,f|u*,f>u*,th⟩/u*,th.
-    Shown at the selected threshold friction velocity u*,th (default 0.15 m/s).
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Average above-threshold flat-bed friction velocity, normalised by threshold $\langle u_{\ast,f}|u_{\ast,f}>u_{\ast,th}\rangle/u_{\ast,th}$.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -522,12 +667,19 @@ layers:
   variable: qhbf
   thresholdAware: true
   units: dimensionless
-  description: Fraction of bed-mode (migration-mode, αH) crest flux that occurs while the flat-bed friction velocity
-    exceeds threshold, sum_u*,f>u*,th n|Q(αH)| / sum n|Q(αH)|. 0 where crest flux occurs only while the flat bed
-    is below threshold; undefined where there is no crest flux. Shown at the selected threshold friction velocity
-    u*,th (default 0.15 m/s).
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Fraction of bed-mode (migration-mode, $\alpha_H$) crest flux that occurs while the flat-bed friction
+    velocity exceeds threshold, $\sum_{u_{\ast,f}>u_{\ast,th}} n|Q(\alpha_H)| / \sum n|Q(\alpha_H)|$. 0 where crest
+    flux occurs only while the flat bed is below threshold; undefined where there is no crest flux.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true
@@ -546,12 +698,19 @@ layers:
   variable: qhef
   thresholdAware: true
   units: dimensionless
-  description: Fraction of elongation-mode (αE) crest flux that occurs while the flat-bed friction velocity exceeds
-    threshold, sum_u*,f>u*,th n|Q(αE)| / sum n|Q(αE)|. 0 where crest flux occurs only while the flat bed is below
-    threshold; undefined where there is no crest flux. Shown at the selected threshold friction velocity u*,th (default
-    0.15 m/s).
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+  description: Fraction of elongation-mode ($\alpha_E$) crest flux that occurs while the flat-bed friction velocity
+    exceeds threshold, $\sum_{u_{\ast,f}>u_{\ast,th}} n|Q(\alpha_E)| / \sum n|Q(\alpha_E)|$. 0 where crest flux
+    occurs only while the flat bed is below threshold; undefined where there is no crest flux.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: true

@@ -5,6 +5,7 @@ import { writeNetcdf3 } from "../src/cell/netcdf3";
 import { crc32, deflateRawAvailable, writeZip } from "../src/cell/zip";
 import zlib from "node:zlib";
 import katex from "katex";
+import { CSV_NAMES, CSV_NAME_RE, csvName } from "../src/cell/csvnames";
 import { cellNetcdf, csvBundle, csvColumns, exportBaseName, fieldMeta, fieldsByThresholdCsv, fluxRoseCsv, fluxRoseTable, fmtF32, metadataJson, readmeText, versionFromPrefix, windHistogramCsv, cfUnits } from "../src/cell/export";
 import { citationSources, citationText, CITATION_SOURCES, referencesLine } from "../src/cell/citation";
 import { citationFile } from "../src/cell/downloads";
@@ -142,7 +143,8 @@ describe("cell exports", () => {
     }
     // field attributes and global attributes are exactly these (no other annotations)
     for (const v of FIELD_VARS) expect(Object.keys(r.vars[v].attrs).sort()).toEqual(["_FillValue", "coordinates", "description", "description_latex", "long_name", "long_name_latex", "units"]);
-    expect(Object.keys(r.gatts).sort()).toEqual(["Conventions", "comment", "data_version", "dataset_id", "geospatial_lat_resolution", "geospatial_lon_resolution", "history", "institution", "license", "references", "source", "title"]);
+    expect(Object.keys(r.gatts).sort()).toEqual(["Conventions", "comment", "data_version", "dataset_id", "fields_citation", "fields_license", "geospatial_lat_resolution", "geospatial_lon_resolution", "history", "institution", "license", "references", "source", "title"]);
+    expect(r.gatts.fields_citation).toMatch(/^Gunn, A\. \(2026\)\. The distribution of Earth's wind-blown sand dunes\. Nature Communications\. doi:10\.1038\/s41467-026-75466-y; .*winds: /);
     expect(String(r.vars.qha_rdp_dp.attrs.description)).toMatch(/^Directional variability of sand flux: ratio of resultant to total drift potential/);
     expect(r.vars.dpm.attrs.units).toBe("m2 s-1");
     expect(r.vars.flux_rose.dims).toEqual(["rose_mode", "ut", "ua_bin"]);
@@ -174,50 +176,60 @@ describe("cell exports", () => {
     expect(Array.from(t[1][20]).every(Number.isNaN)).toBe(true);
     expect(Array.from(t[2][30]).every(Number.isNaN)).toBe(true);
     expect(Array.from(t[0][20]).some(Number.isNaN)).toBe(false);
-    const csv = fluxRoseCsv(c).trim().split("\n");
-    expect(csv.length).toBe(3 + 3 * 64 * 128);
-    expect(csv[0]).toBe("rose_mode,ut,ua_bin,ua_bin_lo,ua_bin_hi,ua_bin_bearing_toward,ua_bin_bearing_from,flux_rose");
-    expect(csv[1]).toBe("1,m s-1,radian,radian,radian,degree,degree,m2 yr-1");
-    const row = (mode: number, k: number, j: number) => csv[3 + (mode * 64 + k) * 128 + j].split(",");
+    const csv = fluxRoseCsv(c).trimEnd().split("\n");
+    expect(csv.length).toBe(1 + 3 * 64 * 128);
+    expect(csv[0]).toBe("\ufeffrose_mode,ustar_threshold,direction_bin_centre,direction_bin_lower,direction_bin_upper,bearing_toward,bearing_from,flux");
+    const row = (mode: number, k: number, j: number) => csv[1 + (mode * 64 + k) * 128 + j].split(",");
     expect(row(0, 0, 0).slice(0, 2)).toEqual(["flat_bed", "0.01"]);
     expect(row(0, 14, 0)[1]).toBe("0.15");
     expect(row(1, 20, 5)[7]).toBe(""); // masked elongation row
     expect(Math.fround(Number(row(0, 14, 7)[7]))).toBe(Math.fround(t[0][14][7]));
   });
-  it("CSV bundle: 3 header rows, tidy long tables with identical direction columns, ut to 2 d.p., deflated zip", async () => {
+  it("CSV bundle: UTF-8 BOM + one ASCII snake_case header row, tidy long tables with identical direction columns, ut to 2 d.p., deflated zip", async () => {
     const c = cell();
-    const wh = windHistogramCsv(c).trim().split("\n");
-    expect(wh[0]).toBe("um_bin,um_bin_lo,um_bin_hi,ua_bin,ua_bin_lo,ua_bin_hi,ua_bin_bearing_toward,ua_bin_bearing_from,wind_hist");
-    expect(wh[1]).toBe("m s-1,m s-1,m s-1,radian,radian,radian,degree,degree,h");
-    expect(wh.length).toBe(3 + 128 * 128);
-    const rows = wh.slice(3).map((l) => l.split(","));
+    const wh = windHistogramCsv(c).trimEnd().split("\n");
+    expect(wh[0]).toBe("\ufeffwind_speed_bin_centre,wind_speed_bin_lower,wind_speed_bin_upper,direction_bin_centre,direction_bin_lower,direction_bin_upper,bearing_toward,bearing_from,hours");
+    expect(wh.length).toBe(1 + 128 * 128);
+    const rows = wh.slice(1).map((l) => l.split(","));
     expect(rows.reduce((a, r) => a + Number(r[8]), 0)).toBe(c.totalHours);
     expect(rows[0].slice(0, 3)).toEqual(["0.078125", "0", "0.15625"]);
     expect(rows[0].slice(6, 8)).toEqual(["268.59375", "88.59375"]);
     // the direction columns are textually identical in both long tables (same order)
-    const fr = fluxRoseCsv(c).trim().split("\n").slice(3).map((l) => l.split(","));
+    const fr = fluxRoseCsv(c).trimEnd().split("\n").slice(1).map((l) => l.split(","));
     for (let j = 0; j < 128; j++) expect(fr[j].slice(2, 7)).toEqual(rows[j].slice(3, 8));
-    const fb = fieldsByThresholdCsv(c).trim().split("\n");
-    expect(fb[0]).toBe(["ut", ...FIELD_VARS].join(","));
-    expect(fb[1].split(",")[0]).toBe("m s-1");
-    expect(fb.length).toBe(3 + 64);
-    expect(fb.slice(3).map((l) => l.split(",")[0])).toEqual(C.UT_VALUES.map((u) => u.toFixed(2)));
-    expect(fb[3].split(",")[1]).toBe(fmtF32(0.4));
-    for (const l of [...wh.slice(0, 3), ...fb.slice(0, 3)]) expect(l).not.toMatch(/[\\$]/);
+    const fb = fieldsByThresholdCsv(c).trimEnd().split("\n");
+    expect(fb[0]).toBe("\ufeff" + ["ustar_threshold", ...FIELD_VARS.map(csvName)].join(","));
+    expect(fb.length).toBe(1 + 64);
+    expect(fb.slice(1).map((l) => l.split(",")[0])).toEqual(C.UT_VALUES.map((u) => u.toFixed(2)));
+    expect(fb[1].split(",")[1]).toBe(fmtF32(0.4));
+    // every header: plain ASCII snake_case, unique, from the explicit map (no fallback); BOM first
+    for (const [f, cols] of Object.entries(csvColumns(c))) {
+      const names = cols.map((x) => csvName(x.name));
+      for (const x of cols) expect(CSV_NAMES[x.name], `${f}: ${x.name}`).toBeDefined();
+      for (const n of names) expect(n).toMatch(CSV_NAME_RE);
+      expect(new Set(names).size, f).toBe(names.length);
+    }
+    for (const l of [wh[0], fb[0]]) { expect(l.startsWith("\ufeff")).toBe(true); expect(l.slice(1)).toMatch(/^[a-z0-9_,]+$/); }
+    expect(csvName("sige_sigh")).toBe("sigma_e_over_sigma_h");
+    expect(csvName("ufm")).toBe("ustar_mean_above_threshold_over_ustar_th");
     const md = JSON.parse(metadataJson(c, META));
     expect(Object.keys(md.fields.dpm).sort()).toEqual(["description", "description_latex", "long_name", "long_name_latex", "units"]);
-    expect(Object.keys(md).sort()).toEqual(["ai_notice", "aux", "cell", "citation", "conventions", "copernicus_notice", "dataset", "fields", "files", "generated", "grid", "institution", "license", "permalink", "ut"]);
+    expect(Object.keys(md).sort()).toEqual(["ai_notice", "aux", "cell", "citation", "conventions", "copernicus_notice", "dataset", "fields", "fields_citation", "fields_license", "files", "generated", "grid", "institution", "license", "permalink", "ut"]);
     expect(md.ut[14]).toBe(0.15);
-    expect(md.files["flux_rose.csv"].columns.map((x: { name: string }) => x.name)).toEqual(csvColumns(c)["flux_rose.csv"].map((x) => x.name));
+    expect(md.files["flux_rose.csv"].columns.map((x: { name: string }) => x.name)).toEqual(csvColumns(c)["flux_rose.csv"].map((x) => csvName(x.name)));
+    expect(md.files["fields_by_threshold.csv"].columns.find((x: { netcdf_name: string }) => x.netcdf_name === "sige_sigh")).toEqual({ name: "sigma_e_over_sigma_h", netcdf_name: "sige_sigh", units: "1", long_name: "σ_E/σ_H" });
     expect(md.citation.map((x: { source: string }) => x.source)).toEqual(["Dune Atlas / dune map", "ERA5-Land", "Global Aridity Index (Global-AI_PET v3.1)", "Vegetation cover (CSIRO MODIS Fractional Cover v3.1)"]);
     const rd = readmeText(c, META);
     expect(rd).toContain(AI_NOTICE);
-    expect(rd).toContain("pd.read_csv(f, header=0, skiprows=[1, 2])");
-    expect(rd).toContain("read.csv(f, skip = 3");
+    expect(rd).toContain("pd.read_csv(f)");
+    expect(rd).toContain('read.csv(f, fileEncoding = "UTF-8-BOM")');
+    expect(rd).toMatch(/sigma_e_over_sigma_h\s+\[1\] σ_E\/σ_H \(NetCDF: sige_sigh\)/);
     const z = readZip(await csvBundle(c, META));
     expect([...z.keys()]).toEqual(["README.txt", "wind_histogram.csv", "fields_by_threshold.csv", "flux_rose.csv", "metadata.json"]);
     expect(z.get("flux_rose.csv")!.method).toBe(8);
-    expect(new TextDecoder().decode(z.get("wind_histogram.csv")!.data)).toBe(windHistogramCsv(c));
+    const whBytes = z.get("wind_histogram.csv")!.data;
+    expect(Array.from(whBytes.slice(0, 3))).toEqual([0xef, 0xbb, 0xbf]);             // UTF-8 BOM in the file
+    expect(new TextDecoder("utf-8", { ignoreBOM: true }).decode(whBytes)).toBe(windHistogramCsv(c));
   });
   it("citations grouped by source (Paper / Data); aridity only in cell downloads", () => {
     const c0 = cell();

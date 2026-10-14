@@ -1,0 +1,186 @@
+{
+ "ab": {
+  "long_name": "Migration mode unsigned direction $\\alpha_H$",
+  "units": "rad",
+  "description": "Migration mode unsigned direction $\\alpha_H$ in radians.",
+  "p2": 0.0828928779065609,
+  "p98": 3.0513739871978762,
+  "frac_finite": 1.0
+ },
+ "ae": {
+  "long_name": "Elongation mode signed direction $\\alpha_E$",
+  "units": "rad",
+  "description": "Elongation mode signed direction $\\alpha_E$ in radians. The direction longitudinal crests elongate.",
+  "p2": -2.977250699996948,
+  "p98": 3.00455286026001,
+  "frac_finite": 1.0
+ },
+ "at": {
+  "long_name": "Migration signed direction $\\alpha_T$",
+  "units": "rad",
+  "description": "Migration signed direction $\\alpha_T$ in radians. The direction transverse crests migrate.",
+  "p2": -2.813208374977112,
+  "p98": 2.9256410264968875,
+  "frac_finite": 1.0
+ },
+ "ao": {
+  "long_name": "Oblique signed direction $\\alpha_O$",
+  "units": "rad",
+  "description": "Oblique signed direction $\\alpha_O$ in radians. The direction oblique dune crests elongate.",
+  "p2": -2.932588872909546,
+  "p98": 2.888108587265015,
+  "frac_finite": 1.0
+ },
+ "rdpa": {
+  "long_name": "Resultant drift direction $RDD$",
+  "units": "rad",
+  "description": "Direction of the time-averaged flat-bed flux vector, $\\arg \\sum n q e^{i\\theta}$, radians CCW from east, direction of transport.",
+  "p2": -3.002356767654419,
+  "p98": 2.990130376815796,
+  "frac_finite": 1.0
+ },
+ "dpm": {
+  "long_name": "Drift potential $DP$",
+  "units": "m$^2$/s",
+  "description": "Time-averaged flat-bed saturated flux magnitude, $DP = \\sum n q / \\sum n$ over all hours of the Mars year (n = 1 per hour), in m$^2$/s.",
+  "p2": 6.726173342741504e-09,
+  "p98": 4.295684584576522e-07,
+  "frac_finite": 1.0
+ },
+ "rdpm": {
+  "long_name": "Resultant drift potential $RDP$",
+  "units": "m$^2$/s",
+  "description": "Magnitude of the time-averaged flat-bed flux vector, $RDP = |\\sum n q e^{i\\theta}| / \\sum n$, in m$^2$/s.",
+  "p2": 2.987676097632175e-09,
+  "p98": 3.048648608228178e-07,
+  "frac_finite": 1.0
+ },
+ "qnlb": {
+  "long_name": "Net along-crest migration-mode flux $\\langle Q_{\\parallel}(\\alpha_H)\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Net along-crest migration-mode flux $\\langle Q_{\\parallel}(\\alpha_H)\\rangle$ in m$^2$/s.",
+  "p2": -2.5089476366702003e-07,
+  "p98": 2.8649081855292037e-07,
+  "frac_finite": 1.0
+ },
+ "qncb": {
+  "long_name": "Net across-crest migration-mode flux $\\langle Q_{\\bot}(\\alpha_H)\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Net across-crest migration-mode flux $\\langle Q_{\\bot}(\\alpha_H)\\rangle$ in m$^2$/s.",
+  "p2": -1.23869236176688e-06,
+  "p98": 9.008617803374364e-07,
+  "frac_finite": 1.0
+ },
+ "qalb": {
+  "long_name": "Absolute along-crest migration-mode flux $\\langle |Q_{\\parallel}(\\alpha_H)|\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Absolute along-crest migration-mode flux $\\langle |Q_{\\parallel}(\\alpha_H)|\\rangle$ in m$^2$/s.",
+  "p2": 3.256218150227141e-08,
+  "p98": 5.383793211422022e-07,
+  "frac_finite": 1.0
+ },
+ "qacb": {
+  "long_name": "Absolute across-crest migration-mode flux $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Absolute across-crest migration-mode flux $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$ in m$^2$/s.",
+  "p2": 8.001033165783156e-08,
+  "p98": 1.697773770956701e-06,
+  "frac_finite": 1.0
+ },
+ "qnle": {
+  "long_name": "Net along-crest elongation-mode flux $\\langle Q_{\\parallel}(\\alpha_E)\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Net along-crest elongation-mode flux $\\langle Q_{\\parallel}(\\alpha_E)\\rangle$ in m$^2$/s.",
+  "p2": 1.2947416596631456e-08,
+  "p98": 6.04663597414401e-07,
+  "frac_finite": 1.0
+ },
+ "qale": {
+  "long_name": "Absolute along-crest elongation-mode flux $\\langle |Q_{\\parallel}(\\alpha_E)|\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Absolute along-crest elongation-mode flux $\\langle |Q_{\\parallel}(\\alpha_E)|\\rangle$ in m$^2$/s.",
+  "p2": 3.340932323681045e-08,
+  "p98": 7.672205481412676e-07,
+  "frac_finite": 1.0
+ },
+ "qace": {
+  "long_name": "Absolute across-crest elongation-mode flux $\\langle |Q_{\\bot}(\\alpha_E)|\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Absolute across-crest elongation-mode flux $\\langle |Q_{\\bot}(\\alpha_E)|\\rangle$ in m$^2$/s.",
+  "p2": 2.9507883354540355e-08,
+  "p98": 1.0343597091377888e-06,
+  "frac_finite": 1.0
+ },
+ "qha_rdp_dp": {
+  "long_name": "$RDP/DP$",
+  "units": "-",
+  "description": "Directional variability of sand flux: ratio of resultant to total drift potential, $RDP/DP$ (0 = multidirectional, 1 = unidirectional). Undefined where there is no sand flux ($DP = 0$).",
+  "p2": 0.12740304440259934,
+  "p98": 0.9641593420505524,
+  "frac_finite": 1.0
+ },
+ "sige_sigh": {
+  "long_name": "$\\sigma_E/\\sigma_H$",
+  "units": "-",
+  "description": "Stability of elongating dunes on starved beds $\\langle|Q_{\\bot}(\\alpha_E)|\\rangle/\\langle|Q_{\\bot}(\\alpha_H)|\\rangle$.",
+  "p2": 0.07542154178023339,
+  "p98": 0.9965417313575745,
+  "frac_finite": 1.0
+ },
+ "qhab_nl_nc": {
+  "long_name": "$\\hat{Q}_{\\parallel/\\bot,H}$",
+  "units": "-",
+  "description": "Straightness vs. sinuosity of periodic long-crested dunes on covered bed (bed instability mode, growth in height dominates), asymmetry of migrating dunes $|\\langle Q_{\\parallel}(\\alpha_H)\\rangle/\\langle Q_{\\bot}(\\alpha_H)\\rangle|$.",
+  "p2": 0.00162849543383345,
+  "p98": 6.213485183715825,
+  "frac_finite": 1.0
+ },
+ "qhab_ac_nc": {
+  "long_name": "$\\hat{Q}_{|\\bot|/\\bot,H}$",
+  "units": "-",
+  "description": "Relative balance between growth in height and migration dynamics $|\\langle |Q_{\\bot}(\\alpha_H)|\\rangle/\\langle Q_{\\bot}(\\alpha_H)\\rangle|$.",
+  "p2": 1.0013592982292174,
+  "p98": 32.98964759826661,
+  "frac_finite": 1.0
+ },
+ "qhne_ac_nl": {
+  "long_name": "$\\hat{Q}_{|\\bot|/\\parallel,E}$",
+  "units": "-",
+  "description": "Morphology of elongating dunes $\\langle |Q_{\\bot}(\\alpha_E)|\\rangle/\\langle Q_{\\parallel}(\\alpha_E)\\rangle$.",
+  "p2": 0.2826587724685669,
+  "p98": 8.922707748413089,
+  "frac_finite": 1.0
+ },
+ "ufm": {
+  "long_name": "$\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$",
+  "units": "-",
+  "description": "Average above-threshold flat-bed friction velocity, normalised by threshold $\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023).",
+  "p2": 1.1707452464103698,
+  "p98": 1.7301824021339418,
+  "frac_finite": 1.0
+ },
+ "uft": {
+  "long_name": "$T|u_{\\ast,f}>u_{\\ast,th}/T$",
+  "units": "-",
+  "description": "Fraction of time flat-bed friction velocity is above threshold $T|u_{\\ast,f}>u_{\\ast,th}/T$. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023).",
+  "p2": 0.03992015868425369,
+  "p98": 0.5446644294261933,
+  "frac_finite": 1.0
+ },
+ "qhbf": {
+  "long_name": "Fraction of bed-mode flux while flat-bed $u_{\\ast,f}>u_{\\ast,th}$",
+  "units": "-",
+  "description": "Fraction of bed-mode (migration-mode, $\\alpha_H$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_H)| / \\sum n|Q(\\alpha_H)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023).",
+  "p2": 0.49559506952762605,
+  "p98": 0.9740049397945404,
+  "frac_finite": 1.0
+ },
+ "qhef": {
+  "long_name": "Fraction of elongation-mode flux while flat-bed $u_{\\ast,f}>u_{\\ast,th}$",
+  "units": "-",
+  "description": "Fraction of elongation-mode ($\\alpha_E$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_E)| / \\sum n|Q(\\alpha_E)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023).",
+  "p2": 0.5170351338386536,
+  "p98": 0.9701680934429169,
+  "frac_finite": 1.0
+ }
+}

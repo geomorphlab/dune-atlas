@@ -32,6 +32,8 @@ export interface LayerDef {
   source: string;
   variable?: string;
   thresholdAware?: boolean;
+  /** computed from the wind data ('Dunes only'); default: zarr-field && thresholdAware (map/dunemask.ts) */
+  windDerived?: boolean;
   units?: string;
   description?: string;
   citation?: string;
@@ -78,6 +80,8 @@ export interface BasemapDef {
   maxzoom?: number;
   attribution: string;
   default?: boolean;
+  /** info (i) popover: definition, Source, Resolution, Licence, Link */
+  info?: { description?: string; source?: string; resolution?: string; coverage?: string; licence?: string; url?: string };
 }
 
 export interface ThresholdDef {

@@ -245,10 +245,12 @@ describe("layer panel", () => {
 });
 
 describe("dataset selector", () => {
-  it("is hidden with a single dataset", () => {
+  it("is shown with a single dataset too (one option), hidden without datasets", () => {
     document.body.innerHTML = '<aside id="layer-panel"></aside>';
     const root = document.getElementById("layer-panel")!;
     renderLayerPanel(root, { ...reg, datasets: reg.datasets!.slice(0, 1) }, new Store(initState()));
+    expect([...(root.querySelector("#dataset-select") as HTMLSelectElement).options].map((o) => o.value)).toEqual([reg.datasets![0].id]);
+    renderLayerPanel(root, { ...reg, datasets: [] }, new Store(initState()));
     expect(root.querySelector("#dataset-select")).toBeNull();
   });
   it("is shown, lists the datasets and drives the store", () => {
@@ -284,7 +286,11 @@ describe("cell panel", () => {
     const det = root.querySelector("details.modes") as HTMLDetailsElement;
     expect(det.open).toBe(true);
     expect(det.querySelector("svg.modes-plot")).not.toBeNull();
-    expect(root.querySelectorAll(".summary tbody tr").length).toBe(23 - C.WITHHELD_VARS.length + 4);
+    expect(root.querySelectorAll(".summary tbody tr").length).toBe(23 - C.WITHHELD_VARS.length + 2);   // + dunes, centre
+    // terse labels: no parentheses (round 5); grid cell and hours only in the downloads
+    for (const th of root.querySelectorAll(".summary tbody th")) expect(th.textContent).not.toMatch(/[()]/);
+    expect(root.querySelector('.summary tr[data-field="cell"]')).toBeNull();
+    expect(root.querySelector('.summary tr[data-field="hours"]')).toBeNull();
     expect([...root.querySelectorAll(".downloads button")].map((b) => b.textContent)).toEqual(["NetCDF (.nc)", "CSV bundle (.zip)", "Citation (TXT)", "Copy citation"]);
     const mini = root.querySelector("#cell-ut-slider") as HTMLInputElement;
     expect(mini).not.toBeNull();
@@ -397,7 +403,7 @@ describe("cell panel", () => {
     await open();
     const kv = root.querySelector(".kv")!;
     expect([...kv.querySelectorAll("dt")].map((d) => d.textContent)).toEqual(["DP", "RDP", "RDP/DP", "RDD"]);
-    expect(kv.querySelector("dd")!.textContent).toBe("9.47×106 m²/yr");
+    expect(kv.querySelector("dd")!.textContent!.replace(/\u00a0/g, " ")).toBe("9.47×106 m²/yr");
     expect(root.querySelectorAll("svg.rose")[1].querySelectorAll(".rose-arrow").length).toBe(4);
     expect((root.querySelector("svg.modes-plot")!.innerHTML.match(/class="current-mode"/g) ?? []).length).toBe(6);
   });
@@ -418,7 +424,7 @@ describe("cell panel", () => {
     await open();
     const flux = () => root.querySelectorAll("svg.rose")[1];
     expect(flux().querySelector(".axis-label")!.textContent).toBe("% of total flux");
-    expect(root.querySelectorAll(".fig")[1].querySelector(".caption")!.textContent).toMatch(/^Flat bed: DP = [0-9.]+ m²\/yr/);
+    expect(root.querySelectorAll(".fig")[1].querySelector(".caption")!.textContent!.replace(/\u00a0/g, " ")).toMatch(/^Flat bed: DP = [0-9.]+ m²\/yr/);
     const abs = root.querySelector('.axis-toggle input[value="abs"]') as HTMLInputElement;
     abs.checked = true; fire(abs, "change");
     expect(flux().querySelector(".axis-label")!.textContent).toBe("m²/yr per sector");
@@ -433,7 +439,7 @@ describe("cell panel", () => {
     const ths = [...root.querySelectorAll(".summary thead th")].map((t) => t.textContent);
     expect(ths).toEqual(["Symbol", "Quantity", "Value"]);
     const row = (v: string) => root.querySelector(`.summary tr[data-field="${v}"]`)!;
-    expect(row("qhbf").querySelector("td.num")!.textContent).toBe("0.813 fraction (0–1)");
+    expect(row("qhbf").querySelector("td.num")!.textContent!.replace(/\u00a0/g, " ")).toBe("0.813 fraction (0–1)");
     expect(row("qhef").querySelector("td.num")!.textContent).toBe("—");
     expect(row("dpm").querySelector("td.sym .katex")).not.toBeNull();
     const visible = root.querySelector(".summary table")!.textContent!;
@@ -443,7 +449,7 @@ describe("cell panel", () => {
     await open();
     const sel = root.querySelector('select[aria-label="Flux rose mode"]') as HTMLSelectElement;
     expect([...sel.options].map((o) => o.textContent)).toEqual(["Flat bed", "Elongation (αE)", "Transverse migration (αH)"]);
-    const cap = () => root.querySelectorAll(".fig")[1].querySelector(".caption")!.textContent!;
+    const cap = () => root.querySelectorAll(".fig")[1].querySelector(".caption")!.textContent!.replace(/\u00a0/g, " ");
     expect(cap()).toMatch(/^Flat bed: DP = /);
     sel.value = "elongation"; fire(sel, "change");
     expect(cap()).toMatch(/^Elongation \(αE\): .* = [0-9.]+ m²\/yr/);

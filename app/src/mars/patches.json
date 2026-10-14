@@ -1,0 +1,285 @@
+[
+  {
+    "file": "src/map/adapters.ts",
+    "edits": [
+      {
+        "find": "const R = 6371008.8, rad = Math.PI / 180;",
+        "replace": "const R = 3389500, rad = Math.PI / 180; // Mars radius (VITE_BODY=mars)",
+        "note": "viewMetersPerPixel: great-circle distance on Mars"
+      }
+    ]
+  },
+  {
+    "file": "src/layerconfig.ts",
+    "edits": [
+      {
+        "find": "const EARTH_CIRCUMFERENCE_M = 2 * Math.PI * 6378137;",
+        "replace": "const EARTH_CIRCUMFERENCE_M = 2 * Math.PI * 3389500; // Mars radius (VITE_BODY=mars)",
+        "note": "metersPerPixel: Web-Mercator ground resolution of a Mars map"
+      }
+    ]
+  },
+  {
+    "file": "src/export/mapExport.ts",
+    "edits": [
+      {
+        "find": "const mpp = (40075016.686 * Math.cos(",
+        "replace": "const mpp = (2 * Math.PI * 3389500 * Math.cos(",
+        "note": "scale bar of the exported image: Mars radius"
+      },
+      {
+        "find": "mercator: \"Web Mercator EPSG:3857\"",
+        "replace": "mercator: \"Web Mercator (Mars sphere, R = 3389.5 km)\""
+      },
+      {
+        "find": "{ kind: \"heading\", text: \"Dune Atlas · map.geomorphlab.org\" }",
+        "replace": "{ kind: \"heading\", text: \"Mars Dune Atlas\" }"
+      },
+      {
+        "find": "text: `Dune map and wind-regime method: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}.` });",
+        "replace": "text: `Dune map: USGS Mars Global Digital Dune Database (Hayward et al. 2007, 2010, 2012, 2014) and Fenton (2020), merged. Wind-regime method: Gunn, A. (2026) Nature Communications, doi:${PAPER_DOI}; transport law: Pähtz & Durán (2023) J. Fluid Mech. 963, A20, doi:10.1017/jfm.2023.343.` });"
+      },
+      {
+        "find": "text.push({ kind: \"text\", text: state.dataset === \"era5\"\n    ? `Wind: ERA5 hourly 10 m wind 1950–2024 (Hersbach et al. 2020, doi:${ERA5_PAPER_DOI}; data doi:${ERA5_DOI}); statistics computed for the Dune Atlas with the method of Gunn (2026). ${C3S_NOTICE_ERA5}`\n    : `Wind: ERA5-Land hourly 10 m wind 1950–2024 (Muñoz-Sabater et al. 2021, doi:${ERA5LAND_PAPER_DOI}; data doi:${ERA5LAND_DOI}); statistics from Gunn (2026). ${C3S_NOTICE}` });",
+        "replace": "text.push({ kind: \"text\", text: `Wind: MCMC FV3 Mars GCM beta release 1 (NASA Ames Mars Climate Modeling Center), hourly lowest-level wind, one Mars year, 2°; https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/` });",
+        "note": "no Copernicus notice on Mars"
+      },
+      {
+        "find": "if (visible.some((l) => l.id === \"aridity\")) text.push({ kind: \"text\", text: \"Aridity: Global Aridity Index v3.1 (Zomer, Xu & Trabucco 2022, doi:10.1038/s41597-022-01493-1; data doi:10.6084/m9.figshare.7504448.v7), CC BY 4.0.\" });",
+        "replace": "if (visible.some((l) => l.id === \"elevation\")) text.push({ kind: \"text\", text: \"Elevation: MGS MOLA – MEX HRSC blended DEM 200 m v2 (Fergason, Hare & Laura 2018, USGS Astrogeology); MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO).\" });"
+      },
+      {
+        "find": "if (visible.some((l) => l.id === \"vegetation\")) text.push({ kind: \"text\", text: \"Vegetation cover: CSIRO MODIS Fractional Cover v3.1 (Guerschman et al. 2015, doi:10.1016/j.rse.2015.01.021; data doi:10.4225/08/5848a3f19a7b3), CC BY 4.0, © 2008–2019 CSIRO.\" });",
+        "replace": "if (visible.some((l) => l.id === \"rho_mean\")) text.push({ kind: \"text\", text: \"Air density: MCMC FV3 Mars GCM beta release 1, lowest layer p/(R T), mean over the Mars year.\" });"
+      },
+      {
+        "find": ": land without mapped dunes`",
+        "replace": ": areas without mapped dunes`"
+      },
+      {
+        "find": "text: `Exported ${isoDate(c.date)} from the Dune Atlas.`",
+        "replace": "text: `Exported ${isoDate(c.date)} from the Mars Dune Atlas.`"
+      },
+      {
+        "find": "return `dune-atlas_map_${dataset}",
+        "replace": "return `mars-dune-atlas_map_${dataset}"
+      },
+      {
+        "find": "` · threshold friction velocity ${utTex(ut)}`",
+        "replace": "` · median grain diameter ${utTex(ut)}`"
+      }
+    ]
+  },
+  {
+    "file": "src/export/plotExport.ts",
+    "edits": [
+      {
+        "find": "export function windSourceText(datasetId: string): string {\n  return datasetId === \"era5\"\n    ? `Wind: ERA5 hourly 10 m wind 1950–2024 (Hersbach et al. 2020, doi:${ERA5_PAPER_DOI}; data doi:${ERA5_DOI}); statistics computed for the Dune Atlas with the method of Gunn (2026). ${C3S_NOTICE_ERA5}`\n    : `Wind: ERA5-Land hourly 10 m wind 1950–2024 (Muñoz-Sabater et al. 2021, doi:${ERA5LAND_PAPER_DOI}; data doi:${ERA5LAND_DOI}); statistics from Gunn (2026). ${C3S_NOTICE}`;\n}",
+        "replace": "export function windSourceText(datasetId: string): string {\n  void datasetId;\n  return `Wind: MCMC FV3 Mars GCM beta release 1 (NASA Ames Mars Climate Modeling Center), hourly lowest-level wind, one Mars year, 2°; https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/`;\n}\n",
+        "note": "no Copernicus notice on Mars"
+      },
+      {
+        "find": "text: `Data: Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications, doi:${PAPER_DOI}. ${windSourceText(d.id)}`",
+        "replace": "text: `Method: Gunn, A. (2026) Nature Communications, doi:${PAPER_DOI}; transport law: Pähtz & Durán (2023) J. Fluid Mech. 963, A20, doi:10.1017/jfm.2023.343. ${windSourceText(d.id)}`"
+      },
+      {
+        "find": "` · threshold friction velocity ${utTex(c.ut)}`",
+        "replace": "` · median grain diameter ${utTex(c.ut)}`"
+      },
+      {
+        "find": "from the Dune Atlas (map.geomorphlab.org).`",
+        "replace": "from the Mars Dune Atlas.`"
+      },
+      {
+        "find": "`dune-atlas_${key}_${datasetId}_${n(cell.lat)}_${n(cell.lon)}${ut === null ? \"\" : `_ut${ut.toFixed(2)}`}.${ext}`",
+        "replace": "`mars-dune-atlas_${key}_${datasetId}_${n(cell.lat)}_${n(cell.lon)}${ut === null ? \"\" : `_d${Math.round(ut)}um`}.${ext}`"
+      }
+    ]
+  },
+  {
+    "file": "src/export/labels.ts",
+    "edits": [
+      {
+        "find": "export const utTex = (ut: number) => `$u_{*,th}$ = ${ut.toFixed(2)} $\\\\mathrm{m\\\\,s^{-1}}$`;",
+        "replace": "export const utTex = (ut: number) => `$d$ = ${Math.round(ut)} $\\\\mathrm{\\\\mu m}$`;",
+        "note": "the slider value is the grain diameter d (µm)"
+      }
+    ]
+  },
+  {
+    "file": "src/ui/legend.ts",
+    "edits": [
+      {
+        "find": "` At current ${mathHtml(\"$u_{*,th}$\")}.`",
+        "replace": "` At current ${mathHtml(\"$d$\")}.`"
+      },
+      {
+        "find": "` · at current ${mathHtml(\"$u_{*,th}$\")}`",
+        "replace": "` · at current ${mathHtml(\"$d$\")}`"
+      },
+      {
+        "find": "\"Land without mapped dunes\"",
+        "replace": "\"Areas without mapped dunes\""
+      }
+    ]
+  },
+  {
+    "file": "src/ui/layerPanel.ts",
+    "edits": [
+      {
+        "find": "export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class=\"sources\">\n  <li><strong>Wind histograms and sand-flux fields (ERA5-Land 0.1°)</strong>: ERA5-Land 1950–2024 hourly 10 m winds (0.1°) and the qsat parameters of Gunn (2026), Supplementary Data (Zenodo, CC BY 4.0). Drift potentials (DP, RDP, RDD, RDP/DP) and crest fluxes are averages over the hourly record.</li>\n  <li><strong>Wind histograms and sand-flux fields (ERA5 0.25°)</strong>: ERA5 1950–2024 hourly 10 m winds on the 0.25° grid (Hersbach et al. 2020; Copernicus Climate Change Service, accessed via the NCI Australia replica); the histograms and the 23 sand-flux fields are computed for the atlas with the method of Gunn (2026). Cells with an ERA5 land–sea mask fraction above 0 (any land in the cell) carry wind data; a 0.25° cell counts as a dune cell where it overlaps a mapped 0.1° dune cell. Choose the dataset with the Wind dataset selector; the dune map, aridity and vegetation layers are the same for both.</li>\n  <li><strong>Dune map</strong>: dune-mask-rev1.tif from the Supplementary Code record (Zenodo, MIT), vectorised into dune fields.</li>\n  <li><strong>Saturated flux divergence</strong> ${mathHtml(\"$\\\\nabla\\\\cdot\\\\vec{q}_s$\")}: divergence of the resultant drift potential vector (magnitude RDP, direction RDD) on the sphere, following Gunn (2026), Methods M6, computed with central differences on the 0.1° grid. Negative values (convergence) imply deposition; no data at coasts.</li>\n  <li><strong>Aridity index</strong>: Global Aridity Index v3.1 (Global-AI_PET v3.1; Zomer, Xu &amp; Trabucco 2022), 1970–2000, native 30″ grid, CC BY 4.0; ocean and Antarctica (south of 60° S) have no data, values ≥ 6.5535 are at the top of the source range. The click panel shows the 0.1° cell mean.</li>\n  <li><strong>Vegetation cover</strong>: CSIRO MODIS Fractional Cover v3.1 (Guerschman et al. 2015; Guerschman &amp; Hill 2018), total vegetation cover (photosynthetic + non-photosynthetic vegetation), mean of the monthly 500 m values 2001–2025 on the 0.1° grid, CC BY 4.0 © 2008–2019 CSIRO, hosted by NCI; the vegetation product of GEOGLAM RAPP. <a href=\"https://map.geo-rapp.org/\" target=\"_blank\" rel=\"noopener noreferrer\">Explore the full time series at GEOGLAM RAPP</a>. The click panel shows the cell mean and the number of valid months.</li>\n</ul>`;",
+        "replace": "export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class=\"sources\">\n  <li><strong>Winds (MCMC FV3 Mars GCM, beta release 1)</strong>: hourly lowest-level winds, temperature and surface pressure of the NASA Ames Mars Climate Modeling Center FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to 2° × 2°: 16,032 hourly samples, one Mars year. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind (≈ 1.6–3 m) follows from the hourly pressure and temperature, and the friction velocity u* comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (2023, eq. 2.2) under constant stress at that height (no roughness length).</li>\n  <li><strong>Sand-flux fields</strong>: for every hour, the threshold and the saturated transport rate of Pähtz &amp; Durán (2023, J. Fluid Mech. 963, A20) at the selected median grain diameter d (grain density 3000 kg/m³, g = 3.71 m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the method of Gunn (2026). Fluxes are per Earth year (365.25 days).</li>\n  <li><strong>Dune map</strong>: USGS Mars Global Digital Dune Database (MGD3; Hayward et al. 2007, 2010, 2012, 2014) plus the small dune fields of Fenton (2020, Icarus 352, 114018), merged into 3,514 dune-field polygons (Mars 2000 sphere).</li>\n  <li><strong>Saturated flux divergence</strong> ${mathHtml(\"$\\\\nabla\\\\cdot\\\\vec{q}_s$\")}: divergence of the resultant drift potential vector (magnitude RDP, direction RDD) on the Mars sphere (R = 3389.5 km), following Gunn (2026), Methods M6, with central differences on the 2° grid. Negative values (convergence) imply deposition.</li>\n  <li><strong>Elevation and shaded relief</strong>: MGS MOLA – MEX HRSC blended DEM, 200 m, v2 (Fergason, Hare &amp; Laura 2018, USGS Astrogeology); licence: MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO). The atlas's MOLA–HRSC shaded-relief basemap tiles are released under CC BY-SA 3.0 IGO (derived from HRSC, CC BY-SA 3.0 IGO, and MOLA, CC0).</li>\n</ul>`;"
+      },
+      {
+        "find": "export const INVERT_NOTE = \"Invert colours land WITHOUT mapped dunes. Vector tiles end at ±85.05° latitude, so interior Antarctica south of 85°S is not coloured.\";",
+        "replace": "export const INVERT_NOTE = \"Invert colours areas WITHOUT mapped dunes.\";"
+      },
+      {
+        "find": "`<p class=\"help\">Updates with the ${mathHtml(\"$u_{*,th}$\")} control.</p>`",
+        "replace": "`<p class=\"help\">Updates with the grain-diameter ${mathHtml(\"$d$\")} control.</p>`"
+      },
+      {
+        "find": "`<p class=\"help\">Threshold-independent: not affected by the ${mathHtml(\"$u_{*,th}$\")} control.</p>`",
+        "replace": "`<p class=\"help\">Independent of the grain diameter: not affected by the ${mathHtml(\"$d$\")} control.</p>`"
+      },
+      {
+        "find": "`Invert: colour land without dunes`",
+        "replace": "`Invert: colour areas without dunes`"
+      },
+      {
+        "find": "\" invert (land without dunes)\"",
+        "replace": "\" invert (areas without dunes)\""
+      },
+      {
+        "find": "<p>Click any land cell to see its 1950–2024 wind rose (ERA5-Land 0.1° or ERA5 0.25°, chosen with the Wind dataset selector), the sand-flux rose at the selected threshold, dune-orientation modes and all wind-regime parameters.</p>",
+        "replace": "<p>Click any 2° cell to see its wind rose for one Mars year (16,032 hourly samples of the MCMC FV3 GCM), the sand-flux rose at the selected grain diameter, dune-orientation modes and all wind-regime parameters.</p>"
+      },
+      {
+        "find": "citationHtml(citationSources([\"era5\", \"aridity\", \"vegetation\"]))",
+        "replace": "citationHtml(citationSources([\"dem\"]))"
+      },
+      {
+        "find": "<p class=\"help\">Contains modified Copernicus Climate Change Service information. Basemap credits are shown in the map attribution.</p>",
+        "replace": "<p class=\"help\">Basemap credits are shown in the map attribution.</p>"
+      }
+    ]
+  },
+  {
+    "file": "src/cell/modesplot.ts",
+    "edits": [
+      {
+        "find": "against threshold friction velocity (radius, ${x0} m/s at the centre to ${x1} m/s at the rim)",
+        "replace": "against median grain diameter (radius, log scale, ${Math.round(10 ** x0)} µm at the centre to ${Math.round(10 ** x1)} µm at the rim)",
+        "note": "Mars: x = log10(d / µm)"
+      },
+      {
+        "find": "for (const u of [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]) p.push(",
+        "replace": "for (const u of [50, 100, 200, 500, 1000].map(Math.log10)) p.push("
+      },
+      {
+        "find": "for (const u of [0.2, 0.4, 0.6]) {",
+        "replace": "for (const u of [100, 200, 500].map(Math.log10)) {"
+      },
+      {
+        "find": "${u.toFixed(1)}</text>",
+        "replace": "${Math.round(10 ** u)}</text>"
+      },
+      {
+        "find": "<title>current u*,th = ${uc.toFixed(2)} m/s</title>",
+        "replace": "<title>current d = ${Math.round(10 ** uc)} µm</title>"
+      },
+      {
+        "find": "o.radiusLabel ?? \"radius: u*,th (m/s)\"",
+        "replace": "o.radiusLabel ?? \"radius: d (µm, log scale)\""
+      }
+    ]
+  },
+  {
+    "file": "src/cell/lineplot.ts",
+    "edits": [
+      {
+        "find": "const xt = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6].filter(",
+        "replace": "const xt = [50, 100, 200, 500, 1000].map(Math.log10).filter(",
+        "note": "Mars: x = log10(d / µm)"
+      },
+      {
+        "find": "text-anchor=\"middle\">${tick(t)}</text>",
+        "replace": "text-anchor=\"middle\">${Math.round(10 ** t)}</text>"
+      }
+    ]
+  },
+  {
+    "file": "src/defaultview.ts",
+    "edits": [
+      {
+        "find": "export const DEFAULT_VIEW: ShareState = {\n  lon: 17.5025, lat: 15.1644, zoom: 3.52, proj: \"globe\",\n  dataset: \"era5\", basemap: \"openfreemap-dark\", ut: 14,\n  layers: [\n    { id: \"rdpa\", opacity: 0.85, cfg: { mode: \"streamlines\" } },\n    { id: \"dunes\", opacity: 1 },\n    { id: \"dpm\", opacity: 0.85 },\n  ],\n  cell: null,\n  panel: true,\n};\n",
+        "replace": "export const DEFAULT_VIEW: ShareState = {\n  // Mars: globe over the north polar erg (the most dune-rich region), FV3 beta 1, d = 200 µm\n  lon: 160, lat: 62, zoom: 2.2, proj: \"globe\",\n  dataset: \"fv3-beta1\", basemap: \"hrsc-mola-hillshade\", ut: 29,\n  layers: [\n    { id: \"rdpa\", opacity: 0.85, cfg: { mode: \"streamlines\" } },\n    { id: \"dunes\", opacity: 1 },\n    { id: \"dpm\", opacity: 0.85 },\n  ],\n  cell: null,\n  panel: true,\n};\n"
+      }
+    ]
+  },
+  {
+    "file": "src/ui/coords.ts",
+    "edits": [
+      {
+        "find": "\"Last tapped point (latitude, longitude)\" : \"Cursor position (latitude, longitude)\"",
+        "replace": "\"Last tapped point (planetocentric latitude, east longitude)\" : \"Cursor position (planetocentric latitude, east longitude)\""
+      }
+    ]
+  },
+  {
+    "file": "src/registry/load.ts",
+    "edits": [
+      {
+        "find": "import.meta.glob(\"../../../registry/layers.yaml\"",
+        "replace": "import.meta.glob(\"../../../registry/mars/layers.yaml\"",
+        "note": "Mars registry: registry/mars/layers.yaml"
+      },
+      {
+        "find": "import.meta.glob(\"../../../registry/generated/*.yaml\"",
+        "replace": "import.meta.glob(\"../../../registry/mars/generated/*.yaml\"",
+        "note": "Mars generated fragments (Wind, Terrain)"
+      },
+      {
+        "find": "import.meta.glob(\"../../../registry/datasets/*/*.yaml\"",
+        "replace": "import.meta.glob(\"../../../registry/mars/datasets/*/*.yaml\"",
+        "note": "Mars wind datasets (none beyond fv3-beta1 yet)"
+      },
+      {
+        "find": "\"registry/layers.yaml not found at build time\"",
+        "replace": "\"registry/mars/layers.yaml not found at build time\""
+      },
+      {
+        "find": "import yaml from \"js-yaml\";",
+        "replace": "import yaml from \"js-yaml\";\nimport { withBaseInvert } from \"../mars/registry/invert\";",
+        "note": "Mars dune invert view kept from the base registry (src/mars/registry/invert.ts)"
+      },
+      {
+        "find": "  return addDatasets(mergeRegistry(base, frags), base, frags, datasetDirs());",
+        "replace": "  return withBaseInvert(addDatasets(mergeRegistry(base, frags), base, frags, datasetDirs()), base);"
+      }
+    ]
+  },
+  {
+    "file": "src/ui/threshold.ts",
+    "edits": [
+      {
+        "find": "  return `${v.toFixed(2)} m/s`;",
+        "replace": "  return `${Math.round(v)} µm`;",
+        "note": "Mars: the control is the median grain diameter d (integer µm values)"
+      },
+      {
+        "find": "`default ${t.values[t.defaultIndex].toFixed(2)}`",
+        "replace": "`default ${formatUt(t.values[t.defaultIndex])}`"
+      },
+      {
+        "find": "  const label = h(\"label\", { for: sid, class: \"ut-label\", html: opts.compact ? mathHtml(\"$u_{*,th}$\") : `Threshold friction velocity ${mathHtml(\"$u_{*,th}$\")}` });\n  const sec = h(\"section\", { class: `threshold${opts.compact ? \" compact\" : \"\"}`, \"aria-label\": \"Threshold friction velocity\" },",
+        "replace": "  const name = t.label.replace(/\\s+d$/, \"\");\n  const label = h(\"label\", { for: sid, class: \"ut-label\", html: opts.compact ? mathHtml(\"$d$\") : `${name} ${mathHtml(\"$d$\")}` });\n  const sec = h(\"section\", { class: `threshold${opts.compact ? \" compact\" : \"\"}`, \"aria-label\": name },",
+        "note": "label from the registry threshold block (\"Median grain diameter d\")"
+      },
+      {
+        "find": "html: `Drives every threshold-dependent map layer and the cell panel (${formatUt(t.values[0])}–${formatUt(t.values[t.values.length - 1])}; default ${formatUt(t.values[t.defaultIndex])}).` }",
+        "replace": "html: `Drives every grain-size-dependent map layer and the cell panel (${formatUt(t.values[0])}–${formatUt(t.values[t.values.length - 1])}, ${t.values.length} log-spaced steps; default ${formatUt(t.values[t.defaultIndex])}). The threshold ${mathHtml(\"$u_{*,th}$\")} is computed for every hour from d and the hour's air density and temperature (Pähtz & Durán 2023).` }"
+      }
+    ]
+  }
+]

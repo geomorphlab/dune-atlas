@@ -16,7 +16,7 @@ Sand moves when the friction velocity of the wind exceeds a threshold. The slide
 
 ### Layers and Active layers
 
-Tick a layer to show it. The ⓘ button gives its definition, units and data source; Display changes its colours, colour limits and scale, or shows direction fields as arrows or streamlines, with a spacing slider from Finer (denser lines) to Coarser. Active layers lists what is on the map, top first: drag a row or use the arrows to change the drawing order, set the opacity with its slider, and remove a layer with ×.
+Tick a layer to show it. The ⓘ button gives its definition, units and data source; Display changes its colours, colour limits and scale, or shows direction fields as arrows or streamlines, with a spacing slider from Finer (denser lines) to Coarser. Active layers lists what is on the map, top first: drag a row or use the arrows to change the drawing order, set the opacity with its slider, and remove a layer with ×. Dunes only (under the Wind dataset selector) draws every wind-derived layer (sand-flux fields, flux divergence, arrows and streamlines) only in the cells with dunes of the dataset; dunes, aridity, vegetation and the basemaps are unchanged, and the cell panel still works for any cell. The setting is part of the link.
 
 ### Clicking a cell
 
@@ -40,7 +40,7 @@ The share button (top right) copies a short link that restores this view: positi
 
 ## Guided tour
 
-Shown once on the first visit (not in embed mode unless `?tour=1`). Buttons: Back / Next (Done on the last step) / Skip tour; counter "Step 1 of 8". Esc or a click outside skips.
+Shown once on the first visit (not in embed mode unless `?tour=1`). Buttons: Back / Next (Done on the last step) / Skip tour; counter "Step 1 of 9". Esc or a click outside skips.
 
 ### 1. Welcome to the Dune Atlas
 
@@ -64,7 +64,7 @@ This slider sets the friction velocity above which the wind moves sand. Every th
 
 Highlights: `#layer-panel .layer-item[data-layer="rdpa"]` or `#layer-panel-body .layer-group` or `#layer-panel .panel-toggle`
 
-Tick layers to add them to the map; ⓘ explains a layer. Display, opened here for the resultant drift direction (RDD), changes a layer's colours and colour limits and, for direction fields, draws a colour map, arrows or streamlines in the line colour and spacing you choose.
+Tick layers to add them to the map; ⓘ explains a layer. Display, opened here for the resultant drift direction (RDD), changes a layer's colours and colour limits and, for direction fields, draws a colour map, arrows or streamlines in the line colour and spacing you choose. Dunes only, under the Wind dataset selector, keeps the wind-derived layers to the cells with dunes.
 
 ### 5. Active layers
 
@@ -88,7 +88,13 @@ Switch between ERA5-Land (0.1°) and ERA5 (0.25°) wind statistics for 1950–20
 
 Highlights: `.atlas-tools .share-btn` or `.atlas-tools`
 
-Copy a short link to this view, or export the map as an image with colour bars, scale and data sources. Plots in the cell panel have their own Export menus. This is the end of the tour.
+Copy a short link to this view, or export the map as an image with colour bars, scale and data sources. Plots in the cell panel have their own Export menus.
+
+### 9. Switch planet
+
+Highlights: `.atlas-tools .planet-btn` or `.atlas-tools`
+
+Earth and Mars share this atlas: the planet button below the camera swaps between them and opens the Mars atlas at its default view. This is the end of the tour.
 
 Fallback (example cell not loaded): The example cell could not be loaded just now (are you offline?). Click any land cell on the map to open its panel.
 

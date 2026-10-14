@@ -62,25 +62,55 @@ export function cellBounds(c: CellRef, g: Grid = ERA5_LAND_GRID): [number, numbe
   return [[w, s], [e, s], [e, n], [w, n], [w, s]];
 }
 
-/** Selected-cell highlight as GeoJSON. A cell that straddles the antimeridian is split into the
- *  parts west and east of ±180 (both within ±180, so the globe and Mercator draw both halves):
- *  the fill is a MultiPolygon (`part: "fill"`) and the outline a MultiLineString without the
- *  seam edge (`part: "outline"`). Other cells: one Polygon (fill and outline). */
+/** Flat-map latitude limit of the selected-cell highlight: just inside the Web-Mercator limit (85.0511°),
+ *  so no vertex lies on the world's top/bottom tile edge (MapLibre extends fill triangles on that edge to
+ *  the pole on the globe: `_fillPoles`). Poleward of it the highlight is drawn by the globe layers
+ *  (map/selection.ts) from the cell's true bounds (`bbox` of the collection). */
+export const FLAT_LAT = 85.05;
+
+/** Selected-cell highlight as GeoJSON for the FLAT map, with `bbox` = the true cell bounds [w, s, e, n]
+ *  (RFC 7946: within ±180, w > e across the antimeridian; s/n within ±90) for the globe layers. A cell that straddles the
+ *  antimeridian is split into the parts west and east of ±180 (both within ±180): the fill is a MultiPolygon
+ *  (`part: "fill"`) and the outline a MultiLineString without the seam edge (`part: "outline"`). A cell
+ *  beyond ±FLAT_LAT is clipped there (fill + outline without the clipped edge); a cell entirely beyond has
+ *  no flat features. Other cells: one Polygon (fill and outline). */
 export function cellFeature(c: CellRef, g: Grid = ERA5_LAND_GRID): GeoJSON.FeatureCollection {
   const ring = cellBounds(c, g);
   const [w, s] = ring[0], [e, n] = ring[2];
-  if (w >= -180 && e <= 180) return { type: "FeatureCollection", features: [{ type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [ring] } }] };
-  // the overhang beyond -180 (or +180) is drawn on the other side
-  const [a0, a1, b0, b1] = w < -180 ? [-180, e, w + 360, 180] : [w, 180, -180, e - 360];
-  const box = (x0: number, x1: number): [number, number][] => [[x0, s], [x1, s], [x1, n], [x0, n], [x0, s]];
-  // outline: every edge except the one on the seam (x = ±180)
-  const east: [number, number][] = [[a0, s], [a1, s], [a1, n], [a0, n]]; // part starting at the seam -180 (west edge on the seam)
-  const west: [number, number][] = [[b1, n], [b0, n], [b0, s], [b1, s]]; // part ending at the seam +180 (east edge on the seam)
-  const outline = w < -180 ? [east, west] : [[[a1, s], [a0, s], [a0, n], [a1, n]] as [number, number][], [[b0, n], [b1, n], [b1, s], [b0, s]] as [number, number][]];
+  // RFC 7946 bbox: longitudes within ±180, west > east for a cell across the antimeridian
+  const wrap = (x: number) => (x < -180 ? x + 360 : x > 180 ? x - 360 : x);
+  const bbox: GeoJSON.BBox = [wrap(w), s, wrap(e), n];
+  const sF = Math.max(s, -FLAT_LAT), nF = Math.min(n, FLAT_LAT);
+  const clipS = sF > s, clipN = nF < n, split = w < -180 || e > 180;
+  if (sF >= nF) return { type: "FeatureCollection", bbox, features: [] };
+  if (!split && !clipS && !clipN) return { type: "FeatureCollection", bbox, features: [{ type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [ring] } }] };
+  // parts within ±180: [x0, x1, seam at x0, seam at x1]; the overhang beyond -180 (or +180) on the other side
+  const parts: [number, number, boolean, boolean][] = !split ? [[w, e, false, false]]
+    : w < -180 ? [[-180, e, true, false], [w + 360, 180, false, true]] : [[w, 180, false, true], [-180, e - 360, true, false]];
+  const box = (x0: number, x1: number): [number, number][] => [[x0, sF], [x1, sF], [x1, nF], [x0, nF], [x0, sF]];
+  // outline: every edge except those on the seam (x = ±180) and those clipped at ±FLAT_LAT
+  const lines: [number, number][][] = [];
+  for (const [x0, x1, seam0, seam1] of parts) {
+    if (!clipS) lines.push([[x0, sF], [x1, sF]]);
+    if (!seam1) lines.push([[x1, sF], [x1, nF]]);
+    if (!clipN) lines.push([[x1, nF], [x0, nF]]);
+    if (!seam0) lines.push([[x0, nF], [x0, sF]]);
+  }
   return {
-    type: "FeatureCollection", features: [
-      { type: "Feature", properties: { part: "fill" }, geometry: { type: "MultiPolygon", coordinates: [[box(a0, a1)], [box(b0, b1)]] } },
-      { type: "Feature", properties: { part: "outline" }, geometry: { type: "MultiLineString", coordinates: outline } },
+    type: "FeatureCollection", bbox, features: [
+      { type: "Feature", properties: { part: "fill" }, geometry: parts.length === 1 ? { type: "Polygon", coordinates: [box(parts[0][0], parts[0][1])] } : { type: "MultiPolygon", coordinates: parts.map(([a, b]) => [box(a, b)]) } },
+      { type: "Feature", properties: { part: "outline" }, geometry: { type: "MultiLineString", coordinates: mergeLines(lines) } },
     ],
   };
+}
+
+/** join consecutive edges that share an end point into polylines */
+function mergeLines(lines: [number, number][][]): [number, number][][] {
+  const out: [number, number][][] = [];
+  for (const l of lines) {
+    const last = out[out.length - 1], p = last?.[last.length - 1];
+    if (p && p[0] === l[0][0] && p[1] === l[0][1]) last.push(...l.slice(1));
+    else out.push([...l]);
+  }
+  return out;
 }

@@ -69,6 +69,45 @@ def dataset_citation(dataset=None) -> str:
     return (f"Fields computed for the atlas from {ds.name} hourly 10 m winds ({ds.info['citation']}; data "
             f"{ds.info['data_citation']}) with the method of Gunn, A. (2026) The distribution of Earth's wind-blown "
             "sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y")
+# Registry (info popover) citation of the atlas-derived fields: one format for every dataset and body,
+# "Gunn, A. (2026). ... doi:...; [data: ...;] winds: ..." (PI 2026-10-14; the app's cell/citation.ts
+# fieldsCitation() returns the same strings and tests compare them). Store attrs keep dataset_citation().
+PAPER_CITATION = ("Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications. "
+                  "doi:10.1038/s41467-026-75466-y")
+ERA5LAND_WINDS = ("ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a "
+                  "state-of-the-art global reanalysis dataset for land applications. Earth System Science Data 13, "
+                  "4349–4383. doi:10.5194/essd-13-4349-2021)")
+
+
+def fields_citation(dataset=None) -> str:
+    ds = get_dataset(dataset)
+    if ds.id == "era5-land":
+        return (f"{PAPER_CITATION}; data: Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes - "
+                f"Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812; winds: {ERA5LAND_WINDS}")
+    return f"{PAPER_CITATION}; winds: {ds.name} hourly 10 m winds {ds.period} ({ds.info['citation']}; data: {ds.info['data_citation']})"
+
+
+def fields_licence(dataset=None) -> str:
+    """Licence row of the atlas-derived fields (PI 2026-10-14): ERA5-Land fields = the Zenodo Supplementary Data
+    licence; fields computed from ERA5 = the Copernicus licence."""
+    ds = get_dataset(dataset)
+    return "CC BY 4.0 (Zenodo Supplementary Data)" if ds.id == "era5-land" else ds.info["licence"]
+
+
+def fields_attribution(dataset=None) -> dict:
+    return {"citation": fields_citation(dataset), "licence": fields_licence(dataset)}
+
+
+def field_definition(var: str, description: str) -> str:
+    """Info-popover definition from the source description: TeX kept for the app's KaTeX rendering (the
+    `units` row states the display units, so the stored units and radians are dropped); directions in the
+    displayed convention (compass bearing; the stored convention stays in the downloads / metadata)."""
+    d = description.replace(", in m$^2$/s.", ".").replace(" in m$^2$/s.", ".").replace(" in radians.", ".")
+    d = d.replace(", radians CCW from east, direction of transport.",
+                  ", the direction sand moves, as a compass bearing (clockwise from north).")
+    return re.sub(r"\s+", " ", d).strip()
+
+
 REPO = Path(__file__).resolve().parents[3]
 METADATA_JSON = REPO / "registry" / "qsat_field_metadata.json"
 
@@ -453,7 +492,7 @@ def registry_fragment(meta: dict | None = None, var_order=None, dataset=None) ->
     registry/layers.schema.json $defs/layer. `dataset` selects the source prefix and citation."""
     from .cellstore import FIELD_VARS
     dset = get_dataset(dataset)
-    prefix, citation = DATASET_SOURCE_PREFIX[dset.id], dataset_citation(dset)
+    prefix, citation = DATASET_SOURCE_PREFIX[dset.id], fields_citation(dset)
     meta = meta or load_metadata()
     group_order = [g["id"] for g in GROUPS]
     order = list(var_order or LAYER_ORDER)
@@ -465,15 +504,9 @@ def registry_fragment(meta: dict | None = None, var_order=None, dataset=None) ->
         fm, m = FIELD_META[v], meta[v]
         tr = fm.get("transform", "none")
         units = "°" if v in ANGLE_VARS else display_units(v)
-        desc = tex_to_plain(m["description"]).replace("m²/s", "m²/yr").replace(" in radians.", ".")
-        desc += (f" Shown at the selected threshold friction velocity u*,th "
-                 f"(default {C.UT_VALUES[C.UT_DEFAULT_INDEX]:.2f} m/s).")
-        if v in ANGLE_VARS:
-            desc += (" Displayed as a compass axis 0–180°." if v == "ab" else
-                     " Displayed as the compass bearing (degrees clockwise from north) toward which sand/crests move.")
-        if v in FLUX_VARS:
-            desc += " Converted from m²/s to m²/yr."
-        elif v in CLIPPED_RATIO_VARS:
+        # definition only: units, the slider and the wind dataset are rows of the info popover (app)
+        desc = field_definition(v, m["description"])
+        if v in CLIPPED_RATIO_VARS:
             desc += (f" The ratio is infinite where its denominator (a net flux) is exactly zero; such values are"
                      f" shown as ±{F16_MAX:,.0f}.")
         display = {"transform": tr, "colormap": fm["colormap"], "clim": display_clim(v, meta)}
@@ -487,6 +520,7 @@ def registry_fragment(meta: dict | None = None, var_order=None, dataset=None) ->
             "id": v, "title": fm["title"], "titleTex": m["long_name"], "group": fm["group"],
             "type": "zarr-field", "source": f"{prefix}/{v}.zarr", "variable": v,
             "thresholdAware": True, "units": units, "description": desc, "citation": citation,
+            "attribution": fields_attribution(dset),
             "visible": v == "dpm", "opacity": 0.85, "queryable": True, "display": display,
         })
     _frag = {"groups": GROUPS, "layers": layers}

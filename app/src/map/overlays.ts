@@ -4,11 +4,14 @@
 // fans the global threshold out to every threshold-aware handle. Stacking follows the user's
 // drawing order (top of the list = drawn on top), always above the basemap and below basemap
 // labels / the selected-cell outline.
+import { SELECTION_STYLE, syncGlobeSelection } from "./selection";
 import type { Map as MlMap } from "maplibre-gl";
 import type { LayerDef, Registry } from "../registry/types";
 import type { LayerState } from "../store";
 import type { LayerConfig } from "../layerconfig";
 import { resolveSource } from "../registry/merge";
+import { CONFIG } from "../config";
+import { isWindDerived, loadDuneMask, type DuneMaskProvider } from "./dunemask";
 import { ADAPTERS, StaleLayerError, type LayerHandle } from "./adapters";
 
 /** Bottom-most map layer of the selected-cell outline (overlays go below it). */
@@ -31,11 +34,33 @@ export class OverlayManager {
   /** drawing order, top first */
   #order: string[];
   #datasetPrefix: string | undefined;
+  #dunesOnly = false;
 
-  constructor(private map: MlMap, private reg: Registry, private dataBase: string, utIndex: number, opts: { order?: string[]; datasetPrefix?: string } = {}) {
+  constructor(private map: MlMap, private reg: Registry, private dataBase: string, utIndex: number, opts: { order?: string[]; datasetPrefix?: string; dunesOnly?: boolean } = {}) {
     this.#utIndex = utIndex;
     this.#order = opts.order ?? reg.layers.map((l) => l.id);
     this.#datasetPrefix = opts.datasetPrefix;
+    this.#dunesOnly = !!opts.dunesOnly;
+  }
+
+  /** 'Dunes only' (map/dunemask.ts): wind-derived layers only in the dataset's dune cells. A change
+   *  re-adds the visible layers (the masked virtual store is part of a layer's source). */
+  setDunesOnly(on: boolean) {
+    if (on === this.#dunesOnly) return;
+    this.#dunesOnly = on;
+    if (this.reg.layers.some((l) => isWindDerived(l) && (this.#handles.has(l.id) || this.#pending.has(l.id)))) this.reattach(this.#desired);
+  }
+  get dunesOnly() { return this.#dunesOnly; }
+
+  /** URL of the current dataset's cell store (its per-cell dune flag is the mask) */
+  cellStoreUrl(): string {
+    const ds = this.reg.datasets?.find((d) => d.prefix === this.#datasetPrefix);
+    return this.#resolve(ds?.cellStore ?? CONFIG.cellStorePath);
+  }
+  duneMaskFor(layer: LayerDef): DuneMaskProvider | undefined {
+    if (!this.#dunesOnly || !isWindDerived(layer)) return undefined;
+    const url = this.cellStoreUrl();
+    return () => loadDuneMask(url);
   }
 
   /** the anchor all overlays stay below */
@@ -85,6 +110,7 @@ export class OverlayManager {
       const h = await ADAPTERS[layer.type](layer, {
         map: this.map, dataBase: this.dataBase, resolve: this.#resolve, threshold: this.reg.threshold, utIndex: this.#utIndex,
         beforeId: this.#beforeId(layer.id), cfg: st.cfg, sourceOfVariable: this.#sourceOfVariable,
+        duneMask: this.duneMaskFor(layer),
         onDataError: (e) => this.onError(layer, e),
         alive: () => gen === this.#generation,
       }, st.opacity);
@@ -172,13 +198,16 @@ export type Selection = GeoJSON.Feature | GeoJSON.FeatureCollection | null;
  *  `part: "outline"` are drawn by one layer only (a cell split at the antimeridian: no outline
  *  along the seam); other features by both. */
 export function ensureSelectedCellLayers(map: MlMap, feature: Selection) {
+  const before = firstSymbolLayer(map);
   if (!map.getSource("selected-cell")) {
     map.addSource("selected-cell", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
-    const before = firstSymbolLayer(map);
-    map.addLayer({ id: SELECTED_CELL_BOTTOM, type: "fill", source: "selected-cell", filter: ["!=", ["get", "part"], "outline"], paint: { "fill-color": "#ffffff", "fill-opacity": 0.12 } }, before);
-    map.addLayer({ id: SELECTED_CELL_LINE, type: "line", source: "selected-cell", filter: ["!=", ["get", "part"], "fill"], paint: { "line-color": "#ff4d6d", "line-width": 2 } }, before);
+    map.addLayer({ id: SELECTED_CELL_BOTTOM, type: "fill", source: "selected-cell", filter: ["!=", ["get", "part"], "outline"], paint: { "fill-color": SELECTION_STYLE.fill, "fill-opacity": SELECTION_STYLE.fillOpacity } }, before);
+    map.addLayer({ id: SELECTED_CELL_LINE, type: "line", source: "selected-cell", filter: ["!=", ["get", "part"], "fill"], paint: { "line-color": SELECTION_STYLE.line, "line-width": SELECTION_STYLE.lineWidth } }, before);
   }
+  // flat map: the GeoJSON layers (cell clipped at ±85.05°); globe: custom layers from the true cell bounds
+  // (map/selection.ts), directly above the GeoJSON layers
   (map.getSource("selected-cell") as unknown as { setData(d: unknown): void }).setData(feature ?? { type: "FeatureCollection", features: [] });
+  syncGlobeSelection(map, feature?.bbox ?? null, [SELECTED_CELL_BOTTOM, SELECTED_CELL_LINE], before);
 }
 export const SELECTED_CELL_LINE = "selected-cell-line";
 

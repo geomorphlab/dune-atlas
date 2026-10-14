@@ -15,7 +15,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "layers", title: "Layers and Active layers",
-    body: "Tick a layer to show it. The ⓘ button gives its definition, units and data source; Display changes its colours, colour limits and scale, or shows direction fields as arrows or streamlines, with a spacing slider from Finer (denser lines) to Coarser. Active layers lists what is on the map, top first: drag a row or use the arrows to change the drawing order, set the opacity with its slider, and remove a layer with ×.",
+    body: "Tick a layer to show it. The ⓘ button gives its definition, units and data source; Display changes its colours, colour limits and scale, or shows direction fields as arrows or streamlines, with a spacing slider from Finer (denser lines) to Coarser. Active layers lists what is on the map, top first: drag a row or use the arrows to change the drawing order, set the opacity with its slider, and remove a layer with ×. Dunes only (under the Wind dataset selector) draws every wind-derived layer (sand-flux fields, flux divergence, arrows and streamlines) only in the cells with dunes of the dataset; dunes, aridity, vegetation and the basemaps are unchanged, and the cell panel still works for any cell. The setting is part of the link.",
   },
   {
     id: "cell", title: "Clicking a cell",
@@ -61,7 +61,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "layers", targets: ['#layer-panel .layer-item[data-layer="rdpa"]', "#layer-panel-body .layer-group", "#layer-panel .panel-toggle"], title: "Layers and their display",
-    body: "Tick layers to add them to the map; ⓘ explains a layer. Display, opened here for the resultant drift direction (RDD), changes a layer's colours and colour limits and, for direction fields, draws a colour map, arrows or streamlines in the line colour and spacing you choose.",
+    body: "Tick layers to add them to the map; ⓘ explains a layer. Display, opened here for the resultant drift direction (RDD), changes a layer's colours and colour limits and, for direction fields, draws a colour map, arrows or streamlines in the line colour and spacing you choose. Dunes only, under the Wind dataset selector, keeps the wind-derived layers to the cells with dunes.",
   },
   {
     id: "active", targets: ["#layer-panel-body .order", "#layer-panel .panel-toggle"], title: "Active layers",
@@ -77,7 +77,11 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "tools", targets: [".atlas-tools .share-btn", ".atlas-tools"], title: "Share and export",
-    body: "Copy a short link to this view, or export the map as an image with colour bars, scale and data sources. Plots in the cell panel have their own Export menus. This is the end of the tour.",
+    body: "Copy a short link to this view, or export the map as an image with colour bars, scale and data sources. Plots in the cell panel have their own Export menus.",
+  },
+  {
+    id: "planet", targets: [".atlas-tools .planet-btn", ".atlas-tools"], title: "Switch planet",
+    body: "Earth and Mars share this atlas: the planet button below the camera swaps between them and opens the Mars atlas at its default view. This is the end of the tour.",
   },
 ];
 

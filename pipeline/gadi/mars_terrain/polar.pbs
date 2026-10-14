@@ -1,0 +1,23 @@
+#!/bin/bash
+# Mars terrain: polar-cap DEM textures (AEQD, N/S, 4096..256 px, terrarium lossless WebP) for the globe
+# hillshade cap, from the MOLA–HRSC DEM (read in place).
+#PBS -P k10
+#PBS -q normal
+#PBS -N mars_terrain_polar
+#PBS -l ncpus=4
+#PBS -l mem=16GB
+#PBS -l walltime=01:00:00
+#PBS -l storage=gdata/k10+gdata/xp65+scratch/k10
+#PBS -j oe
+#PBS -o /scratch/k10/ag5517/dune-atlas/mars/logs/terrain_polar.log
+set -eu
+PY=/g/data/k10/ag5517/apps/dune_atlas_venv/bin/python
+CODE=@CODE@
+OUT=/scratch/k10/ag5517/dune-atlas/mars/stores/basemaps/hrsc-mola-polar
+test -x $PY || { echo "no interpreter"; exit 127; }
+test -f $CODE/dune_atlas_pipeline/mars/terrain_polar.py || { echo "no code"; exit 3; }
+export PYTHONPATH=$CODE OMP_NUM_THREADS=4
+mkdir -p $OUT
+echo "start $(date -u +%FT%TZ)"
+$PY -u -m dune_atlas_pipeline.mars.terrain_polar --out $OUT > $OUT/../hrsc-mola-polar_stdout.json
+echo "DONE $(date -u +%FT%TZ)"

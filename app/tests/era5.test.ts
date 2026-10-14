@@ -154,8 +154,8 @@ describe.skipIf(!haveFix)("ERA5 fixture: panel and downloads", () => {
     const row = (f: string) => root.querySelector(`.summary tr[data-field="${f}"]`)!;
     expect(row("dunes").textContent).toBe("—Dunes present (cell overlaps a mapped 0.1° dune cell)yes");
     expect(root.querySelector('.summary tr[data-field="lsm"]')).toBeNull();
-    expect(row("tot_cov_mean").querySelector("th")!.textContent).toBe("Vegetation cover (mean 2001–2025; 100 % of cell with data)");
-    expect(row("cell").textContent).toBe("—Grid cell (row, column; index)458, 781; 660301 (ERA5 0.25°)");
+    expect(row("tot_cov_mean").querySelector("th")!.textContent).toBe("Vegetation cover");
+    expect(row("centre").querySelector("td.num")!.textContent).toBe("-24.5°, 15.25°");   // ERA5 cell (458, 781)
     expect(row("centre").querySelector("td.num")!.textContent).toBe("-24.5°, 15.25°");
     const cite = root.querySelector(".cite-wrap")!.textContent!;
     expect(cite).toContain("Hersbach, H. et al. (2020)");
@@ -221,7 +221,7 @@ describe.skipIf(!haveFix)("ERA5 fixture: panel and downloads", () => {
     await p.show(Promise.resolve(cs), 458, 781);
     expect(root.querySelector(".cell-scroll")).toBe(el);
     expect(el.scrollTop).toBe(900);
-    expect(root.querySelector('tr[data-field="cell"] td.num')!.textContent).toBe("458, 781; 660301 (ERA5 0.25°)");
+    expect(root.querySelector('tr[data-field="centre"] td.num')!.textContent).toBe("-24.5°, 15.25°");   // ERA5 cell (458, 781)
     expect((root.querySelector('details[data-section="modes"]') as HTMLDetailsElement).open).toBe(false);
     // and back: (-24.5, 15.25) snaps to an ERA5-Land cell next to the first one, still the same location
     ds = "era5-land";
@@ -253,7 +253,7 @@ describe.skipIf(!haveFix)("ERA5 fixture: panel and downloads", () => {
     expect(coast.totalHours).toBeGreaterThan(600000);
     const root = await panel(coast, "era5");
     expect(root.querySelector(".empty-state")).toBeNull();
-    expect(root.querySelector('tr[data-field="cell"] td.num')!.textContent).toMatch(/^458, 778; /);
+    expect(root.querySelector('tr[data-field="centre"] td.num')!.textContent).toBe("-24.5°, 14.5°");     // ERA5 cell (458, 778)
     expect(root.querySelector(".fig-svg svg")).not.toBeNull();
     const sea = await cs.query(458, 777);
     expect(sea.hasData).toBe(false);

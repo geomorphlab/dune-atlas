@@ -14,6 +14,8 @@ export interface AppState {
   dataset: string;
   cell: [number, number] | null;
   embed: boolean;
+  /** 'Dunes only': wind-derived layers drawn only in cells with dunes (map/dunemask.ts) */
+  dunesOnly?: boolean;
 }
 
 type Key = keyof AppState;

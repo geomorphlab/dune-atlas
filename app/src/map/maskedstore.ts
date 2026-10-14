@@ -6,7 +6,11 @@
 // chunk is produced by decoding the matching window of the direction and mask arrays (same
 // level, same threshold) and writing NaN where the mask is not > 0. Same rule as the arrows /
 // streamlines (applyMask) and the side panel (modeDefined).
+// 'Dunes only' (map/dunemask.ts): the same virtual store also writes NaN outside the dune cells of the
+// dataset (mask at the level's block factor), for every wind-derived field; the direction mask is then
+// optional.
 import * as zarr from "zarrita";
+import { levelFactor, maskAtFactor, type DuneMaskProvider } from "./dunemask";
 
 type Readable = zarr.AsyncReadable;
 type Key = `/${string}`;
@@ -22,10 +26,11 @@ export class MaskedFieldStore implements Readable {
   #levels = new Map<string, Promise<LevelInfo>>();
   #dirArrays = new Map<string, Promise<zarr.Array<zarr.DataType, Readable>>>();
   #maskArrays = new Map<string, Promise<zarr.Array<zarr.DataType, Readable>>>();
-  constructor(private dir: Readable, private dirVar: string, private mask: Readable, private maskVar: string) {}
+  constructor(private dir: Readable, private dirVar: string, private mask: Readable | null, private maskVar: string | null, private dune: DuneMaskProvider | null = null) {}
 
-  static fromUrls(dirUrl: string, dirVar: string, maskUrl: string, maskVar: string): MaskedFieldStore {
-    return new MaskedFieldStore(new zarr.FetchStore(dirUrl, { useSuffixRequest: true }), dirVar, new zarr.FetchStore(maskUrl, { useSuffixRequest: true }), maskVar);
+  static fromUrls(dirUrl: string, dirVar: string, maskUrl: string | undefined, maskVar: string | undefined, dune?: DuneMaskProvider | null): MaskedFieldStore {
+    const fs = (u: string) => new zarr.FetchStore(u, { useSuffixRequest: true });
+    return new MaskedFieldStore(fs(dirUrl), dirVar, maskUrl && maskVar ? fs(maskUrl) : null, maskUrl && maskVar ? maskVar : null, dune ?? null);
   }
 
   #parse(key: string): { level: string; rest: string } | null {
@@ -46,7 +51,7 @@ export class MaskedFieldStore implements Readable {
       p = this.#rawMeta(level).then((m) => {
         const shard = m.codecs.find((c) => c.name === "sharding_indexed");
         const chunk = [...(shard?.configuration?.chunk_shape ?? m.chunk_grid.configuration.chunk_shape)];
-        chunk[0] = 1; // one threshold per chunk (dims ut, y, x)
+        if (chunk.length === 3) chunk[0] = 1; // one threshold per chunk (dims ut, y, x); 2-D arrays: inner chunk
         return { shape: m.shape, chunk };
       });
       this.#levels.set(level, p);
@@ -80,25 +85,36 @@ export class MaskedFieldStore implements Readable {
     return this.dir.getRange?.(key, range, opts as never);
   }
 
-  /** Masked chunk `idx` (ut, cy, cx) of level `level` as little-endian float32 bytes. */
+  /** Masked chunk `idx` ([ut,] cy, cx) of level `level` as little-endian float32 bytes. */
   async chunk(level: string, idx: number[]): Promise<Uint8Array> {
     const L = await this.#level(level);
+    const nd = L.shape.length, Y = nd - 2, X = nd - 1;
     const sel = idx.map((ci, d) => {
       const a = ci * L.chunk[d];
       return [a, Math.min(a + L.chunk[d], L.shape[d])] as const;
     });
-    const [dirA, maskA] = await Promise.all([
+    const [dirA, maskA, dune] = await Promise.all([
       this.#open(this.#dirArrays, this.dir, `${level}/${this.dirVar}`),
-      this.#open(this.#maskArrays, this.mask, `${level}/${this.maskVar}`),
+      this.mask && this.maskVar ? this.#open(this.#maskArrays, this.mask, `${level}/${this.maskVar}`) : Promise.resolve(null),
+      this.dune ? this.dune() : Promise.resolve(null),
     ]);
-    if (maskA.shape.some((n, d) => n !== L.shape[d])) throw new Error(`mask ${this.maskVar} level ${level} shape ${maskA.shape} != ${L.shape}`);
-    const s = [sel[0][0], zarr.slice(sel[1][0], sel[1][1]), zarr.slice(sel[2][0], sel[2][1])] as const;
-    const [dv, mv] = (await Promise.all([zarr.get(dirA, s as never), zarr.get(maskA, s as never)])) as { data: ArrayLike<number> }[];
-    const d = dv.data, m = mv.data;
-    const h = sel[1][1] - sel[1][0], w = sel[2][1] - sel[2][0];
-    const [ch, cw] = [L.chunk[1], L.chunk[2]];
+    if (maskA && maskA.shape.some((n, d) => n !== L.shape[d])) throw new Error(`mask ${this.maskVar} level ${level} shape ${maskA.shape} != ${L.shape}`);
+    const s = (nd === 3 ? [sel[0][0], zarr.slice(sel[1][0], sel[1][1]), zarr.slice(sel[2][0], sel[2][1])] : [zarr.slice(sel[0][0], sel[0][1]), zarr.slice(sel[1][0], sel[1][1])]) as never;
+    const [dv, mv] = (await Promise.all([zarr.get(dirA, s), maskA ? zarr.get(maskA, s) : Promise.resolve(null)])) as ({ data: ArrayLike<number> } | null)[];
+    const d = dv!.data, m = mv?.data;
+    const y0 = sel[Y][0], x0 = sel[X][0];
+    const h = sel[Y][1] - y0, w = sel[X][1] - x0;
+    const [ch, cw] = [L.chunk[Y], L.chunk[X]];
+    // dune mask at this level's block factor (a level that is not a block level of the cell grid: unmasked)
+    const f = dune ? levelFactor(dune, L.shape) : null;
+    if (dune && f === null) console.warn(`[dune-atlas] ${this.dirVar} level ${level} ${L.shape}: not a block level of the dune mask ${dune.ny}x${dune.nx}; shown unmasked`);
+    const dm = dune && f !== null ? maskAtFactor(dune, f) : null;
     const out = new Float32Array(ch * cw).fill(NaN); // edge chunks are full-size in zarr v3
-    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) out[y * cw + x] = maskValue(d[y * w + x], m[y * w + x]);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const v = d[y * w + x];
+      const ok = (!m || (m[y * w + x] > 0 && Number.isFinite(m[y * w + x]))) && (!dm || dm.data[(y0 + y) * dm.nx + x0 + x] === 1);
+      out[y * cw + x] = ok ? v : NaN;
+    }
     return new Uint8Array(out.buffer);
   }
 }

@@ -247,7 +247,7 @@ def registry_layer() -> dict:
                         "evapotranspiration, native 30″ (~1 km) grid. UNEP classes: < 0.03 hyper-arid, 0.03–0.2 "
                         "arid, 0.2–0.5 semi-arid, 0.5–0.65 dry sub-humid, > 0.65 humid. Values of 6.5535 mean "
                         "AI ≥ 6.5535 (source saturation). Ocean, Antarctica (south of 60° S) and polar ice with "
-                        "zero ET0 have no data. Independent of the wind dataset and of u*,th."),
+                        "zero ET0 have no data."),
         "citation": f"{a['citation']}; data: Zomer & Trabucco, Global-AI_PET v3.1, doi:{a['doi']} ({a['licence']})",
         "attribution": dict(a),
         "visible": False, "opacity": 0.85, "queryable": False,

@@ -92,6 +92,7 @@ export function initialAppState(reg: Registry, url: UrlState, dataset: string): 
     dataset,
     cell: url.cell ?? null,
     embed: !!url.embed,
+    dunesOnly: !!url.dunesOnly,
   };
 }
 
@@ -102,5 +103,6 @@ export function appShareState(s: AppState, cam: { lon: number; lat: number; zoom
     dataset: s.dataset, basemap: s.basemap, ut: s.utIndex, cell: s.cell,
     layers: s.order.filter((id) => s.layers[id]?.visible).map((id) => ({ id, opacity: Number(s.layers[id].opacity.toFixed(2)), ...(s.layers[id].cfg ? { cfg: s.layers[id].cfg } : {}) })),
     panel,
+    ...(s.dunesOnly ? { dunesOnly: true } : {}),
   };
 }

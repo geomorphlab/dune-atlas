@@ -5,6 +5,7 @@ import type { ThresholdDef } from "../registry/types";
 import type { Store } from "../store";
 import { h } from "./dom";
 import { mathHtml } from "../util/math";
+import { padFigure, reserveCh } from "./livenum";
 
 export function formatUt(v: number): string {
   return `${v.toFixed(2)} m/s`;
@@ -18,10 +19,12 @@ export function thresholdControl(t: ThresholdDef, store: Store, opts: { compact?
     list: lid, "aria-describedby": opts.compact ? undefined : hid,
   }) as HTMLInputElement;
   const ticks = h("datalist", { id: lid }, h("option", { value: t.defaultIndex, label: `default ${formatUt(t.values[t.defaultIndex])}` }));
-  const out = h("output", { for: sid, id: vid, class: "ut-value" });
+  // readout: padded to the widest value with figure spaces, in a fixed-width tabular slot (ui/livenum.ts)
+  const outChars = Math.max(...t.values.map((v) => [...formatUt(v)].length));
+  const out = h("output", { for: sid, id: vid, class: "ut-value live-num", style: `min-width:${reserveCh(t.values.map(formatUt))}ch` });
   const sync = (i: number) => {
     if (input.value !== String(i)) input.value = String(i);
-    out.textContent = formatUt(t.values[i]);
+    out.textContent = padFigure(formatUt(t.values[i]), outChars);
     input.setAttribute("aria-valuetext", `${formatUt(t.values[i])}`);
   };
   sync(store.state.utIndex);

@@ -162,10 +162,11 @@ describe("panel and downloads with cells-aux values", () => {
     const p = new CellPanel(root, 14, { windSectors: 16, fluxSectors: 32, onClose: () => {} });
     await p.show({ query: async () => c, attrs: {}, fieldVars: FIELD_VARS } as unknown as CellStore, 1145, 1952);
     const row = (v: string) => root.querySelector(`.summary tr[data-field="${v}"]`)!;
-    expect(row("qsdiv").querySelector("td.num")!.textContent).toBe(`${fmtNum(Math.fround(-1e-4 + 14 * 3e-6) * 1000)} m/kyr`);
-    expect(row("qsdiv").querySelector("td.num")!.textContent).toMatch(/^-0\.058\d* m\/kyr$/);
+    expect(row("qsdiv").querySelector("td.num")!.textContent!.replace(/\u00a0/g, " ")).toBe(`${fmtNum(Math.fround(-1e-4 + 14 * 3e-6) * 1000)} m/kyr`);
+    expect(row("qsdiv").querySelector("td.num")!.textContent!.replace(/\u00a0/g, " ")).toMatch(/^-0\.058\d* m\/kyr$/);
     expect(row("ai_mean").querySelector("td.num")!.textContent).toBe("≥ 0.050 (arid)");
-    expect(row("ai_mean").textContent).toMatch(/100 % of cell valid, 25 % saturated/);
+    expect(row("ai_mean").querySelector("th")!.textContent).toBe("Aridity index");               // terse label (round 5)
+    expect(row("ai_mean").querySelector("th")!.getAttribute("title")).toMatch(/100 % of cell valid, 25 % saturated/);
     expect(root.querySelector("details.qsdiv svg.line-plot")).not.toBeNull();
     // all six sections, in order, each a disclosure with its h3 in the summary
     expect([...root.querySelectorAll(".cell-body details.section")].map((d) => (d as HTMLElement).dataset.section)).toEqual([...PANEL_SECTIONS]);
@@ -185,9 +186,8 @@ describe("panel and downloads with cells-aux values", () => {
     expect(txt).toContain("m yr-1");
     expect(txt).toContain("10.6084/m9.figshare.7504448.v7");
     const fb = fieldsByThresholdCsv(c).split("\n");
-    expect(fb[0].split(",").slice(-1)[0]).toBe("qsdiv");
-    expect(fb[1].split(",").slice(-1)[0]).toBe("m yr-1");
-    expect(fb[3 + 3].split(",").slice(-1)[0]).toBe(""); // NaN
+    expect(fb[0].split(",").slice(-1)[0]).toBe("flux_divergence");          // qsdiv (CSV header)
+    expect(fb[1 + 3].split(",").slice(-1)[0]).toBe(""); // NaN
     const md = JSON.parse(metadataJson(c, { datasetId: "era5-land", datasetTitle: "ERA5-Land", dataVersion: "v1", permalink: "x" }));
     expect(md.aux.ai_mean).toMatchObject({ value: 0.05, units: "1", license: "CC BY 4.0" });
     expect(md.aux.qsdiv.in_file).toBe("fields_by_threshold.csv");

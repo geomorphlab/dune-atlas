@@ -1,0 +1,27 @@
+#!/bin/bash
+# Mars terrain: 1/64-degree area-mean elevation grid -> fields/elevation.zarr (GeoZarr native pyramid) + elev_mean npz.
+#PBS -P k10
+#PBS -q normal
+#PBS -N mars_terrain_elev
+#PBS -l ncpus=4
+#PBS -l mem=16GB
+#PBS -l walltime=04:00:00
+#PBS -l storage=gdata/k10+gdata/xp65+scratch/k10
+#PBS -j oe
+#PBS -o /scratch/k10/ag5517/dune-atlas/mars/logs/terrain_elevation.log
+set -eu
+PY=/g/data/k10/ag5517/apps/dune_atlas_venv/bin/python
+CODE=@CODE@
+WORK=/scratch/k10/ag5517/dune-atlas/mars/work/terrain/elevation
+STORES=/scratch/k10/ag5517/dune-atlas/mars/stores
+test -x $PY || { echo "no interpreter"; exit 127; }
+test -f $CODE/dune_atlas_pipeline/mars/terrain.py || { echo "no code"; exit 3; }
+mkdir -p $WORK $STORES/fields
+export PYTHONPATH=$CODE OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4
+cd $WORK
+echo "start $(date -u +%FT%TZ) host $(hostname)"
+rm -rf $STORES/fields/elevation.zarr.tmp
+$PY -u -m dune_atlas_pipeline.mars.terrain elevation --work $WORK --store $STORES/fields/elevation.zarr.tmp \
+  --npz $WORK/elev_mean.npz > $WORK/elevation_stdout.json
+rm -rf $STORES/fields/elevation.zarr && mv $STORES/fields/elevation.zarr.tmp $STORES/fields/elevation.zarr
+echo "DONE $(date -u +%FT%TZ)"

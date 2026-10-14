@@ -1,0 +1,25 @@
+#!/bin/bash
+# Mars terrain: full terrarium PMTiles z0-@MAXZOOM@ (+ z0-5 subset) from the MOLA–HRSC DEM (read in place).
+#PBS -P k10
+#PBS -q normal
+#PBS -N mars_terrain_tiles
+#PBS -l ncpus=@NCPUS@
+#PBS -l mem=@MEM@
+#PBS -l walltime=@WALL@
+#PBS -l storage=gdata/k10+gdata/xp65+scratch/k10
+#PBS -j oe
+#PBS -o /scratch/k10/ag5517/dune-atlas/mars/logs/terrain_tiles.log
+set -eu
+PY=/g/data/k10/ag5517/apps/dune_atlas_venv/bin/python
+CODE=@CODE@
+WORK=/scratch/k10/ag5517/dune-atlas/mars/work/terrain/tiles
+STORES=/scratch/k10/ag5517/dune-atlas/mars/stores
+test -x $PY || { echo "no interpreter"; exit 127; }
+test -f $CODE/dune_atlas_pipeline/mars/terrain.py || { echo "no code"; exit 3; }
+mkdir -p $WORK/tmp $STORES/basemaps
+export PYTHONPATH=$CODE OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 TMPDIR=$WORK/tmp
+cd $WORK
+echo "start $(date -u +%FT%TZ) host $(hostname)"
+$PY -u -m dune_atlas_pipeline.mars.terrain tiles --work $WORK --workers @WORKERS@ --maxzoom @MAXZOOM@ \
+  --out $STORES/basemaps/hrsc-mola-terrarium.pmtiles --low-out $WORK/hrsc-mola-terrarium-z0-5.pmtiles > $WORK/tiles_stdout.json
+echo "DONE $(date -u +%FT%TZ)"

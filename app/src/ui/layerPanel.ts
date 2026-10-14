@@ -4,15 +4,18 @@
 //   order (drag or move up/down; top = drawn on top; opacity slider; × to hide), groups ->
 //   layers (toggle, info, display controls, legend), basemap radio + globe toggle, About & citation.
 import { richHtml } from "../util/richtext";
-import type { LayerAttribution, LayerDef, Registry } from "../registry/types";
+import type { BasemapDef, LayerAttribution, LayerDef, Registry } from "../registry/types";
 import type { Store, AppState } from "../store";
 import { h, nextId } from "./dom";
 import { legendHtml } from "./legend";
 import { thresholdControl } from "./threshold";
 import { escapeHtml } from "../util/format";
-import { datasetTooltip } from "../cell/datasetinfo";
+import { BODY_NAME } from "../body";
+import { DATASET_INFO, datasetInfo, datasetTooltip } from "../cell/datasetinfo";
+import { fieldInfo } from "../cell/fieldinfo";
+import { isDatasetDependent } from "../registry/merge";
 import { mathHtml } from "../util/math";
-import { AI_NOTICE, CITATIONS, citationHtml, citationSources } from "../cell/citation";
+import { AI_NOTICE, citationHtml, citationSources, fieldsCitation, fieldsLicence } from "../cell/citation";
 import { canLog, COLORMAP_GROUPS, DEFAULT_SPACING_KM, effectiveDisplay, isDirectional, SPACING_KM_STEPS, vectorColors, type RenderMode } from "../layerconfig";
 
 /** screen-reader names of the spacing steps (finest to coarsest); no units, as on screen */
@@ -30,24 +33,102 @@ export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class="sources">
   <li><strong>Aridity index</strong>: Global Aridity Index v3.1 (Global-AI_PET v3.1; Zomer, Xu &amp; Trabucco 2022), 1970–2000, native 30″ grid, CC BY 4.0; ocean and Antarctica (south of 60° S) have no data, values ≥ 6.5535 are at the top of the source range. The click panel shows the 0.1° cell mean.</li>
   <li><strong>Vegetation cover</strong>: CSIRO MODIS Fractional Cover v3.1 (Guerschman et al. 2015; Guerschman &amp; Hill 2018), total vegetation cover (photosynthetic + non-photosynthetic vegetation), mean of the monthly 500 m values 2001–2025 on the 0.1° grid, CC BY 4.0 © 2008–2019 CSIRO, hosted by NCI; the vegetation product of GEOGLAM RAPP. <a href="https://map.geo-rapp.org/" target="_blank" rel="noopener noreferrer">Explore the full time series at GEOGLAM RAPP</a>. The click panel shows the cell mean and the number of valid months.</li>
 </ul>`;
+/** About: how to cite the map fields of every wind dataset (one format with the info popovers and the downloads). */
+export function fieldsCitationHtml(): string {
+  return `<h4>Citing the map fields</h4><ul class="sources">${Object.values(DATASET_INFO).map((d) => `<li><strong>${escapeHtml(`${d.name} ${d.resolution}`)}</strong>: ${richHtml(fieldsCitation(d.id))}. Licence: ${escapeHtml(fieldsLicence(d.id))}.</li>`).join("")}</ul>`;
+}
 export const INVERT_NOTE = "Invert colours land WITHOUT mapped dunes. Vector tiles end at ±85.05° latitude, so interior Antarctica south of 85°S is not coloured.";
 
 const safeUrl = (u: string) => (/^https?:\/\//i.test(u) ? u : "");
-/** Structured attribution (registry `attribution`): source, citation, licence, link, DOI, changes. */
-export function attributionHtml(a: LayerAttribution | undefined): string {
-  if (!a) return "";
+/** Rows of the structured attribution (registry `attribution`), in the fixed order Source, Citation,
+ *  Data DOI, Licence, Link, Changes (docs/info-text-audit.md). */
+function attributionRows(a: LayerAttribution): string {
   const row = (k: string, v: string | undefined, html?: string) => (v ? `<dt>${k}</dt><dd>${html ?? richHtml(v)}</dd>` : "");
   const url = a.url ? safeUrl(a.url) : "";
   const doi = a.doi?.replace(/^doi:/i, "").replace(/^https?:\/\/doi\.org\//i, "");
-  return `<dl class="attribution">${row("Source", a.source)}${row("Citation", a.citation)}${row("Data DOI", doi, doi ? `<a href="https://doi.org/${escapeHtml(doi)}" target="_blank" rel="noopener">doi:${escapeHtml(doi)}</a>` : "")}${row("Licence", a.licence)}${row("Link", url, url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(url.replace(/^https?:\/\//, "").slice(0, 60))}${url.length > 68 ? "…" : ""}</a>` : "")}${row("Changes", a.changes)}</dl>`;
+  return `${row("Source", a.source)}${row("Citation", a.citation)}${row("Data DOI", doi, doi ? `<a href="https://doi.org/${escapeHtml(doi)}" target="_blank" rel="noopener">doi:${escapeHtml(doi)}</a>` : "")}${row("Licence", a.licence)}${row("Link", url, url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(url.replace(/^https?:\/\//, "").slice(0, 60))}${url.length > 68 ? "…" : ""}</a>` : "")}${row("Changes", a.changes)}`;
+}
+/** Structured attribution (registry `attribution`): source, citation, licence, link, DOI, changes. */
+export function attributionHtml(a: LayerAttribution | undefined): string {
+  return a ? `<dl class="attribution">${attributionRows(a)}</dl>` : "";
 }
 
-/** Info popover body of a layer. */
-export function infoHtml(l: LayerDef): string {
+/** Sentences that repeat a fact row of the info popover (units, display convention, slider dependence).
+ *  Since round 4 (PI 2026-10-14) the generators no longer emit them; this is a render-time fallback for
+ *  texts not yet regenerated (stale registries, layers owned by other tracks) so each fact is stated once. */
+const REPEATED_FACTS: RegExp[] = [
+  /\s*Shown(?: in [^ ]+)? at the selected (?:threshold friction velocity u\*,th|median grain diameter d) \(default [^)]*\)\./g,
+  /\s*Converted from m²\/s to m²\/yr\./g,
+  /\s*Displayed as the compass bearing \(degrees clockwise from north\) toward which sand\/crests move\./g,
+  /\s*Independent of the (?:wind dataset and of u\*,th|grain diameter d(?: and of the wind dataset)?)\./g,
+];
+export const infoDefinition = (text: string) => REPEATED_FACTS.reduce((t, re) => t.replace(re, ""), text).trim();
+
+/** Units row: display units, with the direction / axis convention and fractions spelled out. */
+export function infoUnits(l: LayerDef): string {
+  const tr = (l.display as { transform?: string } | undefined)?.transform;
+  if (tr === "rad-to-bearing") return "° (compass bearing, clockwise from north, toward which sand moves)";
+  if (tr === "rad-to-axis") return "° (crest axis, 0–180°)";
+  if (l.units === "dimensionless") return fieldInfo(l.id).kind === "fraction" ? "fraction (0–1)" : "dimensionless";
+  return l.units ? escapeHtml(l.units) : "";
+}
+
+/** Info popover body of a layer, one structure for every layer of both builds (docs/info-text-audit.md):
+ *  definition, invert note (dune layer), then one list: Units, Wind data, Slider (map fields), Source,
+ *  Citation, Data DOI, Licence, Link, Changes (attribution; or the citation alone). */
+export function infoHtml(l: LayerDef, datasetId?: string): string {
   const thr = l.type === "zarr-field"
     ? (l.thresholdAware ? `<p class="help">Updates with the ${mathHtml("$u_{*,th}$")} control.</p>` : `<p class="help">Threshold-independent: not affected by the ${mathHtml("$u_{*,th}$")} control.</p>`)
     : "";
-  return `${l.description ? `<p>${richHtml(l.description, mathHtml)}</p>` : ""}${l.invertSource ? `<p class="help">${escapeHtml(INVERT_NOTE)}</p>` : ""}${thr}${l.attribution ? attributionHtml(l.attribution) : l.citation ? `<p class="cite">${richHtml(l.citation)}</p>` : ""}`;
+  const row = (k: string, html: string) => (html ? `<dt>${k}</dt><dd>${html}</dd>` : "");
+  let facts = "";
+  if (l.type === "zarr-field") {
+    const ds = datasetInfo(datasetId);
+    facts = row("Units", infoUnits(l))
+      + row("Wind data", isDatasetDependent(l.source) ? escapeHtml(`${ds.name} ${ds.resolution}, ${ds.period}`) : "not used (the same for every wind dataset)")
+      + row("Slider", thr.replace(/^<p class="help">|<\/p>$/g, ""));
+  }
+  const sources = l.attribution ? attributionRows(l.attribution) : l.citation ? row("Citation", richHtml(l.citation)) : "";
+  const def = l.description ? infoDefinition(l.description) : "";
+  return `${def ? `<p class="info-def">${richHtml(def, mathHtml)}</p>` : ""}${l.invertSource ? `<p class="help">${escapeHtml(INVERT_NOTE)}</p>` : ""}${facts || sources ? `<dl class="attribution info-facts">${facts}${sources}</dl>` : ""}`;
+}
+
+/** Info popover of a basemap, the layer structure (docs/info-text-audit.md): definition, then Source,
+ *  Resolution, Licence, Link. The credits also stay in the map attribution. */
+export function basemapInfoHtml(b: BasemapDef): string {
+  const i = b.info ?? {};
+  const row = (k: string, html: string) => (html ? `<dt>${k}</dt><dd>${html}</dd>` : "");
+  const url = i.url ? safeUrl(i.url) : "";
+  const rows = row("Source", i.source ? richHtml(i.source) : "") + row("Resolution", i.resolution ? escapeHtml(i.resolution) : "")
+    + row("Coverage", i.coverage ? richHtml(i.coverage) : "")
+    + row("Licence", i.licence ? richHtml(i.licence) : "")
+    + row("Link", url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(url.replace(/^https?:\/\//, "").replace(/\/$/, "").slice(0, 60))}${url.length > 68 ? "…" : ""}</a>` : "");
+  return `${i.description ? `<p class="info-def">${richHtml(i.description, mathHtml)}</p>` : ""}${rows ? `<dl class="attribution info-facts">${rows}</dl>` : ""}`;
+}
+
+/** 'Dunes only' (PI round 5): one UI-wide switch, in the URL / share link; restricts every wind-derived map
+ *  layer to the dataset's dune cells (map/dunemask.ts). Non-wind layers and the cell panel are unchanged. */
+export const DUNES_ONLY_HELP = "Draw the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in cells with dunes; the other layers and the cell panel are unchanged.";
+export function dunesOnlyToggle(store: Store): HTMLElement {
+  const cb = h("input", { type: "checkbox", id: "dunes-only", "aria-describedby": "dunes-only-help" }) as HTMLInputElement;
+  cb.checked = !!store.state.dunesOnly;
+  cb.addEventListener("change", () => store.set({ dunesOnly: cb.checked }));
+  store.subscribe((st, ch) => { if (ch.has("dunesOnly")) cb.checked = !!st.dunesOnly; });
+  return h("label", { class: "inline dunes-only-row", for: "dunes-only", title: DUNES_ONLY_HELP }, cb, " Dunes only",
+    h("span", { id: "dunes-only-help", class: "visually-hidden" }, DUNES_ONLY_HELP));
+}
+
+/** ⓘ button + popover pair (layers and basemaps) */
+function infoToggle(title: string, html: string, idBase: string): { button: HTMLButtonElement; pop: HTMLElement } {
+  const infoId = nextId(`info-${idBase}`);
+  const button = h("button", { type: "button", class: "info-button", "aria-expanded": "false", "aria-controls": infoId, "aria-label": `About ${title}` }, "i") as HTMLButtonElement;
+  const pop = h("div", { id: infoId, class: "info-popover", hidden: true, role: "note", html });
+  button.addEventListener("click", () => {
+    const open = button.getAttribute("aria-expanded") !== "true";
+    button.setAttribute("aria-expanded", String(open));
+    pop.hidden = !open;
+  });
+  return { button, pop };
 }
 
 function layerItem(l: LayerDef, store: Store): HTMLElement {
@@ -57,7 +138,7 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
   const infoId = nextId(`info-${l.id}`);
   const info = h("button", { type: "button", class: "info-button", "aria-expanded": "false", "aria-controls": infoId, "aria-label": `About ${l.title}` }, "i");
   const pop = h("div", { id: infoId, class: "info-popover", hidden: true, role: "note",
-    html: infoHtml(l) });
+    html: infoHtml(l, store.state.dataset) });
   info.addEventListener("click", () => {
     const open = info.getAttribute("aria-expanded") !== "true";
     info.setAttribute("aria-expanded", String(open));
@@ -187,7 +268,7 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
   refresh(store.state);
   store.subscribe((s, ch) => {
     // a dataset switch changes the layer's definition in place (colour limits, citation)
-    if (ch.has("dataset")) pop.innerHTML = infoHtml(l);
+    if (ch.has("dataset")) pop.innerHTML = infoHtml(l, store.state.dataset);
     if (ch.has("layers") || ch.has("dataset")) refresh(s);
   });
   return item;
@@ -278,6 +359,9 @@ export function setLayerPanelOpen(root: HTMLElement, open: boolean) {
 }
 export const layerPanelOpen = (root: HTMLElement) => !root.classList.contains("collapsed");
 
+/** the header subtitle, identical in both atlases (the Gunn (2026) citation is in About) */
+export const SUBTITLE_HTML = `Interactive explorer for aeolian geomorphology<br>Developed by the <a href="https://www.geomorphlab.org/" target="_blank" rel="noopener">Monash Geomorphology Lab</a>`;
+
 export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store, opts: { fullScreenUrl?: () => string; initialOpen?: boolean } = {}) {
   root.replaceChildren();
   const toggle = h("button", { type: "button", class: "panel-toggle", "aria-expanded": "true", "aria-controls": "layer-panel-body", title: "Show / hide layers" }, "Layers");
@@ -288,21 +372,22 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     root.classList.add("collapsed");
   }
   const header = h("header", { class: "atlas-header" },
-    h("div", { class: "title-row" }, h("h1", {}, "Dune Atlas"), toggle),
-    h("p", { class: "subtitle", html: `Interactive maps for Gunn (2026) <a href="https://doi.org/${CITATIONS[0].doi}" target="_blank" rel="noopener">The distribution of Earth's wind-blown sand dunes</a>, <i>Nat. Commun.</i>` }));
+    h("div", { class: "title-row" }, h("h1", {}, "Dune Atlas", " ", h("span", { class: "body-name" }, BODY_NAME)), toggle),
+    h("p", { class: "subtitle", html: SUBTITLE_HTML }));
   if (opts.fullScreenUrl) {
     const a = h("a", { class: "fullscreen-link", href: opts.fullScreenUrl(), target: "_blank", rel: "noopener" }, "Open full screen ↗");
     store.subscribe(() => { a.href = opts.fullScreenUrl!(); });
     header.append(a);
   }
   const datasets = reg.datasets ?? [];
-  if (datasets.length > 1) {
+  if (datasets.length >= 1) { // shown with a single dataset too (Mars: MCMC FV3)
     const sel = h("select", { id: "dataset-select", "aria-label": "Wind dataset" }, ...datasets.map((d) => h("option", { value: d.id, title: datasetTooltip(d.id) || d.title }, d.title))) as HTMLSelectElement;
     sel.value = store.state.dataset;
     sel.addEventListener("change", () => store.set({ dataset: sel.value }));
     store.subscribe((s, ch) => { if (ch.has("dataset")) sel.value = s.dataset; });
     header.append(h("label", { class: "inline dataset-row", for: "dataset-select" }, "Wind dataset ", sel));
   }
+  header.append(dunesOnlyToggle(store));
   // pinned: never scrolls away, stays visible even when the layer list is collapsed
   const pinned = h("div", { class: "pinned" }, thresholdControl(reg.threshold, store));
   body.append(orderList(reg, store));
@@ -324,7 +409,10 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     const r = h("input", { type: "radio", name: "basemap", id, value: b.id, checked: store.state.basemap === b.id }) as HTMLInputElement;
     r.addEventListener("change", () => { if (r.checked) store.set({ basemap: b.id }); });
     store.subscribe((s, ch) => { if (ch.has("basemap")) r.checked = s.basemap === b.id; });
-    fs.append(h("div", { class: "radio-row" }, r, h("label", { for: id }, b.title)));
+    if (b.info) {
+      const t = infoToggle(b.title, basemapInfoHtml(b), `bm-${b.id}`);
+      fs.append(h("div", { class: "radio-row basemap-row", "data-basemap": b.id }, r, h("label", { for: id }, b.title), t.button), t.pop);
+    } else fs.append(h("div", { class: "radio-row", "data-basemap": b.id }, r, h("label", { for: id }, b.title)));
   }
   const globe = h("input", { type: "checkbox", id: "opt-globe", checked: store.state.projection === "globe" }) as HTMLInputElement;
   globe.addEventListener("change", () => store.set({ projection: globe.checked ? "globe" : "mercator" }));
@@ -337,6 +425,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     h("div", { html: `<p class="ai-notice">${notice}</p>
       <p>Click any land cell to see its 1950–2024 wind rose (ERA5-Land 0.1° or ERA5 0.25°, chosen with the Wind dataset selector), the sand-flux rose at the selected threshold, dune-orientation modes and all wind-regime parameters.</p>
       ${DATA_SOURCES_HTML}
+      ${fieldsCitationHtml()}
       ${citationHtml(citationSources(["era5", "aridity", "vegetation"]))}
       <p class="help">Contains modified Copernicus Climate Change Service information. Basemap credits are shown in the map attribution.</p>` })));
   root.append(header, pinned, body);

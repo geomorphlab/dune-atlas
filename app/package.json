@@ -15,7 +15,14 @@
     "postinstall": "patch-package",
     "check-netcdf": "vite-node scripts/write-cell-exports.ts -- ../staging/fixture ../staging/check-netcdf && PYTHONPATH=../pipeline/src python scripts/check-netcdf.py ../staging/fixture ../staging/check-netcdf && vite-node scripts/write-cell-exports.ts -- ../staging/fixture/datasets/era5 ../staging/check-netcdf-era5 && PYTHONPATH=../pipeline/src python scripts/check-netcdf.py ../staging/fixture/datasets/era5 ../staging/check-netcdf-era5",
     "help-doc": "vite-node scripts/write-help-doc.ts",
-    "test:ci": "bash scripts/test-ci.sh"
+    "test:ci": "bash scripts/test-ci.sh",
+    "test:earth": "vitest run",
+    "test:mars": "VITE_BODY=mars vitest run",
+    "build:mars": "npm run typecheck && VITE_BODY=mars vite build",
+    "dev:mars": "VITE_BODY=mars vite",
+    "preview:mars": "VITE_BODY=mars vite preview",
+    "validate-registry:mars": "vite-node scripts/validate-registry-mars.ts",
+    "test:all": "vitest run; e=$?; VITE_BODY=mars vitest run || exit 1; exit $e"
   },
   "dependencies": {
     "@carbonplan/zarr-layer": "0.4.3",

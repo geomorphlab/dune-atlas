@@ -23,7 +23,7 @@ QSDIV_GROUP = "drift"
 
 GROUPS = [
     # id kept as "climate" (referenced by registry/layers.yaml group order and other fragments)
-    {"id": "climate", "title": "Land surface",
+    {"id": "climate", "title": "Related data",
      "description": ("Surface conditions from external datasets: aridity and vegetation cover. These do not "
                      "depend on the wind dataset or on u*,th.")},
 ]

@@ -110,6 +110,31 @@
           },
           "default": {
             "type": "boolean"
+          },
+          "info": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Content of the basemap's info (i) popover: definition, Source, Resolution, Coverage (optional), Licence, Link (docs/info-text-audit.md).",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "source": {
+                "type": "string"
+              },
+              "resolution": {
+                "type": "string"
+              },
+              "coverage": {
+                "type": "string"
+              },
+              "licence": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            }
           }
         }
       }
@@ -254,6 +279,10 @@
         "thresholdAware": {
           "type": "boolean",
           "description": "Layer has the shared threshold dimension; slider drives its selector."
+        },
+        "windDerived": {
+          "type": "boolean",
+          "description": "Computed from the wind data ('Dunes only' restricts it to the dataset's dune cells). Default: true for zarr-field layers with thresholdAware, false otherwise (app/src/map/dunemask.ts)."
         },
         "units": {
           "type": "string",

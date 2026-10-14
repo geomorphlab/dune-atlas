@@ -11,6 +11,18 @@ export const ERA5LAND_PAPER_DOI = "10.5194/essd-13-4349-2021";
 export const ERA5_DOI = "10.24381/cds.adbb2d47";
 export const ERA5_PAPER_DOI = "10.1002/qj.3803";
 
+/** Citation of the atlas-derived map fields of a wind dataset, one format everywhere (info popover, About,
+ *  downloads): "Gunn, A. (2026). ... doi:...; [data: ...;] winds: ..." (PI 2026-10-14). The registry citations
+ *  (pipeline fields.fields_citation) are the same strings; tests compare them. */
+const PAPER_CITATION = `Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications. doi:${PAPER_DOI}`;
+export function fieldsCitation(datasetId: string): string {
+  return datasetId === "era5"
+    ? `${PAPER_CITATION}; winds: ERA5 hourly 10 m winds 1950–2024 (Hersbach, H. et al. (2020). The ERA5 global reanalysis. Quarterly Journal of the Royal Meteorological Society 146, 1999–2049. doi:${ERA5_PAPER_DOI}; data: Hersbach, H. et al. (2023). ERA5 hourly data on single levels from 1940 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). doi:${ERA5_DOI})`
+    : `${PAPER_CITATION}; data: Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812; winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:${ERA5LAND_PAPER_DOI})`;
+}
+/** Licence of the atlas-derived map fields of a wind dataset (PI 2026-10-14). */
+export const fieldsLicence = (datasetId: string) => (datasetId === "era5" ? "Copernicus licence (Licence to use Copernicus products)" : "CC BY 4.0 (Zenodo Supplementary Data)");
+
 /** One citable work. */
 export interface CitationEntry { label: string; text: string; doi: string; license?: string }
 /** Citations grouped by SOURCE (each with Paper / Data entries), optionally a usage notice. */

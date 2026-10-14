@@ -34,6 +34,7 @@ label.inline { display: inline-flex; align-items: center; gap: 4px; margin: 2px 
 }
 .atlas-header { padding: 8px 12px 0; }
 .title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.atlas-header h1 .body-name { color: var(--muted); font-weight: 400; }   /* planet name after the title, grey as the subtitle */
 .atlas-header h1 { font-size: 18px; margin: 0; }
 .atlas-header .subtitle { margin: 4px 0 6px; font-size: 12px; color: var(--muted); }
 .panel-toggle { border: 1px solid var(--line); background: var(--bg2); border-radius: 4px; padding: 2px 10px; cursor: pointer; }
@@ -97,6 +98,7 @@ input.clim { width: 74px; }
 .basemaps { border: none; border-top: 1px solid var(--line); margin: 8px 0 0; padding: 6px 0 0; }
 .basemaps legend { font-weight: 600; padding: 0; }
 .radio-row { display: flex; gap: 6px; align-items: center; padding: 2px 0; }
+.basemap-row .info-button { margin-left: auto; }   /* basemap info (i), placed as in the layer rows */
 .about summary { cursor: pointer; font-weight: 600; margin-top: 8px; }
 .ai-notice { background: var(--bg2); border-left: 3px solid var(--accent); padding: 6px 8px; border-radius: 3px; }
 .cite-list { padding-left: 16px; font-size: 12px; }
@@ -197,6 +199,16 @@ body.embed .atlas-header h1 { font-size: 15px; }
 .info-popover dl.attribution { display: grid; grid-template-columns: max-content 1fr; gap: 2px 8px; margin: 6px 0 0; font-size: 11.5px; }
 .info-popover dl.attribution dt { color: var(--muted); }
 .info-popover dl.attribution dd { margin: 0; overflow-wrap: anywhere; }
+/* long unbroken text (URLs, DOIs, code, file names) wraps inside every text box of both builds instead of overflowing it */
+#layer-panel, #cell-panel, .info-popover, .about, .legend, .tool-pop, .tour-pop { overflow-wrap: anywhere; }
+/* Live numbers (u*,th / d slider; ui/livenum.ts): tabular figures everywhere in the panels, and each live
+   value + unit in a non-wrapping slot whose min-width is reserved for the longest value of the axis, so the
+   panels do not reflow while the slider moves. */
+#layer-panel, #cell-panel, .legend { font-variant-numeric: tabular-nums; }
+.live-num { display: inline-block; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: normal; }
+.live-num.left { text-align: left; }
+.ut-value.live-num { white-space: pre; }
+:is(#layer-panel, #cell-panel, .info-popover, .about, .legend, .tool-pop, .tour-pop) :is(a, code, kbd, samp) { overflow-wrap: anywhere; word-break: break-word; }
 .legend-bar { position: relative; }
 .legend-bar i { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(0, 0, 0, 0.55); box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.35); }
 .legend-ticks.staggered { height: 26px; }
@@ -251,3 +263,7 @@ body.embed .atlas-header h1 { font-size: 15px; }
 .tour-pop .tour-note { color: var(--muted); font-size: 12.5px; }
 .tour-pop.tour-loading .tour-body::after { content: "Loading…"; color: var(--muted); font-size: 12px; }
 .tour-outline { outline: 2px solid var(--accent); outline-offset: -2px; }
+/* 'Dunes only' switch under the Wind dataset selector (ui/layerPanel.ts dunesOnlyToggle) */
+.dunes-only-row { margin: 0 0 6px; color: var(--text, inherit); cursor: pointer; }
+.dunes-only-row input { margin: 0 4px 0 0; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

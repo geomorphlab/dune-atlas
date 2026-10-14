@@ -33,7 +33,7 @@ TITLE = "Total vegetation cover"
 UNITS = "%"
 CLIM = [0.0, 100.0]
 COLORMAP = "ylgn"                        # sequential yellow (bare) -> green (vegetated)
-GROUP = "climate"                        # shown as "Land surface" (registry/layers.yaml)
+GROUP = "climate"                        # shown as "Related data" (registry/layers.yaml)
 STORE_KEY = "dune-atlas/v1/fields/vegetation.zarr"
 AUX_KEY = "dune-atlas/v1/cells-aux-veg.zarr"
 MAP_URL = "https://map.geo-rapp.org/"
@@ -66,13 +66,11 @@ ATTRIBUTION = {
                 "values rounded to a relative precision of 1.2e-4 for compression."),
 }
 
-DESCRIPTION = (
-    "Mean total vegetation cover (green plus dry vegetation, including trees; % of the ground) over the 300 months "
-    "2001–2025, from the CSIRO MODIS Fractional Cover product v3.1 (500 m, monthly), the vegetation product of "
-    "GEOGLAM RAPP. Monthly 500 m values are averaged onto the 0.1° atlas cells, then over all months with valid "
-    "data (snow, persistent cloud and polar night remove months at high latitudes). The product is calibrated "
-    "against field sites in Australia and saturates under closed canopies. Ocean, Antarctica, land north of 70° N "
-    "and the 180° meridian cells have no data. Independent of the wind dataset and of u*,th. "
+DESCRIPTION = (   # shortened for the info popover (PI 2026-10-14); source, licence and processing are attribution rows
+    "Mean total vegetation cover (green plus dry vegetation, including trees; % of the ground), 2001–2025, from the "
+    "CSIRO MODIS Fractional Cover v3.1 (500 m, monthly) averaged onto the 0.1° cells over the months with valid data. "
+    "Calibrated against Australian field sites; saturates under closed canopies. No data over ocean, Antarctica, "
+    "land north of 70° N and the 180° meridian cells. "
     f"[Explore the full monthly time series at GEOGLAM RAPP]({MAP_URL}).")
 
 

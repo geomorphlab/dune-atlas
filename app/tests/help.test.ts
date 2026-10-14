@@ -66,8 +66,8 @@ describe("guided tour", () => {
     expect((pop.querySelector(".tour-back") as HTMLButtonElement).disabled).toBe(true);
     expect(document.activeElement).toBe(pop.querySelector(".tour-next"));
     expect(TOUR_STEPS.length).toBeGreaterThanOrEqual(6);
-    expect(TOUR_STEPS.length).toBeLessThanOrEqual(8);
-    expect(TOUR_STEPS.map((s) => s.id)).toEqual(["help", "map", "threshold", "layers", "active", "cell", "dataset", "tools"]);
+    expect(TOUR_STEPS.length).toBeLessThanOrEqual(9);
+    expect(TOUR_STEPS.map((s) => s.id)).toEqual(["help", "map", "threshold", "layers", "active", "cell", "dataset", "tools", "planet"]);
   });
   it("Next / Back / arrows; Done on the last step ends it (completed) and marks it seen", () => {
     const onEnd = vi.fn();

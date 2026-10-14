@@ -10,6 +10,7 @@ import { resolveSource } from "../registry/merge";
 import { DEFAULT_VECTOR_FILL, DIRECTION_MASK_VAR, effectiveDisplay, isAxis, maskVarOf, metersPerPixel, spacingToPx, vectorColors, type LayerConfig } from "../layerconfig";
 import { fetchRootAttrs, storeGeoFromAttrs, type StoreGeo } from "./zarrgeo";
 import { MaskedFieldStore } from "./maskedstore";
+import { maskGrid, type DuneMaskProvider } from "./dunemask";
 import { fragmentFor, symlogUniforms } from "./shader";
 import { FieldReader } from "./fieldreader";
 import { applyMask, arrowFeatures, arrowheadsAlong, buildScreenField, evenStreamlines, gcDeg, geoPolylines, readWindow, sampleUnitSphere, splitByScreenGap, type ArrowSeed, type Grid } from "./vectors";
@@ -28,6 +29,9 @@ export interface AdapterContext {
   cfg?: LayerConfig;
   /** resolve the store URL of another variable (directional magnitude pairing) */
   sourceOfVariable?: (v: string) => string | undefined;
+  /** 'Dunes only' (map/dunemask.ts): set for wind-derived layers while the toggle is on; cells without
+   *  dunes are NaN (transparent) in colour maps and carry no arrows / streamlines */
+  duneMask?: DuneMaskProvider;
   /** report a runtime data error (marks the layer 'not available' in the panel) */
   onDataError?: (err: unknown) => void;
   /** false once the style this layer was requested for has been replaced (basemap switch):
@@ -130,9 +134,10 @@ export function storeGeo(url: string): Promise<StoreGeo | null> {
  *  metadata (see zarrgeo.ts: zarr-layer would otherwise snap the extent to ±180 and shift the
  *  raster half a cell east), and for directional fields a masked virtual store (direction shown
  *  only where the paired magnitude is > 0). Exported for tests. */
-export function zarrLayerSource(layer: LayerDef, src: string, geo: StoreGeo | null, maskSrc: string | undefined) {
+export function zarrLayerSource(layer: LayerDef, src: string, geo: StoreGeo | null, maskSrc: string | undefined, duneMask?: DuneMaskProvider) {
   const maskVar = maskVarOf(layer);
-  const store = maskVar && maskSrc ? MaskedFieldStore.fromUrls(src, layer.variable!, maskSrc, maskVar) : undefined;
+  const dirMask = !!(maskVar && maskSrc);
+  const store = dirMask || duneMask ? MaskedFieldStore.fromUrls(src, layer.variable!, dirMask ? maskSrc : undefined, dirMask ? maskVar : undefined, duneMask) : undefined;
   return {
     source: src,
     // '2d': drawn without the depth test. zarr-layer's default '3d' makes MapLibre enable depth
@@ -160,7 +165,7 @@ export const zarrFieldAdapter: LayerAdapter = async (layer, ctx, opacity) => {
   assertAlive(ctx);
   const z = new ZarrLayer({
     id,
-    ...zarrLayerSource(layer, src, geo, maskSrc),
+    ...zarrLayerSource(layer, src, geo, maskSrc, ctx.duneMask),
     variable: layer.variable!,
     clim: eff.clim,
     colormap: eff.colors,
@@ -291,6 +296,9 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
       try { m = await mk.read(Math.min(level, mk.levels.length - 1), ut, bounds); } catch { m = null; }
       applyMask(dir, m);
     }
+    // 'Dunes only': no arrows / streamlines outside the dune cells (mask at this level's block factor)
+    const dm = ctx.duneMask ? await ctx.duneMask() : null;
+    if (dm) applyMask(dir, maskGrid(dm, Math.max(1, Math.round(Math.abs(dir.dlon / dm.grid.dlon)))));
     if (my !== token || !alive) return;
     let features: GeoJSON.Feature[];
     if (eff.mode === "arrows") {

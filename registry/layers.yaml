@@ -32,6 +32,12 @@ basemaps:
     style: https://tiles.openfreemap.org/styles/dark
     attribution: "OpenFreeMap © OpenMapTiles Data from OpenStreetMap"
     default: true             # the atlas UI is dark-themed
+    info:
+      description: "Dark vector basemap of OpenStreetMap roads, places, water and land cover, styled to sit under the atlas colours."
+      source: "OpenFreeMap vector tiles of OpenStreetMap data (OpenMapTiles schema), dark style"
+      resolution: "Vector tiles to zoom 14, drawn sharp at any zoom"
+      licence: "Map data © OpenStreetMap contributors (ODbL 1.0); © OpenMapTiles"
+      url: "https://openfreemap.org/"
   - id: esri-imagery
     title: Satellite imagery (Esri)
     kind: raster
@@ -39,6 +45,12 @@ basemaps:
     tileSize: 256
     maxzoom: 19
     attribution: "Esri, Maxar, Earthstar Geographics, and the GIS User Community"
+    info:
+      description: "Mosaic of satellite and aerial imagery of the land surface."
+      source: "Esri World Imagery (Esri, Maxar, Earthstar Geographics and the GIS User Community)"
+      resolution: "15 m worldwide, 1 m or finer in many regions; tiles to zoom 19"
+      licence: "Esri service under the Esri Master License Agreement / Terms of Use"
+      url: "https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9"
   - id: hillshade
     title: Shaded relief (Mapterhorn, 2D)
     kind: hillshade
@@ -49,6 +61,12 @@ basemaps:
     tileSize: 512
     maxzoom: 12
     attribution: '<a href="https://mapterhorn.com/attribution" target="_blank" rel="noopener">© Mapterhorn</a>'
+    info:
+      description: "Shaded relief computed in the browser from terrain tiles (elevations encoded as Terrarium RGB)."
+      source: "Mapterhorn open terrain tiles: Copernicus DEM GLO-30 worldwide and national open elevation models where available"
+      resolution: "About 30 m worldwide (zoom 12), finer in some countries"
+      licence: "Each source's open licence (for example the Copernicus DEM licence), listed by Mapterhorn"
+      url: "https://mapterhorn.com/attribution"
   - id: opentopomap
     title: Topographic (OpenTopoMap)
     kind: raster
@@ -59,11 +77,23 @@ basemaps:
     tileSize: 256
     maxzoom: 17
     attribution: 'Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, SRTM | Map style © <a href="https://opentopomap.org" target="_blank" rel="noopener">OpenTopoMap</a> (CC-BY-SA)'
+    info:
+      description: "Topographic map with contour lines and hill shading."
+      source: "OpenTopoMap, from OpenStreetMap data and SRTM elevation"
+      resolution: "Raster tiles to zoom 17"
+      licence: "Map data © OpenStreetMap contributors (ODbL 1.0); map style © OpenTopoMap (CC BY-SA 3.0)"
+      url: "https://opentopomap.org/"
   - id: openfreemap-light
     title: Light (OpenFreeMap Positron)
     kind: style
     style: https://tiles.openfreemap.org/styles/positron
     attribution: "OpenFreeMap © OpenMapTiles Data from OpenStreetMap"   # shown by the style's own sources
+    info:
+      description: "Light vector basemap of OpenStreetMap roads, places, water and land cover (Positron style)."
+      source: "OpenFreeMap vector tiles of OpenStreetMap data (OpenMapTiles schema), Positron style"
+      resolution: "Vector tiles to zoom 14, drawn sharp at any zoom"
+      licence: "Map data © OpenStreetMap contributors (ODbL 1.0); © OpenMapTiles"
+      url: "https://openfreemap.org/"
 
 groups:
   # ids match registry/generated/*.yaml so the generated fragments update these in place
@@ -83,8 +113,8 @@ groups:
     collapsed: true
   - id: drift
     title: Drift potential
-  - id: climate            # id kept stable; shown as "Land surface"
-    title: Land surface
+  - id: climate            # id kept stable (permalinks); shown as "Related data"
+    title: Related data
 
 layers:
   # ---------------------------------------------------------------------------------------

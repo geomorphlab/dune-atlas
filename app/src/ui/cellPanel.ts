@@ -1,6 +1,8 @@
 // Click-to-cell side panel (bottom sheet on narrow screens). Structure: header | compact u*,th
 // control (persistent, synced with the layer panel) | content. Content is built once per cell;
 // threshold / bin / axis changes only refresh the dynamic parts so sliders keep focus.
+import { terseQuantity } from "./terse";
+import { storageKey } from "../body";
 import type { CellData, CellStore } from "../cell/cellstore";
 import { cellFromIndex, ERA5_LAND_GRID, type Grid } from "../cell/snap";
 import { fieldValue } from "../cell/cellstore";
@@ -29,6 +31,9 @@ import { formatUt, thresholdControl } from "./threshold";
 import type { ThresholdDef } from "../registry/types";
 import type { Store } from "../store";
 import { h, nextId } from "./dom";
+import { axisReserve, bearingReserve, FMTNUM_WIDEST, live, reserveCh } from "./livenum";
+import { thresholdWindSpeed } from "../cell/flux";
+import { C } from "../util/constants";
 
 export interface FieldLabel {
   /** TeX symbol (without $), "" if none */
@@ -52,11 +57,35 @@ export interface CellPanelOptions {
 }
 
 const deg = (v: number) => (Number.isFinite(v) ? `${v.toFixed(0)}° (${compassPoint(v)})` : MISSING);
+const BEARING_W = bearingReserve(deg);
+/** plain-text units for width estimates (TeX / KaTeX markup dropped) */
+const plainUnits = (u: string) => u.replace(/\$|\\mathrm|[{}]|\\,/g, "").replace(/\^2/g, "²").replace(/\^\{?-1\}?/g, "⁻¹");
+/** Slider-stable slot widths of one cell (ui/livenum.ts): from its 64 stored values where they exist,
+ *  else from the widest text of the quantity's fixed format. */
+interface Reserves { ut: number; wind: number; dp: number; rdp: number; ratio: number; total: number; qsdiv: number }
+const RESERVES = new WeakMap<CellData, Reserves>();
+function reserves(cell: CellData, utValues: ArrayLike<number>): Reserves {
+  let r = RESERVES.get(cell);
+  if (r) return r;
+  const n = utValues.length, f = (id: string, k: number, scale = 1) => fmtNum(fieldValue(cell, id, k) * scale);
+  const q = cell.aux?.series.qsdiv;
+  r = {
+    ut: axisReserve(n, (k) => formatUt(utValues[k])),
+    wind: axisReserve(n, (k) => `${thresholdWindSpeed(utValues[k]).toFixed(1)}&nbsp;m/s`),
+    dp: axisReserve(n, (k) => `${f("dpm", k, C.S2Y)}&nbsp;m²/yr`),
+    rdp: axisReserve(n, (k) => `${f("rdpm", k, C.S2Y)}&nbsp;m²/yr`),
+    ratio: axisReserve(n, (k) => f("qha_rdp_dp", k)),
+    total: reserveCh(FMTNUM_WIDEST.map((x) => `${x}&nbsp;m²/yr`)),
+    qsdiv: q ? axisReserve(n, (k) => `${fmtNum(q[k] * 1000)}&nbsp;m/kyr`) : 0,
+  };
+  RESERVES.set(cell, r);
+  return r;
+}
 
 /** Default table labels from the source metadata: symbol = math part, quantity = text part. */
 export function defaultFieldLabel(v: string): FieldLabel {
   const info = fieldInfo(v);
-  const quantity = textOnly(info.longName) || textOnly(info.description).split(".")[0] || "";
+  const quantity = terseQuantity(textOnly(info.longName) || textOnly(info.description).split(".")[0] || "");
   return { symbolTex: mathOnly(info.longName), quantity };
 }
 
@@ -64,7 +93,7 @@ export function defaultFieldLabel(v: string): FieldLabel {
  *  collapse / expand is remembered in localStorage under duneAtlas.cellPanel.<key>Open. */
 export const PANEL_SECTIONS = ["windRose", "fluxRose", "modes", "qsdiv", "summary", "downloads"] as const;
 export type PanelSection = (typeof PANEL_SECTIONS)[number];
-export const sectionOpenKey = (k: PanelSection) => `duneAtlas.cellPanel.${k}Open`;
+export const sectionOpenKey = (k: PanelSection) => storageKey(`cellPanel.${k}Open`); // per body (body.ts)
 /** cell-centre coordinate: up to 2 decimals (0.1° and 0.25° centres exact), no trailing zeros */
 const SUP: Record<string, string> = { "-": "⁻", 0: "⁰", 1: "¹", 2: "²", 3: "³", 4: "⁴", 5: "⁵", 6: "⁶", 7: "⁷", 8: "⁸", 9: "⁹" };
 /** number as plain text (exports): 3 significant digits, ×10ⁿ outside 0.01 .. 10⁴ */
@@ -91,7 +120,7 @@ function readSectionOpen(): Record<PanelSection, boolean> {
   }
   return out;
 }
-const WIDTH_KEY = "duneAtlas.cellPanel.width", HEIGHT_KEY = "duneAtlas.cellPanel.height";
+const WIDTH_KEY = storageKey("cellPanel.width"), HEIGHT_KEY = storageKey("cellPanel.height");
 export const PANEL_MIN_W = 320;
 const isNarrow = () => !!globalThis.matchMedia?.("(max-width: 720px)").matches;
 
@@ -397,7 +426,8 @@ export class CellPanel {
     const size = this.#figSize;
     const ua = cell.bins.uaCentres;
     const D = this.#dyn;
-    D.meta.innerHTML = ` Threshold ${mathHtml("$u_{*,th}$")} = <strong>${formatUt(v.ut)}</strong> (≈ ${v.thresholdWind10m.toFixed(1)} m/s wind at 10 m)`;
+    const R = reserves(cell, v.utValues);
+    D.meta.innerHTML = ` Threshold ${mathHtml("$u_{*,th}$")} = <strong>${live(formatUt(v.ut), R.ut)}</strong> (≈ ${live(`${v.thresholdWind10m.toFixed(1)}&nbsp;m/s`, R.wind)} wind at 10 m)`;
     const windOpts: RoseSvgOptions = {
       id: "wind-rose", values: v.windRose.freq, colors: SPEED_COLORS, title: "Wind rose",
       desc: `Frequency of hourly 10 m winds by the direction they blow from, ${v.windRose.sectors} sectors, stacked by speed class; 1950–2024; sums to 100 %.`,
@@ -422,18 +452,19 @@ export class CellPanel {
     D.fluxSvg.innerHTML = roseSvg(fluxOpts);
     const ratioTex = v.fluxMode === "flat" ? "$u_{*f}/u_{*,th}$" : "$u_c/u_{*,th}$";
     D.fluxClassLegend.innerHTML = EXCESS_CLASSES.map((c, k) => `<li><span class="swatch" style="background:${EXCESS_COLORS[k]}"></span>${c}</li>`).join("") + `<li>${mathHtml(ratioTex)}</li>`;
-    D.fluxLegend.innerHTML = arrows.map((a) => `<li><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="${a.color}" stroke-width="2" ${a.dash ? `stroke-dasharray="${a.dash}"` : ""}/></svg>${escapeHtml(a.label)}</li>`).join("");
+    D.fluxLegend.innerHTML = arrows.map((a, i) => `<li><svg width="22" height="8" aria-hidden="true"><line x1="1" y1="4" x2="21" y2="4" stroke="${a.color}" stroke-width="2" ${a.dash ? `stroke-dasharray="${a.dash}"` : ""}/></svg>${escapeHtml(s[ROSE_ARROW_KEYS[i]].label)}: ${live(deg(v.modes[ROSE_ARROW_KEYS[i]]), BEARING_W, "left")}</li>`).join("");
     D.fluxKv.innerHTML = `
-        <dt>DP</dt><dd>${fmtNum(v.drift.dp)} m²/yr</dd>
-        <dt>RDP</dt><dd>${fmtNum(v.drift.rdp)} m²/yr</dd>
-        <dt>RDP/DP</dt><dd>${fmtNum(v.drift.ratio)}</dd>
-        <dt>RDD</dt><dd>${deg(v.drift.rddBearing)}</dd>`;
+        <dt>DP</dt><dd>${live(`${fmtNum(v.drift.dp)}&nbsp;m²/yr`, R.dp, "left")}</dd>
+        <dt>RDP</dt><dd>${live(`${fmtNum(v.drift.rdp)}&nbsp;m²/yr`, R.rdp, "left")}</dd>
+        <dt>RDP/DP</dt><dd>${live(fmtNum(v.drift.ratio), R.ratio, "left")}</dd>
+        <dt>RDD</dt><dd>${live(deg(v.drift.rddBearing), BEARING_W, "left")}</dd>`;
     const fm = FLUX_MODES.find((m) => m.id === v.fluxMode)!;
     const what = v.fluxMode === "flat"
       ? `saturated flat-bed flux (q from ${mathHtml("$u_{*f}$")})`
       : `saturated crest flux with speed-up about the mode direction ${mathHtml(v.fluxMode === "elongation" ? "$\\alpha_E$" : "$\\alpha_H$")} at this threshold, ${mathHtml("$u_c = u_{*f}(1 + \\beta \\, h/w \\, |\\sin(\\theta - \\alpha)|)$")}`;
-    const totalTxt = Number.isFinite(v.fluxTotal) ? `${fmtNum(v.fluxTotal)} m²/yr` : `${MISSING} (mode direction undefined at this threshold)`;
-    D.fluxCap.innerHTML = `<strong>${escapeHtml(fm.label)}</strong>: ${mathHtml(fm.totalTex)} = ${totalTxt}. Direction sand moves TOWARD; ${v.fluxSectors.length} sectors of ${w}°. Radius = ${pct ? "% of the total flux in each sector (sums to 100 %)" : `time-averaged flux in each sector, m²/yr (sums to ${escapeHtml(fm.totalText)})`}. Time-averaged ${what}, Σ<sub>speed</sub> n·q / Σ<sub>all</sub> n from the wind histogram, computed in your browser. Colours split each sector by the excess shear ${mathHtml(ratioTex)} of the winds carrying the flux (only ${mathHtml(v.fluxMode === "flat" ? "$u_{*f} > u_{*,th}$" : "$u_c > u_{*,th}$")} transports sand). DP, RDP, RDP/DP, RDD and the arrows are the map fields at this threshold; a direction is hidden where the flux defining it is zero.`;
+    // one slot for the total (or —); the note on — is part of the fixed text of the crest modes
+    const totalTxt = live(Number.isFinite(v.fluxTotal) ? `${fmtNum(v.fluxTotal)}&nbsp;m²/yr` : MISSING, R.total, "left");
+    D.fluxCap.innerHTML = `<strong>${escapeHtml(fm.label)}</strong>: ${mathHtml(fm.totalTex)} = ${totalTxt}${v.fluxMode === "flat" ? "" : ` (${MISSING} = mode direction undefined at this threshold)`}. Direction sand moves TOWARD; ${v.fluxSectors.length} sectors of ${w}°. Radius = ${pct ? "% of the total flux in each sector (sums to 100 %)" : `time-averaged flux in each sector, m²/yr (sums to ${escapeHtml(fm.totalText)})`}. Time-averaged ${what}, Σ<sub>speed</sub> n·q / Σ<sub>all</sub> n from the wind histogram, computed in your browser. Colours split each sector by the excess shear ${mathHtml(ratioTex)} of the winds carrying the flux (only ${mathHtml(v.fluxMode === "flat" ? "$u_{*f} > u_{*,th}$" : "$u_c > u_{*,th}$")} transports sand). DP, RDP, RDP/DP, RDD and the arrows are the map fields at this threshold; a direction is hidden where the flux defining it is zero.`;
     D.modesCap.innerHTML = `Mode bearings (toward) for ${mathHtml("$u_{*,th}$")} = ${v.utValues[0].toFixed(2)} m/s (centre) to ${v.utValues[v.utValues.length - 1].toFixed(2)} m/s (rim); ${mathHtml("$\\alpha_H$")} is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current threshold.`;
     const modesOpts = (t: PlotTheme) => ({ x: v.utValues, currentIndex: v.utIndex, size: Math.min(size, 420), theme: t, series: MODE_KEYS.map((k) => ({ label: s[k].label, color: seriesColor(s[k].color, t), dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined, values: v.modeSeries[k], axis: k === "ab", width: k === "ao" ? 2.8 : undefined })) });
     D.modesSvg.innerHTML = modesPlotSvg(modesOpts(DARK_THEME));
@@ -441,9 +472,9 @@ export class CellPanel {
       const q = Array.from(cell.aux.series.qsdiv, (x) => x * 1000);
       const qsOpts = { x: v.utValues, y: q, currentIndex: v.utIndex, xLabel: "u*,th (m/s)", yLabel: "m/kyr", title: "Saturated flux divergence vs threshold friction velocity", width: Math.min(size, 420) };
       D.qsdivSvg.innerHTML = linePlotSvg(qsOpts);
-      D.qsdivCap.innerHTML = `Saturated flux divergence of this cell (m/kyr; < 0 = flux convergence, deposition) for every ${mathHtml("$u_{*,th}$")}; dot and dashed line: current threshold (${fmtNum(q[v.utIndex])} m/kyr). Divergence of the time-averaged flux vector (RDP, RDD) following Gunn (2026), Methods M6; no data at coasts.`;
+      D.qsdivCap.innerHTML = `Saturated flux divergence of this cell (m/kyr; < 0 = flux convergence, deposition) for every ${mathHtml("$u_{*,th}$")}; dot and dashed line: current threshold (${live(`${fmtNum(q[v.utIndex])}&nbsp;m/kyr`, R.qsdiv)}). Divergence of the time-averaged flux vector (RDP, RDD) following Gunn (2026), Methods M6; no data at coasts.`;
     }
-    D.tableHead.innerHTML = `Cell summary at ${mathHtml("$u_{*,th}$")} = ${formatUt(v.ut)}`;
+    D.tableHead.innerHTML = `Cell summary at ${mathHtml("$u_{*,th}$")} = ${live(formatUt(v.ut), R.ut, "left")}`;
     D.table.innerHTML = this.#table(cell, v);
     // export specs: the same options, re-rendered in the light theme on export
     const edges = [0, 2.5, 5, 7.5, 10, 12.5, 20];
@@ -522,44 +553,53 @@ export class CellPanel {
 
   #table(cell: CellData, v: CellView): string {
     const label = this.#opts.fieldLabel ?? defaultFieldLabel;
-    const rows = cell.fieldVars.filter(isPublishedField).map((id) => {
+    const n = v.utValues.length;
+    /** value cell of field `id` at slider position k: [html, plain text for the width estimate] */
+    const valueAt = (id: string, k: number): [string, string] => {
       const info = fieldInfo(id);
-      const lab = label(id);
-      const raw = fieldValue(cell, id, v.utIndex);
-      const undefinedMode = id in MODE_DEFINED_BY && !modeDefined(cell, id as ModeKey, v.utIndex);
+      const raw = fieldValue(cell, id, k);
+      const undefinedMode = id in MODE_DEFINED_BY && !modeDefined(cell, id as ModeKey, k);
       const val = Number.isFinite(raw) && !undefinedMode ? info.toDisplay(raw) : NaN;
       const shown = !Number.isFinite(val) ? MISSING
         : info.kind === "direction" || info.kind === "axis" ? `${val.toFixed(1)}°`
         : info.kind === "fraction" ? val.toFixed(3)
         : fmtNum(val);
       const units = info.kind === "direction" || info.kind === "axis" ? info.displayUnits.replace(/^°\s*/, "") : info.displayUnits;
-      return `<tr data-field="${id}"><td class="sym">${lab.symbolTex ? mathHtml(`$${lab.symbolTex}$`) : MISSING}</td><th scope="row">${escapeHtml(lab.quantity)}</th><td class="num">${shown}${Number.isFinite(val) && units && units !== "–" ? ` <span class="unit">${mathHtml(units)}</span>` : ""}</td></tr>`;
+      const withUnit = Number.isFinite(val) && units && units !== "–";
+      return [`${shown}${withUnit ? `&nbsp;<span class="unit">${mathHtml(units)}</span>` : ""}`, `${shown}${withUnit ? `&nbsp;${plainUnits(units)}` : ""}`];
+    };
+    const ids = cell.fieldVars.filter(isPublishedField);
+    const qs = cell.aux?.series.qsdiv;
+    const qsText = (k: number) => (Number.isFinite(qs![k]) ? `${fmtNum(qs![k] * 1000)}&nbsp;m/kyr` : MISSING);
+    // one value-column slot width for every slider-dependent row and every slider position (ui/livenum.ts)
+    const W = reserveCh([...ids.flatMap((id) => Array.from({ length: n }, (_, k) => valueAt(id, k)[1])), ...(qs ? Array.from({ length: n }, (_, k) => qsText(k)) : [])]);
+    const rows = ids.map((id) => {
+      const lab = label(id);
+      return `<tr data-field="${id}"><td class="sym">${lab.symbolTex ? mathHtml(`$${lab.symbolTex}$`) : MISSING}</td><th scope="row">${escapeHtml(lab.quantity)}</th><td class="num">${live(valueAt(id, v.utIndex)[0], W)}</td></tr>`;
     }).join("");
     const aux = cell.aux;
     let auxRows = "";
     if (aux) {
       const q = aux.series.qsdiv?.[v.utIndex];
-      if (aux.series.qsdiv) auxRows += `<tr data-field="qsdiv"><td class="sym">${mathHtml(`$${AUX_META.qsdiv.symbolTex}$`)}</td><th scope="row">Saturated flux divergence (&lt; 0 deposition)</th><td class="num">${Number.isFinite(q) ? `${fmtNum(q * 1000)} <span class="unit">m/kyr</span>` : MISSING}</td></tr>`;
+      if (aux.series.qsdiv) auxRows += `<tr data-field="qsdiv"><td class="sym">${mathHtml(`$${AUX_META.qsdiv.symbolTex}$`)}</td><th scope="row" title="Negative values (flux convergence) imply deposition">Saturated flux divergence</th><td class="num">${live(Number.isFinite(q) ? `${fmtNum(q * 1000)}&nbsp;<span class="unit">m/kyr</span>` : MISSING, W)}</td></tr>`;
       const ai = aux.scalars.ai_mean, vf = aux.scalars.ai_valid_frac, sf = aux.scalars.ai_sat_frac;
       if ("ai_mean" in aux.scalars) {
         const sat = sf > 0;
         const val = Number.isFinite(ai) ? `${sat ? "≥ " : ""}${ai.toFixed(3)} <span class="unit">(${aridityClass(ai)})</span>` : MISSING;
         const note = [Number.isFinite(vf) ? `${(100 * vf).toFixed(0)} % of cell valid` : "", sat ? `${(100 * sf).toFixed(0)} % saturated` : ""].filter(Boolean).join(", ");
-        auxRows += `<tr data-field="ai_mean"><td class="sym">${mathHtml(`$${AUX_META.ai_mean.symbolTex}$`)}</td><th scope="row">Aridity index (cell mean, threshold-independent${note ? `; ${note}` : ""})</th><td class="num"${sat ? ' title="Some pixels are at the source saturation value 6.5535, so the mean is a lower bound"' : ""}>${val}</td></tr>`;
+        auxRows += `<tr data-field="ai_mean"><td class="sym">${mathHtml(`$${AUX_META.ai_mean.symbolTex}$`)}</td><th scope="row" title="${escapeHtml(`Cell mean, threshold-independent${note ? `; ${note}` : ""}`)}">Aridity index</th><td class="num"${sat ? ' title="Some pixels are at the source saturation value 6.5535, so the mean is a lower bound"' : ""}>${val}</td></tr>`;
       }
       if ("tot_cov_mean" in aux.scalars) {
         const vc = aux.scalars.tot_cov_mean, vfr = aux.scalars.tot_cov_valid_frac;
         const frac = Number.isFinite(vfr) ? `${(100 * vfr).toFixed(0)} % of cell with data` : "";
         const tip = frac ? ` title="Mean of the 0.1° vegetation cover means (2001–2025) over the part of the cell with data (${(100 * vfr).toFixed(0)} %)"` : "";
-        auxRows += `<tr data-field="tot_cov_mean"><td class="sym">${mathHtml(`$${AUX_META.tot_cov_mean.symbolTex}$`)}</td><th scope="row">Vegetation cover (mean 2001–2025${frac ? `; <span class="subtext">${frac}</span>` : ""})</th><td class="num"${tip}>${Number.isFinite(vc) ? `${vc.toFixed(1)} <span class="unit">%</span>` : MISSING}</td></tr>`;
+        auxRows += `<tr data-field="tot_cov_mean"><td class="sym">${mathHtml(`$${AUX_META.tot_cov_mean.symbolTex}$`)}</td><th scope="row" title="${escapeHtml(`Mean 2001–2025${frac ? `; ${frac}` : ""}`)}">Vegetation cover</th><td class="num"${tip}>${Number.isFinite(vc) ? `${vc.toFixed(1)} <span class="unit">%</span>` : MISSING}</td></tr>`;
       }
     }
     const ds = this.#ds(cell);
     const extra = `${auxRows}
-      <tr data-field="dunes"><td class="sym">${MISSING}</td><th scope="row">Dunes present (cell overlaps a mapped 0.1° dune cell)</th><td class="num">${cell.dune ? "yes" : "no"}</td></tr>
-      <tr data-field="centre"><td class="sym">${MISSING}</td><th scope="row">Cell centre (lat, lon)</th><td class="num">${coord(cell.lat)}°, ${coord(cell.lon)}°</td></tr>
-      <tr data-field="cell"><td class="sym">${MISSING}</td><th scope="row">Grid cell (row, column; index)</th><td class="num">${cell.iy}, ${cell.ix}; ${cell.id} <span class="unit">(${escapeHtml(ds.name)} ${ds.resolution})</span></td></tr>
-      <tr data-field="hours"><td class="sym">${MISSING}</td><th scope="row">Hours counted</th><td class="num">${cell.totalHours.toLocaleString("en")} h</td></tr>`;
+      <tr data-field="dunes"><td class="sym">${MISSING}</td><th scope="row" title="${escapeHtml(`Yes: ${ds.dunesRule}`)}">Dunes present</th><td class="num">${cell.dune ? "yes" : "no"}</td></tr>
+      <tr data-field="centre"><td class="sym">${MISSING}</td><th scope="row" title="Latitude, longitude of the cell centre">Cell centre</th><td class="num">${coord(cell.lat)}°, ${coord(cell.lon)}°</td></tr>`;
     return `<table><thead><tr><th scope="col">Symbol</th><th scope="col">Quantity</th><th scope="col">Value</th></tr></thead><tbody>${rows}${extra}</tbody></table>`;
   }
 

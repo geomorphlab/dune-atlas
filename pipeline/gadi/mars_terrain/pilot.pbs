@@ -1,0 +1,23 @@
+#!/bin/bash
+# Mars terrain pilot: sample terrarium tiles z4-z8 from the MOLA–HRSC DEM (read in place), sizes + timings.
+#PBS -P k10
+#PBS -q normal
+#PBS -N mars_terrain_pilot
+#PBS -l ncpus=12
+#PBS -l mem=47GB
+#PBS -l walltime=02:00:00
+#PBS -l storage=gdata/k10+gdata/xp65+scratch/k10
+#PBS -j oe
+#PBS -o /scratch/k10/ag5517/dune-atlas/mars/logs/terrain_pilot.log
+set -eu
+PY=/g/data/k10/ag5517/apps/dune_atlas_venv/bin/python
+CODE=@CODE@
+WORK=/scratch/k10/ag5517/dune-atlas/mars/work/terrain/pilot
+test -x $PY || { echo "no interpreter"; exit 127; }
+test -f $CODE/dune_atlas_pipeline/mars/terrain.py || { echo "no code"; exit 3; }
+mkdir -p $WORK
+export PYTHONPATH=$CODE OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+cd $WORK
+echo "start $(date -u +%FT%TZ) host $(hostname)"
+$PY -u -m dune_atlas_pipeline.mars.terrain pilot --out $WORK --workers 12 > $WORK/pilot_stdout.json
+echo "DONE $(date -u +%FT%TZ)"

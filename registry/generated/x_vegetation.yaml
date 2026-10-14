@@ -11,13 +11,11 @@ layers:
   variable: vegetation
   thresholdAware: false
   units: '%'
-  description: Mean total vegetation cover (green plus dry vegetation, including trees; % of the ground) over the
-    300 months 2001–2025, from the CSIRO MODIS Fractional Cover product v3.1 (500 m, monthly), the vegetation product
-    of GEOGLAM RAPP. Monthly 500 m values are averaged onto the 0.1° atlas cells, then over all months with valid
-    data (snow, persistent cloud and polar night remove months at high latitudes). The product is calibrated against
-    field sites in Australia and saturates under closed canopies. Ocean, Antarctica, land north of 70° N and the
-    180° meridian cells have no data. Independent of the wind dataset and of u*,th. [Explore the full monthly time
-    series at GEOGLAM RAPP](https://map.geo-rapp.org/).
+  description: Mean total vegetation cover (green plus dry vegetation, including trees; % of the ground), 2001–2025,
+    from the CSIRO MODIS Fractional Cover v3.1 (500 m, monthly) averaged onto the 0.1° cells over the months with
+    valid data. Calibrated against Australian field sites; saturates under closed canopies. No data over ocean,
+    Antarctica, land north of 70° N and the 180° meridian cells. [Explore the full monthly time series at GEOGLAM
+    RAPP](https://map.geo-rapp.org/).
   citation: 'Guerschman, J.P. et al. (2015) Assessing the effects of site heterogeneity and soil properties when
     unmixing photosynthetic vegetation, non-photosynthetic vegetation and bare soil fractions from Landsat and MODIS
     data. Remote Sensing of Environment 161, 12-26. doi:10.1016/j.rse.2015.01.021; Guerschman, J.P. & Hill, M.J.

@@ -6,11 +6,12 @@ cell store and the pipeline reference flux functions.
 NetCDF (xarray, scipy engine): wind_hist == cells.zarr hist exactly; every field var(ut) ==
 cells.zarr fields (float32) exactly; coordinates / attributes present; flux_rose matches
 flux.py flux_rose / crest_flux_rose (about the mode directions ae / ab) to rtol 1e-6, NaN
-crest rows exactly where the defining flux (qace / qacb) is not > 0. CSV bundle: files present,
+crest rows exactly where the defining flux (qace / qacb) is not > 0. CSV bundle (UTF-8 BOM, one ASCII header row; names from metadata.json): files present,
 shapes, and values equal to the NetCDF.
 """
 import io
 import json
+import re
 import pathlib
 import sys
 import zipfile
@@ -129,14 +130,22 @@ for c in cells:
                 checked += 1
             else:
                 assert np.isnan(fr[m, k]).all(), (m, k)
-    # --- CSV bundle, read with the documented recipe: pd.read_csv(f, header=0, skiprows=[1, 2])
+    # --- CSV bundle, read with the documented recipe: pd.read_csv(f) (UTF-8 BOM, one ASCII header row)
     z = zipfile.ZipFile(outdir / c["zip"])
     assert z.namelist() == ["README.txt", "wind_histogram.csv", "fields_by_threshold.csv", "flux_rose.csv", "metadata.json"], z.namelist()
     assert z.testzip() is None
     assert all(i.compress_type == zipfile.ZIP_DEFLATED for i in z.infolist() if i.filename.endswith(".csv")), [i.compress_type for i in z.infolist()]
+    meta_cols = json.loads(z.read("metadata.json"))["files"]
+    # CSV header <- NetCDF name, per file (metadata.json files.<csv>.columns: name, netcdf_name, units, long_name)
+    nc2csv = {f: {x["netcdf_name"]: x["name"] for x in v["columns"]} for f, v in meta_cols.items()}
+    col_meta = {f: {x["netcdf_name"]: x for x in v["columns"]} for f, v in meta_cols.items()}
     # (float_precision="round_trip" makes pandas' parser bit-exact; documented in README.txt)
-    read = lambda name: pd.read_csv(io.BytesIO(z.read(name)), header=0, skiprows=[1, 2], float_precision="round_trip")
-    units_row = lambda name: pd.read_csv(io.BytesIO(z.read(name)), header=0, nrows=1, dtype=str).iloc[0].to_dict()
+    def read(name):
+        assert z.read(name)[:3] == b"\xef\xbb\xbf", name                      # UTF-8 BOM
+        df = pd.read_csv(io.BytesIO(z.read(name)), float_precision="round_trip")
+        assert all(re.fullmatch(r"[a-z][a-z0-9_]*", c_) for c_ in df.columns), list(df.columns)
+        assert list(df.columns) == [x["name"] for x in meta_cols[name]["columns"]], (name, list(df.columns))
+        return df.rename(columns={v: k for k, v in nc2csv[name].items()})   # back to the NetCDF names
     dir_cols = ["ua_bin", "ua_bin_lo", "ua_bin_hi", "ua_bin_bearing_toward", "ua_bin_bearing_from"]
     def check_dirs(df, n_outer):
         d = df[dir_cols].values.reshape(n_outer, 128, 5)
@@ -152,19 +161,17 @@ for c in cells:
     np.testing.assert_array_equal(wh["um_bin"].values.reshape(128, 128)[:, 0], ds["um_bin"].values)
     np.testing.assert_array_equal(wh["um_bin_lo"].values.reshape(128, 128)[:, 0], ds["um_bin_bnds"].values[:, 0])
     check_dirs(wh, 128)
-    u = units_row("wind_histogram.csv")
+    u = {k: x["units"] for k, x in col_meta["wind_histogram.csv"].items()}
     assert u["wind_hist"] == ds["wind_hist"].attrs["units"] and u["ua_bin"] == ds["ua_bin"].attrs["units"] and u["um_bin"] == ds["um_bin"].attrs["units"]
     fb = read("fields_by_threshold.csv")
     assert list(fb.columns) == ["ut", *fv, "qsdiv"], list(fb.columns)
     np.testing.assert_array_equal(fb["qsdiv"].values.astype(np.float32), qs)
     np.testing.assert_array_equal(fb["ut"].values, ds["ut"].values)
-    u = units_row("fields_by_threshold.csv")
+    cm = col_meta["fields_by_threshold.csv"]
     for v in fv:
         np.testing.assert_array_equal(fb[v].values.astype(np.float32), ds[v].values, err_msg=v)
-        assert u[v] == ds[v].attrs["units"], (v, u[v], ds[v].attrs["units"])
-    long_row = pd.read_csv(io.BytesIO(z.read("fields_by_threshold.csv")), header=0, skiprows=[1], nrows=1, dtype=str).iloc[0].to_dict()
-    for v in fv:
-        assert long_row[v] == ds[v].attrs["long_name"], (v, long_row[v])
+        assert cm[v]["units"] == ds[v].attrs["units"], (v, cm[v]["units"], ds[v].attrs["units"])
+        assert cm[v]["long_name"] == ds[v].attrs["long_name"], (v, cm[v]["long_name"])
     rose = read("flux_rose.csv")
     assert list(rose.columns) == ["rose_mode", "ut", *dir_cols, "flux_rose"], list(rose.columns)
     assert len(rose) == 3 * 64 * 128 and list(rose["rose_mode"].unique()) == ["flat_bed", "elongation", "transverse"]
@@ -172,7 +179,7 @@ for c in cells:
     check_dirs(rose, 3 * 64)
     # exactly the NetCDF float32 values (shortest round-trip text), empty = NaN in the same places
     np.testing.assert_array_equal(rose["flux_rose"].values.astype(np.float32).reshape(3, 64, 128), ds["flux_rose"].values)
-    assert units_row("flux_rose.csv")["flux_rose"] == ds["flux_rose"].attrs["units"]
+    assert col_meta["flux_rose.csv"]["flux_rose"]["units"] == ds["flux_rose"].attrs["units"]
     meta = json.loads(z.read("metadata.json"))
     assert meta["cell"]["cell_y"] == iy and sorted(meta["fields"]["dpm"]) == ["description", "description_latex", "long_name", "long_name_latex", "units"]
     assert meta["ut"] == [round(x, 2) for x in ut_values.tolist()]
@@ -196,11 +203,10 @@ for c in cells:
     readme = z.read("README.txt").decode()
     assert "tot_cov_mean" in readme and "https://map.geo-rapp.org/" in readme
     for f in ("wind_histogram.csv", "fields_by_threshold.csv", "flux_rose.csv"):
-        hdr = pd.read_csv(io.BytesIO(z.read(f)), header=None, nrows=3, dtype=str)
-        assert [c_["name"] for c_ in meta["files"][f]["columns"]] == hdr.iloc[0].tolist(), f
-        assert [c_["units"] for c_ in meta["files"][f]["columns"]] == hdr.iloc[1].tolist(), f
+        hdr = pd.read_csv(io.BytesIO(z.read(f)), nrows=0).columns.tolist()
+        assert [c_["name"] for c_ in meta["files"][f]["columns"]] == hdr, f
     readme = z.read("README.txt").decode()
-    assert "pd.read_csv(f, header=0, skiprows=[1, 2])" in readme and "This page was created with assistance from Claude AI." in readme
+    assert "pd.read_csv(f)" in readme and "This page was created with assistance from Claude AI." in readme
     # plain attributes carry no LaTeX
     for v in list(ds.variables):
         for k, a in ds[v].attrs.items():

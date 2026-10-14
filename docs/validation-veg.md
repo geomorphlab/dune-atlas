@@ -1,6 +1,6 @@
 # Validation: total vegetation cover layer (MODIS Fractional Cover v3.1, 2001–2025 mean)
 
-Layer `vegetation` (group "Land surface"), stores `dune-atlas/v1/fields/vegetation.zarr` (GeoZarr pyramid) and
+Layer `vegetation` (group "Related data", id `climate`), stores `dune-atlas/v1/fields/vegetation.zarr` (GeoZarr pyramid) and
 `dune-atlas/v1/cells-aux-veg.zarr` (per-cell values). Source and licence: `docs/sources.md`. Code:
 `pipeline/src/dune_atlas_pipeline/vegetation.py`, `scripts/veg_gadi.py` (NCI Gadi PBS job), tests
 `pipeline/tests/test_vegetation.py`.

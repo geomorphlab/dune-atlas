@@ -1,6 +1,7 @@
 // Per-cell downloads: NetCDF-3 (CF-1.8 style) and a CSV bundle (.zip). Pure builders (tested
 // in node; scripts/check-netcdf.py reads the NetCDF back with xarray); the panel only triggers
 // the download.
+import { csvName, UTF8_BOM } from "./csvnames";
 import { C, isPublishedField } from "../util/constants";
 import { mathToBearingDeg } from "../util/angles";
 import { texToPlain } from "../util/plaintext";
@@ -8,7 +9,7 @@ import { fieldValue, nUt, type CellData, type CellStoreAttrs } from "./cellstore
 import { crestFluxRose, fluxRose, DEFAULT_BINS } from "./flux";
 import { modeDefined } from "./analysis";
 import { fieldInfo } from "./fieldinfo";
-import { AI_NOTICE, C3S_NOTICE, C3S_NOTICE_ERA5, CELL_SOURCE_IDS, citationJson, citationSources, citationText, referencesLine } from "./citation";
+import { AI_NOTICE, C3S_NOTICE, C3S_NOTICE_ERA5, CELL_SOURCE_IDS, citationJson, citationSources, citationText, fieldsCitation, fieldsLicence, referencesLine } from "./citation";
 import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "./auxinfo";
 import { DATASET_INFO, datasetInfo, resolutionText, type DatasetInfo } from "./datasetinfo";
 
@@ -60,13 +61,30 @@ const csvCell = (s: string) => (/[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` 
 const bearingToward = (a: number) => mathToBearingDeg(a);
 const bearingFrom = (a: number) => (mathToBearingDeg(a) + 180) % 360;
 
-/** A CSV column: NetCDF-style name, UDUNITS units, plain long name. */
+/** A CSV column: NetCDF variable name, UDUNITS units, long name (UTF-8, with the symbol). The CSV
+ *  header is `csvName(name)` (plain ASCII snake_case, csvnames.ts); units and long names are documented
+ *  in README.txt and metadata.json. */
 export interface CsvColumn { name: string; units: string; longName: string }
-/** CSV with 3 header rows (names, units, long names) then data rows. */
+/** CSV: UTF-8 with BOM, ONE header row of ASCII snake_case names (csvnames.ts), then data rows. */
 export function csvTable(cols: CsvColumn[], rows: string[][]): string {
-  const head = [cols.map((c) => c.name), cols.map((c) => c.units), cols.map((c) => c.longName)].map((r) => r.map(csvCell).join(","));
-  return [...head, ...rows.map((r) => r.join(","))].join("\n") + "\n";
+  const head = cols.map((c) => csvCell(csvName(c.name))).join(",");
+  return UTF8_BOM + [head, ...rows.map((r) => r.join(","))].join("\n") + "\n";
 }
+/** metadata.json column entry: CSV header, NetCDF name, units, long name. */
+export const csvColumnJson = (x: CsvColumn) => ({ name: csvName(x.name), netcdf_name: x.name, units: x.units, long_name: x.longName });
+/** README column line: CSV header [units] long name (NetCDF: name). */
+export const csvColumnDoc = (c: CsvColumn) => `    ${csvName(c.name).padEnd(44)} [${c.units}] ${c.longName} (NetCDF: ${c.name})`;
+/** README paragraph on the CSV layout (both builds). */
+export const CSV_LAYOUT_TEXT = `CSV layout (all files)
+----------------------
+UTF-8 with a byte-order mark (Excel opens the files correctly). One header row of plain ASCII
+snake_case column names (listed below with units, long name and the NetCDF variable name; also in
+metadata.json "files"), then one data row per record. Empty value = undefined. Numbers are written
+with the shortest text that reproduces the NetCDF value exactly.
+Read with
+  Python/pandas:  pd.read_csv(f)   (add float_precision="round_trip" for bit-exact values)
+  R (base):       read.csv(f, fileEncoding = "UTF-8-BOM")
+  R (readr):      readr::read_csv(f)`;
 
 /** Direction-bin columns shared by wind_histogram.csv and flux_rose.csv (same names, values,
  *  precision and order as the NetCDF ua_bin coordinates). */
@@ -197,6 +215,8 @@ export function cellNetcdf(cell: CellData, meta: ExportMeta): Uint8Array {
       dataset_id: meta.datasetId,
       data_version: meta.dataVersion,
       references: referencesLine(citationSources(CELL_SOURCE_IDS, ds.id)),
+      fields_citation: fieldsCitation(ds.id),
+      fields_license: fieldsLicence(ds.id),
       geospatial_lat_resolution: `${resolutionText(deg)}`.replace("°", " degree"),
       geospatial_lon_resolution: `${resolutionText(Math.abs(cell.grid?.dlon ?? deg))}`.replace("°", " degree"),
       license: LICENSE,
@@ -278,16 +298,16 @@ export function metadataJson(cell: CellData, meta: ExportMeta): string {
     grid: { ...cell.grid, resolution: resolutionText(deg), registration: "pixel: lat0/lon0 are the centre of cell (0, 0); cell (y, x) spans centre ± d/2" },
     dataset: { id: meta.datasetId, title: meta.datasetTitle, version: meta.dataVersion },
     conventions: {
-      wind_direction: "ua_bin = arctan2(v10, u10) = direction the wind blows TOWARD, radians counter-clockwise from east; ua_bin_bearing_toward = (90 - degrees(ua_bin)) mod 360; ua_bin_bearing_from = toward + 180",
-      field_angles: "radians counter-clockwise from east, direction of transport (toward); compass bearing = (90 - degrees(value)) mod 360; ab (alpha_H) is an axis",
+      wind_direction: "direction_bin_centre (NetCDF ua_bin) = arctan2(v10, u10) = direction the wind blows TOWARD, radians counter-clockwise from east; bearing_toward = (90 - degrees(direction_bin_centre)) mod 360; bearing_from = toward + 180",
+      field_angles: "radians counter-clockwise from east, direction of transport (toward); compass bearing = (90 - degrees(value)) mod 360; alpha_h (NetCDF ab) is an axis",
       fluxes: "fields: m2 s-1 (multiply by 31557600 for m2 yr-1); flux_rose: m2 yr-1",
       missing: "empty CSV cell (NetCDF: _FillValue) = undefined (e.g. no crest flux)",
-      csv_headers: "3 header rows: variable name (as in the NetCDF), units (UDUNITS), plain long name",
+      csv_headers: "UTF-8 with BOM; one header row of ASCII snake_case names; per column: name (CSV header), netcdf_name, units (UDUNITS), long_name in files.<csv>.columns",
       dune_present: `1 = ${ds.dunesRule}`,
       land_cells: `wind data: ${ds.landRule}`,
     },
     ut: (cell.utValues ?? C.UT_VALUES).slice(0, nUt(cell)).map(ut2),
-    files: Object.fromEntries(Object.entries(cols).map(([f, c]) => [f, { columns: c.map((x) => ({ name: x.name, units: x.units, long_name: x.longName })) }])),
+    files: Object.fromEntries(Object.entries(cols).map(([f, c]) => [f, { columns: c.map(csvColumnJson) }])),
     fields: Object.fromEntries(pub.map((v) => { const m = fieldMeta(v, meta.storeAttrs); return [v, { long_name: m.longName, long_name_latex: m.longNameLatex, units: m.units, description: m.description, description_latex: m.descriptionLatex }]; })),
     aux: Object.fromEntries(auxVars(cell.aux).map((v) => {
       const m = AUX_META[v], src = auxSourceAttrs(cell.aux!, v, deg);
@@ -296,6 +316,7 @@ export function metadataJson(cell: CellData, meta: ExportMeta): string {
         description: texToPlain(auxDescription(v, deg)), ...Object.fromEntries(["source", "references", "license", "url", "comment", "method"].filter((k) => src[k]).map((k) => [k, texToPlain(src[k])])) }];
     })),
     citation: citationJson(citationSources(CELL_SOURCE_IDS, ds.id)),
+    fields_citation: fieldsCitation(ds.id), fields_license: fieldsLicence(ds.id),
     license: LICENSE, institution: INSTITUTION, copernicus_notice: ds.id === "era5" ? C3S_NOTICE_ERA5 : C3S_NOTICE,
     generated: (meta.generated ?? new Date()).toISOString(), permalink: meta.permalink, ai_notice: AI_NOTICE,
   }, null, 1) + "\n";
@@ -304,24 +325,15 @@ export function metadataJson(cell: CellData, meta: ExportMeta): string {
 export function readmeText(cell: CellData, meta: ExportMeta): string {
   const ds = cellDataset(cell, meta.datasetId);
   const cols = csvColumns(cell, meta.storeAttrs);
-  const colDoc = (f: string) => cols[f].map((c) => `    ${c.name.padEnd(22)} [${c.units}] ${c.longName}`).join("\n");
+  const colDoc = (f: string) => cols[f].map(csvColumnDoc).join("\n");
   return `Dune Atlas cell export
 ======================
 Cell: ${cell.lat}° N, ${cell.lon}° E (grid row ${cell.iy}, column ${cell.ix}); dataset ${meta.datasetTitle} (${meta.datasetId}, ${meta.dataVersion}).
 Generated ${(meta.generated ?? new Date()).toISOString()} from ${meta.permalink}
 
-CSV layout (all files)
-----------------------
-Three header rows: (1) variable names (as in the NetCDF download), (2) units (UDUNITS),
-(3) plain-text long names; then one data row per record. Empty value = undefined.
-Numbers are written with the shortest text that reproduces the NetCDF value exactly.
-Read with
-  Python/pandas:  pd.read_csv(f, header=0, skiprows=[1, 2])
-                  (add float_precision="round_trip" for bit-exact values)
-  R (base):       d <- read.csv(f, skip = 3, header = FALSE); names(d) <- names(read.csv(f, nrows = 0))
-  R (readr):      readr::read_csv(f, skip = 3, col_names = names(readr::read_csv(f, n_max = 0)))
+${CSV_LAYOUT_TEXT}
 wind_histogram.csv and flux_rose.csv are in tidy long format and use the same direction-bin
-columns (ua_bin ... ua_bin_bearing_from), values and order (ua_bin = source bin index order).
+columns (direction_bin_centre ... bearing_from), values and order (source bin index order).
 
 wind_histogram.csv  Hourly ${ds.name} 10 m wind 1950-2024 (${ds.resolution} cell); one row per speed x direction bin.
 ${colDoc("wind_histogram.csv")}
@@ -329,12 +341,12 @@ ${colDoc("wind_histogram.csv")}
 fields_by_threshold.csv  Sand-flux parameters vs threshold; one row per u*,th (64 values,
   0.01-0.64 m/s). Source units: fluxes m2 s-1 (x 31557600 = m2/yr); angles radians
   counter-clockwise from east, direction of transport (bearing = (90 - degrees) mod 360;
-  ab = alpha_H is an axis); fractions / ratios dimensionless.
+  alpha_h = alpha_H is an axis); fractions / ratios dimensionless.
 ${colDoc("fields_by_threshold.csv")}
 
-flux_rose.csv  Flux rose vs threshold: one row per (rose_mode, ut, ua_bin) = 3 x 64 x 128 rows.
-  flux_rose = time-averaged sand flux per direction bin (sum over speed bins of n q / total hours),
-  m2 yr-1, transport TOWARD ua_bin. flat_bed: saturated flat-bed flux; elongation / transverse:
+flux_rose.csv  Flux rose vs threshold: one row per (rose_mode, ustar_threshold, direction bin) = 3 x 64 x 128 rows.
+  flux = time-averaged sand flux per direction bin (sum over speed bins of n q / total hours),
+  m2 yr-1, transport TOWARD direction_bin_centre. flat_bed: saturated flat-bed flux; elongation / transverse:
   crest flux with speed-up about the mode direction alpha_E / alpha_H at that threshold. Crest-mode rows
   are empty where the defining crest flux is zero.
 ${colDoc("flux_rose.csv")}
@@ -346,14 +358,16 @@ ${auxVars(cell.aux).filter((v) => AUX_META[v].kind === "scalar").map((v) => `   
   Aridity: Global-AI_PET v3.1. Vegetation cover (tot_cov_*): CSIRO MODIS Fractional Cover v3.1,
   mean 2001-2025; full monthly time series at https://map.geo-rapp.org/.
 
-qsdiv (fields_by_threshold.csv, m yr-1) is the saturated flux divergence: the divergence of the
-time-averaged flat-bed flux vector (magnitude rdpm, direction rdpa) on the sphere, following
+flux_divergence (qsdiv; fields_by_threshold.csv, m yr-1) is the saturated flux divergence: the divergence of the
+time-averaged flat-bed flux vector (magnitude rdp, direction rdd) on the sphere, following
 Gunn (2026), Methods M6. Negative values (flux convergence) imply deposition.
 
-Drift potentials (dpm, rdpm, rdpa, qha_rdp_dp) and crest fluxes are averages over the hourly
+Drift potentials (dp, rdp, rdd, rdp_over_dp) and crest fluxes are averages over the hourly
 record (sums over all speed and direction bins weighted by the hours in each bin).
 
 ${citationText("", citationSources(CELL_SOURCE_IDS, ds.id)).trim()}
+
+Cite the sand-flux fields as: ${fieldsCitation(ds.id)}. Licence of the fields: ${fieldsLicence(ds.id)}.
 
 Licence: ${LICENSE}.
 

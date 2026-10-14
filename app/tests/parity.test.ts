@@ -127,7 +127,7 @@ describe.skipIf(!have)("ERA5-Land / ERA5 parity of the summary table and downloa
     diff(a.rows, b.rows, "table", d);
     diff(a.sections, b.sections, "sections", d);
     expect(unexplained(d)).toEqual([]);
-    expect(b.root.querySelector('tr[data-field="dunes"] th')!.textContent).toBe("Dunes present (cell overlaps a mapped 0.1° dune cell)");
+    expect(b.root.querySelector('tr[data-field="dunes"] th')!.textContent).toBe("Dunes present");
     expect(b.root.querySelector('tr[data-field="centre"] td.num')!.textContent).toBe("-24.5°, 15.25°");
   });
   it("NetCDF: same dims, variables (order, dims, types), attribute keys and texts", () => {

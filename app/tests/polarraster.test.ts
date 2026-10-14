@@ -262,13 +262,12 @@ describe("globe raster geometry: pole and antimeridian (patched zarr-layer)", ()
     }
   });
 
-  it("selected-cell highlight of a pole-row cell ends at ±90 (one polygon, no fold)", () => {
+  it("selected-cell highlight of a pole-row cell: nothing in the flat map, globe geometry to ±90 (round 5: tests/selection.test.ts)", () => {
     for (const g of [{ lat0: 90, dlat: -0.25, lon0: -180, dlon: 0.25, ny: 721, nx: 1440 }, { lat0: 90, dlat: -0.1, lon0: -180, dlon: 0.1, ny: 1801, nx: 3600 }]) {
       for (const i of [0, g.ny - 1]) {
         const fc = cellFeature(cellFromIndex(i, 100, g), g);
-        expect(fc.features).toHaveLength(1);
-        const lats = (fc.features[0].geometry as GeoJSON.Polygon).coordinates[0].map((p) => p[1]);
-        expect(Math.max(...lats.map(Math.abs))).toBe(90);
+        expect(fc.features).toHaveLength(0);
+        expect(Math.max(Math.abs(fc.bbox![1]), Math.abs(fc.bbox![3]))).toBe(90);
       }
     }
   });

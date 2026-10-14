@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// Vegetation cover layer (Land surface group), generic per-cell sidecars, safe links in registry
+// Vegetation cover layer (Related data group), generic per-cell sidecars, safe links in registry
 // text, panel row, downloads and citations.
 import { harmonizeAux } from "../src/cell/auxinfo";
 import { describe, expect, it, vi } from "vitest";
@@ -25,10 +25,10 @@ const veg = reg.layers.find((l) => l.id === "vegetation")!;
 const RAPP = "https://map.geo-rapp.org/";
 
 describe("vegetation layer (registry)", () => {
-  it("Land surface group after aridity; 2-D, threshold-independent, linear 0-100 %, ylgn", () => {
+  it("Related data group (id climate) after aridity; 2-D, threshold-independent, linear 0-100 %, ylgn", () => {
     expect(veg).toBeTruthy();
     const g = reg.groups.find((x) => x.id === "climate")!;
-    expect(g.title).toBe("Land surface");
+    expect(g.title).toBe("Related data");
     const ids = reg.layers.filter((l) => l.group === "climate").map((l) => l.id);
     expect(ids.indexOf("vegetation")).toBe(ids.indexOf("aridity") + 1);
     expect(veg.thresholdAware).toBe(false);
@@ -169,7 +169,8 @@ describe("vegetation in the panel and the downloads", () => {
     const p = new CellPanel(root, 14, { windSectors: 16, fluxSectors: 32, onClose: () => {} });
     await p.show({ query: async () => c, attrs: {}, fieldVars: FIELD_VARS } as unknown as CellStore, 1145, 1952);
     const row = root.querySelector('.summary tr[data-field="tot_cov_mean"]')!;
-    expect(row.querySelector("th")!.textContent).toBe("Vegetation cover (mean 2001–2025; 100 % of cell with data)");
+    expect(row.querySelector("th")!.textContent).toBe("Vegetation cover");
+    expect(row.querySelector("th")!.getAttribute("title")).toBe("Mean 2001–2025; 100 % of cell with data");
     expect(row.querySelector("td.num")!.textContent).toBe("20.3 %");
     expect(row.querySelector("td.num")!.getAttribute("title")).toBe("Mean of the 0.1° vegetation cover means (2001–2025) over the part of the cell with data (100 %)");
     // citation list in the panel includes the vegetation source with the RAPP link

@@ -1,6 +1,6 @@
 // Permalink state <-> URL query string. Pure (tested).
 //   ?lon=15.2&lat=-24.5&zoom=6.2&basemap=openfreemap-dark&layers=at:0.8~cm=hsv~mode=a,dunes~inv=1
-//    &ut=14&cell=1145,1952&proj=globe|mercator&embed=1&order=dunes,at,...&dataset=era5-land
+//    &ut=14&cell=1145,1952&proj=globe|mercator&embed=1&order=dunes,at,...&dataset=era5-land&dunesonly=1
 // `layers` absent -> registry defaults; `layers=` (empty) -> no overlays. Per-layer tokens:
 // id[:opacity][~key=value]* (keys in layerconfig.ts: cm rev lo hi log mode vc fc lc inv ol).
 import { decodeConfig, encodeConfig, type LayerConfig } from "./layerconfig";
@@ -19,6 +19,8 @@ export interface UrlState {
   /** drawing order (top first), only when it differs from the registry */
   order?: string[];
   dataset?: string;
+  /** `dunesonly=1`: wind-derived layers only in cells with dunes */
+  dunesOnly?: boolean;
   /** `tour=1`: show the guided tour (also in embed mode / after it was seen) */
   tour?: boolean;
 }
@@ -57,6 +59,7 @@ export function parseUrlState(search: string): UrlState {
   const proj = q.get("proj");
   if (proj === "globe" || proj === "mercator") st.proj = proj;
   if (q.get("embed") === "1") st.embed = true;
+  if (q.get("dunesonly") === "1") st.dunesOnly = true;
   if (q.get("tour") === "1") st.tour = true;
   return st;
 }
@@ -74,5 +77,6 @@ export function serializeUrlState(st: UrlState): string {
   if (st.embed) put("embed", "1");
   if (st.order?.length) put("order", st.order.join(","));
   if (st.dataset) put("dataset", st.dataset);
+  if (st.dunesOnly) put("dunesonly", "1");
   return q.length ? `?${q.join("&")}` : "";
 }

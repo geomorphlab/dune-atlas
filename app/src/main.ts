@@ -1,4 +1,5 @@
 // Entry point: map shell + registry-driven overlays + global u*,th control + click-to-cell panel.
+import { storageKey } from "./body";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "katex/dist/katex.min.css";
 import "./style.css";
@@ -16,6 +17,7 @@ import { CellPanel, defaultFieldLabel, type FieldLabel } from "./ui/cellPanel";
 import { CellStore } from "./cell/cellstore";
 import { cellFeature, cellFromIndex, snapToCell, ERA5_LAND_GRID, type Grid } from "./cell/snap";
 import { C3S_NOTICE } from "./cell/citation";
+import { terseQuantity } from "./ui/terse";
 import { mathOnly } from "./util/math";
 import { shareFromHash, shareUrl, type ShareState } from "./share/shortlink";
 import { appShareState, DEFAULT_VIEW, initialAppState, resolveInitialState } from "./defaultview";
@@ -35,7 +37,7 @@ const dataBase = CONFIG.dataBase ?? reg.dataBase;
 // (defaultview.ts). Wind dataset: the link's; query permalinks without one are the registry
 // defaultDataset (ERA5-Land, as they were written); with no view state in the URL, a returning
 // user's explicit choice (localStorage) or the default view's. Layer definitions follow it.
-const DATASET_KEY = "duneAtlas.dataset";
+const DATASET_KEY = storageKey("dataset"); // "duneAtlas.dataset" (Earth; body.ts)
 const storedDataset = (() => { try { return localStorage.getItem(DATASET_KEY) ?? undefined; } catch { return undefined; } })();
 const start = resolveInitialState(shareFromHash(location.hash), parseUrlState(location.search), reg.defaultDataset, storedDataset);
 const url: UrlState = start.url;
@@ -89,7 +91,7 @@ map.getCanvas().setAttribute("aria-label", "Map. Click a land cell to show its w
 map.getCanvas().style.cursor = "crosshair";
 
 const datasetPrefix = () => selectDataset(reg, store.state.dataset)?.prefix;
-const overlays = new OverlayManager(map, reg, dataBase, init.utIndex, { order: init.order, datasetPrefix: datasetPrefix() });
+const overlays = new OverlayManager(map, reg, dataBase, init.utIndex, { order: init.order, datasetPrefix: datasetPrefix(), dunesOnly: !!init.dunesOnly });
 overlays.onError = (l, e) => console.warn(`[dune-atlas] layer '${l.id}': data could not be loaded`, e);
 
 function applyBasemap() {
@@ -154,7 +156,7 @@ function fieldLabel(v: string): FieldLabel {
   const l = reg.layers.find((x) => x.type === "zarr-field" && x.variable === v);
   const d = defaultFieldLabel(v);
   if (!l) return d;
-  return { symbolTex: mathOnly(l.titleTex) || d.symbolTex, quantity: l.title.replace(/\s*\([^)]*\)\s*$/, "") || d.quantity };
+  return { symbolTex: mathOnly(l.titleTex) || d.symbolTex, quantity: terseQuantity(l.title) || d.quantity };
 }
 
 let cellStore: Promise<CellStore> | null = null;
@@ -210,6 +212,7 @@ function currentUrlState(): UrlState {
     order: s.order.join(",") === registryOrder.join(",") ? undefined : s.order,
     // always explicit: permalinks without a dataset are read as the registry defaultDataset
     dataset: (reg.datasets?.length ?? 0) > 1 ? s.dataset : undefined,
+    dunesOnly: s.dunesOnly || undefined,
   };
 }
 // opened without view state: the address stays bare (map.geomorphlab.org) while the state equals
@@ -243,6 +246,7 @@ store.subscribe((s, ch) => {
       else store.set({ cell: c ? [c.iy, c.ix] : null });
     });
   }
+  if (ch.has("dunesOnly")) overlays.setDunesOnly(!!s.dunesOnly);   // 'Dunes only' (map/dunemask.ts)
   if (ch.has("order")) overlays.setOrder(s.order);
   if (ch.has("layers")) overlays.sync(s.layers);
   if (ch.has("utIndex")) { overlays.setThreshold(s.utIndex); panel.setThreshold(s.utIndex); }

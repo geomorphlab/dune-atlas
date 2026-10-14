@@ -6,7 +6,7 @@
 # statement (layers.schema.json $defs/layer/attribution).
 groups:
 - id: climate
-  title: Land surface
+  title: Related data
   description: 'Surface conditions from external datasets: aridity and vegetation cover. These do not depend on
     the wind dataset or on u*,th.'
 layers:
@@ -22,7 +22,7 @@ layers:
   description: 'Global Aridity Index v3.1 (1970–2000): mean annual precipitation divided by reference evapotranspiration,
     native 30″ (~1 km) grid. UNEP classes: < 0.03 hyper-arid, 0.03–0.2 arid, 0.2–0.5 semi-arid, 0.5–0.65 dry sub-humid,
     > 0.65 humid. Values of 6.5535 mean AI ≥ 6.5535 (source saturation). Ocean, Antarctica (south of 60° S) and
-    polar ice with zero ET0 have no data. Independent of the wind dataset and of u*,th.'
+    polar ice with zero ET0 have no data.'
   citation: 'Zomer, R.J., Xu, J. & Trabucco, A. (2022) Version 3 of the Global Aridity Index and Potential Evapotranspiration
     Database. Scientific Data 9, 409. doi:10.1038/s41597-022-01493-1; data: Zomer & Trabucco, Global-AI_PET v3.1,
     doi:10.6084/m9.figshare.7504448.v7 (CC BY 4.0)'
@@ -67,10 +67,17 @@ layers:
   units: m/kyr
   description: Divergence of the time-averaged saturated sand-flux vector (magnitude RDP, direction RDD) on the
     sphere, following Gunn (2026), Methods M6. Negative values (flux convergence) imply deposition, positive values
-    (flux divergence) erosion. No data at coasts (a neighbouring cell has no wind data) and on the ±90° rows. Shown
-    in m/kyr at the selected threshold friction velocity u*,th (default 0.15 m/s).
-  citation: 'Gunn, A. (2026) The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y.
-    Data: doi:10.5281/zenodo.20046812'
+    (flux divergence) erosion. No data at coasts (a neighbouring cell has no wind data) and on the ±90° rows.
+  citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+    data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+    winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+    global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+  attribution:
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+      data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+      winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+      global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+    licence: CC BY 4.0 (Zenodo Supplementary Data)
   visible: false
   opacity: 0.85
   queryable: false

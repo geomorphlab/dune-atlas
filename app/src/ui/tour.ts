@@ -3,10 +3,11 @@
 // Back / Next / Skip on every step, step counter, Esc and a click outside skip; focus is trapped in
 // the popover and returned afterwards; the step text is announced (aria-live).
 import { h } from "./dom";
+import { storageKey } from "../body";
 import { mathHtml } from "../util/math";
 import { TOUR_LABELS, TOUR_STEPS, type TourStep } from "./helpText";
 
-export const TOUR_SEEN_KEY = "duneAtlas.tourSeen";
+export const TOUR_SEEN_KEY = storageKey("tourSeen"); // Earth "duneAtlas.tourSeen", Mars "duneAtlasMars.tourSeen" (body.ts)
 
 /** First visit: not seen yet and not embedded; `?tour=1` always shows it. */
 export function shouldShowTour(o: { embed: boolean; tourParam: boolean; seen: boolean }): boolean {

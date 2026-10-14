@@ -1,0 +1,310 @@
+# Mars dune atlas layer registry (hand-written part; App track). Same schema as
+# registry/layers.yaml (registry/layers.schema.json); merged at build time (VITE_BODY=mars) with
+# every registry/mars/generated/*.yaml fragment ({groups, layers}) written by the Wind and Terrain
+# tracks; a generated layer with the same id REPLACES the placeholder here
+# (app/src/registry/merge.ts). Validate: cd app && npm run validate-registry:mars
+#
+# Differences from Earth: one wind dataset (MCMC FV3 beta release 1), the slider is the median
+# grain diameter d (64 log-spaced values, 50-1000 µm, default 200 µm) and every d-dependent
+# array has the d axis where Earth has ut; no aridity, vegetation, land mask or ERA5 datasets;
+# added: near-surface air density (rho_mean) and elevation (both 2-D).
+version: 1
+dataBase: https://data.geomorphlab.org   # overridden by VITE_DATA_BASE at build time
+
+datasets:
+  - id: fv3-beta1
+    title: MCMC FV3              # label of the Wind dataset selector (shown with one dataset too)
+    prefix: dune-atlas/mars/v1/datasets/fv3-beta1
+    description: "MCMC FV3-based Mars GCM, beta release 1 (2°, hourly, one Mars year): lowest-level winds, temperature and air density, 16,032 hourly samples."
+    citation: "NASA Ames Mars Climate Modeling Center, FV3-based Mars GCM Beta Output Release 1 (fv3betaout1), https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/"
+    cellAuxStores: ["{dataset}/cells-aux.zarr"]
+defaultDataset: fv3-beta1
+
+threshold:
+  dim: d
+  label: "Median grain diameter d"
+  units: µm
+  defaultIndex: 29          # 200 µm (docs/mars-spec.md section 5)
+  values: [50, 52, 55, 58, 60, 63, 67, 70, 73, 77, 80, 84, 88, 93, 97, 102, 107, 112, 118, 123, 129, 136, 142, 149, 157, 164, 172, 181, 189, 200, 208, 218, 229, 240, 252, 264, 277, 290, 305, 319, 335, 351, 368, 386, 405, 425, 446, 467, 490, 514, 539, 565, 593, 622, 652, 684, 717, 752, 788, 827, 867, 909, 954, 1000]
+
+basemaps:
+  - id: hrsc-mola-hillshade
+    title: Shaded relief (MOLA–HRSC, 2D)
+    kind: hillshade
+    # self-built Terrarium 512 px lossless WebP tiles in one PMTiles archive (Terrain track);
+    # a relative pmtiles:// path is resolved against the data base by the Mars app
+    tiles: ["pmtiles://dune-atlas/mars/v1/basemaps/hrsc-mola-terrarium.pmtiles/{z}/{x}/{y}"]
+    encoding: terrarium
+    tileSize: 512
+    maxzoom: 8                # Terrain pilot (confirmed); a smaller local archive (dev subset z0-5) is clamped to its header maxzoom
+    attribution: 'Relief: <a href="https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m" target="_blank" rel="noopener">MGS MOLA – MEX HRSC blended DEM v2 (Fergason, Hare &amp; Laura 2018, USGS Astrogeology)</a>, MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO); hillshade tiles released under <a href="https://creativecommons.org/licenses/by-sa/3.0/igo/" target="_blank" rel="noopener">CC BY-SA 3.0 IGO</a> (derived from HRSC CC BY-SA 3.0 IGO and MOLA CC0)'
+    default: true             # the atlas UI is dark-themed
+    info:
+      description: "Shaded relief computed in the browser from the MOLA–HRSC blended elevation model (Terrarium tiles built for the atlas)."
+      source: "Mars MGS MOLA – MEX HRSC Blended DEM Global 200m v2 (USGS Astrogeology; Fergason, Hare & Laura 2018)"
+      resolution: "200 m DEM; tiles to zoom 8 (about 160 m per pixel at the equator)"
+      licence: "Hillshade tiles CC BY-SA 3.0 IGO (derived from HRSC CC BY-SA 3.0 IGO and MOLA CC0)"
+      url: "https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m"
+  - id: opm-mars
+    title: OpenPlanetaryMap Mars (v0.2)
+    kind: raster
+    tiles: ["https://cartocdn-gusc.global.ssl.fastly.net/opmbuilder/api/v1/map/named/opm-mars-basemap-v0-2/all/{z}/{x}/{y}.png"]
+    tileSize: 256
+    maxzoom: 9
+    attribution: '<a href="https://www.openplanetary.org/opm" target="_blank" rel="noopener">OpenPlanetaryMap</a> / <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>; data NASA/JPL/GSFC (MOLA), NASA/JPL/ASU (THEMIS), USGS'
+    info:
+      description: "OpenPlanetaryMap basemap of Mars: shaded relief and colour with feature names."
+      source: "OpenPlanetaryMap / CARTO; data NASA/JPL/GSFC (MOLA), NASA/JPL/ASU (THEMIS), USGS"
+      resolution: "Raster tiles to zoom 9"
+      licence: "OpenPlanetaryMap terms (see link); NASA and USGS data in the public domain"
+      url: "https://www.openplanetary.org/opm"
+  # Esri OnMars imagery services (geographic tiling, reprojected to Web Mercator in the browser by the
+  # esri-mars:// protocol, src/mars/map/esri.ts); maxzoom = deepest service level + 1. Attributions follow
+  # each ArcGIS item page's licence field (Esri credit + data credit); PI decision 2026-10-14.
+  - id: esri-ctx1
+    title: CTX mosaic, 5 m (Murray Lab V01, Esri)
+    kind: raster
+    tiles: ["esri-mars://CTX1/{z}/{x}/{y}"]
+    tileSize: 512
+    maxzoom: 13
+    attribution: 'Global CTX Mosaic of Mars V01: NASA/JPL/MSSS/The Murray Lab · <a href="https://www.arcgis.com/home/item.html?id=30c4acfe36284b1784bf07d5d73f9e4d" target="_blank" rel="noopener">Esri</a>'
+    info:
+      description: "Global greyscale mosaic of Context Camera (CTX) images of Mars Reconnaissance Orbiter, reprojected to the web map in the browser."
+      source: "Global CTX Mosaic of Mars V01 (The Murray Lab, Caltech; NASA/JPL/MSSS), Esri OnMars service CTX1"
+      resolution: "About 5 m per pixel"
+      licence: "Free use for all purposes, credit NASA/JPL/MSSS/The Murray Lab; Esri service under the Esri Master License Agreement / Terms of Use"
+      url: "https://www.arcgis.com/home/item.html?id=30c4acfe36284b1784bf07d5d73f9e4d"
+  - id: esri-hirise
+    title: HiRISE, where imaged (Esri)
+    kind: raster
+    tiles: ["esri-mars://HiRISE/{z}/{x}/{y}"]
+    tileSize: 512
+    maxzoom: 18
+    attribution: 'HiRISE: NASA/JPL/University of Arizona/USGS · <a href="https://www.arcgis.com/home/item.html?id=c1c4c750a2154842ae523c984cc14fa5" target="_blank" rel="noopener">Esri</a>'
+    info:
+      description: "HiRISE images of Mars Reconnaissance Orbiter where HiRISE has imaged; elsewhere the map background shows."
+      source: "Mars HiRISE Image Mosaic (NASA/JPL/University of Arizona/USGS), Esri OnMars service HiRISE"
+      resolution: "Down to about 25 cm per pixel; sparse coverage"
+      coverage: "HiRISE footprints between about 65° S and 65° N; no imagery at higher latitudes in this mosaic (Esri OnMars)."
+      licence: "Public domain (HiRISE images); Esri service under the Esri Master License Agreement / Terms of Use"
+      url: "https://www.arcgis.com/home/item.html?id=c1c4c750a2154842ae523c984cc14fa5"
+  - id: esri-mdim
+    title: Viking MDIM 2.1 colour (Esri)
+    kind: raster
+    tiles: ["esri-mars://MDIM/{z}/{x}/{y}"]
+    tileSize: 512
+    maxzoom: 8
+    attribution: 'Viking MDIM 2.1 colorized mosaic: USGS Astrogeology / NASA / JPL · <a href="https://www.arcgis.com/home/item.html?id=1efb16809db84f0c892b9b0662dab0c8" target="_blank" rel="noopener">Esri</a>'
+    info:
+      description: "Colorized global mosaic of Viking Orbiter images."
+      source: "Viking MDIM 2.1 Colorized Global Mosaic (USGS Astrogeology / NASA / JPL), Esri OnMars service MDIM"
+      resolution: "About 230 m per pixel (1/256°)"
+      licence: "Public domain (USGS Astrogeology); Esri service under the Esri Master License Agreement / Terms of Use"
+      url: "https://www.arcgis.com/home/item.html?id=1efb16809db84f0c892b9b0662dab0c8"
+  - id: esri-mcolordem
+    title: MOLA–HRSC colour shaded relief (Esri)
+    kind: raster
+    tiles: ["esri-mars://MColorDEM/{z}/{x}/{y}"]
+    tileSize: 512
+    maxzoom: 8
+    attribution: 'MOLA–HRSC colorized shaded relief: USGS Astrogeology / NASA / JPL / ESA / DLR (Fergason, Hare &amp; Laura 2018 blended DEM v2; MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO)) · <a href="https://www.arcgis.com/home/item.html?id=07b33bb3067747abbebd1ce34c29816e" target="_blank" rel="noopener">Esri</a>'
+    info:
+      description: "Colour-coded shaded relief of the MOLA–HRSC blended elevation model."
+      source: "MOLA–HRSC colorized shaded relief (USGS Astrogeology, from the Mars MGS MOLA – MEX HRSC Blended DEM Global 200m v2), Esri OnMars service MColorDEM"
+      resolution: "200 m DEM; service to about 160 m per pixel"
+      licence: "Public domain (USGS Astrogeology); cite the DEM (Fergason, Hare & Laura 2018); Esri service under the Esri Master License Agreement / Terms of Use"
+      url: "https://www.arcgis.com/home/item.html?id=07b33bb3067747abbebd1ce34c29816e"
+
+groups:
+  # ids match the generated fragments (as Earth) so they update these in place
+  - id: dunes
+    title: Dunes
+  - id: orientation
+    title: Bedform orientation
+    description: Compass bearings of the direction of dune migration / elongation (toward).
+  - id: crest-fluxes
+    title: Crest-normal/parallel fluxes
+    collapsed: true
+  - id: morphology
+    title: Ratios & morphology indices
+    collapsed: true
+  - id: wind
+    title: Wind statistics
+    collapsed: true
+  - id: drift
+    title: Drift potential
+  - id: environment         # id kept (permalinks); shown as "Related data" (same title as Earth's climate group)
+    title: Related data
+    description: Near-surface air density (FV3, mean over the year) and elevation (MOLA–HRSC). These do not depend on the grain diameter d.
+
+layers:
+  # -------------------------------------------------------------------------------------------
+  # PLACEHOLDERS (same ids as the generated fragments, which replace them): the dunes and a few
+  # wind-regime fields, enough for the default view and for development on the local fixture
+  # (scripts/mars/app/make_fixture.py). The full set of the 23 fields comes from
+  # registry/mars/generated/qsat_fields.yaml (Wind track).
+  # -------------------------------------------------------------------------------------------
+  - id: dunes
+    title: Dune fields
+    group: dunes
+    type: pmtiles-vector
+    source: dune-atlas/mars/v1/dunes/dunes.pmtiles
+    sourceLayer: dunes
+    visible: true
+    opacity: 1
+    queryable: true
+    # 'invert' view (as Earth's nondune-land): the global surface minus the dune polygons, built by the Terrain
+    # track with its polar dune fix. Key and source-layer are the App track's default until Terrain reports them
+    # (PI 2026-10-14). Kept on the merged layer even when the Terrain fragment (generated/dunes.yaml) replaces
+    # this placeholder without them (src/mars/registry/invert.ts).
+    invertSource: dune-atlas/mars/v1/dunes/invert.pmtiles
+    invertSourceLayer: invert
+    units: "Mapped dune fields"
+    description: "Dune fields of the USGS Mars Global Digital Dune Database (Hayward et al. 2007, 2010, 2012, 2014) plus the small dune fields of Fenton (2020), merged into 3,514 polygons."
+    citation: "Hayward, R. K. et al. (2007) JGR 112, E11007, doi:10.1029/2007JE002943; Hayward, Fenton & Titus (2014) Icarus 230, 38–46, doi:10.1016/j.icarus.2013.04.011; Fenton (2020) Icarus 352, 114018, doi:10.1016/j.icarus.2020.114018"
+    style:
+      fill: {fill-color: "#a0a0a0", fill-opacity: 0.55}
+  - id: dpm
+    title: Drift potential (DP)
+    titleTex: Drift potential $DP$
+    group: drift
+    type: zarr-field
+    source: '{dataset}/fields/dpm.zarr'
+    variable: dpm
+    thresholdAware: true
+    queryable: true
+    visible: true
+    opacity: 0.85
+    units: m²/yr
+    description: "Time-averaged flat-bed saturated flux magnitude DP, mean over the hours of the Mars year of q(u*) with the per-hour threshold of Pähtz & Durán (2023), in m²/yr."
+    citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y; transport law: Pähtz, T. & Durán, O. (2023). Scaling laws for planetary sediment transport from DEM-RANS numerical simulations. Journal of Fluid Mechanics 963, A20. doi:10.1017/jfm.2023.343; winds: MCMC FV3-based Mars GCM Beta Output Release 1, one Mars year of hourly lowest-level winds (NASA Ames Mars Climate Modeling Center (2023), https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics: Haberle, R. M. et al. (2019). Icarus 333, 130–164. doi:10.1016/j.icarus.2019.03.026)'
+    display: {transform: none, log: true, colormap: magma, clim: [0.001, 100]}
+  - id: rdpm
+    title: Resultant drift potential (RDP)
+    titleTex: Resultant drift potential $RDP$
+    group: drift
+    type: zarr-field
+    source: '{dataset}/fields/rdpm.zarr'
+    variable: rdpm
+    thresholdAware: true
+    queryable: true
+    units: m²/yr
+    description: "Magnitude of the time-averaged flat-bed flux vector RDP, in m²/yr, at the selected median grain diameter d."
+    citation: "Method: Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y; transport law: Pähtz & Durán (2023) J Fluid Mech 963:A20"
+    display: {transform: none, log: true, colormap: magma, clim: [0.001, 100]}
+  - id: rdpa
+    title: Resultant drift direction (RDD)
+    titleTex: Resultant drift direction $RDD$
+    group: drift
+    type: zarr-field
+    source: '{dataset}/fields/rdpa.zarr'
+    variable: rdpa
+    thresholdAware: true
+    queryable: true
+    opacity: 0.85
+    units: °
+    description: "Direction of the time-averaged flat-bed flux vector, shown as the compass bearing toward which sand moves, at the selected median grain diameter d."
+    citation: "Method: Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y; transport law: Pähtz & Durán (2023) J Fluid Mech 963:A20"
+    display: {transform: rad-to-bearing, colormap: twilight, cyclic: true, clim: [0, 360], magnitudeVar: rdpm}
+  - id: qha_rdp_dp
+    title: Directional variability (RDP/DP)
+    titleTex: $RDP/DP$
+    group: drift
+    type: zarr-field
+    source: '{dataset}/fields/qha_rdp_dp.zarr'
+    variable: qha_rdp_dp
+    thresholdAware: true
+    queryable: true
+    units: "–"
+    citation: "Method: Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y"
+    display: {transform: none, colormap: viridis, clim: [0, 1]}
+  - id: at
+    title: Transverse migration direction (αT)
+    titleTex: Migration signed direction $\alpha_T$
+    group: orientation
+    type: zarr-field
+    source: '{dataset}/fields/at.zarr'
+    variable: at
+    thresholdAware: true
+    queryable: true
+    units: °
+    description: "The direction transverse crests migrate, shown as a compass bearing, at the selected median grain diameter d."
+    citation: "Method: Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y"
+    display: {transform: rad-to-bearing, colormap: twilight, cyclic: true, clim: [0, 360], magnitudeVar: qacb}
+  - id: ae
+    title: Elongation direction (αE)
+    titleTex: Elongation mode signed direction $\alpha_E$
+    group: orientation
+    type: zarr-field
+    source: '{dataset}/fields/ae.zarr'
+    variable: ae
+    thresholdAware: true
+    queryable: true
+    units: °
+    description: "The direction longitudinal crests elongate, shown as a compass bearing, at the selected median grain diameter d."
+    citation: "Method: Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y"
+    display: {transform: rad-to-bearing, colormap: twilight, cyclic: true, clim: [0, 360]}
+  - id: qacb
+    title: Absolute across-crest migration-mode flux
+    titleTex: "Absolute across-crest migration-mode flux $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$"
+    group: crest-fluxes
+    type: zarr-field
+    source: '{dataset}/fields/qacb.zarr'
+    variable: qacb
+    thresholdAware: true
+    queryable: true
+    units: m²/yr
+    citation: "Method: Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y"
+    display: {transform: none, log: true, colormap: magma, clim: [0.001, 100]}
+  - id: uft
+    title: Fraction of time above threshold
+    titleTex: "$T|u_{\\ast}>u_{\\ast,th}/T$"
+    group: wind
+    type: zarr-field
+    source: '{dataset}/fields/uft.zarr'
+    variable: uft
+    thresholdAware: true
+    queryable: true
+    units: "–"
+    description: "Fraction of the hours in which the friction velocity exceeds that hour's threshold for grain diameter d."
+    citation: "Method: Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y; threshold: Pähtz & Durán (2023)"
+    display: {transform: none, colormap: cividis, clim: [0, 0.5]}
+  - id: qsdiv
+    title: Saturated flux divergence (∇·qs)
+    titleTex: $\nabla\cdot\vec{q}_s$
+    group: drift
+    type: zarr-field
+    source: '{dataset}/fields/qsdiv.zarr'
+    variable: qsdiv
+    thresholdAware: true
+    queryable: false
+    units: m/kyr
+    description: "Divergence of the time-averaged saturated sand-flux vector (magnitude RDP, direction RDD) on the Mars sphere (R = 3389.5 km), following Gunn (2026), Methods M6. Negative values (flux convergence) imply deposition, positive values erosion. Shown in m/kyr at the selected median grain diameter d."
+    citation: "Method: Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y"
+    display: {transform: scale, scale: 1000.0, colormap: piyg, clim: [-0.3, 0.3]}
+  - id: rho_mean
+    title: Near-surface air density
+    titleTex: Near-surface air density $\overline{\rho_f}$
+    group: environment
+    type: zarr-field
+    source: '{dataset}/fields/rho_mean.zarr'
+    variable: rho_mean
+    thresholdAware: false
+    queryable: true
+    units: kg/m³
+    description: "Mean over the Mars year of the hourly lowest-layer air density ρ_f = p/(R T) of the FV3 GCM. Independent of the grain diameter d."
+    citation: "MCMC FV3 Mars GCM beta release 1 (NASA Ames Mars Climate Modeling Center)"
+    display: {transform: none, colormap: viridis, clim: [0.008, 0.028]}
+  - id: elevation
+    title: Elevation (MOLA–HRSC)
+    titleTex: Elevation $z$
+    group: environment
+    type: zarr-field
+    source: dune-atlas/mars/v1/fields/elevation.zarr
+    variable: elevation
+    thresholdAware: false
+    queryable: true
+    units: m
+    description: "Elevation above the Mars 2000 areoid from the MGS MOLA – MEX HRSC blended DEM (200 m). Independent of the grain diameter d."
+    citation: "Fergason, R. L, Hare, T. M., & Laura, J. (2018). HRSC and MOLA Blended Digital Elevation Model at 200m v2. Astrogeology PDS Annex, U.S. Geological Survey. https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m (MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO))"
+    display: {transform: none, colormap: turbo, clim: [-8000, 12000]}

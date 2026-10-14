@@ -109,7 +109,11 @@ def test_registry_semantics():
     for v, l in frag.items():
         assert l["type"] == "zarr-field" and l["thresholdAware"] is True
         assert l["source"] == f"{{dataset}}/fields/{v}.zarr"  # ERA5-Land: dune-atlas/v1/fields/<v>.zarr
-        assert "$" not in l["title"] and "\\" not in l["title"] and "$" not in l["description"]
+        assert "$" not in l["title"] and "\\" not in l["title"]
+        # definitions keep the source TeX for the app's KaTeX rendering (PI 2026-10-14): balanced $...$, no
+        # units / slider / processing sentences (info-popover rows), one citation format and a licence row
+        assert l["description"].count("$") % 2 == 0 and "Shown at the selected" not in l["description"]
+        assert l["attribution"] == F.fields_attribution() and l["citation"].startswith(F.PAPER_CITATION + "; ")
         lo, hi = l["display"]["clim"]
         assert lo < hi
     for v in [v for v in ("at", "ae", "ao", "rdpa") if v in frag]:
