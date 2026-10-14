@@ -50,5 +50,5 @@ describe("slider jitter (Earth): layer panel and cell panel keep their layout ov
     const css = fs.readFileSync(path.resolve(__dirname, "../src/style.css"), "utf8");
     expect(css).toMatch(/#layer-panel, #cell-panel, \.legend \{ font-variant-numeric: tabular-nums; \}/);
     expect(css).toMatch(/\.live-num \{ display: inline-block; white-space: nowrap;[^}]*tabular-nums/);
-  });
+  }, 120_000); // 64-position sweep: ~5 s locally, over 20 s on a 2-core CI runner with the full suite
 });

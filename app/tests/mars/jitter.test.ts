@@ -39,5 +39,5 @@ describe("slider jitter (Mars): layer panel and cell panel keep their layout ove
     store.set({ utIndex: 63 }); const b = out.textContent!;
     expect([...a].length).toBe([...b].length);
     expect(a).toMatch(/^\u2007+50 µm$/); expect(b).toBe("1000 µm");
-  });
+  }, 120_000); // 64-position sweep: ~5 s locally, over 20 s on a 2-core CI runner with the full suite
 });
