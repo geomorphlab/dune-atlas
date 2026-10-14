@@ -25,7 +25,7 @@ describe("Earth build: planet toggle and header", () => {
     const nav = vi.fn();
     const t = tools(nav);
     const btns = [...t.el.querySelectorAll("button.tool-btn")].map((b) => b.className.replace("tool-btn ", ""));
-    expect(btns).toEqual(["help-btn", "share-btn", "export-btn", "planet-btn"]);
+    expect(btns).toEqual(["help-btn", "concepts-btn", "share-btn", "export-btn", "planet-btn"]);
     const b = t.el.querySelector(".planet-btn") as HTMLButtonElement;
     expect([b.getAttribute("aria-label"), b.title]).toEqual(["Switch to Mars", "Switch to Mars"]);
     expect(b.innerHTML).toMatch(/<svg[^>]+width="18" height="18"/);
@@ -80,7 +80,8 @@ describe("Earth build: planet toggle and header", () => {
     const { infoHtml } = await import("../src/core/ui/layerPanel");
     const reg = loadRegistry().registry;
     const rows = (id: string, ds = "era5-land") => [...infoHtml(reg.layers.find((l) => l.id === id)!, ds).matchAll(/<dt>([^<]+)<\/dt>/g)].map((m) => m[1]);
-    expect(rows("dpm")).toEqual(["Units", "Wind data", "Slider", "Citation", "Licence"]);
+    expect(rows("dpm")).toEqual(["Units", "Wind data", "Slider", "Citation"]);   // the shared map-field citation: a link to About
+    expect(infoHtml(reg.layers.find((l) => l.id === "dpm")!, "era5-land")).toContain('data-about="cite-fields"');
     expect(rows("aridity")).toEqual(["Units", "Wind data", "Slider", "Source", "Citation", "Data DOI", "Licence", "Link", "Changes"]);
     const dpm = infoHtml(reg.layers.find((l) => l.id === "dpm")!, "era5");
     expect(dpm).toMatch(/<dt>Wind data<\/dt><dd>ERA5 0\.25°, 1950–2024<\/dd>/);

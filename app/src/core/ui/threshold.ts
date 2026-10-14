@@ -3,6 +3,7 @@
 // top of the layer panel; a compact copy sits at the top of the cell panel. Both write/read the same
 // store key, so map layers, roses, modes plot and table all follow either one.
 import type { ThresholdDef } from "../registry/types";
+import { conceptLinkHtml } from "./concepts";
 import type { Store } from "../store";
 import { h } from "./dom";
 import { mathHtml } from "../util/math";
@@ -70,5 +71,6 @@ export const THRESHOLD_HELP = "Applies to the map layers and the cell panel.";
 /** the slider's ⓘ: what the control is, its default, its range */
 export function thresholdInfoHtml(t: ThresholdDef): string {
   return PROFILE.control.infoIntroHtml()
-    + `<p>${t.values.length} ${PROFILE.control.rangeAdjective}values from ${formatUt(t.values[0])} to ${formatUt(t.values[t.values.length - 1])}; default ${formatUt(t.values[t.defaultIndex])} (the mark under the slider). The compact copy at the top of the cell panel sets the same value.</p>`;
+    + `<p>${t.values.length} ${PROFILE.control.rangeAdjective}values from ${formatUt(t.values[0])} to ${formatUt(t.values[t.values.length - 1])}; default ${formatUt(t.values[t.defaultIndex])} (the mark under the slider). The compact copy at the top of the cell panel sets the same value.</p>`
+    + conceptLinkHtml("@threshold");
 }

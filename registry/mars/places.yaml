@@ -1,0 +1,6 @@
+# Named places of the search box (schema: registry/places.schema.json). Each entry:
+#   id, line1 (Latin-script name), optional line2 {text, lang} (non-Latin name and its language),
+#   aliases, lat, lon, radius_km, countries, sources
+# The named search stays hidden while `enabled` is false: the names are under review.
+enabled: false
+places: []

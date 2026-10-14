@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://map.geomorphlab.org/registry/places.schema.json",
+  "title": "Named places of the search box (registry/<body>/places.yaml)",
+  "description": "Dune fields and other named places the search box can find. The named search is shown only when `enabled` is true.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["enabled", "places"],
+  "properties": {
+    "enabled": { "type": "boolean", "description": "show the named search (and the naming note in the dune layer's info)" },
+    "places": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "line1", "lat", "lon", "radius_km", "sources"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+          "line1": { "type": "string", "minLength": 1, "description": "name in Latin script" },
+          "line2": {
+            "type": "object", "additionalProperties": false, "required": ["text", "lang"],
+            "description": "the name in a non-Latin script, with its language (BCP 47 tag, e.g. ar, zh-Hans, mn-Cyrl)",
+            "properties": { "text": { "type": "string", "minLength": 1 }, "lang": { "type": "string", "pattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$" } }
+          },
+          "aliases": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+          "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+          "lon": { "type": "number", "minimum": -180, "maximum": 360, "description": "Earth: -180..180; Mars: planetocentric, east-positive 0..360" },
+          "radius_km": { "type": "number", "exclusiveMinimum": 0, "description": "approximate radius of the area; sets the zoom" },
+          "countries": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Earth: the countries the area lies in (English short names)" },
+          "sources": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "description": "where the name and location come from" }
+        }
+      }
+    }
+  }
+}

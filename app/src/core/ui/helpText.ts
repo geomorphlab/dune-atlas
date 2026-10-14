@@ -10,11 +10,17 @@ export interface TourStep {
   id: string;
   /** CSS selectors, first visible one is highlighted; none visible: the popover is centred */
   targets: string[];
+  /** optional: the highlight covers every visible element of these selectors (e.g. two adjacent buttons);
+   *  used when the first target is visible */
+  span?: string[];
   title: string;
   body: string;
 }
 
 export const HELP_BUTTON_LABEL = "Help and tour";
+
+/** Concepts panel (mortarboard button, ui/concepts.ts): the entries are the approved text of docs/concepts/ */
+export const CONCEPTS_TEXT = { button: "Concepts", title: "Concepts" };
 
 export const HELP_TITLE = "Help";
 

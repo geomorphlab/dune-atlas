@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import yaml from "js-yaml";
+import { validatePlaces } from "../src/core/registry/validate";
 import { mergeRegistry } from "../src/core/registry/merge";
 import { validateMarsRegistry } from "../src/bodies/mars/registry/validate";
 import type { Registry, RegistryFragment } from "../src/core/registry/types";
@@ -27,6 +28,9 @@ errors.push(...validateMarsRegistry(merged.registry, schema).map((e) => `merged:
 const r = merged.registry;
 console.log(`mars registry: ${r.layers.length} layers in ${r.groups.length} groups, ${r.basemaps.length} basemaps; fragments: ${frags.map((f) => f[0]).join(", ") || "none"}`);
 for (const x of merged.replaced) console.log(`  layer '${x.id}' from mars/layers.yaml replaced by ${x.by}`);
+// named places of the search box (registry/<body>/places.yaml)
+const placesFile = path.join(marsDir, "places.yaml");
+if (fs.existsSync(placesFile)) errors.push(...validatePlaces(yaml.load(fs.readFileSync(placesFile, "utf8")), JSON.parse(fs.readFileSync(path.join(regDir, "places.schema.json"), "utf8"))).map((e) => `places.yaml: ${e}`));
 if (errors.length) {
   for (const e of errors) console.error(`  ERROR ${e}`);
   process.exit(1);

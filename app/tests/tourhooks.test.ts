@@ -67,7 +67,7 @@ beforeEach(() => { fail = false; renders = 0; });
 describe("tour step 4 (layers): Display of RDD opened, then restored", () => {
   it("the step text explains Display; the example layer's Display section is the spotlight target", () => {
     const s = TOUR_STEPS[stepIndex("layers")];
-    expect(stepIndex("layers")).toBe(3);
+    expect(stepIndex("layers")).toBe(4);
     expect(s.body).toMatch(/Display/);
     expect(s.body).toMatch(/colour/);
     expect(s.body).toMatch(/limits/);
@@ -149,7 +149,7 @@ describe("tour step 4 (layers): Display of RDD opened, then restored", () => {
 describe("tour step 6 (cell): example cell opened without moving the map, then restored", () => {
   it("step text names the Namib example and the panel's own u*,th slider", () => {
     const s = TOUR_STEPS[stepIndex("cell")];
-    expect(stepIndex("cell")).toBe(5);
+    expect(stepIndex("cell")).toBe(6);
     expect(s.body).toMatch(/Namib/);
     expect(s.body).toMatch(/u_\{\*,th\}/);
     expect(s.body).toBe("Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The crosshair next to its title centres the map on the cell.");

@@ -66,14 +66,17 @@ describe("guided tour", () => {
     expect((pop.querySelector(".tour-back") as HTMLButtonElement).disabled).toBe(true);
     expect(document.activeElement).toBe(pop.querySelector(".tour-next"));
     expect(TOUR_STEPS.length).toBeGreaterThanOrEqual(6);
-    expect(TOUR_STEPS.length).toBeLessThanOrEqual(9);
-    expect(TOUR_STEPS.map((s) => s.id)).toEqual(["help", "map", "threshold", "layers", "active", "cell", "dataset", "tools", "planet"]);
+    expect(TOUR_STEPS.length).toBeLessThanOrEqual(10);   // short: one step per main control
+    expect(TOUR_STEPS.map((s) => s.id)).toEqual(["help", "concepts", "map", "threshold", "layers", "active", "cell", "dataset", "tools", "planet"]);
   });
   it("Next / Back / arrows; Done on the last step ends it (completed) and marks it seen", () => {
     const onEnd = vi.fn();
     const t = new Tour(TOUR_STEPS, { onEnd });
     t.start();
     const pop = () => document.querySelector(".tour-pop") as HTMLElement;
+    (pop().querySelector(".tour-next") as HTMLButtonElement).click();
+    expect(pop().dataset.step).toBe("concepts");
+    expect(TOUR_STEPS[1].targets).toEqual([".atlas-tools .concepts-btn"]);
     (pop().querySelector(".tour-next") as HTMLButtonElement).click();
     expect(pop().dataset.step).toBe("map");
     key(pop(), "ArrowRight");
@@ -83,8 +86,8 @@ describe("guided tour", () => {
     (pop().querySelector(".tour-back") as HTMLButtonElement).click();
     expect(pop().dataset.step).toBe("map");
     key(pop(), "ArrowLeft");
-    expect(t.index).toBe(0);
-    for (let i = 0; i < TOUR_STEPS.length - 1; i++) (pop().querySelector(".tour-next") as HTMLButtonElement).click();
+    expect(t.index).toBe(1);
+    for (let i = 1; i < TOUR_STEPS.length - 1; i++) (pop().querySelector(".tour-next") as HTMLButtonElement).click();
     expect(pop().querySelector(".tour-next")!.textContent).toBe("Done");
     (pop().querySelector(".tour-next") as HTMLButtonElement).click();
     expect(document.querySelector(".tour")).toBeNull();
@@ -195,5 +198,29 @@ describe("help text document", () => {
   it("docs/reference/help-text.md matches the help text (run npm run help-doc after editing)", () => {
     const f = path.resolve(__dirname, "../../docs/reference/help-text.md");
     expect(fs.readFileSync(f, "utf8")).toBe(helpMarkdown());
+  });
+});
+
+// Regression (October 2026 review): the highlight of the "Share and export" step covers both the share-link and the
+// camera buttons.
+describe("tour highlight of the Share and export step", () => {
+  it("covers the share and the camera buttons", () => {
+    rect(tools.el.querySelector(".export-btn")!, { left: 980, top: 158, width: 29, height: 29 });
+    const i = TOUR_STEPS.findIndex((s) => s.id === "tools");
+    const t = new Tour();
+    t.start(i);
+    const spot = document.querySelector(".tour-spot") as HTMLElement;
+    const pad = 6;
+    expect(parseFloat(spot.style.left)).toBe(980 - pad);
+    expect(parseFloat(spot.style.top)).toBe(129 - pad);
+    expect(parseFloat(spot.style.height)).toBe(158 + 29 - 129 + 2 * pad);   // share top to camera bottom
+    expect(parseFloat(spot.style.width)).toBe(29 + 2 * pad);
+    expect(TOUR_STEPS[i].span).toEqual([".atlas-tools .share-btn", ".atlas-tools .export-btn"]);
+    t.end(false);
+  });
+  it("spanRect: the target alone for steps without a span", async () => {
+    const { spanRect } = await import("../src/core/ui/tour");
+    const el = tools.el.querySelector(".help-btn") as HTMLElement;
+    expect(spanRect(TOUR_STEPS[0], el)).toMatchObject({ left: 980, top: 100, width: 29, height: 29 });
   });
 });

@@ -137,3 +137,63 @@ describe("tour auto-start fallback and loading indicator", () => {
     expect(WHEEL_ZOOM_RATE).toBeGreaterThan(1 / 450);
   });
 });
+
+// Regression (October 2026 review: "the Start tour bubble no longer appears"): the bubble is placed again when the
+// layout changes and waits, hidden, while every position is blocked (e.g. a link or the planet button reopening
+// a view with the cell panel open), instead of staying invisible for the whole visit.
+describe("bubble placement follows the layout", () => {
+  const R = (el: Element, r: { left: number; top: number; width: number; height: number }) => {
+    (el as HTMLElement).getBoundingClientRect = () => ({ ...r, x: r.left, y: r.top, right: r.left + r.width, bottom: r.top + r.height, toJSON: () => r }) as DOMRect;
+  };
+  function layout(cellOpen: boolean) {
+    document.body.innerHTML = `<aside id="layer-panel"></aside><aside id="cell-panel" ${cellOpen ? "" : "hidden"}></aside><div class="maplibregl-ctrl-top-right"><div class="atlas-tools"><button class="tool-btn help-btn"></button><button class="tool-btn planet-btn"></button></div></div>`;
+    vi.stubGlobal("innerWidth", 1370); vi.stubGlobal("innerHeight", 900);
+    R(document.querySelector("#layer-panel")!, { left: 10, top: 10, width: 330, height: 800 });
+    R(document.querySelector("#cell-panel")!, { left: 900, top: 10, width: 418, height: 860 });   // right: 52 px
+    R(document.querySelector(".maplibregl-ctrl-top-right")!, { left: 1331, top: 0, width: 39, height: 300 });
+    R(document.querySelector(".help-btn")!, { left: 1331, top: 120, width: 29, height: 29 });
+    R(document.querySelector(".planet-btn")!, { left: 1331, top: 236, width: 29, height: 29 });
+  }
+  const tick = () => new Promise((r) => setTimeout(r, 0));
+  beforeEach(() => mem.clear());
+  it("on a clear page it is shown left of the Help button", () => {
+    layout(false);
+    const { bubble: b } = wireTourBubble(new FakeTour(), { autostart: false });
+    expect(b.visible).toBe(true);
+    expect(b.el.dataset.tail).toBe("right");
+    expect(parseFloat(b.el.style.left) + 110).toBeLessThanOrEqual(1331);
+  });
+  it("with the cell panel open on arrival it waits hidden, and appears when the panel closes", async () => {
+    layout(true);
+    const { bubble: b } = wireTourBubble(new FakeTour(), { autostart: false });
+    expect(b.shown).toBe(true);
+    expect(b.visible).toBe(false);
+    document.getElementById("cell-panel")!.hidden = true;   // e.g. Esc or the panel's close button
+    await tick();
+    expect(b.visible).toBe(true);
+  });
+  it("a window resize places it again", () => {
+    layout(false);
+    const { bubble: b } = wireTourBubble(new FakeTour(), { autostart: false });
+    R(document.querySelector(".help-btn")!, { left: 1331, top: 160, width: 29, height: 29 });
+    globalThis.dispatchEvent(new Event("resize"));
+    expect(parseFloat(b.el.style.top)).toBeGreaterThan(150);
+  });
+  it("hiding it stops the observers (no placement after the first click)", async () => {
+    layout(false);
+    const { bubble: b } = wireTourBubble(new FakeTour(), { autostart: false });
+    document.body.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    expect(b.shown).toBe(false);
+    document.getElementById("cell-panel")!.hidden = false;
+    await tick();
+    expect(b.el.hidden).toBe(true);
+  });
+  it("Esc on the bubble does not also close the cell panel (keys.ts names the bubble's class)", async () => {
+    const { escapeClosesCell } = await import("../src/core/ui/keys");
+    layout(false);
+    const { bubble: b } = wireTourBubble(new FakeTour(), { autostart: false });
+    const e = new KeyboardEvent("keydown", { key: "Escape", bubbles: true });
+    Object.defineProperty(e, "target", { value: b.el });
+    expect(escapeClosesCell(e)).toBe(false);
+  });
+});

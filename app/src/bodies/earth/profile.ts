@@ -25,6 +25,7 @@ export const PROFILE: BodyProfile = {
     plotExportedFrom: "the Dune Atlas (map.geomorphlab.org)",
   },
   coordsTitle: { pointer: "Cursor position (latitude, longitude)", touch: "Last tapped point (latitude, longitude)" },
+  search: { lonRange: 180, example: "e.g. -24.5, 15.2 or 24°30′S 15°12′E" },
   invert: {
     note: "Invert: colour the land WITHOUT mapped dunes instead of the dunes. Latitudes beyond ±85.05° (interior Antarctica) are not coloured.",
     toggleAria: "Invert: colour land without dunes",
