@@ -6,6 +6,7 @@ import { DARK_THEME, plotLabel, type PlotTheme } from "./plottheme";
 import { angleDiffDeg, bearingToXY, mod } from "../util/angles";
 import { pchipDense, unwrapDeg } from "../util/pchip";
 import { escapeHtml } from "../util/format";
+import { PROFILE } from "@body/profile";
 
 export interface ModeSeries {
   label: string;
@@ -60,19 +61,19 @@ export function modesPlotSvg(o: ModesPlotOptions): string {
   const rad = (u: number) => (R * (u - x0)) / (x1 - x0);
   const pt = (b: number, u: number) => { const [x, y] = bearingToXY(b, rad(u)); return [cx + x, cy + y]; };
   const p: string[] = [];
-  p.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="Polar plot of dune-orientation mode bearings (angle) against threshold friction velocity (radius, ${x0} m/s at the centre to ${x1} m/s at the rim)" class="modes-plot">`);
+  p.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="Polar plot of dune-orientation mode bearings (angle) against ${PROFILE.control.plot.ariaRange(x0, x1)}" class="modes-plot">`);
   const T = o.theme ?? DARK_THEME;
   p.push(`<g fill="none" stroke="${T.grid}" stroke-width="${f2(0.6 * T.lw)}">`);
-  for (const u of [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]) p.push(`<circle cx="${cx}" cy="${cy}" r="${f2(rad(u))}"/>`);
+  for (const u of PROFILE.control.plot.rings) p.push(`<circle cx="${cx}" cy="${cy}" r="${f2(rad(u))}"/>`);
   p.push(`<circle cx="${cx}" cy="${cy}" r="${f2(R)}" stroke="${T.gridStrong}"/>`);
   for (let b = 0; b < 360; b += 45) {
     const [x, y] = bearingToXY(b, R);
     p.push(`<line x1="${cx}" y1="${cy}" x2="${f2(cx + x)}" y2="${f2(cy + y)}"${b % 90 ? ' stroke-dasharray="2 3"' : ""}/>`);
   }
   p.push(`</g><g font-size="${T.fs.ring}" fill="${T.label}" text-anchor="start">`);
-  for (const u of [0.2, 0.4, 0.6]) {
+  for (const u of PROFILE.control.plot.ringLabels) {
     const [x, y] = bearingToXY(67.5, rad(u));
-    p.push(`<text x="${f2(cx + x + 1)}" y="${f2(cy + y)}">${u.toFixed(1)}</text>`);
+    p.push(`<text x="${f2(cx + x + 1)}" y="${f2(cy + y)}">${PROFILE.control.plot.ringText(u)}</text>`);
   }
   p.push(`</g><g font-size="${T.fs.compass}" fill="${T.text}" text-anchor="middle">`);
   for (const [lab, b] of [["N", 0], ["E", 90], ["S", 180], ["W", 270]] as const) {
@@ -81,7 +82,7 @@ export function modesPlotSvg(o: ModesPlotOptions): string {
   }
   p.push(`</g>`);
   const uc = o.x[o.currentIndex];
-  p.push(`<circle class="current-ut" cx="${cx}" cy="${cy}" r="${f2(rad(uc))}" fill="none" stroke="${T.current}" stroke-width="${f2(1.2 * T.lw)}" stroke-dasharray="4 3"><title>current u*,th = ${uc.toFixed(2)} m/s</title></circle>`);
+  p.push(`<circle class="current-ut" cx="${cx}" cy="${cy}" r="${f2(rad(uc))}" fill="none" stroke="${T.current}" stroke-width="${f2(1.2 * T.lw)}" stroke-dasharray="4 3"><title>${PROFILE.control.plot.currentTitle(uc)}</title></circle>`);
   for (const s of o.series) {
     const runs = continuousRuns(s.values, !!s.axis);
     const offsets = s.axis ? [0, 180] : [0];
@@ -100,7 +101,7 @@ export function modesPlotSvg(o: ModesPlotOptions): string {
       }
     }
   }
-  p.push(plotLabel(T, o.radiusLabel ?? "radius: u*,th (m/s)", size - 4, size - 5, T.fs.axis, { anchor: "end", fill: T.label }));
+  p.push(plotLabel(T, o.radiusLabel ?? PROFILE.control.plot.radiusLabel, size - 4, size - 5, T.fs.axis, { anchor: "end", fill: T.label }));
   p.push(`</svg>`);
   return p.join("");
 }

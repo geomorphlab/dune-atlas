@@ -2,6 +2,8 @@
 // and ui/tourHooks.ts serve both). Shared labels and types: ui/helpText.ts. Inline maths as $...$
 // (KaTeX); everything else plain text.
 import type { HelpSection, TourStep } from "../../ui/helpText";
+import { datasetFacts } from "../../cell/datasetinfo";
+import { mathHtml } from "../../util/math";
 
 /** the Wind dataset selector's ⓘ (Earth has an info text here); one Mars dataset: no ⓘ */
 export const DATASET_INFO_TEXT = "";
@@ -80,3 +82,13 @@ export const TOUR_FALLBACK = { cell: "The example cell could not be loaded. Clic
 
 
 export const SHARE_TEXT = { button: "Share / copy link", title: "Share this view", copy: "Copy link", copied: "Link copied", note: "The link restores the position, zoom, grain diameter, basemap, active layers and the selected cell." };
+
+/** About: the paragraph under the AI notice (HTML) */
+export const ABOUT_INTRO_HTML = "<p>Click any cell to see its wind rose over the Mars year of the wind dataset, the sand-flux rose at the selected grain diameter, dune-orientation modes and all wind-regime parameters.</p>";
+/** About, Data sources: the items after the wind datasets' (HTML) */
+export const DATA_SOURCES_ITEMS_HTML = `<li><strong>Sand-flux fields</strong>: for every hour, the threshold and the saturated transport rate of Pähtz &amp; Durán (2023) at the selected median grain diameter d (grain density 3000 kg/m³, g = 3.71 m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in Gunn (2026). Fluxes are volumes of packed sand (packing fraction 0.6, pore space included) per metre width per Earth year (365.25 days), in m²/yr, as on Earth.</li>
+  <li><strong>Dune map</strong>: USGS Mars Global Digital Dune Database (MGD3; Hayward et al. 2007, 2010, 2012, 2014) plus the small dune fields of Fenton (2020, Icarus 352, 114018), merged into 3,514 dune-field polygons (Mars 2000 sphere).</li>
+  <li><strong>Saturated flux divergence</strong> ${mathHtml("$\\nabla\\cdot\\vec{q}_s$")}: divergence of the resultant drift potential vector (magnitude RDP, direction RDD) on the Mars sphere (R = 3389.5 km), following Gunn (2026), Methods M6, with central differences on the grid of the wind dataset (${datasetFacts("resolution")}). Negative values (convergence) imply deposition.</li>
+  <li><strong>Elevation and shaded relief</strong>: MGS MOLA – MEX HRSC blended DEM, 200 m, v2 (Fergason, Hare &amp; Laura 2018, USGS Astrogeology); licence: MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO). The atlas's MOLA–HRSC shaded-relief basemap tiles are released under CC BY-SA 3.0 IGO (derived from HRSC, CC BY-SA 3.0 IGO, and MOLA, CC0).</li>`;
+/** About: the closing note (HTML) */
+export const ABOUT_CREDITS_NOTE_HTML = "<p class=\"help\">Basemap credits are shown in the map attribution.</p>";

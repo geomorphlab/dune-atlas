@@ -2,6 +2,7 @@
 // top of the registry defaults. Pure: defaults, effective display, URL token encoding (tested).
 import type { LayerDef } from "./registry/types";
 import { COLORMAPS } from "./util/colormaps";
+import { PROFILE } from "@body/profile";
 
 export type RenderMode = "colormap" | "arrows" | "streamlines";
 
@@ -112,13 +113,12 @@ export const SPACING_KM_STEPS = [10, 20, 50, 100, 200, 500, 1000];
 export const DEFAULT_SPACING_KM = 100;
 /** screen spacing is clamped to this range (px) for legibility / speed */
 export const DSEP_PX_CLAMP: [number, number] = [8, 120];
-const EARTH_CIRCUMFERENCE_M = 2 * Math.PI * 6378137;
 
 /** Web-Mercator ground resolution (m per CSS px) at latitude `lat` (deg), zoom `zoom`. MapLibre
  *  zoom levels are defined on 512-px tiles: 40075016.686 cos(lat) / (512 * 2^z) = 78271.52
  *  cos(lat) / 2^z (the 156543.03 constant is for 256-px tiles, one zoom level apart). */
 export function metersPerPixel(lat: number, zoom: number, tileSize = 512): number {
-  return (EARTH_CIRCUMFERENCE_M * Math.cos((lat * Math.PI) / 180)) / (tileSize * 2 ** zoom);
+  return (PROFILE.mercatorCircumferenceM * Math.cos((lat * Math.PI) / 180)) / (tileSize * 2 ** zoom);
 }
 
 export interface ScreenSpacing { km: number; px: number; rawPx: number; clamped: boolean }

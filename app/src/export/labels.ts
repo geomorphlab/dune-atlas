@@ -2,9 +2,10 @@
 // layer titles from the registry (title + the math of titleTex), the threshold, units.
 import { texToPlain } from "../util/plaintext";
 import { unitsTex } from "./texsvg";
+import { PROFILE } from "@body/profile";
 
 /** the threshold friction velocity with its value, TeX: $u_{*,th}$ = 0.15 $\\mathrm{m\\,s^{-1}}$ */
-export const utTex = (ut: number) => `$u_{*,th}$ = ${ut.toFixed(2)} $\\mathrm{m\\,s^{-1}}$`;
+export const utTex = (ut: number) => PROFILE.control.valueTex(ut);
 
 const mathOf = (tex: string) => tex.split("$").filter((_, k) => k % 2 === 1);
 

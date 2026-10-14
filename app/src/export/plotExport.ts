@@ -10,6 +10,7 @@ import { isoDate, svgToImage } from "./mapExport";
 import { blobWithDpi, EXPORT_DPI, PLOT_EXPORT_WIDTH } from "./png";
 import type { MathRenderer } from "./texsvg";
 import { utTex } from "./labels";
+import { PROFILE } from "@body/profile";
 
 export type PlotKey = "wind-rose" | "flux-rose" | "modes" | "qsdiv";
 export const PLOT_KEYS: PlotKey[] = ["wind-rose", "flux-rose", "modes", "qsdiv"];
@@ -39,7 +40,7 @@ const fmtLon = (v: number) => `${Math.abs(v).toFixed(2)}° ${v < 0 ? "W" : "E"}`
 /** dune-atlas_<plot>_<dataset>_<lat>_<lon>[_ut<u*,th>].<ext> (u*,th for threshold-dependent plots) */
 export function plotFilename(key: PlotKey, datasetId: string, cell: { lat: number; lon: number }, ut: number | null, ext: "png" | "svg"): string {
   const n = (v: number) => String(Number(v.toFixed(2)));
-  return `dune-atlas_${key}_${datasetId}_${n(cell.lat)}_${n(cell.lon)}${ut === null ? "" : `_ut${ut.toFixed(2)}`}.${ext}`;
+  return `${PROFILE.filePrefix}_${key}_${datasetId}_${n(cell.lat)}_${n(cell.lon)}${ut === null ? "" : PROFILE.control.fileSuffix(ut)}.${ext}`;
 }
 
 
@@ -49,11 +50,11 @@ export function plotStripItems(spec: PlotExportSpec, c: PlotExportContext): Stri
   return [
     ...spec.legend,
     { kind: "heading", text: spec.title },
-    { kind: "text", text: `Cell centre ${fmtLat(c.cell.lat)}, ${fmtLon(c.cell.lon)} · ${d.name} ${d.resolution}, ${d.period}${spec.thresholdDependent ? ` · threshold friction velocity ${utTex(c.ut)}` : ""}` },
+    { kind: "text", text: `Cell centre ${fmtLat(c.cell.lat)}, ${fmtLon(c.cell.lon)} · ${d.name} ${d.resolution}, ${d.period}${spec.thresholdDependent ? ` · ${PROFILE.control.exportName} ${utTex(c.ut)}` : ""}` },
     ...(spec.caption ? [{ kind: "text", text: spec.caption } as StripItem] : []),
     { kind: "text", text: plotDataCredit(windSourceText(d.id)) },
     { kind: "text", text: `View: ${c.shareLink}`, muted: true },
-    { kind: "text", text: `Exported ${isoDate(c.date)} from the Dune Atlas (map.geomorphlab.org).`, muted: true },
+    { kind: "text", text: `Exported ${isoDate(c.date)} from ${PROFILE.exports.plotExportedFrom}.`, muted: true },
   ];
 }
 

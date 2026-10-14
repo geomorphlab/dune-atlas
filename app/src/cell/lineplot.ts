@@ -6,6 +6,7 @@ import { DARK_THEME, plotLabel, type PlotTheme } from "./plottheme";
 import { escapeHtml } from "../util/format";
 import { niceTicks } from "./roses";
 import { pchipDense } from "../util/pchip";
+import { PROFILE } from "@body/profile";
 
 export interface LinePlotOptions {
   x: ArrayLike<number>;
@@ -33,8 +34,8 @@ export interface LinePlotOptions {
 
 const f = (v: number) => (Math.round(v * 100) / 100).toString();
 const tick = (v: number) => Number(v.toPrecision(3)).toString();
-/** x tick text (Mars build: the patch writes d in µm from log10 d) */
-const xTick = (t: number) => tick(t);
+/** x tick text (the body's, e.g. d in µm from log10 d; default 3 significant digits) */
+const xTick = (t: number) => PROFILE.control.plot.lineTickText?.(t) ?? tick(t);
 /** y tick text on a log axis: plain decimals (0.001, 0.1, 10, 1000) */
 const logTick = (v: number) => (v >= 1e-4 && v < 1e6 ? Number(v.toPrecision(3)).toString() : v.toExponential(0).replace("e+", "e"));
 
@@ -48,7 +49,7 @@ export function linePlotSvg(o: LinePlotOptions): string {
   const tv = (v: number) => (o.logY ? Math.log10(v) : v);
   const fin = ys.filter(ok).map(tv);
   const x0 = Math.min(...xs), x1 = Math.max(...xs);
-  const xt = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6].filter((t) => t >= x0 - 1e-9 && t <= x1 + 1e-9);
+  const xt = PROFILE.control.plot.lineTicks.filter((t) => t >= x0 - 1e-9 && t <= x1 + 1e-9);
   // right margin: room for half of the last x tick label (e.g. "1000" was clipped to "100" on Mars)
   const last = xt.length ? xTick(xt[xt.length - 1]) : "";
   const lastAtEdge = xt.length > 0 && (x1 - xt[xt.length - 1]) / (x1 - x0 || 1) < 0.08;

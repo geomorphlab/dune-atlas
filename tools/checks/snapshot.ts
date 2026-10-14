@@ -6,6 +6,8 @@
 //   help       help panel, tour and share/export texts
 //   layerPanel layer-panel DOM (default state) per dataset
 //   urls       every data URL the registry resolves to per dataset (layers, cell store, sidecars, basemaps)
+//   exports    image-export texts and names (map and plot strips as SVG, file names, scale bars), legends
+//              of every layer, the slider readouts and ⓘ, modes and line plots, the coordinates tooltip
 //   cells      (--live) per scenario cell: the recorded data requests (method, URL, byte range) of
 //              opening the cell store and showing the cell, the cell-panel DOM at three slider
 //              positions, and SHA-256 of every per-cell download (NetCDF, CSV bundle, citation)
@@ -55,7 +57,9 @@ const { CONFIG } = await import("../../app/src/config");
 const { CellPanel } = await import("../../app/src/ui/cellPanel");
 const { snapToCell } = await import("../../app/src/cell/snap");
 const { versionFromPrefix } = await import("../../app/src/cell/export");
-const cellStoreMod = BODY === "mars" ? await import("../../app/src/bodies/mars/cell/cellstore") : await import("../../app/src/cell/cellstore");
+// the Mars cell store moved with the refactor (src/mars -> src/bodies/mars); either layout is read
+const marsCellStore = async () => { try { return await import("../../app/src/bodies/mars/cell/cellstore"); } catch { return await import(/* @vite-ignore */ "../../app/src/mars/cell/cellstore"); } };
+const cellStoreMod = BODY === "mars" ? await marsCellStore() : await import("../../app/src/cell/cellstore");
 const StoreClass = (cellStoreMod as unknown as Record<string, { open: (s: string, o: unknown) => Promise<{ grid: unknown }> }>)[BODY === "mars" ? "MarsCellStore" : "CellStore"];
 
 const out: Record<string, unknown> = { body: BODY };
@@ -65,7 +69,9 @@ const regFor = (ds: string) => { const r = loadRegistry().registry; if (ds && ds
 
 out.registry = Object.fromEntries(datasets.map((ds) => [ds, sortKeys(regFor(ds))]));
 out.info = Object.fromEntries(datasets.map((ds) => { const r = regFor(ds); return [ds, Object.fromEntries(r.layers.map((l) => [l.id, infoHtml(l, ds || undefined)]))]; }));
-out.help = sortKeys({ ...Object.fromEntries(Object.entries(help).filter(([, v]) => typeof v !== "function")), stepLabel: help.TOUR_LABELS.step(2, 7) });
+// the help-panel, tour and share/export texts (the About texts are covered by the layerPanel section)
+const HELP_KEYS = ["DATASET_INFO_TEXT", "EXPORT_TEXT", "HELP_ABOUT_LINK", "HELP_BUTTON_LABEL", "HELP_RESTART", "HELP_SECTIONS", "HELP_TITLE", "SHARE_TEXT", "TOUR_FALLBACK", "TOUR_LABELS", "TOUR_STEPS"];
+out.help = sortKeys({ ...Object.fromEntries(Object.entries(help).filter(([k, v]) => typeof v !== "function" && HELP_KEYS.includes(k))), stepLabel: help.TOUR_LABELS.step(2, 7) });
 
 const stateFor = (ds: string) => { const r = regFor(ds); return { r, s: new Store(initialAppState(r, parseUrlState(ds ? `?dataset=${ds}` : ""), ds || r.defaultDataset || "")) }; };
 out.layerPanel = Object.fromEntries(datasets.map((ds) => {
@@ -84,6 +90,56 @@ out.urls = Object.fromEntries(datasets.map((ds) => {
   for (const p of d?.cellAuxStores ?? (d?.cellAuxStore ? [d.cellAuxStore] : CONFIG.cellAuxPaths)) urls.add(resolveSource(p, base, d?.prefix));
   return [ds, [...urls].sort()];
 }));
+
+{
+  const ex = await import("../../app/src/export/mapExport");
+  const px = await import("../../app/src/export/plotExport");
+  const lab = await import("../../app/src/export/labels");
+  const th = await import("../../app/src/ui/threshold");
+  const lg = await import("../../app/src/ui/legend");
+  const lc = await import("../../app/src/layerconfig");
+  const mp = await import("../../app/src/cell/modesplot");
+  const lp = await import("../../app/src/cell/lineplot");
+  const ad = await import("../../app/src/map/adapters");
+  const co = await import("../../app/src/ui/coords");
+  const di = await import("../../app/src/cell/datasetinfo");
+  const date = new Date();
+  const views = [
+    { lon: 15.2, lat: -24.5, zoom: 5.3, bearing: 0, pitch: 0, proj: "mercator" as const },
+    { lon: 160, lat: 62, zoom: 2.2, bearing: 10, pitch: 0, proj: "globe" as const },
+    { lon: -30, lat: 0, zoom: 3, bearing: 0, pitch: 0, proj: "globe" as const },
+  ];
+  out.exports = Object.fromEntries(datasets.map((ds) => {
+    const { r, s } = stateFor(ds);
+    const t = r.threshold, vals = t.values;
+    const x = BODY === "mars" ? vals.map(Math.log10) : vals;
+    const layers = Object.fromEntries(r.layers.map((l) => [l.id, { ...(s.state.layers[l.id] ?? { opacity: 1 }), visible: true, cfg: l.invertSource ? { invert: true } : s.state.layers[l.id]?.cfg }]));
+    const strips: Record<string, string> = {};
+    for (const [k, v] of views.entries()) for (const dunesOnly of [false, true]) {
+      const c = { reg: r, state: { ...s.state, layers, dunesOnly }, view: v, width: 1600, includeBasemap: true, shareLink: "https://map.geomorphlab.org/#v=x", date };
+      strips[`map${k}${dunesOnly ? "-dunesonly" : ""}`] = ex.mapStripSvg(c as never, 1600, null);
+      strips[`mapDefault${k}`] = ex.mapStripSvg({ ...c, state: { ...s.state, dunesOnly } } as never, 1600, null);
+    }
+    const cell = { lat: -24.5, lon: 15.25, iy: 1, ix: 2 };
+    const pctx = { cell, dataset: di.datasetInfo(ds || undefined), ut: vals[t.defaultIndex], shareLink: "https://map.geomorphlab.org/#v=x", date };
+    for (const key of px.PLOT_KEYS) for (const dep of [false, true]) {
+      const spec = { key, title: `Title ${key}`, svg: () => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60"></svg>', legend: [], caption: "Caption", thresholdDependent: dep };
+      strips[`plot-${key}-${dep}`] = px.composePlotSvg(spec as never, pctx as never, 1200, null);
+    }
+    const names = [ex.mapExportFilename(ds || "x", views[0], date), ex.mapExportFilename(ds || "x", views[1], date),
+      ...px.PLOT_KEYS.flatMap((k) => [px.plotFilename(k, ds || "x", cell, vals[t.defaultIndex], "png"), px.plotFilename(k, ds || "x", cell, null, "svg")])];
+    const scale = [0, 30, 60, 80].flatMap((lat) => [2, 2.5, 4, 7, 10].map((zoom) => ex.scaleBar({ lat, zoom })));
+    const mpp = [0, 45, 70].flatMap((lat) => [1, 4, 8].map((zoom) => lc.metersPerPixel(lat, zoom)));
+    const fakeMap = { getCenter: () => ({ lng: 20, lat: 30 }), project: () => ({ x: 400, y: 300 }), unproject: ([px0]: [number, number]) => ({ lng: 20 + (px0 - 400) * 0.01, lat: 30 }) };
+    const legends = Object.fromEntries(r.layers.map((l) => [l.id, [lg.legendHtml(l, s.state.layers[l.id]?.cfg), ...(l.invertSource ? [lg.legendHtml(l, { invert: true } as never)] : [])]]));
+    const series = [{ label: "A", color: "#f00", values: x.map((_, i) => (i * 7) % 360) }, { label: "B", color: "#0f0", values: x.map((_, i) => (i * 3) % 180), axis: true }];
+    const plots = [mp.modesPlotSvg({ x, series, currentIndex: t.defaultIndex }), mp.modesPlotSvg({ x, series, currentIndex: 0, radiusLabel: "r" }),
+      lp.linePlotSvg({ x, y: x.map((_, i) => Math.sin(i / 5)), currentIndex: t.defaultIndex, xLabel: "x", yLabel: "y", title: "t" })];
+    const coords = [false, true].map((touch) => new co.CoordsControl({ touch }).el.title);
+    return [ds, sortKeys({ strips, names, scale, mpp, viewMpp: ad.viewMetersPerPixel(fakeMap as never), projection: ex.PROJECTION_TEXT, legends,
+      readouts: vals.map((v) => [th.formatUt(v), lab.utTex(v)]), thresholdInfo: th.thresholdInfoHtml(t), plots, coords })];
+  }));
+}
 
 if (LIVE) {
   const realFetch = globalThis.fetch;

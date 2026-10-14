@@ -16,6 +16,7 @@ import { exportTitleTex, exportUnits, utTex } from "./labels";
 import { blobWithDpi, EXPORT_DPI, mapExportPixelRatio, stripPlacement } from "./png";
 import { isWindDerived } from "../map/dunemask";
 import { announceDownload } from "../cell/downloads";
+import { PROFILE } from "@body/profile";
 
 export interface MapView { lon: number; lat: number; zoom: number; bearing: number; pitch: number; proj: "globe" | "mercator" }
 export interface MapStripContext {
@@ -40,16 +41,16 @@ const fmtLon = (v: number) => { const w = ((v + 540) % 360) - 180; return `${Mat
 /** dune-atlas_map_<dataset>_<lat>_<lon>_z<zoom>_<date>.png */
 export function mapExportFilename(dataset: string, v: Pick<MapView, "lat" | "lon" | "zoom">, date: Date): string {
   const lon = ((v.lon + 540) % 360) - 180;
-  return `dune-atlas_map_${dataset}_${v.lat.toFixed(2)}_${lon.toFixed(2)}_z${v.zoom.toFixed(1)}_${isoDate(date)}.png`;
+  return `${PROFILE.filePrefix}_map_${dataset}_${v.lat.toFixed(2)}_${lon.toFixed(2)}_z${v.zoom.toFixed(1)}_${isoDate(date)}.png`;
 }
 
-export const PROJECTION_TEXT = { globe: "Globe (perspective view)", mercator: "Web Mercator EPSG:3857" } as const;
+export const PROJECTION_TEXT = { globe: "Globe (perspective view)", mercator: PROFILE.exports.mercatorName } as const;
 
 /** Scale bar at the view centre (MapLibre: 512 px tiles), or null below zoom 2.5 where the scale
  *  varies strongly across the view. */
 export function scaleBar(v: Pick<MapView, "lat" | "zoom">, maxPx = 120): { px: number; label: string } | null {
   if (v.zoom < 2.5) return null;
-  const mpp = (40075016.686 * Math.cos((v.lat * Math.PI) / 180)) / (512 * 2 ** v.zoom);
+  const mpp = (PROFILE.scaleBarCircumferenceM * Math.cos((v.lat * Math.PI) / 180)) / (512 * 2 ** v.zoom);
   const maxM = mpp * maxPx;
   const p = 10 ** Math.floor(Math.log10(maxM));
   const m = [5, 2, 1].map((k) => k * p).find((x) => x <= maxM) ?? p;
@@ -86,7 +87,7 @@ export function mapStripItems(c: MapStripContext): StripItem[] {
       else sw.push({ color: e.vecColor, shape: e.mode === "arrows" && !isAxis(l) ? "arrow" : "line", label: `${exportTitleTex(l)} (${e.mode}, ${isAxis(l) ? "orientation axis" : "direction of transport"})${l.thresholdAware ? ` at ${utTex(ut)}` : ""}` });
     } else {
       const v = vectorColors(l, cfg);
-      sw.push({ color: v.fill, shape: "box", label: v.invert ? `${exportTitleTex(l)}: land without mapped dunes` : exportTitleTex(l) });
+      sw.push({ color: v.fill, shape: "box", label: v.invert ? `${exportTitleTex(l)}: ${PROFILE.invert.swatch}` : exportTitleTex(l) });
     }
   }
   if (sw.length) keys.push({ kind: "swatches", items: sw });
@@ -96,8 +97,8 @@ export function mapStripItems(c: MapStripContext): StripItem[] {
   keys.push({ kind: "mapkeys", bearing: view.bearing, northNote: view.proj === "globe" ? "north up at view centre" : undefined,
     scale: sb, scaleNote: sb ? (view.proj === "globe" ? "at view centre" : `at ${fmtLat(view.lat)}`) : "Scale bar omitted: the scale varies strongly across this view" });
   const text: StripItem[] = [
-    { kind: "heading", text: "Dune Atlas · map.geomorphlab.org" },
-    { kind: "text", text: `${PROJECTION_TEXT[view.proj]} · centre ${fmtLat(view.lat)}, ${fmtLon(view.lon)} · zoom ${view.zoom.toFixed(1)} · wind dataset ${ds.name} ${ds.resolution}, ${ds.period}${anyThr ? ` · threshold friction velocity ${utTex(ut)}` : ""}` },
+    { kind: "heading", text: PROFILE.exports.mapHeading },
+    { kind: "text", text: `${PROJECTION_TEXT[view.proj]} · centre ${fmtLat(view.lat)}, ${fmtLon(view.lon)} · zoom ${view.zoom.toFixed(1)} · wind dataset ${ds.name} ${ds.resolution}, ${ds.period}${anyThr ? ` · ${PROFILE.control.exportName} ${utTex(ut)}` : ""}` },
   ];
   // the Dunes only toggle changes what the wind-derived layers show: say so on the image
   if (state.dunesOnly && visible.some((l) => isWindDerived(l))) text.push({ kind: "text", text: DUNES_ONLY_STRIP });
@@ -108,7 +109,7 @@ export function mapStripItems(c: MapStripContext): StripItem[] {
   const bm = reg.basemaps.find((b) => b.id === state.basemap);
   if (c.includeBasemap && bm) text.push({ kind: "text", text: `Basemap: ${bm.title}${bm.attribution ? `, ${plain(bm.attribution.replace(/<[^>]+>/g, ""))}` : ""}.` });
   text.push({ kind: "text", text: `View: ${c.shareLink}`, muted: true });
-  text.push({ kind: "text", text: `Exported ${isoDate(c.date)} from the Dune Atlas.`, muted: true });
+  text.push({ kind: "text", text: `Exported ${isoDate(c.date)} from ${PROFILE.exports.mapExportedFrom}.`, muted: true });
   return [...keys, ...text];
 }
 

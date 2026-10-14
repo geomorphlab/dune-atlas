@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { DATASET_INFO, datasetFacts } from "../src/cell/datasetinfo";
 import { mapAttributionHtml } from "@body/citation";
 import { DATASET_INFO_TEXT } from "../src/ui/helpText";
-import { THRESHOLD_INFO_DEFAULT } from "../src/ui/threshold";
+import { THRESHOLD_INFO_DEFAULT } from "../src/bodies/earth/profile";
 import { storedNote } from "../src/cell/export";
 
 describe("dataset-selector text (§4 item 1)", () => {

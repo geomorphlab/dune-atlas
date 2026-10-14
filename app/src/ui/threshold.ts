@@ -1,14 +1,16 @@
-// The single global u*,th control (64 steps). The full version is pinned at the top of the
-// layer panel; a compact copy sits at the top of the cell panel. Both write/read the same store
-// key, so map layers, roses, modes plot and table all follow either one.
+// The single global slider control (64 steps; Earth: threshold friction velocity u*,th, Mars: median
+// grain diameter d - the quantity's wording is the body profile's). The full version is pinned at the
+// top of the layer panel; a compact copy sits at the top of the cell panel. Both write/read the same
+// store key, so map layers, roses, modes plot and table all follow either one.
 import type { ThresholdDef } from "../registry/types";
 import type { Store } from "../store";
 import { h } from "./dom";
 import { mathHtml } from "../util/math";
 import { padFigure, reserveCh } from "./livenum";
+import { PROFILE } from "@body/profile";
 
 export function formatUt(v: number): string {
-  return `${v.toFixed(2)} m/s`;
+  return PROFILE.control.format(v);
 }
 
 export function thresholdControl(t: ThresholdDef, store: Store, opts: { compact?: boolean; idPrefix?: string } = {}): HTMLElement {
@@ -34,8 +36,11 @@ export function thresholdControl(t: ThresholdDef, store: Store, opts: { compact?
   reset.addEventListener("click", () => store.set({ utIndex: t.defaultIndex }));
   const pct = (100 * t.defaultIndex) / (t.values.length - 1);
   const track = h("div", { class: "ut-track" }, input, ticks, h("span", { class: "ut-default-mark", style: `left: calc(${pct}% + ${(0.5 - pct / 100) * 16}px)`, title: `default ${formatUt(t.values[t.defaultIndex])}`, "aria-hidden": "true" }));
-  const label = h("label", { for: sid, class: "ut-label", html: opts.compact ? mathHtml("$u_{*,th}$") : `Threshold friction velocity ${mathHtml("$u_{*,th}$")}` });
-  const sec = h("section", { class: `threshold${opts.compact ? " compact" : ""}`, "aria-label": "Threshold friction velocity" },
+  // the registry label without its trailing symbol ("Threshold friction velocity u*,th" -> "Threshold friction velocity")
+  const name = t.label.replace(/\s+\S+$/, "");
+  const sym = mathHtml(PROFILE.control.symbolTex);
+  const label = h("label", { for: sid, class: "ut-label", html: opts.compact ? sym : `${name} ${sym}` });
+  const sec = h("section", { class: `threshold${opts.compact ? " compact" : ""}`, "aria-label": name },
     /* children below */);
   if (opts.compact) { // cell panel: one line (label, value, default) above the slider
     sec.append(h("div", { class: "threshold-head" }, label, out, reset), track);
@@ -62,12 +67,8 @@ export function thresholdControl(t: ThresholdDef, store: Store, opts: { compact?
 
 /** the one description line under the slider (same in both builds; details in the ⓘ) */
 export const THRESHOLD_HELP = "Applies to the map layers and the cell panel.";
-/** the slider's ⓘ, middle paragraphs: the default and its equivalents */
-export const THRESHOLD_INFO_DEFAULT = `<p>The default, 0.15 m/s, is the value used for the global analysis of Gunn (2026): a common global approximation used in place of more accurate local values, not calibrated for any site. Values between 0.1 and 0.4 m/s are typical; for loose, dry sand the threshold depends mainly on grain size and density.</p>`
-  + `<p>With the roughness length of 1 mm used here, 0.15 m/s corresponds to a 10 m wind of 3.4 m/s (6.6 knots); the 12-knot threshold of Fryberger &amp; Dean (1979) corresponds to about 0.27 m/s.</p>`;   // the Baas (2026) point is in the Wind dataset ⓘ
 /** the slider's ⓘ: what the control is, its default, its range */
 export function thresholdInfoHtml(t: ThresholdDef): string {
-  return `<p>The friction velocity ${mathHtml("$u_{*,th}$")} above which the wind moves sand. Every threshold-dependent map layer (its ⓘ says so) and the cell panel use the value set here.</p>`
-    + THRESHOLD_INFO_DEFAULT
-    + `<p>${t.values.length} values from ${formatUt(t.values[0])} to ${formatUt(t.values[t.values.length - 1])}; default ${formatUt(t.values[t.defaultIndex])} (the mark under the slider). The compact copy at the top of the cell panel sets the same value.</p>`;
+  return PROFILE.control.infoIntroHtml()
+    + `<p>${t.values.length} ${PROFILE.control.rangeAdjective}values from ${formatUt(t.values[0])} to ${formatUt(t.values[t.values.length - 1])}; default ${formatUt(t.values[t.defaultIndex])} (the mark under the slider). The compact copy at the top of the cell panel sets the same value.</p>`;
 }

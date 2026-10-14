@@ -16,6 +16,7 @@ import { FieldReader } from "./fieldreader";
 import { applyMask, arrowFeatures, arrowheadsAlong, buildScreenField, clipStreamlines, sampleNearest, evenStreamlines, gcDeg, geoPolylines, readWindow, sampleUnitSphere, splitByScreenGap, type ArrowSeed, type Grid } from "./vectors";
 import { GlobeLinesLayer, POLE_LAT } from "./globelines";
 import { mathToAxisDeg, mathToBearingDeg } from "../util/angles";
+import { PROFILE } from "@body/profile";
 
 export interface AdapterContext {
   map: MlMap;
@@ -216,7 +217,7 @@ const MAX_NODES = 20_000;
 export function viewMetersPerPixel(map: MlMap): number {
   const c = map.project(map.getCenter());
   const a = map.unproject([c.x - 25, c.y]), b = map.unproject([c.x + 25, c.y]);
-  const R = 6371008.8, rad = Math.PI / 180;
+  const R = PROFILE.radiusM, rad = Math.PI / 180;
   const dLat = (b.lat - a.lat) * rad, dLon = (b.lng - a.lng) * rad;
   const hv = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLon / 2) ** 2;
   const d = 2 * R * Math.asin(Math.min(1, Math.sqrt(hv)));
