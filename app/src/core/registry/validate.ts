@@ -76,3 +76,12 @@ export function validateRegistry(reg: unknown, schema: object, withheld: Iterabl
   }
   return errors;
 }
+
+/** The body's named places (registry/<body>/places.yaml) against registry/places.schema.json, plus unique ids. */
+export function validatePlaces(doc: unknown, schema: object): string[] {
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  const v = ajv.compile(schema);
+  if (!v(doc)) return (v.errors ?? []).map((e) => `places schema: ${e.instancePath || "/"} ${e.message}`);
+  const ids = (doc as { places: { id: string }[] }).places.map((p) => p.id);
+  return ids.filter((x, i) => ids.indexOf(x) !== i).map((d) => `places: duplicate id '${d}'`);
+}

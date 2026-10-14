@@ -33,6 +33,11 @@ import { Tools } from "./core/ui/tools";
 import { CoordsControl } from "./core/ui/coords";
 import { escapeClosesCell } from "./core/ui/keys";
 import { tourHooks } from "./core/ui/tourHooks";
+import { SearchBox, searchZoom } from "./core/ui/search";
+import { loadPlaces, placeBounds, type Place } from "./core/search/places";
+import { formatCoord } from "./core/search/coords";
+import { datasetInfo } from "./core/cell/datasetinfo";
+import { PROFILE } from "@body/profile";
 
 const { registry: reg, errors } = loadRegistry();
 if (errors.length) console.warn("registry merge:", errors);
@@ -145,7 +150,13 @@ const fullScreenUrl = () => {
   return `${location.origin}${location.pathname}${serializeUrlState(s)}`;
 };
 const layerPanelEl = document.getElementById("layer-panel")!;
-renderLayerPanel(layerPanelEl, reg, store, { fullScreenUrl: init.embed ? fullScreenUrl : undefined, initialOpen: start.panel });
+// search box (typed coordinates; named places once the body's list is enabled): fly there and open the cell
+const search = new SearchBox({
+  ...PROFILE.search, places: loadPlaces(),
+  goTo: (lat, lon) => goToPoint(lat, lon),
+  goToPlace: (p) => goToPlace(p),
+});
+renderLayerPanel(layerPanelEl, reg, store, { fullScreenUrl: init.embed ? fullScreenUrl : undefined, initialOpen: start.panel, search: search.el });
 
 // ---- share link, map export, help & tour ----
 function shareState(): ShareState {
@@ -208,6 +219,29 @@ const autostart = shouldShowTour({ embed: init.embed, tourParam: !!url.tour, see
 // fallback in case the map never reports idle
 const tourStart = wireTourBubble(tour, { autostart });
 if (autostart) autostartTour(map, () => { if (!tour.active) tour.start(); });
+
+/** search box: fly to a typed point at a zoom where a cell is visible; select the cell when it has data */
+async function goToPoint(lat: number, lon: number): Promise<string> {
+  const where = formatCoord(lat, lon, PROFILE.search.lonRange, 2);
+  const cs = await getCellStore().catch(() => null);
+  const g = cs?.grid ?? grid;
+  const lng = lon > 180 ? lon - 360 : lon;
+  map.flyTo({ center: [lng, lat], zoom: Math.max(map.getZoom(), searchZoom(g.dlat)), essential: true });
+  if (!cs) return `${where}: the cell data could not be loaded.`;
+  const c = snapToCell(lng, lat, g);
+  if (!c) return `${where}: outside the grid of the wind dataset.`;
+  const d = await cs.query(c.iy, c.ix);
+  if (!d.hasData) {
+    const why = datasetInfo(store.state.dataset).nonLandReason;
+    return `${where}: no data for this cell${why ? ` (${why.charAt(0).toLowerCase()}${why.slice(1)})` : ""}.`;
+  }
+  store.set({ cell: [c.iy, c.ix] });
+  return `${where}: cell panel opened.`;
+}
+function goToPlace(p: Place): string {
+  map.fitBounds(placeBounds(p, PROFILE.radiusM / 1000), { padding: 40, maxZoom: 9, essential: true });
+  return p.line1;
+}
 
 map.on("click", async (e) => {
   try { grid = (await getCellStore()).grid; } catch { /* keep the fallback grid */ }

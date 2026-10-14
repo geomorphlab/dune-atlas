@@ -80,6 +80,37 @@ A dataset with a different cell form (e.g. hourly series on Earth) needs a cell 
 and cell panel for that form; these are per body today (`core/cell/{cellstore,analysis,flux,export}.ts` and
 `bodies/earth/cellPanel.ts` for Earth, `bodies/mars/cell/*` and `bodies/mars/cellPanel.ts` for Mars).
 
+## Named places (search box)
+
+The search box (top of the layer panel, `core/ui/search.ts`) reads typed coordinates (`core/search/coords.ts`;
+Earth longitudes -180..180, Mars planetocentric 0..360° east, set by `PROFILE.search`). Named places come from
+`registry/<body>/places.yaml` (schema `registry/places.schema.json`; checked by `npm run validate-registry`):
+
+```yaml
+enabled: false        # the named search, and the naming note in the dune layer's ⓘ, are shown only when true
+places:
+  - id: rub-al-khali
+    line1: Rubʿ al Khali                     # Latin-script name
+    line2: { text: الربع الخالي, lang: ar }   # optional: non-Latin name and its language (BCP 47)
+    aliases: [Empty Quarter]
+    lat: 20.0
+    lon: 50.0                                # Mars: planetocentric, east-positive 0..360
+    radius_km: 500                           # sets the zoom
+    countries: [Saudi Arabia, Oman, United Arab Emirates, Yemen]
+    sources: ["<where the name and the location come from>"]
+```
+
+Matching (`core/search/places.ts`) ignores case, diacritics and apostrophe-like marks, covers both lines and
+the aliases and tolerates small typing errors. Both lists ship empty and disabled until the names are
+approved.
+
+## Concepts panel
+
+The mortarboard button opens the entries of [docs/concepts/concepts-earth-mars.md](../concepts/concepts-earth-mars.md),
+read at build time (`core/ui/concepts.ts`); entries are tagged Earth, Mars or both. `CONCEPT_OF_LAYER` maps
+each layer ⓘ (and the slider and dataset ⓘ, `@threshold`, `@dataset`) to its entry; a new layer that should
+link to an entry is added there.
+
 ## Add a planet
 
 1. **Registry**: `registry/<body>/layers.yaml` (same schema; `threshold` is the slider, e.g. Mars grain

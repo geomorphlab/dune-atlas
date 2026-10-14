@@ -393,7 +393,8 @@ describe("layer panel follows the dataset", () => {
     expect(store.state.dataset).toBe("era5");
     const legend1 = item.querySelector(".legend-wrap")!.innerHTML;
     expect(legend1).not.toBe(legend0);
-    expect(item.querySelector(".info-popover")!.textContent).toContain("Hersbach, H. et al. (2020)");
+    expect(item.querySelector(".info-popover")!.textContent).toContain("ERA5 0.25°, 1950–2024");
+    expect(root.querySelector("details.about")!.textContent).toContain("Hersbach, H. et al. (2020)");   // the shared citation (About)
     sel.value = "era5-land"; sel.dispatchEvent(new Event("change"));
     expect(item.querySelector(".legend-wrap")!.innerHTML).toBe(legend0);
     const about = root.textContent!;

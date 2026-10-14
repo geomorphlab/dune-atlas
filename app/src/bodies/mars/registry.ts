@@ -6,3 +6,5 @@ export const REGISTRY_DIR = "registry/mars";
 export const baseFiles = import.meta.glob("../../../../registry/mars/layers.yaml", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
 export const generatedFiles = import.meta.glob("../../../../registry/mars/generated/*.yaml", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
 export const datasetFiles = import.meta.glob("../../../../registry/mars/datasets/*/*.yaml", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
+/** named places of the search box (registry/mars/places.yaml; core/search/places.ts) */
+export const placesFiles = import.meta.glob("../../../../registry/mars/places.yaml", { query: "?raw", import: "default", eager: true }) as Record<string, string>;

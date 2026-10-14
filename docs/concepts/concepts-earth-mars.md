@@ -1,9 +1,11 @@
-# Concepts panel: content (not shipped yet)
+# Concepts panel: content
 
-Content for the later Concepts panel of both atlases, stored verbatim from the PI-edited text
+Content of the Concepts panel (mortarboard button) of both atlases, stored verbatim from the PI-edited text
 `earth-physics-text_AG.md` (October 2026), sections 5 and 6. Each entry: title with its planet tag
-(Earth, Mars or both), text, references. Do not edit here without the PI; when the panel is built,
-the entries are taken from this file unchanged (markup only adapted).
+(Earth, Mars or both), text, references. Do not edit here without the PI. The app reads this file at build
+time (`app/src/core/ui/concepts.ts`) and shows the entries unchanged: only the markup is adapted (symbols set
+in TeX, references linked to their DOIs); `app/tests/concepts.test.ts` checks that the shown text equals this
+file. Which ⓘ links to which entry: `CONCEPT_OF_LAYER` in `concepts.ts`.
 
 ---
 

@@ -7,6 +7,9 @@
 //    or started it from the bubble or Help), per body (localStorage "duneAtlas[Mars].tourStarted"), then never;
 //  - placed left of the Help button, else below the tools column, else not shown: never over the planet
 //    button, the side (layer) panel or the cell panel;
+//  - placed again whenever the layout changes (window size, the tools column, the side and cell panels,
+//    late font loading): while every position is blocked (e.g. a link that opens with the cell panel) it waits
+//    hidden and appears as soon as one is free, until the first click;
 //  - no motion under prefers-reduced-motion (style.css).
 import { h } from "./dom";
 import { storageKey } from "../body";
@@ -56,6 +59,7 @@ export class TourBubble {
   #onDown = (e: Event) => { if (!this.el.contains(e.target as Node)) this.hide(true); };
   #onKey = (e: KeyboardEvent) => { if (e.key === "Escape") this.hide(true); };
   #onResize = () => this.place();
+  #observers: { disconnect(): void }[] = [];
 
   constructor(start: () => void, doc: Document = document) {
     this.#doc = doc;
@@ -77,6 +81,21 @@ export class TourBubble {
     this.#doc.addEventListener("pointerdown", this.#onDown, true);
     this.#doc.addEventListener("keydown", this.#onKey);
     globalThis.addEventListener?.("resize", this.#onResize);
+    this.#observe();
+  }
+  /** re-place on layout changes: size of the tools column and the panels, the cell panel opening or closing,
+   *  fonts arriving after the first layout */
+  #observe() {
+    const els = [".maplibregl-ctrl-top-right", ...BUBBLE_AVOID].flatMap((s) => [...this.#doc.querySelectorAll(s)]);
+    const win = this.#doc.defaultView as (Window & typeof globalThis) | null;
+    if (win?.ResizeObserver) { const ro = new win.ResizeObserver(() => this.place()); els.forEach((e) => ro.observe(e)); this.#observers.push(ro); }
+    if (win?.MutationObserver) {
+      const mo = new win.MutationObserver(() => this.place());
+      els.forEach((e) => mo.observe(e, { attributes: true, attributeFilter: ["hidden", "class", "style"] }));
+      this.#observers.push(mo);
+    }
+    void (this.#doc as Document & { fonts?: { ready?: Promise<unknown> } }).fonts?.ready?.then(() => this.place());
+    win?.requestAnimationFrame?.(() => this.place());
   }
   /** hide; `dismiss` = for the rest of this visit */
   hide(dismiss = false) {
@@ -87,7 +106,10 @@ export class TourBubble {
     this.#doc.removeEventListener("pointerdown", this.#onDown, true);
     this.#doc.removeEventListener("keydown", this.#onKey);
     globalThis.removeEventListener?.("resize", this.#onResize);
+    for (const o of this.#observers.splice(0)) o.disconnect();
   }
+  /** shown and at a free position (false while it waits for a free position) */
+  get visible() { return this.#shown && this.el.style.visibility !== "hidden"; }
   place() {
     if (!this.#shown) return;
     const help = this.#doc.querySelector(".help-btn") as HTMLElement | null;

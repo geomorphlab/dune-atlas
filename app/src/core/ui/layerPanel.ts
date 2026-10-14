@@ -18,6 +18,8 @@ import { fieldInfo } from "../cell/fieldinfo";
 import { isDatasetDependent } from "../registry/merge";
 import { mathHtml } from "../util/math";
 import { aboutSourceIds, AI_NOTICE, citationHtml, citationSources, fieldsCitation, fieldsLicence } from "../cell/citation";
+import { loadPlaces, PLACES_DISCLAIMER } from "../search/places";
+import { conceptLinkHtml } from "./concepts";
 import { PROFILE } from "@body/profile";
 import { canLog, COLORMAP_GROUPS, DEFAULT_SPACING_KM, effectiveDisplay, isDirectional, SPACING_KM_STEPS, vectorColors, type RenderMode } from "../layerconfig";
 
@@ -26,6 +28,8 @@ export const SPACING_STEP_NAMES = ["finest", "finer", "fine", "medium", "coarse"
 import { COLORMAPS } from "../util/colormaps";
 
 export { AI_NOTICE } from "../cell/citation";
+/** named places of the search box: the dune layer's ⓘ carries the naming note while the named search is shown */
+const PLACES = loadPlaces();
 const AUTHOR_EMAIL = "a.gunn@monash.edu";
 /** 'Data sources' list in About (what each product is and where it comes from). The wind-dataset items and every
  *  dataset fact in the general items come from the dataset table (cell/datasetinfo.ts); sand-flux and divergence
@@ -46,7 +50,7 @@ export const COMPARE_HTML = `<div class="earth-mars"><h4>Earth and Mars: what ca
 <p>DP values on the two planets can therefore be compared in order of magnitude, not as precise numbers. RDP/DP, RDD and the mode directions compare more directly, but each depends on the threshold or grain-diameter setting.</p></div>`;
 /** About: how to cite the map fields of every wind dataset (one format with the info popovers and the downloads). */
 export function fieldsCitationHtml(): string {
-  return `<h4>Citing the map fields</h4><ul class="sources">${Object.values(DATASET_INFO).map((d) => `<li><strong>${escapeHtml(`${d.name} ${d.resolution}`)}</strong>: ${richHtml(fieldsCitation(d.id))}. Licence: ${escapeHtml(fieldsLicence(d.id))}.</li>`).join("")}</ul>`;
+  return `<h4 id="cite-fields" tabindex="-1">Citing the map fields</h4><ul class="sources">${Object.values(DATASET_INFO).map((d) => `<li><strong>${escapeHtml(`${d.name} ${d.resolution}`)}</strong>: ${richHtml(fieldsCitation(d.id))}. Licence: ${escapeHtml(fieldsLicence(d.id))}.</li>`).join("")}</ul>`;
 }
 export const INVERT_NOTE = PROFILE.invert.note;
 
@@ -99,10 +103,24 @@ export function infoHtml(l: LayerDef, datasetId?: string): string {
       + row("Wind data", isDatasetDependent(l.source) ? escapeHtml(`${ds.name} ${ds.resolution}, ${ds.period}`) : "not used (the same for every wind dataset)")
       + row("Slider", thr.replace(/^<p class="help">|<\/p>$/g, ""));
   }
-  const sources = l.attribution ? attributionRows(l.attribution) : l.citation ? row("Citation", richHtml(l.citation)) : "";
+  // the citation shared by the dataset's map fields is shown once, in About ("Citing the map fields"); the
+  // popover links there instead of repeating it (one citation block per panel; other sources stay in full)
+  const sources = sharesFieldsCitation(l, datasetId) ? row("Citation", SHARED_CITATION_LINK)
+    : l.attribution ? attributionRows(l.attribution) : l.citation ? row("Citation", richHtml(l.citation)) : "";
   const def = l.description ? infoDefinition(l.description) : "";
-  return `${def ? `<p class="info-def">${richHtml(def, mathHtml)}</p>` : ""}${l.invertSource ? `<p class="help">${escapeHtml(INVERT_NOTE)}</p>` : ""}${facts || sources ? `<dl class="attribution info-facts">${facts}${sources}</dl>` : ""}`;
+  const naming = l.invertSource && PLACES.enabled ? `<p class="help places-note">${escapeHtml(PLACES_DISCLAIMER)}</p>` : "";
+  return `${def ? `<p class="info-def">${richHtml(def, mathHtml)}</p>` : ""}${conceptLinkHtml(l.id)}${l.invertSource ? `<p class="help">${escapeHtml(INVERT_NOTE)}</p>` : ""}${naming}${facts || sources ? `<dl class="attribution info-facts">${facts}${sources}</dl>` : ""}`;
 }
+
+/** a layer whose attribution is exactly the map-field citation and licence of the dataset (About lists it) */
+export function sharesFieldsCitation(l: LayerDef, datasetId?: string): boolean {
+  const a = l.attribution;
+  if (!a || !datasetId) return false;
+  const keys = Object.keys(a).filter((k) => (a as Record<string, unknown>)[k] !== undefined);
+  return keys.every((k) => k === "citation" || k === "licence") && a.citation === fieldsCitation(datasetId) && (a.licence ?? "") === fieldsLicence(datasetId);
+}
+export const SHARED_CITATION_TEXT = "Citing the map fields (in About)";
+const SHARED_CITATION_LINK = `<button type="button" class="link-button" data-about="cite-fields">${SHARED_CITATION_TEXT}</button>`;
 
 /** shown under the basemap choices while an imagery basemap is selected */
 export const IMAGERY_HINT = "To see the imagery under the colour layers, lower their opacity in Active layers.";
@@ -383,7 +401,7 @@ export function datasetOptionLabel(id: string, fallback: string): string {
 /** the header subtitle, identical in both atlases (the Gunn (2026) citation is in About) */
 export const SUBTITLE_HTML = `Interactive explorer for aeolian geomorphology<br>Developed by the <a href="https://www.geomorphlab.org/" target="_blank" rel="noopener">Monash Geomorphology Lab</a>`;
 
-export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store, opts: { fullScreenUrl?: () => string; initialOpen?: boolean } = {}) {
+export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store, opts: { fullScreenUrl?: () => string; initialOpen?: boolean; search?: HTMLElement } = {}) {
   root.replaceChildren();
   const toggle = h("button", { type: "button", class: "panel-toggle", "aria-expanded": "true", "aria-controls": "layer-panel-body", title: "Show / hide layers" }, "Layers");
   const body = h("div", { id: "layer-panel-body", class: "panel-body" });
@@ -395,6 +413,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
   const header = h("header", { class: "atlas-header" },
     h("div", { class: "title-row" }, h("h1", {}, "Dune Atlas", " ", h("span", { class: "body-name" }, BODY_NAME)), toggle),
     h("p", { class: "subtitle", html: SUBTITLE_HTML }));
+  if (opts.search) header.append(opts.search);   // search box (ui/search.ts): stays visible with the list collapsed
   if (opts.fullScreenUrl) { // embed: a pill on the map above the panel, not in the header
     root.parentElement?.querySelector(":scope > .embed-bar")?.remove();
     root.before(embedBar(opts.fullScreenUrl, store));
@@ -412,7 +431,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     // DATASET_INFO_TEXT is set (Earth), its popover wrapping below the line
     const line = h("div", { class: "dataset-line" }, h("label", { class: "inline dataset-row", for: "dataset-select" }, "Wind dataset ", sel));
     if (DATASET_INFO_TEXT) {
-      const t = infoToggle("Wind dataset", `<p>${mathHtml(DATASET_INFO_TEXT)}</p>`, "dataset");
+      const t = infoToggle("Wind dataset", `<p>${mathHtml(DATASET_INFO_TEXT)}</p>${conceptLinkHtml("@dataset")}`, "dataset");
       line.append(t.button, t.pop);
     }
     header.append(line);
@@ -466,4 +485,16 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
       ${citationHtml(citationSources(aboutSourceIds()))}
       ${ABOUT_CREDITS_NOTE_HTML}` })));
   root.append(header, pinned, body);
+  // links to a section of About (data-about = element id), e.g. the shared map-field citation of the ⓘ popovers
+  root.addEventListener("click", (e) => {
+    const b = (e.target as Element | null)?.closest?.("[data-about]") as HTMLElement | null;
+    if (!b) return;
+    e.preventDefault();
+    const about = root.querySelector("details.about") as HTMLDetailsElement | null;
+    const target = root.querySelector(`#${CSS.escape(b.dataset.about!)}`) as HTMLElement | null;
+    if (!about || !target) return;
+    about.open = true;
+    target.scrollIntoView?.({ block: "start" });
+    target.focus?.();
+  });
 }

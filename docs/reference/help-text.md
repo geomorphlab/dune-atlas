@@ -18,6 +18,14 @@ Sand moves when the friction velocity of the wind exceeds a threshold. The slide
 
 Tick a layer to show it. The ⓘ button gives its definition, units and data source; Display changes its colours, colour limits and scale, or shows direction fields as arrows or streamlines, with a spacing slider from Finer (denser lines) to Coarser. Active layers lists what is on the map, top first: drag a row or use the arrows to change the drawing order, set the opacity with its slider, and remove a layer with ×. Dunes only (under the Wind dataset selector) draws every wind-derived layer (sand-flux fields, flux divergence, arrows and streamlines) only in the cells with dunes of the dataset; dunes, aridity, vegetation and the basemaps are unchanged, and the cell panel still works for any cell. The setting is part of the link.
 
+### Concepts
+
+The Concepts button (mortarboard, under the Help button) explains the quantities of the atlas, each with its references. The Concept link in a layer's ⓘ opens its entry.
+
+### Search
+
+Type a latitude and a longitude in the box at the top of the layer panel, in decimal degrees or in degrees, minutes and seconds, signed or with N, S, E or W (e.g. -24.5, 15.2 or 24°30′S 15°12′E). Latitude comes first unless the letters say otherwise. The line under the box shows how the text was read; Enter moves the map there and opens the cell panel when the cell has data.
+
 ### Clicking a cell
 
 Click any land cell to open the cell panel: the wind rose, the sand-flux rose at the current threshold, dune-orientation modes against the threshold, the flux divergence and a table of all parameters. Section headings fold and unfold. Close the panel with × or Esc. The latitude and longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The crosshair button next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).
@@ -40,7 +48,7 @@ The share button (top right) copies a short link that restores this view: positi
 
 ## Guided tour
 
-Shown once on the first visit (not in embed mode unless `?tour=1`). Buttons: Back / Next (Done on the last step) / Skip tour; counter "Step 1 of 9". Esc or a click outside skips.
+Shown once on the first visit (not in embed mode unless `?tour=1`). Buttons: Back / Next (Done on the last step) / Skip tour; counter "Step 1 of 10". Esc or a click outside skips.
 
 ### 1. Welcome to the Dune Atlas
 
@@ -48,49 +56,55 @@ Highlights: `.atlas-tools .help-btn`
 
 This short tour shows the main controls. The Help button (?) highlighted here, in the top-right corner, opens a quick reference and restarts this tour at any time.
 
-### 2. The map
+### 2. Concepts
+
+Highlights: `.atlas-tools .concepts-btn`
+
+The Concepts button (mortarboard) explains what the quantities on the map mean, with references. Each layer's ⓘ links to its entry.
+
+### 3. The map
 
 Highlights: `#map`
 
 Drag to pan; scroll, pinch or use + and − to zoom. Globe view under Basemap switches between the globe and a flat map.
 
-### 3. Threshold friction velocity $u_{*,th}$
+### 4. Threshold friction velocity $u_{*,th}$
 
 Highlights: `#layer-panel .pinned`
 
 This slider sets the friction velocity above which the wind moves sand. Every threshold-dependent layer and the cell panel update as you move it.
 
-### 4. Layers and their display
+### 5. Layers and their display
 
 Highlights: `#layer-panel .layer-item[data-layer="rdpa"]` or `#layer-panel-body .layer-group` or `#layer-panel .panel-toggle`
 
 Tick layers to add them to the map; ⓘ explains a layer. Display, opened here for the resultant drift direction (RDD), changes a layer's colours and colour limits and, for direction fields, draws a colour map, arrows or streamlines in the line colour and spacing you choose. Dunes only, under the Wind dataset selector, keeps the wind-derived layers to the cells with dunes.
 
-### 5. Active layers
+### 6. Active layers
 
 Highlights: `#layer-panel-body .order` or `#layer-panel .panel-toggle`
 
 The layers on the map, top first. Drag a row or use the arrows to change which layer is drawn on top, use the slider for opacity, and × to remove a layer.
 
-### 6. Click a land cell
+### 7. Click a land cell
 
 Highlights: `#cell-panel:not([hidden])` or `#map`
 
 Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The crosshair next to its title centres the map on the cell.
 
-### 7. Wind dataset
+### 8. Wind dataset
 
 Highlights: `#dataset-select` or `#layer-panel .panel-toggle`
 
 Switch between the wind datasets; each option names the dataset and its grid. The map layers and the cell panel follow the selection.
 
-### 8. Share and export
+### 9. Share and export
 
 Highlights: `.atlas-tools .share-btn` or `.atlas-tools`
 
 Copy a short link to this view, or export the map as an image with colour bars, scale and data sources. Plots in the cell panel have their own Export menus.
 
-### 9. Switch planet
+### 10. Switch planet
 
 Highlights: `.atlas-tools .planet-btn` or `.atlas-tools`
 

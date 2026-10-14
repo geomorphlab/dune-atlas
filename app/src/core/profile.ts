@@ -57,6 +57,9 @@ export interface BodyProfile {
   };
   /** coordinates readout tooltip */
   coordsTitle: { pointer: string; touch: string };
+  /** search box: longitude convention of typed coordinates (Earth -180..180, Mars 0..360 east-positive), the
+   *  placeholder example and an optional note on the convention shown under the field */
+  search: { lonRange: 180 | 360; example: string; conventionNote?: string };
   /** wording of the dune layer's invert (the area outside the mapped dunes) */
   invert: {
     /** layer ⓘ and the toggle tooltip */

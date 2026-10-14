@@ -52,6 +52,19 @@ export function visibleTarget(step: TourStep, doc: Document = document): HTMLEle
   return null;
 }
 
+/** Rectangle of the highlight: the target's, or (a step with `span`, its first target visible) the box around
+ *  every visible element of the span selectors, e.g. the share and camera buttons of step 8. */
+export function spanRect(step: TourStep, el: HTMLElement, doc: Document = document): { left: number; top: number; right: number; bottom: number; width: number; height: number } {
+  const rects = [el, ...(step.span ?? []).flatMap((s) => [...doc.querySelectorAll(s)] as HTMLElement[])]
+    .filter((e) => !e.closest("[hidden]")).map((e) => e.getBoundingClientRect()).filter((r) => r.width > 0 && r.height > 0);
+  const r0 = el.getBoundingClientRect();
+  const all = step.span ? rects : [r0];
+  if (!all.length) return { left: r0.left, top: r0.top, right: r0.right, bottom: r0.bottom, width: r0.width, height: r0.height };
+  const left = Math.min(...all.map((r) => r.left)), top = Math.min(...all.map((r) => r.top));
+  const right = Math.max(...all.map((r) => r.right)), bottom = Math.max(...all.map((r) => r.bottom));
+  return { left, top, right, bottom, width: right - left, height: bottom - top };
+}
+
 /** Per-step side effects: `enter` prepares the UI (may be async, e.g. loading an example cell;
  *  a returned string is shown under the step text, e.g. a fallback), `leave` restores the exact
  *  previous state. `leave` runs whenever the step is left: Next, Back, Skip, Esc, click outside. */
@@ -181,7 +194,7 @@ export class Tour {
       this.#pop.dataset.anchor = "centre";
       return;
     }
-    const r = el.getBoundingClientRect(), pad = 6;
+    const r = spanRect(s, el), pad = 6;
     this.#spot.hidden = false;
     // a target larger than most of the view (the map) gets an inset highlight
     const big = r.width > 0.8 * vw && r.height > 0.8 * vh;

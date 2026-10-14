@@ -164,7 +164,7 @@ cd app && VITE_DATA_BASE=http://127.0.0.1:8787 npm run dev:mars
 ```
 
 The same command against `staging/mars/devroot` (the full local build, same keys) is the integration
-preview; `MARS_STORE_ROOT=<devroot>/dune-atlas/mars/v1/datasets/fv3-beta1 npm run test:mars` runs the
+preview; `MARS_STORE_ROOT=<devroot>/dune-atlas/mars/v2/datasets/fv3-beta1 npm run test:mars` runs the
 cell-store checks on the real store. Screenshots without servers: `scripts/mars/app/screenshots.mjs`
 (Playwright with request interception). Panel figures without a browser:
 `VITE_BODY=mars npx vite-node scripts/mars-panel-preview.ts -- <dataset dir> out.png [lon lat dIndex]`.
