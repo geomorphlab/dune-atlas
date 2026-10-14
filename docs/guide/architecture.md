@@ -443,9 +443,13 @@ Local development against a fixture: see [getting-started.md](getting-started.md
 
 ### Tests
 
-CI (`.github/workflows/ci.yml`) builds synthetic test stores, then runs the registry validation, the type
-check, the Earth and Mars app tests, both builds and the Pages layout check, and the pipeline tests; the site
-is deployed from `main` after all of them pass. `npm run test:ci` (scripts/test-ci.sh) runs the app checks
+CI (`.github/workflows/ci.yml`) runs the jobs a change needs (`scripts/ci/changes.sh`): the synthetic test
+stores (cached under `scripts/ci/fixture_key.py`, a hash of the generators, every repository module they
+import, the registry files they read and the Python dependencies; `pipeline/tests/test_fixture_key.py`
+checks the import coverage), the registry validation, the type check, the Earth and Mars app tests, both
+builds and the Pages layout check, the pipeline tests, and the repository text check on its own for
+changes outside both; a `gate` job passes when every job that ran passed, and the site is deployed from
+`main` after it, when the app job ran. `npm run test:ci` (scripts/test-ci.sh) runs the app checks
 from a clean `git archive` without `staging/` and lists the tests skipped there; `CI_NODE=<dir of node 22>`
 runs it with the CI Node version. The default test timeout is 20 s; the full 64-position slider sweeps
 (`FULL_SWEEP=1`, on `main`) have 120 s.

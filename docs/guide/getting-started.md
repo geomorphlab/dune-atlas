@@ -48,7 +48,7 @@ cd app
 npm test                        # Earth (vitest); FULL_SWEEP=1 sweeps all 64 slider positions (CI on main)
 npm run test:mars               # Mars
 npm run validate-registry && npm run validate-registry:mars
-npm run test:ci                 # the app checks from a clean export, without staging/ (as CI without fixtures)
+npm run test:ci                 # the app checks from a clean export, without staging/ (only for build/CI changes; CI is the full gate)
 cd .. && python -m pytest pipeline/tests -q    # pipeline; tests that need data skip without it
 ```
 

@@ -1,14 +1,19 @@
-# Tests on every pull request and push; the site is deployed to GitHub Pages from main only after every
-# test job has passed.
-#   fixtures  synthetic test stores (pipeline/src/dune_atlas_pipeline/synthetic_fixture.py for Earth,
-#             scripts/mars/app/make_fixture.py for Mars), cached by the hash of their inputs
-#   app       registry validation, type check, Earth and Mars tests (8-position slider sweeps on pull requests,
-#             all 64 positions on main), both builds, Pages layout
-#   pipeline  pipeline tests (Python), syntax and undefined-name lint
-#   deploy    main only: the Pages artifact of the app job
+# Tests on every pull request and on pushes to main; the site is deployed to GitHub Pages from main once every job
+# that ran has passed. Jobs run only for the areas a change touches (scripts/ci/changes.sh):
+#   changes         which areas changed: app, pipeline, text (git diff against the base)
+#   fixtures-earth  synthetic test stores (pipeline/src/dune_atlas_pipeline/synthetic_fixture.py; Mars:
+#   fixtures-mars   scripts/mars/app/make_fixture.py), cached under a hash of exactly what they are made from
+#                   (scripts/ci/fixture_key.py) and built only on a miss; caches saved on main serve every
+#                   pull request
+#   app             registry validation, type check, Earth and Mars tests (8-position slider sweeps on pull
+#                   requests, all 64 positions on main), both builds, Pages layout
+#   pipeline        pipeline tests (Python), syntax and undefined-name lint
+#   text            the repository text check (app/tests/repotext.test.ts) for changes the app job does not cover
+#   gate            always runs; passes when every job that ran passed: the required status check
+#   deploy          main only, when the app job built the site and the gate passed
 name: ci
 on:
-  push:
+  push: { branches: [main] }
   pull_request:
   workflow_dispatch:
 permissions: { contents: read }
@@ -17,26 +22,65 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  fixtures:
+  changes:
     runs-on: ubuntu-latest
+    outputs:
+      app: ${{ steps.f.outputs.app }}
+      pipeline: ${{ steps.f.outputs.pipeline }}
+      text: ${{ steps.f.outputs.text }}
+      fixtures: ${{ steps.f.outputs.fixtures }}
     steps:
       - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - id: f
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: bash scripts/ci/changes.sh
+
+  fixtures-earth:
+    needs: changes
+    if: needs.changes.outputs.fixtures == 'true'
+    runs-on: ubuntu-latest
+    outputs: { key: "${{ steps.k.outputs.key }}" }
+    steps:
+      - uses: actions/checkout@v4
+      - id: k
+        run: echo "key=fixture-earth-py3.12-$(python3 scripts/ci/fixture_key.py earth)" >> "$GITHUB_OUTPUT"
       - id: cache
         uses: actions/cache@v4
-        with: { path: "staging/fixture\nstaging/fixture-mars", key: "fixtures-v1-${{ hashFiles('pipeline/src/**/*.py', 'pipeline/pyproject.toml', 'scripts/mars/app/*.py', 'registry/**/qsat_field_metadata.json', 'registry/mars/**') }}" }
+        with: { path: staging/fixture, key: "${{ steps.k.outputs.key }}", lookup-only: true }
       - if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/setup-python@v5
         with: { python-version: "3.12", cache: pip, cache-dependency-path: pipeline/pyproject.toml }
       - if: steps.cache.outputs.cache-hit != 'true'
         run: pip install -e "pipeline[test]"
       - if: steps.cache.outputs.cache-hit != 'true'
-        name: synthetic fixtures
-        run: |
-          python -m dune_atlas_pipeline.synthetic_fixture --out staging/fixture
-          python scripts/mars/app/make_fixture.py --out staging/fixture-mars --workers 4
+        run: python -m dune_atlas_pipeline.synthetic_fixture --out staging/fixture
+
+  fixtures-mars:
+    needs: changes
+    if: needs.changes.outputs.fixtures == 'true'
+    runs-on: ubuntu-latest
+    outputs: { key: "${{ steps.k.outputs.key }}" }
+    steps:
+      - uses: actions/checkout@v4
+      - id: k
+        run: echo "key=fixture-mars-py3.12-$(python3 scripts/ci/fixture_key.py mars)" >> "$GITHUB_OUTPUT"
+      - id: cache
+        uses: actions/cache@v4
+        with: { path: staging/fixture-mars, key: "${{ steps.k.outputs.key }}", lookup-only: true }
+      - if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: pipeline/pyproject.toml }
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: pip install -e "pipeline[test]"
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: python scripts/mars/app/make_fixture.py --out staging/fixture-mars --workers 4
 
   app:
-    needs: fixtures
+    needs: [changes, fixtures-earth, fixtures-mars]
+    if: needs.changes.outputs.app == 'true'
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: app } }
     env:
@@ -44,7 +88,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache/restore@v4
-        with: { path: "staging/fixture\nstaging/fixture-mars", key: "fixtures-v1-${{ hashFiles('pipeline/src/**/*.py', 'pipeline/pyproject.toml', 'scripts/mars/app/*.py', 'registry/**/qsat_field_metadata.json', 'registry/mars/**') }}", fail-on-cache-miss: true }
+        with: { path: staging/fixture, key: "${{ needs.fixtures-earth.outputs.key }}", fail-on-cache-miss: true }
+      - uses: actions/cache/restore@v4
+        with: { path: staging/fixture-mars, key: "${{ needs.fixtures-mars.outputs.key }}", fail-on-cache-miss: true }
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
       - run: npm ci
@@ -64,12 +110,15 @@ jobs:
         with: { path: app/dist }
 
   pipeline:
-    needs: fixtures
+    needs: [changes, fixtures-earth, fixtures-mars]
+    if: needs.changes.outputs.pipeline == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache/restore@v4
-        with: { path: "staging/fixture\nstaging/fixture-mars", key: "fixtures-v1-${{ hashFiles('pipeline/src/**/*.py', 'pipeline/pyproject.toml', 'scripts/mars/app/*.py', 'registry/**/qsat_field_metadata.json', 'registry/mars/**') }}", fail-on-cache-miss: true }
+        with: { path: staging/fixture, key: "${{ needs.fixtures-earth.outputs.key }}", fail-on-cache-miss: true }
+      - uses: actions/cache/restore@v4
+        with: { path: staging/fixture-mars, key: "${{ needs.fixtures-mars.outputs.key }}", fail-on-cache-miss: true }
       - uses: actions/setup-python@v5
         with: { python-version: "3.12", cache: pip, cache-dependency-path: pipeline/pyproject.toml }
       - run: pip install -e "pipeline[test,tiles,lint]"
@@ -77,9 +126,31 @@ jobs:
       - run: ruff check --select E9,F63,F7,F82 pipeline scripts app/scripts
       - run: python -m pytest pipeline/tests -q -rs
 
+  text:
+    needs: changes
+    if: needs.changes.outputs.text == 'true'
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: app } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
+      - run: npm ci
+      - run: npx vitest run tests/repotext.test.ts
+
+  gate:
+    if: always()
+    needs: [changes, fixtures-earth, fixtures-mars, app, pipeline, text]
+    runs-on: ubuntu-latest
+    steps:
+      - env: { RESULTS: "${{ join(needs.*.result, ' ') }}" }
+        run: |
+          echo "job results: $RESULTS"
+          for r in $RESULTS; do case "$r" in success|skipped) ;; *) echo "::error::a required job did not pass ($r)"; exit 1;; esac; done
+
   deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: [app, pipeline]
+    if: always() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && needs.gate.result == 'success' && needs.app.result == 'success'
+    needs: [gate, app]
     runs-on: ubuntu-latest
     permissions: { pages: write, id-token: write }
     concurrency: { group: pages, cancel-in-progress: false }
