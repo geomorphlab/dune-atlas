@@ -5,6 +5,7 @@ import { effectiveDisplay, isAxis, scaleNorm, vectorColors, type LayerConfig } f
 import { mathHtml } from "../util/math";
 import { escapeHtml } from "../util/format";
 import { richHtml } from "../util/richtext";
+import { PROFILE } from "@body/profile";
 
 /** Colour-bar tick text: plain decimals (0.0005, 0.01, 300, 60000), at most 3 significant digits;
  *  powers of ten only outside 1e-4 .. 1e6, written 10⁻⁵ / 2×10⁶ (never "5e-4"). */
@@ -72,7 +73,7 @@ export function legendHtml(layer: LayerDef, cfg?: LayerConfig): string {
       const what = isAxis(layer) ? "orientation axis (headless)" : "direction of transport (toward)";
       const len = e.mode === "arrows" ? " Arrow length and opacity scale with the paired flux magnitude where available." : "";
       return `<div class="legend legend-vec"><svg width="34" height="10" aria-hidden="true"><line x1="2" y1="5" x2="30" y2="5" stroke="${escapeHtml(e.vecColor)}" stroke-width="1.6"/>${e.mode === "arrows" && !isAxis(layer) ? `<path d="M30,5 L24,2 M30,5 L24,8" stroke="${escapeHtml(e.vecColor)}" stroke-width="1.6"/>` : ""}</svg>
-        <span>${e.mode === "arrows" ? "Arrows" : "Streamlines"}: ${what}.${len}${layer.thresholdAware ? ` At current ${mathHtml("$u_{*,th}$")}.` : ""}</span></div>`;
+        <span>${e.mode === "arrows" ? "Arrows" : "Streamlines"}: ${what}.${len}${layer.thresholdAware ? ` At current ${mathHtml(PROFILE.control.symbolTex)}.` : ""}</span></div>`;
     }
     const ticks = legendTicks(layer, cfg);
     const deg = layer.display?.transform === "rad-to-bearing" || layer.display?.transform === "rad-to-axis";
@@ -91,12 +92,12 @@ export function legendHtml(layer: LayerDef, cfg?: LayerConfig): string {
     return `<div class="legend" role="img" aria-label="${escapeHtml(`Colour scale ${e.scale === "log" ? "(logarithmic) " : e.scale === "symlog" ? "(symmetric logarithmic) " : ""}from ${ticks[0]} to ${ticks[ticks.length - 1]}`)}">
       <div class="legend-bar" style="background:${gradient(e.colors)}" title="values outside the range are shown at the end colours">${marks}</div>
       <div class="legend-ticks${staggered ? " staggered" : ""}">${labels}</div>
-      <div class="legend-units">${mathHtml(layer.units ?? "")}${e.scale === "log" ? " (log scale)" : e.scale === "symlog" ? ` (symlog, linear within ±${tickLabel(e.linthresh)})` : ""}${layer.thresholdAware ? ` · at current ${mathHtml("$u_{*,th}$")}` : ""}</div>${layer.display?.legendNote ? `
+      <div class="legend-units">${mathHtml(layer.units ?? "")}${e.scale === "log" ? " (log scale)" : e.scale === "symlog" ? ` (symlog, linear within ±${tickLabel(e.linthresh)})` : ""}${layer.thresholdAware ? ` · at current ${mathHtml(PROFILE.control.symbolTex)}` : ""}</div>${layer.display?.legendNote ? `
       <div class="legend-note">${richHtml(layer.display.legendNote)}</div>` : ""}
     </div>`;
   }
   const c = vectorColors(layer, cfg);
-  const what = c.invert ? "Land without mapped dunes" : layer.units ?? "";
+  const what = c.invert ? PROFILE.invert.legend : layer.units ?? "";
   // no colour swatch: the fill colour picker above already shows the colour
   return what ? `<div class="legend legend-note">${mathHtml(what)}</div>` : "";
 }

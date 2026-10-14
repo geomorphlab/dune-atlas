@@ -9,7 +9,7 @@ import type { Store, AppState } from "../store";
 import { h, nextId } from "./dom";
 import { legendHtml } from "./legend";
 import { thresholdControl } from "./threshold";
-import { DATASET_INFO_TEXT } from "./helpText";
+import { ABOUT_CREDITS_NOTE_HTML, ABOUT_INTRO_HTML, DATA_SOURCES_ITEMS_HTML, DATASET_INFO_TEXT } from "./helpText";
 import { embedBar } from "./embed";
 import { escapeHtml } from "../util/format";
 import { BODY_NAME } from "../body";
@@ -18,7 +18,8 @@ import { fieldInfo } from "../cell/fieldinfo";
 import { isDatasetDependent } from "../registry/merge";
 import { mathHtml } from "../util/math";
 import { AI_NOTICE, citationHtml, citationSources } from "../cell/citation";
-import { fieldsCitation, fieldsLicence } from "@body/citation";
+import { ABOUT_SOURCE_IDS, fieldsCitation, fieldsLicence } from "@body/citation";
+import { PROFILE } from "@body/profile";
 import { canLog, COLORMAP_GROUPS, DEFAULT_SPACING_KM, effectiveDisplay, isDirectional, SPACING_KM_STEPS, vectorColors, type RenderMode } from "../layerconfig";
 
 /** screen-reader names of the spacing steps (finest to coarsest); no units, as on screen */
@@ -32,11 +33,7 @@ const AUTHOR_EMAIL = "a.gunn@monash.edu";
  *  items are written directly here. */
 export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class="sources">
   ${Object.values(DATASET_INFO).map(datasetSourceItem).join("\n  ")}
-  <li><strong>Sand-flux fields</strong>: for every hour, the friction velocity u* = κ U₁₀ / ln(z/z₀) from the 10 m wind speed U₁₀ (logarithmic wind profile; κ = 0.41, z = 10 m, roughness length z₀ = 1 mm) and the saturated transport rate of Martin &amp; Kok (2017), q = C ρ<sub>f</sub> u*,th (u*² − u*,th²) / (g ρ<sub>s</sub> φ) for u* &gt; u*,th, with C = 5, air density ρ<sub>f</sub> = 1.2 kg/m³, grain density ρ<sub>s</sub> = 2650 kg/m³, packing fraction φ = 0.6 and g = 9.8 m/s², at the selected threshold u*,th, averaged over ${datasetFacts("period")} (Gunn 2026, Methods M3). Fluxes are volumes of packed sand (pore space included) per metre width per year of 365.25 days (m²/yr). Drift potentials, crest fluxes and dune-orientation modes follow the methods reviewed in Courrech du Pont et al. (2024).</li>
-  <li><strong>Dune map</strong>: dune-mask-rev1.tif from the Supplementary Code record (Zenodo, MIT), vectorised into dune fields.</li>
-  <li><strong>Saturated flux divergence</strong> ${mathHtml("$\\nabla\\cdot\\vec{q}_s$")}: divergence of the time-averaged saturated sand-flux vector (magnitude RDP, direction RDD) on the sphere, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) with q = RDP, θ = RDD, latitude φ, longitude λ and R = 6371 km, computed with central differences on the grid of the selected wind dataset (${datasetFacts("resolution")}), following Gunn (2026), Methods M6. By conservation of sand mass, negative values (convergence) imply deposition and positive values erosion, in metres of bed level per thousand years. The values assume a saturated flux and an unlimited supply of loose sand.</li>
-  <li><strong>Aridity index</strong>: Global Aridity Index v3.1 (Global-AI_PET v3.1; Zomer, Xu &amp; Trabucco 2022), 1970–2000, native 30″ grid, CC BY 4.0; ocean and Antarctica (south of 60° S) have no data, values ≥ 6.5535 are at the top of the source range. The click panel shows the mean over the cell of the selected wind dataset.</li>
-  <li><strong>Vegetation cover</strong>: CSIRO MODIS Fractional Cover v3.1 (Guerschman et al. 2015; Guerschman &amp; Hill 2018), total vegetation cover (photosynthetic + non-photosynthetic vegetation), mean of the monthly 500 m values 2001–2025 on the 0.1° grid, CC BY 4.0 © 2008–2019 CSIRO, hosted by NCI; the vegetation product of GEOGLAM RAPP. <a href="https://map.geo-rapp.org/" target="_blank" rel="noopener noreferrer">Explore the full time series at GEOGLAM RAPP</a>. The click panel shows the cell mean and the number of valid months.</li>
+  ${DATA_SOURCES_ITEMS_HTML}
 </ul>`;
 /** About: "Earth and Mars: what can be compared" (identical in both atlases) */
 export const COMPARE_HTML = `<div class="earth-mars"><h4>Earth and Mars: what can be compared</h4>
@@ -52,7 +49,7 @@ export const COMPARE_HTML = `<div class="earth-mars"><h4>Earth and Mars: what ca
 export function fieldsCitationHtml(): string {
   return `<h4>Citing the map fields</h4><ul class="sources">${Object.values(DATASET_INFO).map((d) => `<li><strong>${escapeHtml(`${d.name} ${d.resolution}`)}</strong>: ${richHtml(fieldsCitation(d.id))}. Licence: ${escapeHtml(fieldsLicence(d.id))}.</li>`).join("")}</ul>`;
 }
-export const INVERT_NOTE = "Invert: colour the land WITHOUT mapped dunes instead of the dunes. Latitudes beyond ±85.05° (interior Antarctica) are not coloured.";
+export const INVERT_NOTE = PROFILE.invert.note;
 
 const safeUrl = (u: string) => (/^https?:\/\//i.test(u) ? u : "");
 /** Rows of the structured attribution (registry `attribution`), in the fixed order Source, Citation,
@@ -93,7 +90,7 @@ export function infoUnits(l: LayerDef): string {
  *  Citation, Data DOI, Licence, Link, Changes (attribution; or the citation alone). */
 export function infoHtml(l: LayerDef, datasetId?: string): string {
   const thr = l.type === "zarr-field"
-    ? (l.thresholdAware ? `<p class="help">Updates with the ${mathHtml("$u_{*,th}$")} control.</p>` : `<p class="help">Threshold-independent: not affected by the ${mathHtml("$u_{*,th}$")} control.</p>`)
+    ? (l.thresholdAware ? PROFILE.control.dependentNoteHtml() : PROFILE.control.independentNoteHtml())
     : "";
   const row = (k: string, html: string) => (html ? `<dt>${k}</dt><dd>${html}</dd>` : "");
   let facts = "";
@@ -260,9 +257,9 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
     fc.addEventListener("input", () => store.setLayerConfig(l.id, { fill: fc.value }));
     const box = h("div", { class: "vec-box" }, h("label", { class: "inline" }, "Fill ", fc));
     if (l.invertSource) {
-      const inv = h("input", { type: "checkbox", "aria-label": `Invert: colour land without dunes` }) as HTMLInputElement;
+      const inv = h("input", { type: "checkbox", "aria-label": PROFILE.invert.toggleAria }) as HTMLInputElement;
       inv.addEventListener("change", () => store.setLayerConfig(l.id, { invert: inv.checked || undefined }));
-      box.append(h("label", { class: "inline", title: INVERT_NOTE }, inv, " invert (land without dunes)"));
+      box.append(h("label", { class: "inline", title: INVERT_NOTE }, inv, PROFILE.invert.toggleLabel));
       refreshers.push((s) => { inv.checked = vectorColors(l, s.layers[l.id]?.cfg).invert; });
     }
     refreshers.push((s) => {
@@ -463,11 +460,11 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
   const notice = AI_NOTICE.replace(AUTHOR_EMAIL, `<a href="mailto:${AUTHOR_EMAIL}">${AUTHOR_EMAIL}</a>`);
   body.append(h("details", { class: "about" }, h("summary", {}, "About, data sources & citation"),
     h("div", { html: `<p class="ai-notice">${notice}</p>
-      <p>Click any land cell to see its wind rose over the record of the wind dataset chosen with the Wind dataset selector, the sand-flux rose at the selected threshold, dune-orientation modes and all wind-regime parameters.</p>
+      ${ABOUT_INTRO_HTML}
       ${DATA_SOURCES_HTML}
       ${COMPARE_HTML}
       ${fieldsCitationHtml()}
-      ${citationHtml(citationSources(["era5", "aridity", "vegetation"]))}
-      <p class="help">Contains modified Copernicus Climate Change Service information. Basemap credits are shown in the map attribution.</p>` })));
+      ${citationHtml(citationSources(ABOUT_SOURCE_IDS))}
+      ${ABOUT_CREDITS_NOTE_HTML}` })));
   root.append(header, pinned, body);
 }

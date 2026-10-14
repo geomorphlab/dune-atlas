@@ -14,22 +14,13 @@ import type { Registry } from "./registry/types";
 import { normaliseOrder, type AppState, type LayerState } from "./store";
 import { migrateLegacySpacing } from "./layerconfig";
 import { defaultBasemap } from "./map/basemaps";
+import { PROFILE } from "@body/profile";
 
 export const DEFAULT_SHARE_CODE = "AQXirhW4wRLgAgIBDgMJVSACAWQAB1UA";
 
-/** Opening view: Africa and Arabia, globe; ERA5 0.25°; u*,th = 0.15 m/s (index 14); dark basemap;
- *  RDD as streamlines (85 %) over the dune fields (100 %) over DP (85 %); layer list open. */
-export const DEFAULT_VIEW: ShareState = {
-  lon: 17.5025, lat: 15.1644, zoom: 3.52, proj: "globe",
-  dataset: "era5", basemap: "openfreemap-dark", ut: 14,
-  layers: [
-    { id: "rdpa", opacity: 0.85, cfg: { mode: "streamlines" } },
-    { id: "dunes", opacity: 1 },
-    { id: "dpm", opacity: 0.85 },
-  ],
-  cell: null,
-  panel: true,
-};
+/** Opening view of this body (the body profile's; Earth: Africa and Arabia, globe, ERA5 0.25°,
+ *  u*,th = 0.15 m/s, RDD streamlines over the dune fields over DP; Mars: the north polar erg). */
+export const DEFAULT_VIEW: ShareState = PROFILE.defaultView;
 
 const VIEW_KEYS = ["lon", "lat", "zoom", "basemap", "layers", "ut", "cell", "proj", "order", "dataset"] as const;
 /** does a parsed ?query carry view state (embed=1 / tour=1 alone do not) */

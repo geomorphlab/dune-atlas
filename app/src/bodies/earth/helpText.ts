@@ -3,6 +3,7 @@
 // ui/helpText.ts. Inline maths as $...$ (rendered with KaTeX); everything else plain text.
 import type { HelpSection, TourStep } from "../../ui/helpText";
 import { DATASET_INFO, datasetFacts } from "../../cell/datasetinfo";
+import { mathHtml } from "../../util/math";
 
 /** the Wind dataset selector's ⓘ and the Help section "Wind datasets" text is dataset-agnostic:
  *  the datasets, grids and period come from the dataset table; the reanalysis facts are examples */
@@ -83,3 +84,14 @@ export const TOUR_FALLBACK = { cell: "The example cell could not be loaded. Clic
 
 
 export const SHARE_TEXT = { button: "Share / copy link", title: "Share this view", copy: "Copy link", copied: "Link copied", note: "The link restores the position, zoom, wind dataset, threshold, basemap, active layers and the selected cell." };
+
+/** About: the paragraph under the AI notice (HTML) */
+export const ABOUT_INTRO_HTML = "<p>Click any land cell to see its wind rose over the record of the wind dataset chosen with the Wind dataset selector, the sand-flux rose at the selected threshold, dune-orientation modes and all wind-regime parameters.</p>";
+/** About, Data sources: the items after the wind datasets' (HTML) */
+export const DATA_SOURCES_ITEMS_HTML = `<li><strong>Sand-flux fields</strong>: for every hour, the friction velocity u* = κ U₁₀ / ln(z/z₀) from the 10 m wind speed U₁₀ (logarithmic wind profile; κ = 0.41, z = 10 m, roughness length z₀ = 1 mm) and the saturated transport rate of Martin &amp; Kok (2017), q = C ρ<sub>f</sub> u*,th (u*² − u*,th²) / (g ρ<sub>s</sub> φ) for u* &gt; u*,th, with C = 5, air density ρ<sub>f</sub> = 1.2 kg/m³, grain density ρ<sub>s</sub> = 2650 kg/m³, packing fraction φ = 0.6 and g = 9.8 m/s², at the selected threshold u*,th, averaged over ${datasetFacts("period")} (Gunn 2026, Methods M3). Fluxes are volumes of packed sand (pore space included) per metre width per year of 365.25 days (m²/yr). Drift potentials, crest fluxes and dune-orientation modes follow the methods reviewed in Courrech du Pont et al. (2024).</li>
+  <li><strong>Dune map</strong>: dune-mask-rev1.tif from the Supplementary Code record (Zenodo, MIT), vectorised into dune fields.</li>
+  <li><strong>Saturated flux divergence</strong> ${mathHtml("$\\nabla\\cdot\\vec{q}_s$")}: divergence of the time-averaged saturated sand-flux vector (magnitude RDP, direction RDD) on the sphere, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) with q = RDP, θ = RDD, latitude φ, longitude λ and R = 6371 km, computed with central differences on the grid of the selected wind dataset (${datasetFacts("resolution")}), following Gunn (2026), Methods M6. By conservation of sand mass, negative values (convergence) imply deposition and positive values erosion, in metres of bed level per thousand years. The values assume a saturated flux and an unlimited supply of loose sand.</li>
+  <li><strong>Aridity index</strong>: Global Aridity Index v3.1 (Global-AI_PET v3.1; Zomer, Xu &amp; Trabucco 2022), 1970–2000, native 30″ grid, CC BY 4.0; ocean and Antarctica (south of 60° S) have no data, values ≥ 6.5535 are at the top of the source range. The click panel shows the mean over the cell of the selected wind dataset.</li>
+  <li><strong>Vegetation cover</strong>: CSIRO MODIS Fractional Cover v3.1 (Guerschman et al. 2015; Guerschman &amp; Hill 2018), total vegetation cover (photosynthetic + non-photosynthetic vegetation), mean of the monthly 500 m values 2001–2025 on the 0.1° grid, CC BY 4.0 © 2008–2019 CSIRO, hosted by NCI; the vegetation product of GEOGLAM RAPP. <a href="https://map.geo-rapp.org/" target="_blank" rel="noopener noreferrer">Explore the full time series at GEOGLAM RAPP</a>. The click panel shows the cell mean and the number of valid months.</li>`;
+/** About: the closing note (HTML) */
+export const ABOUT_CREDITS_NOTE_HTML = "<p class=\"help\">Contains modified Copernicus Climate Change Service information. Basemap credits are shown in the map attribution.</p>";

@@ -21,50 +21,10 @@
       "mars": "src/bodies/mars/cell/marsflux.ts",
       "blob": "8b0a3be3e203aae05ab3621f16901edfa147d2d5"
     },
-    "src/cell/lineplot.ts": {
-      "kind": "patched",
-      "mars": "src/bodies/mars/patches.json (2 edits)",
-      "blob": "bb79487104a9d58ee37eacb0478281b953245d37"
-    },
-    "src/cell/modesplot.ts": {
-      "kind": "patched",
-      "mars": "src/bodies/mars/patches.json (6 edits)",
-      "blob": "f6185cf690a7c4acff2035ff8b94a1439b57b8a0"
-    },
-    "src/defaultview.ts": {
-      "kind": "patched",
-      "mars": "src/bodies/mars/patches.json (1 edit)",
-      "blob": "3c1dc872fae1219ab81bfae5219649b157f06059"
-    },
-    "src/export/labels.ts": {
-      "kind": "patched",
-      "mars": "src/bodies/mars/patches.json (1 edit)",
-      "blob": "85f2d45a47014ff2720eb96cfdede4900970cf48"
-    },
-    "src/export/mapExport.ts": {
-      "kind": "patched",
-      "mars": "src/bodies/mars/patches.json (7 edits)",
-      "blob": "340fd8b546eb2a941a84533b186bc8e144577a77"
-    },
-    "src/export/plotExport.ts": {
-      "kind": "patched",
-      "mars": "src/bodies/mars/patches.json (3 edits)",
-      "blob": "233975c4b77f50df5e7fa8be8cde9ea457a5c8f4"
-    },
-    "src/layerconfig.ts": {
-      "kind": "patched",
-      "mars": "src/bodies/mars/patches.json (1 edit)",
-      "blob": "7552bc31956cc69a475d4a70838bc8db0e4fb156"
-    },
     "src/main.ts": {
       "kind": "substituted",
       "mars": "src/bodies/mars/main.ts",
       "blob": "5b1e3bdcf00abcbbf142be9aafc39bee2c926492"
-    },
-    "src/map/adapters.ts": {
-      "kind": "patched",
-      "mars": "src/bodies/mars/patches.json (1 edit)",
-      "blob": "4dc99dca771eedf77ebef118f9cf9435a039f88b"
     },
     "src/registry/load.ts": {
       "kind": "patched",
@@ -75,26 +35,6 @@
       "kind": "substituted",
       "mars": "src/bodies/mars/ui/cellPanel.ts",
       "blob": "5852228090b8c59ca6acecf5f96c7a8dd5a72b84"
-    },
-    "src/ui/coords.ts": {
-      "kind": "patched",
-      "mars": "src/bodies/mars/patches.json (1 edit)",
-      "blob": "c85611db3f1c9155481cebaa68453c2a8cb078b5"
-    },
-    "src/ui/layerPanel.ts": {
-      "kind": "patched",
-      "mars": "src/bodies/mars/patches.json (9 edits)",
-      "blob": "d2b6886b22c513d5a87677098574d9ae7851ee40"
-    },
-    "src/ui/legend.ts": {
-      "kind": "patched",
-      "mars": "src/bodies/mars/patches.json (3 edits)",
-      "blob": "c08520d6622d6cee12905248a58f0c89b48f2317"
-    },
-    "src/ui/threshold.ts": {
-      "kind": "patched",
-      "mars": "src/bodies/mars/patches.json (3 edits)",
-      "blob": "a700e0cdafca91d099ebfe987a89bf6b7779f66d"
     }
   }
 }

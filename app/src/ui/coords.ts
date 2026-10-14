@@ -3,6 +3,7 @@
 // Touch screens (no hover): hidden until the map is tapped, then shows the last tapped point.
 // A DOM control, so it is never part of image exports (those draw the map canvas only).
 import type { IControl, Map as MlMap, MapMouseEvent } from "maplibre-gl";
+import { PROFILE } from "@body/profile";
 
 /** "24.53° S, 15.21° E" (2 decimals, hemisphere letters; longitude wrapped to -180..180) */
 export function formatLatLon(lat: number, lon: number): string {
@@ -26,7 +27,7 @@ export class CoordsControl implements IControl {
     this.#touch = opts.touch ?? !!globalThis.matchMedia?.("(hover: none)").matches;
     this.el = document.createElement("div");
     this.el.className = "maplibregl-ctrl atlas-coords";
-    this.el.title = this.#touch ? "Last tapped point (latitude, longitude)" : "Cursor position (latitude, longitude)";
+    this.el.title = this.#touch ? PROFILE.coordsTitle.touch : PROFILE.coordsTitle.pointer;
     this.el.hidden = true;
   }
   /** show a position (also used for the last tapped point on touch screens) */
