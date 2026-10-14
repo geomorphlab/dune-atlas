@@ -1,12 +1,12 @@
 // Mars registry (registry/mars/layers.yaml + registry/mars/generated/*.yaml) and the body-switch
-// build mechanics (module substitution, source patches). Mirrors tests/registry.test.ts.
+// build mechanics (module substitution, body profile). Mirrors tests/registry.test.ts.
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import { loadRegistry } from "../../src/registry/load";
 import { validateMarsRegistry } from "../../src/bodies/mars/registry/validate";
-import { MARS_PATCHES, MARS_SUBSTITUTES } from "../../src/bodies/mars/build";
-import { applyPatch } from "../../scripts/body-plugin";
+import { MARS_SUBSTITUTES } from "../../src/bodies/mars/build";
+import { PROFILE } from "../../src/bodies/mars/profile";
 import { M } from "../../src/cell/marsphysics";
 import { CONFIG } from "../../src/config";
 
@@ -15,7 +15,7 @@ const schema = JSON.parse(fs.readFileSync(path.resolve(APP, "../registry/layers.
 const { registry: reg, errors } = loadRegistry();
 
 describe("Mars registry", () => {
-  it("is the Mars registry (checked patches of registry/load.ts) and validates", () => {
+  it("is the Mars registry (@body/registry: registry/mars) and validates", () => {
     expect(errors).toEqual([]);
     expect(validateMarsRegistry(reg, schema)).toEqual([]);
     expect(reg.datasets?.map((d) => d.id)).toEqual(["fv3-beta1"]);
@@ -65,17 +65,14 @@ describe("Mars registry", () => {
 });
 
 describe("body-switch build", () => {
-  it("every source patch applies to the current Earth sources (each find matches exactly its count)", () => {
-    for (const p of MARS_PATCHES) {
-      const src = fs.readFileSync(path.join(APP, p.file), "utf8");
-      expect(() => applyPatch(src, p), p.file).not.toThrow();
-      expect(applyPatch(src, p)).not.toBe(src);
-    }
+  it("the planet radius of the body profile is R_MARS of the pipeline constants", () => {
+    expect(PROFILE.radiusM).toBe(M.R_MARS);
+    expect(PROFILE.mercatorCircumferenceM).toBe(2 * Math.PI * M.R_MARS);
+    expect(PROFILE.scaleBarCircumferenceM).toBe(2 * Math.PI * M.R_MARS);
   });
-  it("the planet radius in the patches is R_MARS of the pipeline constants", () => {
-    const all = MARS_PATCHES.flatMap((p) => p.edits.map((e) => e.replace)).join("\n");
-    for (const m of all.matchAll(/\b(3389500)\b/g)) expect(Number(m[1])).toBe(M.R_MARS);
-    expect(all).not.toMatch(/6371008|6378137|40075016/);
+  it("shared modules carry no Earth radius literal (the radii are in the body profiles)", () => {
+    const src = (d: string): string[] => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => e.isDirectory() ? (e.name === "bodies" ? [] : src(path.join(d, e.name))) : e.name.endsWith(".ts") ? [path.join(d, e.name)] : []);
+    for (const f of src(path.join(APP, "src"))) expect(fs.readFileSync(f, "utf8"), f).not.toMatch(/6371008\.8|6378137|40075016/);
   });
   it("every substitute exports at least the Earth module's names", async () => {
     for (const [earth, mars] of Object.entries(MARS_SUBSTITUTES)) {

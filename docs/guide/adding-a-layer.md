@@ -1,7 +1,7 @@
 # Adding a layer
 
-Every map layer is one entry in the **layer registry**: `registry/layers.yaml` (hand-written) plus
-`registry/generated/*.yaml` (written by pipeline commands). The app reads the merged registry at
+Every map layer is one entry in the **layer registry**: `registry/earth/layers.yaml` (hand-written) plus
+`registry/earth/generated/*.yaml` (written by pipeline commands). The app reads the merged registry at
 build time; CI (`npm run validate-registry`) rejects malformed entries. **Adding a layer of an existing
 type needs no JavaScript.** Adding a new *type* of layer is covered in `docs/guide/architecture.md`.
 
@@ -29,7 +29,7 @@ GeoZarr pyramid with 2-D (y, x) arrays and level factors that divide the native 
 dune-atlas aridity --out $STAGING/v1/fields/aridity.zarr            # native 30" pyramid + decode report
 dune-atlas aridity-cells --out $STAGING/ai_cellmeans.npz            # 0.1-deg cell means (--grid era5 for 0.25 deg)
 dune-atlas upload-new --version v1 --work $STAGING --store $STAGING/v1/fields/aridity.zarr=fields/aridity.zarr
-dune-atlas extra-registry                                            # registry/generated/x_extra_fields.yaml
+dune-atlas extra-registry                                            # registry/earth/generated/x_extra_fields.yaml
 ```
 `upload-new` lists the bucket first and refuses any key that already exists (create-only puts). Per-cell values
 for the click panel go into a NEW array of `cells-aux.zarr` (`cellsaux.write_variable`), never into `cells.zarr`.
@@ -50,7 +50,7 @@ rclone copy $STAGING/v1/fields/aridity.zarr r2:dune-atlas-data/dune-atlas/v1/fie
     --exclude "._*" --exclude ".DS_Store"
 ```
 Any 2-D field on the 0.1° ERA5-Land grid (1801 × 3600) works (`static.build_static_pyramid` from
-Python for arrays you compute yourself). Registry entry (`registry/layers.yaml` → `layers:`):
+Python for arrays you compute yourself). Registry entry (`registry/earth/layers.yaml` → `layers:`):
 
 ```yaml
 - id: aridity
@@ -73,12 +73,12 @@ Use the `clim` printed by the build. Colormap names: `app/src/generated/colormap
 ## Example 2 — a new threshold-dependent field (same shape as qsat_params)
 
 A new variable with dims `(ut=64, latitude, longitude)` (e.g. a revised flux quantity): add it to
-`fields.FIELD_META` (title, group, colormap, transform/log) and to `registry/qsat_field_metadata.json`
+`fields.FIELD_META` (title, group, colormap, transform/log) and to `registry/earth/qsat_field_metadata.json`
 (p2/p98), then
 
 ```bash
 PYTHONPATH=pipeline/src python -m dune_atlas_pipeline.fields build --vars <newvar> --out $STAGING/v1/fields
-PYTHONPATH=pipeline/src python -m dune_atlas_pipeline.fields registry     # regenerates registry/generated/qsat_fields.yaml
+PYTHONPATH=pipeline/src python -m dune_atlas_pipeline.fields registry     # regenerates registry/earth/generated/qsat_fields.yaml
 ```
 `thresholdAware: true` is set automatically; the global u*,th slider drives it. (If the variable must
 also appear in the clicked-cell table, it has to be added to `cells.zarr/fields` — that requires a
@@ -115,7 +115,7 @@ For a small set (< a few thousand points) you can skip tippecanoe: upload a `.ge
 (Clicking a point to show its attributes is a planned enhancement; today vector layers display only.)
 
 ## Example 4 — a basemap
-Append to `basemaps:` in `registry/layers.yaml` (`kind: raster` with `tiles`, `kind: style` with a
+Append to `basemaps:` in `registry/earth/layers.yaml` (`kind: raster` with `tiles`, `kind: style` with a
 MapLibre style URL, or `kind: hillshade` with a terrarium/mapbox DEM). Check the provider's terms and
 put the required attribution in `attribution`.
 

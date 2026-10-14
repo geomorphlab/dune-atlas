@@ -1,5 +1,5 @@
 # Mars dune atlas layer registry (hand-written part). Same schema as
-# registry/layers.yaml (registry/layers.schema.json); merged at build time (VITE_BODY=mars) with
+# registry/earth/layers.yaml (registry/layers.schema.json); merged at build time (VITE_BODY=mars) with
 # every registry/mars/generated/*.yaml fragment ({groups, layers}) written by the pipeline
 # (pipeline/src/dune_atlas_pipeline/mars/); a generated layer with the same id REPLACES the placeholder here
 # (app/src/registry/merge.ts). Validate: cd app && npm run validate-registry:mars
@@ -157,9 +157,8 @@ layers:
     opacity: 1
     queryable: true
     # 'invert' view (as Earth's nondune-land): the global surface minus the dune polygons, built with
-    # a polar dune fix. Key and source-layer default to placeholder values until replaced by the
-    # generated fragment. Kept on the merged layer even when that fragment (generated/dunes.yaml) replaces
-    # this placeholder without them (src/mars/registry/invert.ts).
+    # a polar dune fix. The generated fragment (generated/dunes.yaml) replaces this placeholder and
+    # carries the same invert fields.
     invertSource: dune-atlas/mars/v1/dunes/invert-r2.pmtiles
     invertSourceLayer: invert
     units: "Mapped dune fields"

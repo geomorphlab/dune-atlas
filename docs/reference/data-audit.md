@@ -22,7 +22,7 @@ Source: `$DUNE_WORLD_DATA` (local copies of Zenodo 10.5281/zenodo.20046812).
   ab, ae, ao, at, rdpa (angles, rad); dpm, rdpm, qnlb, qncb, qalb, qacb, qnle, qale, qace (m²/s);
   qha_rdp_dp, sige_sigh, qhab_nl_nc, qhab_ac_nc, qhne_ac_nl, ufm, uft, qhbf, qhef (dimensionless).
 - `ut` = linspace(0.01, 0.64, 64) m/s; the default threshold is index 14 (u*,th = 0.15 m/s).
-- Per-variable 2nd/98th percentiles at index 14: `registry/qsat_field_metadata.json`.
+- Per-variable 2nd/98th percentiles at index 14: `registry/earth/qsat_field_metadata.json`.
 
 ## Formulas
 - Constants and reductions copied into `pipeline/src/dune_atlas_pipeline/{constants,flux}.py`.

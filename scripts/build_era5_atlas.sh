@@ -52,7 +52,7 @@ $PY -m dune_atlas_pipeline.qsdiv pyramid --dataset era5 --native "$ST/qsdiv_nati
 [ -d "$ST/stores/cells-aux-veg.zarr" ] || $PY -m dune_atlas_pipeline.vegetation cellsaux --dataset era5 \
     --nc staging/new-layers/veg/tot_cov_mean_2001_2025.nc --data "$D" --out "$ST/stores/cells-aux-veg.zarr" > "$ST/logs/cells_aux_veg.json"
 
-# 5. registry files (registry/datasets/era5/)
+# 5. registry files (registry/earth/datasets/era5/)
 $PY -m dune_atlas_pipeline.dataset_registry write --dataset era5
 # (stores/fields also holds build_stats.jsonl and .<var>.done markers: upload the <var>.zarr directories only)
 log done

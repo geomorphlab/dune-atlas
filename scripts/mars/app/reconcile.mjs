@@ -43,8 +43,8 @@ export function marsModules() {
   if (!block) throw new Error("MARS_SUBSTITUTES not found in src/bodies/mars/build.ts");
   const out = {};
   for (const m of block[1].matchAll(/"([^"]+)":\s*"([^"]+)"/g)) out[m[1]] = { kind: "substituted", mars: m[2] };
-  const patches = JSON.parse(readFileSync(join(APP, "src/bodies/mars/patches.json"), "utf8"));
-  for (const p of patches) {
+  const pf = join(APP, "src/bodies/mars/patches.json");
+  for (const p of existsSync(pf) ? JSON.parse(readFileSync(pf, "utf8")) : []) {
     if (out[p.file]) throw new Error(`${p.file} is both substituted and patched`);
     out[p.file] = { kind: "patched", mars: `src/bodies/mars/patches.json (${p.edits.length} edit${p.edits.length === 1 ? "" : "s"})` };
   }

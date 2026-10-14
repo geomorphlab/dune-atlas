@@ -12,7 +12,7 @@ import { legendHtml, legendTicks, tickLabel } from "../src/ui/legend";
 import { C } from "../src/util/constants";
 import type { CellData } from "../src/cell/cellstore";
 import { makeCell, FIELD_VARS } from "./helpers";
-import meta from "../../registry/qsat_field_metadata.json";
+import meta from "../../registry/earth/qsat_field_metadata.json";
 
 function fakeCell(): CellData {
   const c = (fixture as unknown as { cells: { iy: number; ix: number; lat: number; lon: number; hist_idx: number[]; hist_cnt: number[] }[] }).cells[1];

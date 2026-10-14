@@ -1,4 +1,4 @@
-"""Registry fragment `registry/generated/x_extra_fields.yaml` (x_ prefix: fragments merge in filename
+"""Registry fragment `registry/earth/generated/x_extra_fields.yaml` (x_ prefix: fragments merge in filename
 order, so these layers come after the qsat fields within shared groups), for layers that are not qsat_params fields:
 the native-resolution aridity index (aridity.py) and the saturated flux divergence (qsdiv.py).
 
@@ -11,7 +11,7 @@ from pathlib import Path
 from . import aridity, qsdiv
 
 REPO = Path(__file__).resolve().parents[3]
-OUT = REPO / "registry" / "generated" / "x_extra_fields.yaml"
+OUT = REPO / "registry" / "earth" / "generated" / "x_extra_fields.yaml"
 
 # Display limits (registry display units). qsdiv: m/kyr after display.scale = 1000 (data in m/yr).
 # +-0.3 m/kyr ~ the 2nd/98th percentiles over dune cells at u*,th = 0.15 m/s (-0.30 / +0.30).
@@ -22,7 +22,7 @@ QSDIV_COLORMAP = "piyg"
 QSDIV_GROUP = "drift"
 
 GROUPS = [
-    # id kept as "climate" (referenced by registry/layers.yaml group order and other fragments)
+    # id kept as "climate" (referenced by registry/earth/layers.yaml group order and other fragments)
     {"id": "climate", "title": "Related data",
      "description": ("Surface conditions from external datasets: aridity and vegetation cover. These do not "
                      "depend on the wind dataset or on u*,th.")},
@@ -41,7 +41,7 @@ def write(path=OUT) -> Path:
               "# qsdiv.registry_layer). Do not edit by hand. Fragment {groups, layers}.\n"
               "# aridity: native 30\" GeoZarr, 2-D (y, x) arrays - no u*,th dimension (thresholdAware: false).\n"
               "# qsdiv: data in m/yr, display.scale 1000 -> m/kyr; PiYG (negative = deposition = pink); group drift.\n"
-              "# Group order is set in registry/layers.yaml. `attribution` is the optional structured source\n"
+              "# Group order is set in registry/earth/layers.yaml. `attribution` is the optional structured source\n"
               "# statement (layers.schema.json $defs/layer/attribution).\n")
     path.write_text(header + yaml.safe_dump(fragment(), sort_keys=False, allow_unicode=True, width=110))
     return path

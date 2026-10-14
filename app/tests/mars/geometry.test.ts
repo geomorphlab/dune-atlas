@@ -32,7 +32,7 @@ describe("snap on the Mars grid (rows 89 -> -89, columns -179 -> 179, 2° centre
   });
 });
 
-describe("planet-aware distances (VITE_BODY=mars patches)", () => {
+describe("planet-aware distances (Mars body profile)", () => {
   it("Web-Mercator ground resolution uses R_MARS", () => {
     expect(metersPerPixel(0, 0)).toBeCloseTo((2 * Math.PI * M.R_MARS) / 512, 6);
     expect(metersPerPixel(60, 3)).toBeCloseTo((2 * Math.PI * M.R_MARS * 0.5) / (512 * 8), 6);

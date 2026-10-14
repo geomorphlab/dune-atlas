@@ -119,7 +119,7 @@ describe("Earth build: planet toggle and header", () => {
 
 describe("info texts at the source, one field citation, licences, basemap info", () => {
   const REPO = path.resolve(__dirname, "../..");
-  const gen = ["registry/generated/qsat_fields.yaml", "registry/datasets/era5/qsat_fields.yaml", "registry/generated/x_extra_fields.yaml", "registry/datasets/era5/x_extra_fields.yaml", "registry/generated/x_vegetation.yaml"];
+  const gen = ["registry/earth/generated/qsat_fields.yaml", "registry/earth/datasets/era5/qsat_fields.yaml", "registry/earth/generated/x_extra_fields.yaml", "registry/earth/datasets/era5/x_extra_fields.yaml", "registry/earth/generated/x_vegetation.yaml"];
   it("generated definitions carry no repeated units/slider/processing sentences; maths as TeX (KaTeX in the popover)", async () => {
     for (const f of gen) expect(fs.readFileSync(path.join(REPO, f), "utf8"), f).not.toMatch(/Shown at the selected|Shown in m\/kyr|Converted from m²\/s|Displayed as the compass bearing|Independent of the wind dataset/);
     const { infoHtml } = await import("../src/ui/layerPanel");

@@ -224,7 +224,7 @@
     },
     "datasetLayers": {
       "type": "object",
-      "description": "Filled by the app's registry loader (not written by hand): per non-default dataset, the layer definitions that differ from the default dataset's, by layer id (from registry/datasets/<id>/).",
+      "description": "Filled by the app's registry loader (not written by hand): per non-default dataset, the layer definitions that differ from the default dataset's, by layer id (from registry/earth/datasets/<id>/).",
       "additionalProperties": {
         "type": "object",
         "additionalProperties": {

@@ -2,7 +2,7 @@
 # qsdiv.registry_layer). Do not edit by hand. Fragment {groups, layers}.
 # aridity: native 30" GeoZarr, 2-D (y, x) arrays - no u*,th dimension (thresholdAware: false).
 # qsdiv: data in m/yr, display.scale 1000 -> m/kyr; PiYG (negative = deposition = pink); group drift.
-# Group order is set in registry/layers.yaml. `attribution` is the optional structured source
+# Group order is set in registry/earth/layers.yaml. `attribution` is the optional structured source
 # statement (layers.schema.json $defs/layer/attribution).
 groups:
 - id: climate

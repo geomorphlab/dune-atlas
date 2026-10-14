@@ -81,7 +81,7 @@ def mars_text(var: str, desc: str) -> str:
 
 
 def field_metadata(fields: np.ndarray, k: int = K) -> dict:
-    canon = json.loads((REPO / "registry" / "qsat_field_metadata.json").read_text())
+    canon = json.loads((REPO / "registry" / "earth" / "qsat_field_metadata.json").read_text())
     out = {}
     for i, v in enumerate(QSAT_VARS):
         a = fields[i, k]

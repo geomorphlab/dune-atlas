@@ -31,7 +31,7 @@ import { isPublishedField } from "../../../util/constants";
 import { compassPoint } from "../../../util/angles";
 import { escapeHtml, fmtLat, fmtLon, fmtNum, MISSING } from "../../../util/format";
 import { mathHtml, mathOnly, textOnly } from "../../../util/math";
-import { formatUt, thresholdControl } from "../../../ui/threshold"; // Mars grain-size control via the checked patches of ui/threshold.ts
+import { formatUt, thresholdControl } from "../../../ui/threshold"; // Mars grain-size control (body profile)
 import type { ThresholdDef } from "../../../registry/types";
 import type { Store } from "../../../store";
 import { h, nextId } from "../../../ui/dom";
