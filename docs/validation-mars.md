@@ -100,13 +100,13 @@ object's ETag equals the md5 of its source (no multipart objects). Delivery thro
 (`preview_smoke.mjs --data https://data.geomorphlab.org --origin http://localhost:5173`): 31/31 checks,
 byte ranges answered 206, CORS allows the local dev origin.
 
-**Cloudflare and the 4.95 GB hillshade archive.** Objects above the Cloudflare cache size limit are not
+**Cloudflare and the 4.95 GB hillshade archive** (see §7 for the rule order). Objects above the Cloudflare cache size limit are not
 cached (`cf-cache-status: BYPASS`). The very first range request for the archive was answered `200` with
 the whole object instead of `206`; every later request (8 ranges, start/middle/end) was `206`. A PMTiles
 reader rejects a `200`, so a visitor through an edge location that has not seen the file yet could fail to
 load the hillshade once. Fix (owner, Cloudflare dashboard): a Cache Rule for `data.geomorphlab.org` with URI
 path equal to `/dune-atlas/mars/v1/basemaps/hrsc-mola-terrarium.pmtiles` set to **Bypass cache**, placed
-above the existing "Eligible for cache" rule, so that range requests always go straight to R2.
+AFTER (below) the existing "Eligible for cache" rule (the last matching rule wins), so that range requests always go straight to R2.
 
 ## 5. Open items
 
@@ -144,19 +144,22 @@ docs/info-text-audit.md); hillshade tiles CC BY-SA 3.0 IGO; Esri licence fields 
 stay public; no caveat about crater-scale winds in About; blank cells at extreme d accepted; polar dune
 wedges fixed with polar parts drawn on the globe; globe polar caps for the basemaps; R2 upload verified.
 
+**Live since 2026-10-14** (PI go-ahead): `mars` merged into Earth `main` as 5e0ac44 (no conflicts; no Earth
+commits after b180fef); CI gate on a clean export of the merged tree passed (Earth 478 passed / 22 skipped;
+Mars 74 passed / 5 skipped; both builds). Published as the squashed `public` commit d018427 (tree equal to
+`main`), pushed to `geomorphlab/dune-atlas` `main`; Actions run 38528075599 build + deploy succeeded.
+`https://map.geomorphlab.org/` (Dune Atlas) and `https://map.geomorphlab.org/mars/` (Mars Dune Atlas) answer
+200; `preview_smoke.mjs --data https://data.geomorphlab.org --preview https://map.geomorphlab.org/mars
+--origin https://map.geomorphlab.org`: 33/33. Clean-up list executed (Gadi: live cells.zarr re-verified by
+md5 after the deletions; local items moved to the Trash).
+
 Remaining:
-1. Desktop browser check (§3): planet toggle `/` ↔ `/mars/`, globe polar caps (seam at 85.05°, all six
-   Mars basemaps), north-pole dunes and invert, info popovers, long-URL wrapping, Mars first-visit tour
-   after Earth, PNG export with an Esri basemap.
+1. Cloudflare: the hillshade bypass rule must come AFTER the "Eligible for cache" rule (Cache Rules: the
+   last matching rule wins). Test: a range request with a fresh query string must return 206, not 200.
 2. Science sanity (PI): at d = 200 µm across dune cells, hourly median u*,th = 0.300 m/s (median over
    dune-cell hours), median DP 2.79 m²/yr, 26% of hours above threshold (mean over dune cells); at the
    Nili Patera cell alone the hourly median u*,th is 0.35 m/s. Directions (RDD, dune-orientation modes) vs
    mapped dune orientations and migration directions.
-3. Cloudflare bypass rule for the hillshade archive (§4).
-4. GitHub: pushing a changed workflow file needs a token with `workflow` scope (the stored classic token has
-   `repo` scope and expires 2026-11-17), or a paste of deploy.yml in the GitHub web editor.
-5. Final Earth sync, then merge `mars` into `main`, publish (squashed `public` history as for Earth), deploy.
-6. After go-live: smoke against `https://map.geomorphlab.org/mars/` and a browser pass of both atlases;
+3. Browser pass of both live atlases (planet toggle, polar caps and highlight, Dunes only, CSV in Excel);
    Google Site link if wanted. Rollback: redeploy the previous Pages build or revert the merge; the R2
    objects do not affect Earth.
-7. Clean-up list approved and executed (the v1 stores are now safe on R2).
