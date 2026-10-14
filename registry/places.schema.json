@@ -8,6 +8,7 @@
   "required": ["enabled", "places"],
   "properties": {
     "enabled": { "type": "boolean", "description": "show the named search (and the naming note in the dune layer's info)" },
+    "credit": { "type": "string", "minLength": 1, "description": "source line of the names in map image exports while the names are shown" },
     "note": { "type": "string", "minLength": 1, "description": "naming note shown in the dune layer's info with the named search (default: the app's note)" },
     "places": {
       "type": "array",
@@ -26,7 +27,7 @@
           "type": { "type": "string", "minLength": 1, "description": "feature type, shown with the name in the results (Mars: the IAU descriptor term, e.g. Crater, Unda)" },
           "aliases": { "type": "array", "items": { "type": "string", "minLength": 1 } },
           "lat": { "type": "number", "minimum": -90, "maximum": 90 },
-          "lon": { "type": "number", "minimum": -180, "maximum": 360, "description": "Earth: -180..180; Mars: planetocentric, east-positive 0..360 (as the Mars search box reads longitudes)" },
+          "lon": { "type": "number", "minimum": -180, "maximum": 180, "description": "-180..180, east-positive (Mars: planetocentric)" },
           "radius_km": { "type": "number", "exclusiveMinimum": 0, "description": "approximate radius of the area; sets the zoom" },
           "dune_km2": { "type": "number", "minimum": 0, "description": "mapped dune area of the place (km²); among equally good matches, larger areas come first" },
           "countries": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Earth: the countries the area lies in (English short names)" },

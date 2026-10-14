@@ -18,7 +18,7 @@ import { fieldInfo } from "../cell/fieldinfo";
 import { isDatasetDependent } from "../registry/merge";
 import { mathHtml } from "../util/math";
 import { aboutSourceIds, AI_NOTICE, citationHtml, citationSources, fieldsCitation, fieldsLicence } from "../cell/citation";
-import { loadPlaces, placesNote } from "../search/places";
+import { loadPlaces, placesAvailable, placesNote, PLACE_TEXT } from "../search/places";
 import { conceptLinkHtml } from "./concepts";
 import { bulkGuideHtml, wireBulkGuide } from "./bulkguide";
 import { PROFILE } from "@body/profile";
@@ -150,6 +150,16 @@ export function dunesOnlyToggle(store: Store): HTMLElement {
   store.subscribe((st, ch) => { if (ch.has("dunesOnly")) cb.checked = !!st.dunesOnly; });
   return h("label", { class: "inline dunes-only-row", for: "dunes-only", title: DUNES_ONLY_HELP }, cb, " Dunes only",
     h("span", { id: "dunes-only-help", class: "visually-hidden" }, DUNES_ONLY_HELP));
+}
+
+/** 'Show names' (Dunes group): the dune-field name labels (map/placelabels.ts); remembered per body, in the link */
+export function namesToggle(store: Store): HTMLElement {
+  const cb = h("input", { type: "checkbox", id: "show-names", "aria-describedby": "show-names-help" }) as HTMLInputElement;
+  cb.checked = !!store.state.names;
+  cb.addEventListener("change", () => store.set({ names: cb.checked }));
+  store.subscribe((st, ch) => { if (ch.has("names")) cb.checked = !!st.names; });
+  return h("label", { class: "inline names-row", for: "show-names", title: PLACE_TEXT.toggleHelp }, cb, ` ${PLACE_TEXT.toggle}`,
+    h("span", { id: "show-names-help", class: "visually-hidden" }, PLACE_TEXT.toggleHelp));
 }
 
 /** ⓘ button + popover pair (layers and basemaps) */
@@ -451,6 +461,8 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     const ul = h("ul", { class: "layer-list" });
     for (const l of layers) ul.append(layerItem(l, store));
     det.append(ul);
+    // the name labels: in the Dunes group, only where the body's place list is enabled (Earth: not yet)
+    if (g.id === "dunes" && placesAvailable(PLACES)) det.append(namesToggle(store));
     body.append(det);
   }
 

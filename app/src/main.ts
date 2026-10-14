@@ -34,7 +34,10 @@ import { CoordsControl } from "./core/ui/coords";
 import { escapeClosesCell } from "./core/ui/keys";
 import { tourHooks } from "./core/ui/tourHooks";
 import { SearchBox, searchZoom } from "./core/ui/search";
-import { loadPlaces, placeBounds, type Place } from "./core/search/places";
+import { loadPlaces, placeBounds, placesAvailable, type Place } from "./core/search/places";
+import { ensureRtlPlugin, LOCAL_IDEOGRAPH_FONTS, PlaceLabels, placesNeedRtl, type Tone } from "./core/map/placelabels";
+// the RTL text plugin as an asset of the build (self-hosted; the package exports only its source entry)
+import rtlPluginUrl from "../node_modules/@mapbox/mapbox-gl-rtl-text/dist/mapbox-gl-rtl-text.js?url";
 import { formatCoord } from "./core/search/coords";
 import { datasetInfo } from "./core/cell/datasetinfo";
 import { PROFILE } from "@body/profile";
@@ -73,6 +76,12 @@ const registryOrder = reg.layers.map((l) => l.id);
 const init: AppState = initialAppState(reg, url, initDataset);
 // plotted quantity of the cell panel: the link's, else the visitor's last choice (per body), else DP
 if (!init.plotY) { const p = readPlotChoice(); if (p) init.plotY = p; }
+// dune-field name labels ('Show names'): the link's setting; opened without view state, the visitor's
+// last choice on this atlas (per body); never where the body's place list is not shown (Earth for now)
+const PLACES = loadPlaces();
+const NAMES_KEY = storageKey("names");
+if (!placesAvailable(PLACES)) delete init.names;
+else if (start.source === "default") { try { if (localStorage.getItem(NAMES_KEY) === "1") init.names = true; } catch { /* private mode */ } }
 const store = new Store(init);
 // a dataset switch swaps the layer definitions (sources, colour limits, citations) and resets
 // colour-limit overrides of the swapped layers in the same state change
@@ -99,6 +108,8 @@ const map = new maplibregl.Map({
   touchPitch: false,
   // 300-dpi exports render at pixel ratio 3.125; the default 4096 px cap would lower that
   maxCanvasSize: [16384, 16384],
+  // CJK glyphs of labels drawn from local fonts (map/placelabels.ts)
+  localIdeographFontFamily: LOCAL_IDEOGRAPH_FONTS,
 });
 map.touchZoomRotate.disableRotation();
 map.scrollZoom.setWheelZoomRate(WHEEL_ZOOM_RATE); // faster wheel zoom
@@ -128,6 +139,14 @@ const datasetPrefix = () => selectDataset(reg, store.state.dataset)?.prefix;
 const overlays = new OverlayManager(map, reg, dataBase, init.utIndex, { order: init.order, datasetPrefix: datasetPrefix(), dunesOnly: !!init.dunesOnly });
 overlays.onError = (l, e) => console.warn(`[dune-atlas] layer '${l.id}': data could not be loaded`, e);
 const mapExtras = HOOKS.onMapCreated?.(map, reg, dataBase);
+// dune-field name labels: colours follow the basemap's tone; Arabic-script names load the RTL text plugin
+const basemapTone = (): Tone => reg.basemaps.find((b) => b.id === store.state.basemap)?.tone ?? "dark";
+const placeLabels = new PlaceLabels(map, {
+  list: PLACES, bodyRadiusKm: PROFILE.radiusM / 1000, tone: basemapTone,
+  popup: (focus) => new maplibregl.Popup({ className: "place-popup", closeButton: true, closeOnClick: false, maxWidth: "300px", focusAfterOpen: focus }),
+});
+placeLabels.setVisible(!!store.state.names);
+if (placesNeedRtl(PLACES)) ensureRtlPlugin(maplibregl.setRTLTextPlugin, rtlPluginUrl);
 
 function applyBasemap() {
   const b = reg.basemaps.find((x) => x.id === store.state.basemap) ?? defaultBasemap(reg.basemaps);
@@ -148,7 +167,7 @@ function updateSelectedCell() {
 
 map.on("style.load", () => {
   // every style swap: projection, selected-cell highlight, all active overlays in drawing order
-  if (restoreOverlays(map, overlays, store.state.layers, selectedCellFeature())) map.setProjection({ type: store.state.projection });
+  if (restoreOverlays(map, overlays, store.state.layers, selectedCellFeature())) { map.setProjection({ type: store.state.projection }); placeLabels.attach(); }
 });
 applyBasemap();
 HOOKS.afterFirstBasemap?.(reg, applyBasemap, store);
@@ -162,7 +181,7 @@ const fullScreenUrl = () => {
 const layerPanelEl = document.getElementById("layer-panel")!;
 // search box (typed coordinates; named places once the body's list is enabled): fly there and open the cell
 const search = new SearchBox({
-  ...PROFILE.search, places: loadPlaces(),
+  ...PROFILE.search, places: PLACES,
   goTo: (lat, lon) => goToPoint(lat, lon),
   goToPlace: (p) => goToPlace(p),
 });
@@ -176,7 +195,10 @@ function shareState(): ShareState {
 const shareLinkNow = () => shareUrl(`${location.origin}${location.pathname}`, shareState());
 /** map PNG (camera button): map with the strip below, white or transparent background (export/mapExport.ts) */
 function exportMap(o: MapExportRequest) {
-  return exportMapPng(map, { reg, state: store.state, shareLink: shareLinkNow(), settle: () => overlays.settled() }, o);
+  return exportMapPng(map, { reg, state: store.state, shareLink: shareLinkNow(), settle: () => overlays.settled(),
+    // the name labels: credited while shown; without the basemap (white or transparent background) in their light-basemap colours
+    namesCredit: placeLabels.visible ? PLACES.credit : undefined,
+    prepare: (withBasemap) => { if (withBasemap || !placeLabels.visible) return; placeLabels.setTone("light"); return () => placeLabels.setTone(basemapTone()); } }, o);
 }
 function openAbout() {
   setLayerPanelOpen(layerPanelEl, true);
@@ -301,17 +323,23 @@ async function goToPoint(lat: number, lon: number): Promise<string> {
   return `${where}: cell panel opened.`;
 }
 function goToPlace(p: Place): string {
-  map.fitBounds(placeBounds(p, PROFILE.radiusM / 1000), { padding: 40, maxZoom: 9, essential: true });
+  // fly to the feature and open its popup (the same as clicking its name label); focus stays in the search box
+  if (placeLabels.available) placeLabels.show(p, { focus: false });
+  else map.fitBounds(placeBounds(p, PROFILE.radiusM / 1000), { padding: 40, maxZoom: 9, essential: true });
   return p.line1;
 }
 
 map.on("click", async (e) => {
   if (boxDrawer.active) return;   // the click that ends drawing a region box
+  if (placeLabels.onClick(e)) return;   // a click on a name label: its popup, not the cell
+  placeLabels.closePopup();
   try { grid = (await getCellStore()).grid; } catch { /* keep the fallback grid */ }
   const c = snapToCell(e.lngLat.lng, e.lngLat.lat, grid);
   if (c) store.set({ cell: [c.iy, c.ix] });
 });
-document.addEventListener("keydown", (e) => { if (escapeClosesCell(e) && store.state.cell && !tour.active && !tools.open && !tourStart.bubble.shown) store.set({ cell: null }); });
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && placeLabels.popupOpen) { placeLabels.closePopup(); return; }   // Esc: the name popup first
+  if (escapeClosesCell(e) && store.state.cell && !tour.active && !tools.open && !tourStart.bubble.shown) store.set({ cell: null }); });
 
 // ---- state -> map/panels/URL ----
 function currentUrlState(): UrlState {
@@ -329,6 +357,7 @@ function currentUrlState(): UrlState {
     // always explicit: permalinks without a dataset are read as the registry defaultDataset
     dataset: (reg.datasets?.length ?? 0) > 1 ? s.dataset : undefined,
     dunesOnly: s.dunesOnly || undefined,
+    names: s.names || undefined,
     plot: s.plotY && s.plotY !== "dpm" ? s.plotY : undefined,
   };
 }
@@ -367,6 +396,11 @@ store.subscribe((s, ch) => {
     });
   }
   if (ch.has("dunesOnly")) overlays.setDunesOnly(!!s.dunesOnly);   // 'Dunes only' (map/dunemask.ts)
+  if (ch.has("names")) {   // 'Show names' (map/placelabels.ts): remembered per body
+    placeLabels.setVisible(!!s.names);
+    try { localStorage.setItem(NAMES_KEY, s.names ? "1" : "0"); } catch { /* private mode */ }
+  }
+  if (ch.has("basemap")) placeLabels.setTone(basemapTone());
   if (ch.has("order")) overlays.setOrder(s.order);
   if (ch.has("layers")) overlays.sync(s.layers);
   if (ch.has("utIndex")) { overlays.setThreshold(s.utIndex); panel.setThreshold(s.utIndex); }

@@ -22,18 +22,32 @@ export interface Place {
   countries?: string[];
   sources: string[];
 }
-export interface PlaceList { enabled: boolean; places: Place[]; note?: string }
+export interface PlaceList { enabled: boolean; places: Place[]; note?: string; credit?: string }
+
+/** texts of the name labels ('Show names', map/placelabels.ts) */
+export const PLACE_TEXT = {
+  toggle: "Show names",
+  toggleHelp: "Label named dune fields and features on the map: the largest first, smaller ones as you zoom in. Click a name for its details.",
+  aliases: "Also called",
+  dunes: "Mapped dune area",
+  sources: "Sources",
+  countries: "Countries",
+  credit: "Feature names",
+};
 
 /** the body's place list (empty and disabled when the file is missing) */
 export function loadPlaces(files: Record<string, string> = placesFiles): PlaceList {
   const text = Object.values(files)[0];
   const p = (text ? yaml.load(text) : null) as Partial<PlaceList> | null;
-  return { enabled: !!p?.enabled, places: Array.isArray(p?.places) ? p!.places : [], ...(p?.note ? { note: p.note } : {}) };
+  return { enabled: !!p?.enabled, places: Array.isArray(p?.places) ? p!.places : [], ...(p?.note ? { note: p.note } : {}), ...(p?.credit ? { credit: p.credit } : {}) };
 }
+
+/** the list is shown (named search, name labels): enabled and not empty */
+export const placesAvailable = (list: PlaceList) => list.enabled && list.places.length > 0;
 
 /** the naming note of the dune layer's info: shown only with the named search, the list's own note if it has one */
 export function placesNote(list: PlaceList): string {
-  return list.enabled && list.places.length ? list.note ?? PLACES_DISCLAIMER : "";
+  return placesAvailable(list) ? list.note ?? PLACES_DISCLAIMER : "";
 }
 
 /** The default naming note for the dune layer's info (Earth; draft, under review). */

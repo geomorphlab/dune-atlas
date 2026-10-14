@@ -97,6 +97,7 @@ export function initialAppState(reg: Registry, url: UrlState, dataset: string): 
     cell: url.cell ?? null,
     embed: !!url.embed,
     dunesOnly: !!url.dunesOnly,
+    ...(url.names ? { names: true } : {}),
     ...(url.plot ? { plotY: url.plot } : {}),
   };
 }
@@ -109,6 +110,7 @@ export function appShareState(s: AppState, cam: { lon: number; lat: number; zoom
     layers: s.order.filter((id) => s.layers[id]?.visible).map((id) => ({ id, opacity: Number(s.layers[id].opacity.toFixed(2)), ...(s.layers[id].cfg ? { cfg: s.layers[id].cfg } : {}) })),
     panel,
     ...(s.dunesOnly ? { dunesOnly: true } : {}),
+    ...(s.names ? { names: true } : {}),
     // the plotted quantity only when it is not the default (DP), so default links stay as they were
     ...(s.plotY && s.plotY !== "dpm" ? { plotY: s.plotY } : {}),
   };

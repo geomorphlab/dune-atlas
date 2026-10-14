@@ -1,6 +1,6 @@
 // Short share links: the full view state as a compact, versioned binary in the URL hash
 // (#v=<base64url>). No server. Format v1 (all integers as LEB128 varints, signed ones zigzag):
-//   version (=1) | flags (1 globe, 2 cell, 4 panel, 8 view, 16 dunes only, 32 plot) | lon*1e4 | lat*1e4 | zoom*100 | [bearing*10 | pitch*10] | dataset | basemap
+//   version (=1) | flags (1 globe, 2 cell, 4 panel, 8 view, 16 dunes only, 32 plot, 64 names) | lon*1e4 | lat*1e4 | zoom*100 | [bearing*10 | pitch*10] | dataset | basemap
 //   | ut index | [cell iy | ix] | n layers | per layer: id | opacity*100 | config mask | config fields | [plot quantity id]
 // Ids (layers, basemaps, datasets, colormaps) are indices into APPEND-ONLY tables, so links stay
 // valid when the registry grows; an id missing from a table is written inline (0, length, UTF-8).
@@ -40,10 +40,12 @@ export interface ShareState {
   dunesOnly?: boolean;
   /** quantity of the cell panel's plot (flag bit 32, written after the layers; links without it: the default) */
   plotY?: string;
+  /** 'Show names' (flag bit 64, no payload: older decoders ignore it; links without it: off) */
+  names?: boolean;
 }
 
 export const SHARE_VERSION = 1;
-const F_GLOBE = 1, F_CELL = 2, F_PANEL = 4, F_VIEW = 8, F_DUNES = 16, F_PLOT = 32;
+const F_GLOBE = 1, F_CELL = 2, F_PANEL = 4, F_VIEW = 8, F_DUNES = 16, F_PLOT = 32, F_NAMES = 64;
 // per-layer config mask
 const C_CMAP = 1, C_REV = 2, C_CLIM = 4, C_LOG = 8, C_LOGV = 16, C_MODE = 32, C_VC = 64, C_KM = 128, C_FILL = 256, C_INV = 512;
 const MODES: RenderMode[] = ["colormap", "arrows", "streamlines"];
@@ -97,7 +99,7 @@ export function encodeShare(st: ShareState): string {
   const w = new W();
   w.u(SHARE_VERSION);
   const hasView = !!(st.bearing || st.pitch);
-  w.u((st.proj === "globe" ? F_GLOBE : 0) | (st.cell ? F_CELL : 0) | (st.panel ? F_PANEL : 0) | (hasView ? F_VIEW : 0) | (st.dunesOnly ? F_DUNES : 0) | (st.plotY ? F_PLOT : 0));
+  w.u((st.proj === "globe" ? F_GLOBE : 0) | (st.cell ? F_CELL : 0) | (st.panel ? F_PANEL : 0) | (hasView ? F_VIEW : 0) | (st.dunesOnly ? F_DUNES : 0) | (st.plotY ? F_PLOT : 0) | (st.names ? F_NAMES : 0));
   w.s(wrapLon(st.lon) * 1e4); w.s(Math.max(-90, Math.min(90, st.lat)) * 1e4); w.u(Math.max(0, st.zoom) * 100);
   if (hasView) { w.s((st.bearing ?? 0) * 10); w.u((st.pitch ?? 0) * 10); }
   w.id(st.dataset, SHARE_IDS.datasets); w.id(st.basemap, SHARE_IDS.basemaps); w.u(st.ut);
@@ -135,6 +137,7 @@ export function decodeShare(s: string): ShareState | null {
     st.cell = f & F_CELL ? [r.u(), r.u()] : null;
     st.panel = !!(f & F_PANEL);
     if (f & F_DUNES) st.dunesOnly = true;
+    if (f & F_NAMES) st.names = true;
     const n = r.u();
     if (n > 200) return null;
     for (let k = 0; k < n; k++) {
@@ -174,6 +177,7 @@ export function shareToUrlState(st: ShareState): import("../urlstate").UrlState 
     order: st.layers.map((l) => l.id),
     ...(st.cell ? { cell: st.cell } : {}),
     ...(st.dunesOnly ? { dunesOnly: true } : {}),
+    ...(st.names ? { names: true } : {}),
     ...(st.plotY ? { plot: st.plotY } : {}),
   };
 }

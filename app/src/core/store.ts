@@ -18,6 +18,8 @@ export interface AppState {
   dunesOnly?: boolean;
   /** quantity of the cell panel's "<quantity> vs threshold" plot (cell/qplot.ts; undefined = default DP) */
   plotY?: string;
+  /** 'Show names': dune-field name labels on the map (map/placelabels.ts) */
+  names?: boolean;
 }
 
 type Key = keyof AppState;

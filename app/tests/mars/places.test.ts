@@ -4,6 +4,7 @@
 // list (name and feature type) and the naming note in the dune layer's info.
 import { describe, expect, it, vi } from "vitest";
 import { loadPlaces, matchPlaces, placeBounds, type Place } from "../../src/core/search/places";
+import { formatCoord, parseCoordinates } from "../../src/core/search/coords";
 import { SearchBox, SEARCH_TEXT } from "../../src/core/ui/search";
 import { infoHtml } from "../../src/core/ui/layerPanel";
 import { loadRegistry } from "../../src/core/registry/load";
@@ -30,9 +31,10 @@ describe("Mars place list", () => {
     }
     expect(new Set(LIST.places.map((p) => p.id)).size).toBe(LIST.places.length);
   });
-  it("longitudes in the atlas's search convention: planetocentric, east-positive 0-360", () => {
-    expect(PROFILE.search.lonRange).toBe(360);
-    for (const p of LIST.places) { expect(p.lon, p.id).toBeGreaterThanOrEqual(0); expect(p.lon, p.id).toBeLessThan(360); expect(Math.abs(p.lat)).toBeLessThanOrEqual(90); }
+  it("longitudes in the atlas convention: planetocentric, east-positive -180..180", () => {
+    expect(PROFILE.search.lonRange).toBe(180);
+    expect(LIST.places.some((p) => p.lon < 0)).toBe(true);
+    for (const p of LIST.places) { expect(p.lon, p.id).toBeGreaterThanOrEqual(-180); expect(p.lon, p.id).toBeLessThanOrEqual(180); expect(Math.abs(p.lat)).toBeLessThanOrEqual(90); }
   });
   it.each([
     // name, type, lat, lon (° E), from the Gazetteer feature pages
@@ -40,7 +42,7 @@ describe("Mars place list", () => {
     ["Nili Patera", "Patera", 8.97, 67.17],
     ["Proctor crater", "Crater", -47.63, 29.72],
     ["Olympia Undae", "Unda", 81.16, 178.48],
-    ["Endeavour crater", "Crater", -2.28, 354.8],
+    ["Endeavour crater", "Crater", -2.28, -5.2],
   ])("%s: centre and type", (n, type, lat, lon) => {
     const p = byName(n);
     expect(p.type).toBe(type);
@@ -50,6 +52,17 @@ describe("Mars place list", () => {
   it("Endeavour (west of the prime meridian) frames the map around 5° W", () => {
     const [w, , e] = placeBounds(byName("Endeavour crater"), PROFILE.radiusM / 1000);
     expect((w + e) / 2).toBeCloseTo(-5.2, 1);
+  });
+  it("a 0-360° E input resolves to -180..180 (Endeavour: 354.80° E = -5.20)", () => {
+    const r = parseCoordinates("-2.28, 354.80", PROFILE.search.lonRange);
+    expect(r).toMatchObject({ ok: true, lat: -2.28 });
+    expect(r.ok && r.lon).toBeCloseTo(-5.2, 6);
+    expect(r.ok && r.lon).toBeCloseTo(byName("Endeavour crater").lon, 2);
+    expect(r.ok && r.note).toBe("354.8° E = 5.2° W");
+    expect(formatCoord(-2.28, 354.8, PROFILE.search.lonRange, 2)).toBe("2.28° S, 5.20° W");
+    const b = new SearchBox({ lonRange: PROFILE.search.lonRange, example: PROFILE.search.example, places: LIST, goTo: vi.fn(async () => ""), goToPlace: (p: Place) => p.line1 });
+    b.input.value = "2.28 S 354.8 E"; b.input.dispatchEvent(new Event("input"));
+    expect(b.status.textContent).toBe("Go to 2.2800° S, 5.2000° W (354.8° E = 5.2° W)");
   });
   it("the example cell of the tour (Nili Patera) is the place's cell", () => {
     const p = byName("Nili Patera");
@@ -74,7 +87,7 @@ describe("Mars named search", () => {
     expect(hits[0].place.line1).toBe("Olympia Undae");
   });
   it("the results list shows the name and the feature type", () => {
-    const b = new SearchBox({ lonRange: 360, example: PROFILE.search.example, places: LIST, goTo: vi.fn(async () => ""), goToPlace: (p: Place) => p.line1 });
+    const b = new SearchBox({ lonRange: PROFILE.search.lonRange, example: PROFILE.search.example, places: LIST, goTo: vi.fn(async () => ""), goToPlace: (p: Place) => p.line1 });
     document.body.replaceChildren(b.el);
     expect(b.el.querySelector("label")!.textContent).toBe(SEARCH_TEXT.labelPlaces);
     b.input.value = "gale"; b.input.dispatchEvent(new Event("input"));

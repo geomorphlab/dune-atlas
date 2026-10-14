@@ -83,7 +83,7 @@ and cell panel for that form; these are per body today (`core/cell/{cellstore,an
 ## Named places (search box)
 
 The search box (top of the layer panel, `core/ui/search.ts`) reads typed coordinates (`core/search/coords.ts`;
-Earth longitudes -180..180, Mars planetocentric 0..360° east, set by `PROFILE.search`). Named places come from
+-180..180 east-positive on both atlases, Mars planetocentric; Mars also accepts 0–360° E and converts it; set by `PROFILE.search`). Named places come from
 `registry/<body>/places.yaml` (schema `registry/places.schema.json`; checked by `npm run validate-registry`):
 
 ```yaml
@@ -96,7 +96,7 @@ places:
     type: Erg                                # optional: feature type, shown with the name in the results
     aliases: [Empty Quarter]
     lat: 20.0
-    lon: 50.0                                # Mars: planetocentric, east-positive 0..360
+    lon: 50.0                                # -180..180 east-positive (Mars: planetocentric)
     radius_km: 500                           # sets the zoom
     dune_km2: 250000                         # optional: mapped dune area; ranks equally good matches
     countries: [Saudi Arabia, Oman, United Arab Emirates, Yemen]
@@ -110,6 +110,27 @@ Nomenclature whose official-diameter circle contains mapped dunes, each with its
 Gazetteer feature page as a source and a few informal names as aliases (e.g. Bagnold Dunes for Gale
 crater); its header says how it was made and checked. The Earth list stays empty and disabled until the
 names are approved.
+
+### Name labels on the map ('Show names')
+
+The same list feeds the name labels (`core/map/placelabels.ts`): a symbol layer over a GeoJSON point per
+place, above the data layers and below the selected-cell highlight (basemap labels stay above it and win
+collisions). A label appears once its feature is about 48 px across (zoom threshold from `radius_km`), text
+10–14 px with the radius, and collisions are resolved by size, then `dune_km2` (`symbol-sort-key`).
+Colours follow the basemap's `tone` in the registry (`dark`: pale sand with a dark halo; `light`: dark
+brown with a light halo), so a new basemap needs a `tone`. The toggle sits in the Dunes group when the
+list is enabled; it is remembered per body and is part of both link forms (`names=1`; short-link flag 64).
+A click on a label (or a pick in the search box) zooms to the feature and opens a popup with the name,
+line 2, type or countries, aliases, mapped dune area and the sources. The list's optional `credit` is the
+source line of map image exports while the names are shown; `note` is the naming note of the dune
+layer's ⓘ.
+
+Glyphs: the label font is "Noto Sans Italic" (served by the OpenFreeMap glyph server on its styles; on
+styles without a glyph server every glyph is drawn from the visitor's system fonts). CJK is always drawn
+locally (`localIdeographFontFamily`); Arabic-script names (Arabic, Persian, Urdu) load the RTL text plugin
+(`@mapbox/mapbox-gl-rtl-text`, bundled as an asset of the build, registered lazily only for a list with
+such names). Scripts that need complex shaping MapLibre does not do (e.g. Tibetan, Devanagari, Mongolian)
+show line 2 in the popup only. `tests/placelabels.test.ts` checks this on a fixture Earth list.
 
 ## Concepts panel
 

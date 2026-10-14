@@ -2,8 +2,9 @@
 // N/S/E/W (or the words north, south, east, west); latitude first unless the letters say otherwise.
 //   "-24.5, 15.2"   "24.5 S 15.2 E"   "S24.5 E15.2"   "24°30′S, 15°12′E"   "24 30 00 S 15 12 00 E"
 //   "24,5; 15,2" (decimal commas when the two values are separated by a semicolon)
-// Longitudes are read from -180 to 360 and returned in the body's convention: Earth -180..180,
-// Mars 0..360 east-positive (a west longitude is converted and the conversion reported).
+// Longitudes are read from -180 to 360 and returned in the body's convention: -180..180 east-positive on
+// both atlases (a longitude above 180° E is converted and the conversion reported); 0..360 is kept for a
+// body that would use it.
 
 export type LonRange = 180 | 360;
 
@@ -133,7 +134,7 @@ export function parseCoordinates(input: string, range: LonRange = 180): CoordPar
   return { ok: true, lat, lon: w, ...(note ? { note } : {}) };
 }
 
-/** "24.5000° S, 15.2000° E" (Earth) or "24.5000° S, 350.0000° E" (Mars, 0-360 east) */
+/** "24.5000° S, 15.2000° E" (range 180, both atlases) or "24.5000° S, 350.0000° E" (range 360) */
 export function formatCoord(lat: number, lon: number, range: LonRange = 180, digits = 4): string {
   const la = `${Math.abs(lat).toFixed(digits)}° ${lat < 0 ? "S" : "N"}`;
   if (range === 360) return `${la}, ${wrapLonTo(lon, 360).toFixed(digits)}° E`;

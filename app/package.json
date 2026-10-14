@@ -28,6 +28,7 @@
   "dependencies": {
     "@carbonplan/zarr-layer": "0.4.3",
     "@geomatico/maplibre-cog-protocol": "^0.10.0",
+    "@mapbox/mapbox-gl-rtl-text": "^0.3.0",
     "js-yaml": "^4",
     "katex": "^0.16.47",
     "maplibre-gl": "^5",
