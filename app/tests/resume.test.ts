@@ -1,9 +1,9 @@
 // Planet button return: each atlas stores its last view per body; the other atlas is opened with
 // ?resume=1 and, without view state of its own, reopens that view (camera, basemap, projection, opacities).
 import { describe, expect, it } from "vitest";
-import { parseUrlState, serializeUrlState } from "../src/urlstate";
-import { resolveInitialState, resumeQuery, LAST_VIEW } from "../src/defaultview";
-import { otherBodyUrl, storageKeyFor } from "../src/body";
+import { parseUrlState, serializeUrlState } from "../src/core/urlstate";
+import { resolveInitialState, resumeQuery, LAST_VIEW } from "../src/core/defaultview";
+import { otherBodyUrl, storageKeyFor } from "../src/core/body";
 
 const LAST = "?lon=14.9000&lat=-23.5000&zoom=6.40&basemap=esri-imagery&layers=dpm:0.35,dunes:0.5&ut=20&cell=1135,1950&proj=mercator&dataset=era5&dunesonly=1";
 

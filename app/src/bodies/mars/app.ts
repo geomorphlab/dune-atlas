@@ -1,8 +1,8 @@
 // Mars hooks of the shared entry module (apphooks.ts): the Mars cell store (hourly series), the
 // body-aware scale bar (R_MARS), the Mars basemaps (pmtiles hillshade + archive-depth clamp,
 // esri-mars:// protocol for the Esri OnMars imagery) and the globe polar caps.
-import type { AppHooks } from "../../apphooks";
-import { ensurePmtiles } from "../../map/adapters";
+import type { AppHooks } from "../../core/apphooks";
+import { ensurePmtiles } from "../../core/map/adapters";
 import { MarsCellStore } from "./cell/cellstore";
 import { BodyScaleControl } from "./map/scale";
 import { clampPmtilesBasemaps, prepareMarsBasemaps } from "./map/basemaps";

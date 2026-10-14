@@ -10,10 +10,10 @@
 // Rose per direction bin j (the Earth 128 bins, edges -pi..pi): sum_{h in j} q_h / N (m^2/s),
 // N = hours with valid data; petals sum to the time-averaged flux (DP for the flat bed).
 // Excess-shear classes: u/u*,th of each hour (u = u*_h or u_c), Earth edges 1 .. 5, inf.
-import { M, frictionVelocity, threshold, transportRate, uPlus, viscosity } from "../../../cell/marsphysics";
-import { DEFAULT_BINS, EXCESS_SHEAR_EDGES } from "../../../cell/flux";
-import { sectorOf, towardBearings, type WindRose } from "../../../cell/roses";
-import { towardToFrom } from "../../../util/angles";
+import { M, frictionVelocity, threshold, transportRate, uPlus, viscosity } from "../marsphysics";
+import { DEFAULT_BINS, EXCESS_SHEAR_EDGES } from "../../../core/cell/flux";
+import { sectorOf, towardBearings, type WindRose } from "../../../core/cell/roses";
+import { towardToFrom } from "../../../core/util/angles";
 import type { MarsSeries } from "./cellstore";
 
 const UA_EDGES = DEFAULT_BINS.uaEdges as ArrayLike<number>;

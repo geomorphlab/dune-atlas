@@ -1,8 +1,8 @@
 // Mars citations: the sources cited for the wind dataset, cell downloads and layers (entries may have
 // a DOI or only a URL), the citation of the atlas-derived fields and the credit lines of image exports.
 // Formatting: cell/citation.ts. No Copernicus notice applies to Mars data (the notices are empty).
-import type { CitationSource } from "../../cell/citation";
-import { PAPER_DOI } from "../../cell/paper";
+import type { CitationSource } from "../../core/cell/citation";
+import { PAPER_DOI } from "../../core/cell/paper";
 
 /** Mars data are not Copernicus information: no notice (kept for the shared imports). */
 export const C3S_NOTICE = "";

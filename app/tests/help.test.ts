@@ -5,13 +5,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { Tour, TOUR_SEEN_KEY, shouldShowTour, tourSeen, visibleTarget } from "../src/ui/tour";
-import { Tools } from "../src/ui/tools";
-import { HELP_BUTTON_LABEL, HELP_SECTIONS, TOUR_STEPS } from "../src/ui/helpText";
-import { helpMarkdown } from "../src/ui/helpDoc";
-import { renderLayerPanel } from "../src/ui/layerPanel";
-import { loadRegistry } from "../src/registry/load";
-import { Store, type AppState } from "../src/store";
+import { Tour, TOUR_SEEN_KEY, shouldShowTour, tourSeen, visibleTarget } from "../src/core/ui/tour";
+import { Tools } from "../src/core/ui/tools";
+import { HELP_BUTTON_LABEL, HELP_SECTIONS, TOUR_STEPS } from "../src/core/ui/helpText";
+import { helpMarkdown } from "../src/core/ui/helpDoc";
+import { renderLayerPanel } from "../src/core/ui/layerPanel";
+import { loadRegistry } from "../src/core/registry/load";
+import { Store, type AppState } from "../src/core/store";
 
 const mem = (() => { const m = new Map<string, string>(); return { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => { m.set(k, String(v)); }, removeItem: (k: string) => { m.delete(k); }, clear: () => m.clear() }; })();
 vi.stubGlobal("localStorage", mem);

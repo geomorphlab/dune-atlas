@@ -13,7 +13,7 @@ and per-body storage keys are shared Earth code, so the Earth build is no longer
 
 ### 1a. One UI for both planets (Earth at `/`, Mars at `/mars/`)
 
-* `app/src/body.ts`: `BODY` (`"earth"`, or `"mars"` when `VITE_BODY=mars`), `BODY_NAME`, `storageKey(name)`,
+* `app/src/core/body.ts`: `BODY` (`"earth"`, or `"mars"` when `VITE_BODY=mars`), `BODY_NAME`, `storageKey(name)`,
   `otherBodyUrl()`.
 * Header (`ui/layerPanel.ts`): h1 "Dune Atlas" followed by the body name ("Earth" / "Mars", class `body-name`,
   `var(--muted)` as the subtitle). Subtitle (`SUBTITLE_HTML`, identical in both builds, two lines, no planet
@@ -51,7 +51,7 @@ and per-body storage keys are shared Earth code, so the Earth build is no longer
 * Group titles: Earth `climate` and Mars `environment` are both "Related data" (ids kept for permalinks).
 * Earth source diff vs `earth/main` from this (outside the Mars-only infrastructure: body plugin, Mars scripts,
   `cell/marsphysics.ts`, `generated/constants-mars.json`, package scripts, `vite.config.ts`, `.gitignore`):
-  `app/src/body.ts` (new), `app/src/ui/layerPanel.ts` (header label, subtitle, selector with one dataset, info structure), `app/src/style.css` (body-name rule, overflow-wrap rules), `app/src/ui/tools.ts` (planet toggle), `app/src/ui/helpText.ts` (tour step `planet`), `docs/reference/help-text.md` (regenerated), `app/src/ui/tour.ts`, `app/src/ui/cellPanel.ts`, `app/src/main.ts` (storage keys via `storageKey`, Earth key strings unchanged), `registry/earth/layers.yaml`, `registry/earth/generated/x_extra_fields.yaml`, `registry/earth/datasets/era5/x_extra_fields.yaml`, `pipeline/src/dune_atlas_pipeline/extra_layers.py` (generator) and `vegetation.py` (comment) (group title "Related data"), `docs/guide/architecture.md`, `docs/records/validation-veg.md`, `app/tests/help.test.ts`, `app/tests/ui.test.ts`, `app/tests/vegetation.test.ts`, `app/tests/body.test.ts` (new), `.github/workflows/deploy.yml`, `app/scripts/test-ci.sh`.
+  `app/src/core/body.ts` (new), `app/src/core/ui/layerPanel.ts` (header label, subtitle, selector with one dataset, info structure), `app/src/core/style.css` (body-name rule, overflow-wrap rules), `app/src/core/ui/tools.ts` (planet toggle), `app/src/core/ui/helpText.ts` (tour step `planet`), `docs/reference/help-text.md` (regenerated), `app/src/core/ui/tour.ts`, `app/src/core/ui/cellPanel.ts`, `app/src/main.ts` (storage keys via `storageKey`, Earth key strings unchanged), `registry/earth/layers.yaml`, `registry/earth/generated/x_extra_fields.yaml`, `registry/earth/datasets/era5/x_extra_fields.yaml`, `pipeline/src/dune_atlas_pipeline/extra_layers.py` (generator) and `vegetation.py` (comment) (group title "Related data"), `docs/guide/architecture.md`, `docs/records/validation-veg.md`, `app/tests/help.test.ts`, `app/tests/ui.test.ts`, `app/tests/vegetation.test.ts`, `app/tests/body.test.ts` (new), `.github/workflows/deploy.yml`, `app/scripts/test-ci.sh`.
 
 Per-body code lives in `app/src/bodies/<body>/`; shared modules import it through the `@body/` alias
 (`vite.config.ts` resolves `@body/<module>` to `src/bodies/earth/` or `src/bodies/mars/` by `VITE_BODY`;
@@ -59,22 +59,22 @@ Per-body code lives in `app/src/bodies/<body>/`; shared modules import it throug
 
 | module | content |
 |---|---|
-| `profile.ts` | `PROFILE` (`BodyProfile`, `src/profile.ts`): radius and Web Mercator circumference, export names and strip texts, invert wording, the slider quantity (Earth u\*,th, Mars d: readout, TeX, ⓘ, plot axes; Mars plots use log10 d), coordinates tooltip, opening view |
-| `citation.ts` | cited sources per dataset / cell download / About, field citation and licence, map attribution, image-export credit lines (formatting: `src/cell/citation.ts`) |
-| `datasetinfo.ts` | the wind dataset table (functions: `src/cell/datasetinfo.ts`) |
+| `profile.ts` | `PROFILE` (`BodyProfile`, `src/core/profile.ts`): radius and Web Mercator circumference, export names and strip texts, invert wording, the slider quantity (Earth u\*,th, Mars d: readout, TeX, ⓘ, plot axes; Mars plots use log10 d), coordinates tooltip, opening view |
+| `citation.ts` | cited sources per dataset / cell download / About, field citation and licence, map attribution, image-export credit lines (formatting: `src/core/cell/citation.ts`) |
+| `datasetinfo.ts` | the wind dataset table (functions: `src/core/cell/datasetinfo.ts`) |
 | `auxinfo.ts` | the per-cell sidecar variables (Earth: qsdiv, aridity, vegetation; Mars: qsdiv on R_MARS, rho_mean, elev_mean) |
 | `fieldinfo.ts` | source attributes of the qsat fields (`registry/<body>/qsat_field_metadata.json`) |
-| `helpText.ts` | help sections, tour steps, dataset ⓘ, share text and the About texts (shared labels: `src/ui/helpText.ts`) |
+| `helpText.ts` | help sections, tour steps, dataset ⓘ, share text and the About texts (shared labels: `src/core/ui/helpText.ts`) |
 | `config.ts` | build defaults (sidecar paths, site URL) |
 | `registry.ts` | the registry files `registry/<body>/{layers.yaml, generated/*.yaml, datasets/*/*.yaml}` |
 
 The Mars build additionally substitutes two Earth modules with Mars modules (`app/scripts/body-plugin.ts`,
 `MARS_SUBSTITUTES` in `src/bodies/mars/build.ts`): `src/main.ts` → `src/bodies/mars/main.ts` and
-`src/ui/cellPanel.ts` → `src/bodies/mars/ui/cellPanel.ts` (the hourly-series data path of the Mars cell
+`src/core/ui/cellPanel.ts` → `src/bodies/mars/ui/cellPanel.ts` (the hourly-series data path of the Mars cell
 panel), and sets the `index.html` title, description and noscript text. There are no source patches.
 
 New Mars-only code lives under `app/src/bodies/mars/` (cell store, per-hour rose computation, exports,
-scale bar, basemaps, Esri protocol). The physics is only `src/cell/marsphysics.ts` (port of
+scale bar, basemaps, Esri protocol). The physics is only `src/bodies/mars/marsphysics.ts` (port of
 `pipeline/.../mars/physics.py`); nothing in the app re-implements it.
 
 ### Commands (in `app/`)
@@ -337,7 +337,7 @@ recent history when that blob is not in the clone). It also fails if a substitut
 
 ```
 node scripts/mars/app/reconcile.mjs --check [--rev <rev>]          # what changed (at the working tree or at <rev>)
-node scripts/mars/app/reconcile.mjs --record src/ui/cellPanel.ts ... # after porting: re-record (app-relative paths)
+node scripts/mars/app/reconcile.mjs --record src/core/ui/cellPanel.ts ... # after porting: re-record (app-relative paths)
 node scripts/mars/app/reconcile.mjs --sync                         # add/drop entries after changing MARS_SUBSTITUTES
 ```
 

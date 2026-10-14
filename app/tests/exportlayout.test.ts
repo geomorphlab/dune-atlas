@@ -9,14 +9,14 @@
 import { describe, expect, it, vi } from "vitest";
 import zlib from "node:zlib";
 import { Resvg } from "@resvg/resvg-js";
-import { loadRegistry } from "../src/registry/load";
-import { mapStripItems, mapStripSvg, type MapStripContext } from "../src/export/mapExport";
-import { COLORBAR, colorbarsPerRow, slidePt, STRIP_FS, STRIP_PAD, STRIP_REL, STRIP_UNITS, stripSvg } from "../src/export/strip";
-import { dpiToPpm, EXPORT_DPI, mapExportPixelRatio, mapExportWidth, PLOT_EXPORT_WIDTH, readPngPhys, setPngDpi, stripPlacement } from "../src/export/png";
-import { PLOT_KEYS } from "../src/export/plotExport";
-import { CellPanel } from "../src/ui/cellPanel";
-import type { CellStore } from "../src/cell/cellstore";
-import { EXPORT_TEXT, HELP_SECTIONS } from "../src/ui/helpText";
+import { loadRegistry } from "../src/core/registry/load";
+import { mapStripItems, mapStripSvg, type MapStripContext } from "../src/core/export/mapExport";
+import { COLORBAR, colorbarsPerRow, slidePt, STRIP_FS, STRIP_PAD, STRIP_REL, STRIP_UNITS, stripSvg } from "../src/core/export/strip";
+import { dpiToPpm, EXPORT_DPI, mapExportPixelRatio, mapExportWidth, PLOT_EXPORT_WIDTH, readPngPhys, setPngDpi, stripPlacement } from "../src/core/export/png";
+import { PLOT_KEYS } from "../src/core/export/plotExport";
+import { CellPanel } from "../src/core/ui/cellPanel";
+import type { CellStore } from "../src/core/cell/cellstore";
+import { EXPORT_TEXT, HELP_SECTIONS } from "../src/core/ui/helpText";
 import { sampleCell } from "./publictext";
 import { FIELD_VARS } from "./helpers";
 

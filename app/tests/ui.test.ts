@@ -3,14 +3,14 @@
 // not instantiated here). Uses the merged registry and a fixture cell.
 import { describe, expect, it, beforeEach, vi } from "vitest";
 import fixture from "./fixtures/flux-parity.json";
-import { loadRegistry } from "../src/registry/load";
-import { Store, type AppState } from "../src/store";
-import { renderLayerPanel, AI_NOTICE } from "../src/ui/layerPanel";
-import { metersPerPixel, spacingToPx, SPACING_KM_STEPS } from "../src/layerconfig";
-import { CellPanel, MODES_OPEN_KEY, PANEL_SECTIONS, sameLocation, sectionOpenKey } from "../src/ui/cellPanel";
-import { CONFIG } from "../src/config";
-import type { CellData, CellStore } from "../src/cell/cellstore";
-import { C } from "../src/util/constants";
+import { loadRegistry } from "../src/core/registry/load";
+import { Store, type AppState } from "../src/core/store";
+import { renderLayerPanel, AI_NOTICE } from "../src/core/ui/layerPanel";
+import { metersPerPixel, spacingToPx, SPACING_KM_STEPS } from "../src/core/layerconfig";
+import { CellPanel, MODES_OPEN_KEY, PANEL_SECTIONS, sameLocation, sectionOpenKey } from "../src/core/ui/cellPanel";
+import { CONFIG } from "../src/core/config";
+import type { CellData, CellStore } from "../src/core/cell/cellstore";
+import { C } from "../src/core/util/constants";
 
 const reg = loadRegistry().registry;
 import { makeCell, FIELD_VARS } from "./helpers";

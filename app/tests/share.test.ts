@@ -1,11 +1,11 @@
 // Short share links (#v=…): round trips for many random states, stable id tables, length of
 // typical links, and the old ?query permalinks still parse.
 import { describe, expect, it } from "vitest";
-import { decodeShare, encodeShare, shareFromHash, shareToUrlState, shareUrl, SHARE_IDS, type ShareState } from "../src/share/shortlink";
-import { loadRegistry } from "../src/registry/load";
-import { COLORMAPS } from "../src/util/colormaps";
-import { SPACING_KM_STEPS, type LayerConfig } from "../src/layerconfig";
-import { parseUrlState } from "../src/urlstate";
+import { decodeShare, encodeShare, shareFromHash, shareToUrlState, shareUrl, SHARE_IDS, type ShareState } from "../src/core/share/shortlink";
+import { loadRegistry } from "../src/core/registry/load";
+import { COLORMAPS } from "../src/core/util/colormaps";
+import { SPACING_KM_STEPS, type LayerConfig } from "../src/core/layerconfig";
+import { parseUrlState } from "../src/core/urlstate";
 
 let seed = 12345;
 const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);

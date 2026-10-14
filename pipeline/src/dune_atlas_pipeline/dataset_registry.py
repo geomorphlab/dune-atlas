@@ -1,5 +1,5 @@
 """Registry files of an additional wind dataset (ERA5), kept in `registry/earth/datasets/<id>/`. The app
-merges them at build time (app/src/registry/load.ts): `dataset.yaml` adds the entry to the `datasets` list
+merges them at build time (app/src/core/registry/load.ts): `dataset.yaml` adds the entry to the `datasets` list
 and each fragment replaces the same-named `registry/earth/generated/*.yaml` fragment for that dataset.
 
     registry/earth/datasets/era5/dataset.yaml               entry for the `datasets` list of registry/earth/layers.yaml

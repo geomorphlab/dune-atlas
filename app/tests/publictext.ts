@@ -3,20 +3,20 @@
 import fs from "node:fs";
 import path from "node:path";
 import { NAN_WORD, siteDeny } from "./denylist";
-import { loadRegistry } from "../src/registry/load";
-import { Store, type AppState } from "../src/store";
-import { renderLayerPanel } from "../src/ui/layerPanel";
-import { legendHtml } from "../src/ui/legend";
-import { CellPanel } from "../src/ui/cellPanel";
-import type { CellData, CellStore } from "../src/cell/cellstore";
-import { cellNetcdf, csvColumns, metadataJson, readmeText } from "../src/cell/export";
-import { citationFile } from "../src/cell/downloads";
+import { loadRegistry } from "../src/core/registry/load";
+import { Store, type AppState } from "../src/core/store";
+import { renderLayerPanel } from "../src/core/ui/layerPanel";
+import { legendHtml } from "../src/core/ui/legend";
+import { CellPanel } from "../src/core/ui/cellPanel";
+import type { CellData, CellStore } from "../src/core/cell/cellstore";
+import { cellNetcdf, csvColumns, metadataJson, readmeText } from "../src/core/cell/export";
+import { citationFile } from "../src/core/cell/downloads";
 import { makeCell, FIELD_VARS } from "./helpers";
 import { readNc } from "./ncreader";
-import * as HELP from "../src/ui/helpText";
-import { mapStripItems } from "../src/export/mapExport";
-import { plotStripItems } from "../src/export/plotExport";
-import { datasetInfo } from "../src/cell/datasetinfo";
+import * as HELP from "../src/core/ui/helpText";
+import { mapStripItems } from "../src/core/export/mapExport";
+import { plotStripItems } from "../src/core/export/plotExport";
+import { datasetInfo } from "../src/core/cell/datasetinfo";
 
 const textOf = (html: string) => { const d = document.createElement("div"); d.innerHTML = html; return (d.textContent ?? "").replace(/\s+/g, " ").trim(); };
 
@@ -104,7 +104,7 @@ export async function collectPublicText(auxAttrs: Record<string, Record<string, 
     for (const [f, cols] of Object.entries(csvColumns(cell, storeAttrs as never))) for (const c of cols) out[`csv${sfx}.${f}.${c.name}`] = `${c.units} | ${c.longName}`;
   }
   citationFile(cell).split("\n").forEach((l, k) => { if (l.trim()) out[`citation.${k}`] = l; });
-  // help panel, tour, share and export text (src/ui/helpText.ts, src/bodies/earth/helpText.ts)
+  // help panel, tour, share and export text (src/core/ui/helpText.ts, src/bodies/earth/helpText.ts)
   for (const [k, v] of Object.entries(HELP)) {
     if (typeof v === "string") out[`help.${k}`] = v;
     else if (Array.isArray(v)) v.forEach((e, i) => { for (const [f, t] of Object.entries(e)) if (typeof t === "string") out[`help.${k}.${i}.${f}`] = t; });

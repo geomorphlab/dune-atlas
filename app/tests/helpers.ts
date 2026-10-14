@@ -1,8 +1,8 @@
 // Shared test helpers.
-import type { CellData } from "../src/cell/cellstore";
-import { DEFAULT_BINS } from "../src/cell/flux";
-import { ERA5_LAND_GRID } from "../src/cell/snap";
-import { C } from "../src/util/constants";
+import type { CellData } from "../src/core/cell/cellstore";
+import { DEFAULT_BINS } from "../src/core/cell/flux";
+import { ERA5_LAND_GRID } from "../src/core/cell/snap";
+import { C } from "../src/core/util/constants";
 
 export const FIELD_VARS = C.QSAT_VARS.filter((v) => !C.WITHHELD_VARS.includes(v)); // as in the cell store
 

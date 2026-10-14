@@ -1,7 +1,7 @@
 // Layer-type adapters: one function per registry `type` that adds a layer to the map and returns
 // a handle. To add a new layer type: write an adapter here, register it in ADAPTERS, add the
 // type to registry/layers.schema.json `$defs/layer/properties/type/enum` (and any semantic
-// checks to src/registry/validate.ts). See docs/guide/architecture.md.
+// checks to src/core/registry/validate.ts). See docs/guide/architecture.md.
 import maplibregl, { type Map as MlMap, type AddLayerObject, type GeoJSONSource } from "maplibre-gl";
 import { Protocol } from "pmtiles";
 import { ZarrLayer } from "@carbonplan/zarr-layer";

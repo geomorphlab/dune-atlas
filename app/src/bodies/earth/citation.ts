@@ -1,9 +1,9 @@
 // Earth citations: the sources cited for each wind dataset, cell download and layer, the citation
 // of the atlas-derived fields and the credit lines of image exports. Formatting: cell/citation.ts.
-import { escapeHtml } from "../../util/format";
-import { datasetInfo } from "../../cell/datasetinfo";
-import type { CitationSource } from "../../cell/citation";
-import { PAPER_DOI } from "../../cell/paper";
+import { escapeHtml } from "../../core/util/format";
+import { datasetInfo } from "../../core/cell/datasetinfo";
+import type { CitationSource } from "../../core/cell/citation";
+import { PAPER_DOI } from "../../core/cell/paper";
 
 /** Supplementary Data record (CC BY 4.0): wind histograms and qsat parameter fields */
 export const DATA_DOI = "10.5281/zenodo.20046812";

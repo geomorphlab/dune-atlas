@@ -1,15 +1,15 @@
 // @vitest-environment happy-dom
 // Map export layout: strip below the map, as before; download confirmations.
 import { describe, expect, it, vi } from "vitest";
-import { loadRegistry } from "../src/registry/load";
-import { initialAppState, DEFAULT_VIEW } from "../src/defaultview";
-import { shareToUrlState } from "../src/share/shortlink";
-import { mapStripItems, EXPORT_STAGES } from "../src/export/mapExport";
-import { stripSvg } from "../src/export/strip";
-import { mapExportWidth } from "../src/export/png";
-import { announceDownload, DOWNLOAD_EVENT, triggerDownload } from "../src/cell/downloads";
-import { Tools } from "../src/ui/tools";
-import { EXPORT_TEXT } from "../src/ui/helpText";
+import { loadRegistry } from "../src/core/registry/load";
+import { initialAppState, DEFAULT_VIEW } from "../src/core/defaultview";
+import { shareToUrlState } from "../src/core/share/shortlink";
+import { mapStripItems, EXPORT_STAGES } from "../src/core/export/mapExport";
+import { stripSvg } from "../src/core/export/strip";
+import { mapExportWidth } from "../src/core/export/png";
+import { announceDownload, DOWNLOAD_EVENT, triggerDownload } from "../src/core/cell/downloads";
+import { Tools } from "../src/core/ui/tools";
+import { EXPORT_TEXT } from "../src/core/ui/helpText";
 
 const reg = loadRegistry().registry;
 vi.stubGlobal("localStorage", { getItem: () => null, setItem: () => {}, removeItem: () => {} });

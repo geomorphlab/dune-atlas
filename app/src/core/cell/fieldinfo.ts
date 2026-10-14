@@ -6,7 +6,7 @@
 // constants.WITHHELD_VARS (currently none) are never displayed or exported (isPublishedField).
 import { DESCRIPTION_VARIANT, FIELD_METADATA as meta } from "@body/fieldinfo";
 // one name per quantity: the registry title / titleTex, written by the pipeline with the registry
-import names from "../../../registry/field_names.json";
+import names from "../../../../registry/field_names.json";
 import { C } from "../util/constants";
 import { mathToAxisDeg, mathToBearingDeg } from "../util/angles";
 

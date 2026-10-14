@@ -5,7 +5,7 @@ export function helpMarkdown(): string {
   const L: string[] = [
     "# Dune Atlas: help and tour text",
     "",
-    "Generated from `app/src/ui/helpText.ts` by `npm run help-doc` (do not edit here; a test checks that",
+    "Generated from the Earth help text (`app/src/bodies/earth/helpText.ts`, shared labels in `app/src/core/ui/helpText.ts`) by `npm run help-doc` (do not edit here; a test checks that",
     "this file matches the source). `$...$` is rendered as inline maths.",
     "",
     "## Help button and panel",

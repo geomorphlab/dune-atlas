@@ -1,16 +1,16 @@
 // SVG/legend/tex/download builders: structural checks (no browser).
 import { describe, expect, it } from "vitest";
 import fixture from "./fixtures/flux-parity.json";
-import { roseSvg, niceTicks, SPEED_COLORS, windRoseData } from "../src/cell/roses";
-import { modesPlotSvg, continuousRuns } from "../src/cell/modesplot";
-import { texToHtml, texToText } from "../src/util/tex";
-import { citationFile } from "../src/cell/downloads";
-import { analyseCell } from "../src/cell/analysis";
-import { dpRdpRdd, fluxRose } from "../src/cell/flux";
-import { fragmentFor, displayExpr } from "../src/map/shader";
-import { legendHtml, legendTicks, tickLabel } from "../src/ui/legend";
-import { C } from "../src/util/constants";
-import type { CellData } from "../src/cell/cellstore";
+import { roseSvg, niceTicks, SPEED_COLORS, windRoseData } from "../src/core/cell/roses";
+import { modesPlotSvg, continuousRuns } from "../src/core/cell/modesplot";
+import { texToHtml, texToText } from "../src/core/util/tex";
+import { citationFile } from "../src/core/cell/downloads";
+import { analyseCell } from "../src/core/cell/analysis";
+import { dpRdpRdd, fluxRose } from "../src/core/cell/flux";
+import { fragmentFor, displayExpr } from "../src/core/map/shader";
+import { legendHtml, legendTicks, tickLabel } from "../src/core/ui/legend";
+import { C } from "../src/core/util/constants";
+import type { CellData } from "../src/core/cell/cellstore";
 import { makeCell, FIELD_VARS } from "./helpers";
 import meta from "../../registry/earth/qsat_field_metadata.json";
 

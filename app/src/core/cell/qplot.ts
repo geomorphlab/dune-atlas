@@ -4,7 +4,7 @@
 // are the layer list's (registry/field_names.json; one name per quantity). Direction fields use a fixed
 // 0-360° (axes 0-180°) y axis with breaks where the bearing wraps (PLOT_DIRECTIONS switches them off);
 // ±60,000 sentinels (infinite ratios) and missing values are left out of the autoscale and marked.
-// Shared by both builds (src/ui/cellPanel.ts, src/bodies/mars/ui/cellPanel.ts).
+// Shared by both builds (src/bodies/earth/cellPanel.ts, src/bodies/mars/cellPanel.ts).
 import { fieldValue, type CellData } from "./cellstore";
 import { FIELD_NAMES, fieldInfo } from "./fieldinfo";
 import { modeDefined, MODE_DEFINED_BY, type ModeKey } from "./analysis";

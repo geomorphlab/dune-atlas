@@ -68,7 +68,7 @@ Python for arrays you compute yourself). Registry entry (`registry/earth/layers.
   queryable: false           # cell panel values come from cells.zarr (qsat fields only)
   display: {transform: none, colormap: viridis, clim: [0.0065, 4.2], log: true}
 ```
-Use the `clim` printed by the build. Colormap names: `app/src/generated/colormaps.json`.
+Use the `clim` printed by the build. Colormap names: `app/src/core/generated/colormaps.json`.
 
 ## Example 2 — a new threshold-dependent field (same shape as qsat_params)
 

@@ -1,17 +1,17 @@
 // @vitest-environment happy-dom
-// Mars build of the shared UI (src/body.ts): header "Dune Atlas Mars", planet toggle back to Earth (site
+// Mars build of the shared UI (src/core/body.ts): header "Dune Atlas Mars", planet toggle back to Earth (site
 // root, from the /mars/ base), Mars tour step, and every browser-storage key namespaced per body so the
 // Mars first-visit tour still shows after visiting Earth on the same origin.
 import { describe, expect, it, vi } from "vitest";
-import { BODY, otherBodyUrl, storageKey } from "../../src/body";
-import { Tools } from "../../src/ui/tools";
-import { TOUR_SEEN_KEY, tourSeen } from "../../src/ui/tour";
-import { MODES_OPEN_KEY, sectionOpenKey } from "../../src/ui/cellPanel";
-import { TOUR_STEPS } from "../../src/ui/helpText";
-import { renderLayerPanel } from "../../src/ui/layerPanel";
-import { loadRegistry } from "../../src/registry/load";
-import { Store } from "../../src/store";
-import { DEFAULT_VIEW } from "../../src/defaultview";
+import { BODY, otherBodyUrl, storageKey } from "../../src/core/body";
+import { Tools } from "../../src/core/ui/tools";
+import { TOUR_SEEN_KEY, tourSeen } from "../../src/core/ui/tour";
+import { MODES_OPEN_KEY, sectionOpenKey } from "../../src/core/ui/cellPanel";
+import { TOUR_STEPS } from "../../src/core/ui/helpText";
+import { renderLayerPanel } from "../../src/core/ui/layerPanel";
+import { loadRegistry } from "../../src/core/registry/load";
+import { Store } from "../../src/core/store";
+import { DEFAULT_VIEW } from "../../src/core/defaultview";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -52,7 +52,7 @@ describe("Mars build: planet toggle, header, storage", () => {
     expect([dunes.invertSource, dunes.invertSourceLayer]).toEqual(["dune-atlas/mars/v1/dunes/invert-r2.pmtiles", "invert"]);
     expect(root.querySelector('.layer-item[data-layer="dunes"]')!.textContent).toMatch(/invert \(areas without dunes\)/);
     expect(sub.querySelector("a")!.getAttribute("href")).toBe("https://www.geomorphlab.org/");
-    const css = fs.readFileSync(path.resolve(__dirname, "../../src/style.css"), "utf8");
+    const css = fs.readFileSync(path.resolve(__dirname, "../../src/core/style.css"), "utf8");
     expect(css).toMatch(/\.atlas-header h1 \.body-name \{ color: var\(--muted\)/);
   });
   it("every storage key is duneAtlasMars.*; the Earth tour flag does not suppress the Mars tour", () => {
@@ -71,8 +71,8 @@ describe("Mars build: planet toggle, header, storage", () => {
     expect(bad).toEqual([]);
   });
   it("old links with the removed 'dark' basemap open on the default basemap (long and short links)", async () => {
-    const { resolveInitialState, initialAppState } = await import("../../src/defaultview");
-    const { encodeShare, decodeShare } = await import("../../src/share/shortlink");
+    const { resolveInitialState, initialAppState } = await import("../../src/core/defaultview");
+    const { encodeShare, decodeShare } = await import("../../src/core/share/shortlink");
     const reg = loadRegistry().registry;
     expect(reg.basemaps.some((b) => b.id === "dark")).toBe(false);
     const q = resolveInitialState(null, { basemap: "dark", lon: 67, lat: 9 } as never, undefined, undefined);
@@ -82,7 +82,7 @@ describe("Mars build: planet toggle, header, storage", () => {
     expect(initialAppState(reg, s.url, "fv3-beta1").basemap).toBe("hrsc-mola-hillshade");
   });
   it("info popovers follow the same structure on Mars (Wind data = MCMC FV3; slider = grain diameter d)", async () => {
-    const { infoHtml } = await import("../../src/ui/layerPanel");
+    const { infoHtml } = await import("../../src/core/ui/layerPanel");
     const reg = loadRegistry().registry;
     const L = (id: string) => reg.layers.find((l) => l.id === id)!;
     const rows = (id: string) => [...infoHtml(L(id)).matchAll(/<dt>([^<]+)<\/dt>/g)].map((m) => m[1]);
@@ -132,7 +132,7 @@ describe("Mars: texts at the source, one field citation, FV3 licence, basemap in
     expect(reg.layers.find((l) => l.id === "rdpa")!.description).toMatch(/compass bearing/);
   });
   it("basemap info buttons (6) with the same structure; About cites the FV3 fields; DEM named MOLA–HRSC", async () => {
-    const { basemapInfoHtml } = await import("../../src/ui/layerPanel");
+    const { basemapInfoHtml } = await import("../../src/core/ui/layerPanel");
     const reg = loadRegistry().registry;
     for (const b of reg.basemaps) expect([...basemapInfoHtml(b).matchAll(/<dt>([^<]+)<\/dt>/g)].map((m) => m[1]), b.id)
       .toEqual(b.id === "esri-hirise" ? ["Source", "Resolution", "Coverage", "Licence", "Link"] : ["Source", "Resolution", "Licence", "Link"]);

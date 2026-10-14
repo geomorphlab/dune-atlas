@@ -1,6 +1,6 @@
-"""Export pipeline constants to app/src/generated/constants.json.
+"""Export pipeline constants to app/src/core/generated/constants.json.
 
-The browser flux computation (src/cell/flux.ts) must use exactly the constants
+The browser flux computation (src/core/cell/flux.ts) must use exactly the constants
 in pipeline/src/dune_atlas_pipeline/constants.py. Re-run after changing them:
 
     PYTHONPATH=pipeline/src python app/scripts/export-constants.py
@@ -25,6 +25,6 @@ out = {
     # fields withheld from the atlas (none)
     "QSAT_VARS": list(C.QSAT_VARS), "WITHHELD_VARS": list(C.WITHHELD_VARS),
 }
-dst = ROOT / "app" / "src" / "generated" / "constants.json"
+dst = ROOT / "app" / "src" / "core" / "generated" / "constants.json"
 dst.write_text(json.dumps(out, indent=1) + "\n")
 print(dst, len(out))

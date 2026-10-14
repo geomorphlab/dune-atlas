@@ -3,13 +3,13 @@
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { arrowFeatures, gcDeg, geoPolylines, sampleBearing, sampleNearest, sampleUnit, offset, buildScreenField, evenStreamlines, sampleScreen, arrowheadsAlong, type Grid, type ScreenField, type Streamline } from "../src/map/vectors";
-import { FieldReader } from "../src/map/fieldreader";
+import { arrowFeatures, gcDeg, geoPolylines, sampleBearing, sampleNearest, sampleUnit, offset, buildScreenField, evenStreamlines, sampleScreen, arrowheadsAlong, type Grid, type ScreenField, type Streamline } from "../src/core/map/vectors";
+import { FieldReader } from "../src/core/map/fieldreader";
 import * as zarr from "zarrita";
-import { effectiveDisplay, decodeConfig, encodeConfig, canLog, isDirectional, metersPerPixel, spacingToPx, DSEP_PX_CLAMP, SPACING_KM_STEPS, nearestSpacingStep, migrateLegacySpacing, vectorColors } from "../src/layerconfig";
-import { mathHtml, mathOnly, textOnly } from "../src/util/math";
-import { loadRegistry } from "../src/registry/load";
-import { mathToBearingDeg } from "../src/util/angles";
+import { effectiveDisplay, decodeConfig, encodeConfig, canLog, isDirectional, metersPerPixel, spacingToPx, DSEP_PX_CLAMP, SPACING_KM_STEPS, nearestSpacingStep, migrateLegacySpacing, vectorColors } from "../src/core/layerconfig";
+import { mathHtml, mathOnly, textOnly } from "../src/core/util/math";
+import { loadRegistry } from "../src/core/registry/load";
+import { mathToBearingDeg } from "../src/core/util/angles";
 
 const reg = loadRegistry().registry;
 const L = (id: string) => reg.layers.find((l) => l.id === id)!;

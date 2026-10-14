@@ -7,8 +7,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const handlers: Record<string, (p: { url: string }, a: AbortController) => Promise<{ data: unknown }>> = {};
 vi.mock("maplibre-gl", () => ({ default: { addProtocol: (name: string, fn: (typeof handlers)[string]) => { handlers[name] = fn; } } }));
 
-import { loadRegistry } from "../../src/registry/load";
-import { HELP_SECTIONS } from "../../src/ui/helpText";
+import { loadRegistry } from "../../src/core/registry/load";
+import { HELP_SECTIONS } from "../../src/core/ui/helpText";
 import { prepareMarsBasemaps } from "../../src/bodies/mars/map/basemaps";
 import { ensureEsriProtocol, ESRI_SERVICES, ESRI_STATS, esriTile, resetEsri, tilingMismatch, type EsriEnv } from "../../src/bodies/mars/map/esri";
 

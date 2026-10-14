@@ -3,9 +3,9 @@
 // the masked virtual store (map/maskedstore.ts + map/dunemask.ts) against a real cell store and field store.
 import { expect } from "vitest";
 import * as zarr from "zarrita";
-import { MaskedFieldStore } from "../src/map/maskedstore";
-import { loadDuneMask, maskAtFactor, levelFactor, maskGrid, type DuneMask } from "../src/map/dunemask";
-import { applyMask } from "../src/map/vectors";
+import { MaskedFieldStore } from "../src/core/map/maskedstore";
+import { loadDuneMask, maskAtFactor, levelFactor, maskGrid, type DuneMask } from "../src/core/map/dunemask";
+import { applyMask } from "../src/core/map/vectors";
 
 type Key = `/${string}`;
 export class MemStore implements zarr.AsyncReadable {

@@ -7,9 +7,9 @@ import { beforeAll, describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
-import { CellStore, type CellData } from "../src/cell/cellstore";
-import { CellPanel } from "../src/ui/cellPanel";
-import { cellNetcdf, csvBundle, exportBaseName, type ExportMeta } from "../src/cell/export";
+import { CellStore, type CellData } from "../src/core/cell/cellstore";
+import { CellPanel } from "../src/core/ui/cellPanel";
+import { cellNetcdf, csvBundle, exportBaseName, type ExportMeta } from "../src/core/cell/export";
 import { readNc } from "./ncreader";
 
 const REPO = path.resolve(__dirname, "../..");

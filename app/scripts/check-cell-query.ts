@@ -1,18 +1,18 @@
-// Exercise the browser cell-query path (src/cell/*) in node against a local store using range
+// Exercise the browser cell-query path (src/core/cell/*) in node against a local store using range
 // reads (same get/getRange contract as zarrita's FetchStore). Writes the panel SVGs and the
 // downloads for inspection.
 //   npm run check-cell-query -- ../staging/fixture [outdir] [lon lat]
 import fs from "node:fs";
 import path from "node:path";
-import { CellStore } from "../src/cell/cellstore";
-import { snapToCell } from "../src/cell/snap";
-import { analyseCell, EXCESS_CLASSES, EXCESS_COLORS, FLUX_MODES, MODE_KEYS, MODE_STYLE, ROSE_ARROW_KEYS } from "../src/cell/analysis";
-import { roseSvg, SPEED_COLORS } from "../src/cell/roses";
-import { modesPlotSvg } from "../src/cell/modesplot";
-import { citationFile } from "../src/cell/downloads";
-import { cellNetcdf, csvBundle, exportBaseName } from "../src/cell/export";
-import { dpRdpRdd } from "../src/cell/flux";
-import { C, WITHHELD } from "../src/util/constants";
+import { CellStore } from "../src/core/cell/cellstore";
+import { snapToCell } from "../src/core/cell/snap";
+import { analyseCell, EXCESS_CLASSES, EXCESS_COLORS, FLUX_MODES, MODE_KEYS, MODE_STYLE, ROSE_ARROW_KEYS } from "../src/core/cell/analysis";
+import { roseSvg, SPEED_COLORS } from "../src/core/cell/roses";
+import { modesPlotSvg } from "../src/core/cell/modesplot";
+import { citationFile } from "../src/core/cell/downloads";
+import { cellNetcdf, csvBundle, exportBaseName } from "../src/core/cell/export";
+import { dpRdpRdd } from "../src/core/cell/flux";
+import { C, WITHHELD } from "../src/core/util/constants";
 
 const args = process.argv.slice(2).filter((a) => a !== "--");
 const base = path.resolve(args[0] ?? "../staging/fixture");

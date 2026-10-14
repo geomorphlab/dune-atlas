@@ -7,16 +7,16 @@ import { describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import { Resvg } from "@resvg/resvg-js";
-import { loadRegistry } from "../src/registry/load";
-import { createMathRenderer } from "../src/export/mathjax";
-import { MATH_SCALE, richText, splitTex, unitsTex, wrapRich } from "../src/export/texsvg";
-import { exportTitleTex, exportUnits, utTex } from "../src/export/labels";
-import { mapStripSvg, type MapStripContext } from "../src/export/mapExport";
-import { FLUX_MODES, MODE_STYLE } from "../src/cell/analysis";
-import { PLOT_KEYS } from "../src/export/plotExport";
-import { CellPanel } from "../src/ui/cellPanel";
-import type { CellStore } from "../src/cell/cellstore";
-import { texToPlain } from "../src/util/plaintext";
+import { loadRegistry } from "../src/core/registry/load";
+import { createMathRenderer } from "../src/core/export/mathjax";
+import { MATH_SCALE, richText, splitTex, unitsTex, wrapRich } from "../src/core/export/texsvg";
+import { exportTitleTex, exportUnits, utTex } from "../src/core/export/labels";
+import { mapStripSvg, type MapStripContext } from "../src/core/export/mapExport";
+import { FLUX_MODES, MODE_STYLE } from "../src/core/cell/analysis";
+import { PLOT_KEYS } from "../src/core/export/plotExport";
+import { CellPanel } from "../src/core/ui/cellPanel";
+import type { CellStore } from "../src/core/cell/cellstore";
+import { texToPlain } from "../src/core/util/plaintext";
 import { sampleCell } from "./publictext";
 import { FIELD_VARS } from "./helpers";
 
@@ -122,7 +122,7 @@ describe("exports contain math groups and no raw TeX in visible text", () => {
 });
 
 describe("lazy loading: MathJax is not in the main bundle", () => {
-  it("only src/export/mathjax.ts imports mathjax-full, and it is only imported dynamically", () => {
+  it("only src/core/export/mathjax.ts imports mathjax-full, and it is only imported dynamically", () => {
     const files: string[] = [];
     const walk = (d: string) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const f = path.join(d, e.name); if (e.isDirectory()) walk(f); else if (/\.ts$/.test(f)) files.push(f); } };
     walk(path.resolve(__dirname, "../src"));
@@ -131,6 +131,6 @@ describe("lazy loading: MathJax is not in the main bundle", () => {
       if (!f.endsWith(path.join("export", "mathjax.ts"))) expect(src, f).not.toMatch(/from\s+["']mathjax-full/);
       expect(src, f).not.toMatch(/import\s*(\{[^}]*\}|\*\s+as\s+\w+|\w+)\s*from\s*["']\.\.?\/(export\/)?mathjax["']/);
     }
-    expect(fs.readFileSync(path.resolve(__dirname, "../src/export/texsvg.ts"), "utf8")).toMatch(/import\("\.\/mathjax"\)/);
+    expect(fs.readFileSync(path.resolve(__dirname, "../src/core/export/texsvg.ts"), "utf8")).toMatch(/import\("\.\/mathjax"\)/);
   });
 });

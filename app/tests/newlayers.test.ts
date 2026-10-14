@@ -4,20 +4,20 @@ import { describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import * as zarr from "zarrita";
-import { loadRegistry } from "../src/registry/load";
-import { validateRegistry } from "../src/registry/validate";
+import { loadRegistry } from "../src/core/registry/load";
+import { validateRegistry } from "../src/core/registry/validate";
 import schema from "../../registry/layers.schema.json";
-import { infoHtml, attributionHtml } from "../src/ui/layerPanel";
-import { legendHtml, legendTicks } from "../src/ui/legend";
-import { COLORMAPS } from "../src/util/colormaps";
-import { CellStore, CellAuxStore, type CellData } from "../src/cell/cellstore";
-import { cellNetcdf, fieldsByThresholdCsv, metadataJson } from "../src/cell/export";
-import { aridityClass, AUX_META } from "../src/cell/auxinfo";
-import { linePlotSvg } from "../src/cell/lineplot";
-import { PANEL_SECTIONS, CellPanel } from "../src/ui/cellPanel";
+import { infoHtml, attributionHtml } from "../src/core/ui/layerPanel";
+import { legendHtml, legendTicks } from "../src/core/ui/legend";
+import { COLORMAPS } from "../src/core/util/colormaps";
+import { CellStore, CellAuxStore, type CellData } from "../src/core/cell/cellstore";
+import { cellNetcdf, fieldsByThresholdCsv, metadataJson } from "../src/core/cell/export";
+import { aridityClass, AUX_META } from "../src/core/cell/auxinfo";
+import { linePlotSvg } from "../src/core/cell/lineplot";
+import { PANEL_SECTIONS, CellPanel } from "../src/core/ui/cellPanel";
 import { makeCell, FIELD_VARS } from "./helpers";
-import { C } from "../src/util/constants";
-import { fmtNum } from "../src/util/format";
+import { C } from "../src/core/util/constants";
+import { fmtNum } from "../src/core/util/format";
 import katex from "katex";
 
 const { registry: reg } = loadRegistry();
@@ -58,8 +58,8 @@ describe("registry: aridity and qsdiv", () => {
 
 describe("About: data sources", () => {
   it("lists the aridity source and the flux-divergence derivation; cites Global-AI", async () => {
-    const { renderLayerPanel } = await import("../src/ui/layerPanel");
-    const { Store } = await import("../src/store");
+    const { renderLayerPanel } = await import("../src/core/ui/layerPanel");
+    const { Store } = await import("../src/core/store");
     document.body.innerHTML = '<aside id="layer-panel"></aside>';
     const root = document.getElementById("layer-panel")!;
     const layers = Object.fromEntries(reg.layers.map((l) => [l.id, { visible: false, opacity: 1 }]));

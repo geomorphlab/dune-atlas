@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 // 'Centre map on this cell', Earth: 0.1° ERA5-Land cells.
 import { describe, it, vi } from "vitest";
-import { CellPanel } from "../src/ui/cellPanel";
-import type { CellStore } from "../src/cell/cellstore";
+import { CellPanel } from "../src/core/ui/cellPanel";
+import type { CellStore } from "../src/core/cell/cellstore";
 import { makeCell, FIELD_VARS } from "./helpers";
 import { checkCentre, checkHeaderButton } from "./centrelib";
 

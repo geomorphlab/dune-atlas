@@ -4,9 +4,9 @@
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { CoordsControl, formatLatLon } from "../src/ui/coords";
-import { loadRegistry } from "../src/registry/load";
-import { mapStripItems } from "../src/export/mapExport";
+import { CoordsControl, formatLatLon } from "../src/core/ui/coords";
+import { loadRegistry } from "../src/core/registry/load";
+import { mapStripItems } from "../src/core/export/mapExport";
 
 type H = (e: { lngLat: { lat: number; lng: number } }) => void;
 function fakeMap() {
@@ -72,7 +72,7 @@ describe("readout control", () => {
     expect(main.slice(iScale, main.indexOf("\n", iScale))).toContain('"bottom-left"');
     expect(main.slice(iCoords, main.indexOf("\n", iCoords))).toContain('"bottom-left"');
     const scaleMax = Number(/ScaleControl\(\{ maxWidth: (\d+) \}\)/.exec(hooks)![1]);
-    const css = fs.readFileSync(path.resolve(__dirname, "../src/style.css"), "utf8");
+    const css = fs.readFileSync(path.resolve(__dirname, "../src/core/style.css"), "utf8");
     const rule = (sel: string) => { const k = css.indexOf(`\n${sel} {`) + 1; expect(k, sel).toBeGreaterThan(0); return css.slice(k, css.indexOf("}", k)); };
     const px = (r: string, prop: string) => { const m = new RegExp(`${prop}: ([^;]+);`).exec(r); expect(m, prop).not.toBeNull(); return m![1].trim(); };
     // one flex row aligned to the bottom (MapLibre floats bottom controls with clear: both and inserts
@@ -130,7 +130,7 @@ describe("readout control", () => {
     expect([...box.children].map((e) => e.className)).toEqual(["maplibregl-ctrl atlas-coords", "maplibregl-ctrl maplibregl-ctrl-scale"]);
   });
   it("not part of image exports: exports draw the map canvas and the strip only; the strip has no cursor position", () => {
-    const src = fs.readFileSync(path.resolve(__dirname, "../src/export/mapExport.ts"), "utf8");
+    const src = fs.readFileSync(path.resolve(__dirname, "../src/core/export/mapExport.ts"), "utf8");
     expect(src).toMatch(/map\.getCanvas\(\)/);
     expect(src).not.toMatch(/atlas-coords|querySelector\("\.maplibregl-ctrl/);
     const reg = loadRegistry().registry;

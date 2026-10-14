@@ -4,7 +4,7 @@
 // Pahtz & Duran (2023) J. Fluid Mech. 963:A20: threshold eq. 5.1 with the rarefaction factor of eq. 3.20,
 // transport eq. 3.2 in '+' units. SI units; fluxes are volume fluxes of packed sand q = Q/(rho_p phi) (m^2/s),
 // phi = PACKING = 0.6 (as the Earth atlas).
-import raw from "../generated/constants-mars.json";
+import raw from "./generated/constants-mars.json";
 
 export interface MarsConstants {
   G: number; R_MARS: number; R_AIR: number; MU0: number; T0_MU: number; S_MU: number; K_ADIABATIC: number;

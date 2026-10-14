@@ -2,19 +2,19 @@
 // Image exports: the information strip below the map (contents per active layer set, scale bar,
 // north arrow, sources), the file names, transparency and no dark colours (strip rasterised with
 // resvg), and the panel plots re-rendered in the light theme with the on-screen settings.
-import { PLOT_EXPORT_WIDTH } from "../src/export/png";
+import { PLOT_EXPORT_WIDTH } from "../src/core/export/png";
 import { describe, expect, it, vi } from "vitest";
 import { Resvg } from "@resvg/resvg-js";
-import { loadRegistry } from "../src/registry/load";
-import { mapExportFilename, mapStripItems, mapStripSvg, scaleBar, type MapStripContext } from "../src/export/mapExport";
-import { STRIP_COLORS, stripSvg, wrapText } from "../src/export/strip";
-import { textWidth } from "../src/export/texsvg";
-import { texToPlain } from "../src/util/plaintext";
-import { CellPanel } from "../src/ui/cellPanel";
-import type { CellStore } from "../src/cell/cellstore";
-import { DARK_THEME, LIGHT_THEME } from "../src/cell/plottheme";
-import { plotFilename, PLOT_KEYS } from "../src/export/plotExport";
-import { applyDatasetLayers } from "../src/registry/merge";
+import { loadRegistry } from "../src/core/registry/load";
+import { mapExportFilename, mapStripItems, mapStripSvg, scaleBar, type MapStripContext } from "../src/core/export/mapExport";
+import { STRIP_COLORS, stripSvg, wrapText } from "../src/core/export/strip";
+import { textWidth } from "../src/core/export/texsvg";
+import { texToPlain } from "../src/core/util/plaintext";
+import { CellPanel } from "../src/core/ui/cellPanel";
+import type { CellStore } from "../src/core/cell/cellstore";
+import { DARK_THEME, LIGHT_THEME } from "../src/core/cell/plottheme";
+import { plotFilename, PLOT_KEYS } from "../src/core/export/plotExport";
+import { applyDatasetLayers } from "../src/core/registry/merge";
 import { sampleCell } from "./publictext";
 import { FIELD_VARS } from "./helpers";
 

@@ -4,11 +4,11 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import yaml from "js-yaml";
-import { mergeRegistry, resolveSource, selectDataset } from "../src/registry/merge";
-import { validateRegistry } from "../src/registry/validate";
-import { loadRegistry } from "../src/registry/load";
-import type { LayerDef, Registry, RegistryFragment } from "../src/registry/types";
-import C from "../src/generated/constants.json";
+import { mergeRegistry, resolveSource, selectDataset } from "../src/core/registry/merge";
+import { validateRegistry } from "../src/core/registry/validate";
+import { loadRegistry } from "../src/core/registry/load";
+import type { LayerDef, Registry, RegistryFragment } from "../src/core/registry/types";
+import C from "../src/core/generated/constants.json";
 
 const regDir = path.resolve(__dirname, "../../registry");
 const schema = JSON.parse(fs.readFileSync(path.join(regDir, "layers.schema.json"), "utf8"));

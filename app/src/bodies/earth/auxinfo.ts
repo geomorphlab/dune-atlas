@@ -1,9 +1,9 @@
 // Earth per-cell auxiliary variables (cells-aux.zarr, cells-aux-veg.zarr: flux divergence, aridity,
 // vegetation cover) as shown in the panel and written to the downloads. Names, descriptions, units
 // (UDUNITS) and source statements are defined here; the store attrs give citation, DOI, licence and link.
-import type { CellAux } from "../../cell/cellstore";
-import type { AuxMeta } from "../../cell/auxinfo";
-import { pixelsPerCell, resolutionText } from "../../cell/datasetinfo";
+import type { CellAux } from "../../core/cell/cellstore";
+import type { AuxMeta } from "../../core/cell/auxinfo";
+import { pixelsPerCell, resolutionText } from "../../core/cell/datasetinfo";
 
 export const AUX_META: Record<string, AuxMeta> = {
   qsdiv: {

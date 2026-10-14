@@ -3,20 +3,20 @@
 // (1) the DOM structure of the panel header, the embed pill and the slider block (identical
 // signature in both builds), (2) the CSS rules that place them, and (3) width budgets at the iframe
 // widths 360, 480, 640, 800 and full screen 1280 px, with text widths from the export's Helvetica
-// metrics (src/export/texsvg.ts textWidth) times a 1.1 margin for system-ui.
+// metrics (src/core/export/texsvg.ts textWidth) times a 1.1 margin for system-ui.
 import { expect } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { loadRegistry } from "../src/registry/load";
-import { Store, type AppState } from "../src/store";
-import { renderLayerPanel, datasetOptionLabel } from "../src/ui/layerPanel";
-import { FULL_SCREEN_NOTE, FULL_SCREEN_TEXT } from "../src/ui/embed";
-import { THRESHOLD_HELP } from "../src/ui/threshold";
-import { textWidth } from "../src/export/texsvg";
-import { BODY_NAME } from "../src/body";
+import { loadRegistry } from "../src/core/registry/load";
+import { Store, type AppState } from "../src/core/store";
+import { renderLayerPanel, datasetOptionLabel } from "../src/core/ui/layerPanel";
+import { FULL_SCREEN_NOTE, FULL_SCREEN_TEXT } from "../src/core/ui/embed";
+import { THRESHOLD_HELP } from "../src/core/ui/threshold";
+import { textWidth } from "../src/core/export/texsvg";
+import { BODY_NAME } from "../src/core/body";
 
 export const WIDTHS = [360, 480, 640, 800, 1280];
-const CSS = fs.readFileSync(path.resolve(__dirname, "../src/style.css"), "utf8");
+const CSS = fs.readFileSync(path.resolve(__dirname, "../src/core/style.css"), "utf8");
 const M = 1.1; // system-ui vs Helvetica metrics
 const tw = (s: string, fs_: number, bold = false) => M * textWidth(s, fs_, bold);
 

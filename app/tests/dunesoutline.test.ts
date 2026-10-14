@@ -5,14 +5,14 @@ import { describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import { FakeMap } from "./fakemap";
-import { loadRegistry } from "../src/registry/load";
-import { OverlayManager, restoreOverlays, isDuneMap } from "../src/map/overlays";
-import { setBasemap } from "../src/map/basemaps";
-import { OUTLINE_WIDTH } from "../src/map/adapters";
-import type { LayerState } from "../src/store";
+import { loadRegistry } from "../src/core/registry/load";
+import { OverlayManager, restoreOverlays, isDuneMap } from "../src/core/map/overlays";
+import { setBasemap } from "../src/core/map/basemaps";
+import { OUTLINE_WIDTH } from "../src/core/map/adapters";
+import type { LayerState } from "../src/core/store";
 import type { Map as MlMap } from "maplibre-gl";
 
-vi.mock("../src/map/fieldreader", () => ({ FieldReader: { open: () => Promise.reject(new Error("no field data in this test")) } }));
+vi.mock("../src/core/map/fieldreader", () => ({ FieldReader: { open: () => Promise.reject(new Error("no field data in this test")) } }));
 vi.stubGlobal("fetch", async () => new Response("", { status: 404 }));
 vi.spyOn(console, "warn").mockImplementation(() => {});
 

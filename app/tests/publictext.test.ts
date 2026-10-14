@@ -24,7 +24,7 @@ describe("public text denylist", () => {
 describe("download attributes from the real cells-aux store attrs", () => {
   it("auxSourceAttrs output of the fixture store contains no denylisted terms", async () => {
     const path = await import("node:path");
-    const { auxSourceAttrs } = await import("../src/cell/auxinfo");
+    const { auxSourceAttrs } = await import("../src/core/cell/auxinfo");
     const { siteDeny, NAN_WORD } = await import("./denylist");
     const root = path.resolve(__dirname, "../../staging/fixture/cells-aux.zarr");
     if (!fs.existsSync(root)) return;

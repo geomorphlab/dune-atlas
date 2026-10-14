@@ -1,44 +1,44 @@
 // Click-to-cell side panel (bottom sheet on narrow screens). Structure: header | compact u*,th
 // control (persistent, synced with the layer panel) | content. Content is built once per cell;
 // threshold / bin / axis changes only refresh the dynamic parts so sliders keep focus.
-import { groupedBody, wireTableGroups } from "../../ui/tablegroups";
-import { utTex } from "../../export/labels"; // plot-export legend: the slider value
-import { terseQuantity } from "../../ui/terse";
-import { storageKey } from "../../body";
-import type { CellData, CellStore } from "../../cell/cellstore";
-import { cellFromIndex, ERA5_LAND_GRID, type Grid } from "../../cell/snap";
-import { fieldValue } from "../../cell/cellstore";
-import { analyseCell, EXCESS_CLASSES, EXCESS_COLORS, FLUX_MODES, MODE_DEFINED_BY, MODE_KEYS, MODE_STYLE, ROSE_ARROW_KEYS, modeDefined, type CellView, type FluxMode, type ModeKey } from "../../cell/analysis";
-import { roseSvg, SPEED_COLORS, roseBinChoices, type RoseSvgOptions } from "../../cell/roses";
-import { modesPlotSvg } from "../../cell/modesplot";
-import { DARK_THEME, LIGHT_THEME, seriesColor, type PlotTheme } from "../../cell/plottheme";
-import { composePlotSvg, PLOT_BACKGROUND, katexTex, plotFilename, svgToPngBlob, type PlotExportSpec, type PlotKey } from "../../export/plotExport";
-import { downloadBlob } from "../../export/mapExport";
-import { EXPORT_DPI, PLOT_EXPORT_WIDTH } from "../../export/png";
-import { loadMathRenderer, unitsTex, type MathRenderer } from "../../export/texsvg";
-import { EXPORT_TEXT } from "../../ui/helpText";
-import { fieldSeries, PLOT_STORAGE, plotQuantities, plotSlug, qplotNotes, qplotSvg, resolvePlot, valueText, type PlotQuantity, type QPlotAxis } from "../../cell/qplot";
-import { AUX_META, aridityClass } from "../../cell/auxinfo";
-import { DATASET_INFO, datasetInfo, type DatasetInfo } from "../../cell/datasetinfo";
-import { fieldInfo } from "../../cell/fieldinfo";
-import { citationFile, triggerDownload } from "../../cell/downloads";
-import { cellDataset, cellNetcdf, csvBundle, exportBaseName, type ExportMeta } from "../../cell/export";
-import type { CellStoreAttrs } from "../../cell/cellstore";
+import { groupedBody, wireTableGroups } from "../../core/ui/tablegroups";
+import { utTex } from "../../core/export/labels"; // plot-export legend: the slider value
+import { terseQuantity } from "../../core/ui/terse";
+import { storageKey } from "../../core/body";
+import type { CellData, CellStore } from "../../core/cell/cellstore";
+import { cellFromIndex, ERA5_LAND_GRID, type Grid } from "../../core/cell/snap";
+import { fieldValue } from "../../core/cell/cellstore";
+import { analyseCell, EXCESS_CLASSES, EXCESS_COLORS, FLUX_MODES, MODE_DEFINED_BY, MODE_KEYS, MODE_STYLE, ROSE_ARROW_KEYS, modeDefined, type CellView, type FluxMode, type ModeKey } from "../../core/cell/analysis";
+import { roseSvg, SPEED_COLORS, roseBinChoices, type RoseSvgOptions } from "../../core/cell/roses";
+import { modesPlotSvg } from "../../core/cell/modesplot";
+import { DARK_THEME, LIGHT_THEME, seriesColor, type PlotTheme } from "../../core/cell/plottheme";
+import { composePlotSvg, PLOT_BACKGROUND, katexTex, plotFilename, svgToPngBlob, type PlotExportSpec, type PlotKey } from "../../core/export/plotExport";
+import { downloadBlob } from "../../core/export/mapExport";
+import { EXPORT_DPI, PLOT_EXPORT_WIDTH } from "../../core/export/png";
+import { loadMathRenderer, unitsTex, type MathRenderer } from "../../core/export/texsvg";
+import { EXPORT_TEXT } from "../../core/ui/helpText";
+import { fieldSeries, PLOT_STORAGE, plotQuantities, plotSlug, qplotNotes, qplotSvg, resolvePlot, valueText, type PlotQuantity, type QPlotAxis } from "../../core/cell/qplot";
+import { AUX_META, aridityClass } from "../../core/cell/auxinfo";
+import { DATASET_INFO, datasetInfo, type DatasetInfo } from "../../core/cell/datasetinfo";
+import { fieldInfo } from "../../core/cell/fieldinfo";
+import { citationFile, triggerDownload } from "../../core/cell/downloads";
+import { cellDataset, cellNetcdf, csvBundle, exportBaseName, type ExportMeta } from "../../core/cell/export";
+import type { CellStoreAttrs } from "../../core/cell/cellstore";
 import { CELL_SOURCE_IDS } from "@body/citation";
-import { citationHtml, citationSources } from "../../cell/citation";
-import { isPublishedField } from "../../util/constants";
-import { compassPoint } from "../../util/angles";
-import { escapeHtml, fmtLat, fmtLon, fmtNum, MISSING } from "../../util/format";
-import { mathHtml, mathOnly, textOnly } from "../../util/math";
-import { formatUt, thresholdControl } from "../../ui/threshold";
-import type { ThresholdDef } from "../../registry/types";
-import type { Store } from "../../store";
-import { h, nextId } from "../../ui/dom";
-import { CENTRE_ICON } from "../../map/centre";
-import { axisReserve, bearingReserve, FMTNUM_WIDEST, lazyWidth, live, reserveCh } from "../../ui/livenum";
-import { thresholdWindSpeed } from "../../cell/flux";
-import { C } from "../../util/constants";
-import { defaultFieldLabel, fmtPlain, MODES_OPEN_KEY, PANEL_MIN_W, PANEL_SECTIONS, readPlotChoice, sameLocation, sectionOpenKey, type FieldLabel, type PanelSection } from "../../ui/panelcommon";
+import { citationHtml, citationSources } from "../../core/cell/citation";
+import { isPublishedField } from "../../core/util/constants";
+import { compassPoint } from "../../core/util/angles";
+import { escapeHtml, fmtLat, fmtLon, fmtNum, MISSING } from "../../core/util/format";
+import { mathHtml, mathOnly, textOnly } from "../../core/util/math";
+import { formatUt, thresholdControl } from "../../core/ui/threshold";
+import type { ThresholdDef } from "../../core/registry/types";
+import type { Store } from "../../core/store";
+import { h, nextId } from "../../core/ui/dom";
+import { CENTRE_ICON } from "../../core/map/centre";
+import { axisReserve, bearingReserve, FMTNUM_WIDEST, lazyWidth, live, reserveCh } from "../../core/ui/livenum";
+import { thresholdWindSpeed } from "../../core/cell/flux";
+import { C } from "../../core/util/constants";
+import { defaultFieldLabel, fmtPlain, MODES_OPEN_KEY, PANEL_MIN_W, PANEL_SECTIONS, readPlotChoice, sameLocation, sectionOpenKey, type FieldLabel, type PanelSection } from "../../core/ui/panelcommon";
 
 
 export interface CellPanelOptions {

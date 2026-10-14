@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cellBounds, cellFromIndex, snapToCell, wrapLon, type Grid } from "../src/cell/snap";
+import { cellBounds, cellFromIndex, snapToCell, wrapLon, type Grid } from "../src/core/cell/snap";
 
 describe("snapToCell", () => {
   it("rounds to the nearest 0.1-degree cell centre", () => {

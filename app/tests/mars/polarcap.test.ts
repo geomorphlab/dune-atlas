@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("maplibre-gl", () => ({ default: { addProtocol: () => {} } }));
 
-import { mercatorXY } from "../../src/map/globelines";
+import { mercatorXY } from "../../src/core/map/globelines";
 import {
   BASEMAP_CAP_ID, CAP_RHO_DEG, MERC_LAT, R_MARS_2000, MAPLIBRE_CIRCUMFERENCE, basemapCapKind, capFrame, capGrid, capLevel, capLonLat,
   capPixelM, capUV, exaggerationForZoom, fillMesh, gridTriangles, hexColor, installPolarCaps, maplibreDeriv, standardHillshade, trianglesArea,

@@ -1,7 +1,7 @@
 // Shared by tests/qplot.test.ts and tests/mars/qplot.test.ts: the "<quantity> vs threshold / grain diameter" plot.
 import { expect } from "vitest";
-import { linePlotSvg } from "../src/cell/lineplot";
-import { SENTINEL } from "../src/cell/qplot";
+import { linePlotSvg } from "../src/core/cell/lineplot";
+import { SENTINEL } from "../src/core/cell/qplot";
 
 /** x tick labels of a line plot and whether each fits inside the SVG width (half its width either side) */
 export function xTickFit(svg: string, fs = 10): { label: string; ok: boolean }[] {

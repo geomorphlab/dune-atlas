@@ -1,23 +1,23 @@
 // @vitest-environment happy-dom
 // Vegetation cover layer (Related data group), generic per-cell sidecars, safe links in registry
 // text, panel row, downloads and citations.
-import { harmonizeAux } from "../src/cell/auxinfo";
+import { harmonizeAux } from "../src/core/cell/auxinfo";
 import { describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import * as zarr from "zarrita";
-import { loadRegistry } from "../src/registry/load";
-import { infoHtml } from "../src/ui/layerPanel";
-import { legendHtml, legendTicks } from "../src/ui/legend";
-import { COLORMAPS } from "../src/util/colormaps";
-import { COLORMAP_GROUPS, effectiveDisplay } from "../src/layerconfig";
-import { richHtml, richPlain, safeHttpUrl } from "../src/util/richtext";
-import { CellStore, type CellData } from "../src/cell/cellstore";
-import { cellNetcdf, metadataJson, readmeText } from "../src/cell/export";
-import { citationHtml, citationJson, citationSources, citationText } from "../src/cell/citation";
+import { loadRegistry } from "../src/core/registry/load";
+import { infoHtml } from "../src/core/ui/layerPanel";
+import { legendHtml, legendTicks } from "../src/core/ui/legend";
+import { COLORMAPS } from "../src/core/util/colormaps";
+import { COLORMAP_GROUPS, effectiveDisplay } from "../src/core/layerconfig";
+import { richHtml, richPlain, safeHttpUrl } from "../src/core/util/richtext";
+import { CellStore, type CellData } from "../src/core/cell/cellstore";
+import { cellNetcdf, metadataJson, readmeText } from "../src/core/cell/export";
+import { citationHtml, citationJson, citationSources, citationText } from "../src/core/cell/citation";
 import { CELL_SOURCE_IDS } from "@body/citation";
-import { CellPanel, VEG_CAVEAT } from "../src/ui/cellPanel";
-import { CONFIG } from "../src/config";
+import { CellPanel, VEG_CAVEAT } from "../src/core/ui/cellPanel";
+import { CONFIG } from "../src/core/config";
 import { makeCell, FIELD_VARS } from "./helpers";
 import { readNc } from "./ncreader";
 
@@ -105,7 +105,7 @@ describe("generic per-cell sidecars", () => {
       return s;
     };
     const a = await mk({ ai_mean: 0.1 }), b = await mk({ tot_cov_mean: 42, tot_cov_n_months: 280, ai_mean: 9 });
-    const { CellAuxStore } = await import("../src/cell/cellstore");
+    const { CellAuxStore } = await import("../src/core/cell/cellstore");
     const [sa, sb] = await Promise.all([CellAuxStore.open(a as never), CellAuxStore.open(b as never)]);
     expect(sa.variables).toEqual(["ai_mean"]);
     expect(sb.variables.sort()).toEqual(["ai_mean", "tot_cov_mean", "tot_cov_n_months"]);
@@ -213,7 +213,7 @@ describe("vegetation in the panel and the downloads", () => {
     expect([...d.querySelectorAll("a")].map((x) => x.getAttribute("href"))).toContain(RAPP);
   });
   it("About lists the vegetation source with the RAPP link", async () => {
-    const { DATA_SOURCES_HTML } = await import("../src/ui/layerPanel");
+    const { DATA_SOURCES_HTML } = await import("../src/core/ui/layerPanel");
     const d = document.createElement("div"); d.innerHTML = DATA_SOURCES_HTML;
     expect(d.textContent).toContain("CSIRO MODIS Fractional Cover v3.1");
     expect([...d.querySelectorAll("a")].map((x) => x.getAttribute("href"))).toContain(RAPP);

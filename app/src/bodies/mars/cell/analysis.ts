@@ -3,12 +3,12 @@
 // Flux rose modes as Earth: flat (q from u*), elongation / transverse (crest flux about the stored
 // alpha_E / alpha_H at this d). DP / RDP / RDP/DP / RDD and the mode arrows are the cell-store
 // fields at this d, so the panel matches the map layers.
-import { M } from "../../../cell/marsphysics";
-import { fieldValue, nUt } from "../../../cell/cellstore";
-import { EXCESS_CLASSES, MODE_KEYS, modeDefined, type CellView, type FluxMode, type ModeKey } from "../../../cell/analysis";
-import { sectorSums } from "../../../cell/roses";
-import { mathToAxisDeg, mathToBearingDeg } from "../../../util/angles";
-import { DEFAULT_BINS } from "../../../cell/flux";
+import { M } from "../marsphysics";
+import { fieldValue, nUt } from "../../../core/cell/cellstore";
+import { EXCESS_CLASSES, MODE_KEYS, modeDefined, type CellView, type FluxMode, type ModeKey } from "../../../core/cell/analysis";
+import { sectorSums } from "../../../core/cell/roses";
+import { mathToAxisDeg, mathToBearingDeg } from "../../../core/util/angles";
+import { DEFAULT_BINS } from "../../../core/cell/flux";
 import type { MarsCellData } from "./cellstore";
 import { marsFluxRoses, marsWindRose, thresholdStats, type ThresholdStats } from "./marsflux";
 

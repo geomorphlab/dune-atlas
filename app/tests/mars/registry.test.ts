@@ -3,11 +3,11 @@
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { loadRegistry } from "../../src/registry/load";
+import { loadRegistry } from "../../src/core/registry/load";
 import { validateMarsRegistry } from "../../src/bodies/mars/registry/validate";
 import { PROFILE } from "../../src/bodies/mars/profile";
-import { M } from "../../src/cell/marsphysics";
-import { CONFIG } from "../../src/config";
+import { M } from "../../src/bodies/mars/marsphysics";
+import { CONFIG } from "../../src/core/config";
 
 const APP = path.resolve(__dirname, "../..");
 const schema = JSON.parse(fs.readFileSync(path.resolve(APP, "../registry/layers.schema.json"), "utf8"));

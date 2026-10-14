@@ -1,6 +1,6 @@
 // Earth wind datasets (ERA5-Land 0.1°, ERA5 0.25°) as described in the panel and the downloads;
 // the first entry is the fallback for unknown ids. Shared functions: cell/datasetinfo.ts.
-import type { DatasetInfo } from "../../cell/datasetinfo";
+import type { DatasetInfo } from "../../core/cell/datasetinfo";
 
 /** Land definitions (app constants: the text shown and exported never comes from store attrs).
  *  ERA5-Land: land–sea mask fraction > 0.5; ERA5: > 0 (any land in the 0.25° cell). */

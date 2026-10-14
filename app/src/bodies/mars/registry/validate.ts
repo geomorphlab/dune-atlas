@@ -1,9 +1,9 @@
 // Mars registry validation: the Earth schema + semantic checks (registry/validate.ts), with the
 // threshold block checked against the Mars grain-size slider (pipeline mars/constants.py
 // D_VALUES_UM, D_DEFAULT_INDEX) instead of the Earth u*,th values. Not bundled in the app.
-import { validateRegistry } from "../../../registry/validate";
-import type { Registry } from "../../../registry/types";
-import { M } from "../../../cell/marsphysics";
+import { validateRegistry } from "../../../core/registry/validate";
+import type { Registry } from "../../../core/registry/types";
+import { M } from "../marsphysics";
 
 export function validateMarsRegistry(reg: unknown, schema: object): string[] {
   const errs = validateRegistry(reg, schema, []).filter((e) => !/^threshold: \d+ values, pipeline has|^threshold\.values\[\d+\]/.test(e));

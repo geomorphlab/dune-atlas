@@ -1,7 +1,7 @@
 // Mars profile (see profile.ts). The slider quantity is the median grain diameter d (µm); plots use
 // log10 d as their x.
-import type { BodyProfile } from "../../profile";
-import { mathHtml } from "../../util/math";
+import type { BodyProfile } from "../../core/profile";
+import { mathHtml } from "../../core/util/math";
 import { MARS_CIRCUMFERENCE_M, R_MARS } from "./body";
 
 const log10 = (xs: number[]) => xs.map(Math.log10);

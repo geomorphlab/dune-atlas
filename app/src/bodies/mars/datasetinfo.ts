@@ -1,6 +1,6 @@
 // Mars wind dataset (MCMC FV3 beta release 1: 2°, hourly, one Mars year) as described in the panel
 // and the downloads. Shared functions: cell/datasetinfo.ts.
-import type { DatasetInfo } from "../../cell/datasetinfo";
+import type { DatasetInfo } from "../../core/cell/datasetinfo";
 
 export const LAND_RULE = "every cell (Mars has no land mask: all 16,200 cells carry wind data)";
 export const DUNES_RULE = "the cell overlaps at least one dune polygon of the merged dune map (USGS Mars Global Digital Dune Database and Fenton 2020)";

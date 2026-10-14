@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 // Every checkbox in the layer panel has an accessible name (KaTeX-only labels were read as "on").
 import { describe, expect, it, vi } from "vitest";
-import { renderLayerPanel } from "../src/ui/layerPanel";
-import { loadRegistry } from "../src/registry/load";
-import { Store, type AppState } from "../src/store";
+import { renderLayerPanel } from "../src/core/ui/layerPanel";
+import { loadRegistry } from "../src/core/registry/load";
+import { Store, type AppState } from "../src/core/store";
 
 vi.stubGlobal("localStorage", { getItem: () => null, setItem: () => undefined, removeItem: () => undefined });
 const reg = loadRegistry().registry;

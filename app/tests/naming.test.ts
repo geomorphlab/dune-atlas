@@ -2,10 +2,10 @@
 // the rose legend (MODE_STYLE) and the CSV / NetCDF long names (fieldInfo) use the same name; αH is the
 // bed-instability-mode crest orientation (an axis), never labelled with a compass point.
 import { describe, expect, it } from "vitest";
-import { loadRegistry } from "../src/registry/load";
-import { FIELD_NAMES, fieldInfo } from "../src/cell/fieldinfo";
-import { MODE_STYLE } from "../src/cell/analysis";
-import { textOnly } from "../src/util/math";
+import { loadRegistry } from "../src/core/registry/load";
+import { FIELD_NAMES, fieldInfo } from "../src/core/cell/fieldinfo";
+import { MODE_STYLE } from "../src/core/cell/analysis";
+import { textOnly } from "../src/core/util/math";
 
 const reg = loadRegistry().registry;
 const nameOf = (title: string) => title.replace(/\s*⟨.*⟩\s*$/, "").replace(/\s*\((?:[^()]|\([^()]*\))*\)\s*$/, "");

@@ -4,13 +4,13 @@
 // it; a returning user's explicit dataset choice persists; embed mode uses the same default; the
 // default re-encodes to the same link.
 import { describe, expect, it } from "vitest";
-import { loadRegistry } from "../src/registry/load";
-import { applyDatasetLayers, selectDataset } from "../src/registry/merge";
-import { decodeShare, encodeShare, shareFromHash } from "../src/share/shortlink";
-import { parseUrlState, serializeUrlState } from "../src/urlstate";
-import { appShareState, DEFAULT_SHARE_CODE, DEFAULT_VIEW, hasViewState, initialAppState, resolveInitialState } from "../src/defaultview";
-import { TOUR_STEPS } from "../src/ui/helpText";
-import { DEMO_LAYER } from "../src/ui/tourHooks";
+import { loadRegistry } from "../src/core/registry/load";
+import { applyDatasetLayers, selectDataset } from "../src/core/registry/merge";
+import { decodeShare, encodeShare, shareFromHash } from "../src/core/share/shortlink";
+import { parseUrlState, serializeUrlState } from "../src/core/urlstate";
+import { appShareState, DEFAULT_SHARE_CODE, DEFAULT_VIEW, hasViewState, initialAppState, resolveInitialState } from "../src/core/defaultview";
+import { TOUR_STEPS } from "../src/core/ui/helpText";
+import { DEMO_LAYER } from "../src/core/ui/tourHooks";
 
 const { registry: reg } = loadRegistry();
 const open = (hash: string, search: string, stored?: string) => {

@@ -1,18 +1,18 @@
 // @vitest-environment happy-dom
-// One UI for both planets (src/body.ts): the Earth build's header label, planet toggle (target URL with
+// One UI for both planets (src/core/body.ts): the Earth build's header label, planet toggle (target URL with
 // and without a /mars/ base, embed carried, other planet's default view) and unchanged storage keys.
 // The Mars build has the mirror test in tests/mars/body.test.ts.
 import { describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { BODY, BODY_NAME, isLocalHost, otherBodyUrl, storageKey, storageKeyFor } from "../src/body";
-import { Tools } from "../src/ui/tools";
-import { TOUR_SEEN_KEY } from "../src/ui/tour";
-import { sectionOpenKey } from "../src/ui/cellPanel";
-import { renderLayerPanel } from "../src/ui/layerPanel";
-import { loadRegistry } from "../src/registry/load";
-import { Store } from "../src/store";
-import { DEFAULT_VIEW } from "../src/defaultview";
+import { BODY, BODY_NAME, isLocalHost, otherBodyUrl, storageKey, storageKeyFor } from "../src/core/body";
+import { Tools } from "../src/core/ui/tools";
+import { TOUR_SEEN_KEY } from "../src/core/ui/tour";
+import { sectionOpenKey } from "../src/core/ui/cellPanel";
+import { renderLayerPanel } from "../src/core/ui/layerPanel";
+import { loadRegistry } from "../src/core/registry/load";
+import { Store } from "../src/core/store";
+import { DEFAULT_VIEW } from "../src/core/defaultview";
 
 const tools = (navigate: (u: string) => void) => new Tools({ startTour: () => {}, shareLink: () => "", exportMap: async () => {}, openAbout: () => {}, navigate });
 
@@ -67,7 +67,7 @@ describe("Earth build: planet toggle and header", () => {
     expect([p.getAttribute("viewBox"), p.getAttribute("width")]).toEqual([cam.getAttribute("viewBox"), cam.getAttribute("width")]);
   });
   it("long unbroken text (URLs) wraps in panels, info popovers, About, legends and tool popovers", () => {
-    const css = fs.readFileSync(path.resolve(__dirname, "../src/style.css"), "utf8");
+    const css = fs.readFileSync(path.resolve(__dirname, "../src/core/style.css"), "utf8");
     document.head.innerHTML = `<style>${css}</style>`;
     document.body.innerHTML = '<aside id="layer-panel"><div class="info-popover"><p><a href="#">data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/averyveryverylongunbrokenpath</a></p></div><details class="about"><p>x</p></details><div class="legend">y</div></aside><aside id="cell-panel"><p>z</p></aside><div class="tool-pop">w</div>';
     for (const sel of ["#layer-panel", "#cell-panel", ".info-popover", ".about", ".legend", ".tool-pop"]) {
@@ -77,7 +77,7 @@ describe("Earth build: planet toggle and header", () => {
     document.head.innerHTML = ""; document.body.innerHTML = "";
   });
   it("info popovers: one structure (definition, then Units, Wind data, Slider, then the source rows); no repeated slider/units sentences", async () => {
-    const { infoHtml } = await import("../src/ui/layerPanel");
+    const { infoHtml } = await import("../src/core/ui/layerPanel");
     const reg = loadRegistry().registry;
     const rows = (id: string, ds = "era5-land") => [...infoHtml(reg.layers.find((l) => l.id === id)!, ds).matchAll(/<dt>([^<]+)<\/dt>/g)].map((m) => m[1]);
     expect(rows("dpm")).toEqual(["Units", "Wind data", "Slider", "Citation", "Licence"]);
@@ -122,7 +122,7 @@ describe("info texts at the source, one field citation, licences, basemap info",
   const gen = ["registry/earth/generated/qsat_fields.yaml", "registry/earth/datasets/era5/qsat_fields.yaml", "registry/earth/generated/x_extra_fields.yaml", "registry/earth/datasets/era5/x_extra_fields.yaml", "registry/earth/generated/x_vegetation.yaml"];
   it("generated definitions carry no repeated units/slider/processing sentences; maths as TeX (KaTeX in the popover)", async () => {
     for (const f of gen) expect(fs.readFileSync(path.join(REPO, f), "utf8"), f).not.toMatch(/Shown at the selected|Shown in m\/kyr|Converted from m²\/s|Displayed as the compass bearing|Independent of the wind dataset/);
-    const { infoHtml } = await import("../src/ui/layerPanel");
+    const { infoHtml } = await import("../src/core/ui/layerPanel");
     const reg = loadRegistry().registry;
     const L = (id: string) => reg.layers.find((l) => l.id === id)!;
     expect(L("dpm").description).toMatch(/\$DP = \\sum n q \/ \\sum n\$/);
@@ -136,7 +136,7 @@ describe("info texts at the source, one field citation, licences, basemap info",
   });
   it("every atlas-derived field: one citation format (= fieldsCitation) and the dataset licence row", async () => {
     const { fieldsCitation, fieldsLicence } = await import("@body/citation");
-    const { applyDatasetLayers } = await import("../src/registry/merge");
+    const { applyDatasetLayers } = await import("../src/core/registry/merge");
     for (const ds of ["era5-land", "era5"]) {
       const reg = loadRegistry().registry;
       if (ds !== reg.defaultDataset) applyDatasetLayers(reg, ds);
@@ -152,7 +152,7 @@ describe("info texts at the source, one field citation, licences, basemap info",
     expect(fieldsLicence("era5")).toMatch(/Copernicus/);
   });
   it("basemaps have an info button with definition, Source, Resolution, Licence, Link; About cites the map fields", async () => {
-    const { basemapInfoHtml } = await import("../src/ui/layerPanel");
+    const { basemapInfoHtml } = await import("../src/core/ui/layerPanel");
     const reg = loadRegistry().registry;
     for (const b of reg.basemaps) {
       expect([...basemapInfoHtml(b).matchAll(/<dt>([^<]+)<\/dt>/g)].map((m) => m[1]), b.id).toEqual(["Source", "Resolution", "Licence", "Link"]);

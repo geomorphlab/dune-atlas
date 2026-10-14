@@ -1,8 +1,8 @@
 // Mars per-cell auxiliary variables (cells-aux.zarr: qsdiv (lat, lon, d), rho_mean, elev_mean) as
 // shown in the panel and written to the downloads. The divergence uses the Mars radius.
-import type { CellAux } from "../../cell/cellstore";
-import { resolutionText } from "../../cell/datasetinfo";
-import type { AuxMeta } from "../../cell/auxinfo";
+import type { CellAux } from "../../core/cell/cellstore";
+import { resolutionText } from "../../core/cell/datasetinfo";
+import type { AuxMeta } from "../../core/cell/auxinfo";
 import { R_MARS } from "./body";
 import { DEM_CITATION, DEM_LICENCE, fieldsLicence } from "./citation";
 

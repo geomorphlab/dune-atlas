@@ -1,8 +1,8 @@
 // Earth hooks of the shared entry module (apphooks.ts).
 import maplibregl from "maplibre-gl";
-import type { AppHooks } from "../../apphooks";
-import { CellStore } from "../../cell/cellstore";
-import { ERA5_LAND_GRID } from "../../cell/snap";
+import type { AppHooks } from "../../core/apphooks";
+import { CellStore } from "../../core/cell/cellstore";
+import { ERA5_LAND_GRID } from "../../core/cell/snap";
 import { C3S_NOTICE, mapAttributionHtml } from "./citation";
 
 export type BodyCellStore = CellStore;

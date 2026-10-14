@@ -2,11 +2,11 @@
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { CellStore, fieldValue } from "../src/cell/cellstore";
-import { snapToCell } from "../src/cell/snap";
-import { analyseCell } from "../src/cell/analysis";
-import { dpRdpRdd } from "../src/cell/flux";
-import { C } from "../src/util/constants";
+import { CellStore, fieldValue } from "../src/core/cell/cellstore";
+import { snapToCell } from "../src/core/cell/snap";
+import { analyseCell } from "../src/core/cell/analysis";
+import { dpRdpRdd } from "../src/core/cell/flux";
+import { C } from "../src/core/util/constants";
 
 const fixture = path.resolve(__dirname, "../../staging/fixture");
 const have = fs.existsSync(path.join(fixture, "cells.zarr", "zarr.json"));

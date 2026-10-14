@@ -1,6 +1,6 @@
 // Recorded Mars share links (tests/fixtures/share-links-mars.json) still encode, decode and open identically.
 import { describe, it } from "vitest";
-import { loadRegistry } from "../../src/registry/load";
+import { loadRegistry } from "../../src/core/registry/load";
 import { checkShareCorpus } from "../sharecorpuslib";
 
 describe("share-link corpus (Mars)", () => {

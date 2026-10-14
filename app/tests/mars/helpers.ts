@@ -4,10 +4,10 @@ import path from "node:path";
 import fixture from "../fixtures/mars-rose-parity.json";
 import type { MarsCellData, MarsSeries } from "../../src/bodies/mars/cell/cellstore";
 import { MARS_BINS } from "../../src/bodies/mars/cell/cellstore";
-import { cellFromIndex } from "../../src/cell/snap";
-import { M } from "../../src/cell/marsphysics";
+import { cellFromIndex } from "../../src/core/cell/snap";
+import { M } from "../../src/bodies/mars/marsphysics";
 import { MARS_GRID } from "../../src/bodies/mars/body";
-import { C } from "../../src/util/constants";
+import { C } from "../../src/core/util/constants";
 
 export const FIELD_VARS = C.QSAT_VARS.filter((v) => !C.WITHHELD_VARS.includes(v));
 export interface RoseCase { dIndex: number; dUm: number; alpha: number | null; rose: number[]; classes: number[][]; nHours: number; bins?: number[]; stats: Record<string, number> }

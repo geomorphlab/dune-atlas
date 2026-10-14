@@ -4,7 +4,7 @@
 import { describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { loadRegistry } from "../../src/registry/load";
+import { loadRegistry } from "../../src/core/registry/load";
 import { checkRealStores, checkSynthetic } from "../dunemasklib";
 import { checkClassification, checkExportStrip, checkOverlayManager, checkToggleAndLinks } from "../dunesonlylib";
 import { FIXTURE_DS, RangeFileStore, haveFixture } from "./helpers";

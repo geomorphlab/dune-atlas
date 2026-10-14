@@ -1,10 +1,10 @@
 // Dataset text and map attribution follow the dataset table.
 import { describe, expect, it } from "vitest";
-import { DATASET_INFO, datasetFacts } from "../src/cell/datasetinfo";
+import { DATASET_INFO, datasetFacts } from "../src/core/cell/datasetinfo";
 import { mapAttributionHtml } from "@body/citation";
-import { DATASET_INFO_TEXT } from "../src/ui/helpText";
+import { DATASET_INFO_TEXT } from "../src/core/ui/helpText";
 import { THRESHOLD_INFO_DEFAULT } from "../src/bodies/earth/profile";
-import { storedNote } from "../src/cell/export";
+import { storedNote } from "../src/core/cell/export";
 
 describe("dataset-selector text (§4 item 1)", () => {
   it("names every dataset with its grid and the period from the dataset table", () => {

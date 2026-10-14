@@ -2,15 +2,15 @@
 // toggle in the layer panel, its round trip through short (#v=) and long (?query) links, and the mask
 // handed to the adapters by the overlay manager.
 import { expect } from "vitest";
-import type { Registry } from "../src/registry/types";
-import { Store, type AppState } from "../src/store";
-import { renderLayerPanel } from "../src/ui/layerPanel";
-import { decodeShare, encodeShare, shareFromHash, shareToUrlState } from "../src/share/shortlink";
-import { parseUrlState, serializeUrlState } from "../src/urlstate";
-import { appShareState, initialAppState, resolveInitialState } from "../src/defaultview";
-import { isWindDerived } from "../src/map/dunemask";
-import { OverlayManager } from "../src/map/overlays";
-import { DUNES_ONLY_STRIP, mapStripItems, mapStripSvg } from "../src/export/mapExport";
+import type { Registry } from "../src/core/registry/types";
+import { Store, type AppState } from "../src/core/store";
+import { renderLayerPanel } from "../src/core/ui/layerPanel";
+import { decodeShare, encodeShare, shareFromHash, shareToUrlState } from "../src/core/share/shortlink";
+import { parseUrlState, serializeUrlState } from "../src/core/urlstate";
+import { appShareState, initialAppState, resolveInitialState } from "../src/core/defaultview";
+import { isWindDerived } from "../src/core/map/dunemask";
+import { OverlayManager } from "../src/core/map/overlays";
+import { DUNES_ONLY_STRIP, mapStripItems, mapStripSvg } from "../src/core/export/mapExport";
 
 export const state = (reg: Registry, dataset: string): AppState => ({ basemap: reg.basemaps[0].id, projection: "globe", utIndex: reg.threshold.defaultIndex,
   layers: Object.fromEntries(reg.layers.map((l) => [l.id, { visible: !!l.visible, opacity: l.opacity ?? 1 }])), order: reg.layers.map((l) => l.id), dataset, cell: null, embed: false });

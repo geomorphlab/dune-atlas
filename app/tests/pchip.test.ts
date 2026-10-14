@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { pchipDense, pchipSlopes, unwrapDeg } from "../src/util/pchip";
-import { modesPlotSvg } from "../src/cell/modesplot";
-import { linePlotSvg } from "../src/cell/lineplot";
-import { C } from "../src/util/constants";
+import { pchipDense, pchipSlopes, unwrapDeg } from "../src/core/util/pchip";
+import { modesPlotSvg } from "../src/core/cell/modesplot";
+import { linePlotSvg } from "../src/core/cell/lineplot";
+import { C } from "../src/core/util/constants";
 
 describe("PCHIP smoothing", () => {
   const x = [0.01, 0.05, 0.1, 0.2, 0.25, 0.4, 0.64];

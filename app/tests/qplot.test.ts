@@ -3,17 +3,17 @@
 // names), DP by default, title / caption / axis / live value / export follow the choice, the choice is stored
 // (per body) and in share links (backwards compatible); ±60,000 and gaps do not wreck the axis; x labels fit.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { CellPanel } from "../src/ui/cellPanel";
-import type { CellStore } from "../src/cell/cellstore";
+import { CellPanel } from "../src/core/ui/cellPanel";
+import type { CellStore } from "../src/core/cell/cellstore";
 import { makeCell, FIELD_VARS } from "./helpers";
 import fixture from "./fixtures/flux-parity.json";
-import { loadRegistry } from "../src/registry/load";
-import { C } from "../src/util/constants";
-import { DEFAULT_PLOT, PLOT_STORAGE, plotQuantities } from "../src/cell/qplot";
-import { linePlotSvg } from "../src/cell/lineplot";
-import { decodeShare, encodeShare } from "../src/share/shortlink";
-import { DEFAULT_VIEW, appShareState, initialAppState } from "../src/defaultview";
-import { parseUrlState, serializeUrlState } from "../src/urlstate";
+import { loadRegistry } from "../src/core/registry/load";
+import { C } from "../src/core/util/constants";
+import { DEFAULT_PLOT, PLOT_STORAGE, plotQuantities } from "../src/core/cell/qplot";
+import { linePlotSvg } from "../src/core/cell/lineplot";
+import { decodeShare, encodeShare } from "../src/core/share/shortlink";
+import { DEFAULT_VIEW, appShareState, initialAppState } from "../src/core/defaultview";
+import { parseUrlState, serializeUrlState } from "../src/core/urlstate";
 import { checkLinePlotOptions, xTickFit } from "./qplotlib";
 
 const reg = loadRegistry().registry;

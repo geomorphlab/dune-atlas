@@ -1,5 +1,5 @@
 """Mars constants (docs/reference/mars-spec.md sections 2-5). Single source of truth for the Mars pipeline AND the
-browser (exported to app/src/generated/constants-mars.json by app/scripts/export-constants-mars.py).
+browser (exported to app/src/bodies/mars/generated/constants-mars.json by app/scripts/export-constants-mars.py).
 The Earth constants in dune_atlas_pipeline/constants.py are unchanged and unrelated.
 """
 import numpy as np

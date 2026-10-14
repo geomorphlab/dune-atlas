@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { loadDuneMask } from "../src/map/dunemask";
+import { loadDuneMask } from "../src/core/map/dunemask";
 import { checkArrowAnchoring, checkStreamlineClipping, readLevel0, syntheticDir, syntheticMask } from "./vectorcliplib";
 import { RangeFileStore } from "./mars/helpers";
 

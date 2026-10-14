@@ -2,7 +2,7 @@
 geomorphlab/dune-world `dune-world-era5land-rev0.ipynb` (cells 4, 6, 12, 14).
 
 These are the single source of truth for the pipeline AND are exported to
-app/src/generated/constants.json so the browser's flux computation is identical.
+app/src/core/generated/constants.json so the browser's flux computation is identical.
 """
 import numpy as np
 

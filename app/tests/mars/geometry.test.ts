@@ -1,15 +1,15 @@
 // Mars geometry: snapping on the 2° contract grid, planet-aware distances (patched Earth modules),
 // the body-aware scale bar and the Esri geographic -> Web-Mercator tile plan.
 import { describe, expect, it } from "vitest";
-import { cellBounds, cellFeature, cellFromIndex, snapToCell } from "../../src/cell/snap";
+import { cellBounds, cellFeature, cellFromIndex, snapToCell } from "../../src/core/cell/snap";
 import { MARS_GRID, EXAMPLE_CELL } from "../../src/bodies/mars/body";
-import { metersPerPixel } from "../../src/layerconfig";
-import { scaleBar } from "../../src/export/mapExport";
+import { metersPerPixel } from "../../src/core/layerconfig";
+import { scaleBar } from "../../src/core/export/mapExport";
 import { roundScale, scaleFor, sphereDistance } from "../../src/bodies/mars/map/scale";
 import { extraLevels, planTile, RES0, sourceUrl } from "../../src/bodies/mars/map/esri";
 import { clampPmtilesBasemaps, pmtilesArchive, resolvePmtilesTiles } from "../../src/bodies/mars/map/basemaps";
-import { loadRegistry } from "../../src/registry/load";
-import { M } from "../../src/cell/marsphysics";
+import { loadRegistry } from "../../src/core/registry/load";
+import { M } from "../../src/bodies/mars/marsphysics";
 
 describe("snap on the Mars grid (rows 89 -> -89, columns -179 -> 179, 2° centres)", () => {
   it("corner cells and the tour cell", () => {

@@ -1,9 +1,9 @@
 // Mars text of the help panel and the guided tour (same structure and step ids as Earth, so ui/tour.ts
 // and ui/tourHooks.ts serve both). Shared labels and types: ui/helpText.ts. Inline maths as $...$
 // (KaTeX); everything else plain text.
-import type { HelpSection, TourStep } from "../../ui/helpText";
-import { datasetFacts } from "../../cell/datasetinfo";
-import { mathHtml } from "../../util/math";
+import type { HelpSection, TourStep } from "../../core/ui/helpText";
+import { datasetFacts } from "../../core/cell/datasetinfo";
+import { mathHtml } from "../../core/util/math";
 
 /** the Wind dataset selector's ⓘ (Earth has an info text here); one Mars dataset: no ⓘ */
 export const DATASET_INFO_TEXT = "";

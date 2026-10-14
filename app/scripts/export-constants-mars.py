@@ -1,5 +1,5 @@
-"""Export the Mars constants to app/src/generated/constants-mars.json (the browser Mars physics,
-src/cell/marsphysics.ts, must use exactly pipeline/src/dune_atlas_pipeline/mars/constants.py).
+"""Export the Mars constants to app/src/bodies/mars/generated/constants-mars.json (the browser Mars physics,
+src/bodies/mars/marsphysics.ts, must use exactly pipeline/src/dune_atlas_pipeline/mars/constants.py).
 
     PYTHONPATH=pipeline/src python app/scripts/export-constants-mars.py
 """
@@ -23,6 +23,6 @@ out["PROFILE_LN_X"] = P.LN_X.tolist()
 out["PROFILE_U_PLUS"] = P.U_PLUS.tolist()
 out["N_BISECT"] = int(P.N_BISECT)
 out["LN_US_LO"], out["LN_US_HI"] = float(P.LN_US_LO), float(P.LN_US_HI)
-dst = ROOT / "app" / "src" / "generated" / "constants-mars.json"
+dst = ROOT / "app" / "src" / "bodies" / "mars" / "generated" / "constants-mars.json"
 dst.write_text(json.dumps(out, indent=1) + "\n")
 print(dst, len(out))

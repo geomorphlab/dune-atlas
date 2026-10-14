@@ -3,14 +3,14 @@ import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import * as zarr from "zarrita";
-import { storeGeoFromAttrs, rendererPixelCentre } from "../src/map/zarrgeo";
-import { MaskedFieldStore, maskValue } from "../src/map/maskedstore";
-import { applyMask, arrowFeatures, buildScreenField, evenStreamlines, sampleUnit, type Grid } from "../src/map/vectors";
-import { ERA5_LAND_GRID, cellBounds, cellFromIndex, snapToCell } from "../src/cell/snap";
-import { DIRECTION_MASK_VAR, maskVarOf } from "../src/layerconfig";
-import { MODE_DEFINED_BY } from "../src/cell/analysis";
-import { loadRegistry } from "../src/registry/load";
-import { zarrLayerSource } from "../src/map/adapters";
+import { storeGeoFromAttrs, rendererPixelCentre } from "../src/core/map/zarrgeo";
+import { MaskedFieldStore, maskValue } from "../src/core/map/maskedstore";
+import { applyMask, arrowFeatures, buildScreenField, evenStreamlines, sampleUnit, type Grid } from "../src/core/map/vectors";
+import { ERA5_LAND_GRID, cellBounds, cellFromIndex, snapToCell } from "../src/core/cell/snap";
+import { DIRECTION_MASK_VAR, maskVarOf } from "../src/core/layerconfig";
+import { MODE_DEFINED_BY } from "../src/core/cell/analysis";
+import { loadRegistry } from "../src/core/registry/load";
+import { zarrLayerSource } from "../src/core/map/adapters";
 
 const V1_ATTRS = {
   multiscales: {
@@ -441,7 +441,7 @@ describe("patched zarr-layer: antimeridian (regions on both sides of ±180, edge
     });
   }
   it("selected-cell highlight of a cell centred at -180 is drawn on both sides (no outline on the seam)", async () => {
-    const { cellFeature } = await import("../src/cell/snap");
+    const { cellFeature } = await import("../src/core/cell/snap");
     for (const [g, half] of [[ERA5_LAND_GRID, 0.05], [{ lat0: 90, dlat: -0.25, lon0: -180, dlon: 0.25, ny: 721, nx: 1440 }, 0.125]] as const) {
       const c = cellFromIndex(426, 0, g);
       expect(c.lon).toBe(-180);

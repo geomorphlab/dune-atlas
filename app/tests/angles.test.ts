@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { angleDiffDeg, bearingToMath, bearingToXY, compassPoint, mathToAxisDeg, mathToBearingDeg, mod, towardToFrom } from "../src/util/angles";
-import { BIN_TOWARD_BEARING, sectorOf, windRoseData, sectorSums, ROSE_BIN_CHOICES, sectorCentre, sectorsCentred, roseBinChoices, towardBearings } from "../src/cell/roses";
-import { C } from "../src/util/constants";
+import { angleDiffDeg, bearingToMath, bearingToXY, compassPoint, mathToAxisDeg, mathToBearingDeg, mod, towardToFrom } from "../src/core/util/angles";
+import { BIN_TOWARD_BEARING, sectorOf, windRoseData, sectorSums, ROSE_BIN_CHOICES, sectorCentre, sectorsCentred, roseBinChoices, towardBearings } from "../src/core/cell/roses";
+import { C } from "../src/core/util/constants";
 
 const PI = Math.PI;
 describe("math angle (CCW from east, toward) -> compass bearing", () => {
