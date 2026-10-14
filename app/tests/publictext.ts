@@ -104,7 +104,7 @@ export async function collectPublicText(auxAttrs: Record<string, Record<string, 
     for (const [f, cols] of Object.entries(csvColumns(cell, storeAttrs as never))) for (const c of cols) out[`csv${sfx}.${f}.${c.name}`] = `${c.units} | ${c.longName}`;
   }
   citationFile(cell).split("\n").forEach((l, k) => { if (l.trim()) out[`citation.${k}`] = l; });
-  // help panel, tour, share and export text (src/ui/helpText.ts)
+  // help panel, tour, share and export text (src/ui/helpText.ts, src/bodies/earth/helpText.ts)
   for (const [k, v] of Object.entries(HELP)) {
     if (typeof v === "string") out[`help.${k}`] = v;
     else if (Array.isArray(v)) v.forEach((e, i) => { for (const [f, t] of Object.entries(e)) if (typeof t === "string") out[`help.${k}.${i}.${f}`] = t; });

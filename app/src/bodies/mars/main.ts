@@ -9,7 +9,7 @@ import "../../style.css";
 import maplibregl from "maplibre-gl";
 import { loadRegistry } from "../../registry/load"; // Mars registry via the checked patches of registry/load.ts
 import { applyDatasetLayers, layersForDatasetSwitch, resolveSource, selectDataset } from "../../registry/merge";
-import { CONFIG } from "./config";
+import { CONFIG } from "../../config";
 import { parseUrlState, serializeUrlState, type UrlState } from "../../urlstate";
 import { Store, type AppState } from "../../store";
 import { defaultBasemap, setBasemap } from "../../map/basemaps";
@@ -30,7 +30,7 @@ import { exportMapPng, type MapExportRequest } from "../../export/mapExport";
 import { Tour, shouldShowTour, tourSeen } from "../../ui/tour";
 import { autostartTour, wireTourBubble } from "../../ui/tourBubble";
 import { LoadingIndicator, WHEEL_ZOOM_RATE } from "../../ui/loading";
-import { TOUR_STEPS } from "./ui/helpText";
+import { TOUR_STEPS } from "../../ui/helpText";
 import { Tools } from "../../ui/tools";
 import { CoordsControl } from "../../ui/coords";
 import { escapeClosesCell } from "../../ui/keys";

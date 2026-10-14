@@ -1,9 +1,10 @@
 // Display metadata for the 23 qsat fields: kind -> display transform and units.
-// Long names: the atlas's one name per quantity (registry/field_names.json, = the layer titles); descriptions
-// from registry/qsat_field_metadata.json (source attrs) unless field_names.json defines one.
+// Long names: the atlas's one name per quantity (registry/field_names.json, = the layer titles, the same
+// on every body); descriptions from the body's field_names.json description variant if any, else the
+// shared description, else the body's source attrs (@body/fieldinfo: qsat_field_metadata.json).
 // Which fields exist is decided by the cell store root attrs `field_vars`; fields in
 // constants.WITHHELD_VARS (currently none) are never displayed or exported (isPublishedField).
-import meta from "../../../registry/qsat_field_metadata.json";
+import { DESCRIPTION_VARIANT, FIELD_METADATA as meta } from "@body/fieldinfo";
 // one name per quantity: the registry title / titleTex, written by the pipeline with the registry
 import names from "../../../registry/field_names.json";
 import { C } from "../util/constants";
@@ -40,7 +41,7 @@ export const FIELD_NAMES = names as Record<string, { title: string; titleTex: st
 export function fieldInfo(id: string): FieldInfo {
   const m0 = M[id] ?? { long_name: id, units: "", description: "" };
   const n = FIELD_NAMES[id];
-  const m = { ...m0, long_name: n?.titleTex ?? fix(m0.long_name), description: n?.description ?? fix(m0.description) };
+  const m = { ...m0, long_name: n?.titleTex ?? fix(m0.long_name), description: (DESCRIPTION_VARIANT && n?.[DESCRIPTION_VARIANT]) ?? n?.description ?? fix(m0.description) };
   const kind: FieldKind = FLUX.has(id) ? "flux" : DIRECTION.has(id) ? "direction" : AXIS.has(id) ? "axis" : FRACTION.has(id) ? "fraction" : "ratio";
   const base = { id, kind, longName: m.long_name, description: m.description, sourceUnits: m.units };
   switch (kind) {

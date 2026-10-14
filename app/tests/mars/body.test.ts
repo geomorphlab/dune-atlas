@@ -144,7 +144,7 @@ describe("Mars: texts at the source, one field citation, FV3 licence, basemap in
     const about = root.querySelector(".about")!.textContent!;
     expect(about).toMatch(/Citing the map fields/);
     expect(about).toMatch(/MCMC FV3 2°: Gunn, A\. \(2026\)\..*transport law: Pähtz/);
-    const pub = [fs.readFileSync(path.join(REPO, "registry/mars/layers.yaml"), "utf8"), fs.readFileSync(path.join(REPO, "app/src/bodies/mars/ui/helpText.ts"), "utf8"), fs.readFileSync(path.join(REPO, "app/src/bodies/mars/patches.json"), "utf8"), root.textContent!].join("\n");
+    const pub = [fs.readFileSync(path.join(REPO, "registry/mars/layers.yaml"), "utf8"), fs.readFileSync(path.join(REPO, "app/src/bodies/mars/helpText.ts"), "utf8"), fs.readFileSync(path.join(REPO, "app/src/bodies/mars/patches.json"), "utf8"), root.textContent!].join("\n");
     expect(pub).not.toMatch(/HRSC[–-]MOLA/);
     expect(pub).toMatch(/MOLA–HRSC/);
   });
