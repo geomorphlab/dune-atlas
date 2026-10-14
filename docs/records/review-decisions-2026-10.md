@@ -155,3 +155,17 @@ NetCDF, an xarray read-back of fixture exports (`npm run check-region`).
 | Label priority | size = geometric mean of radius and the radius of the mapped dune area: Rub' al Khali, Kalahari and Taklamakan first |
 | Scripts | Arabic, Persian, Urdu and Pashto (RTL plugin), Chinese (local CJK glyphs), Cyrillic on the labels; Thar's Hindi (Devanagari, complex shaping) in the popup only |
 | Naming notes (verbatim) | Earth and Mars notes in the dune layer's ⓘ, beside 'Show names', in About ('Dune-field names') and under the search results ('About these names'); e-mail address and Gazetteer as links; excluded from the text sweep |
+
+## CI speed-ups (PR #9)
+
+| item | done |
+|---|---|
+| Fixture caches | Earth and Mars synthetic stores (about 150 MB each, so not committed) in separate jobs and caches, keyed by `scripts/ci/fixture_key.py` (generator, every repository module it imports, the registry files it reads, `pipeline/pyproject.toml`, Python version); built only on a miss; `push` runs on `main` only, so the `main` caches serve every pull request. No restore-keys fallback: a store from another key would be another generator's output |
+| Path rules | `scripts/ci/changes.sh`: `app`, `pipeline`, and the repository text check (`text`) for changes neither covers; `gate` (always runs, passes when every job that ran passed) is the only required check; `deploy` on `main` after the gate when the app job built the site |
+| Local checks | CONTRIBUTING: targeted checks of the changed area before a pull request; CI is the full gate; `scripts/test-ci.sh` only for build or CI changes |
+
+Run times (wall clock, first job start to last job end): before, normal runs about 4 min and fixture cache
+misses 9–14 min (fixtures 9.3–13.9 min alone). PR #9 (workflow change, every job, new keys): first run 11.3
+min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 min (cache hit: fixtures
+0.1 min, app 2.1, pipeline 2.9); `main` after the merge (run 38650814140) 10.1 min (one rebuild in the
+`main` scope: Earth 5.9, Mars 4.2 min in parallel; app 3.3, pipeline 3.6, deploy 0.2).
