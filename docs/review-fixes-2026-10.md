@@ -163,3 +163,12 @@ refactor; 8 left until the next ERA5 data version. Tests added: `tests/datasette
 the table, Baas only there, attribution per dataset, file-unit notes) and a public-text check that no site or
 download string says "migration mode". Earth 540 passed (23 skipped), Mars 97 passed.
 
+**Deployment (§4 follow-up)**: `mars` `20e6f1d` (test-ci OK in both checkouts) published as `public` `9a451c9`;
+Actions run 38573468208 succeeded. Live checks: both pages HTTP 200; Mars smoke test (dataset v2) 34/34 passed;
+live bundles: "bed-instability mode" present (Earth 42, Mars 28 occurrences), "migration mode" absent, the ERA5
+attribution line and the "e.g., Baas (2026)" example in the Earth bundle, the file-unit notes in both, 0 references
+to `mars/v1/datasets`, the globe-mesh patch present. The remaining "migration-mode" strings in the bundles are the
+bundled source metadata (Supplementary Data attributes), used only as a fallback that no field reaches; the
+public-text test checks every displayed and downloaded string. This record is committed after the deploy and goes
+out with the next publish.
+

@@ -1,0 +1,8583 @@
+{
+ "body": "earth",
+ "entries": [
+  {
+   "state": {
+    "lon": 17.5025,
+    "lat": 15.1644,
+    "zoom": 3.52,
+    "proj": "globe",
+    "dataset": "era5",
+    "basemap": "openfreemap-dark",
+    "ut": 14,
+    "layers": [
+     {
+      "id": "rdpa",
+      "opacity": 0.85,
+      "cfg": {
+       "mode": "streamlines"
+      }
+     },
+     {
+      "id": "dunes",
+      "opacity": 1
+     },
+     {
+      "id": "dpm",
+      "opacity": 0.85
+     }
+    ],
+    "cell": null,
+    "panel": true
+   },
+   "code": "AQXirhW4wRLgAgIBDgMJVSACAWQAB1UA",
+   "decoded": {
+    "lon": 17.5025,
+    "lat": 15.1644,
+    "zoom": 3.52,
+    "proj": "globe",
+    "dataset": "era5",
+    "basemap": "openfreemap-dark",
+    "ut": 14,
+    "layers": [
+     {
+      "id": "rdpa",
+      "opacity": 0.85,
+      "cfg": {
+       "mode": "streamlines"
+      }
+     },
+     {
+      "id": "dunes",
+      "opacity": 1
+     },
+     {
+      "id": "dpm",
+      "opacity": 0.85
+     }
+    ],
+    "cell": null,
+    "panel": true
+   },
+   "app": {
+    "basemap": "openfreemap-dark",
+    "projection": "globe",
+    "utIndex": 14,
+    "layers": {
+     "dunes": {
+      "visible": true,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": true,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": true,
+      "opacity": 0.85,
+      "cfg": {
+       "mode": "streamlines"
+      }
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "rdpa",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dunes",
+     "rdpm",
+     "dpm",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": 50.9409,
+    "lat": -62.9266,
+    "zoom": 1.14,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 8,
+    "layers": [],
+    "cell": [
+     86,
+     176
+    ],
+    "panel": false
+   },
+   "code": "AQLClz6j6ExyAQUIVrABAA",
+   "decoded": {
+    "lon": 50.9409,
+    "lat": -62.9266,
+    "zoom": 1.14,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 8,
+    "layers": [],
+    "cell": [
+     86,
+     176
+    ],
+    "panel": false
+   },
+   "app": {
+    "basemap": "openfreemap-light",
+    "projection": "mercator",
+    "utIndex": 8,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": [
+     86,
+     176
+    ],
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": -70.766,
+    "lat": -7.3152,
+    "zoom": 7.47,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 48,
+    "layers": [
+     {
+      "id": "ab",
+      "opacity": 0.16,
+      "cfg": {
+       "clim": [
+        2.395,
+        55.068
+       ],
+       "fill": "#15d1f3"
+      }
+     }
+    ],
+    "cell": [
+     39,
+     0
+    ],
+    "panel": false
+   },
+   "code": "AQKXsVb_9gjrBQICMCcAAQsQhAK2JQW43AYFFdHz",
+   "decoded": {
+    "lon": -70.766,
+    "lat": -7.3152,
+    "zoom": 7.47,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 48,
+    "layers": [
+     {
+      "id": "ab",
+      "opacity": 0.16,
+      "cfg": {
+       "clim": [
+        2.395,
+        55.068
+       ],
+       "fill": "#15d1f3"
+      }
+     }
+    ],
+    "cell": [
+     39,
+     0
+    ],
+    "panel": false
+   },
+   "app": {
+    "basemap": "esri-imagery",
+    "projection": "mercator",
+    "utIndex": 48,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": true,
+      "opacity": 0.16,
+      "cfg": {
+       "clim": [
+        2.395,
+        55.068
+       ],
+       "fill": "#15d1f3"
+      }
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": [
+     39,
+     0
+    ],
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": 108.3574,
+    "lat": 6.7876,
+    "zoom": 2.29,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "opentopomap",
+    "ut": 30,
+    "layers": [
+     {
+      "id": "ufm",
+      "opacity": 0.56,
+      "cfg": {
+       "clim": [
+        1.947,
+        88.581
+       ],
+       "log": true
+      }
+     },
+     {
+      "id": "uft",
+      "opacity": 0.05,
+      "cfg": {
+       "reverse": true,
+       "log": true
+      }
+     }
+    ],
+    "cell": [
+     7,
+     42
+    ],
+    "panel": false,
+    "plotY": "qacb"
+   },
+   "code": "ASPsooQByKQI5QEBBB4HKgIWOBy2HgWK6AoFBgUaCw",
+   "decoded": {
+    "lon": 108.3574,
+    "lat": 6.7876,
+    "zoom": 2.29,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "opentopomap",
+    "ut": 30,
+    "layers": [
+     {
+      "id": "ufm",
+      "opacity": 0.56,
+      "cfg": {
+       "clim": [
+        1.947,
+        88.581
+       ],
+       "log": true
+      }
+     },
+     {
+      "id": "uft",
+      "opacity": 0.05,
+      "cfg": {
+       "reverse": true,
+       "log": true
+      }
+     }
+    ],
+    "cell": [
+     7,
+     42
+    ],
+    "panel": false,
+    "plotY": "qacb"
+   },
+   "app": {
+    "basemap": "opentopomap",
+    "projection": "globe",
+    "utIndex": 30,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": true,
+      "opacity": 0.05,
+      "cfg": {
+       "reverse": true,
+       "log": true
+      }
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": true,
+      "opacity": 0.56,
+      "cfg": {
+       "clim": [
+        1.947,
+        88.581
+       ],
+       "log": true
+      }
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "ufm",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "uft",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": [
+     7,
+     42
+    ],
+    "embed": false,
+    "dunesOnly": false,
+    "plotY": "qacb"
+   }
+  },
+  {
+   "state": {
+    "lon": -161.9565,
+    "lat": -33.1212,
+    "zoom": 6.31,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "opentopomap",
+    "ut": 23,
+    "layers": [
+     {
+      "id": "rdpa",
+      "opacity": 0.15,
+      "cfg": {
+       "reverse": true,
+       "log": true
+      }
+     },
+     {
+      "id": "qace",
+      "opacity": 0.8,
+      "cfg": {
+       "colormap": "twilight",
+       "reverse": true
+      }
+     },
+     {
+      "id": "qnlb",
+      "opacity": 0.93,
+      "cfg": {
+       "colormap": "turbo",
+       "clim": [
+        3.082,
+        53.743
+       ],
+       "mode": "arrows",
+       "vecColor": "#396b31"
+      }
+     }
+    ],
+    "cell": [
+     62,
+     11
+    ],
+    "panel": true
+   },
+   "code": "AQbZ2cUBl7co9wQBBBc-CwMJDxoSUAMGDl1lD5QwBd7HBgUBOWsx",
+   "decoded": {
+    "lon": -161.9565,
+    "lat": -33.1212,
+    "zoom": 6.31,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "opentopomap",
+    "ut": 23,
+    "layers": [
+     {
+      "id": "rdpa",
+      "opacity": 0.15,
+      "cfg": {
+       "reverse": true,
+       "log": true
+      }
+     },
+     {
+      "id": "qace",
+      "opacity": 0.8,
+      "cfg": {
+       "colormap": "twilight",
+       "reverse": true
+      }
+     },
+     {
+      "id": "qnlb",
+      "opacity": 0.93,
+      "cfg": {
+       "colormap": "turbo",
+       "clim": [
+        3.082,
+        53.743
+       ],
+       "mode": "arrows",
+       "vecColor": "#396b31"
+      }
+     }
+    ],
+    "cell": [
+     62,
+     11
+    ],
+    "panel": true
+   },
+   "app": {
+    "basemap": "opentopomap",
+    "projection": "mercator",
+    "utIndex": 23,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": true,
+      "opacity": 0.15,
+      "cfg": {
+       "reverse": true,
+       "log": true
+      }
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": true,
+      "opacity": 0.93,
+      "cfg": {
+       "colormap": "turbo",
+       "clim": [
+        3.082,
+        53.743
+       ],
+       "mode": "arrows",
+       "vecColor": "#396b31"
+      }
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": true,
+      "opacity": 0.8,
+      "cfg": {
+       "colormap": "twilight",
+       "reverse": true
+      }
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qace",
+     "qalb",
+     "qnle",
+     "qale",
+     "qnlb",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": [
+     62,
+     11
+    ],
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": -2.3644,
+    "lat": 27.9657,
+    "zoom": 2.18,
+    "proj": "globe",
+    "dataset": "era5",
+    "basemap": "openfreemap-dark",
+    "ut": 28,
+    "layers": [
+     {
+      "id": "dunes",
+      "opacity": 0,
+      "cfg": {
+       "log": true,
+       "spacingKm": 20
+      }
+     }
+    ],
+    "cell": [
+     39,
+     127
+    ],
+    "panel": true,
+    "dunesOnly": true
+   },
+   "code": "ARe38QLSkSLaAQIBHCd_AQEAmAEB",
+   "decoded": {
+    "lon": -2.3644,
+    "lat": 27.9657,
+    "zoom": 2.18,
+    "proj": "globe",
+    "dataset": "era5",
+    "basemap": "openfreemap-dark",
+    "ut": 28,
+    "layers": [
+     {
+      "id": "dunes",
+      "opacity": 0,
+      "cfg": {
+       "log": true,
+       "spacingKm": 20
+      }
+     }
+    ],
+    "cell": [
+     39,
+     127
+    ],
+    "panel": true,
+    "dunesOnly": true
+   },
+   "app": {
+    "basemap": "openfreemap-dark",
+    "projection": "globe",
+    "utIndex": 28,
+    "layers": {
+     "dunes": {
+      "visible": true,
+      "opacity": 0,
+      "cfg": {
+       "log": true,
+       "spacingKm": 20
+      }
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": [
+     39,
+     127
+    ],
+    "embed": false,
+    "dunesOnly": true
+   }
+  },
+  {
+   "state": {
+    "lon": -32.2713,
+    "lat": -61.8484,
+    "zoom": 5.45,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 28,
+    "layers": [],
+    "cell": null,
+    "panel": false,
+    "plotY": "qhbf"
+   },
+   "code": "ASCxsifnv0uhBAEFHAAX",
+   "decoded": {
+    "lon": -32.2713,
+    "lat": -61.8484,
+    "zoom": 5.45,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 28,
+    "layers": [],
+    "cell": null,
+    "panel": false,
+    "plotY": "qhbf"
+   },
+   "app": {
+    "basemap": "openfreemap-light",
+    "projection": "mercator",
+    "utIndex": 28,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false,
+    "plotY": "qhbf"
+   }
+  },
+  {
+   "state": {
+    "lon": -174.7345,
+    "lat": 69.6707,
+    "zoom": 6.21,
+    "bearing": -18.6,
+    "pitch": 0,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "esri-imagery",
+    "ut": 56,
+    "layers": [
+     {
+      "id": "qacb",
+      "opacity": 1
+     },
+     {
+      "id": "uft",
+      "opacity": 0.98,
+      "cfg": {
+       "clim": [
+        5.548,
+        97.608
+       ]
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false
+   },
+   "code": "AQihptUBhoZV7QTzAgABAjgCBGQABmIE2FYFkPULBQ",
+   "decoded": {
+    "lon": -174.7345,
+    "lat": 69.6707,
+    "zoom": 6.21,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "esri-imagery",
+    "ut": 56,
+    "layers": [
+     {
+      "id": "qacb",
+      "opacity": 1
+     },
+     {
+      "id": "uft",
+      "opacity": 0.98,
+      "cfg": {
+       "clim": [
+        5.548,
+        97.608
+       ]
+      }
+     }
+    ],
+    "bearing": -18.6,
+    "pitch": 0,
+    "cell": null,
+    "panel": false
+   },
+   "app": {
+    "basemap": "esri-imagery",
+    "projection": "mercator",
+    "utIndex": 56,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": true,
+      "opacity": 1
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": true,
+      "opacity": 0.98,
+      "cfg": {
+       "clim": [
+        5.548,
+        97.608
+       ]
+      }
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": -178.0845,
+    "lat": -63.7716,
+    "zoom": 5.9,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 0,
+    "layers": [
+     {
+      "id": "qncb",
+      "opacity": 0.06,
+      "cfg": {
+       "colormap": "hsv",
+       "reverse": true,
+       "clim": [
+        5.477,
+        72.961
+       ],
+       "invert": true
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false,
+    "dunesOnly": true
+   },
+   "code": "ARDZsdkBp-xNzgQCAgABDQaHBBDKVQWC9AgF",
+   "decoded": {
+    "lon": -178.0845,
+    "lat": -63.7716,
+    "zoom": 5.9,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 0,
+    "layers": [
+     {
+      "id": "qncb",
+      "opacity": 0.06,
+      "cfg": {
+       "colormap": "hsv",
+       "reverse": true,
+       "clim": [
+        5.477,
+        72.961
+       ],
+       "invert": true
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false,
+    "dunesOnly": true
+   },
+   "app": {
+    "basemap": "esri-imagery",
+    "projection": "mercator",
+    "utIndex": 0,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": true,
+      "opacity": 0.06,
+      "cfg": {
+       "colormap": "hsv",
+       "reverse": true,
+       "clim": [
+        5.477,
+        72.961
+       ],
+       "invert": true
+      }
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": true
+   }
+  },
+  {
+   "state": {
+    "lon": -114.6265,
+    "lat": -75.9025,
+    "zoom": 3.82,
+    "proj": "globe",
+    "dataset": "era5",
+    "basemap": "openfreemap-light",
+    "ut": 13,
+    "layers": [],
+    "cell": null,
+    "panel": true
+   },
+   "code": "AQWx9osB4dNc_gICBQ0A",
+   "decoded": {
+    "lon": -114.6265,
+    "lat": -75.9025,
+    "zoom": 3.82,
+    "proj": "globe",
+    "dataset": "era5",
+    "basemap": "openfreemap-light",
+    "ut": 13,
+    "layers": [],
+    "cell": null,
+    "panel": true
+   },
+   "app": {
+    "basemap": "openfreemap-light",
+    "projection": "globe",
+    "utIndex": 13,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": -13.3984,
+    "lat": 78.5136,
+    "zoom": 6.92,
+    "bearing": 3.8,
+    "pitch": 0,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "hillshade",
+    "ut": 52,
+    "layers": [
+     {
+      "id": "qnle",
+      "opacity": 0.04,
+      "cfg": {
+       "colormap": "cividis",
+       "fill": "#f6f982"
+      }
+     }
+    ],
+    "cell": null,
+    "panel": true,
+    "plotY": "qace"
+   },
+   "code": "ASy_rRDg61-0BUwAAQM0ARAEgQIF9vmCEA",
+   "decoded": {
+    "lon": -13.3984,
+    "lat": 78.5136,
+    "zoom": 6.92,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "hillshade",
+    "ut": 52,
+    "layers": [
+     {
+      "id": "qnle",
+      "opacity": 0.04,
+      "cfg": {
+       "colormap": "cividis",
+       "fill": "#f6f982"
+      }
+     }
+    ],
+    "bearing": 3.8,
+    "pitch": 0,
+    "cell": null,
+    "panel": true,
+    "plotY": "qace"
+   },
+   "app": {
+    "basemap": "hillshade",
+    "projection": "mercator",
+    "utIndex": 52,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": true,
+      "opacity": 0.04,
+      "cfg": {
+       "colormap": "cividis",
+       "fill": "#f6f982"
+      }
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false,
+    "plotY": "qace"
+   }
+  },
+  {
+   "state": {
+    "lon": -36.9981,
+    "lat": 8.8927,
+    "zoom": 2.5,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 43,
+    "layers": [],
+    "cell": [
+     63,
+     146
+    ],
+    "panel": true,
+    "dunesOnly": true
+   },
+   "code": "ARb5lC2-7Qr6AQEFKz-SAQA",
+   "decoded": {
+    "lon": -36.9981,
+    "lat": 8.8927,
+    "zoom": 2.5,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 43,
+    "layers": [],
+    "cell": [
+     63,
+     146
+    ],
+    "panel": true,
+    "dunesOnly": true
+   },
+   "app": {
+    "basemap": "openfreemap-light",
+    "projection": "mercator",
+    "utIndex": 43,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": [
+     63,
+     146
+    ],
+    "embed": false,
+    "dunesOnly": true
+   }
+  },
+  {
+   "state": {
+    "lon": -149.8533,
+    "lat": -56.4013,
+    "zoom": 2.88,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 38,
+    "layers": [],
+    "cell": null,
+    "panel": false,
+    "dunesOnly": true
+   },
+   "code": "ARDJ9rYB2exEoAICAiYA",
+   "decoded": {
+    "lon": -149.8533,
+    "lat": -56.4013,
+    "zoom": 2.88,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 38,
+    "layers": [],
+    "cell": null,
+    "panel": false,
+    "dunesOnly": true
+   },
+   "app": {
+    "basemap": "esri-imagery",
+    "projection": "mercator",
+    "utIndex": 38,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": true
+   }
+  },
+  {
+   "state": {
+    "lon": -60.602,
+    "lat": -40.4141,
+    "zoom": 4.24,
+    "proj": "globe",
+    "dataset": "era5",
+    "basemap": "opentopomap",
+    "ut": 48,
+    "layers": [
+     {
+      "id": "qalb",
+      "opacity": 0.93,
+      "cfg": {
+       "clim": [
+        5.242,
+        15.216
+       ]
+      }
+     },
+     {
+      "id": "at",
+      "opacity": 0.74,
+      "cfg": {
+       "colormap": "greys",
+       "invert": true
+      }
+     },
+     {
+      "id": "dunes",
+      "opacity": 0.61
+     },
+     {
+      "id": "ab",
+      "opacity": 0.07,
+      "cfg": {
+       "log": true,
+       "mode": "streamlines"
+      }
+     }
+    ],
+    "cell": null,
+    "panel": true
+   },
+   "code": "AQWH_UnZqjGoAwIEMAQPXQT0UQXg7QEFAkqBBA4BPQALBzgC",
+   "decoded": {
+    "lon": -60.602,
+    "lat": -40.4141,
+    "zoom": 4.24,
+    "proj": "globe",
+    "dataset": "era5",
+    "basemap": "opentopomap",
+    "ut": 48,
+    "layers": [
+     {
+      "id": "qalb",
+      "opacity": 0.93,
+      "cfg": {
+       "clim": [
+        5.242,
+        15.216
+       ]
+      }
+     },
+     {
+      "id": "at",
+      "opacity": 0.74,
+      "cfg": {
+       "colormap": "greys",
+       "invert": true
+      }
+     },
+     {
+      "id": "dunes",
+      "opacity": 0.61
+     },
+     {
+      "id": "ab",
+      "opacity": 0.07,
+      "cfg": {
+       "log": true,
+       "mode": "streamlines"
+      }
+     }
+    ],
+    "cell": null,
+    "panel": true
+   },
+   "app": {
+    "basemap": "opentopomap",
+    "projection": "globe",
+    "utIndex": 48,
+    "layers": {
+     "dunes": {
+      "visible": true,
+      "opacity": 0.61
+     },
+     "at": {
+      "visible": true,
+      "opacity": 0.74,
+      "cfg": {
+       "colormap": "greys",
+       "invert": true
+      }
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": true,
+      "opacity": 0.07,
+      "cfg": {
+       "log": true,
+       "mode": "streamlines"
+      }
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": true,
+      "opacity": 0.93,
+      "cfg": {
+       "clim": [
+        5.242,
+        15.216
+       ]
+      }
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "qalb",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "dunes",
+     "ao",
+     "qncb",
+     "qnlb",
+     "ab",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": -60.1498,
+    "lat": -81.2201,
+    "zoom": 0.01,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "hillshade",
+    "ut": 28,
+    "layers": [
+     {
+      "id": "vegetation",
+      "opacity": 0.6,
+      "cfg": {
+       "colormap": "greys",
+       "mode": "arrows"
+      }
+     },
+     {
+      "id": "qhab_ac_nc",
+      "opacity": 0.27,
+      "cfg": {
+       "colormap": "twilight_shifted",
+       "vecColor": "#24eb90"
+      }
+     },
+     {
+      "id": "qnlb",
+      "opacity": 0.64,
+      "cfg": {
+       "reverse": true,
+       "vecColor": "#6df888"
+      }
+     }
+    ],
+    "cell": null,
+    "panel": true,
+    "dunesOnly": true,
+    "plotY": "qalb"
+   },
+   "code": "ATSztknRkmMBAQMcAxs8IQ4BFBtBByTrkA5AQm34iA0",
+   "decoded": {
+    "lon": -60.1498,
+    "lat": -81.2201,
+    "zoom": 0.01,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "hillshade",
+    "ut": 28,
+    "layers": [
+     {
+      "id": "vegetation",
+      "opacity": 0.6,
+      "cfg": {
+       "colormap": "greys",
+       "mode": "arrows"
+      }
+     },
+     {
+      "id": "qhab_ac_nc",
+      "opacity": 0.27,
+      "cfg": {
+       "colormap": "twilight_shifted",
+       "vecColor": "#24eb90"
+      }
+     },
+     {
+      "id": "qnlb",
+      "opacity": 0.64,
+      "cfg": {
+       "reverse": true,
+       "vecColor": "#6df888"
+      }
+     }
+    ],
+    "cell": null,
+    "panel": true,
+    "dunesOnly": true,
+    "plotY": "qalb"
+   },
+   "app": {
+    "basemap": "hillshade",
+    "projection": "mercator",
+    "utIndex": 28,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": true,
+      "opacity": 0.64,
+      "cfg": {
+       "reverse": true,
+       "vecColor": "#6df888"
+      }
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": true,
+      "opacity": 0.27,
+      "cfg": {
+       "colormap": "twilight_shifted",
+       "vecColor": "#24eb90"
+      }
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": true,
+      "opacity": 0.6,
+      "cfg": {
+       "colormap": "greys",
+       "mode": "arrows"
+      }
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "vegetation",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "qnlb"
+    ],
+    "dataset": "era5-land",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": true,
+    "plotY": "qalb"
+   }
+  },
+  {
+   "state": {
+    "lon": -127.7912,
+    "lat": 24.0374,
+    "zoom": 1.43,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 0,
+    "layers": [],
+    "cell": null,
+    "panel": false
+   },
+   "code": "AQCv_5sB7KsdjwECAgAA",
+   "decoded": {
+    "lon": -127.7912,
+    "lat": 24.0374,
+    "zoom": 1.43,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 0,
+    "layers": [],
+    "cell": null,
+    "panel": false
+   },
+   "app": {
+    "basemap": "esri-imagery",
+    "projection": "mercator",
+    "utIndex": 0,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": -26.9096,
+    "lat": 12.4322,
+    "zoom": 2.04,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 45,
+    "layers": [
+     {
+      "id": "sige_sigh",
+      "opacity": 0.79,
+      "cfg": {
+       "log": false
+      }
+     }
+    ],
+    "cell": [
+     61,
+     20
+    ],
+    "panel": false
+   },
+   "code": "AQLP7CDElg_MAQEFLT0UAQVPCA",
+   "decoded": {
+    "lon": -26.9096,
+    "lat": 12.4322,
+    "zoom": 2.04,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 45,
+    "layers": [
+     {
+      "id": "sige_sigh",
+      "opacity": 0.79,
+      "cfg": {
+       "log": false
+      }
+     }
+    ],
+    "cell": [
+     61,
+     20
+    ],
+    "panel": false
+   },
+   "app": {
+    "basemap": "openfreemap-light",
+    "projection": "mercator",
+    "utIndex": 45,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": true,
+      "opacity": 0.79,
+      "cfg": {
+       "log": false
+      }
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": [
+     61,
+     20
+    ],
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": -149.11,
+    "lat": 79.5279,
+    "zoom": 3.21,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 41,
+    "layers": [],
+    "cell": null,
+    "panel": false
+   },
+   "code": "AQC3grYBnophwQIBBSkA",
+   "decoded": {
+    "lon": -149.11,
+    "lat": 79.5279,
+    "zoom": 3.21,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 41,
+    "layers": [],
+    "cell": null,
+    "panel": false
+   },
+   "app": {
+    "basemap": "openfreemap-light",
+    "projection": "mercator",
+    "utIndex": 41,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": 70.4174,
+    "lat": 21.9139,
+    "zoom": 7.17,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "esri-imagery",
+    "ut": 55,
+    "layers": [
+     {
+      "id": "dunes",
+      "opacity": 0.55,
+      "cfg": {
+       "log": true,
+       "spacingKm": 500
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false
+   },
+   "code": "AQHc-lWG4BrNBQECNwEBN5gBBQ",
+   "decoded": {
+    "lon": 70.4174,
+    "lat": 21.9139,
+    "zoom": 7.17,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "esri-imagery",
+    "ut": 55,
+    "layers": [
+     {
+      "id": "dunes",
+      "opacity": 0.55,
+      "cfg": {
+       "log": true,
+       "spacingKm": 500
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false
+   },
+   "app": {
+    "basemap": "esri-imagery",
+    "projection": "globe",
+    "utIndex": 55,
+    "layers": {
+     "dunes": {
+      "visible": true,
+      "opacity": 0.55,
+      "cfg": {
+       "log": true,
+       "spacingKm": 500
+      }
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": 81.1738,
+    "lat": -17.4176,
+    "zoom": 5.93,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-dark",
+    "ut": 23,
+    "layers": [
+     {
+      "id": "sige_sigh",
+      "opacity": 0.6,
+      "cfg": {
+       "colormap": "piyg"
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false
+   },
+   "code": "AQC0i2O_oRXRBAEBFwEFPAEL",
+   "decoded": {
+    "lon": 81.1738,
+    "lat": -17.4176,
+    "zoom": 5.93,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-dark",
+    "ut": 23,
+    "layers": [
+     {
+      "id": "sige_sigh",
+      "opacity": 0.6,
+      "cfg": {
+       "colormap": "piyg"
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false
+   },
+   "app": {
+    "basemap": "openfreemap-dark",
+    "projection": "mercator",
+    "utIndex": 23,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": true,
+      "opacity": 0.6,
+      "cfg": {
+       "colormap": "piyg"
+      }
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": -124.4776,
+    "lat": -16.6899,
+    "zoom": 0.89,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 7,
+    "layers": [
+     {
+      "id": "dpm",
+      "opacity": 0.9,
+      "cfg": {
+       "colormap": "greys"
+      }
+     },
+     {
+      "id": "ae",
+      "opacity": 0.16,
+      "cfg": {
+       "colormap": "twilight_shifted",
+       "clim": [
+        0.355,
+        67.256
+       ],
+       "spacingKm": 10
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false,
+    "dunesOnly": true,
+    "plotY": "qacb"
+   },
+   "code": "ATDP-ZcB5a8UWQEFBwIHWgEOAxCFAQfGBQXwmggFAAs",
+   "decoded": {
+    "lon": -124.4776,
+    "lat": -16.6899,
+    "zoom": 0.89,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 7,
+    "layers": [
+     {
+      "id": "dpm",
+      "opacity": 0.9,
+      "cfg": {
+       "colormap": "greys"
+      }
+     },
+     {
+      "id": "ae",
+      "opacity": 0.16,
+      "cfg": {
+       "colormap": "twilight_shifted",
+       "clim": [
+        0.355,
+        67.256
+       ],
+       "spacingKm": 10
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false,
+    "dunesOnly": true,
+    "plotY": "qacb"
+   },
+   "app": {
+    "basemap": "openfreemap-light",
+    "projection": "mercator",
+    "utIndex": 7,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": true,
+      "opacity": 0.16,
+      "cfg": {
+       "colormap": "twilight_shifted",
+       "clim": [
+        0.355,
+        67.256
+       ],
+       "spacingKm": 10
+      }
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": true,
+      "opacity": 0.9,
+      "cfg": {
+       "colormap": "greys"
+      }
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "dpm",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "ae",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": true,
+    "plotY": "qacb"
+   }
+  },
+  {
+   "state": {
+    "lon": 152.7563,
+    "lat": 26.2356,
+    "zoom": 7.32,
+    "bearing": 6.6,
+    "pitch": 0,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 13,
+    "layers": [
+     {
+      "id": "vegetation",
+      "opacity": 0.71,
+      "cfg": {
+       "log": true
+      }
+     }
+    ],
+    "cell": null,
+    "panel": true,
+    "plotY": "qhab_nl_nc"
+   },
+   "code": "AS2WvLoBqIMg3AWEAQABBQ0BG0cYEg",
+   "decoded": {
+    "lon": 152.7563,
+    "lat": 26.2356,
+    "zoom": 7.32,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 13,
+    "layers": [
+     {
+      "id": "vegetation",
+      "opacity": 0.71,
+      "cfg": {
+       "log": true
+      }
+     }
+    ],
+    "bearing": 6.6,
+    "pitch": 0,
+    "cell": null,
+    "panel": true,
+    "plotY": "qhab_nl_nc"
+   },
+   "app": {
+    "basemap": "openfreemap-light",
+    "projection": "globe",
+    "utIndex": 13,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": true,
+      "opacity": 0.71,
+      "cfg": {
+       "log": true
+      }
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false,
+    "plotY": "qhab_nl_nc"
+   }
+  },
+  {
+   "state": {
+    "lon": 38.9425,
+    "lat": 75.8683,
+    "zoom": 0.06,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 53,
+    "layers": [
+     {
+      "id": "qha_rdp_dp",
+      "opacity": 0.93
+     },
+     {
+      "id": "qnle",
+      "opacity": 0.24,
+      "cfg": {
+       "colormap": "hsv",
+       "invert": true
+      }
+     },
+     {
+      "id": "ae",
+      "opacity": 0.91,
+      "cfg": {
+       "colormap": "ylorbr",
+       "log": false
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false,
+    "dunesOnly": true
+   },
+   "code": "ARDixC-2zlwGAgI1AwpdABAYgQQQA1sJDA",
+   "decoded": {
+    "lon": 38.9425,
+    "lat": 75.8683,
+    "zoom": 0.06,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 53,
+    "layers": [
+     {
+      "id": "qha_rdp_dp",
+      "opacity": 0.93
+     },
+     {
+      "id": "qnle",
+      "opacity": 0.24,
+      "cfg": {
+       "colormap": "hsv",
+       "invert": true
+      }
+     },
+     {
+      "id": "ae",
+      "opacity": 0.91,
+      "cfg": {
+       "colormap": "ylorbr",
+       "log": false
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false,
+    "dunesOnly": true
+   },
+   "app": {
+    "basemap": "esri-imagery",
+    "projection": "mercator",
+    "utIndex": 53,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": true,
+      "opacity": 0.91,
+      "cfg": {
+       "colormap": "ylorbr",
+       "log": false
+      }
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": true,
+      "opacity": 0.93
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": true,
+      "opacity": 0.24,
+      "cfg": {
+       "colormap": "hsv",
+       "invert": true
+      }
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "qha_rdp_dp",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qnle",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "ae",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": true
+   }
+  },
+  {
+   "state": {
+    "lon": 45.0697,
+    "lat": -3.1866,
+    "zoom": 4.54,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "hillshade",
+    "ut": 18,
+    "layers": [
+     {
+      "id": "sige_sigh",
+      "opacity": 0.51,
+      "cfg": {
+       "colormap": "cividis",
+       "clim": [
+        6.722,
+        52.944
+       ]
+      }
+     },
+     {
+      "id": "ufm",
+      "opacity": 0.62,
+      "cfg": {
+       "log": false,
+       "mode": "arrows",
+       "fill": "#356df4"
+      }
+     }
+    ],
+    "cell": [
+     0,
+     142
+    ],
+    "panel": false
+   },
+   "code": "AQKSgjfz8QPGAwIDEgCOAQIFMwUFhGkFoLsGBRY-qAIBNW30",
+   "decoded": {
+    "lon": 45.0697,
+    "lat": -3.1866,
+    "zoom": 4.54,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "hillshade",
+    "ut": 18,
+    "layers": [
+     {
+      "id": "sige_sigh",
+      "opacity": 0.51,
+      "cfg": {
+       "colormap": "cividis",
+       "clim": [
+        6.722,
+        52.944
+       ]
+      }
+     },
+     {
+      "id": "ufm",
+      "opacity": 0.62,
+      "cfg": {
+       "log": false,
+       "mode": "arrows",
+       "fill": "#356df4"
+      }
+     }
+    ],
+    "cell": [
+     0,
+     142
+    ],
+    "panel": false
+   },
+   "app": {
+    "basemap": "hillshade",
+    "projection": "mercator",
+    "utIndex": 18,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": true,
+      "opacity": 0.51,
+      "cfg": {
+       "colormap": "cividis",
+       "clim": [
+        6.722,
+        52.944
+       ]
+      }
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": true,
+      "opacity": 0.62,
+      "cfg": {
+       "log": false,
+       "mode": "arrows",
+       "fill": "#356df4"
+      }
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": [
+     0,
+     142
+    ],
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": 111.5253,
+    "lat": 46.222,
+    "zoom": 0.92,
+    "bearing": -4.4,
+    "pitch": 0,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "openfreemap-light",
+    "ut": 14,
+    "layers": [],
+    "cell": [
+     44,
+     141
+    ],
+    "panel": true,
+    "dunesOnly": true
+   },
+   "code": "AR7qkYgBmLY4XFcAAgUOLI0BAA",
+   "decoded": {
+    "lon": 111.5253,
+    "lat": 46.222,
+    "zoom": 0.92,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "openfreemap-light",
+    "ut": 14,
+    "layers": [],
+    "bearing": -4.4,
+    "pitch": 0,
+    "cell": [
+     44,
+     141
+    ],
+    "panel": true,
+    "dunesOnly": true
+   },
+   "app": {
+    "basemap": "openfreemap-light",
+    "projection": "mercator",
+    "utIndex": 14,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": [
+     44,
+     141
+    ],
+    "embed": false,
+    "dunesOnly": true
+   }
+  },
+  {
+   "state": {
+    "lon": 101.1648,
+    "lat": 57.5568,
+    "zoom": 0.5,
+    "proj": "globe",
+    "dataset": "era5",
+    "basemap": "opentopomap",
+    "ut": 33,
+    "layers": [],
+    "cell": null,
+    "panel": true,
+    "dunesOnly": true
+   },
+   "code": "ARWAv3ugoUYyAgQhAA",
+   "decoded": {
+    "lon": 101.1648,
+    "lat": 57.5568,
+    "zoom": 0.5,
+    "proj": "globe",
+    "dataset": "era5",
+    "basemap": "opentopomap",
+    "ut": 33,
+    "layers": [],
+    "cell": null,
+    "panel": true,
+    "dunesOnly": true
+   },
+   "app": {
+    "basemap": "opentopomap",
+    "projection": "globe",
+    "utIndex": 33,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": true
+   }
+  },
+  {
+   "state": {
+    "lon": 37.8261,
+    "lat": -43.6007,
+    "zoom": 4.77,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-dark",
+    "ut": 55,
+    "layers": [],
+    "cell": [
+     37,
+     161
+    ],
+    "panel": false
+   },
+   "code": "AQKqli7NnDXdAwEBNyWhAQA",
+   "decoded": {
+    "lon": 37.8261,
+    "lat": -43.6007,
+    "zoom": 4.77,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-dark",
+    "ut": 55,
+    "layers": [],
+    "cell": [
+     37,
+     161
+    ],
+    "panel": false
+   },
+   "app": {
+    "basemap": "openfreemap-dark",
+    "projection": "mercator",
+    "utIndex": 55,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": [
+     37,
+     161
+    ],
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": 74.3056,
+    "lat": 54.5394,
+    "zoom": 3.47,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 61,
+    "layers": [
+     {
+      "id": "qha_rdp_dp",
+      "opacity": 0.55
+     }
+    ],
+    "cell": [
+     2,
+     16
+    ],
+    "panel": false
+   },
+   "code": "AQKg2lrkyULbAgEFPQIQAQo3AA",
+   "decoded": {
+    "lon": 74.3056,
+    "lat": 54.5394,
+    "zoom": 3.47,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 61,
+    "layers": [
+     {
+      "id": "qha_rdp_dp",
+      "opacity": 0.55
+     }
+    ],
+    "cell": [
+     2,
+     16
+    ],
+    "panel": false
+   },
+   "app": {
+    "basemap": "openfreemap-light",
+    "projection": "mercator",
+    "utIndex": 61,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": true,
+      "opacity": 0.55
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": [
+     2,
+     16
+    ],
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": 131.3728,
+    "lat": -74.8427,
+    "zoom": 6.79,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "esri-imagery",
+    "ut": 1,
+    "layers": [
+     {
+      "id": "rdpm",
+      "opacity": 0.06,
+      "cfg": {
+       "invert": true
+      }
+     },
+     {
+      "id": "qale",
+      "opacity": 0.83,
+      "cfg": {
+       "mode": "arrows"
+      }
+     }
+    ],
+    "cell": [
+     53,
+     135
+    ],
+    "panel": false,
+    "plotY": "qha_rdp_dp"
+   },
+   "code": "ASOAr6ABla5bpwUBAgE1hwECCAaABBFTIAEE",
+   "decoded": {
+    "lon": 131.3728,
+    "lat": -74.8427,
+    "zoom": 6.79,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "esri-imagery",
+    "ut": 1,
+    "layers": [
+     {
+      "id": "rdpm",
+      "opacity": 0.06,
+      "cfg": {
+       "invert": true
+      }
+     },
+     {
+      "id": "qale",
+      "opacity": 0.83,
+      "cfg": {
+       "mode": "arrows"
+      }
+     }
+    ],
+    "cell": [
+     53,
+     135
+    ],
+    "panel": false,
+    "plotY": "qha_rdp_dp"
+   },
+   "app": {
+    "basemap": "esri-imagery",
+    "projection": "globe",
+    "utIndex": 1,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": true,
+      "opacity": 0.06,
+      "cfg": {
+       "invert": true
+      }
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": true,
+      "opacity": 0.83,
+      "cfg": {
+       "mode": "arrows"
+      }
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": [
+     53,
+     135
+    ],
+    "embed": false,
+    "dunesOnly": false,
+    "plotY": "qha_rdp_dp"
+   }
+  },
+  {
+   "state": {
+    "lon": 53.2368,
+    "lat": 40.2838,
+    "zoom": 6.85,
+    "bearing": -18.6,
+    "pitch": 0,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-dark",
+    "ut": 59,
+    "layers": [],
+    "cell": null,
+    "panel": true,
+    "dunesOnly": true,
+    "plotY": "at"
+   },
+   "code": "AT2g_kCsljGtBfMCAAEBOwAG",
+   "decoded": {
+    "lon": 53.2368,
+    "lat": 40.2838,
+    "zoom": 6.85,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-dark",
+    "ut": 59,
+    "layers": [],
+    "bearing": -18.6,
+    "pitch": 0,
+    "cell": null,
+    "panel": true,
+    "dunesOnly": true,
+    "plotY": "at"
+   },
+   "app": {
+    "basemap": "openfreemap-dark",
+    "projection": "globe",
+    "utIndex": 59,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": true,
+    "plotY": "at"
+   }
+  },
+  {
+   "state": {
+    "lon": -102.6143,
+    "lat": 50.5387,
+    "zoom": 5.65,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 39,
+    "layers": [],
+    "cell": null,
+    "panel": false
+   },
+   "code": "AQG9oX3W2D21BAEFJwA",
+   "decoded": {
+    "lon": -102.6143,
+    "lat": 50.5387,
+    "zoom": 5.65,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 39,
+    "layers": [],
+    "cell": null,
+    "panel": false
+   },
+   "app": {
+    "basemap": "openfreemap-light",
+    "projection": "globe",
+    "utIndex": 39,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": 92.0003,
+    "lat": -18.1576,
+    "zoom": 4.48,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "opentopomap",
+    "ut": 7,
+    "layers": [
+     {
+      "id": "qhbf",
+      "opacity": 0.16,
+      "cfg": {
+       "colormap": "ylorbr",
+       "reverse": true,
+       "mode": "arrows"
+      }
+     },
+     {
+      "id": "qsdiv",
+      "opacity": 0.56,
+      "cfg": {
+       "clim": [
+        5.776,
+        97.845
+       ]
+      }
+     }
+    ],
+    "cell": [
+     52,
+     112
+    ],
+    "panel": true
+   },
+   "code": "AQeGp3CPlRbAAwEEBzRwAhcQIwwBGjgEoFoF6vgLBQ",
+   "decoded": {
+    "lon": 92.0003,
+    "lat": -18.1576,
+    "zoom": 4.48,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "opentopomap",
+    "ut": 7,
+    "layers": [
+     {
+      "id": "qhbf",
+      "opacity": 0.16,
+      "cfg": {
+       "colormap": "ylorbr",
+       "reverse": true,
+       "mode": "arrows"
+      }
+     },
+     {
+      "id": "qsdiv",
+      "opacity": 0.56,
+      "cfg": {
+       "clim": [
+        5.776,
+        97.845
+       ]
+      }
+     }
+    ],
+    "cell": [
+     52,
+     112
+    ],
+    "panel": true
+   },
+   "app": {
+    "basemap": "opentopomap",
+    "projection": "globe",
+    "utIndex": 7,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": true,
+      "opacity": 0.16,
+      "cfg": {
+       "colormap": "ylorbr",
+       "reverse": true,
+       "mode": "arrows"
+      }
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": true,
+      "opacity": 0.56,
+      "cfg": {
+       "clim": [
+        5.776,
+        97.845
+       ]
+      }
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": [
+     52,
+     112
+    ],
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": 105.9377,
+    "lat": -32.864,
+    "zoom": 3.1,
+    "bearing": -17.2,
+    "pitch": 0,
+    "proj": "globe",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 47,
+    "layers": [
+     {
+      "id": "rdpm",
+      "opacity": 0.64,
+      "cfg": {
+       "colormap": "cividis"
+      }
+     },
+     {
+      "id": "vegetation",
+      "opacity": 0.37,
+      "cfg": {
+       "vecColor": "#f0c749",
+       "invert": true
+      }
+     },
+     {
+      "id": "sige_sigh",
+      "opacity": 0.54,
+      "cfg": {
+       "clim": [
+        5.56,
+        38.271
+       ]
+      }
+     }
+    ],
+    "cell": [
+     69,
+     27
+    ],
+    "panel": true,
+    "dunesOnly": true
+   },
+   "code": "AR_iqIEB_44otgLXAgACAi9FGwMIQAEFGyXABPDHSQU2BNgIA_7VBAU",
+   "decoded": {
+    "lon": 105.9377,
+    "lat": -32.864,
+    "zoom": 3.1,
+    "proj": "globe",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 47,
+    "layers": [
+     {
+      "id": "rdpm",
+      "opacity": 0.64,
+      "cfg": {
+       "colormap": "cividis"
+      }
+     },
+     {
+      "id": "vegetation",
+      "opacity": 0.37,
+      "cfg": {
+       "vecColor": "#f0c749",
+       "invert": true
+      }
+     },
+     {
+      "id": "sige_sigh",
+      "opacity": 0.54,
+      "cfg": {
+       "clim": [
+        5.56,
+        38.271
+       ]
+      }
+     }
+    ],
+    "bearing": -17.2,
+    "pitch": 0,
+    "cell": [
+     69,
+     27
+    ],
+    "panel": true,
+    "dunesOnly": true
+   },
+   "app": {
+    "basemap": "esri-imagery",
+    "projection": "globe",
+    "utIndex": 47,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": true,
+      "opacity": 0.54,
+      "cfg": {
+       "clim": [
+        5.56,
+        38.271
+       ]
+      }
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": true,
+      "opacity": 0.64,
+      "cfg": {
+       "colormap": "cividis"
+      }
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": true,
+      "opacity": 0.37,
+      "cfg": {
+       "vecColor": "#f0c749",
+       "invert": true
+      }
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "rdpm",
+     "uft",
+     "dpm",
+     "vegetation",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "sige_sigh"
+    ],
+    "dataset": "era5",
+    "cell": [
+     69,
+     27
+    ],
+    "embed": false,
+    "dunesOnly": true
+   }
+  },
+  {
+   "state": {
+    "lon": 89.9722,
+    "lat": -13.556,
+    "zoom": 0.38,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "opentopomap",
+    "ut": 52,
+    "layers": [
+     {
+      "id": "aridity",
+      "opacity": 0.23,
+      "cfg": {
+       "colormap": "brbg",
+       "clim": [
+        5.868,
+        34.867
+       ]
+      }
+     },
+     {
+      "id": "at",
+      "opacity": 0.66,
+      "cfg": {
+       "reverse": true
+      }
+     }
+    ],
+    "cell": [
+     4,
+     89
+    ],
+    "panel": true,
+    "dunesOnly": true
+   },
+   "code": "AReU6m2PxhAmAQQ0BFkCGRcFCthbBeagBAUCQgI",
+   "decoded": {
+    "lon": 89.9722,
+    "lat": -13.556,
+    "zoom": 0.38,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "opentopomap",
+    "ut": 52,
+    "layers": [
+     {
+      "id": "aridity",
+      "opacity": 0.23,
+      "cfg": {
+       "colormap": "brbg",
+       "clim": [
+        5.868,
+        34.867
+       ]
+      }
+     },
+     {
+      "id": "at",
+      "opacity": 0.66,
+      "cfg": {
+       "reverse": true
+      }
+     }
+    ],
+    "cell": [
+     4,
+     89
+    ],
+    "panel": true,
+    "dunesOnly": true
+   },
+   "app": {
+    "basemap": "opentopomap",
+    "projection": "globe",
+    "utIndex": 52,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": true,
+      "opacity": 0.66,
+      "cfg": {
+       "reverse": true
+      }
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": true,
+      "opacity": 0.23,
+      "cfg": {
+       "colormap": "brbg",
+       "clim": [
+        5.868,
+        34.867
+       ]
+      }
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "aridity",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "at",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": [
+     4,
+     89
+    ],
+    "embed": false,
+    "dunesOnly": true
+   }
+  },
+  {
+   "state": {
+    "lon": -152.882,
+    "lat": -47.5164,
+    "zoom": 1.84,
+    "bearing": -19,
+    "pitch": 0,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "hillshade",
+    "ut": 48,
+    "layers": [
+     {
+      "id": "ao",
+      "opacity": 0.47
+     },
+     {
+      "id": "qhne_ac_nl",
+      "opacity": 0.01,
+      "cfg": {
+       "colormap": "hsv"
+      }
+     },
+     {
+      "id": "qsdiv",
+      "opacity": 0.7,
+      "cfg": {
+       "mode": "arrows"
+      }
+     }
+    ],
+    "cell": [
+     69,
+     128
+    ],
+    "panel": true,
+    "plotY": "rdpm"
+   },
+   "code": "AS7nz7oBt4A6uAH7AgABAzBFgAEDDC8AFQEBEBpGIAEC",
+   "decoded": {
+    "lon": -152.882,
+    "lat": -47.5164,
+    "zoom": 1.84,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "hillshade",
+    "ut": 48,
+    "layers": [
+     {
+      "id": "ao",
+      "opacity": 0.47
+     },
+     {
+      "id": "qhne_ac_nl",
+      "opacity": 0.01,
+      "cfg": {
+       "colormap": "hsv"
+      }
+     },
+     {
+      "id": "qsdiv",
+      "opacity": 0.7,
+      "cfg": {
+       "mode": "arrows"
+      }
+     }
+    ],
+    "bearing": -19,
+    "pitch": 0,
+    "cell": [
+     69,
+     128
+    ],
+    "panel": true,
+    "plotY": "rdpm"
+   },
+   "app": {
+    "basemap": "hillshade",
+    "projection": "mercator",
+    "utIndex": 48,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": true,
+      "opacity": 0.47
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": true,
+      "opacity": 0.01,
+      "cfg": {
+       "colormap": "hsv"
+      }
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": true,
+      "opacity": 0.7,
+      "cfg": {
+       "mode": "arrows"
+      }
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": [
+     69,
+     128
+    ],
+    "embed": false,
+    "dunesOnly": false,
+    "plotY": "rdpm"
+   }
+  },
+  {
+   "state": {
+    "lon": 159.2883,
+    "lat": -18.8769,
+    "zoom": 3.49,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "hillshade",
+    "ut": 39,
+    "layers": [
+     {
+      "id": "rdpm",
+      "opacity": 0.02,
+      "cfg": {
+       "vecColor": "#26a194",
+       "invert": true
+      }
+     },
+     {
+      "id": "dunes",
+      "opacity": 0.55
+     },
+     {
+      "id": "qhef",
+      "opacity": 0.48,
+      "cfg": {
+       "reverse": true
+      }
+     },
+     {
+      "id": "qncb",
+      "opacity": 0.2,
+      "cfg": {
+       "reverse": true
+      }
+     }
+    ],
+    "cell": null,
+    "panel": true
+   },
+   "code": "AQTmuMIBwYUX3QICAycECALABCahlAE3ABgwAg0UAg",
+   "decoded": {
+    "lon": 159.2883,
+    "lat": -18.8769,
+    "zoom": 3.49,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "hillshade",
+    "ut": 39,
+    "layers": [
+     {
+      "id": "rdpm",
+      "opacity": 0.02,
+      "cfg": {
+       "vecColor": "#26a194",
+       "invert": true
+      }
+     },
+     {
+      "id": "dunes",
+      "opacity": 0.55
+     },
+     {
+      "id": "qhef",
+      "opacity": 0.48,
+      "cfg": {
+       "reverse": true
+      }
+     },
+     {
+      "id": "qncb",
+      "opacity": 0.2,
+      "cfg": {
+       "reverse": true
+      }
+     }
+    ],
+    "cell": null,
+    "panel": true
+   },
+   "app": {
+    "basemap": "hillshade",
+    "projection": "mercator",
+    "utIndex": 39,
+    "layers": {
+     "dunes": {
+      "visible": true,
+      "opacity": 0.55
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": true,
+      "opacity": 0.02,
+      "cfg": {
+       "vecColor": "#26a194",
+       "invert": true
+      }
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": true,
+      "opacity": 0.2,
+      "cfg": {
+       "reverse": true
+      }
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": true,
+      "opacity": 0.48,
+      "cfg": {
+       "reverse": true
+      }
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "rdpm",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "dunes",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qhef",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qncb",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": -120.2,
+    "lat": 73.148,
+    "zoom": 6.24,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "openfreemap-dark",
+    "ut": 56,
+    "layers": [
+     {
+      "id": "aridity",
+      "opacity": 0.79,
+      "cfg": {
+       "colormap": "magma",
+       "reverse": true,
+       "mode": "arrows"
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false,
+    "dunesOnly": true
+   },
+   "code": "ARCf3ZIBsKVZ8AQCATgBGU8jAgE",
+   "decoded": {
+    "lon": -120.2,
+    "lat": 73.148,
+    "zoom": 6.24,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "openfreemap-dark",
+    "ut": 56,
+    "layers": [
+     {
+      "id": "aridity",
+      "opacity": 0.79,
+      "cfg": {
+       "colormap": "magma",
+       "reverse": true,
+       "mode": "arrows"
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false,
+    "dunesOnly": true
+   },
+   "app": {
+    "basemap": "openfreemap-dark",
+    "projection": "mercator",
+    "utIndex": 56,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": true,
+      "opacity": 0.79,
+      "cfg": {
+       "colormap": "magma",
+       "reverse": true,
+       "mode": "arrows"
+      }
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": true
+   }
+  },
+  {
+   "state": {
+    "lon": 166.006,
+    "lat": -17.8942,
+    "zoom": 3.21,
+    "bearing": -19.6,
+    "pitch": 0,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "opentopomap",
+    "ut": 7,
+    "layers": [],
+    "cell": null,
+    "panel": true
+   },
+   "code": "AQy40soB--sVwQKHAwACBAcA",
+   "decoded": {
+    "lon": 166.006,
+    "lat": -17.8942,
+    "zoom": 3.21,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "opentopomap",
+    "ut": 7,
+    "layers": [],
+    "bearing": -19.6,
+    "pitch": 0,
+    "cell": null,
+    "panel": true
+   },
+   "app": {
+    "basemap": "opentopomap",
+    "projection": "mercator",
+    "utIndex": 7,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": 46.5943,
+    "lat": -59.2437,
+    "zoom": 6.5,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 9,
+    "layers": [],
+    "cell": [
+     23,
+     85
+    ],
+    "panel": true
+   },
+   "code": "AQau8DjpqEiKBQICCRdVAA",
+   "decoded": {
+    "lon": 46.5943,
+    "lat": -59.2437,
+    "zoom": 6.5,
+    "proj": "mercator",
+    "dataset": "era5",
+    "basemap": "esri-imagery",
+    "ut": 9,
+    "layers": [],
+    "cell": [
+     23,
+     85
+    ],
+    "panel": true
+   },
+   "app": {
+    "basemap": "esri-imagery",
+    "projection": "mercator",
+    "utIndex": 9,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5",
+    "cell": [
+     23,
+     85
+    ],
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": -54.5708,
+    "lat": -81.5797,
+    "zoom": 0.81,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 15,
+    "layers": [
+     {
+      "id": "dpm",
+      "opacity": 0.42,
+      "cfg": {
+       "colormap": "turbo",
+       "reverse": true,
+       "invert": true
+      }
+     },
+     {
+      "id": "qha_rdp_dp",
+      "opacity": 0.73,
+      "cfg": {
+       "colormap": "twilight"
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false
+   },
+   "code": "AQHXzkLpymNRAQUPAgcqgwQPCkkBBg",
+   "decoded": {
+    "lon": -54.5708,
+    "lat": -81.5797,
+    "zoom": 0.81,
+    "proj": "globe",
+    "dataset": "era5-land",
+    "basemap": "openfreemap-light",
+    "ut": 15,
+    "layers": [
+     {
+      "id": "dpm",
+      "opacity": 0.42,
+      "cfg": {
+       "colormap": "turbo",
+       "reverse": true,
+       "invert": true
+      }
+     },
+     {
+      "id": "qha_rdp_dp",
+      "opacity": 0.73,
+      "cfg": {
+       "colormap": "twilight"
+      }
+     }
+    ],
+    "cell": null,
+    "panel": false
+   },
+   "app": {
+    "basemap": "openfreemap-light",
+    "projection": "globe",
+    "utIndex": 15,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": true,
+      "opacity": 0.42,
+      "cfg": {
+       "colormap": "turbo",
+       "reverse": true,
+       "invert": true
+      }
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": true,
+      "opacity": 0.73,
+      "cfg": {
+       "colormap": "twilight"
+      }
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "dpm",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "qalb",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": null,
+    "embed": false,
+    "dunesOnly": false
+   }
+  },
+  {
+   "state": {
+    "lon": 61.7402,
+    "lat": 29.0484,
+    "zoom": 2.65,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "opentopomap",
+    "ut": 48,
+    "layers": [
+     {
+      "id": "sige_sigh",
+      "opacity": 0.78,
+      "cfg": {
+       "colormap": "twilight_shifted",
+       "log": true,
+       "spacingKm": 1000,
+       "fill": "#dc8cf2"
+      }
+     },
+     {
+      "id": "qalb",
+      "opacity": 0.36,
+      "cfg": {
+       "mode": "arrows",
+       "invert": true
+      }
+     },
+     {
+      "id": "dpm",
+      "opacity": 0.82,
+      "cfg": {
+       "colormap": "inferno",
+       "spacingKm": 20
+      }
+     },
+     {
+      "id": "qhab_ac_nc",
+      "opacity": 0.14,
+      "cfg": {
+       "colormap": "brbg",
+       "vecColor": "#0b45a2"
+      }
+     }
+    ],
+    "cell": [
+     1,
+     94
+    ],
+    "panel": true
+   },
+   "code": "AQb0rkvouiOJAgEEMAFeBAVOmQMHBtyM8g8koAQBB1KBAQMBFA5BCgtFog",
+   "decoded": {
+    "lon": 61.7402,
+    "lat": 29.0484,
+    "zoom": 2.65,
+    "proj": "mercator",
+    "dataset": "era5-land",
+    "basemap": "opentopomap",
+    "ut": 48,
+    "layers": [
+     {
+      "id": "sige_sigh",
+      "opacity": 0.78,
+      "cfg": {
+       "colormap": "twilight_shifted",
+       "log": true,
+       "spacingKm": 1000,
+       "fill": "#dc8cf2"
+      }
+     },
+     {
+      "id": "qalb",
+      "opacity": 0.36,
+      "cfg": {
+       "mode": "arrows",
+       "invert": true
+      }
+     },
+     {
+      "id": "dpm",
+      "opacity": 0.82,
+      "cfg": {
+       "colormap": "inferno",
+       "spacingKm": 20
+      }
+     },
+     {
+      "id": "qhab_ac_nc",
+      "opacity": 0.14,
+      "cfg": {
+       "colormap": "brbg",
+       "vecColor": "#0b45a2"
+      }
+     }
+    ],
+    "cell": [
+     1,
+     94
+    ],
+    "panel": true
+   },
+   "app": {
+    "basemap": "opentopomap",
+    "projection": "mercator",
+    "utIndex": 48,
+    "layers": {
+     "dunes": {
+      "visible": false,
+      "opacity": 1
+     },
+     "at": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ae": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qacb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "sige_sigh": {
+      "visible": true,
+      "opacity": 0.78,
+      "cfg": {
+       "colormap": "twilight_shifted",
+       "log": true,
+       "spacingKm": 1000,
+       "fill": "#dc8cf2"
+      }
+     },
+     "uft": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "dpm": {
+      "visible": true,
+      "opacity": 0.82,
+      "cfg": {
+       "colormap": "inferno",
+       "spacingKm": 20
+      }
+     },
+     "rdpm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "rdpa": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qha_rdp_dp": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ab": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ao": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qncb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qnlb": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qalb": {
+      "visible": true,
+      "opacity": 0.36,
+      "cfg": {
+       "mode": "arrows",
+       "invert": true
+      }
+     },
+     "qnle": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qale": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qace": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_nl_nc": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhab_ac_nc": {
+      "visible": true,
+      "opacity": 0.14,
+      "cfg": {
+       "colormap": "brbg",
+       "vecColor": "#0b45a2"
+      }
+     },
+     "qhne_ac_nl": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "ufm": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhbf": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qhef": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "aridity": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "qsdiv": {
+      "visible": false,
+      "opacity": 0.85
+     },
+     "vegetation": {
+      "visible": false,
+      "opacity": 0.85
+     }
+    },
+    "order": [
+     "dunes",
+     "at",
+     "ae",
+     "qacb",
+     "sige_sigh",
+     "uft",
+     "qalb",
+     "rdpm",
+     "rdpa",
+     "qha_rdp_dp",
+     "ab",
+     "ao",
+     "qncb",
+     "qnlb",
+     "dpm",
+     "qnle",
+     "qale",
+     "qace",
+     "qhab_nl_nc",
+     "qhab_ac_nc",
+     "qhne_ac_nl",
+     "ufm",
+     "qhbf",
+     "qhef",
+     "aridity",
+     "qsdiv",
+     "vegetation"
+    ],
+    "dataset": "era5-land",
+    "cell": [
+     1,
+     94
+    ],
+    "embed": false,
+    "dunesOnly": false
+   }
+  }
+ ]
+}

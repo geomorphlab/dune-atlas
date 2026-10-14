@@ -142,8 +142,8 @@ Numbers in PI text 3.1 checked: u*,th = 0.15 m/s with z₀ = 1 mm gives U₁₀ 
 
 ## 5. PI decisions on §4 (14 October 2026) and what was done
 
-Applied after the combined deploy of this round was live and checked; commits `41a6495` (changes) and `c9be974`
-(Mars drift record).
+Applied after the combined deploy of this round was live and checked; commits `41a6495` and `87984c0` (changes), `c9be974`
+(Mars drift record); live as `public` `9a451c9`.
 
 | §4 | PI decision | Done |
 |---|---|---|
