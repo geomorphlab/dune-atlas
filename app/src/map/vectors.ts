@@ -248,7 +248,9 @@ export function geoPolylines(pts: ArrayLike<[number, number]>, maxSegDeg = 2): [
 
 export interface ArrowSeed { lon: number; lat: number; /** arrow length in degrees of latitude */ len: number }
 
-/** Arrow (or headless axis segment) features centred on each seed. `mag` scales length/opacity. */
+/** Arrow features anchored at their BASE (PI round 6, as wind quivers): the tail is the seed point and the
+ *  arrow points downwind (toward the transport direction), length L. Headless axis segments (no direction)
+ *  stay centred on the seed. `mag` scales length/opacity. */
 export function arrowFeatures(seeds: ArrowSeed[], dir: Grid, opts: { axis: boolean; mag?: Grid | null }): Feature<MultiLineString>[] {
   const vals: { s: ArrowSeed; b: number; m: number }[] = [];
   for (const s of seeds) {
@@ -265,7 +267,8 @@ export function arrowFeatures(seeds: ArrowSeed[], dir: Grid, opts: { axis: boole
   return vals.map(({ s, b, m }) => {
     const f = Number.isFinite(ref) && ref > 0 && Number.isFinite(m) ? Math.min(1, Math.abs(m) / ref) : 1;
     const L = s.len * (opts.mag ? 0.35 + 0.65 * f : 1);
-    const tail = offset(s.lon, s.lat, b + 180, L / 2), tip = offset(s.lon, s.lat, b, L / 2);
+    const tail: [number, number] = opts.axis ? offset(s.lon, s.lat, b + 180, L / 2) : [s.lon, s.lat];
+    const tip = opts.axis ? offset(s.lon, s.lat, b, L / 2) : offset(s.lon, s.lat, b, L);
     const parts: [number, number][][] = [[tail, tip]];
     if (!opts.axis) parts.push([offset(tip[0], tip[1], b + 150, L * 0.3), tip, offset(tip[0], tip[1], b - 150, L * 0.3)]);
     const coords = parts.flatMap((pp) => geoPolylines(pp, Math.max(2, 2 * L)));
@@ -498,10 +501,40 @@ export function evenStreamlines(f: ScreenField, o: EvenOptions): Streamline[] {
   return lines;
 }
 
-/** Arrowheads (screen px) every `spacing` px along each line, pointing along the line. */
-export function arrowheadsAlong(lines: Streamline[], spacing: number, size: number): [number, number][][] {
-  const heads: [number, number][][] = [];
+/** 'Dunes only' (PI round 6): clip streamlines integrated on the UNMASKED field to the dune cells. Each
+ *  line is split where it leaves / enters a dune cell (at vertex resolution, <= `outEvery` px); pieces shorter
+ *  than `minLen` px are dropped. `inside(x, y)`: the screen point lies in a dune cell. */
+export function clipStreamlines(lines: Streamline[], inside: (x: number, y: number) => boolean, minLen: number): Streamline[] {
+  const out: Streamline[] = [];
+  const flush = (pts: [number, number][]) => {
+    if (pts.length < 2) return;
+    let length = 0;
+    for (let k = 1; k < pts.length; k++) length += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]);
+    if (length >= minLen) out.push({ pts, length });
+  };
   for (const l of lines) {
+    let cur: [number, number][] = [];
+    for (const p of l.pts) {
+      if (inside(p[0], p[1])) cur.push(p);
+      else { flush(cur); cur = []; }
+    }
+    flush(cur);
+  }
+  return out;
+}
+
+/** Arrowheads (screen px) every `spacing` px along each line, pointing along the line. `atLeastOne`
+ *  (clipped 'Dunes only' pieces, often shorter than the spacing): a piece of length >= 4 x size without a
+ *  head gets one at its middle vertex. Heads sit on the line's own vertices (inside the dune cells). */
+export function arrowheadsAlong(lines: Streamline[], spacing: number, size: number, atLeastOne = false): [number, number][][] {
+  const heads: [number, number][][] = [];
+  const head = (ax: number, ay: number, bx: number, by: number) => {
+    const sl = Math.hypot(bx - ax, by - ay), ux = (bx - ax) / sl, uy = (by - ay) / sl;
+    const c = Math.cos(150 * D2R), sn = Math.sin(150 * D2R);
+    heads.push([[bx + size * (ux * c - uy * sn), by + size * (ux * sn + uy * c)], [bx, by], [bx + size * (ux * c + uy * sn), by + size * (-ux * sn + uy * c)]]);
+  };
+  for (const l of lines) {
+    const n0 = heads.length;
     let s = spacing / 2;
     for (let k = 1; k < l.pts.length; k++) {
       const [ax, ay] = l.pts[k - 1], [bx, by] = l.pts[k];
@@ -514,6 +547,11 @@ export function arrowheadsAlong(lines: Streamline[], spacing: number, size: numb
       const l1: [number, number] = [bx + size * (ux * c - uy * sn), by + size * (ux * sn + uy * c)];
       const l2: [number, number] = [bx + size * (ux * c + uy * sn), by + size * (-ux * sn + uy * c)];
       heads.push([l1, [bx, by], l2]);
+    }
+    if (atLeastOne && heads.length === n0 && l.length >= 4 * size && l.pts.length >= 2) {
+      const k = Math.max(1, Math.floor(l.pts.length / 2));
+      const [ax, ay] = l.pts[k - 1], [bx, by] = l.pts[k];
+      if (Math.hypot(bx - ax, by - ay) > 0) head(ax, ay, bx, by);
     }
   }
   return heads;

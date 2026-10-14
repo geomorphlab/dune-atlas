@@ -103,13 +103,16 @@ export async function checkSynthetic() {
 }
 
 /** a real cell store (dune flag) + field pyramid: the virtual store keeps exactly the dune cells */
-export async function checkRealStores(cells: zarr.AsyncReadable, field: zarr.AsyncReadable, v: string, k: number, label: string): Promise<DuneMask> {
+export async function checkRealStores(cells: zarr.AsyncReadable, field: zarr.AsyncReadable, v: string, k: number, label: string): Promise<DuneMask & { kept: number; finite: number }> {
   const m = (await loadDuneMask(`file://${label}`, cells))!;
   expect(m).not.toBeNull();
   const raw = await readVirtual(field, "0", v, k);
   expect(raw.shape).toEqual([m.ny, m.nx]);                    // the field's level 0 is the cell grid
   const store = new MaskedFieldStore(field, v, null, null, async () => m);
   const got = await readVirtual(store, "0", v, k);
-  expectMasked(got.data, raw.data, m);
-  return m;
+  const kept = expectMasked(got.data, raw.data, m);
+  const finite = Array.from(raw.data).filter(Number.isFinite).length;
+  // a fixture whose pyramid holds no chunks (metadata only) checks nothing: say so
+  if (!finite) console.warn(`[dunes-only] ${label}: ${v} level 0 holds no data; masking check is vacuous`);
+  return Object.assign(m, { kept, finite });
 }

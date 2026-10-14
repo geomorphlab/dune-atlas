@@ -324,7 +324,11 @@ describe("direction-validity mask (synthetic)", () => {
     for (let la = 0.5; la < 20; la += 1) for (let lo = 0.5; lo < 40; lo += 1) seeds.push({ lon: lo, lat: la, len: 0.8 });
     const arrows = arrowFeatures(seeds, d, { axis: false });
     expect(arrows.length).toBeGreaterThan(0);
-    for (const f of arrows) for (const line of f.geometry.coordinates) expect(line[0][0]).toBeLessThan(20);
+    // tails (= seeds) only in unmasked cells; an arrow may reach past the mask edge by up to its length (round 6)
+    for (const f of arrows) {
+      expect(f.geometry.coordinates[0][0][0]).toBeLessThan(20);
+      for (const line of f.geometry.coordinates) for (const p of line) expect(p[0]).toBeLessThan(20 + 0.8 + 1e-9);
+    }
     // screen 10 px / deg, north up
     const W = 400, H = 200, cell = 2, gx = W / cell + 1, gy = H / cell + 1;
     const lon = new Float64Array(gx * gy), lat = new Float64Array(gx * gy);

@@ -100,14 +100,14 @@
     "src/main.ts": {
       "kind": "substituted",
       "mars": "src/mars/main.ts",
-      "blob": "dbcec09daa26739128fb1801162dc5b8d36346e7",
-      "commit": "4371ab5d883d2cf2020755b0233f0b5a6b098de7"
+      "blob": "79e8db319f2dd976018126fe877711f1b637a23e",
+      "commit": "df7919aa0516c10a3b2765e2261ab6136e08fcc3"
     },
     "src/map/adapters.ts": {
       "kind": "patched",
       "mars": "src/mars/patches.json (1 edit)",
-      "blob": "ff724d5e983f00aa4c6b273be9ee8948918b4769",
-      "commit": "4371ab5d883d2cf2020755b0233f0b5a6b098de7"
+      "blob": "c592ddd3b548c6c270873d6bda4d3849157bff2e",
+      "commit": "df7919aa0516c10a3b2765e2261ab6136e08fcc3"
     },
     "src/registry/load.ts": {
       "kind": "patched",
@@ -118,8 +118,8 @@
     "src/ui/cellPanel.ts": {
       "kind": "substituted",
       "mars": "src/mars/ui/cellPanel.ts",
-      "blob": "66f68d80c32e8f6348599b989dade8b1cd724f76",
-      "commit": "4371ab5d883d2cf2020755b0233f0b5a6b098de7"
+      "blob": "283c9505dad435494656ce013dd3c6534160b474",
+      "commit": "df7919aa0516c10a3b2765e2261ab6136e08fcc3"
     },
     "src/ui/coords.ts": {
       "kind": "patched",
@@ -130,8 +130,8 @@
     "src/ui/helpText.ts": {
       "kind": "substituted",
       "mars": "src/mars/ui/helpText.ts",
-      "blob": "aacac018974099cb6bf5dfa97bec1f91edc818f2",
-      "commit": "4371ab5d883d2cf2020755b0233f0b5a6b098de7"
+      "blob": "a1b31541fc50982b59b0e17cd30188a64f3f3fdd",
+      "commit": "df7919aa0516c10a3b2765e2261ab6136e08fcc3"
     },
     "src/ui/layerPanel.ts": {
       "kind": "patched",

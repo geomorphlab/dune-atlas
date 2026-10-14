@@ -13,7 +13,7 @@ import { MaskedFieldStore } from "./maskedstore";
 import { maskGrid, type DuneMaskProvider } from "./dunemask";
 import { fragmentFor, symlogUniforms } from "./shader";
 import { FieldReader } from "./fieldreader";
-import { applyMask, arrowFeatures, arrowheadsAlong, buildScreenField, evenStreamlines, gcDeg, geoPolylines, readWindow, sampleUnitSphere, splitByScreenGap, type ArrowSeed, type Grid } from "./vectors";
+import { applyMask, arrowFeatures, arrowheadsAlong, buildScreenField, clipStreamlines, sampleNearest, evenStreamlines, gcDeg, geoPolylines, readWindow, sampleUnitSphere, splitByScreenGap, type ArrowSeed, type Grid } from "./vectors";
 import { GlobeLinesLayer, POLE_LAT } from "./globelines";
 import { mathToAxisDeg, mathToBearingDeg } from "../util/angles";
 
@@ -296,9 +296,12 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
       try { m = await mk.read(Math.min(level, mk.levels.length - 1), ut, bounds); } catch { m = null; }
       applyMask(dir, m);
     }
-    // 'Dunes only': no arrows / streamlines outside the dune cells (mask at this level's block factor)
+    // 'Dunes only' (mask at this level's block factor): arrows are seeded only in dune cells (masked field);
+    // streamlines are integrated on the UNMASKED field (same seeds, spacing, lengths as with the toggle off)
+    // and then clipped to the dune cells (clipStreamlines), so lines are not cut short by masked neighbours
     const dm = ctx.duneMask ? await ctx.duneMask() : null;
-    if (dm) applyMask(dir, maskGrid(dm, Math.max(1, Math.round(Math.abs(dir.dlon / dm.grid.dlon)))));
+    const duneGrid = dm ? maskGrid(dm, Math.max(1, Math.round(Math.abs(dir.dlon / dm.grid.dlon)))) : null;
+    if (duneGrid && eff.mode === "arrows") applyMask(dir, duneGrid);
     if (my !== token || !alive) return;
     let features: GeoJSON.Feature[];
     if (eff.mode === "arrows") {
@@ -328,8 +331,9 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
         lon[j * nx + i] = ll.lng; lat[j * nx + i] = ll.lat;
       }
       const field = buildScreenField(lon, lat, nx, ny, cell, axis, (lo, la) => sampleUnitSphere(dir, lo, la, axis));
-      const lines = evenStreamlines(field, { width: W, height: H, dsep, maxLines: 2500, budgetMs: 250 });
       const un = (p: [number, number]) => { const ll = map.unproject(p); return [ll.lng, ll.lat] as [number, number]; };
+      const all = evenStreamlines(field, { width: W, height: H, dsep, maxLines: 2500, budgetMs: 250 });
+      const lines = duneGrid ? clipStreamlines(all, (x, y) => { const [lo, la] = un([x, y]); return sampleNearest(duneGrid, lo, la) > 0; }, Math.max(6, dsep / 3)) : all;
       // screen vertices -> lon/lat pieces drawn the short way (split at the antimeridian, and at any
       // step longer than a few line spacings - a discontinuity, never a real streamline step)
       const maxSeg = Math.max(1, 4 * dsep * degPerPx);
@@ -337,7 +341,7 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
         // globe: screen pieces (split at any jump longer than a few line spacings) -> lon/lat
         const gap = 4 * dsep;
         const glines = lines.flatMap((l) => splitByScreenGap(l.pts, gap).map((pc) => pc.map(un)));
-        if (!axis) glines.push(...arrowheadsAlong(lines, Math.max(60, 3 * dsep), 4.5).flatMap((hd) => splitByScreenGap(hd, gap).map((pc) => pc.map(un))));
+        if (!axis) glines.push(...arrowheadsAlong(lines, Math.max(60, 3 * dsep), 4.5, !!duneGrid).flatMap((hd) => splitByScreenGap(hd, gap).map((pc) => pc.map(un))));
         globe.setLines(glines);
         if (own.hasSource(src)) (map.getSource(src) as GeoJSONSource).setData({ type: "FeatureCollection", features: [] });
         if (import.meta.env?.DEV) console.debug(`[dune-atlas] ${layer.id} streamlines (globe): ${glines.length} lines, level ${level}, window ${bounds.map((v) => v.toFixed(1))}, ${Math.round(performance.now() - t0)} ms`);
@@ -348,7 +352,7 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
         return pieces.length ? [{ type: "Feature", properties: { a: 1 }, geometry: pieces.length === 1 ? { type: "LineString", coordinates: pieces[0] } : { type: "MultiLineString", coordinates: pieces } } as GeoJSON.Feature] : [];
       });
       if (!axis) {
-        const heads = arrowheadsAlong(lines, Math.max(60, 3 * dsep), 4.5);
+        const heads = arrowheadsAlong(lines, Math.max(60, 3 * dsep), 4.5, !!duneGrid);
         features.push({ type: "Feature", properties: { a: 1 }, geometry: { type: "MultiLineString", coordinates: heads.flatMap((hd) => geoPolylines(hd.map(un), maxSeg)) } });
       }
     }

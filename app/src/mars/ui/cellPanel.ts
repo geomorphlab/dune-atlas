@@ -32,6 +32,7 @@ import { formatUt, thresholdControl } from "../../ui/threshold"; // Mars grain-s
 import type { ThresholdDef } from "../../registry/types";
 import type { Store } from "../../store";
 import { h, nextId } from "../../ui/dom";
+import { CENTRE_ICON } from "../../map/centre";
 import { axisReserve, bearingReserve, FMTNUM_WIDEST, live, reserveCh } from "../../ui/livenum";
 import { thresholdStats } from "../cell/marsflux";
 import { M } from "../../cell/marsphysics";
@@ -69,10 +70,14 @@ export interface CellPanelOptions {
   threshold?: { def: ThresholdDef; store: Store };
   /** short link to the current view (plot exports) */
   shareLink?: () => string;
+  /** 'Centre map on this cell' (header button next to the title; map/centre.ts) */
+  onCentre?: (c: { lon: number; lat: number }) => void;
 }
 
 const deg = (v: number) => (Number.isFinite(v) ? `${v.toFixed(0)}° (${compassPoint(v)})` : MISSING);
 const BEARING_W = bearingReserve(deg);
+/** widest cell title, e.g. "89.9°S, 179.9°W" (ui/livenum.ts width estimate) */
+const TITLE_W = reserveCh([`${fmtLat(-89.9)}, ${fmtLon(-179.9)}`]);
 /** plain-text units for width estimates (TeX / KaTeX markup dropped) */
 const plainUnits = (u: string) => u.replace(/\$|\\mathrm|[{}]|\\,/g, "").replace(/\^2/g, "²").replace(/\^\{?-1\}?/g, "⁻¹");
 /** Fixed formats of the per-hour threshold statistics (computed per d in the browser, so their 64 values
@@ -337,7 +342,17 @@ export class CellPanel {
     const close = h("button", { type: "button", class: "close", "aria-label": "Close cell panel" }, "×");
     close.addEventListener("click", () => this.#opts.onClose());
     const title = c.lat !== undefined && c.lon !== undefined ? `${fmtLat(c.lat)}, ${fmtLon(c.lon)}` : `Cell ${c.iy}, ${c.ix}`;
-    const head = h("header", { class: "cell-head" }, h("h2", { id: "cell-title" }, title), close);
+    // title in a reserved, non-wrapping width (the widest coordinate text) so the centre button next to it never
+    // moves between cells and the header keeps one line (embed / narrow layouts: the title ellipsises)
+    const h2 = h("h2", { id: "cell-title", style: `flex: 0 1 ${TITLE_W}ch; min-width: 0` }, title);
+    const titleRow = h("div", { class: "cell-title-row" }, h2);
+    if (this.#opts.onCentre && c.lat !== undefined && c.lon !== undefined) {
+      const at = { lon: c.lon, lat: c.lat };
+      const btn = h("button", { type: "button", class: "centre-btn", "aria-label": "Centre map on this cell", title: "Centre map on this cell", html: CENTRE_ICON });
+      btn.addEventListener("click", () => this.#opts.onCentre!(at));
+      titleRow.append(btn);
+    }
+    const head = h("header", { class: "cell-head" }, titleRow, close);
     this.#root.setAttribute("aria-labelledby", "cell-title");
     const content = h("div", { class: "cell-body" });
     const kids: HTMLElement[] = [head];

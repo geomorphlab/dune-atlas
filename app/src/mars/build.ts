@@ -27,7 +27,8 @@ export const MARS_SUBSTITUTES: Record<string, string> = {
 export const MARS_PATCHES: SourcePatch[] = patches as SourcePatch[];
 
 export const MARS_HTML = {
-  title: "Mars Dune Atlas — Geomorphology Lab",
+  /** tab title: the group site style, identical for Earth and Mars (the header shows the body name) */
+  title: "MGL - Dune Atlas",
   description: "Interactive atlas of Martian dunes, wind regimes and sand-flux roses from the MCMC FV3 Mars GCM with the transport law of Pähtz &amp; Durán (2023) and the method of Gunn (2026).",
   noscript: "The Mars Dune Atlas needs JavaScript and WebGL.",
 };

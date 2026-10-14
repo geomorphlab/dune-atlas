@@ -19,8 +19,8 @@ and per-body storage keys are shared Earth code, so the Earth build is no longer
   `var(--muted)` as the subtitle). Subtitle (`SUBTITLE_HTML`, identical in both builds, two lines, no planet
   name): "Interactive explorer for aeolian geomorphology" / "Developed by the Monash Geomorphology Lab" (link
   https://www.geomorphlab.org/). The Gunn (2026) citation stays in About, citations and downloads. The Mars
-  title and subtitle patches are gone; page `<title>`, meta, exports and citations keep "Mars Dune Atlas" in the
-  Mars build.
+  title and subtitle patches are gone; meta description, exports and citations keep "Mars Dune Atlas" in the
+  Mars build. The tab title is "MGL - Dune Atlas" in both builds (round 6, §2c).
 * Wind dataset selector: shown whenever the registry has a dataset (`>= 1`), so Mars shows "MCMC FV3" (tooltip
   from `datasetTooltip`); Earth unchanged (ERA5-Land, ERA5).
 * Planet toggle (`ui/tools.ts`): a `tool-btn planet-btn` directly under the camera button, 18 px inline SVG
@@ -245,6 +245,41 @@ highlights are DOM; map exports omit the `selected-cell*` layers.
 
 **Planet button on localhost**: see §1a.
 
+### 2c. Round 6 (PI 2026-10-14, both builds)
+
+**Streamlines with Dunes only** (`src/map/vectors.ts` `clipStreamlines`, `src/map/adapters.ts`; tests
+`tests/vectorclip.test.ts`, `tests/mars/vectorclip.test.ts`, shared `tests/vectorcliplib.ts`): with the toggle
+on, streamlines were integrated in the masked field, so a line ended at the first non-dune cell and most
+were shorter than the minimum length (few or none drawn). Now they are integrated in the UNMASKED direction
+field over the same view window as with the toggle off (same cost) and then clipped to the dune cells: each
+line is split at vertex resolution where `sampleNearest(duneGrid)` changes, pieces shorter than
+`max(6 px, dsep/3)` are dropped, and a piece of at least 4 head sizes without a regular head gets one at its
+midpoint (`arrowheadsAlong(..., atLeastOne)`). Cells without wind data still end lines (NaN, as before).
+Counts (all lines / clipped pieces / lines from integrating the masked field): Mars fixture 120 / 244 / 5,
+devroot 121 / 244 / 5 (2,749 dune cells); Earth ERA5-Land fixture subset 41 / 26 / 9. Every clipped vertex
+lies in a dune cell (checked).
+
+**Arrows anchored at the base** (`arrowFeatures`): the tail is the seed point and the tip is the seed offset by
+the arrow length along the bearing (previously centred on the seed). With Dunes only the arrows use the masked
+field, so every seed, i.e. every arrow base, is in a dune cell. Headless axis segments stay centred. The legend
+swatch was already drawn tail-left.
+
+**Centre on cell** (`src/map/centre.ts`; tests `tests/centre.test.ts`, `tests/mars/centre.test.ts`, shared
+`tests/centrelib.ts`): a crosshair button (`button.centre-btn`, 18 px, `currentColor`, aria-label "Centre map
+on this cell") next to the cell-panel title (`div.cell-title-row`; the title keeps a fixed width of
+"89.9°S, 179.9°W" so the button does not move). It eases the map (600 ms; `jumpTo` with
+`prefers-reduced-motion`) to the cell centre at the current zoom, raised if the cell would be under 24 px;
+bearing and pitch are kept; latitude is clamped to ±85.05° on the flat map, polar cells are centred exactly
+on the globe. Help ("Clicking a cell") and the tour `cell` step have one sentence on it.
+
+**Tab title and icon**: `<title>MGL - Dune Atlas</title>` in `app/index.html` and `MARS_HTML.title`
+(the group site's style). The lab icon (from the PI's tarball) is in `app/public/`: `favicon.ico` (multi-size),
+`favicon-32.png`, `apple-touch-icon.png` (180 px), `icon-192.png` (not referenced: there is no web manifest).
+Links use `%BASE_URL%`, so Earth links `/favicon.ico` and Mars `/mars/favicon.ico`; Vite copies `public/` into
+`dist/` and `dist-mars/`, and the Pages layout (`dist-mars` -> `dist/mars`) serves them at both paths
+(asserted in `scripts/test-ci.sh`; tests `tests/head.test.ts`, `tests/mars/head.test.ts`, shared
+`tests/headlib.ts`).
+
 ## 3. Basemaps: sources and licences
 
 | id | source | licence / credit shown | notes |
@@ -324,6 +359,9 @@ cell-store checks on the real store. Screenshots without servers: `scripts/mars/
 | `jitter.test.ts` | slider over all 64 d: layer and cell panel text/structure constant outside the live slots; every value fits its slot; readout padded |
 | `dunesonly.test.ts` | Dunes only: classification (rho_mean, elevation, dunes unaffected), synthetic pyramid masking (level 0 exact, block-any), fixture / devroot `cells.zarr/dune` (2,749 cells) masking of dpm and qsdiv, toggle + short/long link round trip, overlay manager |
 | `selection.test.ts` | selected-cell highlight of 84–86°, 86–88°, 88–90° N/S cells: flat source clipped (no vertex on the Mercator edge), globe geometry from the true bounds, layer switch by projection |
+| `vectorclip.test.ts` | streamlines with Dunes only: unmasked integration then clipping (every vertex in a dune cell, pieces >= min length, a head on long pieces), fixture / devroot counts vs masked integration; arrows anchored at the base, seeds in dune cells |
+| `centre.test.ts` | Centre on cell: button in the title row, ease to the cell (duration, zoom floor, bearing/pitch kept), reduced motion -> jumpTo, polar cell on flat (clamped) and globe |
+| `head.test.ts` | tab title "MGL - Dune Atlas" after the Mars HTML transform, `%BASE_URL%` icon links, icon files and sizes |
 | `globecaps.test.ts` | polar-cap hook: dune fill/invert specs from the registry (`invert.pmtiles`, layer `invert`); caps in globe projection, absent in Mercator; every Mars basemap switch keeps a matching basemap cap |
 | `polarcap.test.ts` | (Terrain) cap geometry, hillshade maths, installation/ordering on a fake map, Esri cap composition |
 

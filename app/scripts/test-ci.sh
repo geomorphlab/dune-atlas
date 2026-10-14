@@ -31,4 +31,8 @@ VITE_BODY=mars VITE_BASE=/mars/ VITE_DATA_BASE="https://data.geomorphlab.org" VI
 rm -rf dist/mars && cp -R dist-mars dist/mars
 test -f dist/index.html && test -f dist/mars/index.html
 grep -q 'src="/mars/assets/' dist/mars/index.html || { echo "ci: Mars assets not under /mars/"; exit 1; }
+# tab icon (app/public): served at / and /mars/ in the Pages layout, linked under each build's base
+for f in favicon.ico favicon-32.png apple-touch-icon.png; do test -f "dist/$f" && test -f "dist/mars/$f" || { echo "ci: $f missing in dist/ or dist/mars/"; exit 1; }; done
+grep -q 'href="/favicon.ico"' dist/index.html && grep -q 'href="/mars/favicon.ico"' dist/mars/index.html || { echo "ci: icon links not under the base"; exit 1; }
+grep -q '<title>MGL - Dune Atlas</title>' dist/index.html && grep -q '<title>MGL - Dune Atlas</title>' dist/mars/index.html || { echo "ci: page title"; exit 1; }
 echo "ci: OK"

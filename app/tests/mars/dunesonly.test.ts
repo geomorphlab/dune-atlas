@@ -29,6 +29,8 @@ describe("Dunes only (Mars)", () => {
       const m = await checkRealStores(cells, new RangeFileStore(path.join(DS, `fields/${v}.zarr`)), v, 29, `${DS}-${v}`);
       expect([m.ny, m.nx]).toEqual([90, 180]);
       if (process.env.MARS_STORE_ROOT) expect(m.count).toBe(2749);   // 2° cells overlapping a dune polygon
+      expect(m.finite).toBeGreaterThan(0);                              // the store holds data (not a vacuous check)
+      expect(m.kept).toBeGreaterThan(0);
     }
   });
   it("toggle next to the Wind dataset selector; round trip through short and long links", () => {

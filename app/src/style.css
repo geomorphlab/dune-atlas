@@ -116,7 +116,10 @@ input.clim { width: 74px; }
 .resize-handle:hover, .resize-handle:focus-visible, body.resizing .resize-handle { background: linear-gradient(to right, var(--accent) 0 2px, transparent 2px); }
 body.resizing { user-select: none; cursor: ew-resize; }
 .cell-head { position: sticky; top: 0; background: var(--bg); display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--line); z-index: 2; }
-.cell-head h2 { font-size: 16px; margin: 0; }
+.cell-head h2 { font-size: 16px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+.cell-title-row { display: flex; align-items: center; gap: 4px; min-width: 0; flex: 1 1 auto; }
+.cell-head .centre-btn { flex: none; border: none; background: none; color: inherit; padding: 2px; line-height: 0; cursor: pointer; border-radius: 4px; }
+.cell-head .centre-btn:hover, .cell-head .centre-btn:focus-visible { color: var(--accent); }
 .cell-head .close { border: none; background: none; font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px; }
 .cell-threshold { position: sticky; top: 41px; z-index: 1; background: var(--bg2); border-bottom: 1px solid var(--line); padding: 6px 12px 2px; }
 .cell-body { padding: 4px 12px 12px; }

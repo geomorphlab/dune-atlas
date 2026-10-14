@@ -20,7 +20,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "cell", title: "Clicking a cell",
-    body: "Click any 2° cell to open the cell panel: the wind rose, the sand-flux rose at the current grain diameter, dune-orientation modes against the grain diameter, the flux divergence and a table of all parameters. Section headings fold and unfold. Close the panel with × or Esc. The planetocentric latitude and east longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point).",
+    body: "Click any 2° cell to open the cell panel: the wind rose, the sand-flux rose at the current grain diameter, dune-orientation modes against the grain diameter, the flux divergence and a table of all parameters. Section headings fold and unfold. Close the panel with × or Esc. The planetocentric latitude and east longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The crosshair button next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).",
   },
   {
     id: "datasets", title: "Wind dataset",
@@ -67,7 +67,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "cell", targets: ["#cell-panel:not([hidden])", "#map"], title: "Click a cell",
-    body: "Clicking a cell opens the cell panel, shown here for the dune field of Nili Patera (9° N, 67° E): wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own grain-diameter slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information.",
+    body: "Clicking a cell opens the cell panel, shown here for the dune field of Nili Patera (9° N, 67° E): wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own grain-diameter slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The crosshair next to its title centres the map on the cell.",
   },
   {
     id: "tools", targets: [".atlas-tools .share-btn", ".atlas-tools"], title: "Share and export",

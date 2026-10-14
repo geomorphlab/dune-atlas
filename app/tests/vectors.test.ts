@@ -44,9 +44,16 @@ describe("vector geometry", () => {
     expect(f.length).toBe(2);
     const [[tail, tip], head] = f[0].geometry.coordinates;
     expect(tip[0]).toBeGreaterThan(tail[0]);
-    expect(tip[1]).toBeCloseTo(tail[1], 6);
+    // anchored at the base (round 6): tail = seed point, tip one arrow length downwind along the great circle
+    expect(tail).toEqual([10, 10]);
+    expect(gcDeg(tail as [number, number], tip as [number, number])).toBeCloseTo(2, 9);
     expect(head.length).toBe(3);
-    expect(arrowFeatures(seeds, g, { axis: true })[0].geometry.coordinates.length).toBe(1);
+    expect(head[1]).toEqual(tip);
+    // axes (headless, no direction) stay centred on the seed
+    const ax = arrowFeatures(seeds, g, { axis: true })[0].geometry.coordinates;
+    expect(ax.length).toBe(1);
+    expect(gcDeg([10, 10], ax[0][0] as [number, number])).toBeCloseTo(1, 9);
+    expect(gcDeg([10, 10], ax[0][ax[0].length - 1] as [number, number])).toBeCloseTo(1, 9);
     const mag = uniform(1); mag.data[10 * 40 + 10] = 0; // weak at the first seed (row 10, col 10)
     const fm = arrowFeatures([...seeds, { lon: 30, lat: 10, len: 2 }], g, { axis: false, mag });
     const len = (ff: typeof fm[0]) => Math.abs(ff.geometry.coordinates[0][1][0] - ff.geometry.coordinates[0][0][0]);

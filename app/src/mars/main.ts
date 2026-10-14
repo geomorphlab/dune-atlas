@@ -19,6 +19,7 @@ import { versionFromPrefix } from "../cell/export";
 import { CellPanel, defaultFieldLabel, type FieldLabel } from "./ui/cellPanel";
 import { MarsCellStore } from "./cell/cellstore";
 import { cellFeature, cellFromIndex, snapToCell, type Grid } from "../cell/snap";
+import { centreOnCell } from "../map/centre";
 import { terseQuantity } from "../ui/terse";
 import { mathOnly } from "../util/math";
 import { shareFromHash, shareUrl, type ShareState } from "../share/shortlink";
@@ -189,7 +190,7 @@ const getCellStore = (): Promise<MarsCellStore> => (cellStore ??= (() => {
 })());
 const panel = new CellPanel(document.getElementById("cell-panel")!, init.utIndex, {
   windSectors: CONFIG.windRoseSectors, fluxSectors: CONFIG.fluxRoseSectors,
-  onClose: () => store.set({ cell: null }), fieldLabel, threshold: { def: reg.threshold, store }, shareLink: () => shareLinkNow(),
+  onClose: () => store.set({ cell: null }), onCentre: (c) => { centreOnCell(map, c, Math.abs(grid.dlat)); }, fieldLabel, threshold: { def: reg.threshold, store }, shareLink: () => shareLinkNow(),
   exportMeta: () => {
     const ds = selectDataset(reg, store.state.dataset);
     return { datasetId: ds?.id ?? "", datasetTitle: ds?.title ?? "", dataVersion: versionFromPrefix(ds?.prefix), permalink: fullScreenUrl() };
