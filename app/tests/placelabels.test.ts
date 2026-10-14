@@ -9,7 +9,7 @@ import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import { validateStyleMin } from "@maplibre/maplibre-gl-style-spec";
 import {
-  ensureRtlPlugin, isRtl, LABEL_STYLE, labelMinZoom, labelSize, LOCAL_IDEOGRAPH_FONTS, mapDrawable, PLACE_LABELS, PLACE_SOURCE,
+  BASEMAP_LABELS_KEPT, dotImage, DOT, ensureRtlPlugin, isRtl, LABEL_STYLE, LABEL_ZOOM, LINE2_SMALLER, PLACE_DOT, labelMinZoom, labelSize, LOCAL_IDEOGRAPH_FONTS, mapDrawable, PLACE_LABELS, PLACE_SOURCE,
   placeFeatures, placeLabelLayer, PlaceLabels, placePopupContent, placesNeedRtl,
 } from "../src/core/map/placelabels";
 import { firstSymbolLayer, SELECTED_CELL_BOTTOM } from "../src/core/map/overlays";
@@ -38,25 +38,30 @@ const FIXTURE: PlaceList = {
 const EARTH_R = 6371;
 
 describe("label features", () => {
-  const fc = placeFeatures(FIXTURE, EARTH_R);
+  const fc = placeFeatures(FIXTURE);
   const f = (id: string) => fc.features.find((x) => x.properties!.id === id)!;
   it("one point per place at its centre (longitudes -180..180)", () => {
     expect(fc.features).toHaveLength(FIXTURE.places.length);
     expect(f("rub-al-khali").geometry.coordinates).toEqual([50, 20]);
     expect(f("dateline").geometry.coordinates).toEqual([179.9, -10]);
-    expect(placeFeatures({ enabled: true, places: [P({ id: "x", line1: "X", lon: 354.8 })] }, 3389.5).features[0].geometry.coordinates[0]).toBeCloseTo(-5.2, 6);
+    expect(placeFeatures({ enabled: true, places: [P({ id: "x", line1: "X", lon: 354.8 })] }).features[0].geometry.coordinates[0]).toBeCloseTo(-5.2, 6);
   });
   it("larger features: lower zoom threshold, larger text, placed first", () => {
-    expect(f("rub-al-khali").properties!.minzoom).toBeLessThan(f("dasht-e-lut").properties!.minzoom);
-    expect(f("dasht-e-lut").properties!.minzoom).toBeLessThan(f("tibet-field").properties!.minzoom);
+    expect(f("rub-al-khali").properties!.minzoom).toBe(0);   // large fields from the whole-globe view
+    expect(f("dasht-e-lut").properties!.minzoom).toBe(0);
+    expect(f("dasht-e-lut").properties!.minzoom).toBeLessThan(f("dateline").properties!.minzoom);
+    expect(f("dateline").properties!.minzoom).toBeLessThan(f("tibet-field").properties!.minzoom);
     expect(f("rub-al-khali").properties!.rank).toBeLessThan(f("thar").properties!.rank);   // 500 km before 400 km
     expect(f("thar").properties!.rank).toBeLessThan(f("dateline").properties!.rank);
-    expect(labelSize(10)).toBe(10);
-    expect(labelSize(400)).toBe(14);
-    expect(labelSize(10000)).toBe(14);
-    expect(labelSize(100)).toBeGreaterThan(10);
-    expect(labelMinZoom(1e5, EARTH_R)).toBe(0);
-    expect(labelMinZoom(0.01, EARTH_R)).toBe(9);
+    expect(labelSize(10)).toBe(13);
+    expect(labelSize(400)).toBe(20);
+    expect(labelSize(10000)).toBe(20);
+    expect(labelSize(100)).toBeGreaterThan(13);
+    expect(labelMinZoom(LABEL_ZOOM.rAll)).toBe(0);
+    expect(labelMinZoom(1e5)).toBe(0);
+    expect(labelMinZoom(LABEL_ZOOM.rLast)).toBe(LABEL_ZOOM.max);
+    expect(labelMinZoom(0.01)).toBe(LABEL_ZOOM.max);
+    expect(LABEL_ZOOM.max).toBeLessThanOrEqual(5);   // every name by zoom 4-5
   });
   it("line 2 in Arabic, Persian, Urdu, Chinese and Cyrillic on the map; Tibetan only in the popup", () => {
     for (const id of ["rub-al-khali", "dasht-e-lut", "thar", "taklamakan", "ryn-peski"]) expect(f(id).properties!.line2, id).toBe(FIXTURE.places.find((p) => p.id === id)!.line2!.text);
@@ -86,14 +91,19 @@ describe("label features", () => {
 
 describe("label layer", () => {
   it("is a valid style layer: italic font, size by feature, priority by size, zoom threshold, halo", () => {
-    const style = { version: 8, glyphs: "https://example.org/{fontstack}/{range}.pbf", sources: { [PLACE_SOURCE]: { type: "geojson", data: placeFeatures(FIXTURE, EARTH_R) } }, layers: [placeLabelLayer(true, "dark")] };
+    const style = { version: 8, glyphs: "https://example.org/{fontstack}/{range}.pbf", sources: { [PLACE_SOURCE]: { type: "geojson", data: placeFeatures(FIXTURE) } }, layers: [placeLabelLayer(true, "dark")] };
     expect(validateStyleMin(style as never)).toEqual([]);
     const l = placeLabelLayer(false, "light");
     expect(l.layout["text-font"]).toEqual(["Noto Sans Italic"]);
     expect(l.layout["symbol-sort-key"]).toEqual(["get", "rank"]);
     expect(l.layout.visibility).toBe("none");
     expect(l.filter).toEqual([">=", ["zoom"], ["get", "minzoom"]]);
-    expect(JSON.stringify(l.layout["text-field"])).toContain('"font-scale":0.86');   // line 2 slightly smaller
+    expect(JSON.stringify(l.layout["text-field"])).toContain(`"font-scale":["/",["-",["get","size"],${LINE2_SMALLER}],["get","size"]]`);   // line 2 2 px smaller
+    expect(l.layout["icon-image"]).toBe(PLACE_DOT);   // the centre dot, beside which the name sits
+    expect(l.layout["text-variable-anchor"]).toEqual(["left", "right", "top", "bottom"]);
+    expect(l.layout["text-padding"]).toBeLessThanOrEqual(1);
+    expect(l.paint["icon-color"]).toBe(l.paint["text-color"]);
+    expect(l.paint["text-halo-width"]).toBeGreaterThanOrEqual(2);
     expect(l.paint["text-color"]).toBe(LABEL_STYLE.light.text);
     expect(LABEL_STYLE.dark.text).toBe("#e8d3a8");
   });
@@ -119,8 +129,12 @@ function fakeMap(layers: { id: string; type: string }[]) {
       ls.splice(i < 0 ? ls.length : i, 0, { id: spec.id, type: spec.type });
       layout[spec.id] = { ...spec.layout }; paint[spec.id] = { ...spec.paint };
     },
-    setLayoutProperty: (id: string, k: string, v: unknown) => { layout[id][k] = v; },
+    setLayoutProperty: (id: string, k: string, v: unknown) => { (layout[id] ??= {})[k] = v; },
     setPaintProperty: (id: string, k: string, v: unknown) => { paint[id][k] = v; },
+    images: new Map<string, unknown>(),
+    hasImage(id: string) { return map.images.has(id); },
+    addImage(id: string, img: unknown, o: unknown) { map.images.set(id, { img, o }); },
+    getLayoutProperty: (id: string, k: string) => layout[id]?.[k],
     queryRenderedFeatures: vi.fn(() => rendered),
     getCanvas: () => canvas,
     on: (ev: string, layer: string, f: () => void) => { (handlers[`${ev}:${layer}`] ??= []).push(f); },
@@ -191,6 +205,36 @@ describe("PlaceLabels on a map", () => {
     expect(map.canvas.style.cursor).toBe("pointer");
     map.fire(`mouseleave:${PLACE_LABELS}`);
     expect(map.canvas.style.cursor).toBe("crosshair");
+  });
+  it("the centre dot: an SDF disc image, added once per style", () => {
+    const { map, pl } = setup();
+    pl.attach();
+    expect(map.images.get(PLACE_DOT)).toMatchObject({ o: { sdf: true } });
+    const img = dotImage(), c = Math.floor(DOT.size / 2);
+    expect(img.data.length).toBe(DOT.size * DOT.size * 4);
+    expect(img.data[(c * DOT.size + c) * 4 + 3]).toBe(255);   // inside
+    expect(img.data[3]).toBe(0);                              // the corner: beyond the halo range
+    const edge = Math.round(c + DOT.radius);
+    expect(img.data[(c * DOT.size + edge) * 4 + 3]).toBeGreaterThan(150);   // about 0.75 at the edge
+  });
+  it("while shown, the basemap's labels other than countries and states give way; restored when hidden", () => {
+    const { map, pl } = setup();
+    map.ls.push({ id: "place_city", type: "symbol" }, { id: "water_name", type: "symbol" }, { id: "place_state", type: "symbol" }, { id: "place_country_major", type: "symbol" }, { id: "poi_hidden", type: "symbol" });
+    map.layout["poi_hidden"] = { visibility: "none" };
+    pl.attach();
+    pl.setVisible(true);
+    expect([...pl.yielded].sort()).toEqual(["place-country", "place_city", "water_name"].sort().filter((x) => !BASEMAP_LABELS_KEPT.test(x)));
+    expect(map.layout["place_city"].visibility).toBe("none");
+    expect(map.layout["place_state"]?.visibility).toBeUndefined();
+    expect(map.layout["place_country_major"]?.visibility).toBeUndefined();
+    pl.setVisible(false);
+    expect(map.layout["place_city"].visibility).toBe("visible");
+    expect(map.layout["water_name"].visibility).toBe("visible");
+    expect(map.layout["poi_hidden"].visibility).toBe("none");   // hidden by the style itself: left alone
+    expect(pl.yielded).toEqual([]);
+    pl.setVisible(true);
+    pl.attach();   // a basemap switch: the new style's labels give way too
+    expect(map.layout["place_city"].visibility).toBe("none");
   });
   it("nothing is added for a disabled or empty list", () => {
     const { map, pl } = setup({ enabled: false, places: FIXTURE.places });

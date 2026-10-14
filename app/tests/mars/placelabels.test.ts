@@ -15,7 +15,7 @@ import { PROFILE } from "../../src/bodies/mars/profile";
 
 const LIST = loadPlaces();
 const R_KM = PROFILE.radiusM / 1000;
-const fc = placeFeatures(LIST, R_KM);
+const fc = placeFeatures(LIST);
 const prop = (name: string) => fc.features.find((f) => f.properties!.line1 === name)!.properties!;
 
 describe("Mars name labels", () => {
@@ -29,12 +29,12 @@ describe("Mars name labels", () => {
       expect(lon, f.properties!.id).toBeLessThanOrEqual(180);
       expect(Math.abs(lat)).toBeLessThanOrEqual(90);
       expect(f.properties!.minzoom).toBeGreaterThanOrEqual(0);
-      expect(f.properties!.minzoom).toBeLessThanOrEqual(9);
+      expect(f.properties!.minzoom).toBeLessThanOrEqual(4.5);
       expect(f.properties!.line2).toBeUndefined();
     }
   });
   it("large features at low zoom (Olympia Undae, the chasmata), small craters as you zoom in", () => {
-    expect(prop("Olympia Undae").minzoom).toBeLessThan(1.5);
+    expect(prop("Olympia Undae").minzoom).toBe(0);
     const med = (a: number[]) => [...a].sort((x, y) => x - y)[Math.floor(a.length / 2)];
     const chasmata = LIST.places.filter((p) => p.type === "Chasma").map((p) => prop(p.line1).minzoom);
     const craters25 = LIST.places.filter((p) => p.type === "Crater" && p.radius_km <= 25).map((p) => prop(p.line1).minzoom);
@@ -46,8 +46,8 @@ describe("Mars name labels", () => {
     expect(byR).toEqual([...byR].sort((a, b) => a - b));
     expect(prop("Gale crater").minzoom).toBeLessThan(prop("Endeavour crater").minzoom);
     expect(prop("Olympia Undae").rank).toBeLessThan(prop("Gale crater").rank);
-    expect(prop("Olympia Undae").size).toBe(14);
-    expect(prop("Endeavour crater").size).toBe(10);
+    expect(prop("Olympia Undae").size).toBe(20);
+    expect(prop("Endeavour crater").size).toBe(13);
   });
   it("near the pole and west of 0° E: centres as in the list (-180..180)", () => {
     const ou = fc.features.find((f) => f.properties!.line1 === "Olympia Undae")!.geometry.coordinates;
