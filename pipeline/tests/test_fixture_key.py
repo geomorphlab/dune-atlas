@@ -1,5 +1,6 @@
 """The fixture cache key (scripts/ci/fixture_key.py) covers every repository module the generators load."""
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -18,7 +19,8 @@ LOAD = {
 def _loaded(body: str) -> set[Path]:
     code = (f"import json, sys\n{LOAD[body]}\n"
             "print(json.dumps(sorted({getattr(m, '__file__', None) or '' for m in list(sys.modules.values())})))")
-    out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True).stdout
+    env = {**os.environ, "PYTHONPATH": os.pathsep.join([str(REPO / "pipeline" / "src"), os.environ.get("PYTHONPATH", "")])}
+    out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True, env=env).stdout
     files = json.loads(out.splitlines()[-1])
     return {Path(f).resolve() for f in files if f.endswith(".py") and Path(f).resolve().is_relative_to(REPO)}
 
