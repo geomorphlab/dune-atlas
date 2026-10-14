@@ -203,17 +203,29 @@ def field_names(meta: dict | None = None) -> dict:
     """{var: {title, titleTex[, description][, descriptionMars]}}: the one name per quantity, for the app's downloads and cell
     table (registry/field_names.json; the registry layers carry the same title / titleTex)."""
     meta = meta or load_metadata()
+    mp = REPO / "registry" / "mars" / "qsat_field_metadata.json"
+    mars = json.loads(mp.read_text()) if mp.exists() else {}
     out = {}
     for v, fm in FIELD_META.items():
         if v not in meta:
             continue
         e = {"title": fm["title"], "titleTex": title_tex(fm["title"], meta[v]["long_name"])}
-        if v in FIELD_DEFINITIONS:
-            e["description"] = FIELD_DEFINITIONS[v]
-        if v in MARS_FIELD_DEFINITIONS:
-            e["descriptionMars"] = MARS_FIELD_DEFINITIONS[v]
+        d = FIELD_DEFINITIONS.get(v) or rename_modes(meta[v]["description"])
+        if d != meta[v]["description"]:
+            e["description"] = d
+        dm = MARS_FIELD_DEFINITIONS.get(v) or (rename_modes(mars[v]["description"]) if v in mars and v not in FIELD_DEFINITIONS else None)
+        if dm and dm != e.get("description", meta[v]["description"]):
+            e["descriptionMars"] = dm
         out[v] = e
     return out
+
+
+def rename_modes(text: str) -> str:
+    """The mode of αH is the bed-instability mode (PI, Oct 2026), not the "migration mode", in every name and
+    definition; the source metadata (Supplementary Data attributes) keep their wording."""
+    return (text.replace("bed-mode (migration-mode, $\\alpha_H$)", "bed-instability-mode ($\\alpha_H$)")
+            .replace("migration-mode", "bed-instability-mode").replace("Migration-mode", "Bed-instability-mode")
+            .replace("migration mode", "bed-instability mode").replace("Migration mode", "Bed-instability mode"))
 
 
 def field_definition(var: str, description: str) -> str:
@@ -222,7 +234,7 @@ def field_definition(var: str, description: str) -> str:
     displayed convention (compass bearing; the stored convention stays in the downloads / metadata)."""
     if var in FIELD_DEFINITIONS:
         return FIELD_DEFINITIONS[var]
-    d = description.replace(", in m$^2$/s.", ".").replace(" in m$^2$/s.", ".").replace(" in radians.", ".")
+    d = rename_modes(description).replace(", in m$^2$/s.", ".").replace(" in m$^2$/s.", ".").replace(" in radians.", ".")
     d = d.replace(", radians CCW from east, direction of transport.",
                   ", the direction sand moves, as a compass bearing (clockwise from north).")
     return re.sub(r"\s+", " ", d).strip()
@@ -262,11 +274,11 @@ FIELD_META = {
                  colormap="twilight", transform="rad-to-bearing"),
     "dpm":  dict(group="drift", title="Drift potential (DP)", colormap="magma", log=True),
     "rdpm": dict(group="drift", title="Resultant drift potential (RDP)", colormap="magma", log=True),
-    "qnlb": dict(group="crest-fluxes", title="Net along-crest flux, migration mode ⟨Q∥(αH)⟩", colormap="rdbu"),
-    "qncb": dict(group="crest-fluxes", title="Net across-crest flux, migration mode ⟨Q⊥(αH)⟩", colormap="rdbu"),
-    "qalb": dict(group="crest-fluxes", title="Absolute along-crest flux, migration mode ⟨|Q∥(αH)|⟩",
+    "qnlb": dict(group="crest-fluxes", title="Net along-crest flux, bed-instability mode ⟨Q∥(αH)⟩", colormap="rdbu"),
+    "qncb": dict(group="crest-fluxes", title="Net across-crest flux, bed-instability mode ⟨Q⊥(αH)⟩", colormap="rdbu"),
+    "qalb": dict(group="crest-fluxes", title="Absolute along-crest flux, bed-instability mode ⟨|Q∥(αH)|⟩",
                  colormap="magma", log=True),
-    "qacb": dict(group="crest-fluxes", title="Absolute across-crest flux, migration mode ⟨|Q⊥(αH)|⟩",
+    "qacb": dict(group="crest-fluxes", title="Absolute across-crest flux, bed-instability mode ⟨|Q⊥(αH)|⟩",
                  colormap="magma", log=True),
     "qnle": dict(group="crest-fluxes", title="Net along-crest flux, elongation mode ⟨Q∥(αE)⟩", colormap="rdbu"),
     "qale": dict(group="crest-fluxes", title="Absolute along-crest flux, elongation mode ⟨|Q∥(αE)|⟩",
@@ -276,7 +288,7 @@ FIELD_META = {
     "qha_rdp_dp": dict(group="drift", title="Flux directionality (RDP/DP)", colormap="viridis", clim=[0.0, 1.0]),
     "sige_sigh":  dict(group="morphology", title="Stability of elongating dunes on starved beds (σE/σH)",
                        colormap="viridis", clim=[0.0, 1.0]),  # bounded by definition (max 1.004: spline-fitted αH)
-    "qhab_nl_nc": dict(group="morphology", title="Crest straightness vs sinuosity, migration mode (Q̂∥/⊥,H)",
+    "qhab_nl_nc": dict(group="morphology", title="Crest straightness vs sinuosity, bed-instability mode (Q̂∥/⊥,H)",
                        colormap="viridis", log=True),
     "qhab_ac_nc": dict(group="morphology", title="Growth-in-height vs migration balance (Q̂|⊥|/⊥,H)",
                        colormap="viridis", log=True),
@@ -286,7 +298,7 @@ FIELD_META = {
                  colormap="cividis"),
     "uft":  dict(group="wind", title="Fraction of time above threshold (T | u*f > u*th / T)", colormap="cividis",
                  clim=[0.0, 1.0]),
-    "qhbf": dict(group="wind", title="Fraction of bed-mode flux while flat bed above threshold",
+    "qhbf": dict(group="wind", title="Fraction of bed-instability-mode flux while flat bed above threshold",
                  colormap="cividis", clim=[0.0, 1.0]),
     "qhef": dict(group="wind", title="Fraction of elongation-mode flux while flat bed above threshold",
                  colormap="cividis", clim=[0.0, 1.0]),

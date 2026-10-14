@@ -16,7 +16,7 @@ import { versionFromPrefix } from "./cell/export";
 import { CellPanel, readPlotChoice, defaultFieldLabel, type FieldLabel } from "./ui/cellPanel";
 import { CellStore } from "./cell/cellstore";
 import { cellFeature, cellFromIndex, snapToCell, ERA5_LAND_GRID, type Grid } from "./cell/snap";
-import { C3S_NOTICE } from "./cell/citation";
+import { C3S_NOTICE, mapAttributionHtml } from "./cell/citation";
 import { centreOnCell } from "./map/centre";
 import { terseQuantity } from "./ui/terse";
 import { mathOnly } from "./util/math";
@@ -93,13 +93,18 @@ map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-ri
 if (!init.embed) map.addControl(new maplibregl.FullscreenControl(), "top-right");
 map.addControl(new maplibregl.ScaleControl({ maxWidth: 120 }), "bottom-left");
 map.addControl(new CoordsControl(), "bottom-left"); // cursor lat, lon, beside the scale bar
-map.addControl(new maplibregl.AttributionControl({
+// attribution: the wind-regime line follows the selected dataset (mapAttributionHtml; PI, Oct 2026)
+const attributionFor = (ds: string) => new maplibregl.AttributionControl({
   compact: true,
-  customAttribution: [
-    "Contains modified Copernicus Climate Change Service information",
-    `Dune and wind-regime data: <a href="https://doi.org/10.1038/s41467-026-75466-y" target="_blank" rel="noopener">Gunn (2026)</a>, CC BY 4.0`,
-  ],
-}), "bottom-right");
+  customAttribution: ["Contains modified Copernicus Climate Change Service information", mapAttributionHtml(ds)],
+});
+let attribution = attributionFor(store.state.dataset);
+map.addControl(attribution, "bottom-right");
+store.subscribe((s, ch) => {
+  if (!ch.has("dataset")) return;
+  map.removeControl(attribution);
+  map.addControl((attribution = attributionFor(s.dataset)), "bottom-right");
+});
 map.getCanvas().setAttribute("aria-label", "Map. Click a land cell to show its wind and sand-flux roses.");
 map.getCanvas().style.cursor = "crosshair";
 

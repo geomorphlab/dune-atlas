@@ -24,7 +24,7 @@ Click any land cell to open the cell panel: the wind rose, the sand-flux rose at
 
 ### Wind datasets
 
-The Wind dataset selector switches between reanalysis wind statistics for 1950–2024. ERA5-Land, used by Gunn (2026), is a land-surface rerun at 0.1° driven by ERA5 atmospheric fields interpolated to its grid (Muñoz-Sabater et al. 2021), so its winds are not an independent estimate. Baas (2026) reports ERA5-Land 10 m wind speeds systematically 20–30 % below those of ERA5. Where the two datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune map, aridity and vegetation layers are the same for both.
+The Wind dataset selector switches between reanalysis wind statistics (ERA5-Land, 0.1°; ERA5, 0.25°; 1950–2024). ERA5-Land, used by Gunn (2026), is a land-surface rerun driven by ERA5 atmospheric fields interpolated to its grid (Muñoz-Sabater et al. 2021), so its winds are not an independent estimate, and the datasets can still differ: e.g., Baas (2026) reports ERA5-Land 10 m wind speeds 20–30 % below those of ERA5. Where the datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune map, aridity and vegetation layers are the same for every dataset.
 
 ### Downloads and citation
 

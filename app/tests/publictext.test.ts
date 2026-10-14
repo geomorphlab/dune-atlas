@@ -7,6 +7,11 @@ import { allowed, collectPublicText, DENY, ERA5_V2_STORE_ATTRS, strip } from "./
 vi.stubGlobal("localStorage", { getItem: () => null, setItem: () => {}, removeItem: () => {}, clear: () => {} });
 
 describe("public text denylist", () => {
+  it("the αH mode is the bed-instability mode everywhere (PI, Oct 2026)", async () => {
+    const t = await collectPublicText();
+    expect(Object.entries(t).filter(([, v]) => /migration[- ]mode/i.test(v)).map(([k]) => k)).toEqual([]);
+    expect(Object.values(t).some((v) => /bed-instability mode/.test(v))).toBe(true);
+  });
   it("site and download strings contain no denylisted terms", async () => {
     const t = await collectPublicText();
     if (process.env.TEXT_DUMP) fs.writeFileSync(process.env.TEXT_DUMP, JSON.stringify(t, null, 1));

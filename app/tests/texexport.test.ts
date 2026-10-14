@@ -51,7 +51,7 @@ describe("TeX -> SVG paths", () => {
       dpm: "Drift potential ($DP$)", rdpm: "Resultant drift potential ($RDP$)", rdpa: "Resultant drift direction ($RDD$)",
       qha_rdp_dp: "Flux directionality ($RDP/DP$)", at: "Transverse migration direction ($\\alpha_T$)", ab: "Crest orientation, bed-instability mode ($\\alpha_H$)",
       qsdiv: "Saturated flux divergence ($\\nabla\\cdot\\vec{q}_s$)", aridity: "Aridity index ($\\mathrm{AI}$)", vegetation: "Total vegetation cover ($V$)",
-      qacb: "Absolute across-crest flux, migration mode $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$",
+      qacb: "Absolute across-crest flux, bed-instability mode $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$",
     };
     for (const [id, t] of Object.entries(want)) expect(exportTitleTex(reg.layers.find((l) => l.id === id)!), id).toBe(t);
     for (const l of reg.layers) {

@@ -1,5 +1,7 @@
 // Citation text shown in the panel and in downloads.
 import { richHtml } from "../util/richtext";
+import { escapeHtml } from "../util/format";
+import { datasetInfo } from "./datasetinfo";
 
 /** AI-assistance notice (verbatim; shown in About and written into every download). */
 export const AI_NOTICE = "This page was created with assistance from Claude AI. I have reviewed the functionality and underlying data but if you notice any issues or errors please contact me at a.gunn@monash.edu.";
@@ -19,6 +21,15 @@ export function fieldsCitation(datasetId: string): string {
   return datasetId === "era5"
     ? `${PAPER_CITATION}; winds: ERA5 hourly 10 m winds 1950–2024 (Hersbach, H. et al. (2020). The ERA5 global reanalysis. Quarterly Journal of the Royal Meteorological Society 146, 1999–2049. doi:${ERA5_PAPER_DOI}; data: Hersbach, H. et al. (2023). ERA5 hourly data on single levels from 1940 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). doi:${ERA5_DOI})`
     : `${PAPER_CITATION}; data: Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812; winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:${ERA5LAND_PAPER_DOI})`;
+}
+/** Map attribution line of the dune map and the wind-regime fields, following the selected dataset (PI, Oct 2026):
+ *  fields from the paper's data record (ERA5-Land) are Gunn (2026) data, CC BY 4.0; fields computed for the atlas
+ *  (ERA5) carry the wind data's licence. */
+export function mapAttributionHtml(datasetId: string): string {
+  const d = datasetInfo(datasetId), paper = `<a href="https://doi.org/${PAPER_DOI}" target="_blank" rel="noopener">Gunn (2026)</a>`;
+  return d.fieldsFrom === "paper"
+    ? `Dune and wind-regime data: ${paper}, CC BY 4.0`
+    : `Dune map: ${paper}, CC BY 4.0; wind-regime fields computed for the atlas from ${escapeHtml(d.name)} ${escapeHtml(d.resolution)} with the methods outlined in ${paper}, ${escapeHtml(fieldsLicence(datasetId))}`;
 }
 /** Licence of the atlas-derived map fields of a wind dataset (PI 2026-10-14). */
 export const fieldsLicence = (datasetId: string) => (datasetId === "era5" ? "Copernicus licence (Licence to use Copernicus products)" : "CC BY 4.0 (Zenodo Supplementary Data)");

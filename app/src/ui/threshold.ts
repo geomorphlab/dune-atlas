@@ -64,7 +64,7 @@ export function thresholdControl(t: ThresholdDef, store: Store, opts: { compact?
 export const THRESHOLD_HELP = "Applies to the map layers and the cell panel.";
 /** the slider's ⓘ, middle paragraphs: the default and its equivalents (PI text 3.1, Oct 2026) */
 export const THRESHOLD_INFO_DEFAULT = `<p>The default, 0.15 m/s, is the value used for the global analysis of Gunn (2026): a common global approximation used in place of more accurate local values, not calibrated for any site. Values between 0.1 and 0.4 m/s are typical; for loose, dry sand the threshold depends mainly on grain size and density.</p>`
-  + `<p>With the roughness length of 1 mm used here, 0.15 m/s corresponds to a 10 m wind of 3.4 m/s (6.6 knots); the 12-knot threshold of Fryberger &amp; Dean (1979) corresponds to about 0.27 m/s. Baas (2026) reports ERA5-Land 10 m wind speeds 20–30 % below those of ERA5, so the same threshold can give different results with the two wind datasets.</p>`;
+  + `<p>With the roughness length of 1 mm used here, 0.15 m/s corresponds to a 10 m wind of 3.4 m/s (6.6 knots); the 12-knot threshold of Fryberger &amp; Dean (1979) corresponds to about 0.27 m/s.</p>`;   // the Baas (2026) point is in the Wind dataset ⓘ (PI, Oct 2026)
 /** the slider's ⓘ: what the control is, its default, its range */
 export function thresholdInfoHtml(t: ThresholdDef): string {
   return `<p>The friction velocity ${mathHtml("$u_{*,th}$")} above which the wind moves sand. Every threshold-dependent map layer (its ⓘ says so) and the cell panel use the value set here.</p>`

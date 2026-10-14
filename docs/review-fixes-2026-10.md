@@ -141,3 +141,25 @@ Mars v2 data in the same deploy.
 **Mars v2 data**: merged without conflicts; the Mars registry fragments regenerated from the merged sources are
 identical to Wind's v2 files in colour limits and sources (text from this round); the Mars dev fixture now points
 at the v2 layout (`staging/fixture-mars` → `staging/mars/v2/fixture-mars`).
+
+**Deployment (second round)**: published as `public` `6adf251`; its Actions run 38566189680 failed in the
+polar-raster test (the test harness exceeded the CI time limit, not a code fault). Commit `3e54bd2` sized that
+test for CI (≤ 2° spacing and memoised meshes; 54 s → 11 s); republished as `public` `4bcccdb`, Actions run
+38568819345 succeeded. Live checks: both pages HTTP 200; Mars smoke test (dataset v2) 34/34 passed; the Mars
+bundle requests only `mars/v2/datasets` (0 references to `mars/v1/datasets`); the patched globe mesh is in the
+live Earth bundle. Mars DP at d = 200 µm from the served stores, v1 → v2 (m²/yr): Nili Patera (40, 123)
+1.4646 → 2.44092; Proctor (68, 105) 3.21143 → 5.35254; north polar erg (4, 151) 1.42871 → 2.38135; ratios
+1.66661, 1.66672, 1.66678 = 1/0.6 within the 12-bit rounding of the stores, matching the reference values of the
+data change (1.4645 → 2.4408, 3.2115 → 5.3526, 1.4288 → 2.3813).
+
+**PI decisions on the text audit §4** (commits `41a6495`, `c9be974`; details in `docs/user-text-audit-2.md` §5):
+the Baas (2026) comparison moved from the threshold ⓘ to the Wind dataset ⓘ / Help as an example, and that text
+now renders the datasets, grids and period from the dataset table; the map attribution follows the selected
+dataset (ERA5: atlas-computed fields, Copernicus licence), set by a new dataset-table field; "migration mode" →
+"bed-instability mode" in every crest-flux name and definition (layer list, ⓘ, table, colour bars, CSV / NetCDF
+long names; CSV column names unchanged, none contains the phrase); export descriptions of direction, axis and
+flux fields say how the file holds the values (radians; m2 s-1). Items 2, 3, 7 kept; 6 deferred to the
+refactor; 8 left until the next ERA5 data version. Tests added: `tests/datasettext.test.ts` (dataset text from
+the table, Baas only there, attribution per dataset, file-unit notes) and a public-text check that no site or
+download string says "migration mode". Earth 540 passed (23 skipped), Mars 97 passed.
+

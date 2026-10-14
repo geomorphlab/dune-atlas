@@ -326,15 +326,15 @@ layers:
     magnitudeVar: qace
     cyclic: true
 - id: qncb
-  title: Net across-crest flux, migration mode ⟨Q⊥(αH)⟩
-  titleTex: Net across-crest flux, migration mode $\langle Q_{\bot}(\alpha_H)\rangle$
+  title: Net across-crest flux, bed-instability mode ⟨Q⊥(αH)⟩
+  titleTex: Net across-crest flux, bed-instability mode $\langle Q_{\bot}(\alpha_H)\rangle$
   group: crest-fluxes
   type: zarr-field
   source: '{dataset}/fields/qncb.zarr'
   variable: qncb
   thresholdAware: true
   units: m²/yr
-  description: Net across-crest migration-mode flux $\langle Q_{\bot}(\alpha_H)\rangle$.
+  description: Net across-crest bed-instability-mode flux $\langle Q_{\bot}(\alpha_H)\rangle$.
   citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
     transport law: Pähtz, T. & Durán, O. (2023). Scaling laws for planetary sediment transport from DEM-RANS numerical
     simulations. Journal of Fluid Mechanics 963, A20. doi:10.1017/jfm.2023.343; winds: MCMC FV3-based Mars GCM Beta
@@ -359,15 +359,15 @@ layers:
     - -65.0
     - 65.0
 - id: qacb
-  title: Absolute across-crest flux, migration mode ⟨|Q⊥(αH)|⟩
-  titleTex: Absolute across-crest flux, migration mode $\langle |Q_{\bot}(\alpha_H)|\rangle$
+  title: Absolute across-crest flux, bed-instability mode ⟨|Q⊥(αH)|⟩
+  titleTex: Absolute across-crest flux, bed-instability mode $\langle |Q_{\bot}(\alpha_H)|\rangle$
   group: crest-fluxes
   type: zarr-field
   source: '{dataset}/fields/qacb.zarr'
   variable: qacb
   thresholdAware: true
   units: m²/yr
-  description: Absolute across-crest migration-mode flux $\langle |Q_{\bot}(\alpha_H)|\rangle$.
+  description: Absolute across-crest bed-instability-mode flux $\langle |Q_{\bot}(\alpha_H)|\rangle$.
   citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
     transport law: Pähtz, T. & Durán, O. (2023). Scaling laws for planetary sediment transport from DEM-RANS numerical
     simulations. Journal of Fluid Mechanics 963, A20. doi:10.1017/jfm.2023.343; winds: MCMC FV3-based Mars GCM Beta
@@ -393,15 +393,15 @@ layers:
     - 89.0
     log: true
 - id: qnlb
-  title: Net along-crest flux, migration mode ⟨Q∥(αH)⟩
-  titleTex: Net along-crest flux, migration mode $\langle Q_{\parallel}(\alpha_H)\rangle$
+  title: Net along-crest flux, bed-instability mode ⟨Q∥(αH)⟩
+  titleTex: Net along-crest flux, bed-instability mode $\langle Q_{\parallel}(\alpha_H)\rangle$
   group: crest-fluxes
   type: zarr-field
   source: '{dataset}/fields/qnlb.zarr'
   variable: qnlb
   thresholdAware: true
   units: m²/yr
-  description: Net along-crest migration-mode flux $\langle Q_{\parallel}(\alpha_H)\rangle$.
+  description: Net along-crest bed-instability-mode flux $\langle Q_{\parallel}(\alpha_H)\rangle$.
   citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
     transport law: Pähtz, T. & Durán, O. (2023). Scaling laws for planetary sediment transport from DEM-RANS numerical
     simulations. Journal of Fluid Mechanics 963, A20. doi:10.1017/jfm.2023.343; winds: MCMC FV3-based Mars GCM Beta
@@ -426,15 +426,15 @@ layers:
     - -15.0
     - 15.0
 - id: qalb
-  title: Absolute along-crest flux, migration mode ⟨|Q∥(αH)|⟩
-  titleTex: Absolute along-crest flux, migration mode $\langle |Q_{\parallel}(\alpha_H)|\rangle$
+  title: Absolute along-crest flux, bed-instability mode ⟨|Q∥(αH)|⟩
+  titleTex: Absolute along-crest flux, bed-instability mode $\langle |Q_{\parallel}(\alpha_H)|\rangle$
   group: crest-fluxes
   type: zarr-field
   source: '{dataset}/fields/qalb.zarr'
   variable: qalb
   thresholdAware: true
   units: m²/yr
-  description: Absolute along-crest migration-mode flux $\langle |Q_{\parallel}(\alpha_H)|\rangle$.
+  description: Absolute along-crest bed-instability-mode flux $\langle |Q_{\parallel}(\alpha_H)|\rangle$.
   citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
     transport law: Pähtz, T. & Durán, O. (2023). Scaling laws for planetary sediment transport from DEM-RANS numerical
     simulations. Journal of Fluid Mechanics 963, A20. doi:10.1017/jfm.2023.343; winds: MCMC FV3-based Mars GCM Beta
@@ -599,8 +599,8 @@ layers:
     - 0.0
     - 1.0
 - id: qhab_nl_nc
-  title: Crest straightness vs sinuosity, migration mode (Q̂∥/⊥,H)
-  titleTex: Crest straightness vs sinuosity, migration mode $\hat{Q}_{\parallel/\bot,H}$
+  title: Crest straightness vs sinuosity, bed-instability mode (Q̂∥/⊥,H)
+  titleTex: Crest straightness vs sinuosity, bed-instability mode $\hat{Q}_{\parallel/\bot,H}$
   group: morphology
   type: zarr-field
   source: '{dataset}/fields/qhab_nl_nc.zarr'
@@ -788,15 +788,15 @@ layers:
     - 1.2
     - 1.7
 - id: qhbf
-  title: Fraction of bed-mode flux while flat bed above threshold
-  titleTex: Fraction of bed-mode flux while flat bed above threshold
+  title: Fraction of bed-instability-mode flux while flat bed above threshold
+  titleTex: Fraction of bed-instability-mode flux while flat bed above threshold
   group: wind
   type: zarr-field
   source: '{dataset}/fields/qhbf.zarr'
   variable: qhbf
   thresholdAware: true
   units: dimensionless
-  description: Fraction of bed-mode (migration-mode, $\alpha_H$) crest flux that occurs while the flat-bed friction
+  description: Fraction of bed-instability-mode ($\alpha_H$) crest flux that occurs while the flat-bed friction
     velocity exceeds threshold, $\sum_{u_{\ast,f}>u_{\ast,th}} n|Q(\alpha_H)| / \sum n|Q(\alpha_H)|$. 0 where crest
     flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold
     is that hour's cessation threshold $u_{\ast,th}(d, \rho_f, T)$ of Pähtz & Durán (2023).

@@ -36,20 +36,24 @@
   "description": "Magnitude of the time-averaged flat-bed flux vector, $RDP = |\\sum n q e^{i\\theta}| / \\sum n$: the net volume of packed sand per metre width per year after transport in opposing directions has cancelled. Same units as DP; RDP ≤ DP, with equality only when all transport is in one direction."
  },
  "qnlb": {
-  "title": "Net along-crest flux, migration mode ⟨Q∥(αH)⟩",
-  "titleTex": "Net along-crest flux, migration mode $\\langle Q_{\\parallel}(\\alpha_H)\\rangle$"
+  "title": "Net along-crest flux, bed-instability mode ⟨Q∥(αH)⟩",
+  "titleTex": "Net along-crest flux, bed-instability mode $\\langle Q_{\\parallel}(\\alpha_H)\\rangle$",
+  "description": "Net along-crest bed-instability-mode flux $\\langle Q_{\\parallel}(\\alpha_H)\\rangle$ in m$^2$/s."
  },
  "qncb": {
-  "title": "Net across-crest flux, migration mode ⟨Q⊥(αH)⟩",
-  "titleTex": "Net across-crest flux, migration mode $\\langle Q_{\\bot}(\\alpha_H)\\rangle$"
+  "title": "Net across-crest flux, bed-instability mode ⟨Q⊥(αH)⟩",
+  "titleTex": "Net across-crest flux, bed-instability mode $\\langle Q_{\\bot}(\\alpha_H)\\rangle$",
+  "description": "Net across-crest bed-instability-mode flux $\\langle Q_{\\bot}(\\alpha_H)\\rangle$ in m$^2$/s."
  },
  "qalb": {
-  "title": "Absolute along-crest flux, migration mode ⟨|Q∥(αH)|⟩",
-  "titleTex": "Absolute along-crest flux, migration mode $\\langle |Q_{\\parallel}(\\alpha_H)|\\rangle$"
+  "title": "Absolute along-crest flux, bed-instability mode ⟨|Q∥(αH)|⟩",
+  "titleTex": "Absolute along-crest flux, bed-instability mode $\\langle |Q_{\\parallel}(\\alpha_H)|\\rangle$",
+  "description": "Absolute along-crest bed-instability-mode flux $\\langle |Q_{\\parallel}(\\alpha_H)|\\rangle$ in m$^2$/s."
  },
  "qacb": {
-  "title": "Absolute across-crest flux, migration mode ⟨|Q⊥(αH)|⟩",
-  "titleTex": "Absolute across-crest flux, migration mode $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$"
+  "title": "Absolute across-crest flux, bed-instability mode ⟨|Q⊥(αH)|⟩",
+  "titleTex": "Absolute across-crest flux, bed-instability mode $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$",
+  "description": "Absolute across-crest bed-instability-mode flux $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$ in m$^2$/s."
  },
  "qnle": {
   "title": "Net along-crest flux, elongation mode ⟨Q∥(αE)⟩",
@@ -74,8 +78,8 @@
   "description": "Ratio of the growth rates in height of dunes in the elongation and bed-instability orientations, $\\langle|Q_{\\bot}(\\alpha_E)|\\rangle/\\langle|Q_{\\bot}(\\alpha_H)|\\rangle$, between 0 and 1. It assesses whether dunes elongating from a sand source on a starved bed are stable: in numerical simulations and in dunes around the Tibesti Massif, elongating linear dunes form where the ratio is above about 0.6 and trains of barchans form below it (Gao et al. 2015; Courrech du Pont et al. 2024). It does not take bed mobility or other boundary conditions into account."
  },
  "qhab_nl_nc": {
-  "title": "Crest straightness vs sinuosity, migration mode (Q̂∥/⊥,H)",
-  "titleTex": "Crest straightness vs sinuosity, migration mode $\\hat{Q}_{\\parallel/\\bot,H}$",
+  "title": "Crest straightness vs sinuosity, bed-instability mode (Q̂∥/⊥,H)",
+  "titleTex": "Crest straightness vs sinuosity, bed-instability mode $\\hat{Q}_{\\parallel/\\bot,H}$",
   "description": "Net along-crest over net across-crest sand flux for crests of the bed-instability orientation, $|\\langle Q_{\\parallel}(\\alpha_H)\\rangle/\\langle Q_{\\bot}(\\alpha_H)\\rangle|$. Along-crest transport tends to keep crests straight, while across-crest transport, which drives migration, tends to make them sinuous (Rubin 2012), so higher values suggest straighter long-crested dunes on sand-covered beds. For dunes migrating on starved beds, the ratio measures the asymmetry of sand fluxes that makes dunes such as barchans asymmetric (Courrech du Pont et al. 2024). In the sand-covered-bed examples of Courrech du Pont et al. (2024) it is about 0.03 for transverse, 0.4 for oblique and 22 for longitudinal dunes. The ratio goes to infinity where its denominator (a net flux) goes to zero (shown clipped to ±60,000)."
  },
  "qhab_ac_nc": {
@@ -90,18 +94,23 @@
  },
  "ufm": {
   "title": "Mean above-threshold friction velocity / threshold (⟨u*f | u*f > u*th⟩ / u*th)",
-  "titleTex": "Mean above-threshold friction velocity / threshold $\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$"
+  "titleTex": "Mean above-threshold friction velocity / threshold $\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$",
+  "descriptionMars": "Average above-threshold flat-bed friction velocity, normalised by threshold $\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023)."
  },
  "uft": {
   "title": "Fraction of time above threshold (T | u*f > u*th / T)",
-  "titleTex": "Fraction of time above threshold $T|u_{\\ast,f}>u_{\\ast,th}/T$"
+  "titleTex": "Fraction of time above threshold $T|u_{\\ast,f}>u_{\\ast,th}/T$",
+  "descriptionMars": "Fraction of time flat-bed friction velocity is above threshold $T|u_{\\ast,f}>u_{\\ast,th}/T$. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023)."
  },
  "qhbf": {
-  "title": "Fraction of bed-mode flux while flat bed above threshold",
-  "titleTex": "Fraction of bed-mode flux while flat bed above threshold"
+  "title": "Fraction of bed-instability-mode flux while flat bed above threshold",
+  "titleTex": "Fraction of bed-instability-mode flux while flat bed above threshold",
+  "description": "Fraction of bed-instability-mode ($\\alpha_H$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_H)| / \\sum n|Q(\\alpha_H)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux.",
+  "descriptionMars": "Fraction of bed-instability-mode ($\\alpha_H$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_H)| / \\sum n|Q(\\alpha_H)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023)."
  },
  "qhef": {
   "title": "Fraction of elongation-mode flux while flat bed above threshold",
-  "titleTex": "Fraction of elongation-mode flux while flat bed above threshold"
+  "titleTex": "Fraction of elongation-mode flux while flat bed above threshold",
+  "descriptionMars": "Fraction of elongation-mode ($\\alpha_E$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_E)| / \\sum n|Q(\\alpha_E)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023)."
  }
 }

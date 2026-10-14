@@ -115,3 +115,10 @@ export function citationHtml(sources: CitationSource[] = citationSources()): str
   const link = (e: CitationEntry) => (e.doi ? `<a href="https://doi.org/${e.doi}" target="_blank" rel="noopener">doi:${e.doi}</a>` : e.url ? `<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.url.replace(/^https?:\/\//, ""))}</a>` : "");
   return `<ul class="cite-list">${sources.map((s) => `<li><strong>${esc(s.title)}</strong><ul>${s.entries.map((e) => `<li>${esc(e.label)}: ${esc(e.text)} ${link(e)}</li>`).join("")}</ul>${s.notice ? `<p class="help">${richHtml(s.notice)}</p>` : ""}</li>`).join("")}</ul>`;
 }
+
+/** Map attribution of the wind-regime fields (Earth: follows the selected dataset); the Mars map attribution is
+ *  set in src/mars/main.ts. Exported so the Mars module has the Earth module's names. */
+export function mapAttributionHtml(datasetId: string): string {
+  void datasetId;
+  return "";
+}

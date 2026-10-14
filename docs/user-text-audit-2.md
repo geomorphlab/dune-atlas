@@ -139,3 +139,27 @@ the cell table and the CSV / NetCDF long names of both atlases.
 
 Numbers in PI text 3.1 checked: u*,th = 0.15 m/s with z₀ = 1 mm gives U₁₀ = 0.15/0.41 · ln(10/0.001) = 3.37 m/s
 (6.55 kn); 12 kn = 6.17 m/s gives u* = 0.275 m/s.
+
+## 5. PI decisions on §4 (14 October 2026) and what was done
+
+Applied after the combined deploy of this round was live and checked; commits `41a6495` (changes) and `c9be974`
+(Mars drift record).
+
+| §4 | PI decision | Done |
+|---|---|---|
+| 1 | Baas (2026) point only in the Wind dataset ⓘ, as an example; dataset ⓘ / Help dataset-agnostic, period and grids from the dataset table | Threshold ⓘ, 3rd paragraph: the Baas sentence removed (now ends "… corresponds to about 0.27 m/s."). Wind dataset ⓘ and Help "Wind datasets": "The Wind dataset selector switches between reanalysis wind statistics (ERA5-Land, 0.1°; ERA5, 0.25°; 1950–2024). ERA5-Land, used by Gunn (2026), is a land-surface rerun driven by ERA5 atmospheric fields interpolated to its grid (Muñoz-Sabater et al. 2021), so its winds are not an independent estimate, and the datasets can still differ: e.g., Baas (2026) reports ERA5-Land 10 m wind speeds 20–30 % below those of ERA5. Where the datasets give different results, treat them as uncertain. … the same for every dataset." The bracket (names, grids, period) is rendered from the dataset table; "the two datasets" → "the datasets", "for both" → "for every dataset". |
+| 2 | Accept the Mars divergence deviation | Kept as deployed. |
+| 3 | Keep the dune-map grid wording | Unchanged. |
+| 4 | Map attribution follows the selected dataset, from the dataset metadata | New dataset-table field `fieldsFrom` ("paper": ERA5-Land; "atlas": ERA5, Mars). ERA5-Land: "Dune and wind-regime data: Gunn (2026), CC BY 4.0" (unchanged). ERA5: "Dune map: Gunn (2026), CC BY 4.0; wind-regime fields computed for the atlas from ERA5 0.25° with the methods outlined in Gunn (2026), Copernicus licence (Licence to use Copernicus products)". The line is rebuilt when the dataset changes; "Contains modified Copernicus Climate Change Service information" stays for both. Mars attribution unchanged. |
+| 5 | "migration mode" → "bed-instability mode" in every crest-flux title and definition | Layer list, ⓘ, cell-panel table, colour bars, CSV / NetCDF long names and descriptions, README column lines: e.g. "Net across-crest flux, migration mode ⟨Q⊥(αH)⟩" → "Net across-crest flux, bed-instability mode ⟨Q⊥(αH)⟩" (qncb, qnlb, qacb, qalb, qhab_nl_nc); qhbf "Fraction of bed-mode (migration-mode, αH) crest flux …" → "Fraction of bed-instability-mode (αH) crest flux …", title "Fraction of bed-instability-mode flux while flat bed above threshold". Both atlases. CSV column names unchanged: none contains the phrase (q_across_net_h, q_along_net_h, q_across_abs_h, q_along_abs_h, qhat_along_over_across_h, bed_mode_flux_fraction_above_threshold), so no README list is needed. The source metadata files (copies of the Supplementary Data attributes) keep their wording; the pipeline renames when it writes the registry. Test: no public string (2,539 collected: site, Help, info, exports) contains "migration mode" / "migration-mode". Not changed: the flux-rose mode menu "Transverse migration (αH)" and "αT (transverse migration direction)", which name the dune type and its migration direction, not the mode. |
+| 6 | Defer to the refactor | Not done. |
+| 7 | Keep "· at current u*,th" | Unchanged. |
+| 8 | Leave the R2 store attribute until the next ERA5 data version | Unchanged. |
+
+Added in the same commit (found while checking §4.5): the export descriptions (NetCDF `description`, metadata.json,
+README) of direction, axis and flux fields now end with how the file holds the values, because the definitions
+speak of the displayed values (compass bearings, m²/yr): "Values in this file: radians counter-clockwise from east
+(the direction pointed toward); compass bearing = (90 − degrees(value)) mod 360" (axes: "… (an axis: value and value + pi are the same line)");
+fluxes "Values in this file: m2 s-1 (x 31557600 = m2 yr-1)." Not added where the description already gives the
+units.
+

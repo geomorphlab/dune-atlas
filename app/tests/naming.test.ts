@@ -1,6 +1,6 @@
 // One name per quantity (review L5, U12): the layer list (titleTex), the cell table (title), the info title,
 // the rose legend (MODE_STYLE) and the CSV / NetCDF long names (fieldInfo) use the same name; αH is the
-// migration-mode crest orientation (an axis), never labelled with a compass point.
+// bed-instability-mode crest orientation (an axis), never labelled with a compass point.
 import { describe, expect, it } from "vitest";
 import { loadRegistry } from "../src/registry/load";
 import { FIELD_NAMES, fieldInfo } from "../src/cell/fieldinfo";

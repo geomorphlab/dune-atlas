@@ -151,13 +151,24 @@ function bins(cell: CellData) {
   return { ue: b.umEdges ?? C.UM_EDGES, ae: b.uaEdges ?? C.UA_EDGES, uc: b.umCentres, ac: b.uaCentres };
 }
 
+/** Export descriptions: where a definition speaks of the displayed values (compass bearings, m²/yr), add how the
+ *  file stores them (radians counter-clockwise from east; m2 s-1), unless the description already says so. */
+export function storedNote(info: { kind: string }, desc: string): string {
+  if (!desc) return desc;
+  if ((info.kind === "direction" || info.kind === "axis") && !/radian/i.test(desc))
+    return `${desc} Values in this file: radians counter-clockwise from east${info.kind === "axis" ? " (an axis: value and value + pi are the same line)" : " (the direction pointed toward); compass bearing = (90 - degrees(value)) mod 360"}.`;
+  if (info.kind === "flux" && !/m\$\^2\$\/s|m2 s-1|m\^2\/s/.test(desc)) return `${desc} Values in this file: m2 s-1 (x 31557600 = m2 yr-1).`;
+  return desc;
+}
+
 /** Field metadata for exports: plain + LaTeX long name, units, description (the app's field
  *  descriptions; store attrs only as a fallback for fields the app does not know). */
 export function fieldMeta(v: string, attrs?: ExportMeta["storeAttrs"]) {
   const info = fieldInfo(v);
   const ln = info.longName || attrs?.field_long_names?.[v] || v;
   const units = attrs?.field_units?.[v] ?? info.sourceUnits;
-  const desc = info.description || attrs?.field_descriptions?.[v] || "";
+  // the definitions describe the displayed quantity (compass bearings, m²/yr); the files hold the stored values
+  const desc = storedNote(info, info.description || attrs?.field_descriptions?.[v] || "");
   return { id: v, longName: texToPlain(ln), longNameLatex: ln, units: cfUnits(units), description: texToPlain(desc), descriptionLatex: desc };
 }
 
