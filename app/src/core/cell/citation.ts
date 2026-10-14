@@ -1,7 +1,11 @@
-// Citation text shown in the panels and written into downloads. The formatting is shared; the sources
-// (which works to cite for a dataset, a cell download or a layer) are per body (@body/citation).
+// Citation text shown in the panels and written into downloads. The formatting is shared; the sources are
+// the body's (@body/citation: the atlas, per-cell and layer sources) and the datasets' (registry
+// `datasets[].citationSources`); which sources a dataset cites, its field citation and licence, its wind
+// line of image exports and its data notice are the registry `datasets[].credits` (cell/datasetinfo.ts).
 import { richHtml } from "../util/richtext";
-import { CITATION_SOURCES, datasetSourceIds } from "@body/citation";
+import { ABOUT_SOURCE_IDS, BODY_CITATION_SOURCES } from "@body/citation";
+import { DATASET_CITATION_SOURCES, DATASET_INFO, datasetCredits } from "./datasetinfo";
+import { loadRegistry } from "../registry/load";
 export { AI_NOTICE, PAPER_DOI } from "./paper";
 
 /** One citable work: a DOI (preferred) or a URL. */
@@ -12,6 +16,30 @@ export interface CitationEntry {
 }
 /** Citations grouped by SOURCE (each with Paper / Data entries), optionally a usage notice. */
 export interface CitationSource { id: string; title: string; entries: CitationEntry[]; notice?: string }
+
+/** every citation source by id: the body's and the datasets' */
+export const CITATION_SOURCES: Record<string, CitationSource> = { ...BODY_CITATION_SOURCES, ...Object.fromEntries(DATASET_CITATION_SOURCES.map((s) => [s.id, s])) };
+
+/** the sources a wind dataset cites (atlas, wind data, ...; registry credits.sources); default dataset if unknown */
+export function datasetSourceIds(datasetId?: string): string[] {
+  return datasetCredits(datasetId).sources;
+}
+/** Citation of the atlas-derived map fields of a wind dataset, one format everywhere (info popover, About,
+ *  downloads; = the pipeline's fields.fields_citation, tests compare them). */
+export const fieldsCitation = (datasetId?: string): string => datasetCredits(datasetId).fieldsCitation;
+/** Licence of the atlas-derived map fields of a wind dataset. */
+export const fieldsLicence = (datasetId?: string): string => datasetCredits(datasetId).fieldsLicence;
+/** the wind line of image exports (map and plots) */
+export const windSourceText = (datasetId?: string): string => datasetCredits(datasetId).windSourceText;
+/** data notice of a dataset written into downloads (e.g. the Copernicus notice); "" if none */
+export const datasetNotice = (datasetId?: string): string => datasetCredits(datasetId).notice ?? "";
+/** About, Citation: besides the default dataset's sources, the wind-data source of every other dataset and
+ *  the body's extra sources (layers, cell downloads) */
+export function aboutSourceIds(): string[] {
+  const def = loadRegistry().registry.defaultDataset;
+  const others = Object.keys(DATASET_INFO).filter((id) => id !== def).map((id) => datasetCredits(id).dataSource);
+  return [...others, ...ABOUT_SOURCE_IDS];
+}
 
 /** The sources to cite: the dataset's atlas and wind-data sources, then any extra ids (e.g. the
  *  per-cell aridity / vegetation sources), in order. */

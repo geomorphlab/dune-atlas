@@ -14,8 +14,8 @@ const app = path.join(repo, "app");
 const id = process.argv[2] ?? "era5";
 
 const yaml = (await import(path.join(app, "node_modules", "js-yaml", "dist", "js-yaml.mjs"))).default;
-const { mergeRegistry } = await import(path.join(app, "src", "registry", "merge.ts"));
-const { validateRegistry } = await import(path.join(app, "src", "registry", "validate.ts"));
+const { mergeRegistry } = await import(path.join(app, "src", "core", "registry", "merge.ts"));
+const { validateRegistry } = await import(path.join(app, "src", "core", "registry", "validate.ts"));
 
 const reg = path.join(repo, "registry"), earth = path.join(reg, "earth");
 const dsDir = path.join(earth, "datasets", id);

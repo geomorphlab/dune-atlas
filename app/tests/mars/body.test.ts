@@ -121,7 +121,7 @@ describe("Mars: texts at the source, one field citation, FV3 licence, basemap in
   it("Wind generator outputs: no repeated sentences; citation/licence of every FV3-derived field", async () => {
     for (const f of ["registry/mars/generated/qsat_fields.yaml", "registry/mars/generated/x_extra_fields.yaml"])
       expect(fs.readFileSync(path.join(REPO, f), "utf8"), f).not.toMatch(/Shown at the selected|Shown in m\/kyr|Converted from m²\/s|Displayed as the compass bearing|Independent of the grain diameter/);
-    const { fieldsCitation, fieldsLicence } = await import("@body/citation");
+    const { fieldsCitation, fieldsLicence } = await import("../../src/core/cell/citation");
     const reg = loadRegistry().registry;
     const derived = reg.layers.filter((l) => l.type === "zarr-field" && l.thresholdAware);
     expect(derived.length).toBe(24);

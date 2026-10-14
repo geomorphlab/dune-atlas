@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 // Mars cell panel, downloads and public text (mirrors tests/ui.test.ts, tests/export.test.ts and
 // tests/publictext.test.ts for the Mars build).
-import { fieldsCitation } from "@body/citation";
+import { fieldsCitation } from "../../src/core/cell/citation";
 import { describe, expect, it, vi } from "vitest";
 import { CellPanel } from "../../src/bodies/mars/cellPanel";
 import { renderLayerPanel } from "../../src/core/ui/layerPanel";

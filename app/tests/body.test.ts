@@ -135,7 +135,7 @@ describe("info texts at the source, one field citation, licences, basemap info",
     expect(veg).toMatch(/\[Explore the full monthly time series at GEOGLAM RAPP\]\(https:\/\/map\.geo-rapp\.org\/\)/);
   });
   it("every atlas-derived field: one citation format (= fieldsCitation) and the dataset licence row", async () => {
-    const { fieldsCitation, fieldsLicence } = await import("@body/citation");
+    const { fieldsCitation, fieldsLicence } = await import("../src/core/cell/citation");
     const { applyDatasetLayers } = await import("../src/core/registry/merge");
     for (const ds of ["era5-land", "era5"]) {
       const reg = loadRegistry().registry;

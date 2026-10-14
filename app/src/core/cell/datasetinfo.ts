@@ -1,37 +1,28 @@
 // Wind datasets as described in the panel and the downloads (name, resolution, period, hours,
-// land-cell and dune rules). The table is per body (@body/datasetinfo); unknown ids fall back to the
-// body's first dataset. The resolution and the 30″ pixel count per cell can also be derived from a
-// cell-store grid.
+// land-cell and dune rules) and their credits: from the body's registry entries (`datasets[].info`,
+// `credits`, `citationSources`), so a dataset is added in the registry alone. Unknown ids fall back to the
+// default dataset. The resolution and the 30″ pixel count per cell can also be derived from a cell-store
+// grid.
 import type { Grid } from "./snap";
-import { DATASET_INFO } from "@body/datasetinfo";
-export { DATASET_INFO };
+import { loadRegistry } from "../registry/load";
+import type { CitationSourceDef, DatasetCredits, DatasetInfoDef } from "../registry/types";
 
-export interface DatasetInfo {
-  id: string;
-  /** reanalysis name, e.g. "ERA5-Land" */
-  name: string;
-  /** grid spacing as text, e.g. "0.1°" */
-  resolution: string;
-  resDeg: number;
-  period: string;
-  /** hours in the record */
-  nHours: number;
-  /** which cells carry wind data */
-  landRule: string;
-  /** land–sea mask fraction above which a cell is a land cell (wind data) */
-  landThreshold: number;
-  /** why a cell outside the land mask has no statistics (non-land message) */
-  nonLandReason: string;
-  /** what "dunes" means for a cell of this grid */
-  dunesRule: string;
-  /** About, Data sources: the dataset's item (HTML, after its bold title "Wind histograms and sand-flux fields
-   *  (<name> <resolution>)"); dataset facts live here, not in general text */
-  sourceHtml: string;
-  /** its bold title there; default "Wind histograms and sand-flux fields (<name> <resolution>)" */
-  sourceTitle?: string;
-  /** where the map fields come from: the paper's data record ("paper") or computed for the atlas ("atlas");
-   *  sets the map attribution line (citation.ts mapAttributionHtml) */
-  fieldsFrom: "paper" | "atlas";
+/** a wind dataset as the panel, About and downloads describe it: the registry entry's `info` with its id
+ *  (field meanings: registry/layers.schema.json, datasets[].info) */
+export interface DatasetInfo extends DatasetInfoDef { id: string }
+
+const REG = loadRegistry().registry;
+const DATASETS = REG.datasets ?? [];
+/** the body's wind datasets in registry order */
+export const DATASET_INFO: Record<string, DatasetInfo> = Object.fromEntries(DATASETS.filter((d) => d.info).map((d) => [d.id, { id: d.id, ...d.info! }]));
+const CREDITS: Record<string, DatasetCredits> = Object.fromEntries(DATASETS.filter((d) => d.credits).map((d) => [d.id, d.credits!]));
+const DEFAULT_ID = REG.defaultDataset && DATASET_INFO[REG.defaultDataset] ? REG.defaultDataset : Object.keys(DATASET_INFO)[0];
+/** citation sources defined by the datasets (registry `citationSources`) */
+export const DATASET_CITATION_SOURCES: CitationSourceDef[] = DATASETS.flatMap((d) => d.citationSources ?? []);
+
+/** citations and notices of a dataset (registry `credits`); unknown ids: the default dataset's */
+export function datasetCredits(id?: string): DatasetCredits {
+  return (id && CREDITS[id]) || CREDITS[DEFAULT_ID];
 }
 
 /** Tooltip of the Wind dataset selector (app text; not the generated registry description, which
@@ -53,7 +44,7 @@ export function datasetFacts(key: "resolution" | "period" | "name", infos: Datas
 }
 
 export function datasetInfo(id?: string): DatasetInfo {
-  return (id && DATASET_INFO[id]) || Object.values(DATASET_INFO)[0];
+  return (id && DATASET_INFO[id]) || DATASET_INFO[DEFAULT_ID];
 }
 
 /** grid spacing in degrees (from the cell-store grid when known) */

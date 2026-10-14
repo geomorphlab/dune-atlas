@@ -4,7 +4,8 @@ import type { CellAux } from "../../core/cell/cellstore";
 import { resolutionText } from "../../core/cell/datasetinfo";
 import type { AuxMeta } from "../../core/cell/auxinfo";
 import { R_MARS } from "./body";
-import { DEM_CITATION, DEM_LICENCE, fieldsLicence } from "./citation";
+import { DEM_CITATION, DEM_LICENCE } from "./citation";
+import { fieldsLicence } from "../../core/cell/citation";
 
 export const AUX_META: Record<string, AuxMeta> = {
   qsdiv: {

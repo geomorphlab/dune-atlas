@@ -11,8 +11,8 @@ import { analyseCell, modeDefined } from "./analysis";
 import { compassPoint } from "../util/angles";
 import { latLonText } from "./downloads";
 import { fieldInfo } from "./fieldinfo";
-import { AI_NOTICE, citationJson, citationSources, citationText, referencesLine } from "./citation";
-import { C3S_NOTICE, C3S_NOTICE_ERA5, CELL_SOURCE_IDS, fieldsCitation, fieldsLicence } from "@body/citation";
+import { AI_NOTICE, citationJson, citationSources, citationText, datasetNotice, fieldsCitation, fieldsLicence, referencesLine } from "./citation";
+import { CELL_SOURCE_IDS } from "@body/citation";
 import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "./auxinfo";
 import { DATASET_INFO, datasetInfo, resolutionText, type DatasetInfo } from "./datasetinfo";
 
@@ -362,7 +362,7 @@ export function metadataJson(cell: CellData, meta: ExportMeta): string {
     })),
     citation: citationJson(citationSources(CELL_SOURCE_IDS, ds.id)),
     fields_citation: fieldsCitation(ds.id), fields_license: fieldsLicence(ds.id),
-    license: LICENSE, institution: INSTITUTION, copernicus_notice: ds.id === "era5" ? C3S_NOTICE_ERA5 : C3S_NOTICE,
+    license: LICENSE, institution: INSTITUTION, copernicus_notice: datasetNotice(ds.id),
     generated: (meta.generated ?? new Date()).toISOString(), permalink: meta.permalink, ai_notice: AI_NOTICE,
   }, null, 1) + "\n";
 }

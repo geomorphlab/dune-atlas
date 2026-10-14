@@ -1,6 +1,8 @@
 """Registry files of an additional wind dataset (ERA5), kept in `registry/earth/datasets/<id>/`. The app
 merges them at build time (app/src/core/registry/load.ts): `dataset.yaml` adds the entry to the `datasets` list
-and each fragment replaces the same-named `registry/earth/generated/*.yaml` fragment for that dataset.
+and each fragment replaces the same-named `registry/earth/generated/*.yaml` fragment for that dataset. The
+entry's `info`, `credits` and `citationSources` (what the panel, About, citations and exports say about the
+dataset) are written by hand and kept when the entry is rewritten.
 
     registry/earth/datasets/era5/dataset.yaml               entry for the `datasets` list of registry/earth/layers.yaml
     registry/earth/datasets/era5/qsat_field_metadata.json   per-variable long_name/units/description + p2/p98 at
@@ -34,6 +36,8 @@ REPO = Path(__file__).resolve().parents[3]
 # ERA5 stores with land = lsm > 0 (2026-10-13); the first build (lsm > 0.5) is at dune-atlas/v1/datasets/era5
 PREFIX = {"era5": "dune-atlas/v2/datasets/era5"}
 TITLE = {"era5": "ERA5 0.25°, 1950–2024"}
+# keys of a dataset entry written by hand (what the app says about the dataset: layers.schema.json $defs/dataset)
+CURATED_KEYS = ("info", "credits", "citationSources")
 
 
 def out_dir(ds) -> Path:
@@ -87,8 +91,14 @@ def write(dataset="era5") -> list[Path]:
            f"# {ds.name} ({ds.resolution}) registry files; merged by the app for this dataset (see the module docstring).\n")
     paths = []
     p = d / "dataset.yaml"
-    p.write_text(hdr + "# entry for the `datasets` list of registry/earth/layers.yaml\n"
-                 + yaml.safe_dump([dataset_entry(ds)], sort_keys=False, allow_unicode=True, width=110))
+    entry = dataset_entry(ds)
+    # the hand-maintained texts of the entry (panel, About, citations, exports) are kept as they are
+    if p.exists():
+        old = (yaml.safe_load(p.read_text()) or [{}])[0]
+        entry.update({k: old[k] for k in CURATED_KEYS if k in old})
+    p.write_text(hdr.replace("`. Do not edit.\n", "`; info, credits and\n# citationSources are maintained by hand (kept by the writer).\n", 1)
+                 + "# entry for the `datasets` list of registry/earth/layers.yaml\n"
+                 + yaml.safe_dump([entry], sort_keys=False, allow_unicode=True, width=110))
     paths.append(p)
     p = d / "qsat_fields.yaml"
     frag = fields.registry_fragment(meta, dataset=ds)

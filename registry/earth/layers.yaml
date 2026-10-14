@@ -1,7 +1,7 @@
 # dune-atlas layer registry (hand-written part). Validated against layers.schema.json by
 # `npm run validate-registry` (CI). At build time the app merges this file with every
 # registry/earth/generated/*.yaml fragment ({groups, layers}) written by the pipeline; a generated
-# layer with the same id REPLACES the entry here (see app/src/registry/merge.ts).
+# layer with the same id REPLACES the entry here (see app/src/core/registry/merge.ts).
 version: 1
 dataBase: https://data.geomorphlab.org   # overridden by VITE_DATA_BASE at build time
 
@@ -16,6 +16,54 @@ datasets:
     citation: "Muñoz Sabater, J. (2019). ERA5-Land hourly data from 1950 to present. C3S CDS. doi:10.24381/cds.e2161bac"
     # per-cell sidecars on the cells.zarr grid (one store per later set of per-cell variables)
     cellAuxStores: ["{dataset}/cells-aux.zarr", "{dataset}/cells-aux-veg.zarr"]
+    # what the panel, About, downloads and image exports say about this dataset (app: cell/datasetinfo.ts,
+    # cell/citation.ts): `info` (name, grid, period, land and dune rules, About item), `credits` (sources
+    # cited for it, its wind-data source, the map-field citation and licence, the image-export wind line,
+    # the data notice) and the citation sources it defines
+    info:
+      name: ERA5-Land
+      resolution: 0.1°
+      resDeg: 0.1
+      period: 1950–2024
+      nHours: 657455
+      landRule: land cells (land–sea mask fraction above 0.5); ocean cells have no wind data
+      landThreshold: 0.5
+      nonLandReason: This cell is mainly water
+      dunesRule: the cell overlaps at least one 0.1° dune cell of the dune map (Gunn 2026)
+      fieldsFrom: paper
+      sourceHtml: ERA5-Land 1950–2024 hourly 10 m winds (0.1°) and the qsat parameters of Gunn (2026), Supplementary
+        Data (Zenodo, CC BY 4.0). Drift potentials (DP, RDP, RDD, RDP/DP) and crest fluxes are averages over the hourly
+        record.
+    credits:
+      sources:
+      - dune-atlas
+      - era5-land
+      dataSource: era5-land
+      fieldsCitation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
+        data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
+        winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art
+        global reanalysis dataset for land applications. Earth System Science Data 13, 4349–4383. doi:10.5194/essd-13-4349-2021)'
+      fieldsLicence: CC BY 4.0 (Zenodo Supplementary Data)
+      windSourceText: 'Wind: ERA5-Land hourly 10 m wind 1950–2024 (Muñoz-Sabater et al. 2021, doi:10.5194/essd-13-4349-2021;
+        data doi:10.24381/cds.e2161bac); statistics from Gunn (2026). Contains modified Copernicus Climate Change Service
+        information (ERA5-Land, 1950–2024). Neither the European Commission nor ECMWF is responsible for any use that
+        may be made of the Copernicus information or data it contains.'
+      notice: Contains modified Copernicus Climate Change Service information (ERA5-Land, 1950–2024). Neither the European
+        Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data it contains.
+    citationSources:
+    - id: era5-land
+      title: ERA5-Land
+      entries:
+      - label: Paper
+        text: 'Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art global reanalysis dataset for land applications.
+          Earth System Science Data 13, 4349–4383.'
+        doi: 10.5194/essd-13-4349-2021
+      - label: Data
+        text: Muñoz Sabater, J. (2019). ERA5-Land hourly data from 1950 to present. Copernicus Climate Change Service
+          (C3S) Climate Data Store (CDS).
+        doi: 10.24381/cds.e2161bac
+      notice: Contains modified Copernicus Climate Change Service information (ERA5-Land, 1950–2024). Neither the European
+        Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data it contains.
 defaultDataset: era5-land
 
 threshold:

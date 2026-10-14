@@ -107,6 +107,12 @@ export interface DatasetDef {
   cellAuxStores?: string[];
   /** single sidecar (older registries; used when cellAuxStores is absent) */
   cellAuxStore?: string;
+  /** how the panel, About and downloads describe the dataset (cell/datasetinfo.ts) */
+  info?: DatasetInfoDef;
+  /** citations and notices of the dataset (cell/citation.ts) */
+  credits?: DatasetCredits;
+  /** citation sources defined by this dataset */
+  citationSources?: CitationSourceDef[];
 }
 
 export interface Registry {
@@ -126,4 +132,20 @@ export interface Registry {
 export interface RegistryFragment {
   groups?: GroupDef[];
   layers?: LayerDef[];
+}
+
+/** registry `datasets[].info` (layers.schema.json) */
+export interface DatasetInfoDef {
+  name: string; resolution: string; resDeg: number; period: string; nHours: number;
+  landRule: string; landThreshold: number; nonLandReason: string; dunesRule: string;
+  fieldsFrom: "paper" | "atlas"; sourceTitle?: string; sourceHtml: string;
+}
+/** registry `datasets[].credits` */
+export interface DatasetCredits {
+  sources: string[]; dataSource: string; fieldsCitation: string; fieldsLicence: string; windSourceText: string; notice?: string;
+}
+/** a citation source (registry `datasets[].citationSources`, or a body's in @body/citation) */
+export interface CitationSourceDef {
+  id: string; title: string; notice?: string;
+  entries: { label: string; text: string; doi: string; url?: string; license?: string; key?: string }[];
 }

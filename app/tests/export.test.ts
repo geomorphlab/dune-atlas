@@ -9,7 +9,7 @@ import katex from "katex";
 import { CSV_NAMES, CSV_NAME_RE, csvName } from "../src/core/cell/csvnames";
 import { cellNetcdf, csvBundle, csvColumns, exportBaseName, fieldMeta, fieldsByThresholdCsv, fluxRoseCsv, fluxRoseTable, fmtF32, metadataJson, readmeText, versionFromPrefix, windHistogramCsv, cfUnits } from "../src/core/cell/export";
 import { citationSources, citationText, referencesLine } from "../src/core/cell/citation";
-import { CITATION_SOURCES } from "@body/citation";
+import { CITATION_SOURCES } from "../src/core/cell/citation";
 import { citationFile } from "../src/core/cell/downloads";
 import { fluxRose, crestFluxRose } from "../src/core/cell/flux";
 import { fieldValue } from "../src/core/cell/cellstore";

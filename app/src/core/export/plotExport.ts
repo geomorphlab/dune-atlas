@@ -3,7 +3,8 @@
 // settings, with an information strip below. Composition and names are pure (tested).
 import { exportPlotTheme, LIGHT_THEME, type PlotTheme } from "../cell/plottheme";
 import type { DatasetInfo } from "../cell/datasetinfo";
-import { plotDataCredit, windSourceText } from "@body/citation";
+import { plotDataCredit } from "@body/citation";
+import { windSourceText } from "../cell/citation";
 import { texToPlain } from "../util/plaintext";
 import { stripSvg, STRIP_COLORS, STRIP_FONT, STRIP_PAD, STRIP_UNITS, type StripItem } from "./strip";
 import { isoDate, svgToImage } from "./mapExport";

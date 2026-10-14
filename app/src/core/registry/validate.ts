@@ -32,6 +32,14 @@ export function validateRegistry(reg: unknown, schema: object, withheld: Iterabl
   for (const d of dup(ds.map((x) => x.id))) errors.push(`datasets: duplicate id '${d}'`);
   if (r.defaultDataset && !ds.some((d) => d.id === r.defaultDataset)) errors.push(`defaultDataset '${r.defaultDataset}' is not in datasets`);
   if (ds.length && !r.defaultDataset) errors.push("defaultDataset is required when datasets are listed");
+  // every dataset says what it is and how to cite it (the panel, About, downloads and exports read these)
+  const defined = new Set(ds.flatMap((d) => (d.citationSources ?? []).map((s) => s.id)));
+  for (const d of ds) {
+    if (!d.info) errors.push(`datasets: '${d.id}' has no info`);
+    if (!d.credits) { errors.push(`datasets: '${d.id}' has no credits`); continue; }
+    if (!d.credits.sources.includes(d.credits.dataSource)) errors.push(`datasets: '${d.id}' credits.dataSource '${d.credits.dataSource}' is not in credits.sources`);
+    if (!defined.has(d.credits.dataSource)) errors.push(`datasets: '${d.id}' credits.dataSource '${d.credits.dataSource}' is not defined in any citationSources`);
+  }
   for (const b of r.basemaps) {
     if ((b.kind === "raster" || b.kind === "hillshade") && !(b.tiles && b.tiles.length)) errors.push(`basemap ${b.id}: kind ${b.kind} needs tiles`);
     if (b.kind === "style" && !b.style) errors.push(`basemap ${b.id}: kind style needs style URL`);

@@ -70,9 +70,16 @@ describe("datasets", () => {
     const d = clone(base); d.layers[1].source = "{version}/x.zarr";
     expect(validateRegistry(d, schema).join("\n")).toMatch(/unknown placeholder/);
   });
-  it("a second dataset validates", () => {
-    const e = clone(base); e.datasets!.push({ id: "era5", title: "ERA5 (0.25°)", prefix: "dune-atlas/era5/v1" });
+  it("a second dataset validates (registry-only: its info, credits and citation sources travel with it)", () => {
+    const e = clone(base);
+    const d0 = e.datasets![0];
+    const src = { ...d0.citationSources![0], id: "other-data" };
+    e.datasets!.push({ ...clone(d0), id: "other", title: "Other 0.25°", prefix: "dune-atlas/other/v1", citationSources: [src], credits: { ...d0.credits!, sources: ["dune-atlas", "other-data"], dataSource: "other-data" } });
     expect(validateRegistry(e, schema)).toEqual([]);
+  });
+  it("a dataset without info or credits is rejected", () => {
+    const e = clone(base); e.datasets!.push({ id: "bare", title: "Bare", prefix: "dune-atlas/bare/v1" });
+    expect(validateRegistry(e, schema)).toEqual(["datasets: 'bare' has no info", "datasets: 'bare' has no credits"]);
   });
 });
 

@@ -17,8 +17,7 @@ import { DATASET_INFO, datasetFacts, datasetInfo, datasetSourceItem, datasetTool
 import { fieldInfo } from "../cell/fieldinfo";
 import { isDatasetDependent } from "../registry/merge";
 import { mathHtml } from "../util/math";
-import { AI_NOTICE, citationHtml, citationSources } from "../cell/citation";
-import { ABOUT_SOURCE_IDS, fieldsCitation, fieldsLicence } from "@body/citation";
+import { aboutSourceIds, AI_NOTICE, citationHtml, citationSources, fieldsCitation, fieldsLicence } from "../cell/citation";
 import { PROFILE } from "@body/profile";
 import { canLog, COLORMAP_GROUPS, DEFAULT_SPACING_KM, effectiveDisplay, isDirectional, SPACING_KM_STEPS, vectorColors, type RenderMode } from "../layerconfig";
 
@@ -464,7 +463,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
       ${DATA_SOURCES_HTML}
       ${COMPARE_HTML}
       ${fieldsCitationHtml()}
-      ${citationHtml(citationSources(ABOUT_SOURCE_IDS))}
+      ${citationHtml(citationSources(aboutSourceIds()))}
       ${ABOUT_CREDITS_NOTE_HTML}` })));
   root.append(header, pinned, body);
 }
