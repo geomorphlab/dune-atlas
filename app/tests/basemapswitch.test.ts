@@ -74,7 +74,7 @@ function check(map: FakeMap, ov: OverlayManager, layers: Record<string, LayerSta
   expect((map.getStyle().metadata as Record<string, string>)["atlas:basemap"]).toBe(basemapId);
   // presence: exactly the expected overlay layers, once each
   const expected: Record<string, string[]> = {
-    aridity: ["ov-aridity"], dpm: ["ov-dpm"], rdpa: ["ov-rdpa-vec"],
+    aridity: ["ov-aridity"], dpm: ["ov-dpm"], rdpa: ["ov-rdpa-vec", "ov-rdpa-vec-globe"], // GeoJSON lines (flat map) + custom layer (globe)
     dunes: invert ? ["ov-dunes-invert", "ov-dunes-fill"] : ["ov-dunes-fill"],
   };
   for (const id of ACTIVE) {
@@ -83,7 +83,7 @@ function check(map: FakeMap, ov: OverlayManager, layers: Record<string, LayerSta
   }
   expect(order.filter((x) => x.startsWith("ov-")).sort()).toEqual(Object.values(expected).flat().sort());
   // drawing order: bottom aridity < dpm < rdpa < dunes < selected cell < first basemap label
-  const stack = ["ov-aridity", "ov-dpm", "ov-rdpa-vec", ...expected.dunes, SELECTED_CELL_BOTTOM, SELECTED_CELL_LINE];
+  const stack = ["ov-aridity", "ov-dpm", "ov-rdpa-vec", "ov-rdpa-vec-globe", ...expected.dunes, SELECTED_CELL_BOTTOM, SELECTED_CELL_LINE];
   for (let k = 1; k < stack.length; k++) expect(at(stack[k - 1]), `${stack[k - 1]} below ${stack[k]}`).toBeLessThan(at(stack[k]));
   // basemap: every basemap layer below the first label is under all overlays; labels above
   const sym = firstSymbolLayer(map as unknown as MlMap);

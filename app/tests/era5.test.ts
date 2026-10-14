@@ -355,7 +355,8 @@ describe("overlays: dataset switch, then basemap switch", () => {
       expect(o.indexOf("ov-dpm")).toBeLessThan(o.indexOf("ov-rdpa-vec"));
       expect(o.indexOf("ov-rdpa-vec")).toBeLessThan(o.indexOf("ov-dunes-fill"));
       expect(map.getLayer("ov-rdpa-vec")!.paint["line-color"]).toBe("#112233");
-      expect(o.filter((x) => x.startsWith("ov-")).length).toBe(4);
+      expect(o.filter((x) => x.startsWith("ov-")).length).toBe(5); // + the globe line layer of rdpa
+      expect(o.indexOf("ov-rdpa-vec-globe")).toBe(o.indexOf("ov-rdpa-vec") + 1);
       expect(map.listenerCount("moveend")).toBe(1);
       expect(map.errors).toEqual([]);
     };

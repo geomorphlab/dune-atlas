@@ -4,8 +4,13 @@
 // Streamlines (Jobard & Lefer 1997) are traced in SCREEN space on a unit-vector field:
 //  * geo data are sampled as unit vectors, never raw angles: directions -> bilinear (sin, cos) of
 //    the bearing, renormalised; axes -> doubled-angle vectors (sin 2θ, cos 2θ), θ = atan2/2;
-//  * the screen field is built on a node grid (every few px) by mapping the geographic unit
-//    vector through the local Jacobian of the projection (finite differences of node lon/lat);
+//  * the screen field is built on a node grid (every few px): the geographic direction becomes a
+//    3D tangent vector on the unit sphere and is mapped to screen px through the local Jacobian
+//    of the projection (finite differences of the node positions on the sphere, least squares) -
+//    no lon/lat derivatives, so it is regular at the poles (globe view) and the antimeridian;
+//  * near the poles the field is sampled by blending the 3D tangent vectors of the grid nodes
+//    (each in its own east/north frame) and expressing the blend in the frame of the sample
+//    point (sampleUnitSphere), so the pole rows (lat ±90) are used and nothing is NaN there;
 //  * RK4 integration with a 1-2 px step, forward and backward from each seed; stop on leaving the
 //    viewport / globe, no data or a weak (divergent) field, coming within dtest of another line
 //    (spatial hash; the line's own recent points are ignored), or the maximum length;
@@ -26,7 +31,6 @@ export interface Grid {
 }
 
 const D2R = Math.PI / 180;
-const cosLat = (lat: number) => Math.max(0.05, Math.cos(lat * D2R));
 const isGlobalGrid = (g: Grid) => Math.abs(Math.abs(g.dlon) * g.nx - 360) < 1e-6;
 
 function colIndex(g: Grid, lon: number): number {
@@ -99,6 +103,96 @@ export function sampleUnit(g: Grid, lon: number, lat: number, axis: boolean, min
   if (!axis) return [sx / m, sy / m];
   const t = Math.atan2(sx, sy) / 2; // bearing of one end
   return [Math.sin(t), Math.cos(t)];
+}
+
+// ---------------------------------------------------------------------------------------------
+// The unit sphere (x towards lon 0 / lat 0, y towards lon 90° E, z north)
+// ---------------------------------------------------------------------------------------------
+
+type V3 = [number, number, number];
+/** position on the unit sphere */
+export function ecef(lon: number, lat: number): V3 {
+  const l = lon * D2R, p = lat * D2R, c = Math.cos(p);
+  return [c * Math.cos(l), c * Math.sin(l), Math.sin(p)];
+}
+/** local east and north unit vectors at (lon, lat); at the poles from the given longitude */
+export function enFrame(lon: number, lat: number): [V3, V3] {
+  const l = lon * D2R, p = lat * D2R, sl = Math.sin(l), cl = Math.cos(l), sp = Math.sin(p);
+  return [[-sl, cl, 0], [-sp * cl, -sp * sl, Math.cos(p)]];
+}
+const dot3 = (a: V3, b: V3) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+
+/** Like sampleUnit, but the corner directions are blended as 3D tangent vectors on the sphere
+ *  (each corner in its own east/north frame) and expressed in the frame at (lon, lat): exact near
+ *  and at the poles (pole rows lat ±90 included), the same as sampleUnit elsewhere. */
+export function sampleUnitSphere(g: Grid, lon: number, lat: number, axis: boolean, minMag = 0.2): [number, number] | null {
+  const fx = colIndex(g, lon), fy = (lat - g.lat0) / g.dlat;
+  const glob = isGlobalGrid(g);
+  const i0 = Math.floor(fx);
+  // rows: clamp to the grid (beyond the outermost row centre - e.g. towards a pole that is not a
+  // row - the outermost row is used, blended across longitude)
+  let j0 = Math.floor(fy), ty = fy - j0;
+  if (j0 < 0) { j0 = 0; ty = 0; }
+  if (j0 + 1 >= g.ny) { j0 = Math.max(0, g.ny - 2); ty = g.ny > 1 ? Math.min(1, fy - j0) : 0; }
+  if (g.ny < 2 || (!glob && (i0 < 0 || i0 + 1 >= g.nx))) return sampleUnit(g, lon, lat, axis, minMag);
+  const i1 = glob ? (i0 + 1) % g.nx : i0 + 1, ii0 = glob ? ((i0 % g.nx) + g.nx) % g.nx : i0;
+  const tx = fx - i0;
+  const [Eq, Nq] = enFrame(lon, lat);
+  const k = axis ? 2 : 1;
+  let sx = 0, sy = 0;
+  const corners: [number, number, number][] = [[ii0, j0, (1 - tx) * (1 - ty)], [i1, j0, tx * (1 - ty)], [ii0, j0 + 1, (1 - tx) * ty], [i1, j0 + 1, tx * ty]];
+  for (const [i, j, w] of corners) {
+    if (w === 0) continue;
+    const b = g.data[j * g.nx + i];
+    if (!Number.isFinite(b)) return null;
+    const [E, N] = enFrame(g.lon0 + i * g.dlon, g.lat0 + j * g.dlat);
+    const sb = Math.sin(b * D2R), cb = Math.cos(b * D2R);
+    const T: V3 = [sb * E[0] + cb * N[0], sb * E[1] + cb * N[1], sb * E[2] + cb * N[2]];
+    // the corner direction in the frame of the sample point (renormalised in its tangent plane)
+    const e = dot3(T, Eq), n = dot3(T, Nq), m = Math.hypot(e, n);
+    if (!(m > 1e-9)) continue;
+    const a = Math.atan2(e / m, n / m);
+    sx += w * Math.sin(k * a);
+    sy += w * Math.cos(k * a);
+  }
+  const m = Math.hypot(sx, sy);
+  if (!(m >= minMag)) return null;
+  if (!axis) return [sx / m, sy / m];
+  const t = Math.atan2(sx, sy) / 2;
+  return [Math.sin(t), Math.cos(t)];
+}
+
+/** Read window [west, south, east, north] for the visible part of the map from the lon/lat of
+ *  sample points on the screen (NaN = off the globe). Not clamped to the Web-Mercator limit: when
+ *  a pole is visible (or the view reaches within `poleDeg` of it) the window spans all longitudes
+ *  and extends to that pole. Longitudes otherwise from `lonRange` (map bounds). */
+export function readWindow(lats: ArrayLike<number>, lonRange: [number, number], o: { poleVisible?: { north: boolean; south: boolean }; padDeg?: number; poleDeg?: number } = {}): [number, number, number, number] {
+  let s = 90, n = -90;
+  for (let k = 0; k < lats.length; k++) { const v = lats[k]; if (Number.isFinite(v)) { s = Math.min(s, v); n = Math.max(n, v); } }
+  if (s > n) return [lonRange[0], -90, lonRange[1], 90];
+  const pad = o.padDeg ?? 1, poleDeg = o.poleDeg ?? 2;
+  const south = o.poleVisible?.south || s - pad <= -90 + poleDeg, north = o.poleVisible?.north || n + pad >= 90 - poleDeg;
+  const S = south ? -90 : Math.max(-90, s - pad), N = north ? 90 : Math.min(90, n + pad);
+  let [w, e] = lonRange;
+  if (e < w) e += 360;
+  if (south || north || e - w >= 360) { w = -180; e = 180; }
+  return [w, S, e, N];
+}
+
+/** Split a screen polyline wherever consecutive points are more than `maxPx` apart (a
+ *  discontinuity, never a streamline step) or not finite; pieces with >= 2 points. */
+export function splitByScreenGap(pts: ArrayLike<[number, number]>, maxPx: number): [number, number][][] {
+  const out: [number, number][][] = [];
+  let cur: [number, number][] = [];
+  for (let k = 0; k < pts.length; k++) {
+    const p = pts[k];
+    if (!Number.isFinite(p[0]) || !Number.isFinite(p[1])) { if (cur.length >= 2) out.push(cur); cur = []; continue; }
+    const q = cur[cur.length - 1];
+    if (q && Math.hypot(p[0] - q[0], p[1] - q[1]) > maxPx) { if (cur.length >= 2) out.push(cur); cur = []; }
+    cur.push([p[0], p[1]]);
+  }
+  if (cur.length >= 2) out.push(cur);
+  return out;
 }
 
 /** Point at great-circle distance `dist` (degrees of arc) along a compass bearing (spherical
@@ -195,29 +289,36 @@ export interface ScreenField {
 }
 
 /** Build the screen field from the lon/lat of each node (NaN = off the globe / no projection).
- *  `geoUnit(lon, lat)` returns the geographic unit vector (east, north) or null. The screen
- *  direction is J (d lon, d lat) with the Jacobian J = d(x, y)/d(lon, lat) obtained by inverting
- *  finite differences of the node lon/lat (no extra projection calls). */
+ *  `geoUnit(lon, lat)` returns the geographic unit vector (east, north) or null. The direction
+ *  becomes a 3D tangent vector T on the unit sphere; the screen direction (a, b) solves
+ *  a dP/dx + b dP/dy = T in the least-squares sense, with dP/dx, dP/dy the finite differences of
+ *  the node positions on the sphere (no extra projection calls, no lon/lat derivatives: regular
+ *  at the poles and across the antimeridian). */
 export function buildScreenField(lon: Float64Array, lat: Float64Array, nx: number, ny: number, cell: number, axis: boolean, geoUnit: (lon: number, lat: number) => [number, number] | null): ScreenField {
   const vx = new Float32Array(nx * ny).fill(NaN), vy = new Float32Array(nx * ny).fill(NaN);
-  const wrap = (d: number) => (d > 180 ? d - 360 : d < -180 ? d + 360 : d);
   for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
     const k = j * nx + i;
     if (!Number.isFinite(lon[k]) || !Number.isFinite(lat[k])) continue;
-    const ia = i + 1 < nx ? i + 1 : i - 1, ja = j + 1 < ny ? j + 1 : j - 1;
-    const kx = j * nx + ia, ky = ja * nx + i;
-    if (!Number.isFinite(lon[kx]) || !Number.isFinite(lon[ky])) continue;
-    const sx = ia > i ? 1 : -1, sy = ja > j ? 1 : -1;
-    // d(lon, lat) per +1 px in x and y
-    const a = (wrap(lon[kx] - lon[k]) * sx) / cell, c = ((lat[kx] - lat[k]) * sx) / cell;
-    const b = (wrap(lon[ky] - lon[k]) * sy) / cell, d = ((lat[ky] - lat[k]) * sy) / cell;
-    const det = a * d - b * c;
-    if (!Number.isFinite(det) || Math.abs(det) < 1e-18) continue;
+    const ok = (q: number) => Number.isFinite(lon[q]) && Number.isFinite(lat[q]);
+    // dP per +1 px in x and y: central differences where both neighbours are on the map, else one-sided
+    const diff = (qa: number | null, qb: number | null, h: number): V3 | null => {
+      const a = qa !== null && ok(qa) ? ecef(lon[qa], lat[qa]) : null, b = qb !== null && ok(qb) ? ecef(lon[qb], lat[qb]) : null;
+      const c = ecef(lon[k], lat[k]);
+      if (a && b) return [(a[0] - b[0]) / (2 * h), (a[1] - b[1]) / (2 * h), (a[2] - b[2]) / (2 * h)];
+      if (a) return [(a[0] - c[0]) / h, (a[1] - c[1]) / h, (a[2] - c[2]) / h];
+      if (b) return [(c[0] - b[0]) / h, (c[1] - b[1]) / h, (c[2] - b[2]) / h];
+      return null;
+    };
+    const A = diff(i + 1 < nx ? k + 1 : null, i > 0 ? k - 1 : null, cell), B = diff(j + 1 < ny ? k + nx : null, j > 0 ? k - nx : null, cell);
+    if (!A || !B) continue;
     const g = geoUnit(lon[k], lat[k]);
     if (!g) continue;
-    const dlon = g[0] / cosLat(lat[k]), dlat = g[1];
-    // invert [a b; c d] (px -> deg) to map (dlon, dlat) -> (dx, dy)
-    let x = (d * dlon - b * dlat) / det, y = (-c * dlon + a * dlat) / det;
+    const [E, N] = enFrame(lon[k], lat[k]);
+    const T: V3 = [g[0] * E[0] + g[1] * N[0], g[0] * E[1] + g[1] * N[1], g[0] * E[2] + g[1] * N[2]];
+    const aa = dot3(A, A), ab = dot3(A, B), bb = dot3(B, B), at = dot3(A, T), bt = dot3(B, T);
+    const det = aa * bb - ab * ab;
+    if (!Number.isFinite(det) || Math.abs(det) < 1e-30 * Math.max(1e-300, aa * bb)) continue;
+    let x = (bb * at - ab * bt) / det, y = (aa * bt - ab * at) / det;
     const m = Math.hypot(x, y);
     if (!(m > 0)) continue;
     x /= m; y /= m;

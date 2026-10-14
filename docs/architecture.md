@@ -70,16 +70,33 @@ and fixture layouts and fails if an upgrade changes them.
   `dtest` = dsep/2; RK4 step 1.5 px; forward + backward; stop at the
   viewport/globe limb, no data, weak field, > 45° turn in one step, within `dtest` of another line
   (spatial hash, own last points ignored) or max length; seeds at ±dsep normals then a grid;
-  lines < 2 dsep dropped; ≤ 2500 lines, 250 ms). The field is sampled as unit vectors (directions:
-  bilinear (sin, cos); the axial αH: doubled angles, sign chosen to continue the line) from the
-  pyramid level with cell ≤ dsep/4 px, mapped to screen through the local Jacobian of the node
-  lon/lat grid (≤ 20k nodes). Direction fields get arrowheads along the lines. Screen vertices are
-  unprojected and passed through `geoPolylines`: longitudes unwrapped along the line, split at the
-  antimeridian with a shared interpolated vertex at ±180 (otherwise MapLibre joins 179.9 → −179.9
-  the long way, a ring around the globe), and split at any step longer than 4·dsep in degrees or
-  a non-finite vertex; arrows use the spherical destination (`offset`, exact near the poles) and
-  the same split. Drawn as a GeoJSON
-  line layer (globe and mercator); recomputed on `moveend` and threshold change.
+  lines < 2 dsep dropped; ≤ 2500 lines, 250 ms). The field is sampled on the SPHERE
+  (`sampleUnitSphere`): each grid corner's bearing becomes a 3D tangent vector in its own
+  east/north frame, the four are blended bilinearly in 3D and expressed in the query point's
+  frame (axial αH: doubled angles, sign chosen to continue the line), so sampling is regular at
+  the poles and the antimeridian (the old (sin, cos) blend in lon/lat frames and the cos(lat)
+  clamp are gone); rows are clamped to the grid including the pole rows. Pyramid level: cell
+  ≤ dsep/4 px. The screen direction comes from a 3D Jacobian: central differences of the node
+  positions on the unit sphere (≤ 20k nodes over the screen), least-squares solved for the screen
+  vector of the tangent — equivalent to integrating on the sphere and projecting, with spacing
+  kept in screen px (deliberately not great-circle stepping on the sphere, which would lose
+  the even screen spacing). Read window (`readWindow`): in the globe the latitudes of a 17×17
+  screen sample plus 1° pad, extended to the pole (row ±90 included) when the pole is on the
+  visible hemisphere (project/unproject round trip at ±89.9999°); never clamped at ±85.05°.
+  Direction fields get arrowheads along the lines.
+  *Flat map:* screen vertices are unprojected and passed through `geoPolylines`: longitudes
+  unwrapped along the line, split at the antimeridian with a shared interpolated vertex at ±180
+  (otherwise MapLibre joins 179.9 → −179.9 the long way, a ring around the globe), and split at
+  any step longer than 4·dsep in degrees or a non-finite vertex; arrows use the spherical
+  destination (`offset`, exact near the poles) and the same split; drawn as a GeoJSON line layer
+  `ov-<id>-vec`. *Globe:* GeoJSON layers cannot be drawn beyond ±85.05° in MapLibre's globe, so the
+  lines go to a custom WebGL layer `ov-<id>-vec-globe` (`src/map/globelines.ts`, `GlobeLinesLayer`):
+  vertices as unclamped Mercator x/y (latitudes up to ±89.9999°), projected with MapLibre's
+  `projectTile` shader prelude, extruded in screen space (line width in px, 1 px antialiasing,
+  premultiplied alpha, per-vertex alpha for the arrows' magnitude scaling); lines are split where
+  consecutive screen vertices are > 4·dsep apart (`splitByScreenGap`), the GeoJSON source is
+  emptied while the globe layer draws, and the layer draws nothing in Mercator. Opacity and line
+  colour apply to both layers. Recomputed on `moveend`, `projectiontransition` and threshold change.
 * **Arrow / streamline spacing** is set on the ground: slider 'Spacing (km)' with steps 10, 20,
   50, 100, 200, 500, 1000 km (default 100; URL `~km=`). On every recompute it is converted to
   screen px at the view centre with the measured ground resolution (great-circle distance between

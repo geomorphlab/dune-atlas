@@ -12,7 +12,8 @@ import { fetchRootAttrs, storeGeoFromAttrs, type StoreGeo } from "./zarrgeo";
 import { MaskedFieldStore } from "./maskedstore";
 import { fragmentFor, symlogUniforms } from "./shader";
 import { FieldReader } from "./fieldreader";
-import { applyMask, arrowFeatures, arrowheadsAlong, buildScreenField, evenStreamlines, geoPolylines, sampleUnit, type ArrowSeed, type Grid } from "./vectors";
+import { applyMask, arrowFeatures, arrowheadsAlong, buildScreenField, evenStreamlines, gcDeg, geoPolylines, readWindow, sampleUnitSphere, splitByScreenGap, type ArrowSeed, type Grid } from "./vectors";
+import { GlobeLinesLayer, POLE_LAT } from "./globelines";
 import { mathToAxisDeg, mathToBearingDeg } from "../util/angles";
 
 export interface AdapterContext {
@@ -229,6 +230,12 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
   own.addSource(src, { type: "geojson", data: { type: "FeatureCollection", features: [] } });
   own.addLayer({ id, type: "line", source: src, layout: { "line-cap": "round", "line-join": "round" },
     paint: { "line-color": eff.vecColor, "line-width": eff.mode === "arrows" ? 1.4 : 1.2, "line-opacity": ["*", opacity, ["get", "a"]] } }, ctx.beforeId);
+  // globe: the same lines from a custom layer placed by the globe projection itself (reaches and
+  // crosses the poles; a GeoJSON layer ends at ±85.05°). Only one of the two draws at a time.
+  const gid = `${id}-globe`;
+  const globe = new GlobeLinesLayer(gid, eff.vecColor, opacity, eff.mode === "arrows" ? 1.4 : 1.2);
+  own.addLayer(globe as never, ctx.beforeId);
+  const isGlobe = () => map.getProjection?.()?.type === "globe";
   const dirReader = FieldReader.open(res(ctx, layer.source), layer.variable!);
   const magVar = layer.display?.magnitudeVar ?? DEFAULT_MAGNITUDE[layer.variable!];
   const magSrc = eff.mode === "arrows" && magVar ? ctx.sourceOfVariable?.(magVar) : undefined;
@@ -248,14 +255,27 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
     const canvas = map.getCanvas();
     const W = canvas.clientWidth, H = canvas.clientHeight;
     const b = map.getBounds();
+    const globeView = isGlobe();
     // continuous west..east (may extend beyond ±180 at the antimeridian: the reader joins the
     // columns of both ends of the global grid); the whole width only when the view spans >= 360°
     let bounds: [number, number, number, number] = [b.getWest(), Math.max(-90, b.getSouth()), b.getEast(), Math.min(90, b.getNorth())];
+    if (globeView) {
+      // globe: the latitudes of the visible surface, NOT clamped to the Web-Mercator limit; a
+      // visible pole reads all longitudes up to ±90 (the grids have pole rows)
+      const lats: number[] = [];
+      for (let y = 0; y <= H; y += H / 16) for (let x = 0; x <= W; x += W / 16) {
+        const ll = map.unproject([x, y]), back = map.project(ll);
+        if (Math.hypot(back.x - x, back.y - y) <= 2) lats.push(ll.lat);
+      }
+      const poleOn = (lat: number) => { const p = map.project([0, lat]); if (!(p.x >= 0 && p.y >= 0 && p.x <= W && p.y <= H)) return false; return Math.abs(map.unproject(p).lat - lat) < 1; };
+      bounds = readWindow(lats, [bounds[0], bounds[2]], { poleVisible: { north: poleOn(POLE_LAT), south: poleOn(-POLE_LAT) } });
+    }
     if (bounds[2] < bounds[0]) bounds[2] += 360;
     if (bounds[2] - bounds[0] >= 360) bounds = [-180, bounds[1], 180, bounds[3]];
     const c = map.project(map.getCenter());
     const p1 = map.unproject([c.x, c.y - 50]), p0 = map.unproject([c.x, c.y + 50]);
-    const degPerPx = Math.max(1e-6, Math.abs(p1.lat - p0.lat) / 100);
+    // degrees of arc per px at the centre (great circle: also at a pole, where both have one latitude)
+    const degPerPx = Math.max(1e-6, gcDeg([p1.lng, p1.lat], [p0.lng, p0.lat]) / 100);
     // km is the only user state; the px value is internal to this recompute
     const dsep = spacingToPx(km, viewMetersPerPixel(map)).px;
     let reader: FieldReader;
@@ -280,7 +300,7 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
         const back = map.project(ll);
         if (Math.hypot(back.x - x, back.y - y) > 2) continue; // off the globe
         const ll2 = map.unproject([x, y + dsep]);
-        seeds.push({ lon: ll.lng, lat: ll.lat, len: 0.8 * Math.abs(ll.lat - ll2.lat) || 0.8 * dsep * degPerPx });
+        seeds.push({ lon: ll.lng, lat: ll.lat, len: 0.8 * gcDeg([ll.lng, ll.lat], [ll2.lng, ll2.lat]) || 0.8 * dsep * degPerPx });
       }
       let mag: Grid | null = null;
       const mr = await magReader;
@@ -299,12 +319,22 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
         if (Math.hypot(back.x - x, back.y - y) > 1) continue; // off the globe
         lon[j * nx + i] = ll.lng; lat[j * nx + i] = ll.lat;
       }
-      const field = buildScreenField(lon, lat, nx, ny, cell, axis, (lo, la) => sampleUnit(dir, lo, la, axis));
+      const field = buildScreenField(lon, lat, nx, ny, cell, axis, (lo, la) => sampleUnitSphere(dir, lo, la, axis));
       const lines = evenStreamlines(field, { width: W, height: H, dsep, maxLines: 2500, budgetMs: 250 });
       const un = (p: [number, number]) => { const ll = map.unproject(p); return [ll.lng, ll.lat] as [number, number]; };
       // screen vertices -> lon/lat pieces drawn the short way (split at the antimeridian, and at any
       // step longer than a few line spacings - a discontinuity, never a real streamline step)
       const maxSeg = Math.max(1, 4 * dsep * degPerPx);
+      if (globeView) {
+        // globe: screen pieces (split at any jump longer than a few line spacings) -> lon/lat
+        const gap = 4 * dsep;
+        const glines = lines.flatMap((l) => splitByScreenGap(l.pts, gap).map((pc) => pc.map(un)));
+        if (!axis) glines.push(...arrowheadsAlong(lines, Math.max(60, 3 * dsep), 4.5).flatMap((hd) => splitByScreenGap(hd, gap).map((pc) => pc.map(un))));
+        globe.setLines(glines);
+        if (own.hasSource(src)) (map.getSource(src) as GeoJSONSource).setData({ type: "FeatureCollection", features: [] });
+        if (import.meta.env?.DEV) console.debug(`[dune-atlas] ${layer.id} streamlines (globe): ${glines.length} lines, level ${level}, window ${bounds.map((v) => v.toFixed(1))}, ${Math.round(performance.now() - t0)} ms`);
+        return;
+      }
       features = lines.flatMap((l) => {
         const pieces = geoPolylines(l.pts.map(un), maxSeg);
         return pieces.length ? [{ type: "Feature", properties: { a: 1 }, geometry: pieces.length === 1 ? { type: "LineString", coordinates: pieces[0] } : { type: "MultiLineString", coordinates: pieces } } as GeoJSON.Feature] : [];
@@ -314,26 +344,41 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
         features.push({ type: "Feature", properties: { a: 1 }, geometry: { type: "MultiLineString", coordinates: heads.flatMap((hd) => geoPolylines(hd.map(un), maxSeg)) } });
       }
     }
+    if (globeView) {
+      // arrows on the globe: the same lon/lat polylines from the custom layer
+      const gl: [number, number][][] = [], ga: number[] = [];
+      for (const f of features) {
+        const g = f.geometry as GeoJSON.MultiLineString | GeoJSON.LineString, a = Number((f.properties as { a?: number })?.a ?? 1);
+        for (const l of g.type === "LineString" ? [g.coordinates] : g.coordinates) { gl.push(l as [number, number][]); ga.push(a); }
+      }
+      globe.setLines(gl, ga);
+      features = [];
+    } else globe.setLines([]);
     if (own.hasSource(src)) (map.getSource(src) as GeoJSONSource).setData({ type: "FeatureCollection", features });
     if (import.meta.env?.DEV) console.debug(`[dune-atlas] ${layer.id} ${eff.mode}: ${features.length} features, level ${level}, ${Math.round(performance.now() - t0)} ms`);
   };
   const onMove = () => { void compute(); };
   map.on("moveend", onMove);
+  // globe <-> flat map: the other line layer draws; recompute for the new projection
+  const onProj = () => { globe.setLines([]); void compute(); };
+  map.on("projectiontransition", onProj);
   void compute();
   return {
-    get layerIds() { return own.live([id]); },
-    setOpacity: (o) => { op = o; if (own.has(id)) map.setPaintProperty(id, "line-opacity", ["*", op, ["get", "a"]]); },
+    get layerIds() { return own.live([id, gid]); },
+    setOpacity: (o) => { op = o; if (own.has(id)) map.setPaintProperty(id, "line-opacity", ["*", op, ["get", "a"]]); globe.setStyle({ opacity: o }); },
     setThreshold: layer.thresholdAware ? (i) => { if (i !== ut) { ut = i; void compute(); } } : undefined,
     applyConfig: (cfg) => {
       const next = effectiveDisplay(layer, cfg);
       if (next.mode !== eff.mode) return false;
       if (own.has(id)) map.setPaintProperty(id, "line-color", next.vecColor);
+      globe.setStyle({ color: next.vecColor });
       if (next.spacingKm !== km) { km = next.spacingKm; void compute(); }
       return true;
     },
     remove: () => {
       alive = false;
       map.off("moveend", onMove);
+      map.off("projectiontransition", onProj);
       own.remove();
     },
   };
