@@ -27,7 +27,7 @@ export function loadPlaces(files: Record<string, string> = placesFiles): PlaceLi
   return { enabled: !!p?.enabled, places: Array.isArray(p?.places) ? p!.places : [] };
 }
 
-/** The naming note for the dune layer's info, shown only with the named search (draft for PI review). */
+/** The naming note for the dune layer's info, shown only with the named search (draft, under review). */
 export const PLACES_DISCLAIMER = "Dune-field names in the search are for navigation only. Many dune fields have several names, including Indigenous and local names; the names shown are those we could source, and they imply no position on naming or boundaries.";
 
 /** Search key: lower case, without diacritics, apostrophes and ʿayn / hamza marks; other punctuation

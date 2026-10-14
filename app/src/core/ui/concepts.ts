@@ -1,5 +1,5 @@
 // Concepts panel (mortarboard button): what the quantities of the atlas mean, with references. The text is the
-// PI-approved file docs/concepts/concepts-earth-mars.md, read at build time and used unchanged; only the markup
+// approved file docs/concepts/concepts-earth-mars.md, read at build time and used unchanged; only the markup
 // is adapted (the symbols are set in TeX as elsewhere on the site, and the references are linked). Entries are
 // tagged Earth, Mars or both; each atlas shows its own and "both". Layer ⓘ popovers link to their entry
 // (CONCEPT_OF_LAYER).

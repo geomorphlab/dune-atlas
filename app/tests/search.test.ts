@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 // Search box: named-place matching (diacritics, both name lines, aliases, typing errors), the place lists
-// in the registry (schema-valid, empty and disabled until the PI approves the names), the search UI
+// in the registry (schema-valid, empty and disabled until the names are approved), the search UI
 // (feedback while typing, Enter flies there, named search hidden while disabled), and the naming note.
 import fs from "node:fs";
 import path from "node:path";
