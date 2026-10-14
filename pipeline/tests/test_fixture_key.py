@@ -1,5 +1,5 @@
 """The fixture cache key (scripts/ci/fixture_key.py) covers every repository module the generators load."""
-import importlib
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -8,33 +8,25 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "scripts" / "ci"))
 import fixture_key as FK  # noqa: E402
 
-
-def _repo_modules() -> set[Path]:
-    out = set()
-    for m in list(sys.modules.values()):
-        f = getattr(m, "__file__", None)
-        if f and Path(f).resolve().is_relative_to(REPO) and Path(f).suffix == ".py":
-            out.add(Path(f).resolve())
-    return out
+# load a generator in a fresh interpreter (module level only, not its main) and list the modules it loaded
+LOAD = {
+    "earth": "import importlib; importlib.import_module('dune_atlas_pipeline.synthetic_fixture')",
+    "mars": f"import runpy; runpy.run_path({str(REPO / 'scripts' / 'mars' / 'app' / 'make_fixture.py')!r}, run_name='not_main')",
+}
 
 
-def test_earth_inputs_cover_the_imported_modules():
-    importlib.import_module("dune_atlas_pipeline.synthetic_fixture")
-    loaded = {p for p in _repo_modules() if (REPO / "pipeline" / "src") in p.parents}
-    missing = loaded - set(FK.inputs("earth"))
-    assert not missing, sorted(str(p.relative_to(REPO)) for p in missing)
+def _loaded(body: str) -> set[Path]:
+    code = (f"import json, sys\n{LOAD[body]}\n"
+            "print(json.dumps(sorted({getattr(m, '__file__', None) or '' for m in list(sys.modules.values())})))")
+    out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True).stdout
+    files = json.loads(out.splitlines()[-1])
+    return {Path(f).resolve() for f in files if f.endswith(".py") and Path(f).resolve().is_relative_to(REPO)}
 
 
-def test_mars_inputs_cover_the_imported_modules():
-    # in a fresh interpreter: the generator inserts its own paths and imports at module level
-    import json
-    gen = str(REPO / "scripts" / "mars" / "app" / "make_fixture.py")
-    code = (f"import json, runpy, sys\nrunpy.run_path({gen!r}, run_name='not_main')\n"
-            "print(json.dumps(sorted({getattr(m, '__file__', None) or '' for m in sys.modules.values()})))")
-    files = json.loads(subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True).stdout.splitlines()[-1])
-    loaded = {Path(f).resolve() for f in files if f.endswith(".py") and Path(f).resolve().is_relative_to(REPO)}
-    missing = loaded - set(FK.inputs("mars"))
-    assert not missing, sorted(str(p.relative_to(REPO)) for p in missing)
+def test_inputs_cover_the_imported_modules():
+    for body in ("earth", "mars"):
+        missing = _loaded(body) - set(FK.inputs(body))
+        assert not missing, (body, sorted(str(p.relative_to(REPO)) for p in missing))
 
 
 def test_key_is_stable_and_body_specific():
