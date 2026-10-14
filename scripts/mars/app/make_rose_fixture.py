@@ -1,4 +1,4 @@
-"""Python reference for the Mars flux roses of the app (app/src/mars/cell/marsflux.ts), computed with
+"""Python reference for the Mars flux roses of the app (app/src/bodies/mars/cell/marsflux.ts), computed with
 pipeline mars/physics.py and an independent numpy implementation of the binning:
 direction bin = numpy.digitize(ua, UA_EDGES[1:-1]) (the Earth 128 bins), rose_j = sum_{h in j} q_h / N,
 excess-shear class = numpy.digitize(u / u*,th, EDGES[1:-1]) for u > u*,th.

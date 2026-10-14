@@ -3,7 +3,7 @@
 // tests/publictext.test.ts for the Mars build).
 import { fieldsCitation } from "../../src/cell/citation";
 import { describe, expect, it, vi } from "vitest";
-import { CellPanel } from "../../src/mars/ui/cellPanel";
+import { CellPanel } from "../../src/bodies/mars/ui/cellPanel";
 import { renderLayerPanel } from "../../src/ui/layerPanel";
 import { legendHtml } from "../../src/ui/legend";
 import { loadRegistry } from "../../src/registry/load";
@@ -15,9 +15,9 @@ import { plotFilename, plotStripItems } from "../../src/export/plotExport";
 import { datasetInfo } from "../../src/cell/datasetinfo";
 import { citationSources, citationText } from "../../src/cell/citation";
 import { CSV_NAMES, CSV_NAME_RE, csvName } from "../../src/cell/csvnames";
-import { cellNetcdf, csvBundle, csvColumns, fieldsByGrainSizeCsv, fluxRoseCsv, metadataJson, readmeText, windSeriesCsv, marsFluxRoseTable } from "../../src/mars/cell/export";
-import { analyseMarsCell } from "../../src/mars/cell/analysis";
-import type { MarsCellStore } from "../../src/mars/cell/cellstore";
+import { cellNetcdf, csvBundle, csvColumns, fieldsByGrainSizeCsv, fluxRoseCsv, metadataJson, readmeText, windSeriesCsv, marsFluxRoseTable } from "../../src/bodies/mars/cell/export";
+import { analyseMarsCell } from "../../src/bodies/mars/cell/analysis";
+import type { MarsCellStore } from "../../src/bodies/mars/cell/cellstore";
 import { readNc } from "../ncreader";
 import { FIELD_VARS, makeMarsCell } from "./helpers";
 

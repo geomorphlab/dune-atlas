@@ -1,7 +1,7 @@
 // Live check of the esri-mars:// protocol against the real OnMars services (node: real fetch, stub canvas).
 // Usage (needs network; behind a proxy set NODE_USE_ENV_PROXY=1): cd app && npx vite-node ../scripts/mars/app/esri_live_smoke.ts
 // Prints, per service, the tiling check and per test tile: rows drawn, source requests, missing, skipped, time.
-import { esriTile, ESRI_STATS, ESRI_SERVICES, tilingMismatch, type EsriEnv } from "../../../app/src/mars/map/esri";
+import { esriTile, ESRI_STATS, ESRI_SERVICES, tilingMismatch, type EsriEnv } from "../../../app/src/bodies/mars/map/esri";
 const warnings: string[] = [];
 const env: EsriEnv = {
   base: "https://astro.arcgis.com/arcgis/rest/services/OnMars", fetch: (...a) => fetch(...a),

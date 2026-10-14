@@ -3,7 +3,7 @@
 // projection (`projectTile`, unclamped Mercator), so a fill reaches the pole. A GeoJSON fill layer on the
 // globe is cut at the Web-Mercator limit (85.0511°) and its triangles on the top/bottom tile edge are
 // extended to the pole (MapLibre `_fillPoles`: a grey wedge). Used for the selected-cell highlight
-// (map/selection.ts); the Mars polar dune caps use the same mechanism (src/mars/map/polarcap.ts).
+// (map/selection.ts); the Mars polar dune caps use the same mechanism (src/bodies/mars/map/polarcap.ts).
 import type { CustomLayerInterface, CustomRenderMethodInput, Map as MlMap } from "maplibre-gl";
 import { mercatorXY } from "./globelines";
 

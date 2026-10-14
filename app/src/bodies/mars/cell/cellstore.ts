@@ -7,11 +7,11 @@
 // The returned cell is a CellData (so fieldValue / nUt / modeDefined work unchanged) plus the
 // hourly series; `hist` is empty and `utValues` holds the grain diameters d (µm).
 import * as zarr from "zarrita";
-import { CachingStore, CellAuxStore, type CellAux, type CellData } from "../../cell/cellstore";
-import { harmonizeAux } from "../../cell/auxinfo";
-import { cellFromIndex, type Grid } from "../../cell/snap";
-import { DEFAULT_BINS, type Bins } from "../../cell/flux";
-import { M } from "../../cell/marsphysics";
+import { CachingStore, CellAuxStore, type CellAux, type CellData } from "../../../cell/cellstore";
+import { harmonizeAux } from "../../../cell/auxinfo";
+import { cellFromIndex, type Grid } from "../../../cell/snap";
+import { DEFAULT_BINS, type Bins } from "../../../cell/flux";
+import { M } from "../../../cell/marsphysics";
 import { MARS_GRID } from "../body";
 
 type Readable = zarr.AsyncReadable | zarr.Readable;

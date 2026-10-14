@@ -1,7 +1,7 @@
 // Build-time body switch (VITE_BODY=mars; default earth). The Earth build does not load this
 // plugin at all, so its output is byte-for-byte the same as before the Mars work.
 //
-// For Mars it does three things (all declared in src/mars/build.ts):
+// For Mars it does three things (all declared in src/bodies/mars/build.ts):
 //  1. module substitution: an import that resolves to an Earth module listed in MARS_SUBSTITUTES
 //     resolves to its Mars replacement instead (the replacement itself may import the original);
 //  2. source patches: exact find/replace edits of Earth modules (constants such as the planet
@@ -11,7 +11,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Plugin } from "vite";
-import { MARS_HTML, MARS_PATCHES, MARS_SUBSTITUTES, type SourcePatch } from "../src/mars/build";
+import { MARS_HTML, MARS_PATCHES, MARS_SUBSTITUTES, type SourcePatch } from "../src/bodies/mars/build";
 
 const APP = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const strip = (id: string) => id.split("?")[0];

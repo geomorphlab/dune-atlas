@@ -4,11 +4,11 @@
 import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
-import { MarsCellStore } from "../../src/mars/cell/cellstore";
+import { MarsCellStore } from "../../src/bodies/mars/cell/cellstore";
 import { fieldValue } from "../../src/cell/cellstore";
 import { snapToCell } from "../../src/cell/snap";
-import { analyseMarsCell } from "../../src/mars/cell/analysis";
-import { EXAMPLE_CELL, MARS_GRID } from "../../src/mars/body";
+import { analyseMarsCell } from "../../src/bodies/mars/cell/analysis";
+import { EXAMPLE_CELL, MARS_GRID } from "../../src/bodies/mars/body";
 import { M } from "../../src/cell/marsphysics";
 import { FIELD_VARS, FIXTURE_DS, RangeFileStore } from "./helpers";
 

@@ -14,14 +14,14 @@ export interface SourcePatch { file: string; edits: SourceEdit[] }
 
 /** app-relative paths */
 export const MARS_SUBSTITUTES: Record<string, string> = {
-  "src/main.ts": "src/mars/main.ts",
-  "src/config.ts": "src/mars/config.ts",
-  "src/ui/cellPanel.ts": "src/mars/ui/cellPanel.ts",
-  "src/ui/helpText.ts": "src/mars/ui/helpText.ts",
-  "src/cell/citation.ts": "src/mars/cell/citation.ts",
-  "src/cell/datasetinfo.ts": "src/mars/cell/datasetinfo.ts",
-  "src/cell/auxinfo.ts": "src/mars/cell/auxinfo.ts",
-  "src/cell/fieldinfo.ts": "src/mars/cell/fieldinfo.ts",
+  "src/main.ts": "src/bodies/mars/main.ts",
+  "src/config.ts": "src/bodies/mars/config.ts",
+  "src/ui/cellPanel.ts": "src/bodies/mars/ui/cellPanel.ts",
+  "src/ui/helpText.ts": "src/bodies/mars/ui/helpText.ts",
+  "src/cell/citation.ts": "src/bodies/mars/cell/citation.ts",
+  "src/cell/datasetinfo.ts": "src/bodies/mars/cell/datasetinfo.ts",
+  "src/cell/auxinfo.ts": "src/bodies/mars/cell/auxinfo.ts",
+  "src/cell/fieldinfo.ts": "src/bodies/mars/cell/fieldinfo.ts",
 };
 
 export const MARS_PATCHES: SourcePatch[] = patches as SourcePatch[];

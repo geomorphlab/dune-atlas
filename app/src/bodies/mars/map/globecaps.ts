@@ -3,7 +3,7 @@
 // Mercator style (and the PNG export of it) carries no custom layers. installPolarCaps keeps the caps ordered
 // and mirrored on styledata / style.load / idle (basemap switches rebuild the basemap cap).
 import type { Map as MlMap } from "maplibre-gl";
-import type { BasemapDef, LayerDef } from "../../registry/types";
+import type { BasemapDef, LayerDef } from "../../../registry/types";
 import { installPolarCaps, type FillCapSpec, type PolarCapOptions } from "./polarcap";
 
 const join = (base: string, key: string) => `${base.replace(/\/+$/, "")}/${key.replace(/^\/+/, "")}`;

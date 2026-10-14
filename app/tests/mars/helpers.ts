@@ -2,11 +2,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import fixture from "../fixtures/mars-rose-parity.json";
-import type { MarsCellData, MarsSeries } from "../../src/mars/cell/cellstore";
-import { MARS_BINS } from "../../src/mars/cell/cellstore";
+import type { MarsCellData, MarsSeries } from "../../src/bodies/mars/cell/cellstore";
+import { MARS_BINS } from "../../src/bodies/mars/cell/cellstore";
 import { cellFromIndex } from "../../src/cell/snap";
 import { M } from "../../src/cell/marsphysics";
-import { MARS_GRID } from "../../src/mars/body";
+import { MARS_GRID } from "../../src/bodies/mars/body";
 import { C } from "../../src/util/constants";
 
 export const FIELD_VARS = C.QSAT_VARS.filter((v) => !C.WITHHELD_VARS.includes(v));

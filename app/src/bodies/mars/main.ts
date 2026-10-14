@@ -2,40 +2,40 @@
 // line - map, registry-driven overlays, the global control (median grain diameter d on Mars),
 // click-to-cell panel - with the Mars cell store (hourly series), the body-aware scale bar, the
 // Mars basemaps (pmtiles hillshade, OpenPlanetaryMap, Esri OnMars imagery) and Mars texts.
-import { storageKey } from "../body";
+import { storageKey } from "../../body";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "katex/dist/katex.min.css";
-import "../style.css";
+import "../../style.css";
 import maplibregl from "maplibre-gl";
-import { loadRegistry } from "../registry/load"; // Mars registry via the checked patches of registry/load.ts
-import { applyDatasetLayers, layersForDatasetSwitch, resolveSource, selectDataset } from "../registry/merge";
+import { loadRegistry } from "../../registry/load"; // Mars registry via the checked patches of registry/load.ts
+import { applyDatasetLayers, layersForDatasetSwitch, resolveSource, selectDataset } from "../../registry/merge";
 import { CONFIG } from "./config";
-import { parseUrlState, serializeUrlState, type UrlState } from "../urlstate";
-import { Store, type AppState } from "../store";
-import { defaultBasemap, setBasemap } from "../map/basemaps";
-import { OverlayManager, ensureSelectedCellLayers, restoreOverlays } from "../map/overlays";
-import { setLayerPanelOpen, renderLayerPanel } from "../ui/layerPanel";
-import { versionFromPrefix } from "../cell/export";
+import { parseUrlState, serializeUrlState, type UrlState } from "../../urlstate";
+import { Store, type AppState } from "../../store";
+import { defaultBasemap, setBasemap } from "../../map/basemaps";
+import { OverlayManager, ensureSelectedCellLayers, restoreOverlays } from "../../map/overlays";
+import { setLayerPanelOpen, renderLayerPanel } from "../../ui/layerPanel";
+import { versionFromPrefix } from "../../cell/export";
 import { CellPanel, readPlotChoice, defaultFieldLabel, type FieldLabel } from "./ui/cellPanel";
 import { MarsCellStore } from "./cell/cellstore";
-import { cellFeature, cellFromIndex, snapToCell, type Grid } from "../cell/snap";
-import { centreOnCell } from "../map/centre";
-import { terseQuantity } from "../ui/terse";
-import { mathOnly } from "../util/math";
-import { shareFromHash, shareUrl, type ShareState } from "../share/shortlink";
-import { appShareState, DEFAULT_VIEW, initialAppState, LAST_VIEW, resolveInitialState, resumeQuery } from "../defaultview";
-import { mapExportPixelRatio } from "../export/png";
-import { loadMathRenderer } from "../export/texsvg";
-import { exportMapPng, type MapExportRequest } from "../export/mapExport";
-import { Tour, shouldShowTour, tourSeen } from "../ui/tour";
-import { autostartTour, wireTourBubble } from "../ui/tourBubble";
-import { LoadingIndicator, WHEEL_ZOOM_RATE } from "../ui/loading";
+import { cellFeature, cellFromIndex, snapToCell, type Grid } from "../../cell/snap";
+import { centreOnCell } from "../../map/centre";
+import { terseQuantity } from "../../ui/terse";
+import { mathOnly } from "../../util/math";
+import { shareFromHash, shareUrl, type ShareState } from "../../share/shortlink";
+import { appShareState, DEFAULT_VIEW, initialAppState, LAST_VIEW, resolveInitialState, resumeQuery } from "../../defaultview";
+import { mapExportPixelRatio } from "../../export/png";
+import { loadMathRenderer } from "../../export/texsvg";
+import { exportMapPng, type MapExportRequest } from "../../export/mapExport";
+import { Tour, shouldShowTour, tourSeen } from "../../ui/tour";
+import { autostartTour, wireTourBubble } from "../../ui/tourBubble";
+import { LoadingIndicator, WHEEL_ZOOM_RATE } from "../../ui/loading";
 import { TOUR_STEPS } from "./ui/helpText";
-import { Tools } from "../ui/tools";
-import { CoordsControl } from "../ui/coords";
-import { escapeClosesCell } from "../ui/keys";
-import { tourHooks } from "../ui/tourHooks";
-import { ensurePmtiles } from "../map/adapters";
+import { Tools } from "../../ui/tools";
+import { CoordsControl } from "../../ui/coords";
+import { escapeClosesCell } from "../../ui/keys";
+import { tourHooks } from "../../ui/tourHooks";
+import { ensurePmtiles } from "../../map/adapters";
 import { BodyScaleControl } from "./map/scale";
 import { clampPmtilesBasemaps, prepareMarsBasemaps } from "./map/basemaps";
 import { ESRI_STATS } from "./map/esri";

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Drift record of the Mars build (app/src/mars/upstream.json): for every Earth module the Mars build
+// Drift record of the Mars build (app/src/bodies/mars/upstream.json): for every Earth module the Mars build
 // substitutes, patches or was adapted from, the git blob id of the Earth source it was last
 // reconciled with. tests/mars/upstream.test.ts (npm run test:mars) fails, naming
 // each module, as soon as the Earth source differs from the record. See docs/guide/mars.md,
@@ -12,7 +12,7 @@
 //       after porting: re-record the module(s) at the current HEAD (blob id of the committed source;
 //       refuses a module with uncommitted changes unless --allow-dirty). Also adds missing entries.
 //   node scripts/mars/app/reconcile.mjs --sync
-//       add entries for modules newly substituted (src/mars/build.ts) or patched (src/mars/patches.json)
+//       add entries for modules newly substituted (src/bodies/mars/build.ts) or patched (src/bodies/mars/patches.json)
 //       and drop entries no longer used; existing entries are kept as they are.
 //
 // Paths are app-relative (src/ui/cellPanel.ts = app/src/ui/cellPanel.ts). Run from anywhere in the repo.
@@ -25,28 +25,28 @@ const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = execFileSync("git", ["rev-parse", "--show-toplevel"], { cwd: here, encoding: "utf8" }).trim();
 const git = (...a) => execFileSync("git", a, { cwd: ROOT, encoding: "utf8" }).trim();   // pathspecs are repo-relative
 const APP = join(ROOT, "app");
-const RECORD = join(APP, "src/mars/upstream.json");
+const RECORD = join(APP, "src/bodies/mars/upstream.json");
 
 // Earth modules that a Mars module (not a substitute) was adapted from: Mars-only code written as the
 // counterpart of an Earth module, whose fixes usually need porting by hand.
 export const DERIVED = {
-  "src/cell/export.ts": "src/mars/cell/export.ts",
-  "src/cell/analysis.ts": "src/mars/cell/analysis.ts",
-  "src/cell/flux.ts": "src/mars/cell/marsflux.ts",
-  "src/cell/cellstore.ts": "src/mars/cell/cellstore.ts",
+  "src/cell/export.ts": "src/bodies/mars/cell/export.ts",
+  "src/cell/analysis.ts": "src/bodies/mars/cell/analysis.ts",
+  "src/cell/flux.ts": "src/bodies/mars/cell/marsflux.ts",
+  "src/cell/cellstore.ts": "src/bodies/mars/cell/cellstore.ts",
 };
 
 /** the modules the Mars build depends on as copies or patches: {path: {kind, mars}} */
 export function marsModules() {
-  const build = readFileSync(join(APP, "src/mars/build.ts"), "utf8");
+  const build = readFileSync(join(APP, "src/bodies/mars/build.ts"), "utf8");
   const block = /MARS_SUBSTITUTES[^{]*\{([\s\S]*?)\};/.exec(build);
-  if (!block) throw new Error("MARS_SUBSTITUTES not found in src/mars/build.ts");
+  if (!block) throw new Error("MARS_SUBSTITUTES not found in src/bodies/mars/build.ts");
   const out = {};
   for (const m of block[1].matchAll(/"([^"]+)":\s*"([^"]+)"/g)) out[m[1]] = { kind: "substituted", mars: m[2] };
-  const patches = JSON.parse(readFileSync(join(APP, "src/mars/patches.json"), "utf8"));
+  const patches = JSON.parse(readFileSync(join(APP, "src/bodies/mars/patches.json"), "utf8"));
   for (const p of patches) {
     if (out[p.file]) throw new Error(`${p.file} is both substituted and patched`);
-    out[p.file] = { kind: "patched", mars: `src/mars/patches.json (${p.edits.length} edit${p.edits.length === 1 ? "" : "s"})` };
+    out[p.file] = { kind: "patched", mars: `src/bodies/mars/patches.json (${p.edits.length} edit${p.edits.length === 1 ? "" : "s"})` };
   }
   for (const [k, v] of Object.entries(DERIVED)) if (!out[k]) out[k] = { kind: "derived", mars: v };
   return out;
@@ -95,7 +95,7 @@ if (flag("--check")) {
   const paths = flag("--record-all") ? Object.keys(mods) : args.filter((a) => !a.startsWith("--"));
   if (!paths.length) throw new Error("no module given");
   for (const p of paths) {
-    if (!mods[p]) throw new Error(`${p} is not substituted, patched or derived (src/mars/build.ts, patches.json, DERIVED)`);
+    if (!mods[p]) throw new Error(`${p} is not substituted, patched or derived (src/bodies/mars/build.ts, patches.json, DERIVED)`);
     record(rec, p, mods, flag("--allow-dirty"));
   }
   save(rec);
