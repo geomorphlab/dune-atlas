@@ -42,7 +42,7 @@ All quantities per hour; d is the slider value (§5).
 * Transport (eq. 3.2), for Θ > Θ_t (else 0): Q⁺ / d⁺^{3/2} = 1.7 s^{1/3}(Θ − Θ_t) + 12 s^{1/3}(Θ − Θ_t)², with Q⁺ = Q/(ρ_p ν).
   * Dimensional form: Q = 1.7 s^{1/3} ρ_f (d/g̃)^{1/2} (u*² − u*,th²) + 12 s^{−2/3} ρ_f (g̃³ d)^{−1/2} (u*² − u*,th²)², in kg m⁻¹ s⁻¹.
   * **Typo correction 1:** the paper's eq. 5.2 prints both terms with ρ_p (1.7 s^{1/3} ρ_p …, 12 s^{−2/3} ρ_p …). Eq. 3.2 gives exactly these coefficients with ρ_f in place of ρ_p. The Earth check (u* = 0.4, u*,th = 0.2 m/s, d = 200 µm, ν = 1.5×10⁻⁵) gives 0.017 kg m⁻¹ s⁻¹ with ρ_f, against ~38 with ρ_p. Code from eq. 3.2 in "+" units; `transport_rate_dimensional` pins the equivalence in tests.
-* Atlas flux q = Q/ρ_p (m² s⁻¹; volume of grains), displayed in m² yr⁻¹ with 1 yr = 365.25 × 86,400 s (Earth year, as the Earth atlas).
+* Atlas flux q = Q/(ρ_p φ) with packing fraction φ = 0.6 (m² s⁻¹; volume of packed sand, as the Earth atlas FLUXCONSTANT = 5/0.6), displayed in m² yr⁻¹ with 1 yr = 365.25 × 86,400 s (Earth year, as the Earth atlas). Constant `PACKING` in mars/constants.py.
 * Validity: Ga√s > 81 with Ga = √(s g̃ d³)/ν. It holds for every hour on the axis; the worst case found is 137 at 50 µm, ρ_f = 0.0035, T = 300 K. Test it per hour and report the fraction of hours violating it (expected 0).
 * Crest flux (as Earth, notebook cell 14): u_c = u* (1 + β A |sin(ua − α)|), q_c = q(u_c; same hour's u*,th).
 * Flat-bed flux is q(u*).
@@ -53,6 +53,7 @@ All quantities per hour; d is the slider value (§5).
 | symbol | value | notes |
 |---|---|---|
 | ρ_p | 3000 kg m⁻³ | basaltic sand |
+| φ | 0.6 | sand-bed packing fraction; fluxes are volumes of packed sand q = Q/(ρ_p φ), as Earth (per PI 2026-10-14) |
 | g | 3.71 m s⁻² | |
 | R | 191.8 J kg⁻¹ K⁻¹ | Mars air, mean molar mass 43.34 g/mol |
 | μ₀, T₀, S | 1.370×10⁻⁵ Pa s, 273 K, 222 K | Sutherland law for CO₂ |

@@ -1,5 +1,5 @@
 diff --git a/node_modules/@carbonplan/zarr-layer/dist/index.js b/node_modules/@carbonplan/zarr-layer/dist/index.js
-index d4f9c22..b572f35 100644
+index d4f9c22..0f828ab 100644
 --- a/node_modules/@carbonplan/zarr-layer/dist/index.js
 +++ b/node_modules/@carbonplan/zarr-layer/dist/index.js
 @@ -1050,6 +1050,12 @@ var _ZarrStore = class _ZarrStore {
@@ -15,7 +15,70 @@ index d4f9c22..b572f35 100644
        if (consolidatedMeta) {
          const arrayKey = `${entry.asset}/${this.variable}`;
          const arrayMeta = consolidatedMeta[arrayKey];
-@@ -2030,6 +2036,12 @@ function lonToMercatorNorm(lon) {
+@@ -1559,26 +1565,28 @@ function interleaveBands(bands, channels) {
+   }
+   return result;
+ }
+-function createSubdividedQuad(subdivisions) {
++function createSubdividedQuad(subdivisions, subdivisionsY = subdivisions) {
++  // dune-atlas patch: separate column / row counts (globe mesh on the data's cell grid, globeMeshCounts)
++  const nx = subdivisions, ny = subdivisionsY;
+   const vertices = [];
+   const texCoords = [];
+-  const step = 2 / subdivisions;
+-  const texStep = 1 / subdivisions;
++  const step = 2 / nx, stepY = 2 / ny;
++  const texStep = 1 / nx, texStepY = 1 / ny;
+   const pushVertex = (col, row) => {
+     const x = -1 + col * step;
+-    const y = 1 - row * step;
++    const y = 1 - row * stepY;
+     const u = col * texStep;
+-    const v = row * texStep;
++    const v = row * texStepY;
+     vertices.push(x, y);
+     texCoords.push(u, v);
+   };
+-  for (let row = 0; row < subdivisions; row++) {
+-    for (let col = 0; col <= subdivisions; col++) {
++  for (let row = 0; row < ny; row++) {
++    for (let col = 0; col <= nx; col++) {
+       pushVertex(col, row);
+       pushVertex(col, row + 1);
+     }
+-    if (row < subdivisions - 1) {
+-      pushVertex(subdivisions, row + 1);
++    if (row < ny - 1) {
++      pushVertex(nx, row + 1);
+       pushVertex(0, row + 1);
+     }
+   }
+@@ -1588,6 +1596,24 @@ function createSubdividedQuad(subdivisions) {
+   };
+ }
+ 
++// dune-atlas patch: globe mesh on the data's cell grid. A region was one quad split into ceil(span in degrees)
++// steps (about 1 degree); on the globe each step is a flat chord up to R*theta^2/8 = 240 m below the sphere, and the
++// texture varies linearly along it, so cell edges inside a step were drawn up to ~1 % of a 0.1-degree cell away from
++// the same edges of vector layers (dune outlines), which MapLibre subdivides finely (vertical-perspective, zoom < 12).
++// Vertex lines now run along cell edges (every cell for cells <= GLOBE_MAX_STEP_DEG, else cells split into steps of
++// at most that size), so a cell's edges lie exactly on the sphere; the remaining sag between lines is <= 15 m.
++var GLOBE_MAX_STEP_DEG = 0.25;
++var GLOBE_MAX_SUBDIVISIONS = 512;
++function globeMeshCount(cells, cellDeg) {
++  if (!(cells > 0) || !(cellDeg > 0)) return MIN_SUBDIVISIONS;
++  let k = Math.max(1, Math.ceil(cellDeg / GLOBE_MAX_STEP_DEG - 1e-9));
++  while (k > 1 && cells * k > GLOBE_MAX_SUBDIVISIONS) k--;
++  if (cells * k <= GLOBE_MAX_SUBDIVISIONS) return Math.max(MIN_SUBDIVISIONS, cells * k);
++  // more cells than the cap: a vertex line every d cells, d the smallest divisor of `cells` that fits
++  for (let d = 2; d <= cells; d++) if (cells % d === 0 && cells / d <= GLOBE_MAX_SUBDIVISIONS) return Math.max(MIN_SUBDIVISIONS, cells / d);
++  return GLOBE_MAX_SUBDIVISIONS;
++}
++
+ // src/colormap.ts
+ function hexToRgb(hex) {
+   const cleaned = hex.replace("#", "");
+@@ -2030,6 +2056,12 @@ function lonToMercatorNorm(lon) {
    const clamped = Math.max(-180, Math.min(180, lon));
    return (clamped + 180) / 360;
  }
@@ -28,7 +91,7 @@ index d4f9c22..b572f35 100644
  function latToMercatorNorm(lat) {
    const clamped = Math.max(
      -MERCATOR_LAT_LIMIT,
-@@ -2130,9 +2142,9 @@ function boundsToMercatorNorm(xyLimits, crs) {
+@@ -2130,9 +2162,9 @@ function boundsToMercatorNorm(xyLimits, crs) {
      [yMin, yMax] = [yMax, yMin];
    }
    const bounds = {
@@ -40,7 +103,7 @@ index d4f9c22..b572f35 100644
      y1: latToMercatorNorm(yMin)
    };
    if (crs === "EPSG:4326") {
-@@ -2204,8 +2216,10 @@ function computeWorldOffsets(map, isGlobe) {
+@@ -2204,8 +2236,10 @@ function computeWorldOffsets(map, isGlobe) {
    if (west > east) {
      effectiveEast = east + 360;
    }
@@ -53,7 +116,7 @@ index d4f9c22..b572f35 100644
    const worldOffsets = [];
    for (let i = minWorld; i <= maxWorld; i++) {
      worldOffsets.push(i);
-@@ -5865,11 +5879,21 @@ var UntiledMode = class {
+@@ -5865,11 +5899,21 @@ var UntiledMode = class {
    /**
     * Calculate which regions are visible in the current viewport.
     */
@@ -76,7 +139,7 @@ index d4f9c22..b572f35 100644
      const [regionH, regionW] = this.regionSize;
      if (this.proj4def && this.cachedWGS84Transformer) {
        const transformer = this.cachedWGS84Transformer;
-@@ -5921,27 +5945,38 @@ var UntiledMode = class {
+@@ -5921,27 +5965,38 @@ var UntiledMode = class {
        }
        return regions2;
      }
@@ -122,7 +185,7 @@ index d4f9c22..b572f35 100644
          regions.push({ regionX: rx, regionY: ry });
        }
      }
-@@ -6204,7 +6239,7 @@ var UntiledMode = class {
+@@ -6204,7 +6259,7 @@ var UntiledMode = class {
        return { xMin: 0, xMax: 1, yMin: 0, yMax: 1 };
      }
      const [regionH, regionW] = regionSize;
@@ -131,10 +194,11 @@ index d4f9c22..b572f35 100644
      const pxXStart = regionX * regionW;
      const pxXEnd = Math.min(pxXStart + regionW, width);
      const pxYStart = regionY * regionH;
-@@ -6287,6 +6322,22 @@ var UntiledMode = class {
+@@ -6287,20 +6342,48 @@ var UntiledMode = class {
        } else {
          latSpanDegrees = Math.abs(geoBounds.yMax - geoBounds.yMin);
        }
+-      const subdivisions = this.isGlobeProjection ? Math.max(
 +      if (this.crs === "EPSG:4326") {
 +        // dune-atlas patch: watertight seams - one subdivision count for every region of a level
 +        // (from the nominal region size), so neighbouring regions share their edge vertices. With
@@ -151,10 +215,28 @@ index d4f9c22..b572f35 100644
 +          );
 +        }
 +      }
-       const subdivisions = this.isGlobeProjection ? Math.max(
++      let subdivisions = this.isGlobeProjection ? Math.max(
          MIN_SUBDIVISIONS,
          Math.min(MAX_SUBDIVISIONS, Math.ceil(latSpanDegrees))
-@@ -6299,8 +6350,8 @@ var UntiledMode = class {
+       ) : MERCATOR_SUBDIVISIONS;
++      let subdivisionsY = subdivisions;
++      if (this.crs === "EPSG:4326" && this.isGlobeProjection) {
++        // dune-atlas patch: globe mesh on the cell grid (globeMeshCount), from the NOMINAL region size so
++        // neighbouring regions keep sharing their edge vertices (watertight seams, above)
++        const lm2 = region.levelMeta, rsz2 = lm2?.regionSize ?? this.regionSize;
++        const lw2 = lm2?.width ?? this.width, lh2 = lm2?.height ?? this.height;
++        const lim2 = rsz2 && lw2 && lh2 ? this.levelXYLimits(lw2, lh2) : null;
++        if (lim2) {
++          subdivisions = globeMeshCount(rsz2[1], Math.abs(lim2.xMax - lim2.xMin) / lw2);
++          subdivisionsY = globeMeshCount(rsz2[0], Math.abs(lim2.yMax - lim2.yMin) / lh2);
++        }
++      }
+       if (this.crs === "EPSG:4326") {
+-        const subdivided = createSubdividedQuad(subdivisions);
++        const subdivided = createSubdividedQuad(subdivisions, subdivisionsY);
+         region.vertexArr = subdivided.vertexArr;
+         region.pixCoordArr = subdivided.texCoordArr;
+         region.vertexCount = subdivided.vertexArr.length / 2;
          const latMin = geoBounds.yMin;
          const latMax = geoBounds.yMax;
          region.mercatorBounds = {
@@ -165,7 +247,7 @@ index d4f9c22..b572f35 100644
            y0: latToMercatorNorm(latMax),
            y1: latToMercatorNorm(latMin),
            // Include lat bounds for fragment shader reprojection
-@@ -6979,12 +7030,15 @@ var UntiledMode = class {
+@@ -6979,12 +7062,15 @@ var UntiledMode = class {
      };
      if (useDirectEcef && this.crs === "EPSG:4326" && region.mercatorBounds?.latMin != null && region.mercatorBounds?.latMax != null) {
        const mb = region.mercatorBounds;

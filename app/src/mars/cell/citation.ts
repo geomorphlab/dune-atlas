@@ -44,7 +44,7 @@ export const CITATION_SOURCES: Record<string, CitationSource> = {
     entries: [
       { label: "Method (wind-regime and dune-orientation fields)", text: "Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications.", doi: PAPER_DOI },
     ],
-    notice: "Mars wind series, sand-flux fields and flux divergence computed for the Mars Dune Atlas from the FV3 lowest-level winds with the transport law of Pähtz & Durán (2023) and the method of Gunn (2026).",
+    notice: "Mars wind series, sand-flux fields and flux divergence computed for the Mars Dune Atlas from the FV3 lowest-level winds with the transport law of Pähtz & Durán (2023) and the methods outlined in Gunn (2026).",
   },
   fv3: {
     id: "fv3", title: "MCMC FV3 Mars GCM, beta release 1",

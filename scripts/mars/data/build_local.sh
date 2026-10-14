@@ -10,7 +10,7 @@ REPO=$(cd "$(dirname "$0")/../../.." && pwd)
 EXP=$REPO/staging/mars/export
 ELEV_NPZ=${ELEV_NPZ:?set ELEV_NPZ to the Terrain elev_mean.npz}
 DEV=$REPO/staging/mars/devroot
-DS=$DEV/dune-atlas/mars/v1/datasets/fv3-beta1
+DS=$DEV/dune-atlas/mars/v2/datasets/fv3-beta1
 mkdir -p "$DS"
 cd "$REPO/pipeline"
 PYTHONPATH=src nice python -m dune_atlas_pipeline.mars.sidecars all --export "$EXP/fields_export.npz" --devroot "$DEV" \

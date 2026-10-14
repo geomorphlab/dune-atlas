@@ -58,7 +58,7 @@ export const CITATION_SOURCES: Record<string, CitationSource> = {
       { label: "Paper", text: "Gunn, A. (2026). The distribution of Earth's wind-blown sand dunes. Nature Communications.", doi: PAPER_DOI },
       { label: DUNE_MAP_LABEL, text: "Gunn, A. (2026). geomorphlab/dune-world: The distribution of Earth's wind-blown sand dunes - Supplementary Code (v1.0.0). Zenodo.", doi: DUNE_MAP_DOI, license: "MIT", key: "data_dune_map" },
     ],
-    notice: "ERA5 wind histograms and sand-flux fields computed for the Dune Atlas from ERA5 hourly 10 m winds with the method of Gunn (2026).",
+    notice: "ERA5 wind histograms and sand-flux fields computed for the Dune Atlas from ERA5 hourly 10 m winds with the methods outlined in Gunn (2026).",
   },
   "era5-land": {
     id: "era5-land", title: "ERA5-Land",

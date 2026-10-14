@@ -1,11 +1,11 @@
 // @vitest-environment happy-dom
-// Review round 2026-10: landscape map export with the selected cell (U6), download confirmations (L14).
+// Review round 2026-10: map export layout (strip below, as before; PI), download confirmations (L14).
 import { describe, expect, it, vi } from "vitest";
 import { loadRegistry } from "../src/registry/load";
 import { initialAppState, DEFAULT_VIEW } from "../src/defaultview";
 import { shareToUrlState } from "../src/share/shortlink";
-import { mapStripItems, selectedCellText, SIDE, sideLayout, sideWidth, EXPORT_STAGES } from "../src/export/mapExport";
-import { stripSvg, STRIP_FS, slidePt } from "../src/export/strip";
+import { mapStripItems, EXPORT_STAGES } from "../src/export/mapExport";
+import { stripSvg } from "../src/export/strip";
 import { mapExportWidth } from "../src/export/png";
 import { announceDownload, DOWNLOAD_EVENT, triggerDownload } from "../src/cell/downloads";
 import { Tools } from "../src/ui/tools";
@@ -14,32 +14,21 @@ import { EXPORT_TEXT } from "../src/ui/helpText";
 const reg = loadRegistry().registry;
 vi.stubGlobal("localStorage", { getItem: () => null, setItem: () => {}, removeItem: () => {} });
 
-describe("landscape map export (review U6)", () => {
+describe("map export layout (PI, Oct 2026: back to the strip below the map)", () => {
   const st = initialAppState(reg, shareToUrlState(DEFAULT_VIEW), DEFAULT_VIEW.dataset);
-  const ctx = (cssW: number) => ({ reg, state: st, view: { lon: 15, lat: -24, zoom: 4, bearing: 0, pitch: 0, proj: "globe" as const }, width: cssW, includeBasemap: true, shareLink: "https://map.geomorphlab.org/#v=abcdefgh", date: new Date(Date.UTC(2026, 9, 14)), selectedCell: { lat: -23.25, lon: 15 } });
-  it("map left, strip column right: wider than tall at common window sizes; text about 11 pt on a 16:9 slide", () => {
-    for (const [w, hh] of [[1370, 900], [1920, 1080], [1280, 720], [1024, 768]]) {
-      const W = mapExportWidth(w), H = Math.round((W * hh) / w);
-      const strip = stripSvg(mapStripItems(ctx(w)), { units: SIDE.units });
-      const lay = sideLayout({ width: W, height: H }, strip.height);
-      expect(lay.width / lay.height, `${w}x${hh}`).toBeGreaterThan(1.3);
-      expect(lay.strip.x).toBe(W);
-      expect(lay.strip.width).toBe(sideWidth(W));
+  const ctx = (cssW: number) => ({ reg, state: st, view: { lon: 15, lat: -24, zoom: 4, bearing: 0, pitch: 0, proj: "globe" as const }, width: cssW, includeBasemap: true, shareLink: "https://map.geomorphlab.org/#v=abcdefgh", date: new Date(Date.UTC(2026, 9, 14)) });
+  it("strip below the map across its full width; no selected-cell line; no text beyond the right edge", () => {
+    for (const w of [1370, 1920, 1024]) {
+      const W = mapExportWidth(w);
+      const strip = stripSvg(mapStripItems(ctx(w)), { pxWidth: W });
+      expect(strip.svg).toMatch(new RegExp(`width="${W}"`));
+      const vb = Number(/viewBox="0 0 ([\d.]+) /.exec(strip.svg)![1]);
+      for (const m of strip.svg.matchAll(/<text[^>]*\bx="([\d.]+)"/g)) expect(Number(m[1]), `x at ${w}`).toBeLessThan(vb);
     }
-    const textFrac = (STRIP_FS.text / SIDE.units) * SIDE.frac;   // body text / image width
-    expect(slidePt(textFrac)).toBeGreaterThan(10);
-    expect(slidePt(textFrac)).toBeLessThan(12.5);
-    expect(EXPORT_TEXT.note).toMatch(/Landscape PNG/);
-    expect(EXPORT_TEXT.note).toMatch(/about 11 pt/);
-  });
-  it("the strip names the outlined selected cell; the scale bar follows the column scale", () => {
     const items = mapStripItems(ctx(1370));
-    expect(items.some((i) => i.kind === "text" && i.text === selectedCellText({ lat: -23.25, lon: 15 }))).toBe(true);
-    expect(selectedCellText({ lat: -23.25, lon: 15 })).toBe("Outlined in red: the selected cell, centre 23.25° S, 15.00° E.");
-    const k = (mapStripItems({ ...ctx(1370), stripScale: 0.5 }).find((i) => i.kind === "mapkeys") as { scale: { px: number } | null }).scale;
-    const k1 = (mapStripItems({ ...ctx(1370), stripScale: 1 }).find((i) => i.kind === "mapkeys") as { scale: { px: number } | null }).scale;
-    if (k && k1) expect(k.px * 2).toBeCloseTo(k1.px, 6);
-    expect(mapStripItems({ ...ctx(1370), selectedCell: null }).some((i) => i.kind === "text" && /selected cell/.test(i.text))).toBe(false);
+    expect(items.some((i) => i.kind === "text" && /selected cell|Outlined in red/i.test(i.text))).toBe(false);
+    expect(EXPORT_TEXT.note).not.toMatch(/slide|Landscape|selected cell/i);
+    expect(EXPORT_TEXT.note).toMatch(/below the map/);
     expect(Object.values(EXPORT_STAGES).length).toBe(3);
   });
 });

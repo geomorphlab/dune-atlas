@@ -43,72 +43,72 @@
   "long_name": "Drift potential $DP$",
   "units": "m$^2$/s",
   "description": "Time-averaged flat-bed saturated flux magnitude, $DP = \\sum n q / \\sum n$ over all hours of the Mars year (n = 1 per hour), in m$^2$/s.",
-  "p2": 6.726173342741504e-09,
-  "p98": 4.295684584576522e-07,
+  "p2": 1.12102886085097e-08,
+  "p98": 7.159474307627536e-07,
   "frac_finite": 1.0
  },
  "rdpm": {
   "long_name": "Resultant drift potential $RDP$",
   "units": "m$^2$/s",
   "description": "Magnitude of the time-averaged flat-bed flux vector, $RDP = |\\sum n q e^{i\\theta}| / \\sum n$, in m$^2$/s.",
-  "p2": 2.987676097632175e-09,
-  "p98": 3.048648608228178e-07,
+  "p2": 4.979460159759697e-09,
+  "p98": 5.081081008029289e-07,
   "frac_finite": 1.0
  },
  "qnlb": {
   "long_name": "Net along-crest migration-mode flux $\\langle Q_{\\parallel}(\\alpha_H)\\rangle$",
   "units": "m$^2$/s",
   "description": "Net along-crest migration-mode flux $\\langle Q_{\\parallel}(\\alpha_H)\\rangle$ in m$^2$/s.",
-  "p2": -2.5089476366702003e-07,
-  "p98": 2.8649081855292037e-07,
+  "p2": -4.181579299711302e-07,
+  "p98": 4.774846695454472e-07,
   "frac_finite": 1.0
  },
  "qncb": {
   "long_name": "Net across-crest migration-mode flux $\\langle Q_{\\bot}(\\alpha_H)\\rangle$",
   "units": "m$^2$/s",
   "description": "Net across-crest migration-mode flux $\\langle Q_{\\bot}(\\alpha_H)\\rangle$ in m$^2$/s.",
-  "p2": -1.23869236176688e-06,
-  "p98": 9.008617803374364e-07,
+  "p2": -2.064487271127291e-06,
+  "p98": 1.5014362634246937e-06,
   "frac_finite": 1.0
  },
  "qalb": {
   "long_name": "Absolute along-crest migration-mode flux $\\langle |Q_{\\parallel}(\\alpha_H)|\\rangle$",
   "units": "m$^2$/s",
   "description": "Absolute along-crest migration-mode flux $\\langle |Q_{\\parallel}(\\alpha_H)|\\rangle$ in m$^2$/s.",
-  "p2": 3.256218150227141e-08,
-  "p98": 5.383793211422022e-07,
+  "p2": 5.427030252747045e-08,
+  "p98": 8.972988496225307e-07,
   "frac_finite": 1.0
  },
  "qacb": {
   "long_name": "Absolute across-crest migration-mode flux $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$",
   "units": "m$^2$/s",
   "description": "Absolute across-crest migration-mode flux $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$ in m$^2$/s.",
-  "p2": 8.001033165783156e-08,
-  "p98": 1.697773770956701e-06,
+  "p2": 1.333505596790019e-07,
+  "p98": 2.829622876561189e-06,
   "frac_finite": 1.0
  },
  "qnle": {
   "long_name": "Net along-crest elongation-mode flux $\\langle Q_{\\parallel}(\\alpha_E)\\rangle$",
   "units": "m$^2$/s",
   "description": "Net along-crest elongation-mode flux $\\langle Q_{\\parallel}(\\alpha_E)\\rangle$ in m$^2$/s.",
-  "p2": 1.2947416596631456e-08,
-  "p98": 6.04663597414401e-07,
+  "p2": 2.1579028235407804e-08,
+  "p98": 1.0077726255985908e-06,
   "frac_finite": 1.0
  },
  "qale": {
   "long_name": "Absolute along-crest elongation-mode flux $\\langle |Q_{\\parallel}(\\alpha_E)|\\rangle$",
   "units": "m$^2$/s",
   "description": "Absolute along-crest elongation-mode flux $\\langle |Q_{\\parallel}(\\alpha_E)|\\rangle$ in m$^2$/s.",
-  "p2": 3.340932323681045e-08,
-  "p98": 7.672205481412676e-07,
+  "p2": 5.568220657892198e-08,
+  "p98": 1.2787009131898232e-06,
   "frac_finite": 1.0
  },
  "qace": {
   "long_name": "Absolute across-crest elongation-mode flux $\\langle |Q_{\\bot}(\\alpha_E)|\\rangle$",
   "units": "m$^2$/s",
   "description": "Absolute across-crest elongation-mode flux $\\langle |Q_{\\bot}(\\alpha_E)|\\rangle$ in m$^2$/s.",
-  "p2": 2.9507883354540355e-08,
-  "p98": 1.0343597091377888e-06,
+  "p2": 4.91798044066627e-08,
+  "p98": 1.7239328849427695e-06,
   "frac_finite": 1.0
  },
  "qha_rdp_dp": {

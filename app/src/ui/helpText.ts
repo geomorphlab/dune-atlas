@@ -7,6 +7,9 @@ export const HELP_TITLE = "Help";
 export const HELP_RESTART = "Restart tour";
 export const HELP_ABOUT_LINK = "About, data sources & citation";
 
+/** the Wind dataset selector's ⓘ and the Help section "Wind datasets" (PI text 3.16, Oct 2026); "" = no ⓘ */
+export const DATASET_INFO_TEXT = "The Wind dataset selector switches between reanalysis wind statistics for 1950–2024. ERA5-Land, used by Gunn (2026), is a land-surface rerun at 0.1° driven by ERA5 atmospheric fields interpolated to its grid (Muñoz-Sabater et al. 2021), so its winds are not an independent estimate. Baas (2026) reports ERA5-Land 10 m wind speeds systematically 20–30 % below those of ERA5. Where the two datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune map, aridity and vegetation layers are the same for both.";
+
 export interface HelpSection { id: string; title: string; body: string }
 export const HELP_SECTIONS: HelpSection[] = [
   {
@@ -23,7 +26,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "datasets", title: "Wind datasets",
-    body: "The Wind dataset selector switches between ERA5-Land (0.1°) and ERA5 (0.25°) wind statistics for 1950–2024. The wind and sand-flux layers and the cell panel follow the selection; the dune map, aridity and vegetation layers are the same for both.",
+    body: DATASET_INFO_TEXT,
   },
   {
     id: "downloads", title: "Downloads and citation",
@@ -31,7 +34,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "images", title: "Exporting images",
-    body: "Export map image (camera button, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources, so the text is easy to crop. Text is sized relative to the image so it stays legible when the image fills a slide. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.",
+    body: "Export map image (camera button, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap, on a white or transparent background. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.",
   },
   {
     id: "share", title: "Sharing the view",
@@ -73,7 +76,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "dataset", targets: ["#dataset-select", "#layer-panel .panel-toggle"], title: "Wind dataset",
-    body: "Switch between ERA5-Land (0.1°) and ERA5 (0.25°) wind statistics for 1950–2024. The map layers and the cell panel follow the selection.",
+    body: "Switch between the wind datasets; each option names the dataset and its grid. The map layers and the cell panel follow the selection.",
   },
   {
     id: "tools", targets: [".atlas-tools .share-btn", ".atlas-tools"], title: "Share and export",
@@ -81,7 +84,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "planet", targets: [".atlas-tools .planet-btn", ".atlas-tools"], title: "Switch planet",
-    body: "Earth and Mars share this atlas: the planet button below the camera swaps between them and opens the Mars atlas at its default view. This is the end of the tour.",
+    body: "Earth and Mars share this atlas: the planet button below the camera swaps between them, and each atlas reopens the view you last had there.",
   },
 ];
 
@@ -94,7 +97,7 @@ export const SHARE_TEXT = { button: "Share / copy link", title: "Share this view
 export const EXPORT_TEXT = {
   button: "Export map image", title: "Export map image", basemap: "Include basemap", run: "Export PNG", working: "Rendering…",
   transparent: "Transparent background (default white)",
-  note: "Landscape PNG of the current view, without the panels: the map on the left, colour bars, legends, north arrow, scale and data sources in a column on the right (about 2,900–3,600 pixels wide). It fits the width of a 16:9 slide, with text at about 11 pt. The selected cell is outlined in red.",
+  note: "PNG of the current view, 1600–2400 pixels wide, without the panels, on a white background unless Transparent background is ticked. Colour bars, legends, scale and data sources are added below the map.",
   done: "Saved:", downloaded: "Download started:",
   plotMenu: "Export", png: "PNG", svg: "SVG", plotTransparent: "Transparent background",
 };

@@ -10,7 +10,7 @@ import { DEM_CITATION, DEM_LICENCE, fieldsLicence } from "./citation";
 export const AUX_META: Record<string, AuxMeta> = {
   qsdiv: {
     longName: "Saturated flux divergence", symbolTex: "\\nabla\\cdot\\vec{q}_s", units: "m yr-1", kind: "series", displayUnits: "m/kyr", displayScale: 1000,
-    description: "Divergence of the time-averaged flat-bed saturated sand-flux vector (magnitude RDP, direction RDD) on the Mars sphere, following Gunn (2026), Methods M6; negative = flux convergence (deposition), positive = flux divergence (erosion); undefined on the ±89° rows.",
+    description: "Divergence of the time-averaged flat-bed saturated sand-flux vector (magnitude RDP, direction RDD) on the Mars sphere, following Gunn (2026), Methods M6; negative = flux convergence (deposition), positive = flux divergence (erosion).",
   },
   rho_mean: {
     longName: "Near-surface air density, mean over the year", symbolTex: "\\overline{\\rho_f}", units: "kg m-3", kind: "scalar",
@@ -45,7 +45,7 @@ export function auxVars(aux: CellAux | undefined): string[] {
   return AUX_ORDER.filter((v) => (AUX_META[v].kind === "series" ? v in aux.series : v in aux.scalars));
 }
 
-export const QSDIV_SOURCE = "Derived by the Mars Dune Atlas from rdpm and rdpa (FV3 beta release 1 winds, Pähtz & Durán 2023 transport law)";
+export const QSDIV_SOURCE = "Derived by the Mars Dune Atlas from rdpm and rdpa (winds of the wind dataset, Pähtz & Durán 2023 transport law)";
 export const QSDIV_METHOD = (deg: number) => `Gunn (2026) Methods M6: central differences on the ${resolutionText(deg)} grid, periodic in longitude, R = ${(R_MARS / 1000).toFixed(1)} km`;
 // Earth-only statements (kept for the shared imports; unused on Mars)
 export const ARIDITY_CHANGES = "";

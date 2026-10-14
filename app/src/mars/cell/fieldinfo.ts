@@ -19,5 +19,5 @@ export function fieldInfo(id: string): FieldInfo {
   const m = M[id] ?? { long_name: id, units: "", description: "" };
   // long name: the atlas name (same quantity, same name on both planets; review L5); Mars descriptions
   const n = FIELD_NAMES[id];
-  return { ...earthFieldInfo(id), longName: n?.titleTex ?? fix(m.long_name), description: n?.description ?? fix(m.description), sourceUnits: m.units };
+  return { ...earthFieldInfo(id), longName: n?.titleTex ?? fix(m.long_name), description: n?.descriptionMars ?? n?.description ?? fix(m.description), sourceUnits: m.units };
 }

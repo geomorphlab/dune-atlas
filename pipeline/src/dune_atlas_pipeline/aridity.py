@@ -253,10 +253,8 @@ def registry_layer() -> dict:
         "visible": False, "opacity": 0.85, "queryable": False,
         "display": {"transform": "none", "colormap": COLORMAP, "clim": CLIM, "log": True,
                     # UNEP aridity class limits as legend ticks; top of the scale is saturated in the source
-                    "ticks": list(UNEP_LIMITS), "topLabel": "≥ 6.5",
-                    "legendNote": ("Ticks: UNEP class limits (hyper-arid < 0.03 < arid < 0.2 < semi-arid < 0.5 < dry "
-                                   "sub-humid < 0.65 < humid). Top colour = AI ≥ 6.5 (source values saturate at 6.5535). "
-                                   "No data over ocean and Antarctica (south of 60° S).")},
+                    # (no legendNote: the classes, saturation and no-data areas are stated once, in the info; PI, Oct 2026)
+                    "ticks": list(UNEP_LIMITS), "topLabel": "≥ 6.5"},
     }
 
 

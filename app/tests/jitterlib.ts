@@ -48,13 +48,13 @@ export const fakeMeasure: Measure = (text, font) => {
   return [...text].reduce((a, c) => a + adv(c), 0) * px * (bold ? 1.06 : 1);
 };
 
-/** Live slots whose reserved room could show as a hole: every slot must end its line block (key-number dd,
+/** Live slots whose reserved room could show as a hole: every slot must end its line block (cell-meta line,
  *  legend item, caption lead, heading) or be a right-aligned table value or a padded readout. */
 export function holes(roots: Element[]): string[] {
   const out: string[] = [];
   for (const root of roots) for (const e of root.querySelectorAll(".live-num")) {
     if (e.tagName === "OUTPUT" || e.closest("td.num")) continue;
-    const block = e.closest("dd, li, .cap-lead, h3, p");
+    const block = e.closest("dd, li, .cap-lead, .meta-line, h3, p");
     const tail = (block?.textContent ?? "").replace(/\s+$/, "");
     if (!block || !e.classList.contains("left") || !tail.endsWith((e.textContent ?? "").replace(/\s+$/, ""))) out.push(`${block?.tagName ?? "?"}: ${(block?.textContent ?? "").slice(0, 80)}`);
   }

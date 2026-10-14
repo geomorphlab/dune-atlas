@@ -60,7 +60,7 @@ DATASET = {
                       "5.1; two typo corrections, docs/mars-spec.md)"),
     "fields_method": ("23 sand-flux fields at 64 median grain diameters from the hourly lowest-level winds, "
                       "time-averaged over the Mars year (one sample per hour), per-hour threshold and flux "
-                      "(Pähtz & Durán 2023) with the crest-mode method of Gunn (2026) Nat Commun "
+                      "(Pähtz & Durán 2023) with the crest-mode methods outlined in Gunn (2026) Nat Commun "
                       "doi:10.1038/s41467-026-75466-y"),
 }
 SHARDS_Y = list(range(0, NY, SHARD))
@@ -74,7 +74,7 @@ def fv3_to_contract(a: np.ndarray, lat_axis: int = -2, lon_axis: int = -1) -> np
 
 def constants_attrs() -> dict:
     return {k: float(getattr(M, k)) for k in ("G", "R_MARS", "R_AIR", "MU0", "T0_MU", "S_MU", "K_ADIABATIC",
-                                               "RHO_P", "KAPPA", "MIX_DAMP", "DSTAR_MIN", "UPLUS_MIN", "C1", "C2",
+                                               "RHO_P", "PACKING", "KAPPA", "MIX_DAMP", "DSTAR_MIN", "UPLUS_MIN", "C1", "C2",
                                                "KN_A", "KN_B", "KN_C", "GA_SQRT_S_MIN", "BETA", "DASPECT", "S2Y")}
 
 
@@ -182,7 +182,8 @@ def root_attrs(keepbits: dict, extra: dict | None = None) -> dict:
         "dunes_definition": ("fraction of the cell area covered by dune polygons (PI shapefile aggregated from the "
                              "USGS Mars Dune Digital Database; spherical geodesic areas on the Mars 2000 sphere)"),
         "constants": constants_attrs(),
-        "flux_units": "fields fluxes in m^2/s (volume flux q = Q/rho_p); display units m^2/yr with 1 yr = 365.25 d",
+        "flux_units": ("fields fluxes in m^2/s (volume flux of packed sand q = Q/(rho_p phi), phi = 0.6); "
+                       "display units m^2/yr with 1 yr = 365.25 d"),
     }
     a.update(extra or {})
     return a
@@ -593,6 +594,55 @@ def validate_splice(new: str, old: str, index: int) -> dict:
     return out
 
 
+# the fields that are sand fluxes (m^2/s, linear in q): every other field is a direction, a ratio of fluxes, a
+# fraction or a speed ratio and does not depend on the flux normalisation
+FLUX_FIELDS = ("dpm", "rdpm", "qnlb", "qncb", "qalb", "qacb", "qnle", "qale", "qace")
+
+
+def rescale_packing(src: str, out: str, log=print) -> dict:
+    """v2 store from a v1 store whose fluxes are q = Q/rho_p: a copy with the FLUX_FIELDS rows of `fields` divided by
+    M.PACKING (float64 then rounded to float32; every field is linear in q, so this equals the recomputation to
+    within 1 float32 ulp) and the root attrs flux_units / constants / dataset.fields_method / flux_history updated.
+    Array metadata (shape, sharding, codecs, fill value) are unchanged; series, dunes, dune, ls, sol are copied
+    bit-identically. Refuses a store that already carries PACKING in its constants."""
+    import shutil
+
+    import zarr
+    if os.path.exists(out):
+        raise FileExistsError(out)
+    g0 = zarr.open_group(src, mode="r")
+    if "PACKING" in g0.attrs["constants"]:
+        raise ValueError(f"{src} already holds packed-sand fluxes (constants.PACKING present)")
+    shutil.copytree(src, out)
+    g = zarr.open_group(out, mode="r+")
+    fv = list(g.attrs["field_vars"])
+    rows = [fv.index(v) for v in FLUX_FIELDS]
+    a, a0 = g["fields"], g0["fields"]
+    t0 = time.time()
+    n = 0
+    for sy in range(0, a.shape[0], a.shards[0]):
+        for sx in range(0, a.shape[1], a.shards[1]):
+            blk = a0[sy:sy + a.shards[0], sx:sx + a.shards[1]]
+            if np.isnan(blk).all():
+                continue                                   # shard absent in the source: stays absent
+            new = blk.copy()
+            new[:, :, rows] = (blk[:, :, rows].astype("f8") / M.PACKING).astype("f4")
+            a[sy:sy + a.shards[0], sx:sx + a.shards[1]] = new
+            n += 1
+    hist = list(g.attrs.get("flux_history", []))
+    hist.append({"date": "2026-10-14", "factor": 1.0 / M.PACKING, "fields": list(FLUX_FIELDS),
+                 "from": "q = Q/rho_p (v1)", "to": "q = Q/(rho_p phi), phi = 0.6 (volume of packed sand, as the "
+                                                  "Earth atlas FLUXCONSTANT = 5/0.6)",
+                 "method": ("fields flux rows divided by phi in float64 and rounded to float32 (mars/cells.py "
+                            "rescale_packing); all other fields, the series and the other arrays unchanged")})
+    ds = dict(g.attrs["dataset"])
+    ds["fields_method"] = DATASET["fields_method"]
+    g.attrs.update({"constants": constants_attrs(), "flux_units": root_attrs({})["flux_units"], "dataset": ds,
+                    "flux_history": hist})
+    log(f"rescaled {n} shards in {time.time() - t0:.1f} s")
+    return {"src": src, "out": out, "shards": n, "rows": rows, "factor": 1.0 / M.PACKING}
+
+
 def export_store(store: str, out_npz: str, rho_mean_from: str) -> dict:
     """fields_export.npz (fields (23, 64, lat, lon), rho_mean, dunes, ...) from a store; rho_mean is taken from a previous
     export (it does not depend on d)."""
@@ -629,7 +679,12 @@ def main(argv=None):
     ex = sub.add_parser("export")
     ex.add_argument("--store", required=True); ex.add_argument("--out", required=True)
     ex.add_argument("--rho-mean-from", required=True)
+    rp = sub.add_parser("rescale-packing", help="v2 copy of a v1 store with fluxes of packed sand (q / PACKING)")
+    rp.add_argument("--src", required=True); rp.add_argument("--out", required=True)
     a = p.parse_args(argv)
+    if a.cmd == "rescale-packing":
+        print(json.dumps(rescale_packing(a.src, a.out, log=lambda s: print(s, flush=True))), flush=True)
+        return
     if a.cmd == "splice":
         splice(a.fv3, a.store, a.index, a.workdir, a.nproc, log=lambda s: print(s, flush=True))
         return

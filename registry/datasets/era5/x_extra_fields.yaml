@@ -50,9 +50,6 @@ layers:
     - 0.5
     - 0.65
     topLabel: ≥ 6.5
-    legendNote: 'Ticks: UNEP class limits (hyper-arid < 0.03 < arid < 0.2 < semi-arid < 0.5 < dry sub-humid < 0.65
-      < humid). Top colour = AI ≥ 6.5 (source values saturate at 6.5535). No data over ocean and Antarctica (south
-      of 60° S).'
 - id: qsdiv
   title: Saturated flux divergence (∇·qs)
   titleTex: Saturated flux divergence $\nabla\cdot\vec{q}_s$
@@ -62,9 +59,13 @@ layers:
   variable: qsdiv
   thresholdAware: true
   units: m/kyr
-  description: Divergence of the time-averaged saturated sand-flux vector (magnitude RDP, direction RDD) on the
-    sphere, following Gunn (2026), Methods M6. Negative values (flux convergence) imply deposition, positive values
-    (flux divergence) erosion. No data at coasts (a neighbouring cell has no wind data) and on the ±90° rows.
+  description: 'Divergence of the time-averaged saturated sand-flux vector (magnitude RDP, direction RDD) on the
+    sphere, following Gunn (2026), Methods M6: $\nabla\cdot\vec{q}_s = \frac{1}{R\cos\phi}\left[\frac{\partial (q\cos\theta)}{\partial\lambda}
+    + \frac{\partial (q\sin\theta\cos\phi)}{\partial\phi}\right]$ with $q = RDP$, $\theta = RDD$. By conservation
+    of sand mass, negative values (flux convergence) imply deposition and positive values (flux divergence) erosion.
+    The values assume a saturated flux and an unlimited supply of loose sand, so on rock, crusted or vegetated surfaces
+    actual erosion is limited by the sand available. No data at coasts (a neighbouring cell has no wind data) and
+    on the ±90° rows.'
   citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
     winds: ERA5 hourly 10 m winds 1950–2024 (Hersbach, H. et al. (2020). The ERA5 global reanalysis. Quarterly Journal
     of the Royal Meteorological Society 146, 1999–2049. doi:10.1002/qj.3803; data: Hersbach, H. et al. (2023). ERA5

@@ -18,8 +18,8 @@ export const MODE_STYLE = {
   // one name per quantity (review L5): the layer-list names; αH is an axis (0–180°), the crest line
   at: { label: "αT (transverse migration direction)", tex: "$\\alpha_T$", color: "#ff6b6b" },
   ae: { label: "αE (elongation direction)", tex: "$\\alpha_E$", color: "#4dabf7" },
-  ao: { label: "αO (oblique elongation direction)", tex: "$\\alpha_O$", color: "#c77dff", dash: "0.5 3.5" },
-  ab: { label: "αH (migration-mode crest orientation)", tex: "$\\alpha_H$", color: "#69db7c", dash: "5 3" },
+  ao: { label: "αO (along-crest transport direction)", tex: "$\\alpha_O$", color: "#c77dff", dash: "0.5 3.5" },
+  ab: { label: "αH (crest orientation, bed-instability mode)", tex: "$\\alpha_H$", color: "#69db7c", dash: "5 3" },
   rdpa: { label: "RDD (resultant drift direction)", tex: "$RDD$", color: "#f1f3f5", dash: "2 2" },
 } as const;
 export type ModeKey = keyof typeof MODE_STYLE;

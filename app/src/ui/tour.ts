@@ -145,6 +145,10 @@ export class Tour {
     const hook = this.#hooks[s.id];
     this.#pop.classList.toggle("tour-loading", !!hook?.enter);
     this.ready = this.ready.then(() => this.#leave()).then(async () => {
+      // the previous step's restore (e.g. step 4 closing RDD's Display, scrolling the list back) moves the
+      // controls: re-anchor on the restored layout, also for steps without a hook (step 5 kept the stale
+      // highlight position of the layer list while the list moved; PI, Oct 2026)
+      if (my === this.#seq && this.#root && !hook?.enter) { this.#place(); return; }
       if (my !== this.#seq || !hook?.enter) return;
       this.#entered = s.id;
       let note: void | string;

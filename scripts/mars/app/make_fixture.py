@@ -1,5 +1,6 @@
 """Development fixture for the Mars app (App track): synthetic-but-schema-exact stores under
-<repo>/staging/fixture-mars/dune-atlas/mars/v1/ (the R2 key layout of the data contract):
+<repo>/staging/fixture-mars/dune-atlas/mars/ (the R2 key layout of the data contract; the dataset stores are under
+v2/ since the packed-sand fluxes, phi = 0.6, the body-level elevation pyramid stays under v1/):
 
   datasets/fv3-beta1/cells.zarr       series (90,180,5,16032) = u, v, T, rho, z, fields (90,180,23,64), dunes, dune, ls, sol
                                       - every array full-size; only the shards listed in --shards are written
@@ -42,8 +43,8 @@ from dune_atlas_pipeline.mars import physics as P  # noqa: E402
 from dune_atlas_pipeline.qsat_compute import DO, DO_BED0, _bedmode, _elongationmode  # noqa: E402
 import fixture_common as FC  # noqa: E402
 
-PREFIX = "dune-atlas/mars/v1"
-DS = f"{PREFIX}/datasets/fv3-beta1"
+PREFIX = "dune-atlas/mars/v1"                        # body-level objects (elevation, basemaps, dunes)
+DS = "dune-atlas/mars/v2/datasets/fv3-beta1"         # dataset stores (v2: packed-sand fluxes q = Q/(rho_p phi))
 FIELD_VARS = list(EC.QSAT_VARS)
 D = M.D_VALUES                    # (64,) m
 SHARD = 16

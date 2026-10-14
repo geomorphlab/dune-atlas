@@ -1,6 +1,6 @@
 # Validation: Mars wind fields (FV3 beta 1, cells.zarr, pyramids, sidecars)
 
-Wind track of the Mars build (docs/mars-spec.md). **Current build v1** (2026-10-14): u* from the smooth-wall mixing-length profile of Pähtz & Durán (2023) eq. 2.2 under constant stress at each hour's lowest-level height z (spec §2, physics change 5b92eff); series (u, v, T, ρ, z). The first build **v0** used a neutral log law with z₀ = 1 mm at a fixed 2 m and a 4-variable series; it is kept on Gadi as `cells.zarr.v0` until integration and compared in §6. **Default grain size 200 µm** (PI, 2026-10-14; commit 7dad373): node 29 of the d axis moved from 199 to exactly 200 µm; that one node of every d-dependent product was recomputed (§3a) and the store before the change is kept as `cells.zarr.v1-199`. Code: `pipeline/src/dune_atlas_pipeline/mars/` (`fields.py` engine, `cells.py` store builder and validation, `stats.py`, `fixture.py`, `pyramids.py`, `sidecars.py`), `pipeline/gadi/mars/cells_job.sh`, `scripts/mars/data/`. Gadi code snapshot of the v1 store: `wind-39b1329`.
+Wind track of the Mars build (docs/mars-spec.md). **Current build v2** (2026-10-14): v1 with fluxes of packed sand, q = Q/(ρ_p φ), φ = 0.6 (§11). **v1** (2026-10-14): u* from the smooth-wall mixing-length profile of Pähtz & Durán (2023) eq. 2.2 under constant stress at each hour's lowest-level height z (spec §2, physics change 5b92eff); series (u, v, T, ρ, z). The first build **v0** used a neutral log law with z₀ = 1 mm at a fixed 2 m and a 4-variable series; it is kept on Gadi as `cells.zarr.v0` until integration and compared in §6. **Default grain size 200 µm** (PI, 2026-10-14; commit 7dad373): node 29 of the d axis moved from 199 to exactly 200 µm; that one node of every d-dependent product was recomputed (§3a) and the store before the change is kept as `cells.zarr.v1-199`. Code: `pipeline/src/dune_atlas_pipeline/mars/` (`fields.py` engine, `cells.py` store builder and validation, `stats.py`, `fixture.py`, `pyramids.py`, `sidecars.py`), `pipeline/gadi/mars/cells_job.sh`, `scripts/mars/data/`. Gadi code snapshot of the v1 store: `wind-39b1329`.
 
 ## 1. Method
 
@@ -176,3 +176,34 @@ Assessment artifact `fv3_stats.npz` (afbfe333…, same FV3 file): annual-mean ρ
 * numba is not in the local `dune-atlas` env; the numpy backend is used automatically there (3–5× slower).
 * The fixture has hourly series for the three site shards only (≈ 30 MB per shard); fields cover 3 × 3 shards per site.
 * `stats.json` p0/p100 are exact extremes since v1 (the v0 file reported the lowest histogram bin edge for the all-cell p0).
+
+## 11. v2: fluxes of packed sand (φ = 0.6)
+
+PI decision 2026-10-14: atlas fluxes are volumes of packed sand, q = Q/(ρ_p φ) with φ = 0.6, as the Earth atlas (FLUXCONSTANT = 5/0.6); v1 stored q = Q/ρ_p. Code: `mars/constants.py` `PACKING = 0.6`, division in `physics.transport_rate` (and `transport_rate_dimensional`) and in the app's `marsphysics.ts` `transportRate`; every field, statistic and the qsdiv sidecar inherit it. All flux values in §§3a, 6 and 7 are v1 (Q/ρ_p); multiply by 1/0.6 for v2. Published under the new prefix `dune-atlas/mars/v2/datasets/fv3-beta1/` (registry `layers.yaml` prefix bumped); `mars/v1/` is unchanged and body-level objects (elevation, basemaps, dunes) stay under `mars/v1/`.
+
+* **Data (0 SU, local).** Every field is linear in q (dpm, rdpm, qnlb, qncb, qalb, qacb, qnle, qale, qace) or independent of it (directions, flux ratios, fractions, u*/u*,th statistics), so v2 is the published v1 store with the nine flux rows of `fields` divided by φ in float64 and rounded to float32 (`mars.cells rescale-packing`; same shape, sharding, codecs and fill value), followed by the unchanged pyramid/sidecar builder on the rescaled export. Recomputing 4 cells of shard (2, 7) (incl. Nili Patera) from the published series with φ = 0.6 and φ = 1: flux ratio 1/0.6 to ≤ 1.2e-10, non-flux fields equal to ≤ 1.2e-10 (float64).
+
+* **Upload** (`scripts/mars/data/upload_v2.py`, create-only; ledger `staging/mars/r2/uploaded-v2-fv3-beta1.json`): 516 objects, 2,003,136,181 B = 443 create-only PUTs (124,960,074 B) + 72 cells.zarr/series shards copied server-side from v1 (1,878,175,296 B) + 1 test copy (`cells.zarr/sol/zarr.json`, 811 B, ETag = v1). R2 ignores If-None-Match on CopyObject, so the copies are one-part multipart uploads (UploadPartCopy with CopySource-If-Match = v1 ETag) completed with If-None-Match: * (412 on an existing key, checked).
+
+* **Verification** (`scripts/mars/data/verify_v2.py`; every v2 object read through the S3 endpoint and https://data.geomorphlab.org/, md5 compared with the local build or with the v1 ETag; values decoded with zarr from the public bytes):
+
+| objects | n | bytes | changed / identical to v1 (md5) | S3 = public | values v2 vs v1 |
+|---|---|---|---|---|---|
+| cells.zarr/fields | 73 | 71,409,178 | 72 / 1 | 73/73 | 9 flux rows: |r φ − 1| ≤ 5.96e-08 (float32 rounding); 14 other rows bit-identical: True |
+| cells.zarr series, dunes, dune, ls, sol | 81 | 1,878,216,496 | 0 / 81 | 81/81 | bit-identical (md5 = v1 ETag, incl. the 72 copied series shards) |
+| cells.zarr root zarr.json | 1 | 7,395 | 1 / 0 | 1/1 | attrs: flux_units, constants.PACKING, dataset.fields_method, flux_history |
+| cells-aux qsdiv | 73 | 4,449,472 | 73 / 0 | 73/73 | = qsdiv(v2 fields) exactly; |v2 − v1/0.6| ≤ 1.0e-07 × max|qsdiv| |
+| cells-aux root, rho_mean, elev_mean | 15 | 104,466 | 2 / 13 | 15/15 | chunks bit-identical; 2 zarr.json with current attribute text |
+| flux pyramids (9 + qsdiv) | 110 | 21,150,538 | 39 / 71 | 110/110 | |r φ − 1| ≤ 2.03e-04 (12-bit display rounding of each version); clims × 1/0.6, e.g. dpm [0.21, 14] → [0.35, 23] m²/yr; coordinate chunks identical |
+| non-flux pyramids (14 + rho_mean) | 163 | 27,798,636 | 30 / 133 | 163/163 | data bit-identical: True; changed objects are zarr.json (source text) |
+
+* **Reference cells**, d = 200 µm (node 29), DP in m²/yr:
+
+| site | cell (i, j) | lat, lon | DP v1 | DP v2 | RDP v1 | RDP v2 |
+|---|---|---|---|---|---|---|
+| Nili Patera | (40, 123) | 9°, 67° | 1.4645 | 2.4408 | 0.8086 | 1.3477 |
+| Proctor crater | (68, 105) | -47°, 31° | 3.2115 | 5.3526 | 1.9544 | 3.2574 |
+| north polar erg | (4, 151) | 81°, 123° | 1.4288 | 2.3813 | 0.8698 | 1.4496 |
+
+* Not recomputed for v2: the FV3 statistics document (§7, `mars_fv3_stats.json`); its flux entries scale by 1/0.6, the others are unchanged.
+

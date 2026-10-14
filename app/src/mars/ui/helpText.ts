@@ -8,6 +8,8 @@ export const HELP_BUTTON_LABEL = "Help and tour";
 export const HELP_TITLE = "Help";
 export const HELP_RESTART = "Restart tour";
 export const HELP_ABOUT_LINK = "About, data sources & citation";
+/** the Wind dataset selector's ⓘ (Earth: PI text 3.16); one Mars dataset: no ⓘ */
+export const DATASET_INFO_TEXT = "";
 
 export const HELP_SECTIONS: HelpSection[] = [
   {
@@ -20,11 +22,11 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "cell", title: "Clicking a cell",
-    body: "Click any 2° cell to open the cell panel: the wind rose, the sand-flux rose at the current grain diameter, dune-orientation modes against the grain diameter, the flux divergence and a table of all parameters. Section headings fold and unfold. Close the panel with × or Esc. The planetocentric latitude and east longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The crosshair button next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).",
+    body: "Click any cell to open the cell panel: the wind rose, the sand-flux rose at the current grain diameter, dune-orientation modes against the grain diameter, the flux divergence and a table of all parameters. Section headings fold and unfold. Close the panel with × or Esc. The planetocentric latitude and east longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The crosshair button next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).",
   },
   {
     id: "datasets", title: "Wind dataset",
-    body: "The winds are the lowest-level winds of the MCMC FV3-based Mars Global Climate Model, beta release 1 (2°, hourly, one Mars year: 16,032 hourly samples). The wind and sand-flux layers and the cell panel use this dataset.",
+    body: "The winds are the hourly lowest-level winds of a Mars climate model over one Mars year (e.g., the MCMC FV3-based Mars Global Climate Model, beta release 1: 2° grid, 16,032 hourly samples). The wind and sand-flux layers and the cell panel use the dataset shown in the Wind dataset selector.",
   },
   {
     id: "basemaps", title: "Basemaps",
@@ -32,11 +34,11 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "downloads", title: "Downloads and citation",
-    body: "Download & cite in the cell panel saves the hourly wind and air series and all parameters of the cell as NetCDF or as a CSV bundle, with the citation of every data source. Please cite the FV3 GCM output, Pähtz & Durán (2023) for the transport law and Gunn (2026) for the method.",
+    body: "Download & cite in the cell panel saves the hourly wind and air series and all parameters of the cell as NetCDF or as a CSV bundle, with the citation of every data source. Please cite the wind dataset, Pähtz & Durán (2023) for the transport law and Gunn (2026), which outlines the methods.",
   },
   {
     id: "images", title: "Exporting images",
-    body: "Export map image (camera button, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources, so the text is easy to crop. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.",
+    body: "Export map image (camera button, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap, on a white or transparent background. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.",
   },
   {
     id: "share", title: "Sharing the view",
@@ -75,7 +77,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "planet", targets: [".atlas-tools .planet-btn", ".atlas-tools"], title: "Switch planet",
-    body: "Earth and Mars share this atlas: the planet button below the camera swaps between them and opens the Earth atlas at its default view. This is the end of the tour.",
+    body: "Earth and Mars share this atlas: the planet button below the camera swaps between them, and each atlas reopens the view you last had there.",
   },
 ];
 
@@ -87,7 +89,7 @@ export const SHARE_TEXT = { button: "Share / copy link", title: "Share this view
 export const EXPORT_TEXT = {
   button: "Export map image", title: "Export map image", basemap: "Include basemap", run: "Export PNG", working: "Rendering…",
   transparent: "Transparent background (default white)",
-  note: "Landscape PNG of the current view, without the panels: the map on the left, colour bars, legends, north arrow, scale and data sources in a column on the right (about 2,900–3,600 pixels wide). It fits the width of a 16:9 slide, with text at about 11 pt. The selected cell is outlined in red.",
+  note: "PNG of the current view, 1600–2400 pixels wide, without the panels, on a white background unless Transparent background is ticked. Colour bars, legends, scale and data sources are added below the map.",
   done: "Saved:", downloaded: "Download started:",
   plotMenu: "Export", png: "PNG", svg: "SVG", plotTransparent: "Transparent background",
 };

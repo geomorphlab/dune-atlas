@@ -1,6 +1,8 @@
 // Click-to-cell side panel (bottom sheet on narrow screens). Structure: header | compact u*,th
 // control (persistent, synced with the layer panel) | content. Content is built once per cell;
 // threshold / bin / axis changes only refresh the dynamic parts so sliders keep focus.
+import { groupedBody, wireTableGroups } from "./tablegroups";
+import { utTex } from "../export/labels"; // plot-export legend: the slider value (PI, Oct 2026)
 import { terseQuantity } from "./terse";
 import { storageKey } from "../body";
 import type { CellData, CellStore } from "../cell/cellstore";
@@ -93,7 +95,7 @@ function reserves(cell: CellData, utValues: ArrayLike<number>): Reserves {
 }
 
 /** vegetation cover caveat in the table (review L7): total cover includes dry vegetation */
-export const VEG_CAVEAT = "Total cover: green plus dry (non-photosynthetic) vegetation. It can read high on bare desert, where bright soil is hard to tell from dry plant material.";
+export const VEG_CAVEAT = "Total cover includes non-photosynthetic vegetation (dry and dead plant material) as well as green vegetation, so it can be substantial where little green vegetation is visible; compare it with the aridity index.";
 
 /** the stored choice of the plotted quantity (per body) */
 export const readPlotChoice = (): string | undefined => { try { return localStorage.getItem(storageKey(PLOT_STORAGE)) ?? undefined; } catch { return undefined; } };
@@ -109,9 +111,6 @@ function plotReserve(cell: object, q: PlotQuantity, ys: number[]): number {
   return w;
 }
 
-/** key-numbers box rows: label | value (dt / dd pairs) */
-export const keyRows = (data: string, rows: [string, string][]) => `<p class="key-data">Wind data: ${data}</p><dl>${rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>`;
-
 /** Default table labels from the source metadata: symbol = math part, quantity = text part. */
 export function defaultFieldLabel(v: string): FieldLabel {
   const info = fieldInfo(v);
@@ -119,10 +118,10 @@ export function defaultFieldLabel(v: string): FieldLabel {
   return { symbolTex: mathOnly(info.longName), quantity };
 }
 
-/** Collapsible panel sections in panel order (every section heading is a disclosure; "summary" is the full
- *  table behind "More" under the key numbers, closed by default); otherwise open by default, a
- *  collapse / expand is remembered in localStorage under duneAtlas.cellPanel.<key>Open. */
-export const PANEL_SECTIONS = ["summary", "windRose", "fluxRose", "modes", "qsdiv", "downloads"] as const;
+/** Collapsible panel sections in panel order (every section heading is a disclosure, open by default; a
+ *  collapse / expand is remembered in localStorage under duneAtlas.cellPanel.<key>Open). The summary table is
+ *  back after the plots, without the key-numbers box (PI, Oct 2026); its rows fold in groups (ui/tablegroups.ts). */
+export const PANEL_SECTIONS = ["windRose", "fluxRose", "modes", "qsdiv", "summary", "downloads"] as const;
 export type PanelSection = (typeof PANEL_SECTIONS)[number];
 export const sectionOpenKey = (k: PanelSection) => storageKey(`cellPanel.${k}Open`); // per body (body.ts)
 /** cell-centre coordinate: up to 2 decimals (0.1° and 0.25° centres exact), no trailing zeros */
@@ -143,8 +142,7 @@ export function sameLocation(a: { lat: number; lon: number; grid?: Grid }, b: { 
   return dLat <= Math.max(ha, hb) + 1e-9 && dLon <= Math.max(wa, wb) + 1e-9;
 }
 export const MODES_OPEN_KEY = sectionOpenKey("modes");
-/** the full summary table is behind "More", closed until opened (review U5); the state is remembered */
-const SECTION_DEFAULT_OPEN: Record<PanelSection, boolean> = { windRose: true, fluxRose: true, modes: true, qsdiv: true, summary: false, downloads: true };
+const SECTION_DEFAULT_OPEN: Record<PanelSection, boolean> = { windRose: true, fluxRose: true, modes: true, qsdiv: true, summary: true, downloads: true };
 function readSectionOpen(): Record<PanelSection, boolean> {
   const out = { ...SECTION_DEFAULT_OPEN };
   for (const k of PANEL_SECTIONS) {
@@ -426,13 +424,8 @@ export class CellPanel {
     }
     const d = (k: string, tag: keyof HTMLElementTagNameMap = "div", cls = "") => (this.#dyn[k] = h(tag, { class: cls }));
     this.#dyn = {};
-    // meta: dune badge, key numbers (review U5), the full summary table behind "More"
-    body.append(h("p", { class: "cell-meta", html: cell.dune ? '<span class="badge dune">Dunes present</span>' : '<span class="badge">No dunes mapped</span>' }));
-    body.append(d("keyNumbers", "div", "key-numbers"));
-    this.#dyn.keyNumbers.setAttribute("role", "group");
-    this.#dyn.keyNumbers.setAttribute("aria-label", "Key numbers at the current threshold");
-    body.append(this.#section("summary", "summary more", d("tableHead", "h3"), d("table", "div", "table-wrap"),
-      h("p", { class: "caption" }, "Angles are compass bearings of the transport direction; fluxes converted from m²/s to m²/yr; — = not defined (e.g. no crest flux).")));
+    // meta: dune badge and the threshold line (the summary table follows the plots)
+    body.append(h("p", { class: "cell-meta", html: cell.dune ? '<span class="badge dune">Dunes present</span>' : '<span class="badge">No dunes mapped</span>' }, d("meta", "span", "meta-lines")));
     // wind rose
     const edges = [0, 2.5, 5, 7.5, 10, 12.5, 20];
     const choices = roseBinChoices(cell.bins.uaCentres.length);
@@ -480,7 +473,10 @@ export class CellPanel {
       d("qsdivSvg", "div", "fig-svg"), d("qsdivCap", "p", "caption"), this.#exportMenu("qsdiv")));
     this.#dyn.qplotSel = qsel;
     this.#dyn.qsdivHead.id = "qd-h";
-    // downloads
+    // summary table (rows in collapsible groups), then downloads
+    body.append(this.#section("summary", "summary", d("tableHead", "h3"), d("table", "div", "table-wrap"),
+      h("p", { class: "caption" }, "Angles are compass bearings of the transport direction; fluxes converted from m²/s to m²/yr; — = not defined (e.g. no crest flux).")));
+    wireTableGroups(this.#dyn.table);
     body.append(this.#downloads(cell));
     this.#dyn.tableHead.id = "tb-h";
     this.update();
@@ -497,17 +493,13 @@ export class CellPanel {
     const R = reserves(cell, v.utValues);
     const dsk = this.#ds(cell);
     // one value per row, each slot at the end of its row (no hole beside a shorter value; ui/livenum.ts)
-    D.keyNumbers.innerHTML = keyRows(`${escapeHtml(dsk.name)} ${dsk.resolution}, ${dsk.period}${/^\d{4}–\d{4}$/.test(dsk.period) ? ` (${Number(dsk.period.slice(5)) - Number(dsk.period.slice(0, 4)) + 1} years)` : ""}`, [
-      [`Threshold ${mathHtml("$u_{*,th}$")}`, `<strong>${live(formatUt(v.ut), R.ut, "left")}</strong>`],
-      ["10 m wind at threshold", `≈ ${live(`${v.thresholdWind10m.toFixed(1)}&nbsp;m/s`, R.wind, "left")}`],
-      ["Drift potential DP", live(`${fmtNum(v.drift.dp)}&nbsp;m²/yr`, R.dp, "left")],
-      ["Resultant drift potential RDP", live(`${fmtNum(v.drift.rdp)}&nbsp;m²/yr`, R.rdp, "left")],
-      ["Resultant drift direction RDD", live(deg(v.drift.rddBearing), BEARING_W(), "left")],
-      ["Directionality RDP/DP", live(fmtNum(v.drift.ratio), R.ratio, "left")],
-    ]);
+    // the threshold line of before Oct 2026 (no box; PI), one statement per line with its value at the end (no
+    // hole; ui/livenum.ts)
+    D.meta.innerHTML = `<span class="meta-line">Threshold ${mathHtml("$u_{*,th}$")}: <strong>${live(formatUt(v.ut), R.ut, "left")}</strong></span>`
+      + `<span class="meta-line">Wind at 10 m at the threshold: ≈ ${live(`${v.thresholdWind10m.toFixed(1)}&nbsp;m/s`, R.wind, "left")}</span>`;
     const windOpts: RoseSvgOptions = {
       id: "wind-rose", values: v.windRose.freq, colors: SPEED_COLORS, title: "Wind rose",
-      desc: `Frequency of hourly 10 m winds by the direction they blow from, ${v.windRose.sectors} sectors, stacked by speed class; 1950–2024; sums to 100 %.`,
+      desc: `Frequency of hourly 10 m winds by the direction they blow from, ${v.windRose.sectors} sectors, stacked by speed class; ${dsk.period}; sums to 100 %.`,
       ringFormat: (x: number) => `${x}%`, axisLabel: "% of hours", size, uaCentres: ua,
     };
     D.windSvg.innerHTML = roseSvg(windOpts);
@@ -543,7 +535,7 @@ export class CellPanel {
     // the total ends the caption's first line (a block), so the room kept for longer values is not a hole
     const totalTxt = live(`${Number.isFinite(v.fluxTotal) ? `${fmtNum(v.fluxTotal)}&nbsp;m²/yr` : MISSING}.`, v.fluxMode === "flat" ? R.dpTotal : R.total, "left");
     D.fluxCap.innerHTML = `<span class="cap-lead"><strong>${escapeHtml(fm.label)}</strong>${v.fluxMode === "flat" ? "" : ` (${MISSING} = mode direction undefined at this threshold)`}: ${mathHtml(fm.totalTex)} = ${totalTxt}</span> Direction sand moves TOWARD; ${v.fluxSectors.length} sectors of ${w}°. Radius = ${pct ? "% of the total flux in each sector (sums to 100 %)" : `time-averaged flux in each sector, m²/yr (sums to ${escapeHtml(fm.totalText)})`}. Time-averaged ${what}, Σ<sub>speed</sub> n·q / Σ<sub>all</sub> n from the wind histogram. Colours split each sector by the excess shear ${mathHtml(ratioTex)} of the winds carrying the flux (only ${mathHtml(v.fluxMode === "flat" ? "$u_{*f} > u_{*,th}$" : "$u_c > u_{*,th}$")} transports sand). DP, RDP, RDP/DP, RDD and the arrows are the map fields at this threshold; a direction is hidden where the flux defining it is zero.`;
-    D.modesCap.innerHTML = `Mode bearings (toward) for ${mathHtml("$u_{*,th}$")} = ${v.utValues[0].toFixed(2)} m/s (centre) to ${v.utValues[v.utValues.length - 1].toFixed(2)} m/s (rim); ${mathHtml("$\\alpha_H$")} is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current threshold. Where RDP/DP is low (winds from several directions that nearly balance), RDD is poorly defined and can swing by up to 180° between nearby thresholds; ${mathHtml("$\\alpha_T$")} need not follow RDD.`;
+    D.modesCap.innerHTML = `Mode bearings (toward) for ${mathHtml("$u_{*,th}$")} = ${v.utValues[0].toFixed(2)} m/s (centre) to ${v.utValues[v.utValues.length - 1].toFixed(2)} m/s (rim); ${mathHtml("$\\alpha_H$")} is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current threshold. Where RDP/DP is low (below about 0.3), transport in opposing directions nearly cancels, so RDD is poorly defined and can swing by up to 180° with a small change of threshold or wind dataset. The modes depend on the whole flux rose rather than on its resultant: ${mathHtml("$\\alpha_T$")} follows the crest orientation ${mathHtml("$\\alpha_H$")} that maximises gross transport across crests, so it can stay steady and differ from RDD.`;
     const modesOpts = (t: PlotTheme) => ({ x: v.utValues, currentIndex: v.utIndex, size: Math.min(size, 420), theme: t, series: MODE_KEYS.map((k) => ({ label: s[k].label, color: seriesColor(s[k].color, t), dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined, values: v.modeSeries[k], axis: k === "ab", width: k === "ao" ? 2.8 : undefined })) });
     D.modesSvg.innerHTML = modesPlotSvg(modesOpts(DARK_THEME));
     // "<quantity> vs threshold": title, plot, live value (a slot ending the caption's first line) and notes
@@ -553,7 +545,7 @@ export class CellPanel {
     D.qsdivHead.innerHTML = `${mathHtml(pq.titleTex)} vs threshold`;
     D.qsdivSvg.innerHTML = qplotSvg(pq, pys, pax, Math.min(size, 420));
     D.qsdivCap.innerHTML = `<span class="cap-lead">At the current threshold: ${live(`${valueText(pq, pys[v.utIndex])}.`, plotReserve(cell, pq, pys), "left")}</span> ${escapeHtml(qplotNotes(pq, pys, pax, pq.id === "qsdiv" ? QSDIV_NOTE : ""))}`;
-    D.tableHead.innerHTML = `More: full cell summary at ${mathHtml("$u_{*,th}$")} = ${live(formatUt(v.ut), R.ut, "left")}`;
+    D.tableHead.innerHTML = `Cell summary at ${mathHtml("$u_{*,th}$")} = ${live(formatUt(v.ut), R.ut, "left")}`;
     D.table.innerHTML = this.#table(cell, v);
     // export specs: the same options, re-rendered in the light theme on export
     const edges = [0, 2.5, 5, 7.5, 10, 12.5, 20];
@@ -580,14 +572,14 @@ export class CellPanel {
       modes: {
         key: "modes", title: "Dune-orientation modes vs threshold friction velocity (angle = direction toward, radius = $u_{*,th}$)", thresholdDependent: true, caption: unitsTex(katexTex(D.modesCap)),
         svg: (t) => modesPlotSvg({ ...modesOpts(t), radiusLabel: "radius: $u_{*,th}$ ($\\mathrm{m\\,s^{-1}}$)" }),
-        legend: [{ kind: "swatches", items: [...MODE_KEYS.map((k) => ({ color: seriesColor(s[k].color, L), shape: "line" as const, dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined, label: texLabel(k) })), { color: L.current, shape: "line" as const, dash: "4 3", label: "current threshold" }] }],
+        legend: [{ kind: "swatches", items: [...MODE_KEYS.map((k) => ({ color: seriesColor(s[k].color, L), shape: "line" as const, dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined, label: texLabel(k) })), { color: L.current, shape: "line" as const, dash: "4 3", label: utTex(v.ut) }] }],
       },
     };
     this.#plotName = plotSlug(pq, "threshold");
     this.#plots.qsdiv = {
       key: "qsdiv", title: `${pq.titleTex} vs threshold friction velocity $u_{*,th}$`, thresholdDependent: true, caption: unitsTex(katexTex(D.qsdivCap)),
       svg: (t) => qplotSvg(pq, pys, pax, Math.min(size, 420), t, true),
-      legend: [{ kind: "swatches", items: [{ color: "#e3a33b", shape: "line", label: `${pq.titleTex}${pq.unitsTex ? ` (${pq.unitsTex})` : ""}` }, { color: "#e3a33b", shape: "dot", label: "current threshold" }] }],
+      legend: [{ kind: "swatches", items: [{ color: "#e3a33b", shape: "line", label: `${pq.titleTex}${pq.unitsTex ? ` (${pq.unitsTex})` : ""}` }, { color: "#e3a33b", shape: "dot", label: utTex(v.ut) }] }],
     };
   }
 
@@ -683,7 +675,7 @@ export class CellPanel {
     const extra = `${auxRows}
       <tr data-field="dunes"><td class="sym">${MISSING}</td><th scope="row" title="${escapeHtml(`Yes: ${ds.dunesRule}`)}">Dunes present</th><td class="num">${cell.dune ? "yes" : "no"}</td></tr>
       <tr data-field="centre"><td class="sym">${MISSING}</td><th scope="row" title="Latitude, longitude of the cell centre">Cell centre</th><td class="num">${coord(cell.lat)}°, ${coord(cell.lon)}°</td></tr>`;
-    return `<table><thead><tr><th scope="col">Symbol</th><th scope="col">Quantity</th><th scope="col">Value</th></tr></thead><tbody>${rows}${extra}</tbody></table>`;
+    return `<table><thead><tr><th scope="col">Symbol</th><th scope="col">Quantity</th><th scope="col">Value</th></tr></thead>${groupedBody(rows + extra)}</table>`;
   }
 
   /** the slider setting the cell values are taken at (Citation TXT; review U14) */

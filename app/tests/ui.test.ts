@@ -289,9 +289,9 @@ describe("cell panel", () => {
     const det = root.querySelector("details.modes") as HTMLDetailsElement;
     expect(det.open).toBe(true);
     expect(det.querySelector("svg.modes-plot")).not.toBeNull();
-    expect(root.querySelectorAll(".summary tbody tr").length).toBe(23 - C.WITHHELD_VARS.length + 2);   // + dunes, centre
+    expect(root.querySelectorAll(".summary tbody.tgroup-rows tr").length).toBe(23 - C.WITHHELD_VARS.length + 2);   // + dunes, centre (rows in groups)
     // terse labels: no parentheses (round 5); grid cell and hours only in the downloads
-    for (const th of root.querySelectorAll(".summary tbody th")) expect(th.textContent).not.toMatch(/[()]/);
+    for (const th of root.querySelectorAll(".summary tbody.tgroup-rows th")) expect(th.textContent).not.toMatch(/[()]/);
     expect(root.querySelector('.summary tr[data-field="cell"]')).toBeNull();
     expect(root.querySelector('.summary tr[data-field="hours"]')).toBeNull();
     expect([...root.querySelectorAll(".downloads button")].map((b) => b.textContent)).toEqual(["NetCDF (.nc)", "CSV bundle (.zip)", "Citation (TXT)", "Copy citation"]);
@@ -300,7 +300,7 @@ describe("cell panel", () => {
     mini.value = "40"; fire(mini, "input");
     expect(store.state.utIndex).toBe(40);
     expect(root.querySelector("#cell-ut-value")!.textContent).toBe("0.41 m/s");
-    expect(root.querySelector(".key-numbers")!.textContent).toContain("0.41 m/s");
+    expect(root.querySelector(".cell-meta")!.textContent).toContain("0.41 m/s");
     expect(root.querySelector("#cell-ut-slider")).toBe(mini); // not rebuilt while dragging
   });
   it("modes plot: a collapse is remembered in localStorage for new panels", async () => {
@@ -314,7 +314,7 @@ describe("cell panel", () => {
     d2.open = true; d2.dispatchEvent(new Event("toggle"));
     expect(memStorage.getItem(MODES_OPEN_KEY)).toBe("1");
   });
-  it("every section heading is a disclosure (same markup as Modes); open by default (the full table behind More closed); each state remembered", async () => {
+  it("every section heading is a disclosure (same markup as Modes); open by default; each state remembered", async () => {
     await open();
     const body = root.querySelector(".cell-body")!;
     const secs = [...body.querySelectorAll("details.section")] as HTMLDetailsElement[];
@@ -327,10 +327,10 @@ describe("cell panel", () => {
       expect(d.classList.contains("section")).toBe(true);
       expect(d.firstElementChild!.tagName).toBe("SUMMARY");
       expect(d.firstElementChild!.querySelectorAll("h3").length).toBe(1);
-      expect(d.open).toBe(d.dataset.section !== "summary");
+      expect(d.open).toBe(true);
     }
     const title = (k: string) => body.querySelector(`details[data-section="${k}"] > summary`)!.textContent!.replace(/\s+/g, " ");
-    expect(title("summary")).toMatch(/^More: full cell summary at u.*= 0\.\d\d m\/s/);
+    expect(title("summary")).toMatch(/^Cell summary at u.*= 0\.\d\d m\/s/);
     expect(title("downloads")).toBe("Download & cite");
     // collapse each; a new panel (another cell) keeps every choice
     for (const d of secs) { d.open = false; d.dispatchEvent(new Event("toggle")); }

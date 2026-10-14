@@ -19,7 +19,7 @@ describe("Mars registry", () => {
     expect(errors).toEqual([]);
     expect(validateMarsRegistry(reg, schema)).toEqual([]);
     expect(reg.datasets?.map((d) => d.id)).toEqual(["fv3-beta1"]);
-    expect(reg.datasets?.[0].prefix).toBe("dune-atlas/mars/v1/datasets/fv3-beta1");
+    expect(reg.datasets?.[0].prefix).toBe("dune-atlas/mars/v2/datasets/fv3-beta1");
     expect(reg.defaultDataset).toBe("fv3-beta1");
   });
   it("threshold block = the grain-size slider of the spec (dim d, µm, 64 values 50-1000, default 29 = 200 µm)", () => {

@@ -21,6 +21,11 @@ export interface DatasetInfo {
   nonLandReason: string;
   /** what "dunes" means for a cell of this grid */
   dunesRule: string;
+  /** About, Data sources: the dataset's item (HTML, after its bold title "Wind histograms and sand-flux fields
+   *  (<name> <resolution>)"); dataset facts live here, not in general text (PI text rules, Oct 2026) */
+  sourceHtml: string;
+  /** its bold title there; default "Wind histograms and sand-flux fields (<name> <resolution>)" */
+  sourceTitle?: string;
 }
 
 /** Land definitions (app constants: the text shown and exported never comes from store attrs).
@@ -34,11 +39,13 @@ export const DATASET_INFO: Record<string, DatasetInfo> = {
     id: "era5-land", name: "ERA5-Land", resolution: "0.1°", resDeg: 0.1, period: "1950–2024", nHours: 657455,
     landRule: LAND_RULE, landThreshold: 0.5, nonLandReason: "This cell is mainly water",
     dunesRule: DUNES_RULE,
+    sourceHtml: "ERA5-Land 1950–2024 hourly 10 m winds (0.1°) and the qsat parameters of Gunn (2026), Supplementary Data (Zenodo, CC BY 4.0). Drift potentials (DP, RDP, RDD, RDP/DP) and crest fluxes are averages over the hourly record.",
   },
   era5: {
     id: "era5", name: "ERA5", resolution: "0.25°", resDeg: 0.25, period: "1950–2024", nHours: 657456,
     landRule: LAND_RULE_ERA5, landThreshold: 0, nonLandReason: "This cell has no land (land–sea mask fraction 0)",
     dunesRule: DUNES_RULE,
+    sourceHtml: "ERA5 1950–2024 hourly 10 m winds on the 0.25° grid (Hersbach et al. 2020; Copernicus Climate Change Service, accessed via the NCI Australia replica); the histograms and the 23 sand-flux fields are computed for the atlas with the methods outlined in Gunn (2026). Cells with an ERA5 land–sea mask fraction above 0 (any land in the cell) carry wind data; a 0.25° cell counts as a dune cell where it overlaps a mapped 0.1° dune cell.",
   },
 };
 
@@ -47,6 +54,15 @@ export const DATASET_INFO: Record<string, DatasetInfo> = {
 export function datasetTooltip(id: string): string {
   const d = DATASET_INFO[id];
   return d ? `${d.name} ${d.resolution}, ${d.period}; land cells: land–sea mask fraction > ${d.landThreshold}` : "";
+}
+
+/** distinct values of one dataset fact, joined with " or " (e.g. the grids "0.1° or 0.25°", the period
+ *  "1950–2024"): general text names the datasets' facts from this table, never by hand */
+export function datasetSourceItem(d: DatasetInfo): string {
+  return `<li><strong>${d.sourceTitle ?? `Wind histograms and sand-flux fields (${d.name} ${d.resolution})`}</strong>: ${d.sourceHtml}</li>`;
+}
+export function datasetFacts(key: "resolution" | "period" | "name", infos: DatasetInfo[] = Object.values(DATASET_INFO)): string {
+  return [...new Set(infos.map((d) => d[key]))].join(" or ");
 }
 
 export function datasetInfo(id?: string): DatasetInfo {

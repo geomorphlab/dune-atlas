@@ -16,6 +16,7 @@ describe("Mars physics parity", () => {
   it("axis and constants", () => {
     expect(D_VALUES.length).toBe(64);
     expect(M.D_VALUES_UM[M.D_DEFAULT_INDEX]).toBe(200);
+    expect(M.PACKING).toBe(0.6); // fluxes are volumes of packed sand, q = Q/(rho_p phi)
   });
   it("eq. 2.2 profile matches Python incl. both extrapolations", () => {
     F.profile.x.forEach((x, i) => expect(close(uPlus(x), F.profile.u_plus[i], 1e-12)).toBe(true));

@@ -2,12 +2,13 @@
 // Keep line-for-line equivalent: tests/marsphysics.test.ts checks it against the Python output
 // (tests/fixtures/mars-physics-parity.json from scripts/make-mars-physics-fixture.py).
 // Pahtz & Duran (2023) J. Fluid Mech. 963:A20: threshold eq. 5.1 with the rarefaction factor of eq. 3.20,
-// transport eq. 3.2 in '+' units. SI units; fluxes are volume fluxes q = Q/rho_p (m^2/s).
+// transport eq. 3.2 in '+' units. SI units; fluxes are volume fluxes of packed sand q = Q/(rho_p phi) (m^2/s),
+// phi = PACKING = 0.6 (as the Earth atlas).
 import raw from "../generated/constants-mars.json";
 
 export interface MarsConstants {
   G: number; R_MARS: number; R_AIR: number; MU0: number; T0_MU: number; S_MU: number; K_ADIABATIC: number;
-  RHO_P: number; KAPPA: number; MIX_DAMP: number; DSTAR_MIN: number; UPLUS_MIN: number; C1: number; C2: number;
+  RHO_P: number; PACKING: number; KAPPA: number; MIX_DAMP: number; DSTAR_MIN: number; UPLUS_MIN: number; C1: number; C2: number;
   KN_A: number; KN_B: number; KN_C: number; GA_SQRT_S_MIN: number; BETA: number; DASPECT: number; S2Y: number;
   D_DEFAULT_INDEX: number; D_VALUES_UM: number[]; SERIES_VARS: string[];
   PROFILE_LN_X: number[]; PROFILE_U_PLUS: number[]; N_BISECT: number; LN_US_LO: number; LN_US_HI: number;
@@ -89,13 +90,13 @@ export function threshold(d: number, rho: number, T: number, knudsen = true): Th
   return { ut, s, gt, nu, dplus, dstar, kn, fkn, gaSqrtS };
 }
 
-/** Saturated volume flux q = Q/rho_p (m^2/s), eq. 3.2 in '+' units; 0 where u* <= u*,th. */
+/** Saturated volume flux of packed sand q = Q/(rho_p phi) (m^2/s), eq. 3.2 in '+' units; 0 where u* <= u*,th. */
 export function transportRate(ustar: number, ut: number, d: number, s: number, gt: number, nu: number): number {
   if (!(ustar > ut)) return 0;
   const dth = (ustar ** 2 - ut ** 2) / (s * gt * d);
   const dplus = (gt * d) / (gt * nu) ** (2 / 3);
   const qplus = dplus ** 1.5 * (M.C1 * s ** (1 / 3) * dth + M.C2 * s ** (1 / 3) * dth ** 2);
-  return qplus * nu;
+  return (qplus * nu) / M.PACKING;
 }
 
 /** q(u*) (m^2/s) for one hour; th may be passed when the same hour's threshold is reused (crest fluxes). */

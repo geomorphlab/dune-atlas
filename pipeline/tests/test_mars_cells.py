@@ -173,6 +173,42 @@ def test_splice_one_node(tmp_path):
     assert np.load(tmp_path / "e.npz")["d_values_um"][29] == 200
 
 
+def test_rescale_packing(tmp_path):
+    """v1 store (q = Q/rho_p) -> v2 (q = Q/(rho_p phi)): flux rows x 1/0.6 to float32 rounding, everything else
+    bit-identical, attrs updated, a second application refused."""
+    _fake_fv3(tmp_path)
+    out = str(tmp_path / "cells.zarr")
+    CE.build(str(tmp_path), str(tmp_path / "dunefrac.npz"), out, str(tmp_path / "w"), nproc=2,
+             shards=[(32, 96)], log=lambda *_: None)
+    v1 = str(tmp_path / "v1.zarr")
+    g = zarr.open_group(out, mode="r+")
+    c = dict(g.attrs["constants"]); c.pop("PACKING")
+    g.attrs.update({"constants": c})                           # as a v1 store
+    F = g["fields"][32:48, 96:112]
+    fv = list(g.attrs["field_vars"]); rows = [fv.index(v) for v in CE.FLUX_FIELDS]
+    F[:, :, rows] = (F[:, :, rows].astype("f8") * M.PACKING).astype("f4")
+    g["fields"][32:48, 96:112] = F
+    import shutil
+    shutil.copytree(out, v1)
+    s = CE.rescale_packing(v1, str(tmp_path / "v2.zarr"), log=lambda *_: None)
+    assert s["shards"] == 1 and abs(s["factor"] - 1 / 0.6) < 1e-15
+    g1, g2 = zarr.open_group(v1, mode="r"), zarr.open_group(str(tmp_path / "v2.zarr"), mode="r")
+    a, b = g1["fields"][...], g2["fields"][...]
+    other = [k for k in range(len(fv)) if k not in rows]
+    assert np.array_equal(a[:, :, other], b[:, :, other], equal_nan=True)
+    np.testing.assert_array_equal(b[:, :, rows], (a[:, :, rows].astype("f8") / 0.6).astype("f4"))
+    fin = np.isfinite(a[:, :, rows]) & (a[:, :, rows] != 0)
+    assert fin.sum() > 1000
+    r = b[:, :, rows][fin].astype("f8") / a[:, :, rows][fin]
+    assert np.abs(r * 0.6 - 1).max() < 1.2e-7
+    assert np.array_equal(g1["series"][...], g2["series"][...], equal_nan=True)
+    assert g2.attrs["constants"]["PACKING"] == 0.6 and "packed sand" in g2.attrs["flux_units"]
+    assert g2.attrs["flux_history"][-1]["fields"] == list(CE.FLUX_FIELDS)
+    assert "methods outlined in Gunn" in g2.attrs["dataset"]["fields_method"]
+    with pytest.raises(ValueError):
+        CE.rescale_packing(str(tmp_path / "v2.zarr"), str(tmp_path / "v3.zarr"), log=lambda *_: None)
+
+
 def _rho_npz(tmp_path):
     p = tmp_path / "rho.npz"
     np.savez(p, rho_mean=np.ones((90, 180), "f4"))

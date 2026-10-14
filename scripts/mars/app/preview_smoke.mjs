@@ -18,7 +18,7 @@ const { PMTiles, FetchSource } = await import(require.resolve("pmtiles"));
 const arg = (k, d) => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : d; };
 const DATA = arg("--data", "http://127.0.0.1:8787");
 const PREVIEW = arg("--preview", process.env.PREVIEW);
-const DS = "dune-atlas/mars/v1/datasets/fv3-beta1";
+const DS = "dune-atlas/mars/v2/datasets/fv3-beta1";
 const ORIGIN = arg("--origin", "http://localhost:5173");
 const out = { data: DATA, checks: [], failures: [] };
 const ok = (name, pass, info = {}) => { out.checks.push({ name, pass, ...info }); if (!pass) out.failures.push(name); };

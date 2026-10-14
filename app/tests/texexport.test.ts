@@ -49,7 +49,7 @@ describe("TeX -> SVG paths", () => {
   it("layer export titles: the English title with its symbol in TeX, once", () => {
     const want: Record<string, string> = {
       dpm: "Drift potential ($DP$)", rdpm: "Resultant drift potential ($RDP$)", rdpa: "Resultant drift direction ($RDD$)",
-      qha_rdp_dp: "Flux directionality ($RDP/DP$)", at: "Transverse migration direction ($\\alpha_T$)", ab: "Migration-mode crest orientation ($\\alpha_H$)",
+      qha_rdp_dp: "Flux directionality ($RDP/DP$)", at: "Transverse migration direction ($\\alpha_T$)", ab: "Crest orientation, bed-instability mode ($\\alpha_H$)",
       qsdiv: "Saturated flux divergence ($\\nabla\\cdot\\vec{q}_s$)", aridity: "Aridity index ($\\mathrm{AI}$)", vegetation: "Total vegetation cover ($V$)",
       qacb: "Absolute across-crest flux, migration mode $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$",
     };

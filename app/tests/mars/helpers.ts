@@ -49,5 +49,6 @@ export class RangeFileStore {
   }
 }
 export const FIXTURE_ROOT = path.resolve(__dirname, "../../../staging/fixture-mars/dune-atlas/mars/v1");
-export const FIXTURE_DS = path.join(FIXTURE_ROOT, "datasets/fv3-beta1");
+// dataset stores moved to mars/v2 with the packed-sand fluxes (phi = 0.6); body-level objects stay under mars/v1
+export const FIXTURE_DS = path.resolve(__dirname, "../../../staging/fixture-mars/dune-atlas/mars/v2/datasets/fv3-beta1");
 export const haveFixture = fs.existsSync(path.join(FIXTURE_DS, "cells.zarr", "zarr.json"));

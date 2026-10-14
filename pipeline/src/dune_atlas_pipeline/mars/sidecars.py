@@ -36,7 +36,7 @@ from .fields import QSAT_VARS
 REPO = Path(__file__).resolve().parents[4]
 META_JSON = REPO / "registry" / "mars" / "qsat_field_metadata.json"
 GEN = REPO / "registry" / "mars" / "generated"
-PREFIX = "dune-atlas/mars/v1/datasets/fv3-beta1"
+PREFIX = "dune-atlas/mars/v2/datasets/fv3-beta1"
 K = M.D_DEFAULT_INDEX
 D_TEXT = f" Shown at the selected median grain diameter d (default {int(M.D_VALUES_UM[K])} µm)."
 EARTH_UT_TEXT = (f" Shown at the selected threshold friction velocity u*,th "
@@ -191,6 +191,8 @@ def qsat_fragment(meta: dict) -> dict:
         assert "Shown at the selected" not in lay["description"], lay["id"]   # units/slider are popover rows
         lay["citation"] = CITATION
         lay["attribution"] = dict(ATTRIBUTION)
+        if lay["id"] in EF.MARS_FIELD_DEFINITIONS:            # Mars wording (PI text 3.2)
+            lay["description"] = EF.MARS_FIELD_DEFINITIONS[lay["id"]]
         assert lay["source"] == f"{{dataset}}/fields/{lay['id']}.zarr", lay["source"]
     return frag
 
@@ -200,16 +202,22 @@ def extra_fragment(qsdiv_clim, rho_clim) -> dict:
         {"id": "qsdiv", "title": "Saturated flux divergence (∇·qs)", "titleTex": r"Saturated flux divergence $\nabla\cdot\vec{q}_s$",
          "group": "drift", "type": "zarr-field", "source": "{dataset}/fields/qsdiv.zarr", "variable": "qsdiv",
          "thresholdAware": True, "units": "m/kyr",
-         "description": ("Divergence of the time-averaged saturated sand-flux vector (magnitude RDP, direction RDD) "
-                         "on the Mars sphere (R = 3389.5 km), following Gunn (2026), Methods M6. Negative values "
-                         "(flux convergence) imply deposition, positive values (flux divergence) erosion."),
+         "description": (r"Divergence of the time-averaged saturated sand-flux vector (magnitude RDP, direction RDD) on "
+                         r"the Mars sphere, following Gunn (2026), Methods M6: $\nabla\cdot\vec{q}_s = \frac{1}{R\cos\phi}"
+                         r"\left[\frac{\partial (q\cos\theta)}{\partial\lambda} + \frac{\partial (q\sin\theta\cos\phi)}"
+                         r"{\partial\phi}\right]$ with $q = RDP$, $\theta = RDD$. By conservation of sand mass, negative "
+                         r"values (flux convergence) imply deposition and positive values (flux divergence) erosion. The "
+                         r"values assume a saturated flux and an unlimited supply of loose sand, so on rock, crusted or "
+                         r"vegetated surfaces actual erosion is limited by the sand available."),
+         # PI text 3.14 minus its last sentence ("No data at coasts ... ±90° rows"): Mars has no land mask and the
+         # divergence is defined in every cell (one-sided differences at the ±89° rows); see docs/user-text-audit-2.md
          "citation": CITATION, "attribution": dict(ATTRIBUTION), "visible": False, "opacity": 0.85, "queryable": False,
          "display": {"transform": "scale", "scale": 1000.0, "colormap": "piyg", "clim": list(qsdiv_clim)}},
         {"id": "rho_mean", "title": "Near-surface air density", "titleTex": r"Near-surface air density $\overline{\rho_f}$",
          "group": "environment", "type": "zarr-field", "source": "{dataset}/fields/rho_mean.zarr",
          "variable": "rho_mean", "thresholdAware": False, "units": "kg/m³",
-         "description": (r"Mean over the Mars year of the hourly lowest-layer air density $\rho_f = p/(R T)$ of the FV3 "
-                         "GCM ($p$ = mid pressure of the lowest layer, $T$ = lowest-level temperature)."),
+         "description": (r"Mean over the Mars year of the hourly lowest-layer air density $\rho_f = p/(R T)$ of the wind "
+                         "dataset's climate model ($p$ = mid pressure of the lowest layer, $T$ = lowest-level temperature)."),
          "citation": GCM_CITATION, "attribution": {"citation": GCM_CITATION, "licence": LICENCE}, "visible": False, "opacity": 0.85, "queryable": True,
          "display": {"transform": "none", "colormap": "viridis", "clim": list(rho_clim)}},
     ]}

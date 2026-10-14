@@ -269,7 +269,7 @@ export function csvColumns(cell: CellData, attrs?: ExportMeta["storeAttrs"]): Re
       { name: "um_bin_lo", units: "m s-1", longName: "10 m wind speed bin lower edge" },
       { name: "um_bin_hi", units: "m s-1", longName: "10 m wind speed bin upper edge" },
       ...DIR_COLUMNS,
-      { name: "wind_hist", units: "h", longName: `hours in the speed x direction bin, ${cellDataset(cell).name} 1950-2024 (hours with U10 > 20 m/s not binned)` },
+      { name: "wind_hist", units: "h", longName: `hours in the speed x direction bin, ${cellDataset(cell).name} ${cellDataset(cell).period.replace(/–/g, "-")} (hours with U10 > 20 m/s not binned)` },
     ],
     "fields_by_threshold.csv": [UT_COLUMN, ...pub.map((v) => { const m = fieldMeta(v, attrs); return { name: v, units: m.units, longName: m.longName }; }),
       ...auxVars(cell.aux).filter((v) => AUX_META[v].kind === "series").map((v) => ({ name: v, units: AUX_META[v].units, longName: AUX_META[v].longName }))],
@@ -368,7 +368,7 @@ ${CSV_LAYOUT_TEXT}
 wind_histogram.csv and flux_rose.csv are in tidy long format and use the same direction-bin
 columns (direction_bin_centre ... bearing_from), values and order (source bin index order).
 
-wind_histogram.csv  Hourly ${ds.name} 10 m wind 1950-2024 (${ds.resolution} cell); one row per speed x direction bin.
+wind_histogram.csv  Hourly ${ds.name} 10 m wind ${ds.period.replace(/–/g, "-")} (${ds.resolution} cell); one row per speed x direction bin.
 ${colDoc("wind_histogram.csv")}
 
 fields_by_threshold.csv  Sand-flux parameters vs threshold; one row per u*,th (64 values,

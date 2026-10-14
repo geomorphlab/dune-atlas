@@ -8,6 +8,7 @@
  "S_MU": 222.0,
  "K_ADIABATIC": 1.33,
  "RHO_P": 3000.0,
+ "PACKING": 0.6,
  "KAPPA": 0.4,
  "MIX_DAMP": 7.0,
  "DSTAR_MIN": 18.0,

@@ -24,7 +24,7 @@ Click any land cell to open the cell panel: the wind rose, the sand-flux rose at
 
 ### Wind datasets
 
-The Wind dataset selector switches between ERA5-Land (0.1°) and ERA5 (0.25°) wind statistics for 1950–2024. The wind and sand-flux layers and the cell panel follow the selection; the dune map, aridity and vegetation layers are the same for both.
+The Wind dataset selector switches between reanalysis wind statistics for 1950–2024. ERA5-Land, used by Gunn (2026), is a land-surface rerun at 0.1° driven by ERA5 atmospheric fields interpolated to its grid (Muñoz-Sabater et al. 2021), so its winds are not an independent estimate. Baas (2026) reports ERA5-Land 10 m wind speeds systematically 20–30 % below those of ERA5. Where the two datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune map, aridity and vegetation layers are the same for both.
 
 ### Downloads and citation
 
@@ -32,7 +32,7 @@ Download & cite in the cell panel saves the wind histogram and all parameters of
 
 ### Exporting images
 
-Export map image (camera button, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources, so the text is easy to crop. Text is sized relative to the image so it stays legible when the image fills a slide. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.
+Export map image (camera button, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap, on a white or transparent background. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.
 
 ### Sharing the view
 
@@ -82,7 +82,7 @@ Clicking a land cell opens the cell panel, shown here for a dune cell in the Nam
 
 Highlights: `#dataset-select` or `#layer-panel .panel-toggle`
 
-Switch between ERA5-Land (0.1°) and ERA5 (0.25°) wind statistics for 1950–2024. The map layers and the cell panel follow the selection.
+Switch between the wind datasets; each option names the dataset and its grid. The map layers and the cell panel follow the selection.
 
 ### 8. Share and export
 
@@ -94,7 +94,7 @@ Copy a short link to this view, or export the map as an image with colour bars, 
 
 Highlights: `.atlas-tools .planet-btn` or `.atlas-tools`
 
-Earth and Mars share this atlas: the planet button below the camera swaps between them and opens the Mars atlas at its default view. This is the end of the tour.
+Earth and Mars share this atlas: the planet button below the camera swaps between them, and each atlas reopens the view you last had there.
 
 Fallback (example cell not loaded): The example cell could not be loaded. Click any land cell on the map to open its panel.
 
@@ -108,5 +108,5 @@ Fallback (example cell not loaded): The example cell could not be loaded. Click 
 
 - Button: Export map image
 - Popover: Export map image; Include basemap; Export PNG; while rendering "Rendering…"
-- Note: Landscape PNG of the current view, without the panels: the map on the left, colour bars, legends, north arrow, scale and data sources in a column on the right (about 2,900–3,600 pixels wide). It fits the width of a 16:9 slide, with text at about 11 pt. The selected cell is outlined in red.
+- Note: PNG of the current view, 1600–2400 pixels wide, without the panels, on a white background unless Transparent background is ticked. Colour bars, legends, scale and data sources are added below the map.
 - Cell-panel plots: menu "Export" with PNG, SVG

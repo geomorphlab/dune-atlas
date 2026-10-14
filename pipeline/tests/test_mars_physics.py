@@ -25,12 +25,25 @@ def test_earth_sanity_rho_f_not_rho_p():
     """Eq. 3.2 on Earth (u* = 0.4, u*,th = 0.2 m/s, d = 200 um) gives a typical aeolian mass flux; the printed
     eq. 5.2 (rho_p in place of rho_f) is larger by the factor s ~ 2200."""
     e = _earth_state()
-    Q = e["rho_p"] * P.transport_rate(0.4, 0.2, e["d"], e["s"], e["gt"], e["nu"])
+    Q = e["rho_p"] * M.PACKING * P.transport_rate(0.4, 0.2, e["d"], e["s"], e["gt"], e["nu"])
     assert 0.01 < Q < 0.03                                     # kg m^-1 s^-1
     du2 = 0.4 ** 2 - 0.2 ** 2
     Q_printed = (1.7 * e["s"] ** (1 / 3) * e["rho_p"] * np.sqrt(e["d"] / e["gt"]) * du2
                  + 12 * e["s"] ** (-2 / 3) * e["rho_p"] * (e["gt"] ** 3 * e["d"]) ** -0.5 * du2 ** 2)
     assert Q_printed / Q > 1000
+
+
+def test_packed_sand_volume_flux():
+    """Atlas fluxes are volumes of packed sand, q = Q/(rho_p phi) with phi = 0.6 (as the Earth atlas,
+    FLUXCONSTANT = 5/0.6; docs/mars-spec.md section 3)."""
+    assert M.PACKING == 0.6
+    e = _earth_state()
+    du = 0.4 ** 2 - 0.2 ** 2
+    th = du / (e["s"] * e["gt"] * e["d"])
+    dplus = e["gt"] * e["d"] / (e["gt"] * e["nu"]) ** (2 / 3)
+    Q_over_rho_p = dplus ** 1.5 * (M.C1 * e["s"] ** (1 / 3) * th + M.C2 * e["s"] ** (1 / 3) * th ** 2) * e["nu"]
+    q = P.transport_rate(0.4, 0.2, e["d"], e["s"], e["gt"], e["nu"])
+    np.testing.assert_allclose(q, Q_over_rho_p / 0.6, rtol=1e-14)
 
 
 def test_threshold_minimum_at_dstar_min():

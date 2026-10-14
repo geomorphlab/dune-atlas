@@ -183,10 +183,14 @@ def registry_layer(clim_m_per_kyr=(-0.1, 0.1), colormap="piyg", group="drift", d
         "id": VAR, "title": "Saturated flux divergence (∇·qs)", "titleTex": r"Saturated flux divergence $\nabla\cdot\vec{q}_s$",
         "group": group, "type": "zarr-field", "source": f"{DATASET_SOURCE_PREFIX[ds.id]}/qsdiv.zarr", "variable": VAR,
         "thresholdAware": True, "units": "m/kyr",
-        "description": ("Divergence of the time-averaged saturated sand-flux vector (magnitude RDP, direction RDD) "
-                        "on the sphere, following Gunn (2026), Methods M6. Negative values (flux convergence) imply "
-                        "deposition, positive values (flux divergence) erosion. No data at coasts (a neighbouring "
-                        "cell has no wind data) and on the ±90° rows."),
+        "description": (r"Divergence of the time-averaged saturated sand-flux vector (magnitude RDP, direction RDD) on "
+                        r"the sphere, following Gunn (2026), Methods M6: $\nabla\cdot\vec{q}_s = \frac{1}{R\cos\phi}"
+                        r"\left[\frac{\partial (q\cos\theta)}{\partial\lambda} + \frac{\partial (q\sin\theta\cos\phi)}"
+                        r"{\partial\phi}\right]$ with $q = RDP$, $\theta = RDD$. By conservation of sand mass, negative "
+                        r"values (flux convergence) imply deposition and positive values (flux divergence) erosion. The "
+                        r"values assume a saturated flux and an unlimited supply of loose sand, so on rock, crusted or "
+                        r"vegetated surfaces actual erosion is limited by the sand available. No data at coasts (a "
+                        r"neighbouring cell has no wind data) and on the ±90° rows."),
         "citation": fields_citation(ds), "attribution": fields_attribution(ds),
         "visible": False, "opacity": 0.85, "queryable": False,
         "display": {"transform": "scale", "scale": 1000.0, "colormap": colormap, "clim": list(clim_m_per_kyr)},

@@ -29,8 +29,8 @@ SOURCE = ("Fields computed for the Mars dune atlas from the MCMC FV3-based Mars 
           "lowest-level winds, temperature and air density (NASA Ames Mars Climate Modeling Center 2023; model "
           "physics Haberle et al. 2019, Icarus 333, 130-164, doi:10.1016/j.icarus.2019.03.026), with the per-hour "
           "threshold and transport rate of Pähtz & Durán (2023) J. Fluid Mech. 963, A20, doi:10.1017/jfm.2023.343, "
-          "and the crest-mode method of Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature "
-          "Communications. doi:10.1038/s41467-026-75466-y")
+          "and the crest-mode methods outlined in Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. "
+          "Nature Communications. doi:10.1038/s41467-026-75466-y")
 DATASET_ATTRS = {"body": "mars", "dune_atlas:dataset": CE.DATASET["id"], "dataset_name": CE.DATASET["name"],
                  "dataset_resolution": "2°", "dataset_n_hours": CE.NT, "dataset_citation": CE.DATASET["citation"],
                  "dataset_source": CE.DATASET["source"], "transport_law": CE.DATASET["transport_law"]}

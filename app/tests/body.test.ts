@@ -130,8 +130,8 @@ describe("round 4: info texts at the source, one field citation, licences, basem
     expect(L("rdpa").description).toMatch(/compass bearing \(clockwise from north\)/);
     expect(L("rdpa").description).not.toMatch(/radians|CCW/);
     const veg = L("vegetation").description!;
-    expect(veg.length).toBeLessThan(560); // was 707; + the dry-vegetation caveat (review L7)
-    expect(veg).toMatch(/As it includes dry vegetation, it can read high on bare desert\./);
+    expect(veg.length).toBeLessThan(700); // was 707; + the non-photosynthetic-cover sentence (PI text 3.15)
+    expect(veg).toMatch(/Total cover includes non-photosynthetic vegetation \(dry and dead plant material\) as well as green vegetation, so it can be substantial where little green vegetation is visible; compare it with the aridity index\./);
     expect(veg).toMatch(/\[Explore the full monthly time series at GEOGLAM RAPP\]\(https:\/\/map\.geo-rapp\.org\/\)/);
   });
   it("every atlas-derived field: one citation format (= fieldsCitation) and the dataset licence row", async () => {

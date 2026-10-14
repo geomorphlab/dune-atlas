@@ -1,5 +1,8 @@
 """Writes docs/validation-mars-fields.md from the build records in staging/mars/export (v1) and staging/mars/export_v0.
 
+Section 11 (v2, packed-sand fluxes) is maintained by hand from staging/mars/v2/verify_v2.json and is not written
+by this script: re-running it drops section 11.
+
     python scripts/mars/data/make_validation_doc.py
 """
 import json

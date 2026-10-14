@@ -14,7 +14,7 @@ dataBase: https://data.geomorphlab.org   # overridden by VITE_DATA_BASE at build
 datasets:
   - id: fv3-beta1
     title: MCMC FV3              # label of the Wind dataset selector (shown with one dataset too)
-    prefix: dune-atlas/mars/v1/datasets/fv3-beta1
+    prefix: dune-atlas/mars/v2/datasets/fv3-beta1
     description: "MCMC FV3-based Mars GCM, beta release 1 (2°, hourly, one Mars year): lowest-level winds, temperature and air density, 16,032 hourly samples."
     citation: "NASA Ames Mars Climate Modeling Center, FV3-based Mars GCM Beta Output Release 1 (fv3betaout1), https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/"
     cellAuxStores: ["{dataset}/cells-aux.zarr"]
@@ -138,7 +138,7 @@ groups:
     title: Drift potential
   - id: environment         # id kept (permalinks); shown as "Related data" (same title as Earth's climate group)
     title: Related data
-    description: Near-surface air density (FV3, mean over the year) and elevation (MOLA–HRSC). These do not depend on the grain diameter d.
+    description: Near-surface air density (from the wind dataset, mean over the year) and elevation (MOLA–HRSC). These do not depend on the grain diameter d.
 
 layers:
   # -------------------------------------------------------------------------------------------

@@ -47,13 +47,12 @@ describe("vegetation layer (registry)", () => {
     expect(g1 > r1 && g1 > b1).toBe(true);                // dark green
     expect(COLORMAP_GROUPS.find((x) => x.label === "Sequential")!.names).toContain("ylgn");
   });
-  it("legend note: mean of monthly MODIS fractional cover and a safe link to GEOGLAM RAPP", () => {
+  it("colour bar: ticks only (the explanation and the GEOGLAM RAPP link are in the info; PI, Oct 2026)", () => {
     const html = legendHtml(veg);
-    expect(html).toMatch(/Mean of monthly MODIS fractional cover 2001–2025 \(photosynthetic \+ non-photosynthetic vegetation\)/);
-    const d = document.createElement("div"); d.innerHTML = html;
-    const a = d.querySelector(".legend-note a") as HTMLAnchorElement;
+    expect(html).not.toMatch(/legend-note|MODIS|RAPP/);
+    const d = document.createElement("div"); d.innerHTML = infoHtml(veg);
+    const a = [...d.querySelectorAll("a")].find((x) => x.textContent === "Explore the full monthly time series at GEOGLAM RAPP") as HTMLAnchorElement;
     expect(a.getAttribute("href")).toBe(RAPP);
-    expect(a.textContent).toBe("Explore the full time series at GEOGLAM RAPP");
     expect(a.getAttribute("target")).toBe("_blank");
     expect(a.getAttribute("rel")).toContain("noopener");
   });

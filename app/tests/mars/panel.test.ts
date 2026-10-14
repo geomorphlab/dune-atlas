@@ -29,7 +29,8 @@ const initState = (): AppState => ({ basemap: reg.basemaps[0].id, projection: "g
 const text = (el: Element) => (el.textContent ?? "").replace(/\s+/g, " ");
 /** Earth-only wording that must not appear anywhere in the Mars site or downloads */
 const EARTH = /ERA5|Copernicus|C3S|ECMWF|1950|10 m wind|at 10 m|land[- ]sea|land cell|aridity|vegetation|Namib|Earth's wind-blown sand dunes(?! - Supp)|EPSG:3857|6371 km/i;
-const EARTH_OK = (s: string) => s.replace(/The distribution of Earth's wind-blown sand dunes/g, "");
+// allowed: the paper title; Fryberger's DP definition in the DP ⓘ ("computed from 10 m wind speeds in knots", PI text 3.2)
+const EARTH_OK = (s: string) => s.replace(/The distribution of Earth's wind-blown sand dunes/g, "").replace(/computed from 10 m wind speeds in knots/g, "");
 
 async function openPanel() {
   document.body.innerHTML = '<aside id="cell-panel" hidden></aside>';
@@ -44,9 +45,9 @@ async function openPanel() {
 describe("Mars cell panel", () => {
   it("same sections as Earth; grain-size control, 2 m winds, d axes, Mars table rows", async () => {
     const { root } = await openPanel();
-    expect([...root.querySelectorAll("details.section")].map((d) => d.getAttribute("data-section"))).toEqual(["summary", "windRose", "fluxRose", "modes", "qsdiv", "downloads"]);
+    expect([...root.querySelectorAll("details.section")].map((d) => d.getAttribute("data-section"))).toEqual(["windRose", "fluxRose", "modes", "qsdiv", "summary", "downloads"]);
     const t = text(root);
-    expect(t).toMatch(/Grain diameter d\s*200 µm/);
+    expect(t).toMatch(/Grain diameter d:\s*200 µm/);
     expect(t).toMatch(/median over the hours/);
     expect(t).toMatch(/m\/s, lowest model level/);
     expect(t).toMatch(/lowest-level wind \(height in this cell \d\.\d\d–\d\.\d\d m\)/);   // review L17: the cell's range, About gives all cells
@@ -54,7 +55,7 @@ describe("Mars cell panel", () => {
     for (const th of root.querySelectorAll(".summary tbody th")) expect(th.textContent).not.toMatch(/[()]/);
     expect(t).not.toMatch(/z₀|z0|log law/);
     expect(t).toMatch(/Modes vs grain diameter/);
-    expect(t).toMatch(/More: full cell summary at d = 200 µm/);
+    expect(t).toMatch(/Cell summary at d = 200 µm/);
     expect(t).toMatch(/Mean air density/);
     expect(root.querySelector('.summary tr[data-field="elev_mean"] th')!.textContent).toBe("Elevation");
     expect(t).not.toMatch(/16,032 hourly samples \(one Mars year/);   // 'Hours counted' row removed (downloads keep it)
@@ -67,7 +68,7 @@ describe("Mars cell panel", () => {
     const { root, panel, cell } = await openPanel();
     const before = root.querySelector('[data-section="fluxRose"] .kv')!.textContent;
     panel.setThreshold(5);
-    expect(root.querySelector(".key-numbers")!.textContent!.replace(/\u00a0/g, " ")).toMatch(/Grain diameter d\s*63 µm/);
+    expect(root.querySelector(".cell-meta")!.textContent!.replace(/\u00a0/g, " ")).toMatch(/Grain diameter d:\s*63 µm/);
     const v = analyseMarsCell(cell, 5, { fluxSectors: 32 });
     expect(text(root)).toContain(`${v.stats.utMedian.toFixed(2)} m/s`);
     expect(root.querySelector('[data-section="fluxRose"] .kv')!.textContent).toBe(before); // DP etc. are the fields (constant here)
@@ -154,6 +155,10 @@ describe("Mars public text", () => {
     renderLayerPanel(root, reg, new Store(initState()));
     for (const b of root.querySelectorAll("details")) (b as HTMLDetailsElement).open = true;
     for (const p of root.querySelectorAll(".info-popover")) (p as HTMLElement).hidden = false;
+    // About, "Earth and Mars: what can be compared" (PI text 2.2) names Earth on purpose: present, then left out
+    const cmp = root.querySelector(".about .earth-mars")!;
+    expect(text(cmp)).toMatch(/^Earth and Mars: what can be compared Both atlases compute the same quantities/);
+    cmp.remove();
     const t = text(root);
     expect(t).toMatch(/Mars Dune Atlas/);
     expect(t).toMatch(/Median grain diameter/);

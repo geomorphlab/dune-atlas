@@ -47,7 +47,7 @@ export function panelSignature(root: HTMLElement) {
   };
 }
 export const SIGNATURE = {
-  header: ["div.title-row", "p.subtitle", "label.dataset-row.inline", "label.dunes-only-row.inline"],
+  header: ["div.title-row", "p.subtitle", "div.dataset-line", "label.dunes-only-row.inline"],
   titleRow: ["h1", "button.panel-toggle"],
   slider: ["div.threshold-head", "div.threshold-readout", "div.ut-track", "p.help", "div.info-popover"],
   sliderHead: ["label.ut-label", "button.info-button"],
@@ -114,7 +114,8 @@ export function budgets(W: number, embed: boolean) {
   const h1 = embed ? 15 : 18;
   rows.push(["title row", tw(`Dune Atlas ${BODY_NAME}`, h1, true) + 8 + tw("▾ Layers", 14) + 22, inner]);
   const opts = (reg.datasets ?? []).map((d) => datasetOptionLabel(d.id, d.title));
-  rows.push(["Wind dataset row", tw("Wind dataset", 12.5) + 6 + Math.max(...opts.map((o) => tw(o, 12.5))) + 30, inner]);   // 12.5 px since review U12 / L16
+  const dsInfo = root.querySelector(".dataset-line > .info-button") ? 6 + 18 : 0;   // the dataset ⓘ (Earth)
+  rows.push(["Wind dataset row", tw("Wind dataset", 12.5) + 6 + Math.max(...opts.map((o) => tw(o, 12.5))) + 30 + dsInfo, inner]);   // 12.5 px since review U12 / L16
   rows.push(["Dunes only row", 13 + 4 + tw("Dunes only", 12.5), inner]);
   const label = (root.querySelector(".pinned .ut-label")!.textContent ?? "").replace(/\s+/g, " ").trim();
   rows.push(["slider label + ⓘ", tw(label, 13.5, true) + 6 + 18, inner]);

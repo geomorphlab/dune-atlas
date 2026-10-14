@@ -35,7 +35,7 @@ const TEXT_FIXES: [RegExp, string][] = [[/signed signed/g, "signed"]];
 const fix = (t: string) => TEXT_FIXES.reduce((a, [re, r]) => a.replace(re, r), t);
 
 /** the atlas name of a quantity, with its symbol in TeX (e.g. "Drift potential $DP$") and an own definition */
-export const FIELD_NAMES = names as Record<string, { title: string; titleTex: string; description?: string }>;
+export const FIELD_NAMES = names as Record<string, { title: string; titleTex: string; description?: string; descriptionMars?: string }>;
 
 export function fieldInfo(id: string): FieldInfo {
   const m0 = M[id] ?? { long_name: id, units: "", description: "" };

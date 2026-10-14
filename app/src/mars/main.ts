@@ -108,7 +108,7 @@ map.addControl(new maplibregl.AttributionControl({
   compact: true,
   customAttribution: [
     `Winds: <a href="https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/" target="_blank" rel="noopener">MCMC FV3 Mars GCM beta 1</a> (NASA Ames)`,
-    `Dunes: USGS Mars Global Digital Dune Database and <a href="https://doi.org/10.1016/j.icarus.2020.114018" target="_blank" rel="noopener">Fenton (2020)</a>; method: <a href="https://doi.org/10.1038/s41467-026-75466-y" target="_blank" rel="noopener">Gunn (2026)</a>, transport: <a href="https://doi.org/10.1017/jfm.2023.343" target="_blank" rel="noopener">Pähtz &amp; Durán (2023)</a>`,
+    `Dunes: USGS Mars Global Digital Dune Database and <a href="https://doi.org/10.1016/j.icarus.2020.114018" target="_blank" rel="noopener">Fenton (2020)</a>; methods as outlined in <a href="https://doi.org/10.1038/s41467-026-75466-y" target="_blank" rel="noopener">Gunn (2026)</a>, transport: <a href="https://doi.org/10.1017/jfm.2023.343" target="_blank" rel="noopener">Pähtz &amp; Durán (2023)</a>`,
   ],
 }), "bottom-right");
 map.getCanvas().setAttribute("aria-label", "Map of Mars. Click a cell to show its wind and sand-flux roses.");
@@ -163,12 +163,9 @@ function shareState(): ShareState {
   return appShareState(store.state, { lon: c.lng, lat: c.lat, zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() }, !layerPanelEl.classList.contains("collapsed"));
 }
 const shareLinkNow = () => shareUrl(`${location.origin}${location.pathname}`, shareState());
-/** map PNG (camera button): landscape, selected cell outlined, white or transparent background (export/mapExport.ts) */
+/** map PNG (camera button): map with the strip below, white or transparent background (export/mapExport.ts) */
 function exportMap(o: MapExportRequest) {
-  const sc = store.state.cell;
-  let selectedCell: { lat: number; lon: number } | null = null;
-  try { if (sc) { const c = cellFromIndex(sc[0], sc[1], grid); selectedCell = { lat: c.lat, lon: c.lon }; } } catch { /* outside the grid */ }
-  return exportMapPng(map, { reg, state: store.state, shareLink: shareLinkNow(), settle: () => overlays.settled(), selectedCell }, o);
+  return exportMapPng(map, { reg, state: store.state, shareLink: shareLinkNow(), settle: () => overlays.settled() }, o);
 }
 function openAbout() {
   setLayerPanelOpen(layerPanelEl, true);

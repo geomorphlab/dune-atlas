@@ -145,12 +145,9 @@ function shareState(): ShareState {
   return appShareState(store.state, { lon: c.lng, lat: c.lat, zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() }, !layerPanelEl.classList.contains("collapsed"));
 }
 const shareLinkNow = () => shareUrl(`${location.origin}${location.pathname}`, shareState());
-/** map PNG (camera button): landscape, selected cell outlined, white or transparent background (export/mapExport.ts) */
+/** map PNG (camera button): map with the strip below, white or transparent background (export/mapExport.ts) */
 function exportMap(o: MapExportRequest) {
-  const sc = store.state.cell;
-  let selectedCell: { lat: number; lon: number } | null = null;
-  try { if (sc) { const c = cellFromIndex(sc[0], sc[1], grid); selectedCell = { lat: c.lat, lon: c.lon }; } } catch { /* outside the grid */ }
-  return exportMapPng(map, { reg, state: store.state, shareLink: shareLinkNow(), settle: () => overlays.settled(), selectedCell }, o);
+  return exportMapPng(map, { reg, state: store.state, shareLink: shareLinkNow(), settle: () => overlays.settled() }, o);
 }
 function openAbout() {
   setLayerPanelOpen(layerPanelEl, true);

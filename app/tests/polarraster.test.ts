@@ -38,10 +38,13 @@ type Lib = {
 function makeLib(unpatched: "" | "pole" | "seam" = ""): { lib: Lib; computeWorldOffsets(map: unknown, globe: boolean): number[] } {
   const helpers = [
     "var MERCATOR_LAT_LIMIT = 85.05112878; var MIN_SUBDIVISIONS = 2; var MAX_SUBDIVISIONS = 128; var MERCATOR_SUBDIVISIONS = 1; var WEB_MERCATOR_EXTENT = 20037508342789244e-9;",
-    method("function createSubdividedQuad(subdivisions) {", "\n// src/"),
+    method("function createSubdividedQuad(subdivisions, subdivisionsY = subdivisions) {", "\n// src/"),   // with globeMeshCount (globe mesh on the cell grid)
     fnSrc("lonToMercatorNorm"), fnSrc("lonToMercatorNormUnclamped"), fnSrc("latToMercatorNorm"), fnSrc("latToWgs84Norm"),
     fnSrc("boundsToMercatorNorm"), fnSrc("geoToArrayIndex"), fnSrc("flipTexCoordV"), method("function computeWorldOffsets(map, isGlobe) {", "// src/render-helpers.ts"),
-  ].join("\n");
+  ].join("\n")
+    // topology checks: 0.1° regions of more than 300 cells a side get a vertex line every d cells (d | cells) to keep the
+    // test meshes small; smaller regions keep the production mesh (a line on every cell edge)
+    .replace("function globeMeshCount(cells, cellDeg) {", "function globeMeshCount(cells, cellDeg) {\n  if (cells > 300 && cellDeg < 0.15) { for (let d = 2; d <= cells; d++) if (cells % d === 0 && cells / d <= 48) return cells / d; }");
   const members = [
     method("_parseUntiledMultiscale(metadata) {", "  static clearCache() {"),
     method("levelXYLimits(width, height) {", "  getVisibleRegions(map) {"),
@@ -53,7 +56,8 @@ function makeLib(unpatched: "" | "pole" | "seam" = ""): { lib: Lib; computeWorld
   // unpatched: the library's original mesh bounds (cell edges, beyond ±90 for pole rows)
   // seam: the original per-region subdivision count (from the region's own latitude span)
   const m = unpatched === "pole" ? members.replace("latToWgs84Norm(Math.max(-90, mb.latMin))", "latToWgs84Norm(mb.latMin)").replace("latToWgs84Norm(Math.min(90, mb.latMax))", "latToWgs84Norm(mb.latMax)")
-    : unpatched === "seam" ? members.replace(/if \(this\.crs === "EPSG:4326"\) \{\s*\/\/ dune-atlas patch: watertight seams[\s\S]*?\n      \}\n      const subdivisions/, "const subdivisions") : members;
+    : unpatched === "seam" ? members.replace(/if \(this\.crs === "EPSG:4326"\) \{\s*\/\/ dune-atlas patch: watertight seams[\s\S]*?\n      \}\n      let subdivisions/, "let subdivisions")
+      .replace(/if \(this\.crs === "EPSG:4326" && this\.isGlobeProjection\) \{\s*\/\/ dune-atlas patch: globe mesh on the cell grid[\s\S]*?\n      \}\n      if \(this\.crs === "EPSG:4326"\) \{/, 'if (this.crs === "EPSG:4326") {') : members;
   if (unpatched) expect(m).not.toBe(members);
   // eslint-disable-next-line @typescript-eslint/no-implied-eval
   return new Function(`${helpers}\nreturn { lib: { ${m} }, computeWorldOffsets };`)();
@@ -218,7 +222,7 @@ describe("globe raster geometry: pole and antimeridian (patched zarr-layer)", ()
         expect(tris.reduce((m, t) => Math.min(m, ...t.lat), 0)).toBeLessThan(-90); // vertices beyond the pole
         expect(new Set(tris.map((t) => t.sign)).size).toBe(2); // flipped triangles
         // points near the pole covered more than once
-        const many = [[10, -89.6], [100, -89.8], [-120, -89.3], [45, -89.95]].map(([lo, la]) => coverCount(tris, unit(lo, la)));
+        const many = [[10, -89.99], [100, -89.995], [-120, -89.985], [45, -89.998]].map(([lo, la]) => coverCount(tris, unit(lo, la)));   // the fold: last row only (the globe mesh has a row per cell)
         expect(Math.max(...many)).toBeGreaterThan(1);
       });
       it("the original per-region subdivision count leaves seams along region boundaries (area off)", () => {

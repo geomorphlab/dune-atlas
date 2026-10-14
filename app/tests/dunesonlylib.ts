@@ -31,7 +31,7 @@ export function checkToggleAndLinks(reg: Registry, dataset: string) {
   const cb = root.querySelector("#dunes-only") as HTMLInputElement;
   expect(cb).not.toBeNull();
   // next to the Wind dataset selector, default off
-  expect(cb.closest("label")!.previousElementSibling?.classList.contains("dataset-row")).toBe(true);
+  expect(cb.closest("label")!.previousElementSibling?.querySelector(":scope > .dataset-row")).not.toBeNull();
   expect(cb.checked).toBe(false);
   cb.checked = true; cb.dispatchEvent(new Event("change"));
   expect(store.state.dunesOnly).toBe(true);

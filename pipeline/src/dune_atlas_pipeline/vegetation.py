@@ -69,8 +69,9 @@ ATTRIBUTION = {
 DESCRIPTION = (   # shortened for the info popover (PI 2026-10-14); source, licence and processing are attribution rows
     "Mean total vegetation cover (green plus dry vegetation, including trees; % of the ground), 2001–2025, from the "
     "CSIRO MODIS Fractional Cover v3.1 (500 m, monthly) averaged onto the 0.1° cells over the months with valid data. "
-    "Calibrated against Australian field sites; saturates under closed canopies. As it includes dry vegetation, "
-    "it can read high on bare desert. "  # review L7
+    "Calibrated against Australian field sites; saturates under closed canopies. "
+    "Total cover includes non-photosynthetic vegetation (dry and dead plant material) as well as green vegetation, "
+    "so it can be substantial where little green vegetation is visible; compare it with the aridity index. "  # PI text 3.15
     "No data over ocean, Antarctica, "
     "land north of 70° N and the 180° meridian cells. "
     f"[Explore the full monthly time series at GEOGLAM RAPP]({MAP_URL}).")
@@ -295,11 +296,8 @@ def registry_layer() -> dict:
         "attribution": dict(a),
         "visible": False, "opacity": 0.85, "queryable": False,
         "display": {"transform": "none", "colormap": COLORMAP, "clim": list(CLIM), "log": False,
-                    "ticks": [0, 20, 40, 60, 80, 100], "topLabel": "≥ 100",
-                    "legendNote": ("Mean of monthly MODIS fractional cover 2001–2025 (photosynthetic + "
-                                   "non-photosynthetic vegetation). "
-                                   f"[Explore the full time series at GEOGLAM RAPP]({MAP_URL}). "
-                                   "No data over ocean, Antarctica and north of 70° N.")},
+                    # (no legendNote: stated once, in the info; PI, Oct 2026)
+                    "ticks": [0, 20, 40, 60, 80, 100], "topLabel": "≥ 100"},
     }
 
 

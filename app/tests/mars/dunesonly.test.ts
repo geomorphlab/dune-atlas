@@ -40,6 +40,6 @@ describe("Dunes only (Mars)", () => {
     checkExportStrip(reg, "fv3-beta1");
   });
   it("overlay manager: mask only for wind-derived layers while on, from the dataset's cells.zarr", () => {
-    checkOverlayManager(reg, "dune-atlas/mars/v1/datasets/fv3-beta1", /^https:\/\/data\.test\/dune-atlas\/mars\/v1\/datasets\/fv3-beta1\/cells\.zarr$/);
+    checkOverlayManager(reg, "dune-atlas/mars/v2/datasets/fv3-beta1", /^https:\/\/data\.test\/dune-atlas\/mars\/v2\/datasets\/fv3-beta1\/cells\.zarr$/);
   });
 });

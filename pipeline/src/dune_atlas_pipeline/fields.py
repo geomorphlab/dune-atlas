@@ -67,7 +67,7 @@ def dataset_citation(dataset=None) -> str:
     if ds.id == "era5-land":
         return CITATION
     return (f"Fields computed for the atlas from {ds.name} hourly 10 m winds ({ds.info['citation']}; data "
-            f"{ds.info['data_citation']}) with the method of Gunn, A. (2026) The distribution of Earth's wind-blown "
+            f"{ds.info['data_citation']}) with the methods outlined in Gunn, A. (2026) The distribution of Earth's wind-blown "
             "sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y")
 # Registry (info popover) citation of the atlas-derived fields: one format for every dataset and body,
 # "Gunn, A. (2026). ... doi:...; [data: ...;] winds: ..." (PI 2026-10-14; the app's cell/citation.ts
@@ -98,10 +98,87 @@ def fields_attribution(dataset=None) -> dict:
     return {"citation": fields_citation(dataset), "licence": fields_licence(dataset)}
 
 
-# Definitions written here where the source description only repeats the source name (review L5).
+# Info-popover definitions (PI text, docs/earth-physics-text_AG.md section 3, Oct 2026; review L5): used instead of
+# the source descriptions for the registry layers, the cell table and the CSV / NetCDF descriptions. Both planets
+# unless MARS_FIELD_DEFINITIONS gives a Mars text (written by mars.sidecars and field_names.json `descriptionMars`).
 FIELD_DEFINITIONS = {
-    "ab": (r"Orientation of the crests of dunes in the migration (bed-instability) mode: an axis from 0° to 180°,"
-           r" perpendicular to the migration direction $\alpha_T$."),
+    "dpm": (r"Time-averaged flat-bed saturated sand flux, $DP = \sum n q / \sum n$ over all speed and direction bins: "
+            r"the volume of packed sand per metre width that the wind could move per year over a flat bed fully "
+            r"covered by loose sand (Gunn 2026). Like the drift potential of Fryberger & Dean (1979) it measures the "
+            r"wind's capacity to transport sand, but it is a different quantity: Fryberger's DP is in vector units, "
+            r"computed from 10 m wind speeds in knots as $V^2(V - V_t)$ with a 12-knot threshold, whereas this DP is a "
+            r"physical flux computed from the friction velocity with the threshold set by the slider. The two cannot "
+            r"be converted into each other without the wind-speed distribution, and Fryberger's energy classes (below "
+            r"200, 200–400 and above 400 vector units) do not apply to these values."),
+    "rdpm": (r"Magnitude of the time-averaged flat-bed flux vector, $RDP = |\sum n q e^{i\theta}| / \sum n$: the net "
+             r"volume of packed sand per metre width per year after transport in opposing directions has cancelled. "
+             r"Same units as DP; RDP ≤ DP, with equality only when all transport is in one direction."),
+    "rdpa": (r"Direction of the time-averaged flat-bed flux vector, $\arg \sum n q e^{i\theta}$, the direction sand "
+             r"moves, as a compass bearing (clockwise from north). Poorly defined where RDP/DP is low, because "
+             r"transport in opposing directions nearly cancels."),
+    "qha_rdp_dp": (r"Directional variability of sand flux: ratio of resultant to total drift potential, $RDP/DP$ "
+                   r"(0 = multidirectional, 1 = unidirectional). Undefined where there is no sand flux ($DP = 0$). "
+                   r"Fryberger & Dean (1979) classes: below 0.3 low (complex or obtuse bimodal winds), 0.3–0.8 "
+                   r"intermediate (obtuse to acute bimodal winds), above 0.8 high (unimodal winds). Only transport "
+                   r"above the threshold counts here, and the flux law differs from Fryberger's, so use the classes "
+                   r"as a guide."),
+    "at": (r"Migration direction $\alpha_T$ of dunes whose crests have the bed-instability orientation $\alpha_H$: "
+           r"perpendicular to $\alpha_H$, toward the side of the net sand flux across the crest (Gunn 2026; Courrech "
+           r"du Pont et al. 2024)."),
+    "ab": (r"Crest orientation $\alpha_H$ of the bed-instability mode: the axis (0–180°) of crests that receive the "
+           r"largest gross sand transport across them, including the speed-up of the wind over the crest (Rubin & "
+           r"Hunter 1987; Courrech du Pont et al. 2024). It is also the expected crest orientation of migrating dunes "
+           r"such as barchans. Dunes with this orientation migrate perpendicular to it, in direction $\alpha_T$. As an "
+           r"axis it has no compass direction: e.g., 128° and 308° are the same line."),
+    "ae": (r"Elongation direction $\alpha_E$: the direction in which a dune grows in length without migrating, where "
+           r"the net sand flux across its crest is zero and the net flux along it is positive (Courrech du Pont et "
+           r"al. 2014, 2024). It applies to dunes on beds with limited sand, typically growing from a fixed sand "
+           r"source. Where a wind regime allows several such directions, the atlas shows the most stable one."),
+    "ao": (r"Direction $\alpha_O$ along crests of the bed-instability orientation $\alpha_H$ in which the net sand "
+           r"flux along the crest points, as a compass bearing. Where crests are oblique to the net transport, sand "
+           r"moves along them as well as across them; $\alpha_O$ shows which way along the crest it moves."),
+    "sige_sigh": (r"Ratio of the growth rates in height of dunes in the elongation and bed-instability orientations, "
+                  r"$\langle|Q_{\bot}(\alpha_E)|\rangle/\langle|Q_{\bot}(\alpha_H)|\rangle$, between 0 and 1. It "
+                  r"assesses whether dunes elongating from a sand source on a starved bed are stable: in numerical "
+                  r"simulations and in dunes around the Tibesti Massif, elongating linear dunes form where the ratio "
+                  r"is above about 0.6 and trains of barchans form below it (Gao et al. 2015; Courrech du Pont et al. "
+                  r"2024). It does not take bed mobility or other boundary conditions into account."),
+    "qhab_nl_nc": (r"Net along-crest over net across-crest sand flux for crests of the bed-instability orientation, "
+                   r"$|\langle Q_{\parallel}(\alpha_H)\rangle/\langle Q_{\bot}(\alpha_H)\rangle|$. Along-crest "
+                   r"transport tends to keep crests straight, while across-crest transport, which drives migration, "
+                   r"tends to make them sinuous (Rubin 2012), so higher values suggest straighter long-crested dunes "
+                   r"on sand-covered beds. For dunes migrating on starved beds, the ratio measures the asymmetry of "
+                   r"sand fluxes that makes dunes such as barchans asymmetric (Courrech du Pont et al. 2024). In the "
+                   r"sand-covered-bed examples of Courrech du Pont et al. (2024) it is about 0.03 for transverse, 0.4 "
+                   r"for oblique and 22 for longitudinal dunes. The ratio goes to infinity where its denominator (a "
+                   r"net flux) goes to zero (shown clipped to ±60,000)."),
+    "qhab_ac_nc": (r"Gross over net across-crest sand flux for crests of the bed-instability orientation, "
+                   r"$|\langle |Q_{\bot}(\alpha_H)|\rangle/\langle Q_{\bot}(\alpha_H)\rangle|$, never below 1: the "
+                   r"balance between growth in height and migration. Values near 1 mean that transport across the "
+                   r"crest goes one way and the dunes mainly migrate; large values mean that it reverses, building "
+                   r"the dunes up with little net migration, which may also favour straighter crests (Courrech du "
+                   r"Pont et al. 2024). In the sand-covered-bed examples of Courrech du Pont et al. (2024) it is about "
+                   r"1.1 for transverse, 5 for oblique and 49 for longitudinal dunes. The ratio goes to infinity where "
+                   r"its denominator (a net flux) goes to zero (shown clipped to ±60,000)."),
+    "qhne_ac_nl": (r"Gross across-crest over net along-crest sand flux for dunes in the elongation orientation, "
+                   r"$\langle |Q_{\bot}(\alpha_E)|\rangle/\langle Q_{\parallel}(\alpha_E)\rangle$: the balance between "
+                   r"growth in height and elongation. For dunes that elongate without migrating, it is the parameter "
+                   r"expected to distinguish their shapes. Compared with $\hat{Q}_{|\bot|/\bot,H}$, it indicates "
+                   r"whether elongation or migration is more likely to set dune shape and orientation on a starved "
+                   r"bed: the dynamic with the larger ratio favours growth in height more and is expected to prevail "
+                   r"(Courrech du Pont et al. 2024). The ratio goes to infinity where its denominator (a net flux) goes "
+                   r"to zero (shown clipped to ±60,000)."),
+}
+# Mars wording (PI text 3.2): DP is averaged over the hours of the Mars year with a grain-size threshold.
+MARS_FIELD_DEFINITIONS = {
+    "dpm": (r"Time-averaged flat-bed saturated sand flux, $DP = \sum q / N$ over all N hours of the Mars year: the "
+            r"volume of packed sand per metre width that the wind could move per Earth year over a flat bed fully "
+            r"covered by loose sand (Gunn 2026). Like the drift potential of Fryberger & Dean (1979) it measures the "
+            r"wind's capacity to transport sand, but it is a different quantity: Fryberger's DP is in vector units, "
+            r"computed from 10 m wind speeds in knots as $V^2(V - V_t)$ with a 12-knot threshold, whereas this DP is a "
+            r"physical flux computed from the friction velocity with a threshold computed from the grain diameter. "
+            r"The two cannot be converted into each other, and Fryberger's energy classes do not apply to these "
+            r"values."),
 }
 
 
@@ -123,7 +200,7 @@ def title_tex(title: str, long_name: str) -> str:
 
 
 def field_names(meta: dict | None = None) -> dict:
-    """{var: {title, titleTex[, description]}}: the one name per quantity, for the app's downloads and cell
+    """{var: {title, titleTex[, description][, descriptionMars]}}: the one name per quantity, for the app's downloads and cell
     table (registry/field_names.json; the registry layers carry the same title / titleTex)."""
     meta = meta or load_metadata()
     out = {}
@@ -133,6 +210,8 @@ def field_names(meta: dict | None = None) -> dict:
         e = {"title": fm["title"], "titleTex": title_tex(fm["title"], meta[v]["long_name"])}
         if v in FIELD_DEFINITIONS:
             e["description"] = FIELD_DEFINITIONS[v]
+        if v in MARS_FIELD_DEFINITIONS:
+            e["descriptionMars"] = MARS_FIELD_DEFINITIONS[v]
         out[v] = e
     return out
 
@@ -157,7 +236,7 @@ GROUPS = [
     {"id": "drift", "title": "Drift potential",
      "description": "Flat-bed sand flux: total (DP), net (RDP), its direction (RDD) and directionality (RDP/DP)."},
     {"id": "orientation", "title": "Bedform orientation",
-     "description": "Predicted dune-crest orientations for the bed-instability (migration), elongation and oblique modes."},
+     "description": "Predicted dune orientations: crest orientation and migration direction of the bed-instability mode, elongation direction and along-crest transport direction."},
     {"id": "crest-fluxes", "title": "Crest-normal/parallel fluxes", "collapsed": True,
      "description": "Net and absolute sand flux resolved across (normal to) and along (parallel to) predicted crests."},
     {"id": "morphology", "title": "Ratios & morphology indices", "collapsed": True,
@@ -171,13 +250,13 @@ GROUPS = [
 # CSV/NetCDF long names; review L5). `titleTex` = the same name with the source symbol in TeX (title_tex).
 # Order = cellstore.FIELD_VARS.
 FIELD_META = {
-    "ab":   dict(group="orientation", title="Migration-mode crest orientation (αH)",
+    "ab":   dict(group="orientation", title="Crest orientation, bed-instability mode (αH)",
                  colormap="twilight", transform="rad-to-axis"),
     "ae":   dict(group="orientation", title="Elongation direction (αE)",
                  colormap="twilight", transform="rad-to-bearing"),
     "at":   dict(group="orientation", title="Transverse migration direction (αT)",
                  colormap="twilight", transform="rad-to-bearing"),
-    "ao":   dict(group="orientation", title="Oblique elongation direction (αO)",
+    "ao":   dict(group="orientation", title="Along-crest transport direction (αO)",
                  colormap="twilight", transform="rad-to-bearing"),
     "rdpa": dict(group="drift", title="Resultant drift direction (RDD)",
                  colormap="twilight", transform="rad-to-bearing"),
@@ -555,7 +634,7 @@ def registry_fragment(meta: dict | None = None, var_order=None, dataset=None, sh
         units = "°" if v in ANGLE_VARS else display_units(v)
         # definition only: units, the slider and the wind dataset are rows of the info popover (app)
         desc = field_definition(v, m["description"])
-        if v in CLIPPED_RATIO_VARS:
+        if v in CLIPPED_RATIO_VARS and "±60,000" not in desc:   # the PI definitions (Oct 2026) state it
             desc += (f" The ratio is infinite where its denominator (a net flux) is exactly zero; such values are"
                      f" shown as ±{F16_MAX:,.0f}.")
         display = {"transform": tr, "colormap": fm["colormap"],

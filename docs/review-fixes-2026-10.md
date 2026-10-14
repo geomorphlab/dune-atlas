@@ -107,3 +107,37 @@ only, not in a real browser. Items that most need a look in a browser are marked
 * Not checked: the pages in a real browser (none available in the development sandbox).
 * `tests/repotext.test.ts` (run only where the maintainer's local word list exists) reports 36 hits in files
   that predate this track (Mars physics constants and specification); this log was reworded to add none.
+
+## Addendum: second round (PI text, text sweep, PI browser review, Mars v2 data), 14 October 2026
+
+Commits on `mars`: `4b8a690` (code), `b78cda2` (Mars drift record), `417f7a5` (audit), `be5d161` (merge of
+`mars-packing`: Mars fluxes as packed-sand volumes, q = Q/(ρp φ), φ = 0.6; data prefix
+`dune-atlas/mars/v2/datasets/fv3-beta1`; Mars DP and all fluxes ×1/0.6). Published together in one deploy (below).
+
+**PI-edited physics text** applied verbatim (only "reviewd" → "reviewed"; markup adapted) in the Earth and Mars
+About, every info button of the file, the modes captions, Help and a new ⓘ beside the Wind dataset selector; αH
+is now "Crest orientation, bed-instability mode (αH)" and αO "Along-crest transport direction (αO)" everywhere,
+including the CSV / NetCDF long names. One deviation: the Mars divergence ⓘ omits the sentence "No data at coasts
+… ±90° rows", which does not hold on Mars (for the PI to confirm). The Concepts entries are stored, not shipped:
+`docs/concepts/concepts-earth-mars.md`. The packed-sand wording of the Mars About and downloads ships with the
+Mars v2 data in the same deploy.
+
+**Text sweep** (PI rules a–c): every change old → new, and 8 items left for the PI, in
+`docs/user-text-audit-2.md`.
+
+**PI browser review** (how each was verified; no browser in the development sandbox):
+
+| # | Item | Change | Verified by |
+|---|---|---|---|
+| 1 | Tour step 5 showed two yellow boxes | The only accent-outlined elements during a step are the highlight and the popover border; at step 5 the popover sits directly under the Active-layers box at about the same width, and the highlight was placed before step 4's restore (closing RDD's Display, scrolling the list back) had moved the list. The popover border is now neutral and every step is re-anchored after the previous step's restore. | tour DOM tests (`tourhooks`, `tourplace`); cause by code reading — **check in a browser** |
+| 2 | Cell panel order; no key-numbers box | Old order (plots, then the summary table, then downloads), no box; the threshold (Mars: grain diameter and per-hour threshold statistics) on short lines under the dune badge, each value at its line end; the table rows fold in groups as in the layer panel (Drift potential, Bedform orientation, Crest-normal/parallel fluxes, Ratios & morphology indices, Wind statistics, Related data, Cell), open state remembered per body (`duneAtlas[Mars].cellPanel.tableGroups`; crest fluxes, ratios and wind statistics closed by default, as in the layer panel). | DOM tests (section order, groups, persistence over re-renders, titles and members against both registries), slider sweeps over 64 positions (no reflow, no holes) in both builds |
+| 3 | Tour step 7 / About wording tied to the present datasets | Step 7: "Switch between the wind datasets; each option names the dataset and its grid. …"; About intro and items: dataset facts from the dataset table; tour included in the sweep. | audit table; Mars public-text test |
+| 4 | "This is the end of the tour." | Removed (both); the sentence before now says each atlas reopens the view you last had there. | help-doc test (docs/help-text.md regenerated) |
+| 5 | Globe: raster cell short of the dune outline (22° N, 56.7° E) | Cause: zarr-layer drew each region (361 × 360 cells) as one quad split into about 1° steps; on the globe each step is a flat chord up to ~240 m below the sphere, and the texture varies linearly along it, while MapLibre subdivides vector lines finely. A cell edge inside a step is therefore drawn inward of the outline, by an amount that grows with the distance from the view centre (MapLibre's globe is a sphere below zoom 11 and blends to Mercator between 11 and 12). Fix in the zarr-layer patch: on the globe the mesh has a vertex line on every cell edge (cells ≤ 0.25°; coarser cells split into steps ≤ 0.25°; ≤ 512 lines per region side), so cell edges lie on the sphere. Mercator was already exact (one planar quad, per-fragment inverse-Mercator lookup). | geometry test with a vertical-perspective camera model (`tests/globemesh.test.ts`): the old mesh put the right / bottom edge of a cell 5.4 px (22° N), 3.3 px (45° N) and 9.1 px (70° N) inside the outline at zoom 10.5–11.9 (CSS px; double on a retina screen, consistent with the screenshot); the new mesh < 0.1 px. Pole and seam topology tests pass. Cost: up to ~260 k vertices per 0.1° region on the globe. **Check in a browser**, including frame rate on the globe at zoom 8–11. |
+| 6 | Map PNG export layout | Reverted to the layout before this round (map, then the strip below across the full width); kept: white default background with the Transparent option, progress stages and the "Saved" / download messages. Removed: the side column, the selected-cell outline and its line in the export (the on-map selection ring stays, PI decision). Export box and Help no longer promise a slide shape. | strip test (full width, no text beyond the right edge, no selected-cell line); not rendered in a browser — **check an export with several layers** |
+| 7 | Plot export legends | "current threshold" / "current grain diameter" → the value, "u*,th = 0.15 m/s" / "d = 200 µm". | type check, plot-export tests; not rendered |
+| 8 | Colour-bar text duplicating the info | Notes removed from the aridity and vegetation colour bars (their text is in the info); the Mars elevation note moved into its info. Colour bars keep ticks, labels and the units row. | registry test: no layer in either atlas has a colour-bar note |
+
+**Mars v2 data**: merged without conflicts; the Mars registry fragments regenerated from the merged sources are
+identical to Wind's v2 files in colour limits and sources (text from this round); the Mars dev fixture now points
+at the v2 layout (`staging/fixture-mars` → `staging/mars/v2/fixture-mars`).

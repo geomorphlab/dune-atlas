@@ -102,13 +102,13 @@ def threshold(d, rho, T, knudsen=True):
 
 
 def transport_rate(ustar, ut, d, s, gt, nu):
-    """Saturated volume flux q = Q / rho_p (m^2/s) from eq. 3.2 in '+' units:
-    Q+ / d+^(3/2) = C1 s^(1/3) (Th - Th_t) + C2 s^(1/3) (Th - Th_t)^2, Q+ = Q/(rho_p nu),
+    """Saturated volume flux of packed sand q = Q / (rho_p phi) (m^2/s, phi = PACKING = 0.6) from eq. 3.2 in '+'
+    units: Q+ / d+^(3/2) = C1 s^(1/3) (Th - Th_t) + C2 s^(1/3) (Th - Th_t)^2, Q+ = Q/(rho_p nu),
     Th = u*^2 / (s g~ d); zero where u* <= u*,th."""
     dth = (ustar ** 2 - ut ** 2) / (s * gt * d)
     dplus = gt * d / (gt * nu) ** (2.0 / 3.0)
     qplus = dplus ** 1.5 * (M.C1 * s ** (1 / 3) * dth + M.C2 * s ** (1 / 3) * dth ** 2)
-    return np.where(ustar > ut, qplus * nu, 0.0)       # Q/rho_p = Q+ nu
+    return np.where(ustar > ut, qplus * nu / M.PACKING, 0.0)   # Q/(rho_p phi) = Q+ nu / phi
 
 
 def flux(ustar, d, rho, T, knudsen=True):
@@ -118,11 +118,11 @@ def flux(ustar, d, rho, T, knudsen=True):
 
 
 def transport_rate_dimensional(ustar, ut, d, rho, gt):
-    """The same law written dimensionally (corrected eq. 5.2), divided by rho_p. Used only in tests to pin
+    """The same law written dimensionally (corrected eq. 5.2), divided by rho_p phi. Used only in tests to pin
     the typo correction: equals transport_rate. The paper prints 1.7 s^(1/3) rho_p ... + 12 s^(-2/3) rho_p ...;
     eq. 3.2 gives exactly these coefficients with rho_f in place of rho_p."""
     du2 = ustar ** 2 - ut ** 2
     s = M.RHO_P / rho
     Q = (M.C1 * s ** (1 / 3) * rho * np.sqrt(d / gt) * du2
          + M.C2 * s ** (-2 / 3) * rho * (gt ** 3 * d) ** -0.5 * du2 ** 2)
-    return np.where(ustar > ut, Q / M.RHO_P, 0.0)
+    return np.where(ustar > ut, Q / (M.RHO_P * M.PACKING), 0.0)

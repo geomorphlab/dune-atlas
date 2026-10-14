@@ -13,6 +13,8 @@ K_ADIABATIC = 1.33       # adiabatic exponent (Knudsen number only)
 
 # --- grains -------------------------------------------------------------------------------------
 RHO_P = 3000.0           # grain density (kg m^-3), basaltic sand
+PACKING = 0.6            # sand-bed packing fraction phi: atlas fluxes are volumes of packed sand, q = Q/(rho_p phi)
+                         # (as the Earth atlas, FLUXCONSTANT = 5/0.6)
 
 # --- near-surface wind ----------------------------------------------------------------------------
 # u* from the GCM lowest-level wind at that hour's lowest-level height z (hydrostatic), through the smooth-wall

@@ -83,13 +83,14 @@ describe("info popover and legend", () => {
     expect(infoHtml(L("qsdiv"))).toMatch(/Updates with the/);
     expect(attributionHtml({ url: "javascript:alert(1)", source: "<b>x</b>" })).not.toMatch(/javascript:|<b>/);
   });
-  it("aridity legend: UNEP class ticks, saturated top label, note on saturation and Antarctica", () => {
+  it("aridity legend: UNEP class ticks and the saturated top label only; classes and no-data areas are in the info (PI, Oct 2026)", () => {
     const a = L("aridity");
     expect(legendTicks(a)).toEqual([0.003, 0.03, 0.2, 0.5, 0.65, 6.5]);
     const h = legendHtml(a);
     expect(h).toContain(">≥ 6.5<");
-    expect(h).toMatch(/AI ≥ 6\.5 \(source values saturate at 6\.5535\)/);
-    expect(h).toMatch(/Antarctica \(south of 60° S\)/);
+    expect(h).not.toMatch(/legend-note|UNEP|Antarctica|saturate/);
+    expect(a.description).toMatch(/UNEP classes: < 0\.03 hyper-arid/);
+    expect(a.description).toMatch(/Antarctica \(south of 60° S\)/);
     expect(h).toContain('class="legend-ticks staggered"'); // 0.5 / 0.65 are close on the log scale
     expect((h.match(/<i style=/g) ?? []).length).toBe(4);
     // a user clim replaces the class ticks

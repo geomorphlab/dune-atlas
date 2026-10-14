@@ -13,7 +13,8 @@ layers:
   thresholdAware: false
   units: m
   description: Elevation $z$ of the surface relative to the Mars areoid (MOLA datum), from the Mars MGS MOLA – MEX
-    HRSC Blended DEM Global 200m v2.
+    HRSC Blended DEM Global 200m v2. The colour scale saturates beyond its ends (Olympus Mons 21 km, Hellas −8.2
+    km).
   citation: Fergason, R. L, Hare, T. M., & Laura, J. (2018). HRSC and MOLA Blended Digital Elevation Model at 200m
     v2. Astrogeology PDS Annex, U.S. Geological Survey. https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m
   attribution:
@@ -23,8 +24,8 @@ layers:
       200m v2. Astrogeology PDS Annex, U.S. Geological Survey. https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m
     licence: CC0 (MOLA), CC BY-SA 3.0 IGO (HRSC)
     url: https://astrogeology.usgs.gov/search/map/mars_mgs_mola_mex_hrsc_blended_dem_global_200m
-    changes: Area mean over 1/64° (~0.93 km) pixels of the 200 m DEM, rounded to 1 m; zoomed-out map views show means
-      (≤ 0.5 m rounding).
+    changes: Area mean over 1/64° (~0.93 km) pixels of the 200 m DEM, rounded to 1 m; zoomed-out map views show
+      means (≤ 0.5 m rounding).
   visible: false
   opacity: 0.85
   queryable: true
@@ -34,4 +35,3 @@ layers:
     clim:
     - -8000
     - 12000
-    legendNote: Colour scale saturates beyond the ends (Olympus Mons 21 km, Hellas −8.2 km).
