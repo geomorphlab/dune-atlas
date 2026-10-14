@@ -1,13 +1,8 @@
-// All text of the Mars help panel and guided tour (replaces ui/helpText.ts in the Mars build; same
-// exports, structure and step ids as Earth so ui/tour.ts and ui/tourHooks.ts work unchanged).
-// Inline maths as $...$ (KaTeX); everything else plain text.
-export type { HelpSection, TourStep } from "../../../ui/helpText";
-import type { HelpSection, TourStep } from "../../../ui/helpText";
+// Mars text of the help panel and the guided tour (same structure and step ids as Earth, so ui/tour.ts
+// and ui/tourHooks.ts serve both). Shared labels and types: ui/helpText.ts. Inline maths as $...$
+// (KaTeX); everything else plain text.
+import type { HelpSection, TourStep } from "../../ui/helpText";
 
-export const HELP_BUTTON_LABEL = "Help and tour";
-export const HELP_TITLE = "Help";
-export const HELP_RESTART = "Restart tour";
-export const HELP_ABOUT_LINK = "About, data sources & citation";
 /** the Wind dataset selector's ⓘ (Earth has an info text here); one Mars dataset: no ⓘ */
 export const DATASET_INFO_TEXT = "";
 
@@ -83,13 +78,5 @@ export const TOUR_STEPS: TourStep[] = [
 
 export const TOUR_FALLBACK = { cell: "The example cell could not be loaded. Click any cell on the map to open its panel." };
 
-export const TOUR_LABELS = { back: "Back", next: "Next", done: "Done", skip: "Skip tour", step: (i: number, n: number) => `Step ${i} of ${n}` };
 
 export const SHARE_TEXT = { button: "Share / copy link", title: "Share this view", copy: "Copy link", copied: "Link copied", note: "The link restores the position, zoom, grain diameter, basemap, active layers and the selected cell." };
-export const EXPORT_TEXT = {
-  button: "Export map image", title: "Export map image", basemap: "Include basemap", run: "Export PNG", working: "Rendering…",
-  transparent: "Transparent background (default white)",
-  note: "PNG of the current view, 1600–2400 pixels wide, without the panels, on a white background unless Transparent background is ticked. Colour bars, legends, scale and data sources are added below the map.",
-  done: "Saved:", downloaded: "Download started:",
-  plotMenu: "Export", png: "PNG", svg: "SVG", plotTransparent: "Transparent background",
-};

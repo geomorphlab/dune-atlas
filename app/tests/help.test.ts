@@ -192,7 +192,7 @@ describe("help button and panel", () => {
 });
 
 describe("help text document", () => {
-  it("docs/reference/help-text.md matches src/ui/helpText.ts (run npm run help-doc after editing)", () => {
+  it("docs/reference/help-text.md matches the help text (run npm run help-doc after editing)", () => {
     const f = path.resolve(__dirname, "../../docs/reference/help-text.md");
     expect(fs.readFileSync(f, "utf8")).toBe(helpMarkdown());
   });

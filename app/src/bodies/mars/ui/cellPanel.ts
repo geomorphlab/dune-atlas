@@ -18,10 +18,10 @@ import { composePlotSvg, PLOT_BACKGROUND, katexTex, plotFilename, svgToPngBlob, 
 import { downloadBlob } from "../../../export/mapExport";
 import { EXPORT_DPI, PLOT_EXPORT_WIDTH } from "../../../export/png";
 import { loadMathRenderer, unitsTex, type MathRenderer } from "../../../export/texsvg";
-import { EXPORT_TEXT } from "./helpText";
+import { EXPORT_TEXT } from "../../../ui/helpText";
 import { fieldSeries, PLOT_STORAGE, plotQuantities, plotSlug, qplotNotes, qplotSvg, resolvePlot, valueText, type PlotQuantity, type QPlotAxis } from "../../../cell/qplot";
-import { AUX_META } from "../cell/auxinfo";
-import { datasetInfo, type DatasetInfo } from "../cell/datasetinfo";
+import { AUX_META } from "../../../cell/auxinfo";
+import { datasetInfo, type DatasetInfo } from "../../../cell/datasetinfo";
 import { fieldInfo } from "../../../cell/fieldinfo";
 import { latLonText, triggerDownload } from "../../../cell/downloads";
 import { cellDataset, cellNetcdf, csvBundle, exportBaseName, type ExportMeta } from "../cell/export";

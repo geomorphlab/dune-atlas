@@ -1,14 +1,8 @@
-// Mars wind dataset as described in the panel and the downloads (replaces cell/datasetinfo.ts in
-// the Mars build). One dataset: the MCMC FV3 beta release 1 (2°, hourly, one Mars year).
-import type { Grid } from "../../../cell/snap";
-export type { DatasetInfo } from "../../../cell/datasetinfo";
-export { resolutionText, pixelsPerCell, datasetSourceItem } from "../../../cell/datasetinfo";
-import { datasetFacts as earthDatasetFacts } from "../../../cell/datasetinfo";
-import type { DatasetInfo } from "../../../cell/datasetinfo";
+// Mars wind dataset (MCMC FV3 beta release 1: 2°, hourly, one Mars year) as described in the panel
+// and the downloads. Shared functions: cell/datasetinfo.ts.
+import type { DatasetInfo } from "../../cell/datasetinfo";
 
 export const LAND_RULE = "every cell (Mars has no land mask: all 16,200 cells carry wind data)";
-/** Earth-only (ERA5 land mask); kept so the Mars module exports the Earth module's names. Unused on Mars. */
-export const LAND_RULE_ERA5 = LAND_RULE;
 export const DUNES_RULE = "the cell overlaps at least one dune polygon of the merged dune map (USGS Mars Global Digital Dune Database and Fenton 2020)";
 
 export const DATASET_INFO: Record<string, DatasetInfo> = {
@@ -20,23 +14,3 @@ export const DATASET_INFO: Record<string, DatasetInfo> = {
     sourceHtml: "hourly lowest-level winds, temperature and surface pressure of the NASA Ames Mars Climate Modeling Center FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to 2° × 2° (a cell is about 120 km across at the equator, larger than most dune fields): 16,032 hourly samples, one Mars year. The map draws each cell as one square, so a field that changes strongly from cell to cell, as DP often does at low latitudes, looks blocky. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature (1.5–3.2 m over all cells and hours; 1.6–3.0 m in 98 % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction velocity u* comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (2023, eq. 2.2) under constant stress at that height (no roughness length).",
   },
 };
-
-/** as Earth, over the Mars datasets */
-export function datasetFacts(key: "resolution" | "period" | "name", infos: DatasetInfo[] = Object.values(DATASET_INFO)): string {
-  return earthDatasetFacts(key, infos);
-}
-
-export function datasetInfo(id?: string): DatasetInfo {
-  return (id && DATASET_INFO[id]) || DATASET_INFO["fv3-beta1"];
-}
-
-export function cellSizeDeg(grid?: Pick<Grid, "dlat">, id?: string): number {
-  return grid ? Math.abs(grid.dlat) : datasetInfo(id).resDeg;
-}
-
-/** Tooltip of the wind dataset selector (Earth edcbb50/c6a2cd3 add the same export; the selector only
- *  appears with a second dataset): "MCMC FV3 2°, one Mars year (...)". Mars has no land mask. */
-export function datasetTooltip(id: string): string {
-  const d = DATASET_INFO[id];
-  return d ? `${d.name} ${d.resolution}, ${d.period}` : "";
-}

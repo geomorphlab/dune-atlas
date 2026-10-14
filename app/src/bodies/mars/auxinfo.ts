@@ -1,11 +1,10 @@
-// Metadata of the Mars per-cell auxiliary variables (cells-aux.zarr: qsdiv (lat, lon, d), rho_mean,
-// elev_mean); replaces cell/auxinfo.ts in the Mars build. The divergence uses the Mars radius.
-import type { CellAux } from "../../../cell/cellstore";
-import { resolutionText } from "../../../cell/datasetinfo";
-export type { AuxMeta } from "../../../cell/auxinfo";
-import type { AuxMeta } from "../../../cell/auxinfo";
-import { R_MARS } from "../body";
-import { DEM_CITATION, DEM_LICENCE, fieldsLicence } from "../citation";
+// Mars per-cell auxiliary variables (cells-aux.zarr: qsdiv (lat, lon, d), rho_mean, elev_mean) as
+// shown in the panel and written to the downloads. The divergence uses the Mars radius.
+import type { CellAux } from "../../cell/cellstore";
+import { resolutionText } from "../../cell/datasetinfo";
+import type { AuxMeta } from "../../cell/auxinfo";
+import { R_MARS } from "./body";
+import { DEM_CITATION, DEM_LICENCE, fieldsLicence } from "./citation";
 
 export const AUX_META: Record<string, AuxMeta> = {
   qsdiv: {
@@ -47,12 +46,6 @@ export function auxVars(aux: CellAux | undefined): string[] {
 
 export const QSDIV_SOURCE = "Derived by the Mars Dune Atlas from rdpm and rdpa (winds of the wind dataset, Pähtz & Durán 2023 transport law)";
 export const QSDIV_METHOD = (deg: number) => `Gunn (2026) Methods M6: central differences on the ${resolutionText(deg)} grid, periodic in longitude, R = ${(R_MARS / 1000).toFixed(1)} km`;
-// Earth-only statements (kept for the shared imports; unused on Mars)
-export const ARIDITY_CHANGES = "";
-export const VEGETATION_SOURCE = "";
-export const VEGETATION_LICENCE = "";
-export const VEGETATION_URL = "";
-export const VEGETATION_CHANGES = "";
 
 export function auxSourceAttrs(aux: CellAux, v: string, deg = 2): Record<string, string> {
   const a = aux.attrs[v] ?? {};
@@ -72,5 +65,5 @@ export function auxSourceAttrs(aux: CellAux, v: string, deg = 2): Record<string,
   return out;
 }
 
-/** Earth-only (aridity classes); unused on Mars */
+/** aridity classes: Earth only (the Earth cell panel imports this name until the panels are unified) */
 export function aridityClass(_ai: number): string { void _ai; return ""; }

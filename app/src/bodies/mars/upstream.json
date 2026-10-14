@@ -6,30 +6,15 @@
       "mars": "src/bodies/mars/cell/analysis.ts",
       "blob": "4311901690754b8a9df8c5154d65bf306b76402c"
     },
-    "src/cell/auxinfo.ts": {
-      "kind": "substituted",
-      "mars": "src/bodies/mars/cell/auxinfo.ts",
-      "blob": "83ce86c3a81bda23c77d3337b6a6eee0027a1e69"
-    },
     "src/cell/cellstore.ts": {
       "kind": "derived",
       "mars": "src/bodies/mars/cell/cellstore.ts",
       "blob": "36a606a763fed7269d747c443ee327f49d73a1c9"
     },
-    "src/cell/datasetinfo.ts": {
-      "kind": "substituted",
-      "mars": "src/bodies/mars/cell/datasetinfo.ts",
-      "blob": "dcb0d3ee675a805a577e3b214243c5ac79f2c28e"
-    },
     "src/cell/export.ts": {
       "kind": "derived",
       "mars": "src/bodies/mars/cell/export.ts",
       "blob": "68494221ab4a68ab9c08ff819eb8f64e0e1d68cc"
-    },
-    "src/cell/fieldinfo.ts": {
-      "kind": "substituted",
-      "mars": "src/bodies/mars/cell/fieldinfo.ts",
-      "blob": "fd465aeb55d3d630967d3f0f88b42075ccbe20e5"
     },
     "src/cell/flux.ts": {
       "kind": "derived",
@@ -45,11 +30,6 @@
       "kind": "patched",
       "mars": "src/bodies/mars/patches.json (6 edits)",
       "blob": "f6185cf690a7c4acff2035ff8b94a1439b57b8a0"
-    },
-    "src/config.ts": {
-      "kind": "substituted",
-      "mars": "src/bodies/mars/config.ts",
-      "blob": "5228c45ee83d4efce1a0a7264f4ce678b8876b90"
     },
     "src/defaultview.ts": {
       "kind": "patched",
@@ -100,11 +80,6 @@
       "kind": "patched",
       "mars": "src/bodies/mars/patches.json (1 edit)",
       "blob": "c85611db3f1c9155481cebaa68453c2a8cb078b5"
-    },
-    "src/ui/helpText.ts": {
-      "kind": "substituted",
-      "mars": "src/bodies/mars/ui/helpText.ts",
-      "blob": "f7650df1c81b17a28818c0555bd26508a5e137b6"
     },
     "src/ui/layerPanel.ts": {
       "kind": "patched",
