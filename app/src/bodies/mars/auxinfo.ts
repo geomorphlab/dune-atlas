@@ -65,5 +65,3 @@ export function auxSourceAttrs(aux: CellAux, v: string, deg = 2): Record<string,
   return out;
 }
 
-/** aridity classes: Earth only (the Earth cell panel imports this name until the panels are unified) */
-export function aridityClass(_ai: number): string { void _ai; return ""; }

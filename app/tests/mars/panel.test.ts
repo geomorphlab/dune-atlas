@@ -3,7 +3,7 @@
 // tests/publictext.test.ts for the Mars build).
 import { fieldsCitation } from "@body/citation";
 import { describe, expect, it, vi } from "vitest";
-import { CellPanel } from "../../src/bodies/mars/ui/cellPanel";
+import { CellPanel } from "../../src/bodies/mars/cellPanel";
 import { renderLayerPanel } from "../../src/ui/layerPanel";
 import { legendHtml } from "../../src/ui/legend";
 import { loadRegistry } from "../../src/registry/load";

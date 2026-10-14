@@ -5,7 +5,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { loadRegistry } from "../../src/registry/load";
 import { validateMarsRegistry } from "../../src/bodies/mars/registry/validate";
-import { MARS_SUBSTITUTES } from "../../src/bodies/mars/build";
 import { PROFILE } from "../../src/bodies/mars/profile";
 import { M } from "../../src/cell/marsphysics";
 import { CONFIG } from "../../src/config";
@@ -74,18 +73,23 @@ describe("body-switch build", () => {
     const src = (d: string): string[] => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => e.isDirectory() ? (e.name === "bodies" ? [] : src(path.join(d, e.name))) : e.name.endsWith(".ts") ? [path.join(d, e.name)] : []);
     for (const f of src(path.join(APP, "src"))) expect(fs.readFileSync(f, "utf8"), f).not.toMatch(/6371008\.8|6378137|40075016/);
   });
-  it("every substitute exports at least the Earth module's names", async () => {
-    for (const [earth, mars] of Object.entries(MARS_SUBSTITUTES)) {
-      if (earth === "src/main.ts") continue; // entry, no exports
-      expect(fs.existsSync(path.join(APP, mars)), mars).toBe(true);
-      const src = fs.readFileSync(path.join(APP, earth), "utf8");
-      const names = [...src.matchAll(/^export (?:const|function|class|let|interface|type|async function) ([A-Za-z0-9_]+)/gm)].map((m) => m[1]);
-      const reexp = [...src.matchAll(/^export \{([^}]+)\}/gm)].flatMap((m) => m[1].split(",").map((x) => x.trim().split(/\s+as\s+/).pop()!.replace(/^type\s+/, "")));
-      const msrc = fs.readFileSync(path.join(APP, mars), "utf8");
-      for (const n of [...names, ...reexp].filter(Boolean)) {
-        const ok = new RegExp(`^export (?:const|function|class|let|interface|type|async function) ${n}\\b`, "m").test(msrc) || new RegExp(`^export (?:type )?\\{[^}]*\\b${n}\\b[^}]*\\}`, "m").test(msrc);
-        expect(ok, `${mars} must export ${n}`).toBe(true);
-      }
+  it("body contract: both bodies provide the same @body modules with the same exports", () => {
+    const dir = (b: string) => path.join(APP, "src/bodies", b);
+    const mods = (b: string) => fs.readdirSync(dir(b)).filter((f) => f.endsWith(".ts")).sort();
+    const shared = mods("earth").filter((f) => mods("mars").includes(f));
+    // every module that shared code imports through @body must exist for both bodies
+    const used = new Set<string>();
+    const walk = (d: string): void => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) { if (e.name !== "bodies") walk(p); } else if (/\.ts$/.test(e.name)) for (const m of fs.readFileSync(p, "utf8").matchAll(/from "@body\/([A-Za-z]+)"/g)) used.add(`${m[1]}.ts`); } };
+    walk(path.join(APP, "src"));
+    for (const m of used) expect(shared, m).toContain(m);
+    const names = (f: string) => new Set([...fs.readFileSync(f, "utf8").matchAll(/^export (?:const|function|class|let|interface|type|async function) ([A-Za-z0-9_]+)/gm)].map((m) => m[1]));
+    for (const m of used) {
+      const e = names(path.join(dir("earth"), m)), ma = names(path.join(dir("mars"), m));
+      // the names shared code imports from @body/<m> exist in both
+      const imported = new Set<string>();
+      const walk2 = (d: string): void => { for (const x of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, x.name); if (x.isDirectory()) { if (x.name !== "bodies") walk2(p); } else if (/\.ts$/.test(x.name)) for (const mm of fs.readFileSync(p, "utf8").matchAll(new RegExp(`import (?:type )?\\{([^}]*)\\} from "@body/${m.replace(".ts", "")}"`, "g"))) for (const n of mm[1].split(",")) { const k = n.trim().replace(/^type\s+/, "").split(/\s+as\s+/)[0]; if (k) imported.add(k); } } };
+      walk2(path.join(APP, "src"));
+      for (const n of imported) { expect(e.has(n), `earth/${m} exports ${n}`).toBe(true); expect(ma.has(n), `mars/${m} exports ${n}`).toBe(true); }
     }
   });
 });

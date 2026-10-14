@@ -71,12 +71,6 @@ export function datasetSourceIds(_datasetId?: string): string[] { void _datasetI
 /** sources of a cell download besides the dataset ones (elevation: the DEM) */
 export const CELL_SOURCE_IDS = ["dem"];
 
-/** Map attribution of the wind-regime fields (Earth: follows the selected dataset); the Mars map attribution is
- *  set in src/bodies/mars/main.ts. */
-export function mapAttributionHtml(datasetId: string): string {
-  void datasetId;
-  return "";
-}
 
 /** the wind line of image exports (map and plots) */
 export function windSourceText(datasetId: string): string {

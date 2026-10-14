@@ -65,11 +65,13 @@ describe("readout control", () => {
   });
   it("placed bottom left on the SAME row as the scale bar, immediately to its right, styled like it, not clickable", () => {
     const main = fs.readFileSync(path.resolve(__dirname, "../src/main.ts"), "utf8");
-    const iScale = main.indexOf("new maplibregl.ScaleControl"), iCoords = main.indexOf("new CoordsControl()");
+    const hooks = fs.readFileSync(path.resolve(__dirname, "../src/bodies/earth/app.ts"), "utf8");
+    const iScale = main.indexOf("HOOKS.scaleControl()"), iCoords = main.indexOf("new CoordsControl()");
     expect(iScale).toBeGreaterThan(0);
     expect(iCoords).toBeGreaterThan(iScale);
+    expect(main.slice(iScale, main.indexOf("\n", iScale))).toContain('"bottom-left"');
     expect(main.slice(iCoords, main.indexOf("\n", iCoords))).toContain('"bottom-left"');
-    const scaleMax = Number(/ScaleControl\(\{ maxWidth: (\d+) \}\)/.exec(main)![1]);
+    const scaleMax = Number(/ScaleControl\(\{ maxWidth: (\d+) \}\)/.exec(hooks)![1]);
     const css = fs.readFileSync(path.resolve(__dirname, "../src/style.css"), "utf8");
     const rule = (sel: string) => { const k = css.indexOf(`\n${sel} {`) + 1; expect(k, sel).toBeGreaterThan(0); return css.slice(k, css.indexOf("}", k)); };
     const px = (r: string, prop: string) => { const m = new RegExp(`${prop}: ([^;]+);`).exec(r); expect(m, prop).not.toBeNull(); return m![1].trim(); };

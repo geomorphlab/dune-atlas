@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { loadRegistry } from "../../src/registry/load";
 import { Store, type AppState } from "../../src/store";
 import { renderLayerPanel } from "../../src/ui/layerPanel";
-import { CellPanel } from "../../src/bodies/mars/ui/cellPanel";
+import { CellPanel } from "../../src/bodies/mars/cellPanel";
 import type { MarsCellStore } from "../../src/bodies/mars/cell/cellstore";
 import { measuredWidthCh, reserveCh, setMeasurer } from "../../src/ui/livenum";
 import { fakeMeasure, holes, sweep, sweepFields } from "../jitterlib";

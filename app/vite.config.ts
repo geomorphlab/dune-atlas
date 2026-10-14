@@ -1,11 +1,13 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { configDefaults, defineConfig } from "vitest/config";
-import { bodyPlugin } from "./scripts/body-plugin";
+import { bodyHtml } from "./scripts/body-html";
+import { HTML as EARTH_HTML } from "./src/bodies/earth/html";
+import { HTML as MARS_HTML } from "./src/bodies/mars/html";
 
-// Body switch (docs/guide/mars.md): VITE_BODY=mars builds the Mars atlas (module substitutions and
-// source patches from src/bodies/mars/build.ts, output dist-mars/, tests tests/mars/); anything else is the
-// Earth atlas, built exactly as before (no plugin).
+// Body switch (docs/guide/extending.md): VITE_BODY=mars builds the Mars atlas (per-body modules from
+// src/bodies/mars/ through the @body alias, output dist-mars/, tests tests/mars/); anything else is the
+// Earth atlas (src/bodies/earth/).
 const MARS = process.env.VITE_BODY === "mars";
 /** `@body/<module>` resolves to the per-body module of the built body (src/bodies/<body>/<module>.ts) */
 const BODY_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "src/bodies", MARS ? "mars" : "earth");
@@ -13,7 +15,7 @@ const BODY_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "src
 // Served from the root of map.geomorphlab.org (custom domain on GitHub Pages).
 export default defineConfig({
   base: MARS ? (process.env.VITE_BASE || "/") : "/",
-  plugins: MARS ? [bodyPlugin("mars")] : [],
+  plugins: [bodyHtml(MARS ? MARS_HTML : EARTH_HTML)],
   resolve: { alias: [{ find: /^@body\//, replacement: `${BODY_DIR}/` }] },
   server: {
     port: 5173,

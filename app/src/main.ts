@@ -1,4 +1,5 @@
-// Entry point: map shell + registry-driven overlays + global u*,th control + click-to-cell panel.
+// Entry point of both atlases: map shell + registry-driven overlays + the global slider control (Earth u*,th,
+// Mars d) + click-to-cell panel. What differs per body comes from the @body modules (hooks: @body/app).
 import { storageKey } from "./body";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "katex/dist/katex.min.css";
@@ -14,9 +15,8 @@ import { OverlayManager, ensureSelectedCellLayers, restoreOverlays } from "./map
 import { setLayerPanelOpen, renderLayerPanel } from "./ui/layerPanel";
 import { versionFromPrefix } from "./cell/export";
 import { CellPanel, readPlotChoice, defaultFieldLabel, type FieldLabel } from "./ui/cellPanel";
-import { CellStore } from "./cell/cellstore";
-import { cellFeature, cellFromIndex, snapToCell, ERA5_LAND_GRID, type Grid } from "./cell/snap";
-import { C3S_NOTICE, mapAttributionHtml } from "@body/citation";
+import { cellFeature, cellFromIndex, snapToCell, type Grid } from "./cell/snap";
+import { APP_HOOKS as HOOKS, type BodyCellStore } from "@body/app";
 import { centreOnCell } from "./map/centre";
 import { terseQuantity } from "./ui/terse";
 import { mathOnly } from "./util/math";
@@ -37,11 +37,12 @@ import { tourHooks } from "./ui/tourHooks";
 const { registry: reg, errors } = loadRegistry();
 if (errors.length) console.warn("registry merge:", errors);
 const dataBase = CONFIG.dataBase ?? reg.dataBase;
+if (HOOKS.prepareBasemaps) reg.basemaps = HOOKS.prepareBasemaps(reg.basemaps, dataBase);
 // ---- initial state: short share link (#v=…) > ?query permalink > the default view
 // (defaultview.ts). Wind dataset: the link's; query permalinks without one are the registry
-// defaultDataset (ERA5-Land, as they were written); with no view state in the URL, a returning
+// defaultDataset (Earth: ERA5-Land, as they were written); with no view state in the URL, a returning
 // user's explicit choice (localStorage) or the default view's. Layer definitions follow it.
-const DATASET_KEY = storageKey("dataset"); // "duneAtlas.dataset" (Earth; body.ts)
+const DATASET_KEY = storageKey("dataset"); // "duneAtlas.dataset" / "duneAtlasMars.dataset" (body.ts)
 const storedDataset = (() => { try { return localStorage.getItem(DATASET_KEY) ?? undefined; } catch { return undefined; } })();
 // planet button return (?resume=1): this atlas's last view, stored per body on every view change
 const LAST_VIEW_KEY = storageKey(LAST_VIEW);
@@ -91,12 +92,12 @@ loading.begin();
 map.keyboard.disableRotation();
 map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 if (!init.embed) map.addControl(new maplibregl.FullscreenControl(), "top-right");
-map.addControl(new maplibregl.ScaleControl({ maxWidth: 120 }), "bottom-left");
+map.addControl(HOOKS.scaleControl(), "bottom-left");
 map.addControl(new CoordsControl(), "bottom-left"); // cursor lat, lon, beside the scale bar
-// attribution: the wind-regime line follows the selected dataset (mapAttributionHtml)
+// attribution: follows the selected dataset
 const attributionFor = (ds: string) => new maplibregl.AttributionControl({
   compact: true,
-  customAttribution: ["Contains modified Copernicus Climate Change Service information", mapAttributionHtml(ds)],
+  customAttribution: HOOKS.attribution(ds),
 });
 let attribution = attributionFor(store.state.dataset);
 map.addControl(attribution, "bottom-right");
@@ -105,20 +106,21 @@ store.subscribe((s, ch) => {
   map.removeControl(attribution);
   map.addControl((attribution = attributionFor(s.dataset)), "bottom-right");
 });
-map.getCanvas().setAttribute("aria-label", "Map. Click a land cell to show its wind and sand-flux roses.");
+map.getCanvas().setAttribute("aria-label", HOOKS.mapAriaLabel);
 map.getCanvas().style.cursor = "crosshair";
 
 const datasetPrefix = () => selectDataset(reg, store.state.dataset)?.prefix;
 const overlays = new OverlayManager(map, reg, dataBase, init.utIndex, { order: init.order, datasetPrefix: datasetPrefix(), dunesOnly: !!init.dunesOnly });
 overlays.onError = (l, e) => console.warn(`[dune-atlas] layer '${l.id}': data could not be loaded`, e);
+const mapExtras = HOOKS.onMapCreated?.(map, reg, dataBase);
 
 function applyBasemap() {
   const b = reg.basemaps.find((x) => x.id === store.state.basemap) ?? defaultBasemap(reg.basemaps);
   setBasemap(map, b, store.state.projection);
 }
 
-/** grid of the current dataset's cell store (from its root attrs); ERA5-Land until opened */
-let grid: Grid = ERA5_LAND_GRID;
+/** grid of the current dataset's cell store (from its root attrs); the body's default grid until opened */
+let grid: Grid = HOOKS.defaultGrid;
 
 function selectedCellFeature(): GeoJSON.FeatureCollection | null {
   const c = store.state.cell;
@@ -134,6 +136,7 @@ map.on("style.load", () => {
   if (restoreOverlays(map, overlays, store.state.layers, selectedCellFeature())) map.setProjection({ type: store.state.projection });
 });
 applyBasemap();
+HOOKS.afterFirstBasemap?.(reg, applyBasemap, store);
 
 // ---- panels ----
 const fullScreenUrl = () => {
@@ -171,10 +174,10 @@ function fieldLabel(v: string): FieldLabel {
   return { symbolTex: mathOnly(l.titleTex) || d.symbolTex, quantity: terseQuantity(l.title) || d.quantity };
 }
 
-let cellStore: Promise<CellStore> | null = null;
-const getCellStore = (): Promise<CellStore> => (cellStore ??= (() => {
+let cellStore: Promise<BodyCellStore> | null = null;
+const getCellStore = (): Promise<BodyCellStore> => (cellStore ??= (() => {
   const ds = selectDataset(reg, store.state.dataset);
-  const p = CellStore.open(resolveSource(ds?.cellStore ?? CONFIG.cellStorePath, dataBase, ds?.prefix), {
+  const p = HOOKS.openCellStore(resolveSource(ds?.cellStore ?? CONFIG.cellStorePath, dataBase, ds?.prefix), {
     useSuffixRequest: CONFIG.useSuffixRequest, aux: (ds?.cellAuxStores ?? (ds?.cellAuxStore ? [ds.cellAuxStore] : CONFIG.cellAuxPaths)).map((p) => resolveSource(p, dataBase, ds?.prefix)),
   });
   // a store opened for a dataset that is no longer selected (rapid switching) must not set the grid
@@ -192,8 +195,8 @@ const panel = new CellPanel(document.getElementById("cell-panel")!, init.utIndex
 if (init.cell) void panel.show(getCellStore(), init.cell[0], init.cell[1]);
 
 // ---- help, tour (with the Display and example-cell demonstrations), share, export ----
-// example cell: a dune cell in the Namib Sand Sea, the containing cell of the current dataset
-const EXAMPLE_CELL = { lon: 15.2, lat: -24.5 };
+// example cell: the body's (Earth: Namib Sand Sea; Mars: Nili Patera), the containing cell of the current dataset
+const EXAMPLE_CELL = HOOKS.exampleCell;
 const tour = new Tour(TOUR_STEPS, { hooks: tourHooks({
   layerPanel: layerPanelEl, store, panel, cellRoot: document.getElementById("cell-panel")!,
   exampleCell: async () => { const c = snapToCell(EXAMPLE_CELL.lon, EXAMPLE_CELL.lat, (await getCellStore()).grid); return c ? [c.iy, c.ix] : null; },
@@ -250,7 +253,7 @@ if (query0.resume) scheduleUrl(); // drop resume=1 from the address
 store.subscribe((s, ch) => {
   if (ch.has("basemap") || ch.has("projection") || ch.has("dataset")) loading.begin();
   if (ch.has("basemap")) applyBasemap();
-  if (ch.has("projection")) map.setProjection({ type: s.projection });
+  if (ch.has("projection")) { map.setProjection({ type: s.projection }); mapExtras?.onProjection?.(); }
   if (ch.has("dataset")) {
     // re-resolve '{dataset}' sources and the cell store; keep the selected location by re-snapping
     const prev = s.cell ? (() => { try { return cellFromIndex(s.cell![0], s.cell![1], grid); } catch { return null; } })() : null;
@@ -280,4 +283,4 @@ store.subscribe((s, ch) => {
 });
 
 // expose for debugging in the console
-(window as unknown as { duneAtlas: unknown }).duneAtlas = { map, store, registry: reg, notice: C3S_NOTICE };
+(window as unknown as { duneAtlas: unknown }).duneAtlas = { map, store, registry: reg, ...HOOKS.debug };
