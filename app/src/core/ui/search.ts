@@ -5,7 +5,7 @@
 // body's place list is enabled; until then the field takes coordinates only.
 import { h, nextId } from "./dom";
 import { formatCoord, parseCoordinates, type LonRange } from "../search/coords";
-import { matchPlaces, type Place, type PlaceHit } from "../search/places";
+import { matchPlaces, PLACE_TEXT, type Place, type PlaceHit } from "../search/places";
 
 export interface SearchOptions {
   /** the body's longitude convention: Earth -180..180, Mars 0..360 east-positive */
@@ -20,6 +20,8 @@ export interface SearchOptions {
   goTo(lat: number, lon: number): Promise<string>;
   /** fly to a named place */
   goToPlace(p: Place): Promise<string> | string;
+  /** the naming note (HTML), opened by 'About these names' under the results */
+  namesNoteHtml?: string;
 }
 
 export const SEARCH_TEXT = {
@@ -38,6 +40,9 @@ export class SearchBox {
   readonly input: HTMLInputElement;
   readonly status: HTMLElement;
   readonly list: HTMLUListElement;
+  /** 'About these names' under the results, and the note it opens */
+  readonly namesFoot: HTMLElement;
+  readonly namesNote: HTMLElement;
   #o: SearchOptions;
   #hits: PlaceHit[] = [];
   #active = -1;
@@ -54,10 +59,16 @@ export class SearchBox {
     const go = h("button", { type: "submit", class: "search-go", "aria-label": SEARCH_TEXT.button, title: SEARCH_TEXT.button, html: ICON });
     this.status = h("p", { id: sid, class: "help search-status", role: "status", "aria-live": "polite", hidden: true });
     this.list = h("ul", { id: lid, class: "search-results", role: "listbox", "aria-label": "Places", hidden: true }) as HTMLUListElement;
+    const noteId = `${id}-names-note`;
+    this.namesNote = h("p", { id: noteId, class: "help search-names-note", hidden: true, html: o.namesNoteHtml ?? "" });
+    const about = h("button", { type: "button", class: "link-button search-names-link", "aria-expanded": "false", "aria-controls": noteId }, PLACE_TEXT.aboutNames) as HTMLButtonElement;
+    about.addEventListener("pointerdown", (e) => e.preventDefault());   // keep the focus (and the results) in the field
+    about.addEventListener("click", () => { const open = this.namesNote.hidden; this.namesNote.hidden = !open; about.setAttribute("aria-expanded", String(open)); });
+    this.namesFoot = h("div", { class: "search-names-foot", hidden: true }, about, this.namesNote);
     this.el = h("form", { class: "atlas-search", role: "search", "aria-label": label },
       h("label", { for: id, class: "visually-hidden" }, label),
       h("div", { class: "search-row" }, this.input, go),
-      this.list, this.status,
+      this.list, ...(named && o.namesNoteHtml ? [this.namesFoot] : []), this.status,
       ...(o.conventionNote ? [h("p", { id: nid, class: "help search-note" }, o.conventionNote)] : [])) as HTMLFormElement;
     this.el.addEventListener("submit", (e) => { e.preventDefault(); void this.submit(); });
     this.input.addEventListener("input", () => this.preview());
@@ -96,12 +107,16 @@ export class SearchBox {
       const li = h("li", { id: `${this.list.id}-${i}`, role: "option", class: "search-hit", "aria-selected": String(i === this.#active) },
         h("span", { class: "hit-line1" }, p.line1),
         ...(p.type ? [h("span", { class: "hit-type" }, p.type)] : []),
+        // found by another name (alternative name, sub-unit): say which
+        ...(x.kind === "alias" ? [h("span", { class: "hit-alias", dir: "auto" }, x.matched)] : []),
         ...(p.line2 ? [h("span", { class: "hit-line2", lang: p.line2.lang }, p.line2.text)] : []),
         ...(p.countries?.length ? [h("span", { class: "hit-country" }, p.countries.join(", "))] : []));
       li.addEventListener("pointerdown", (e) => { e.preventDefault(); void this.#pick(i); });
       return li;
     }));
     this.list.hidden = !hits.length;
+    this.namesFoot.hidden = !hits.length;
+    if (!hits.length) { this.namesNote.hidden = true; this.namesFoot.querySelector("button")?.setAttribute("aria-expanded", "false"); }
     if (this.#named()) {
       this.input.setAttribute("aria-expanded", String(!!hits.length));
       if (hits.length) this.input.setAttribute("aria-activedescendant", `${this.list.id}-0`); else this.input.removeAttribute("aria-activedescendant");

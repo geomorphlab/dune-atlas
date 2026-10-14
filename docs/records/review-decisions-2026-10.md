@@ -146,3 +146,12 @@ NetCDF, an xarray read-back of fixture exports (`npm run check-region`).
 | 'Show names' labels | symbol layer from the place list (Mars; Earth hidden while its list is disabled), default off, remembered per body, in both link forms; label from 48 px feature size, 10–14 px italic text, priority by size; pale sand / dark brown by the basemap `tone` (new registry field); above data, below the selected-cell highlight and the basemap labels; label click (or search pick) zooms and opens a popup; in map exports with a source line |
 | Earth preparation | fixture list with Arabic, Persian, Urdu, Chinese, Cyrillic and Tibetan names: RTL text plugin bundled and lazily registered, CJK via `localIdeographFontFamily`, Tibetan (complex shaping) in the popup only |
 | Mars longitudes −180° to 180° everywhere | place list, search echo (0–360° E input converted, e.g. 354.80 → −5.20), region bounds and export titles, help text |
+
+## Earth dune-field names and the naming notes (PR #8)
+
+| decision | done |
+|---|---|
+| Earth named search and labels enabled | `registry/earth/places.yaml` generated from the approved table (274 fields, 83 with line 2) by `scripts/places/build_earth_places.py`; aliases, alternative names (with notes in the popup; Great Sand Dunes: Ute, Jicarilla Apache and Navajo (Diné) names), sub-units ('Includes', resolving to the parent) and countries searchable; review columns not shipped (one internal holding note removed from a reference) |
+| Label priority | size = geometric mean of radius and the radius of the mapped dune area: Rub' al Khali, Kalahari and Taklamakan first |
+| Scripts | Arabic, Persian, Urdu and Pashto (RTL plugin), Chinese (local CJK glyphs), Cyrillic on the labels; Thar's Hindi (Devanagari, complex shaping) in the popup only |
+| Naming notes (verbatim) | Earth and Mars notes in the dune layer's ⓘ, beside 'Show names', in About ('Dune-field names') and under the search results ('About these names'); e-mail address and Gazetteer as links; excluded from the text sweep |

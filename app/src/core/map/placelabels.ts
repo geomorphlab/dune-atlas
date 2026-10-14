@@ -1,7 +1,7 @@
 // Dune-field name labels ('Show names' in the Dunes group): a MapLibre symbol layer over a GeoJSON built from
 // the body's place list (registry/<body>/places.yaml, the same list as the search box). Large features
-// first: each label appears once its feature is about LABEL_PX pixels across, and collisions are resolved
-// by size (symbol-sort-key). Italic, pale sand on dark basemaps and dark brown on light ones (registry
+// first: each label appears once its feature (labelRadius: radius and mapped dune area) is about LABEL_PX
+// pixels across, and collisions are resolved by that size (symbol-sort-key). Italic, pale sand on dark basemaps and dark brown on light ones (registry
 // basemaps[].tone), with a soft halo. The layer sits above the data layers and below the selected-cell
 // highlight; basemap labels stay above it (MapLibre places the upper layer's symbols first, so the two
 // never overlap). A click on a label (only on the label: cell clicks elsewhere are unchanged) or a pick in
@@ -30,7 +30,7 @@ export const LOCAL_IDEOGRAPH_FONTS = "'Noto Sans CJK SC', 'Noto Sans SC', 'PingF
 export const LABEL_PX = 48;
 export const LABEL_MAX_MINZOOM = 9;
 /** text size range (px) from the smallest to the largest features */
-export const LABEL_SIZE = { min: 10, max: 14, rSmall: 25, rLarge: 600 } as const;
+export const LABEL_SIZE = { min: 10, max: 14, rSmall: 10, rLarge: 400 } as const;
 export const LABEL_STYLE = {
   dark: { text: "#e8d3a8", halo: "rgba(14, 11, 8, 0.82)" },
   light: { text: "#4a2e12", halo: "rgba(255, 248, 236, 0.85)" },
@@ -44,6 +44,11 @@ const RTL = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/u;
 export const mapDrawable = (s: string) => !COMPLEX.test(s);
 export const isRtl = (s: string) => RTL.test(s);
 
+/** the size a label is scaled by (km): the geometric mean of the feature's radius and the radius of a disc of
+ *  its mapped dune area, so big ergs come first and a large feature with few dunes does not */
+export function labelRadius(p: Pick<Place, "radius_km" | "dune_km2">): number {
+  return p.dune_km2 ? Math.sqrt(p.radius_km * Math.sqrt(p.dune_km2 / Math.PI)) : p.radius_km;
+}
 /** zoom at which a feature of radius `radiusKm` is LABEL_PX pixels across (512 px world at zoom 0) */
 export function labelMinZoom(radiusKm: number, bodyRadiusKm: number): number {
   const diamDeg = ((2 * radiusKm) / bodyRadiusKm) * (180 / Math.PI);
@@ -67,10 +72,10 @@ export function placeFeatures(list: PlaceList, bodyRadiusKm: number): GeoJSON.Fe
       properties: {
         id: p.id, line1: p.line1,
         ...(p.line2 && mapDrawable(p.line2.text) ? { line2: p.line2.text } : {}),
-        minzoom: labelMinZoom(p.radius_km, bodyRadiusKm),
-        size: labelSize(p.radius_km),
-        // lower keys are placed first: larger features, then larger mapped dune areas
-        rank: -(p.radius_km * 1e6 + (p.dune_km2 ?? 0)) / 1e6,
+        minzoom: labelMinZoom(labelRadius(p), bodyRadiusKm),
+        size: labelSize(labelRadius(p)),
+        // lower keys are placed first: larger (labelRadius), then larger mapped dune areas
+        rank: -(labelRadius(p) * 1e6 + (p.dune_km2 ?? 0)) / 1e6,
       },
     })),
   };
@@ -108,7 +113,12 @@ export function placePopupContent(p: Place): HTMLElement {
   if (p.line2) rows.push(h("p", { class: "place-line2", lang: p.line2.lang, dir: "auto" }, p.line2.text));
   const meta = [p.type, p.countries?.length ? p.countries.join(", ") : undefined].filter(Boolean).join(" · ");
   if (meta) rows.push(h("p", { class: "place-meta" }, meta));
-  if (p.aliases?.length) rows.push(h("p", { class: "place-row" }, `${PLACE_TEXT.aliases}: ${p.aliases.join(", ")}`));
+  // other names: the alternative names with their notes (script, meaning, language); else the aliases
+  if (p.alt_names?.length) {
+    rows.push(h("p", { class: "place-row" }, `${PLACE_TEXT.aliases}:`),
+      h("ul", { class: "place-alt" }, ...p.alt_names.map((a) => h("li", {}, h("span", { dir: "auto" }, a.text), ...(a.note ? [" ", h("span", { class: "place-note" }, `(${a.note})`)] : [])))));
+  } else if (p.aliases?.length) rows.push(h("p", { class: "place-row" }, `${PLACE_TEXT.aliases}: ${p.aliases.join(", ")}`));
+  if (p.includes?.length) rows.push(h("p", { class: "place-row" }, `${PLACE_TEXT.includes}: ${p.includes.join(", ")}`));
   if (p.dune_km2 !== undefined) rows.push(h("p", { class: "place-row" }, `${PLACE_TEXT.dunes}: ${Math.round(p.dune_km2).toLocaleString("en-GB")} km²`));
   const src = h("ul", { class: "place-sources" }, ...p.sources.map((s) => h("li", {}, ...linkify(s))));
   rows.push(h("p", { class: "place-row place-src-head" }, `${PLACE_TEXT.sources}:`), src);

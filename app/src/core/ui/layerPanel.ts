@@ -18,7 +18,7 @@ import { fieldInfo } from "../cell/fieldinfo";
 import { isDatasetDependent } from "../registry/merge";
 import { mathHtml } from "../util/math";
 import { aboutSourceIds, AI_NOTICE, citationHtml, citationSources, fieldsCitation, fieldsLicence } from "../cell/citation";
-import { loadPlaces, placesAvailable, placesNote, PLACE_TEXT } from "../search/places";
+import { loadPlaces, placesAvailable, placesNoteHtml, PLACE_TEXT } from "../search/places";
 import { conceptLinkHtml } from "./concepts";
 import { bulkGuideHtml, wireBulkGuide } from "./bulkguide";
 import { PROFILE } from "@body/profile";
@@ -37,7 +37,7 @@ const AUTHOR_EMAIL = "a.gunn@monash.edu";
  *  items are written directly here. */
 export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class="sources">
   ${Object.values(DATASET_INFO).map(datasetSourceItem).join("\n  ")}
-  ${DATA_SOURCES_ITEMS_HTML}
+  ${DATA_SOURCES_ITEMS_HTML}${placesAvailable(PLACES) ? `\n  <li class="places-note"><strong>${PLACE_TEXT.aboutItem}</strong>: ${placesNoteHtml(PLACES)}</li>` : ""}
 </ul>`;
 /** About: "Earth and Mars: what can be compared" (identical in both atlases) */
 export const COMPARE_HTML = `<div class="earth-mars"><h4>Earth and Mars: what can be compared</h4>
@@ -109,8 +109,8 @@ export function infoHtml(l: LayerDef, datasetId?: string): string {
   const sources = sharesFieldsCitation(l, datasetId) ? row("Citation", SHARED_CITATION_LINK)
     : l.attribution ? attributionRows(l.attribution) : l.citation ? row("Citation", richHtml(l.citation)) : "";
   const def = l.description ? infoDefinition(l.description) : "";
-  const note = l.group === "dunes" && (l.type === "pmtiles-vector" || l.type === "geojson-points") ? placesNote(PLACES) : "";   // the dune map (map/overlays isDuneMap)
-  const naming = note ? `<p class="help places-note">${escapeHtml(note)}</p>` : "";
+  const note = l.group === "dunes" && (l.type === "pmtiles-vector" || l.type === "geojson-points") ? placesNoteHtml(PLACES) : "";   // the dune map (map/overlays isDuneMap)
+  const naming = note ? `<p class="help places-note">${note}</p>` : "";
   return `${def ? `<p class="info-def">${richHtml(def, mathHtml)}</p>` : ""}${conceptLinkHtml(l.id)}${l.invertSource ? `<p class="help">${escapeHtml(INVERT_NOTE)}</p>` : ""}${naming}${facts || sources ? `<dl class="attribution info-facts">${facts}${sources}</dl>` : ""}`;
 }
 
@@ -158,8 +158,11 @@ export function namesToggle(store: Store): HTMLElement {
   cb.checked = !!store.state.names;
   cb.addEventListener("change", () => store.set({ names: cb.checked }));
   store.subscribe((st, ch) => { if (ch.has("names")) cb.checked = !!st.names; });
-  return h("label", { class: "inline names-row", for: "show-names", title: PLACE_TEXT.toggleHelp }, cb, ` ${PLACE_TEXT.toggle}`,
+  const label = h("label", { class: "inline", for: "show-names", title: PLACE_TEXT.toggleHelp }, cb, ` ${PLACE_TEXT.toggle}`,
     h("span", { id: "show-names-help", class: "visually-hidden" }, PLACE_TEXT.toggleHelp));
+  // the naming note beside the toggle (the same text as the dune layer's ⓘ, About and the search results)
+  const t = infoToggle(PLACE_TEXT.aboutItem, `<p class="places-note">${placesNoteHtml(PLACES)}</p>`, "names");
+  return h("div", { class: "names-row" }, label, t.button, t.pop);
 }
 
 /** ⓘ button + popover pair (layers and basemaps) */

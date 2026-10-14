@@ -100,9 +100,9 @@ describe("Mars named search", () => {
   it("the dune layer's ⓘ carries the Mars naming note (and not Earth's)", () => {
     const dunes = loadRegistry().registry.layers.find((l) => l.id === "dunes")!;
     const html = infoHtml(dunes);
-    expect(html).toContain("IAU-approved feature names from the Gazetteer of Planetary Nomenclature");
-    expect(html).toContain("the dune fields lie within or near the named features");
-    expect(html).not.toContain("Indigenous");
+    expect(LIST.note).toBe("Dune-field names are IAU-approved feature names from the Gazetteer of Planetary Nomenclature (IAU/USGS), with a few informal aliases.");
+    expect(html).toContain('<p class="help places-note">Dune-field names are IAU-approved feature names from the <a href="https://planetarynames.wr.usgs.gov/" target="_blank" rel="noopener">Gazetteer of Planetary Nomenclature</a> (IAU/USGS), with a few informal aliases.</p>');
+    expect(html).not.toContain("monash");
     for (const l of loadRegistry().registry.layers.filter((x) => x.id !== "dunes")) expect(infoHtml(l), l.id).not.toContain("places-note");
   });
   it("help describes the named search", () => {

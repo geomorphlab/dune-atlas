@@ -34,7 +34,7 @@ import { CoordsControl } from "./core/ui/coords";
 import { escapeClosesCell } from "./core/ui/keys";
 import { tourHooks } from "./core/ui/tourHooks";
 import { SearchBox, searchZoom } from "./core/ui/search";
-import { loadPlaces, placeBounds, placesAvailable, type Place } from "./core/search/places";
+import { loadPlaces, placeBounds, placesAvailable, placesNoteHtml, type Place } from "./core/search/places";
 import { ensureRtlPlugin, LOCAL_IDEOGRAPH_FONTS, PlaceLabels, placesNeedRtl, type Tone } from "./core/map/placelabels";
 // the RTL text plugin as an asset of the build (self-hosted; the package exports only its source entry)
 import rtlPluginUrl from "../node_modules/@mapbox/mapbox-gl-rtl-text/dist/mapbox-gl-rtl-text.js?url";
@@ -181,7 +181,7 @@ const fullScreenUrl = () => {
 const layerPanelEl = document.getElementById("layer-panel")!;
 // search box (typed coordinates; named places once the body's list is enabled): fly there and open the cell
 const search = new SearchBox({
-  ...PROFILE.search, places: PLACES,
+  ...PROFILE.search, places: PLACES, namesNoteHtml: placesNoteHtml(PLACES),
   goTo: (lat, lon) => goToPoint(lat, lon),
   goToPlace: (p) => goToPlace(p),
 });

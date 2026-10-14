@@ -14,6 +14,10 @@ export interface Place {
   /** feature type, shown with the name in the results (Mars: the IAU descriptor term, e.g. Crater) */
   type?: string;
   aliases?: string[];
+  /** other names with a note on their script, meaning and language (searchable; popup) */
+  alt_names?: { text: string; note?: string }[];
+  /** named parts of the area (popup 'Includes'; their names are in `aliases`) */
+  includes?: string[];
   lat: number;
   lon: number;
   radius_km: number;
@@ -22,13 +26,22 @@ export interface Place {
   countries?: string[];
   sources: string[];
 }
-export interface PlaceList { enabled: boolean; places: Place[]; note?: string; credit?: string }
+export interface PlaceList {
+  enabled: boolean; places: Place[];
+  /** the naming note (verbatim) and the parts of it shown as links */
+  note?: string; note_links?: { text: string; href: string }[];
+  /** source line of map image exports while the names are shown */
+  credit?: string;
+}
 
 /** texts of the name labels ('Show names', map/placelabels.ts) */
 export const PLACE_TEXT = {
   toggle: "Show names",
   toggleHelp: "Label named dune fields and features on the map: the largest first, smaller ones as you zoom in. Click a name for its details.",
   aliases: "Also called",
+  includes: "Includes",
+  aboutNames: "About these names",
+  aboutItem: "Dune-field names",
   dunes: "Mapped dune area",
   sources: "Sources",
   countries: "Countries",
@@ -39,19 +52,30 @@ export const PLACE_TEXT = {
 export function loadPlaces(files: Record<string, string> = placesFiles): PlaceList {
   const text = Object.values(files)[0];
   const p = (text ? yaml.load(text) : null) as Partial<PlaceList> | null;
-  return { enabled: !!p?.enabled, places: Array.isArray(p?.places) ? p!.places : [], ...(p?.note ? { note: p.note } : {}), ...(p?.credit ? { credit: p.credit } : {}) };
+  return { enabled: !!p?.enabled, places: Array.isArray(p?.places) ? p!.places : [], ...(p?.note ? { note: p.note } : {}), ...(p?.note_links ? { note_links: p.note_links } : {}), ...(p?.credit ? { credit: p.credit } : {}) };
 }
 
 /** the list is shown (named search, name labels): enabled and not empty */
 export const placesAvailable = (list: PlaceList) => list.enabled && list.places.length > 0;
 
-/** the naming note of the dune layer's info: shown only with the named search, the list's own note if it has one */
+/** the naming note (verbatim text of the list): shown only with the named search */
 export function placesNote(list: PlaceList): string {
-  return placesAvailable(list) ? list.note ?? PLACES_DISCLAIMER : "";
+  return placesAvailable(list) ? list.note ?? "" : "";
+}
+/** the naming note as HTML: the text escaped, its `note_links` (first occurrence each) as links */
+export function placesNoteHtml(list: PlaceList): string {
+  const text = placesNote(list);
+  if (!text) return "";
+  const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  let html = esc(text);
+  for (const l of list.note_links ?? []) {
+    const e = esc(l.text);
+    const ext = l.href.startsWith("mailto:") ? "" : ' target="_blank" rel="noopener"';
+    html = html.replace(e, `<a href="${esc(l.href)}"${ext}>${e}</a>`);
+  }
+  return html;
 }
 
-/** The default naming note for the dune layer's info (Earth; draft, under review). */
-export const PLACES_DISCLAIMER = "Dune-field names in the search are for navigation only. Many dune fields have several names, including Indigenous and local names; the names shown are those we could source, and they imply no position on naming or boundaries.";
 
 /** Search key: lower case, without diacritics, apostrophes and ʿayn / hamza marks; other punctuation
  *  becomes a space. Non-Latin letters are kept (line2 matches in its own script). */
@@ -103,22 +127,46 @@ export function nameScore(q: string, name: string): number {
   return 0;
 }
 
-export interface PlaceHit { place: Place; score: number; matched: string }
+/** what a hit matched: the name (line 1 or 2), another name (alias, alternative name, sub-unit) or a country */
+export type HitKind = "name" | "alias" | "country";
+export interface PlaceHit { place: Place; score: number; matched: string; kind: HitKind }
 
-/** Places matching `query` (best first, at most `limit`): over line1, line2 and the aliases; equally good
- *  matches by mapped dune area (largest first), then by name. */
+/** the names a place is found by: line 1, line 2, the aliases (incl. sub-units) and the alternative names */
+export function searchNames(p: Place): string[] {
+  return [p.line1, ...(p.line2 ? [p.line2.text] : []), ...(p.aliases ?? []), ...(p.alt_names ?? []).map((a) => a.text)];
+}
+/** a country or territory typed in full ranks above partial name matches (85); its start below every name
+ *  match (40); the places of a country then follow their mapped dune area */
+export const COUNTRY_SCORE = { exact: 85, partial: 40 } as const;
+const KEYS = new WeakMap<Place, { names: [string, string][]; countries: [string, string][] }>();
+function keysOf(p: Place) {
+  let k = KEYS.get(p);
+  if (!k) KEYS.set(p, (k = { names: searchNames(p).map((n) => [n, searchKey(n)]), countries: (p.countries ?? []).map((c) => [c, searchKey(c)]) }));
+  return k;
+}
+
+/** Places matching `query` (best first, at most `limit`): over line1, line2, the aliases and alternative
+ *  names (typing errors tolerated), then the countries (whole words or their start); equally good matches by
+ *  mapped dune area (largest first), then by name. */
 export function matchPlaces(query: string, places: Place[], limit = 8): PlaceHit[] {
   const q = searchKey(query);
   if (!q) return [];
   const hits: PlaceHit[] = [];
   for (const p of places) {
-    let best = 0, matched = p.line1;
-    for (const n of [p.line1, p.line2?.text, ...(p.aliases ?? [])]) {
-      if (!n) continue;
-      const s = nameScore(q, searchKey(n)) - (n === p.line1 ? 0 : 1);   // a tie goes to the main name
-      if (s > best) { best = s; matched = n; }
+    const k = keysOf(p);
+    let best = 0, matched = p.line1, kind: HitKind = "name";
+    for (const [n, key] of k.names) {
+      const main = n === p.line1 || n === p.line2?.text;
+      const s = nameScore(q, key) - (n === p.line1 ? 0 : 1);   // a tie goes to the main name
+      if (s > best) { best = s; matched = n; kind = main ? "name" : "alias"; }
     }
-    if (best > 0) hits.push({ place: p, score: best, matched });
+    if (q.length >= 3) {
+      for (const [c, key] of k.countries) {
+        const s = key === q ? COUNTRY_SCORE.exact : nameScore(q, key) >= 80 ? COUNTRY_SCORE.partial : 0;
+        if (s > best) { best = s; matched = c; kind = "country"; }
+      }
+    }
+    if (best > 0) hits.push({ place: p, score: best, matched, kind });
   }
   return hits.sort((a, b) => b.score - a.score || (b.place.dune_km2 ?? 0) - (a.place.dune_km2 ?? 0) || a.place.line1.localeCompare(b.place.line1)).slice(0, limit);
 }
