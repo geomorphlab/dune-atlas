@@ -450,3 +450,9 @@ label.inline.region-param, label.inline.region-range { display: flex; margin: 1p
 .basemap-notice[hidden] { display: none; }
 .basemap-notice .close { background: none; border: 0; color: var(--muted); font-size: 16px; line-height: 1; cursor: pointer; padding: 0 2px; }
 .basemap-notice .close:hover { color: var(--fg); }
+/* language switch (i18n/switcher.ts): its own column of square buttons below the planet button */
+.atlas-lang button.lang-btn { filter: none; color: var(--muted); font-size: 11px; font-weight: 600; line-height: 1; padding: 0; }
+.atlas-lang button.lang-btn[aria-pressed="true"] { color: var(--accent); background: var(--bg3); }
+.atlas-lang button.lang-btn:hover:not([aria-pressed="true"]) { color: var(--fg); }
+/* Simplified Chinese: CJK system fonts before the generic family (i18n; <html lang="zh-Hans">) */
+html:lang(zh-Hans) { font-family: system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Noto Sans SC", "Source Han Sans SC", sans-serif; }

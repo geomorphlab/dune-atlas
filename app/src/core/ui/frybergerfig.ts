@@ -12,6 +12,7 @@ import { DARK_THEME } from "../cell/plottheme";
 import { h, nextId } from "./dom";
 import { mathHtml } from "../util/math";
 import { live, padFigure, reserveCh } from "./livenum";
+import { tr } from "../../i18n";
 
 export const KNOT = 0.514444; // m/s
 export const FRYBERGER_VT_KT = 12;
@@ -37,6 +38,9 @@ export const FRY_TEXT = {
     "Dashed lines: the two thresholds; between them only one DP is above zero. " +
     "The ratio changes with wind speed, so there is no fixed conversion factor: for a real wind record, the ratio of the two DPs depends on its mix of wind speeds. Hours above 20 m/s are not counted by the atlas.",
 };
+
+/** FRY_TEXT in the current language (keys fry.<name>; i18n/catalogue.ts) */
+export const fryText = () => Object.fromEntries(Object.entries(FRY_TEXT).map(([k, v]) => [k, tr(`fry.${k}`, v)])) as typeof FRY_TEXT;
 
 export interface FrybergerPoint { u: number; kt: number; atlas: number; fry: number; ratio: number }
 
@@ -85,6 +89,7 @@ const tickText = (v: number) => (v >= 1000 ? `${v / 1000}k` : String(Number(v.to
 
 /** the two stacked plots as SVG for threshold ut */
 export function frybergerSvg(ut: number): string {
+  const F = fryText();
   const T = DARK_THEME;
   const pts = Array.from({ length: N + 1 }, (_, i) => steadyWindDp((U_MAX * i) / N, ut));
   const X = (u: number) => ML + (PW * u) / U_MAX;
@@ -98,7 +103,7 @@ export function frybergerSvg(ut: number): string {
   const rLo = rv.length ? Math.max(10 ** Math.floor(Math.log10(Math.min(...rv))), rHi / 1e4) : 0.01;
   const yR = (v: number) => BOT.y0 + BOT.h * (1 - (Math.log10(v) - Math.log10(rLo)) / (Math.log10(rHi) - Math.log10(rLo)));
   const s: string[] = [];
-  s.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="100%" role="img" class="fry-svg" aria-label="${FRY_TEXT.heading}">`);
+  s.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="100%" role="img" class="fry-svg" aria-label="${F.heading}">`);
   const txt = (x: number, y: number, t: string, o: { anchor?: string; fill?: string; size?: number; rot?: boolean } = {}) =>
     `<text x="${f2(x)}" y="${f2(y)}" font-size="${o.size ?? T.fs.tick}" fill="${o.fill ?? T.label}" text-anchor="${o.anchor ?? "middle"}"${o.rot ? ` transform="rotate(-90 ${f2(x)} ${f2(y)})"` : ""}>${t}</text>`;
   // frames and grids
@@ -111,7 +116,7 @@ export function frybergerSvg(ut: number): string {
     s.push(`<line x1="${f2(X(k * KNOT))}" x2="${f2(X(k * KNOT))}" y1="${TOP.y0 - 3}" y2="${TOP.y0}" stroke="${T.label}" stroke-width="0.8"/>`);
     s.push(txt(X(k * KNOT), TOP.y0 - 6, String(k), { size: T.fs.tick - 1 }));
   }
-  s.push(txt(ML + PW + 4, TOP.y0 - 6, FRY_TEXT.knots, { anchor: "start", size: T.fs.tick - 1 }));
+  s.push(txt(ML + PW + 4, TOP.y0 - 6, F.knots, { anchor: "start", size: T.fs.tick - 1 }));
   for (let g = 0; g <= 4; g++) {
     const y = TOP.y0 + (TOP.h * g) / 4;
     if (g > 0 && g < 4) s.push(`<line x1="${ML}" x2="${ML + PW}" y1="${f2(y)}" y2="${f2(y)}" stroke="${T.grid}" stroke-width="0.4" stroke-dasharray="2 3"/>`);
@@ -123,8 +128,8 @@ export function frybergerSvg(ut: number): string {
     if (e > Math.log10(rLo) && e < Math.log10(rHi)) s.push(`<line x1="${ML}" x2="${ML + PW}" y1="${f2(y)}" y2="${f2(y)}" stroke="${T.grid}" stroke-width="0.4" stroke-dasharray="2 3"/>`);
     s.push(txt(ML - 4, y + 3.5, Number(v.toPrecision(1)).toString(), { anchor: "end", fill: COL.ratio }));
   }
-  s.push(txt(12, TOP.y0 + TOP.h / 2, FRY_TEXT.atlas, { rot: true, fill: COL.atlas, size: T.fs.axis }));
-  s.push(txt(W - 8, TOP.y0 + TOP.h / 2, FRY_TEXT.fryberger, { rot: true, fill: COL.fry, size: T.fs.axis }));
+  s.push(txt(12, TOP.y0 + TOP.h / 2, F.atlas, { rot: true, fill: COL.atlas, size: T.fs.axis }));
+  s.push(txt(W - 8, TOP.y0 + TOP.h / 2, F.fryberger, { rot: true, fill: COL.fry, size: T.fs.axis }));
   s.push(txt(12, BOT.y0 + BOT.h / 2, "ratio", { rot: true, fill: COL.ratio, size: T.fs.axis }));
   // thresholds
   const uA = atlasThresholdSpeed(ut), uF = FRYBERGER_VT_KT * KNOT;
@@ -155,19 +160,21 @@ export function frybergerSvg(ut: number): string {
 /** readout for a pointed-at speed (HTML; null: nothing pointed at yet): four lines, each ending in a slot
  *  reserved for its widest value, so the text never reflows as the values change (ui/livenum.ts) */
 export function readoutHtml(p: FrybergerPoint | null): string {
+  const F = fryText();
   const wDp = reserveCh(DP_WIDEST.map((x) => `${x}&nbsp;m²/yr`)), wFry = reserveCh(DP_WIDEST.map((x) => `${x}&nbsp;VU`));
   const wU = reserveCh(SPEED_WIDEST.map((x) => `${x}&nbsp;m/s (${x}&nbsp;knots)`)), wR = reserveCh(RATIO_WIDEST);
   const u = p ? `${p.u.toFixed(1)}&nbsp;m/s (${p.kt.toFixed(1)}&nbsp;knots)` : "—";
   const line = (col: string, label: string, val: string, w: number) =>
     `<span class="fry-line"><span style="color:${col}">${mathHtml(label)}</span> ${live(val, w, "left")}</span>`;
-  return line("inherit", FRY_TEXT.readU, u, wU) +
-    line(COL.atlas, FRY_TEXT.readAtlas, p ? `${fmtDp(p.atlas)}&nbsp;m²/yr` : "—", wDp) +
-    line(COL.fry, FRY_TEXT.readFry, p ? `${fmtDp(p.fry)}&nbsp;VU` : "—", wFry) +
-    line(COL.ratio, FRY_TEXT.readRatio, p ? fmtRatio(p.ratio) : "—", wR);
+  return line("inherit", F.readU, u, wU) +
+    line(COL.atlas, F.readAtlas, p ? `${fmtDp(p.atlas)}&nbsp;m²/yr` : "—", wDp) +
+    line(COL.fry, F.readFry, p ? `${fmtDp(p.fry)}&nbsp;VU` : "—", wFry) +
+    line(COL.ratio, F.readRatio, p ? fmtRatio(p.ratio) : "—", wR);
 }
 
 /** the interactive figure (Earth atlas only); `utIndex` is the index of C.UT_VALUES to start at */
 export function frybergerFigure(mapIndex: () => number = () => C.UT_DEFAULT_INDEX): HTMLElement {
+  const F = fryText();
   const sid = nextId("fry-ut");
   const clampI = (k: number) => Math.min(Math.max(0, k), C.UT_VALUES.length - 1);
   let i = clampI(mapIndex());
@@ -175,11 +182,11 @@ export function frybergerFigure(mapIndex: () => number = () => C.UT_DEFAULT_INDE
   const utText = (v: number) => `${v.toFixed(2)} m/s`;
   const outChars = Math.max(...C.UT_VALUES.map((v) => [...utText(v)].length));
   const out = h("output", { for: sid, class: "ut-value live-num", style: `min-width:${reserveCh(C.UT_VALUES.map(utText))}ch` });
-  const back = h("button", { type: "button", class: "link-button", title: FRY_TEXT.mapValueTitle }, FRY_TEXT.mapValue);
+  const back = h("button", { type: "button", class: "link-button", title: F.mapValueTitle }, F.mapValue);
   const plot = h("div", { class: "fry-plot" });
   const read = h("p", { class: "fry-readout", html: readoutHtml(null) });
   const legend = h("p", { class: "fry-legend", html:
-    `<span style="color:${COL.atlas}">━ ${FRY_TEXT.atlas}</span> <span style="color:${COL.fry}">━ ${FRY_TEXT.fryberger}</span> <span style="color:${COL.ratio}">━ ${FRY_TEXT.ratio} ${FRY_TEXT.ratioUnits}</span>` });
+    `<span style="color:${COL.atlas}">━ ${F.atlas}</span> <span style="color:${COL.fry}">━ ${F.fryberger}</span> <span style="color:${COL.ratio}">━ ${F.ratio} ${F.ratioUnits}</span>` });
   let lastU: number | null = null;
   const draw = () => {
     const ut = C.UT_VALUES[i];
@@ -209,10 +216,10 @@ export function frybergerFigure(mapIndex: () => number = () => C.UT_DEFAULT_INDE
   back.addEventListener("click", () => { i = clampI(mapIndex()); draw(); });
   draw();
   return h("figure", { class: "fry-fig" },
-    h("p", { class: "fry-heading" }, FRY_TEXT.heading),
-    h("div", { class: "fry-slider" }, h("label", { for: sid, html: mathHtml(FRY_TEXT.slider) }), input, out, back),
+    h("p", { class: "fry-heading" }, F.heading),
+    h("div", { class: "fry-slider" }, h("label", { for: sid, html: mathHtml(F.slider) }), input, out, back),
     plot,
-    h("p", { class: "fry-xaxis", html: mathHtml(FRY_TEXT.xAxis) }),
-    legend, h("p", { class: "fry-hint" }, FRY_TEXT.hint), read,
-    h("figcaption", { html: mathHtml(FRY_TEXT.caption) }));
+    h("p", { class: "fry-xaxis", html: mathHtml(F.xAxis) }),
+    legend, h("p", { class: "fry-hint" }, F.hint), read,
+    h("figcaption", { html: mathHtml(F.caption) }));
 }

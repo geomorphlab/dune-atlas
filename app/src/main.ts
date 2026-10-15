@@ -1,5 +1,7 @@
 // Entry point of both atlases: map shell + registry-driven overlays + the global slider control (Earth u*,th,
 // Mars d) + click-to-cell panel. What differs per body comes from the @body modules (hooks: @body/app).
+import { applyHtmlLang, LANG } from "./i18n";
+import { langSwitch } from "./i18n/switcher";
 import { storageKey } from "./core/body";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "katex/dist/katex.min.css";
@@ -54,6 +56,7 @@ import { triggerDownload } from "./core/cell/downloads";
 import { DATA_LICENSE_URL } from "./core/ui/bulkguide";
 import { BODY } from "./core/body";
 
+applyHtmlLang();
 const { registry: reg, errors } = loadRegistry();
 if (errors.length) console.warn("registry merge:", errors);
 const dataBase = CONFIG.dataBase ?? reg.dataBase;
@@ -306,6 +309,8 @@ async function runRegion(box: Box, sel: RegionSelection, o: { onProgress: (d: nu
 const tools = new Tools({ startTour: () => tourStart.fromHelp(), shareLink: shareLinkNow, exportMap, openAbout, utIndex: () => store.state.utIndex,
   region: { lonRange: PROFILE.search.lonRange, context: regionContext, draw: () => boxDrawer.draw(), show: (b) => boxDrawer.show(b), run: runRegion } });
 map.addControl({ onAdd: () => tools.el, onRemove: () => tools.el.remove() }, "top-right");
+// language switch: a separate column below the tools (planet button last there)
+if (!init.embed) { const langEl = langSwitch(); map.addControl({ onAdd: () => langEl, onRemove: () => langEl.remove() }, "top-right"); }
 const autostart = shouldShowTour({ embed: init.embed, tourParam: !!url.tour, seen: tourSeen() });
 // "Help and Tour" bubble by the Help button; the automatic first-visit start also has a time-out
 // fallback in case the map never reports idle
@@ -367,6 +372,7 @@ function currentUrlState(): UrlState {
     dunesOnly: s.dunesOnly || undefined,
     names: s.names || undefined,
     plot: s.plotY && s.plotY !== "dpm" ? s.plotY : undefined,
+    lang: LANG === "en" ? undefined : LANG,
   };
 }
 // opened without view state: the address stays bare (map.geomorphlab.org) while the state equals

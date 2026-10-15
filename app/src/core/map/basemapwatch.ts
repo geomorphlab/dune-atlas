@@ -4,6 +4,8 @@
 // loaded, a notice asks the user to choose another basemap. A style basemap whose style file cannot be
 // fetched fails at once. The notice goes as soon as a tile loads or the basemap changes; × closes it.
 // Errors of the atlas's own layers (data, labels, selected cell) are not counted.
+import { fill, t, tr } from "../../i18n";
+import { basemapKey } from "../../i18n/keys";
 import type { BasemapDef } from "../registry/types";
 import { basemapStyle } from "./basemaps";
 import { h } from "../ui/dom";
@@ -94,7 +96,7 @@ export class BasemapWatch {
     if (!b) return;
     if (this.#loaded > 0) { this.el.hidden = true; return; }
     if (this.#errors >= FAIL_AFTER && !this.#closed && this.el.hidden) {
-      this.#text.textContent = BASEMAP_FAILED_TEXT(b.title.trim());
+      this.#text.textContent = fill(t("basemap.failed"), { title: tr(basemapKey(b.id), b.title.trim()) });
       this.el.hidden = false;
     }
   }

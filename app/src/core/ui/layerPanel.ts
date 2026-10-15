@@ -3,6 +3,9 @@
 //   outside the scroll area) | scrolling body: 'Active layers' = the visible layers in drawing
 //   order (drag or move up/down; top = drawn on top; opacity slider; × to hide), groups ->
 //   layers (toggle, info, display controls, legend), basemap radio + globe toggle, About & citation.
+import { t as ui, tr } from "../../i18n";
+import { SUBTITLE_EN } from "../../i18n/subtitle";
+import { basemapKey, groupKey, layerKey, layerTitleText } from "../../i18n/keys";
 import { richHtml } from "../util/richtext";
 import type { BasemapDef, LayerAttribution, LayerDef, Registry } from "../registry/types";
 import type { Store, AppState } from "../store";
@@ -152,7 +155,7 @@ export function dunesOnlyToggle(store: Store): HTMLElement {
   cb.checked = !!store.state.dunesOnly;
   cb.addEventListener("change", () => store.set({ dunesOnly: cb.checked }));
   store.subscribe((st, ch) => { if (ch.has("dunesOnly")) cb.checked = !!st.dunesOnly; });
-  return h("label", { class: "inline dunes-only-row", for: "dunes-only", title: DUNES_ONLY_HELP }, cb, "Dunes only",
+  return h("label", { class: "inline dunes-only-row", for: "dunes-only", title: DUNES_ONLY_HELP }, cb, ui("panel.dunesOnly"),
     h("span", { id: "dunes-only-help", class: "visually-hidden" }, DUNES_ONLY_HELP));
 }
 
@@ -164,7 +167,7 @@ export function namesToggle(store: Store): HTMLElement {
   cb.checked = !!store.state.names;
   cb.addEventListener("change", () => store.set({ names: cb.checked }));
   store.subscribe((st, ch) => { if (ch.has("names")) cb.checked = !!st.names; });
-  const label = h("label", { for: "show-names", title: PLACE_TEXT.toggleHelp }, PLACE_TEXT.toggle,
+  const label = h("label", { for: "show-names", title: PLACE_TEXT.toggleHelp }, ui("panel.names"),
     h("span", { id: "show-names-help", class: "visually-hidden" }, PLACE_TEXT.toggleHelp));
   // the ⓘ: what the labels do, then the naming note (the same text as the mask's ⓘ, About and the search results)
   const t = infoToggle(PLACE_TEXT.aboutItem, `<p class="info-def">${escapeHtml(PLACE_TEXT.toggleHelp)}</p><p class="help places-note">${placesNoteHtml(PLACES)}</p>`, "names");
@@ -208,7 +211,7 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
   const refreshers: ((s: AppState) => void)[] = [];
 
   if (l.type === "zarr-field") {
-    const disp = h("details", { class: "display-opts" }, h("summary", {}, "Display"));
+    const disp = h("details", { class: "display-opts" }, h("summary", {}, ui("panel.display")));
     // render mode (directional fields)
     if (isDirectional(l)) {
       const mode = h("select", { "aria-label": `Display ${l.title} as` },
@@ -226,7 +229,7 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
       ds.addEventListener("input", () => ds.setAttribute("aria-valuetext", valueText()));
       ds.addEventListener("change", () => store.setLayerConfig(l.id, { spacingKm: kmAt() === DEFAULT_SPACING_KM ? undefined : kmAt() }));
       const dsRow = h("label", { class: "inline spacing", title: "Spacing between arrows / streamlines: left finer (denser lines), right coarser" }, "Spacing ",
-        h("span", { class: "spacing-end", "aria-hidden": "true" }, "Finer"), ds, h("span", { class: "spacing-end", "aria-hidden": "true" }, "Coarser"));
+        h("span", { class: "spacing-end", "aria-hidden": "true" }, ui("panel.finer")), ds, h("span", { class: "spacing-end", "aria-hidden": "true" }, ui("panel.coarser")));
       disp.append(h("label", { class: "inline" }, "Show as ", mode), vcRow, dsRow);
       refreshers.push((s) => {
         const e = effectiveDisplay(l, s.layers[l.id]?.cfg);
@@ -318,7 +321,7 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
     for (const r of refreshers) r(s);
   };
   const item = h("li", { class: "layer-item", "data-layer": l.id },
-    h("div", { class: "layer-row" }, cb, h("label", { for: cid, html: l.shortTitle ? escapeHtml(l.shortTitle) : l.titleTex ? mathHtml(l.titleTex) : escapeHtml(l.title) }), info),
+    h("div", { class: "layer-row" }, cb, h("label", { for: cid, html: l.shortTitle ? escapeHtml(tr(layerKey(l.id, "short"), l.shortTitle)) : mathHtml(layerTitleText(l)) }), info),
     controls, legend, pop);
   refresh(store.state);
   store.subscribe((s, ch) => {
@@ -361,7 +364,7 @@ function orderList(reg: Registry, store: Store): HTMLElement {
     const li = h("li", { class: "order-item", draggable: "true", "data-layer": id },
       h("span", { class: "drag-handle", "aria-hidden": "true", title: "Drag to reorder" }, "⠿"),
       h("span", { class: "order-num" }, ""),
-      h("span", { class: "order-title", html: l?.titleTex ? mathHtml(l.titleTex) : escapeHtml(title(id)) }), op, up, down, rm);
+      h("span", { class: "order-title", html: l ? mathHtml(layerTitleText(l)) : escapeHtml(title(id)) }), op, up, down, rm);
     li.addEventListener("dragstart", (e) => { dragId = id; li.classList.add("dragging"); e.dataTransfer?.setData("text/plain", id); if (e.dataTransfer) e.dataTransfer.effectAllowed = "move"; });
     li.addEventListener("dragend", () => { dragId = null; li.classList.remove("dragging"); });
     li.addEventListener("dragover", (e) => { if (dragId && dragId !== id) { e.preventDefault(); li.classList.add("drop-target"); } });
@@ -401,7 +404,7 @@ function orderList(reg: Registry, store: Store): HTMLElement {
     const b = ol.querySelector(`.order-item[data-layer="${id}"] .move:nth-of-type(${dir === "up" ? 1 : 2})`) as HTMLButtonElement | null;
     (b && !b.disabled ? b : (ol.querySelector(`.order-item[data-layer="${id}"] .move:not([disabled])`) as HTMLButtonElement | null))?.focus();
   };
-  const wrap = h("details", { class: "order", open: true }, h("summary", {}, "Active layers"), ol);
+  const wrap = h("details", { class: "order", open: true }, h("summary", {}, ui("panel.active")), ol);
   render(store.state);
   store.subscribe((s, ch) => { if (ch.has("order") || ch.has("layers")) render(s); });
   return wrap;
@@ -421,11 +424,11 @@ export function datasetOptionLabel(id: string, fallback: string): string {
 }
 
 /** the header subtitle, identical in both atlases (the Gunn (2026) citation is in About) */
-export const SUBTITLE_HTML = `Interactive explorer for aeolian geomorphology<br>Developed by the <a href="https://www.geomorphlab.org/" target="_blank" rel="noopener">Monash Geomorphology Lab</a>`;
+export const SUBTITLE_HTML = SUBTITLE_EN;
 
 export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store, opts: { fullScreenUrl?: () => string; initialOpen?: boolean; search?: HTMLElement } = {}) {
   root.replaceChildren();
-  const toggle = h("button", { type: "button", class: "panel-toggle", "aria-expanded": "true", "aria-controls": "layer-panel-body", title: "Show / hide layers" }, "Layers");
+  const toggle = h("button", { type: "button", class: "panel-toggle", "aria-expanded": "true", "aria-controls": "layer-panel-body", title: ui("header.layersTitle") }, ui("header.layers"));
   const body = h("div", { id: "layer-panel-body", class: "panel-body" });
   toggle.addEventListener("click", () => setLayerPanelOpen(root, toggle.getAttribute("aria-expanded") !== "true"));
   if (opts.initialOpen === false || (opts.initialOpen === undefined && (store.state.embed || globalThis.matchMedia?.("(max-width: 720px)").matches))) {
@@ -434,7 +437,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
   }
   const header = h("header", { class: "atlas-header" },
     h("div", { class: "title-row" }, markNoTranslate(h("h1", {}, "Dune Atlas", " ", h("span", { class: "body-name" }, BODY_NAME))), toggle),
-    h("p", { class: "subtitle", html: SUBTITLE_HTML }));
+    h("p", { class: "subtitle", html: ui("header.subtitle") }));
   if (opts.search) header.append(opts.search);   // search box (ui/search.ts): stays visible with the list collapsed
   if (opts.fullScreenUrl) { // embed: a pill on the map above the panel, not in the header
     root.parentElement?.querySelector(":scope > .embed-bar")?.remove();
@@ -466,8 +469,8 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
   for (const g of reg.groups) {
     const layers = reg.layers.filter((l) => l.group === g.id);
     if (!layers.length) continue;
-    const det = h("details", { class: "layer-group", open: !g.collapsed }, h("summary", {}, g.title));
-    if (g.description) det.append(h("p", { class: "help", html: mathHtml(g.description) }));
+    const det = h("details", { class: "layer-group", open: !g.collapsed }, h("summary", {}, tr(groupKey(g.id), g.title)));
+    if (g.description) det.append(h("p", { class: "help", html: mathHtml(tr(groupKey(g.id, "desc"), g.description)) }));
     const ul = h("ul", { class: "layer-list" });
     for (const l of layers) ul.append(layerItem(l, store));
     // the name labels: a row of the Dune Fields group, where the body's place list is enabled
@@ -476,7 +479,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     body.append(det);
   }
 
-  const fs = h("fieldset", { class: "basemaps" }, h("legend", {}, "Basemap"));
+  const fs = h("fieldset", { class: "basemaps" }, h("legend", {}, ui("basemap.legend")));
   for (const b of reg.basemaps) {
     const id = nextId(`bm-${b.id}`);
     const r = h("input", { type: "radio", name: "basemap", id, value: b.id, checked: store.state.basemap === b.id }) as HTMLInputElement;
@@ -484,8 +487,8 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     store.subscribe((s, ch) => { if (ch.has("basemap")) r.checked = s.basemap === b.id; });
     if (b.info) {
       const t = infoToggle(b.title, basemapInfoHtml(b), `bm-${b.id}`);
-      fs.append(h("div", { class: "radio-row basemap-row", "data-basemap": b.id }, r, h("label", { for: id }, b.title), t.button), t.pop);
-    } else fs.append(h("div", { class: "radio-row", "data-basemap": b.id }, r, h("label", { for: id }, b.title)));
+      fs.append(h("div", { class: "radio-row basemap-row", "data-basemap": b.id }, r, h("label", { for: id }, tr(basemapKey(b.id), b.title.trim())), t.button), t.pop);
+    } else fs.append(h("div", { class: "radio-row", "data-basemap": b.id }, r, h("label", { for: id }, tr(basemapKey(b.id), b.title.trim()))));
   }
   const globe = h("input", { type: "checkbox", id: "opt-globe", checked: store.state.projection === "globe" }) as HTMLInputElement;
   globe.addEventListener("change", () => store.set({ projection: globe.checked ? "globe" : "mercator" }));

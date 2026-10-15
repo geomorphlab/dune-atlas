@@ -1,6 +1,7 @@
 // Click-to-cell side panel (bottom sheet on narrow screens). Structure: header | compact u*,th
 // control (persistent, synced with the layer panel) | content. Content is built once per cell;
 // threshold / bin / axis changes only refresh the dynamic parts so sliders keep focus.
+import { t } from "../../i18n";
 import { fluxRoseHeading, loadPetals, PETAL_CHOICE_LABEL, PETAL_CONVENTIONS, petalCaptionHtml, petalOffset, petalPhrase, PETALS_SWITCH_LABEL, savePetals, type PetalConvention } from "../../core/cell/petals";
 import { groupedBody, wireTableGroups } from "../../core/ui/tablegroups";
 import { utTex } from "../../core/export/labels"; // plot-export legend: the slider value
@@ -747,7 +748,7 @@ export class CellPanel {
       const t = citationFile(cell, this.#exportMeta().datasetId, this.#citeSetting());
       void navigator.clipboard?.writeText(t).then(() => { countCopy("copy-citation"); copy.textContent = "Copied"; setTimeout(() => { copy.textContent = "Copy citation"; }, 1500); }, () => triggerDownload(`${base()}_citation.txt`, t, "text/plain"));
     });
-    return this.#section("downloads", "downloads", h("h3", { id: "dl-h" }, "Download & cite"),
+    return this.#section("downloads", "downloads", h("h3", { id: "dl-h" }, t("cell.downloads")),
       h("div", { class: "buttons" },
         btn("NetCDF (.nc)", "Wind histogram, all fields vs threshold, flux roses and metadata in one NetCDF-3 file (CF-1.8)", () => triggerDownload(`${base()}.nc`, cellNetcdf(cell, this.#exportMeta()), "application/x-netcdf")),
         btn("CSV bundle (.zip)", "wind_histogram.csv, fields_by_threshold.csv, flux_rose.csv, rose_16_sectors.csv (16 sectors, degrees), metadata.json and README.txt", () => { void csvBundle(cell, this.#exportMeta()).then((z) => triggerDownload(`${base()}.zip`, z, "application/zip")); }),
