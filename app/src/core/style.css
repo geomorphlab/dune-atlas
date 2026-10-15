@@ -445,3 +445,8 @@ label.inline.region-param, label.inline.region-range { display: flex; margin: 1p
 .tool-pop-concepts .fry-fig .fry-readout { font-size: 11.5px; line-height: 1.4; }
 .tool-pop-concepts .fry-fig .fry-line { display: block; }
 .tool-pop-concepts .fry-fig .fry-hint { font-size: 11px; color: var(--muted); }
+/* basemap that cannot be loaded (map/basemapwatch.ts): below the loading indicator, closable */
+.basemap-notice { position: fixed; z-index: 31; left: 50%; top: 44px; transform: translateX(-50%); display: flex; gap: 8px; align-items: flex-start; max-width: min(460px, calc(100vw - 32px)); padding: 6px 8px 6px 12px; border-radius: 8px; background: rgba(0,0,0,.82); border: 1px solid var(--accent); color: var(--fg); font-size: 12.5px; line-height: 1.4; }
+.basemap-notice[hidden] { display: none; }
+.basemap-notice .close { background: none; border: 0; color: var(--muted); font-size: 16px; line-height: 1; cursor: pointer; padding: 0 2px; }
+.basemap-notice .close:hover { color: var(--fg); }
