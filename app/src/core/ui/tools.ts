@@ -8,6 +8,9 @@ import { DOWNLOAD_EVENT } from "../cell/downloads";
 import { mathHtml } from "../util/math";
 import { newRegionState, regionForm, REGION_TEXT, type RegionOptions } from "./regionExport";
 import { CONCEPT_EVENT, CONCEPTS, conceptBodyHtml, conceptTitleHtml } from "./concepts";
+import { frybergerFigure } from "./frybergerfig";
+import { C } from "../util/constants";
+const C_DEFAULT_UT = () => C.UT_DEFAULT_INDEX;
 import { CONCEPTS_TEXT, EXPORT_TEXT, HELP_ABOUT_LINK, HELP_BUTTON_LABEL, HELP_RESTART, HELP_SECTIONS, HELP_TITLE, SHARE_TEXT } from "./helpText";
 
 export interface ToolsOptions {
@@ -19,6 +22,8 @@ export interface ToolsOptions {
   region?: RegionOptions;
   /** open a URL (default: location.assign); tests replace it */
   navigate?: (url: string) => void;
+  /** current index of the threshold slider (the Concepts figure of DP starts there) */
+  utIndex?: () => number;
 }
 
 const ICONS = {
@@ -130,6 +135,11 @@ export class Tools {
     const items = CONCEPTS.map((c) => {
       const d = h("details", { class: "concept", id: `concept-${c.id}`, "data-concept-id": c.id, open: c.id === id },
         h("summary", { html: conceptTitleHtml(c) }), h("div", { class: "concept-body", html: conceptBodyHtml(c) })) as HTMLDetailsElement;
+      // Earth: the DP entry shows how the atlas DP relates to Fryberger's DP (ui/frybergerfig.ts)
+      if (BODY === "earth" && c.id === "drift-potential-dp") {
+        const body = d.querySelector(".concept-body") as HTMLElement;
+        body.insertBefore(frybergerFigure(() => this.#opts.utIndex?.() ?? C_DEFAULT_UT()), body.querySelector(".concept-refs"));
+      }
       return d;
     });
     const pop = this.#openPopWith({ fit: true }, "concepts", owner, CONCEPTS_TEXT.title, h("div", { class: "concept-list" }, ...items));

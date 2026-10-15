@@ -51,7 +51,7 @@ References: Fryberger & Dean (1979); Wasson & Hyde (1983); Gunn (2026).
 
 ### Wind FROM, sand TOWARD — both
 
-The atlas uses two opposite conventions, as is usual in each field. Wind roses are meteorological: a petal pointing north shows wind blowing from the north. Sand-flux roses, RDD and the dune-orientation modes show the direction sand or dunes move toward: a petal pointing south shows sand moving to the south. So a north wind appears as a north petal on the wind rose and a south petal on the sand rose. The crest orientation αH is an axis (0–180°), not a direction of motion, and has neither "from" nor "toward".
+The atlas uses two opposite conventions, as is usual in each field. Wind roses are meteorological: a petal pointing north shows wind blowing from the north. Sand-flux roses, RDD and the dune-orientation modes show the direction sand or dunes move toward: a petal pointing south shows sand moving to the south. So a north wind appears as a north petal on the wind rose and a south petal on the sand rose. The Petals switch above the sand-flux rose in the cell panel can turn its petals to show the direction the wind comes from instead, as on the wind rose; the arrows on the rose, the bearing values, the map and the downloaded data keep the toward convention. The crest orientation αH is an axis (0–180°), not a direction of motion, and has neither "from" nor "toward".
 
 References: none.
 

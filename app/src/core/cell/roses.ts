@@ -141,6 +141,8 @@ export interface RoseSvgOptions {
   uaCentres?: ArrayLike<number>;
   /** colours of grid / labels (default: the dark on-screen theme) */
   theme?: PlotTheme;
+  /** rotation of the petals only (deg; 180 draws a toward rose as a from rose); arrows are not turned */
+  petalOffset?: number;
 }
 
 const f2 = (v: number) => (Math.round(v * 100) / 100).toString();
@@ -182,7 +184,7 @@ export function roseSvg(o: RoseSvgOptions): string {
   // sectors touch (full 360/n each, no gaps); a hairline stroke in the fill colour hides seams
   parts.push(`<g class="rose-petals" stroke-width="0.35" stroke-linejoin="round">`);
   for (let s = 0; s < n; s++) {
-    const c = sectorCentre(s, n, o.uaCentres);
+    const c = sectorCentre(s, n, o.uaCentres) + (o.petalOffset ?? 0);
     const a0 = c - w / 2, a1 = c + w / 2;
     let acc = 0;
     o.values[s].forEach((v, k) => {

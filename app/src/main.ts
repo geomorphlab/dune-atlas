@@ -296,7 +296,7 @@ async function runRegion(box: Box, sel: RegionSelection, o: { onProgress: (d: nu
   triggerDownload(`${name}.zip`, zip, "application/zip");
   return { name: `${name}.zip`, cells: data.length, withData };
 }
-const tools = new Tools({ startTour: () => tourStart.fromHelp(), shareLink: shareLinkNow, exportMap, openAbout,
+const tools = new Tools({ startTour: () => tourStart.fromHelp(), shareLink: shareLinkNow, exportMap, openAbout, utIndex: () => store.state.utIndex,
   region: { lonRange: PROFILE.search.lonRange, context: regionContext, draw: () => boxDrawer.draw(), show: (b) => boxDrawer.show(b), run: runRegion } });
 map.addControl({ onAdd: () => tools.el, onRemove: () => tools.el.remove() }, "top-right");
 const autostart = shouldShowTour({ embed: init.embed, tourParam: !!url.tour, seen: tourSeen() });
