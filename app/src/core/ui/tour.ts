@@ -2,10 +2,12 @@
 // popover anchored to it (centred when the control is hidden, e.g. a collapsed panel on mobile).
 // Back / Next / Skip on every step, step counter, Esc and a click outside skip; focus is trapped in
 // the popover and returned afterwards; the step text is announced (aria-live).
+import { fill, t, tr } from "../../i18n";
+import { tourKey } from "../../i18n/keys";
 import { h } from "./dom";
 import { storageKey } from "../body";
 import { mathHtml } from "../util/math";
-import { TOUR_LABELS, TOUR_STEPS, type TourStep } from "./helpText";
+import { TOUR_STEPS, type TourStep } from "./helpText";
 
 export const TOUR_SEEN_KEY = storageKey("tourSeen"); // Earth "duneAtlas.tourSeen", Mars "duneAtlasMars.tourSeen" (body.ts)
 
@@ -109,9 +111,9 @@ export class Tour {
   start(i = 0) {
     this.end(false, true);
     this.#prevFocus = document.activeElement;
-    const back = h("button", { type: "button", class: "tour-back" }, TOUR_LABELS.back);
-    const next = h("button", { type: "button", class: "tour-next" }, TOUR_LABELS.next);
-    const skip = h("button", { type: "button", class: "tour-skip" }, TOUR_LABELS.skip);
+    const back = h("button", { type: "button", class: "tour-back" }, t("tour.back"));
+    const next = h("button", { type: "button", class: "tour-next" }, t("tour.next"));
+    const skip = h("button", { type: "button", class: "tour-skip" }, t("tour.skip"));
     back.addEventListener("click", () => this.back());
     next.addEventListener("click", () => this.next());
     skip.addEventListener("click", () => this.end(false));
@@ -150,9 +152,9 @@ export class Tour {
     this.#i = i;
     const s = this.#steps[i], n = this.#steps.length;
     const q = (c: string) => this.#pop.querySelector(c) as HTMLElement;
-    q(".tour-count").textContent = TOUR_LABELS.step(i + 1, n);
-    q("#tour-title").innerHTML = mathHtml(s.title);
-    q("#tour-body").innerHTML = `<p>${mathHtml(s.body)}</p>`;
+    q(".tour-count").textContent = fill(t("tour.step"), { i: i + 1, n });
+    q("#tour-title").innerHTML = mathHtml(tr(tourKey(s.id, "title"), s.title));
+    q("#tour-body").innerHTML = `<p>${mathHtml(tr(tourKey(s.id, "body"), s.body))}</p>`;
     // leave the previous step (restore), then enter this one; re-anchor once it is ready
     const my = ++this.#seq;
     const hook = this.#hooks[s.id];
@@ -172,7 +174,7 @@ export class Tour {
       this.#place();
     });
     (q(".tour-back") as HTMLButtonElement).disabled = i === 0;
-    q(".tour-next").textContent = i === n - 1 ? TOUR_LABELS.done : TOUR_LABELS.next;
+    q(".tour-next").textContent = i === n - 1 ? t("tour.done") : t("tour.next");
     this.#pop.dataset.step = s.id;
     this.#place();
     this.#emit({ type: "step", index: i });

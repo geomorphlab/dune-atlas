@@ -4,6 +4,7 @@
 // the dune-orientation modes) always point toward, as in Fryberger & Dean (1979), and bearing values, map
 // layers and downloaded data keep the toward convention. The choice is remembered in the browser, per atlas
 // (like every other setting: body.ts storageKey).
+import { t } from "../../i18n";
 import { storageKey } from "../body";
 
 export type PetalConvention = "toward" | "from";
@@ -27,8 +28,8 @@ export function savePetals(p: PetalConvention): void {
 export const petalOffset = (p: PetalConvention) => (p === "from" ? 180 : 0);
 
 /** label of a choice in the panel switch */
-export const PETAL_CHOICE_LABEL: Record<PetalConvention, string> = { toward: " toward", from: " from" };
-export const PETALS_SWITCH_LABEL = "Petals:";
+export const PETAL_CHOICE_LABEL: Record<PetalConvention, string> = { toward: ` ${t("cell.petalsToward")}`, from: ` ${t("cell.petalsFrom")}` };
+export const PETALS_SWITCH_LABEL = t("cell.petals");
 
 /** heading of the flux rose section and title of the exported figure */
 export const fluxRoseHeading = (p: PetalConvention) => `Sand flux rose (time-averaged, transport ${p})`;

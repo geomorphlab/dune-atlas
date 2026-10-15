@@ -9,13 +9,14 @@
 //    late font loading): while every position is blocked (e.g. a link that opens with the cell panel) it waits
 //    hidden and appears as soon as one is free, until the first click;
 //  - no motion under prefers-reduced-motion (style.css).
+import { t } from "../../i18n";
 import { h } from "./dom";
 import type { TourEvent } from "./tour";
 
 export const TOUR_BUBBLE_TEXT = "Help and Tour";
 export const TOUR_BUBBLE_LABEL = "Start the guided tour of the atlas";
 /** elements the bubble must not cover */
-export const BUBBLE_AVOID = ["#layer-panel", "#cell-panel", ".planet-btn"];
+export const BUBBLE_AVOID = ["#layer-panel", "#cell-panel", ".planet-btn", ".atlas-lang"];
 
 
 type Rect = { left: number; top: number; right: number; bottom: number };
@@ -57,8 +58,8 @@ export class TourBubble {
   constructor(start: () => void, doc: Document = document) {
     this.#doc = doc;
     this.#start = start;
-    this.el = h("button", { type: "button", class: "tour-bubble", hidden: true, "aria-label": TOUR_BUBBLE_LABEL },
-      h("span", { class: "tour-bubble-text" }, TOUR_BUBBLE_TEXT)) as HTMLButtonElement;
+    this.el = h("button", { type: "button", class: "tour-bubble", hidden: true, "aria-label": t("bubble.label") },
+      h("span", { class: "tour-bubble-text" }, t("bubble.text"))) as HTMLButtonElement;
     this.el.addEventListener("click", () => { this.hide(true); this.#start(); });   // Enter / Space click a button
     this.el.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.stopPropagation(); this.hide(true); } });
     doc.body.append(this.el);

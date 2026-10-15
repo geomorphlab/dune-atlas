@@ -29,6 +29,8 @@ export interface UrlState {
   plot?: string;
   /** `resume=1` (planet button): open this atlas's last view when the link has no view of its own */
   resume?: boolean;
+  /** `lang=fr|zh-Hans`: language of the atlas (i18n/index.ts reads it; written here so links keep it) */
+  lang?: string;
 }
 
 const num = (s: string | null) => (s === null || s.trim() === "" ? undefined : Number.isFinite(Number(s)) ? Number(s) : undefined);
@@ -69,6 +71,8 @@ export function parseUrlState(search: string): UrlState {
   if (q.get("names") === "1") st.names = true;
   if (q.get("tour") === "1") st.tour = true;
   if (q.get("resume") === "1") st.resume = true;
+  const lg = q.get("lang");
+  if (lg === "fr" || lg === "zh-Hans") st.lang = lg;
   const pl = q.get("plot");
   if (pl && /^[a-z0-9_]+$/.test(pl)) st.plot = pl;
   return st;
@@ -90,5 +94,6 @@ export function serializeUrlState(st: UrlState): string {
   if (st.dunesOnly) put("dunesonly", "1");
   if (st.names) put("names", "1");
   if (st.plot) put("plot", st.plot);
+  if (st.lang) put("lang", st.lang);
   return q.length ? `?${q.join("&")}` : "";
 }

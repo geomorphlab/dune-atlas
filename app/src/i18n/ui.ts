@@ -1,0 +1,45 @@
+// English of the interface strings that are not data (layer texts come from the registry, help and tour
+// from helpText, Concepts from docs/concepts). Use t("key") (fill() for {placeholders}); translations:
+// docs/translations/<lang>.md, compiled by npm run i18n.
+import { SUBTITLE_EN } from "./subtitle";
+
+export const UI = {
+  "ui.language": "Language",
+  "header.subtitle": SUBTITLE_EN,
+  "header.layers": "Layers",
+  "header.layersTitle": "Show / hide layers",
+  "basemap.legend": "Basemap",
+  "tools.help": "Help and tour",
+  "tools.concepts": "Concepts",
+  "bubble.text": "Help and Tour",
+  "bubble.label": "Start the guided tour of the atlas",
+  "tour.back": "Back",
+  "tour.next": "Next",
+  "tour.done": "Done",
+  "tour.skip": "Skip tour",
+  "tour.step": "Step {i} of {n}",
+  "concepts.references": "References:",
+  "concepts.link": "Concept",
+  "legend.log": "(log scale)",
+  "legend.symlog": "(symlog, linear within ±{x})",
+  "legend.atCurrent": "at current",
+  "legend.axis": "orientation axis (headless)",
+  "legend.toward": "direction of transport (toward)",
+  "legend.arrows": "Arrows",
+  "legend.streamlines": "Streamlines",
+  "legend.arrowLength": "Arrow length and opacity scale with the paired flux magnitude where available.",
+  "panel.dunesOnly": "Dunes only",
+  "panel.names": "Names",
+  "panel.display": "Display",
+  "panel.finer": "Finer",
+  "panel.coarser": "Coarser",
+  "panel.active": "Active layers",
+  "tools.share": "Share / copy link",
+  "tools.export": "Export map image",
+  "cell.downloads": "Download & cite",
+  "cell.petals": "Petals:",
+  "cell.petalsToward": "toward",
+  "cell.petalsFrom": "from",
+  "basemap.failed": "The basemap “{title}” could not be loaded from its provider. It may be blocked on your network or temporarily unavailable. Please choose another basemap.",
+} as const;
+export type UiKey = keyof typeof UI;

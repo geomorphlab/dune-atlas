@@ -2,6 +2,8 @@
 // Share / copy link, Export map image. Each opens a small popover (one at a time; Esc, × or a
 // click outside closes it and returns focus to its button). Below them the planet toggle, a plain
 // button that opens the other atlas (Earth <-> Mars; body.ts) at its default view.
+import { t, tr } from "../../i18n";
+import { helpKey } from "../../i18n/keys";
 import { h, nextId } from "./dom";
 import { BODY, bodyName, isEmbedded, otherBody, otherBodyUrl } from "../body";
 import { DOWNLOAD_EVENT } from "../cell/downloads";
@@ -55,10 +57,10 @@ export class Tools {
       return b;
     };
     this.el = h("div", { class: "maplibregl-ctrl maplibregl-ctrl-group atlas-tools" },
-      btn("help-btn", HELP_BUTTON_LABEL, ICONS.help, (b) => this.openHelp(b)),
-      btn("concepts-btn", CONCEPTS_TEXT.button, ICONS.concepts, (b) => this.openConcepts(undefined, b)),
-      btn("share-btn", SHARE_TEXT.button, ICONS.share, (b) => this.openShare(b)),
-      btn("export-btn", EXPORT_TEXT.button, ICONS.camera, (b) => this.openExport(b)),
+      btn("help-btn", t("tools.help"), ICONS.help, (b) => this.openHelp(b)),
+      btn("concepts-btn", t("tools.concepts"), ICONS.concepts, (b) => this.openConcepts(undefined, b)),
+      btn("share-btn", t("tools.share"), ICONS.share, (b) => this.openShare(b)),
+      btn("export-btn", t("tools.export"), ICONS.camera, (b) => this.openExport(b)),
       ...(opts.region ? [btn("region-btn", REGION_TEXT.button, ICONS.region, (b) => void this.openRegion(b))] : []),
       this.#planetButton());
     // "Concept" links in the ⓘ popovers (data-concept) and other callers open the panel at an entry
@@ -121,12 +123,12 @@ export class Tools {
   }
 
   openHelp(owner = this.el.querySelector(".help-btn") as HTMLButtonElement) {
-    const restart = h("button", { type: "button", class: "restart-tour" }, HELP_RESTART);
+    const restart = h("button", { type: "button", class: "restart-tour" }, tr("help.restart", HELP_RESTART));
     restart.addEventListener("click", () => { this.close(); this.#opts.startTour(); });
-    const about = h("button", { type: "button", class: "link-button about-link" }, HELP_ABOUT_LINK);
+    const about = h("button", { type: "button", class: "link-button about-link" }, tr("help.aboutLink", HELP_ABOUT_LINK));
     about.addEventListener("click", () => { this.close(); this.#opts.openAbout(); });
-    const secs = HELP_SECTIONS.map((s) => h("section", { "data-help": s.id }, h("h3", { html: mathHtml(s.title) }), h("p", { html: mathHtml(s.body) })));
-    this.#openPop("help", owner, HELP_TITLE, restart, h("div", { class: "help-sections" }, ...secs), h("p", {}, about));
+    const secs = HELP_SECTIONS.map((s) => h("section", { "data-help": s.id }, h("h3", { html: mathHtml(tr(helpKey(s.id, "title"), s.title)) }), h("p", { html: mathHtml(tr(helpKey(s.id, "body"), s.body)) })));
+    this.#openPop("help", owner, tr("help.title", HELP_TITLE), restart, h("div", { class: "help-sections" }, ...secs), h("p", {}, about));
   }
 
   /** Concepts panel: the atlas's concept entries (concepts.ts), each with its references; `id` opens and
@@ -142,7 +144,7 @@ export class Tools {
       }
       return d;
     });
-    const pop = this.#openPopWith({ fit: true }, "concepts", owner, CONCEPTS_TEXT.title, h("div", { class: "concept-list" }, ...items));
+    const pop = this.#openPopWith({ fit: true }, "concepts", owner, t("tools.concepts"), h("div", { class: "concept-list" }, ...items));
     const target = id ? items.find((d) => d.dataset.conceptId === id) : undefined;
     if (target) target.scrollIntoView?.({ block: "start" });
     ((target ?? items[0])?.querySelector("summary") as HTMLElement | null)?.focus();

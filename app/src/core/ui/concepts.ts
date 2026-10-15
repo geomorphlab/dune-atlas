@@ -3,6 +3,8 @@
 // is adapted (the symbols are set in TeX as elsewhere on the site, and the references are linked). Entries are
 // tagged Earth, Mars or both; each atlas shows its own and "both". Layer ⓘ popovers link to their entry
 // (CONCEPT_OF_LAYER).
+import { t, tr } from "../../i18n";
+import { conceptKey } from "../../i18n/keys";
 import conceptsMd from "../../../../docs/concepts/concepts-earth-mars.md?raw";
 import { BODY } from "../body";
 import { escapeHtml } from "../util/format";
@@ -82,13 +84,13 @@ export function entryReferences(c: Concept): string[] {
  *  kept as written (translate="no"): a translated paper title does not exist and cannot be cited or found;
  *  only the word "References" is left to the translator. */
 export function conceptBodyHtml(c: Concept): string {
-  const paras = c.paragraphs.map((p) => `<p>${mathHtml(texify(p))}</p>`).join("");
+  const paras = c.paragraphs.map((p, i) => `<p>${mathHtml(texify(tr(conceptKey(c, `p${i + 1}`), p)))}</p>`).join("");
   const refs = c.refs.length
-    ? `<p class="concept-refs">References: <span ${NO_TRANSLATE_ATTRS}>${escapeHtml(c.refs.join("; "))}.</span></p><ul class="concept-reflist" translate="no">${entryReferences(c).map((r) => `<li>${referenceHtml(r)}</li>`).join("")}</ul>`
+    ? `<p class="concept-refs">${t("concepts.references")} <span ${NO_TRANSLATE_ATTRS}>${escapeHtml(c.refs.join("; "))}.</span></p><ul class="concept-reflist" translate="no">${entryReferences(c).map((r) => `<li>${referenceHtml(r)}</li>`).join("")}</ul>`
     : "";
   return paras + refs;
 }
-export const conceptTitleHtml = (c: Concept) => mathHtml(texify(c.title));
+export const conceptTitleHtml = (c: Concept) => mathHtml(texify(tr(conceptKey(c, "title"), c.title)));
 
 /** Concept entry of each layer's ⓘ and of the slider and dataset ⓘ (ids of conceptId). Entries missing on a body
  *  are skipped (conceptFor). */
@@ -127,8 +129,9 @@ export function conceptFor(layerId: string): Concept | undefined {
 /** event that opens the Concepts panel at an entry (tools.ts listens; buttons carry data-concept) */
 export const CONCEPT_EVENT = "duneatlas:concept";
 export const CONCEPT_LINK_TEXT = "Concept";
+const conceptLinkText = () => t("concepts.link");
 /** the "Concept: <title>" link of an ⓘ popover (HTML), or "" */
 export function conceptLinkHtml(layerId: string): string {
   const c = conceptFor(layerId);
-  return c ? `<p class="concept-link"><button type="button" class="link-button" data-concept="${escapeHtml(c.id)}">${CONCEPT_LINK_TEXT}: ${conceptTitleHtml(c)}</button></p>` : "";
+  return c ? `<p class="concept-link"><button type="button" class="link-button" data-concept="${escapeHtml(c.id)}">${conceptLinkText()}: ${conceptTitleHtml(c)}</button></p>` : "";
 }

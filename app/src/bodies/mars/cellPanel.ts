@@ -3,6 +3,7 @@
 // content), computed from the hourly series of cells.zarr (u, v, T, rho) with the per-hour
 // threshold of Pahtz & Duran (2023) at the selected median grain diameter d (mars/cell/analysis.ts).
 // Kept close to ui/cellPanel.ts line by line: port Earth changes here when they matter on Mars.
+import { t } from "../../i18n";
 import { fluxRoseHeading, loadPetals, PETAL_CHOICE_LABEL, PETAL_CONVENTIONS, petalCaptionHtml, petalOffset, petalPhrase, PETALS_SWITCH_LABEL, savePetals, type PetalConvention } from "../../core/cell/petals";
 import { groupedBody, wireTableGroups } from "../../core/ui/tablegroups";
 import { utTex } from "../../core/export/labels"; // plot-export legend: the slider value
@@ -729,7 +730,7 @@ export class CellPanel {
       const t = citationFile(cell, this.#exportMeta().datasetId, this.#citeSetting());
       void navigator.clipboard?.writeText(t).then(() => { countCopy("copy-citation"); copy.textContent = "Copied"; setTimeout(() => { copy.textContent = "Copy citation"; }, 1500); }, () => triggerDownload(`${base()}_citation.txt`, t, "text/plain"));
     });
-    return this.#section("downloads", "downloads", h("h3", { id: "dl-h" }, "Download & cite"),
+    return this.#section("downloads", "downloads", h("h3", { id: "dl-h" }, t("cell.downloads")),
       h("div", { class: "buttons" },
         btn("NetCDF (.nc)", "Hourly wind and air series, all fields vs grain size, flux roses and metadata in one NetCDF-3 file (CF-1.8)", () => triggerDownload(`${base()}.nc`, cellNetcdf(cell, this.#exportMeta()), "application/x-netcdf")),
         btn("CSV bundle (.zip)", "wind_series.csv, fields_by_grain_size.csv, flux_rose.csv, rose_16_sectors.csv (16 sectors, degrees), metadata.json and README.txt", () => { void csvBundle(cell, this.#exportMeta()).then((z) => triggerDownload(`${base()}.zip`, z, "application/zip")); }),

@@ -1,5 +1,9 @@
 // Legends: colormap bar + clim ticks + units for zarr fields (following the user's colormap /
 // clim / log choice), arrow/streamline key for directional render modes, a short note for vectors (no swatch: the fill picker shows the colour).
+import { fill, t, tr } from "../../i18n";
+import { layerKey, layerUnits } from "../../i18n/keys";
+import { BODY } from "../body";
+const capFirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 import type { LayerDef } from "../registry/types";
 import { effectiveDisplay, isAxis, scaleNorm, vectorColors, type LayerConfig } from "../layerconfig";
 import { mathHtml } from "../util/math";
@@ -70,10 +74,10 @@ export function legendHtml(layer: LayerDef, cfg?: LayerConfig): string {
   if (layer.type === "zarr-field") {
     const e = effectiveDisplay(layer, cfg);
     if (e.mode !== "colormap") {
-      const what = isAxis(layer) ? "orientation axis (headless)" : "direction of transport (toward)";
-      const len = e.mode === "arrows" ? " Arrow length and opacity scale with the paired flux magnitude where available." : "";
+      const what = isAxis(layer) ? t("legend.axis") : t("legend.toward");
+      const len = e.mode === "arrows" ? ` ${t("legend.arrowLength")}` : "";
       return `<div class="legend legend-vec"><svg width="34" height="10" aria-hidden="true"><line x1="2" y1="5" x2="30" y2="5" stroke="${escapeHtml(e.vecColor)}" stroke-width="1.6"/>${e.mode === "arrows" && !isAxis(layer) ? `<path d="M30,5 L24,2 M30,5 L24,8" stroke="${escapeHtml(e.vecColor)}" stroke-width="1.6"/>` : ""}</svg>
-        <span>${e.mode === "arrows" ? "Arrows" : "Streamlines"}: ${what}.${len}${layer.thresholdAware ? ` At current ${mathHtml(PROFILE.control.symbolTex)}.` : ""}</span></div>`;
+        <span>${e.mode === "arrows" ? t("legend.arrows") : t("legend.streamlines")}: ${what}.${len}${layer.thresholdAware ? ` ${capFirst(t("legend.atCurrent"))} ${mathHtml(PROFILE.control.symbolTex)}.` : ""}</span></div>`;
     }
     const ticks = legendTicks(layer, cfg);
     const deg = layer.display?.transform === "rad-to-bearing" || layer.display?.transform === "rad-to-axis";
@@ -92,12 +96,12 @@ export function legendHtml(layer: LayerDef, cfg?: LayerConfig): string {
     return `<div class="legend" role="img" aria-label="${escapeHtml(`Colour scale ${e.scale === "log" ? "(logarithmic) " : e.scale === "symlog" ? "(symmetric logarithmic) " : ""}from ${ticks[0]} to ${ticks[ticks.length - 1]}`)}">
       <div class="legend-bar" style="background:${gradient(e.colors)}" title="values outside the range are shown at the end colours">${marks}</div>
       <div class="legend-ticks${staggered ? " staggered" : ""}">${labels}</div>
-      <div class="legend-units">${mathHtml(layer.units ?? "")}${e.scale === "log" ? " (log scale)" : e.scale === "symlog" ? ` (symlog, linear within ±${tickLabel(e.linthresh)})` : ""}${layer.thresholdAware ? ` · at current ${mathHtml(PROFILE.control.symbolTex)}` : ""}</div>${layer.display?.legendNote ? `
-      <div class="legend-note">${richHtml(layer.display.legendNote)}</div>` : ""}
+      <div class="legend-units">${mathHtml(layerUnits(layer))}${e.scale === "log" ? ` ${t("legend.log")}` : e.scale === "symlog" ? ` ${fill(t("legend.symlog"), { x: tickLabel(e.linthresh) })}` : ""}${layer.thresholdAware ? ` · ${t("legend.atCurrent")} ${mathHtml(PROFILE.control.symbolTex)}` : ""}</div>${layer.display?.legendNote ? `
+      <div class="legend-note">${richHtml(tr(layerKey(layer.id, "legendNote"), layer.display.legendNote))}</div>` : ""}
     </div>`;
   }
   const c = vectorColors(layer, cfg);
-  const what = c.invert ? PROFILE.invert.legend : layer.units ?? "";
+  const what = c.invert ? tr(`${BODY}.invert.legend`, PROFILE.invert.legend) : layerUnits(layer);
   // no colour swatch: the fill colour picker above already shows the colour
   return what ? `<div class="legend legend-note">${mathHtml(what)}</div>` : "";
 }
