@@ -99,7 +99,7 @@ describe("label layer", () => {
     expect(l.paint["icon-color"]).toBe(l.paint["text-color"]);
     expect(l.paint["text-halo-width"]).toBeGreaterThanOrEqual(2);
     expect(l.paint["text-color"]).toBe(LABEL_STYLE.light.text);
-    expect(LABEL_STYLE.dark.text).toBe("#e8d3a8");
+    expect(LABEL_STYLE.dark.text).toBe("#ffffff");
   });
 });
 

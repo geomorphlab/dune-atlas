@@ -36,11 +36,12 @@ export const LABEL_ZOOM = { rAll: 100, rLast: 8, max: 0 } as const;
 /** text size (px): one size for every name (min = max); line 2 is LINE2_SMALLER px smaller */
 export const LABEL_SIZE = { min: 15, max: 15, rSmall: 10, rLarge: 400 } as const;
 export const LINE2_SMALLER = 2;
+/** dark basemaps: white names (the warm cream used before merged with the yellow ends of most colour maps) */
 export const LABEL_STYLE = {
-  dark: { text: "#e8d3a8", halo: "rgba(10, 8, 5, 0.95)" },
+  dark: { text: "#ffffff", halo: "rgba(10, 8, 5, 0.95)" },
   light: { text: "#4a2e12", halo: "rgba(255, 250, 240, 0.95)" },
 } as const;
-export const LABEL_HALO = { width: 2.2, blur: 0.4 } as const;
+export const LABEL_HALO = { width: 2.5, blur: 0.4 } as const;
 /** the centre dot: an SDF disc (coloured and haloed like the text) */
 export const PLACE_DOT = "place-dot";
 export const DOT = { size: 24, radius: 3.5 } as const;

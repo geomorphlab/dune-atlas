@@ -1,6 +1,7 @@
 // Click-to-cell side panel (bottom sheet on narrow screens). Structure: header | compact u*,th
 // control (persistent, synced with the layer panel) | content. Content is built once per cell;
 // threshold / bin / axis changes only refresh the dynamic parts so sliders keep focus.
+import { fluxRoseHeading, loadPetals, PETAL_CHOICE_LABEL, PETAL_CONVENTIONS, petalCaptionHtml, petalOffset, petalPhrase, PETALS_SWITCH_LABEL, savePetals, type PetalConvention } from "../../core/cell/petals";
 import { groupedBody, wireTableGroups } from "../../core/ui/tablegroups";
 import { utTex } from "../../core/export/labels"; // plot-export legend: the slider value
 import { terseQuantity } from "../../core/ui/terse";
@@ -158,6 +159,8 @@ export class CellPanel {
   #windBins: number;
   #fluxBins: number;
   #fluxAxis: "pct" | "abs" = "pct";
+  /** convention of the flux rose petals (remembered in the browser; core/cell/petals.ts) */
+  #petals: PetalConvention = loadPetals();
   /** open state of the collapsible sections (localStorage) */
   #open = readSectionOpen();
   /** a collapsible section: <details> whose <summary> holds the section's <h3> heading */
@@ -473,13 +476,24 @@ export class CellPanel {
         r.addEventListener("change", () => { if (r.checked) { this.#fluxAxis = v; this.update(); } });
         return h("label", { for: id, class: "inline" }, r, v === "pct" ? " % of total" : " m²/yr");
       }));
+    const frH = h("h3", { id: "fr-h" }, fluxRoseHeading(this.#petals));
+    const petalName = nextId("fpet");
+    const petalSel = h("div", { class: "axis-toggle", role: "radiogroup", "aria-label": "Flux rose petal direction" },
+      h("span", {}, PETALS_SWITCH_LABEL),
+      ...PETAL_CONVENTIONS.map((v) => {
+        const id = nextId("fp");
+        const r = h("input", { type: "radio", name: petalName, id, value: v, checked: this.#petals === v }) as HTMLInputElement;
+        r.addEventListener("change", () => { if (r.checked) { this.#petals = v; savePetals(v); frH.textContent = fluxRoseHeading(v); this.update(); } });
+        return h("label", { for: id, class: "inline" }, r, PETAL_CHOICE_LABEL[v]);
+      }));
     const modeSel = h("select", { "aria-label": "Flux rose mode" }, ...FLUX_MODES.map((m) => h("option", { value: m.id }, m.label))) as HTMLSelectElement;
     modeSel.value = this.#fluxMode;
     modeSel.addEventListener("change", () => { this.#fluxMode = modeSel.value as FluxMode; this.update(); });
-    body.append(this.#section("fluxRose", "fig flux", h("h3", { id: "fr-h" }, "Sand flux rose (time-averaged, transport toward)"),
+    body.append(this.#section("fluxRose", "fig flux", frH,
       h("label", { class: "inline" }, "Flux ", modeSel),
       binSlider("Sectors", this.#fluxBins, choices, (n) => { this.#fluxBins = n; this.update(); }),
       axisSel,
+      petalSel,
       d("fluxSvg", "div", "fig-svg"),
       d("fluxClassLegend", "ul", "fig-legend"),
       d("fluxLegend", "ul", "fig-legend arrows"),
@@ -541,10 +555,10 @@ export class CellPanel {
     const w = 360 / v.fluxSectors.length;
     const fluxOpts: RoseSvgOptions = {
       id: "flux-rose", values: pct ? v.fluxStackPct : v.fluxStack, colors: EXCESS_COLORS,
-      title: "Sand flux rose (time-averaged, transport toward)",
-      desc: `Time-averaged ${v.fluxMode === "flat" ? "flat-bed" : "crest"} sand flux by the direction sand moves toward, ${v.fluxSectors.length} sectors of ${w} degrees, stacked by excess shear ${v.fluxMode === "flat" ? "u*f" : "uc"}/u*,th, ${pct ? "percent of total flux" : "m²/yr"}, at u*,th ${formatUt(v.ut)}.`,
+      title: fluxRoseHeading(this.#petals),
+      desc: `Time-averaged ${v.fluxMode === "flat" ? "flat-bed" : "crest"} sand flux ${petalPhrase(this.#petals)}, ${v.fluxSectors.length} sectors of ${w} degrees, stacked by excess shear ${v.fluxMode === "flat" ? "u*f" : "uc"}/u*,th, ${pct ? "percent of total flux" : "m²/yr"}, at u*,th ${formatUt(v.ut)}.`,
       ringFormat: (x) => (pct ? `${Number(x.toPrecision(2))}%` : `${Number(x.toPrecision(2))}`), arrows,
-      centreText: anyFlux ? undefined : "no transport", axisLabel: pct ? "% of total flux" : "m²/yr per sector", size, uaCentres: ua,
+      centreText: anyFlux ? undefined : "no transport", axisLabel: pct ? "% of total flux" : "m²/yr per sector", size, uaCentres: ua, petalOffset: petalOffset(this.#petals),
     };
     D.fluxSvg.innerHTML = roseSvg(fluxOpts);
     const ratioTex = v.fluxMode === "flat" ? "$u_{*f}/u_{*,th}$" : "$u_c/u_{*,th}$";
@@ -562,7 +576,7 @@ export class CellPanel {
     // one slot for the total (or —); the note on — is part of the fixed text of the crest modes
     // the total ends the caption's first line (a block), so the room kept for longer values is not a hole
     const totalTxt = live(`${Number.isFinite(v.fluxTotal) ? `${fmtNum(v.fluxTotal)}&nbsp;m²/yr` : MISSING}.`, v.fluxMode === "flat" ? R.dpTotal : R.total, "left");
-    D.fluxCap.innerHTML = `<span class="cap-lead"><strong>${escapeHtml(fm.label)}</strong>${v.fluxMode === "flat" ? "" : ` (${MISSING} = mode direction undefined at this threshold)`}: ${mathHtml(fm.totalTex)} = ${totalTxt}</span> Direction sand moves TOWARD; ${v.fluxSectors.length} sectors of ${w}°. Radius = ${pct ? "% of the total flux in each sector (sums to 100 %)" : `time-averaged flux in each sector, m²/yr (sums to ${escapeHtml(fm.totalText)})`}. Time-averaged ${what}, Σ<sub>speed</sub> n·q / Σ<sub>all</sub> n from the wind histogram. Colours split each sector by the excess shear ${mathHtml(ratioTex)} of the winds carrying the flux (only ${mathHtml(v.fluxMode === "flat" ? "$u_{*f} > u_{*,th}$" : "$u_c > u_{*,th}$")} transports sand). DP, RDP, RDP/DP, RDD and the arrows are the map fields at this threshold; a direction is hidden where the flux defining it is zero.`;
+    D.fluxCap.innerHTML = `<span class="cap-lead"><strong>${escapeHtml(fm.label)}</strong>${v.fluxMode === "flat" ? "" : ` (${MISSING} = mode direction undefined at this threshold)`}: ${mathHtml(fm.totalTex)} = ${totalTxt}</span> ${petalCaptionHtml(this.#petals)}; ${v.fluxSectors.length} sectors of ${w}°. Radius = ${pct ? "% of the total flux in each sector (sums to 100 %)" : `time-averaged flux in each sector, m²/yr (sums to ${escapeHtml(fm.totalText)})`}. Time-averaged ${what}, Σ<sub>speed</sub> n·q / Σ<sub>all</sub> n from the wind histogram. Colours split each sector by the excess shear ${mathHtml(ratioTex)} of the winds carrying the flux (only ${mathHtml(v.fluxMode === "flat" ? "$u_{*f} > u_{*,th}$" : "$u_c > u_{*,th}$")} transports sand). DP, RDP, RDP/DP, RDD and the arrows are the map fields at this threshold; a direction is hidden where the flux defining it is zero.`;
     D.modesCap.innerHTML = `Mode bearings (toward) for ${mathHtml("$u_{*,th}$")} = ${v.utValues[0].toFixed(2)} m/s (centre) to ${v.utValues[v.utValues.length - 1].toFixed(2)} m/s (rim); ${mathHtml("$\\alpha_H$")} is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current threshold. Where RDP/DP is low (below about 0.3), transport in opposing directions nearly cancels, so RDD is poorly defined and can swing by up to 180° with a small change of threshold or wind dataset. The modes depend on the whole flux rose rather than on its resultant: ${mathHtml("$\\alpha_T$")} follows the crest orientation ${mathHtml("$\\alpha_H$")} that maximises gross transport across crests, so it can stay steady and differ from RDD.`;
     const modesOpts = (t: PlotTheme) => ({ x: v.utValues, currentIndex: v.utIndex, size: Math.min(size, 420), theme: t, series: MODE_KEYS.map((k) => ({ label: s[k].label, color: seriesColor(s[k].color, t), dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined, values: v.modeSeries[k], axis: k === "ab", width: k === "ao" ? 2.8 : undefined })) });
     D.modesSvg.innerHTML = modesPlotSvg(modesOpts(DARK_THEME));
@@ -589,7 +603,7 @@ export class CellPanel {
         legend: [{ kind: "swatches", items: [...edges.slice(0, -1).map((e, k) => ({ color: SPEED_COLORS[k], shape: "box" as const, label: `${e}–${edges[k + 1]} $\\mathrm{m\\,s^{-1}}$` })), { color: "none", shape: "line" as const, label: "10 m wind speed classes" }].filter((x) => x.color !== "none") }],
       },
       "flux-rose": {
-        key: "flux-rose", title: `Sand flux rose (time-averaged, transport toward): ${fmTex}, ${perSector}`, thresholdDependent: true, caption: unitsTex(katexTex(D.fluxCap)),
+        key: "flux-rose", title: `${fluxRoseHeading(this.#petals)}: ${fmTex}, ${perSector}`, thresholdDependent: true, caption: unitsTex(katexTex(D.fluxCap)),
         svg: (t) => roseSvg({ ...fluxOpts, id: "x-flux-rose", theme: t, axisLabel: perSector, arrows: arrows.map((a) => ({ ...a, color: seriesColor(a.color, t) })) }),
         legend: [
           { kind: "swatches", items: EXCESS_CLASSES.map((c, k) => ({ color: EXCESS_COLORS[k], shape: "box" as const, label: `${ratioTex} ${c}` })) },

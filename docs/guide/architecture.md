@@ -364,7 +364,9 @@ within ±90°, texture coordinates in [0, 1]; the unpatched code fails these che
   and 'Transverse migration (αH)' (crest flux with speed-up `uc = uf (1 + BETA·DASPECT·|sin(ua − α)|)`
   about the mode directions ae / ab at the current u\*,th, `flux.py crest_flux_rose`), all time-averaged
   `Σ_speed n·q / Σ_all n` (the same reduction as the fields), caption states the
-  mode and total (DP or ⟨|Q(α)|⟩); petals aggregated into 8–128 sectors (slider) by the direction sand moves TOWARD; radial
+  mode and total (DP or ⟨|Q(α)|⟩); petals aggregated into 8–128 sectors (slider) by the direction sand moves TOWARD (the Petals switch, `core/cell/petals.ts`, draws each petal 180° round to show the
+  direction the wind comes FROM instead; nothing is recalculated, arrows, bearing values and downloads stay toward;
+  remembered in the browser per atlas); radial
   axis % of total flux (sums to 100; default) or m²/yr (sums to DP), DP stated in the caption. There is no reduction option. DP, RDP, RDP/DP and RDD in the panel, the RDD
   arrow and the RDD line in the modes plot are the cell-store fields at the current
   threshold (so the panel matches the map); arrows αT, αE (toward) and the αH axis likewise.
