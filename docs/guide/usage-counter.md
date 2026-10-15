@@ -297,6 +297,12 @@ days, and Web Analytics days older than six months, cannot be recovered.
   computer with a local SQLite database in place of D1 and a fake in place of Cloudflare's API.
 - D1 keeps 7 days of "Time Travel" restore points on the free plan [D1 limits].
 
+**Weekly backup.** The private repository `geomorphlab/dune-atlas-usage` copies `usage.csv` and `status.csv`
+every Monday at 04:41 UTC (GitHub Actions workflow "Weekly usage backup"; it can also be run by hand from the
+repository's Actions tab) and commits them, so the repository's history keeps every week. It reads the CSV key
+from the repository secret `CSV_KEY`: if the key is changed, update that secret too. GitHub emails the owner
+if a run fails. First run: 15 October 2026.
+
 ## 6. Sources
 
 Cloudflare documentation pages, with the "last updated" date printed on each page; all read on 15 October 2026.

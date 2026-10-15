@@ -2267,10 +2267,6 @@
   "text": "⟦0⟧⟦1⟧(⟦2⟧) et⟦3⟧, fusionnés, compilés par A. Gunn",
   "en": "b0aa5392"
  },
- "c.762593af": {
-  "text": "Polygones⟦0⟧: domaine public (U.S. Geological Survey)",
-  "en": "762593af"
- },
  "c.7c3bca61": {
   "text": "⟦0⟧et⟦1⟧fusionnés en un seul calque de polygones ; géométries invalides corrigées ; coordonnées arrondies à 1e-⟦#0⟧°.",
   "en": "7c3bca61"
@@ -2442,10 +2438,6 @@
  "c.c238d4e5": {
   "text": "<strong>Champs de flux de sable</strong> : pour chaque heure, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/yr, comme sur Terre.",
   "en": "c238d4e5"
- },
- "c.7a26bd74": {
-  "text": "<strong>Carte des dunes</strong> :⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧), complétée par les petits champs de dunes de Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), fusionnés en ⟦#3⟧ polygones de champs de dunes (sphère Mars ⟦#4⟧) ; polygones⟦4⟧: domaine public (U.S. Geological Survey).",
-  "en": "7a26bd74"
  },
  "c.c4698157": {
   "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur potentiel de dérive résultant (norme⟦1⟧, direction⟦2⟧) sur la sphère martienne (R = ⟦#0⟧ km), selon⟦3⟧, Methods⟦4⟧, avec des différences centrées sur la grille du jeu de données de vent (⟦#1⟧°). Les valeurs négatives (convergence) indiquent un dépôt.",
@@ -2890,6 +2882,22 @@
  "c.f17421a6": {
   "text": "Le sélecteur Jeu de données de vent permet de choisir entre des statistiques de vent issues de réanalyses (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° ; ⟦#2⟧–⟦#3⟧).⟦2⟧, utilisé par⟦3⟧, est une réexécution de la surface continentale pilotée par les champs atmosphériques de⟦4⟧interpolés sur sa grille (Muñoz-Sabater et al. ⟦#4⟧) : ses vents ne constituent donc pas une estimation indépendante, et les jeux de données peuvent malgré tout différer : par exemple,⟦5⟧indique des vitesses du vent à ⟦#5⟧ m de⟦6⟧inférieures de ⟦#6⟧–⟦#7⟧ % à celles de⟦7⟧. Là où les jeux de données donnent des résultats différents, considérez-les comme incertains. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; le masque des champs de dunes et les calques d’aridité et de végétation sont les mêmes pour tous les jeux de données.",
   "en": "f17421a6"
+ },
+ "c.cb7f6eba": {
+  "text": "Polygones⟦0⟧: domaine public (U.S. Geological Survey) ; champs de dunes de⟦1⟧:⟦2⟧",
+  "en": "cb7f6eba"
+ },
+ "c.2905fdb9": {
+  "text": "<strong>Carte des dunes</strong> :⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧), complétée par les petits champs de dunes de Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), fusionnés en ⟦#3⟧ polygones de champs de dunes (sphère Mars ⟦#4⟧) ; polygones⟦4⟧: domaine public (U.S. Geological Survey) ; champs de dunes de⟦5⟧:⟦6⟧.",
+  "en": "2905fdb9"
+ },
+ "c.762593af": {
+  "text": "Polygones⟦0⟧: domaine public (U.S. Geological Survey)",
+  "en": "762593af"
+ },
+ "c.7a26bd74": {
+  "text": "<strong>Carte des dunes</strong> :⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧), complétée par les petits champs de dunes de Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), fusionnés en ⟦#3⟧ polygones de champs de dunes (sphère Mars ⟦#4⟧) ; polygones⟦4⟧: domaine public (U.S. Geological Survey).",
+  "en": "7a26bd74"
  },
  "c.9ca2c0fc": {
   "text": "Concept : Les deux jeux de données de vent⟦0⟧",

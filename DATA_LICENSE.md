@@ -27,7 +27,7 @@ root attributes, and every per-cell download lists its sources and licences.
 | Hourly wind series, sand-flux fields, flux divergence and air density, MCMC FV3 2° | `v2/datasets/fv3-beta1/` (`cells.zarr`, `fields/`, `cells-aux.zarr` `qsdiv`, `rho_mean`); the superseded first build under `v1/datasets/fv3-beta1/` was deleted on 14 October 2026 | NASA Ames Mars Climate Modeling Center, FV3-based Mars GCM Beta Output Release 1 (`fv3betaout1`), transport law of Pähtz & Durán (2023) | **No licence stated by the source** (NASA open data); the atlas states "NASA Ames MCMC output; no licence stated (NASA open data)". |
 | Relief basemap tiles (MOLA–HRSC hillshade, terrarium encoding) | `v1/basemaps/hrsc-mola-terrarium.pmtiles` | Mars MGS MOLA – MEX HRSC Blended DEM Global 200m v2 (Fergason, Hare & Laura 2018, USGS Astrogeology): MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO) | **CC BY-SA 3.0 IGO** (share-alike, as an adaptation of the HRSC data) |
 | Elevation (map field and per-cell mean) | `v1/fields/elevation.zarr`, `v2/datasets/fv3-beta1/cells-aux.zarr` `elev_mean` | the same blended DEM | **CC BY-SA 3.0 IGO** (share-alike, as an adaptation of the HRSC data). See note 4. |
-| Dune polygons (vector tiles, surface-without-dunes tiles, per-cell dune fraction) | `v1/dunes/dunes-r2.pmtiles`, `v1/dunes/invert-r2.pmtiles`, `cells.zarr` `dunes` | USGS Mars Global Digital Dune Database (MGD3; Hayward et al. 2007, 2010, 2012, 2014; public domain) merged with the small dune fields of Fenton (2020, *Icarus* 352, 114018) | MGD3 polygons: **public domain** (U.S. Geological Survey). Fenton (2020) dune fields: listed as a source; licence pending, see note 5. |
+| Dune polygons (vector tiles, surface-without-dunes tiles, per-cell dune fraction) | `v1/dunes/dunes-r2.pmtiles`, `v1/dunes/invert-r2.pmtiles`, `cells.zarr` `dunes` | USGS Mars Global Digital Dune Database (MGD3; Hayward et al. 2007, 2010, 2012, 2014; public domain) merged with the small dune fields of Fenton (2020, *Icarus* 352, 114018) | MGD3 polygons: **public domain** (U.S. Geological Survey). Fenton (2020) dune fields: **CC BY 4.0** (granted by the author; cite Fenton 2020). See note 5. |
 
 ## Basemaps
 
@@ -63,5 +63,8 @@ The decisions below were taken by the author in October 2026.
    same.
 5. **Mars dune polygons.** "Public domain (U.S. Geological Survey)" applies to the MGD3 polygons only;
    the atlas states it as "MGD3 polygons: public domain (U.S. Geological Survey)". The small dune fields
-   of Fenton (2020, *Icarus* 352, 114018; data shared by the author) are listed as a source without a
-   licence statement: their licence is pending confirmation from the author.
+   of Fenton (2020, *Icarus* 352, 114018; data shared by the author) are **CC BY 4.0**: the author, L. K. Fenton,
+   agreed by email (October 2026) to their use under CC BY 4.0, provided Fenton (2020) is cited.
+   The original data are the paper's supplementary archive, posted by the author on ResearchGate:
+   https://www.researchgate.net/publication/344520812_fenton2020_101016jicarus2020114018_SupplementaryMaterialstargz.
+   The atlas states "MGD3 polygons: public domain (U.S. Geological Survey); Fenton (2020) dune fields: CC BY 4.0".

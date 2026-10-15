@@ -2487,10 +2487,6 @@ ZH: 沙丘区以其所在地貌单元经国际天文学联合会（IAU）批准�
 EN: ⟦0⟧⟦1⟧(⟦2⟧) and⟦3⟧, merged, compiled by A. Gunn
 ZH: ⟦0⟧⟦1⟧（⟦2⟧）和⟦3⟧，合并，由 A. Gunn 编制
 
-## c.762593af (Layer popovers)
-EN: ⟦0⟧polygons: public domain (U.S. Geological Survey)
-ZH: ⟦0⟧多边形：公有领域（美国地质调查局）
-
 ## c.7c3bca61 (Layer popovers)
 EN: ⟦0⟧and⟦1⟧merged into one polygon layer; invalid geometries repaired; coordinates rounded to 1e-⟦#0⟧°.
 ZH: ⟦0⟧和⟦1⟧合并为单一多边形图层；修复了无效几何；坐标四舍五入至 1e-⟦#0⟧°。
@@ -2664,10 +2660,6 @@ ZH: <strong>风场（⟦0⟧Mars⟦1⟧，测试版 ⟦#0⟧）</strong>：⟦2�
 ## c.c238d4e5 (About)
 EN: <strong>Sand-flux fields</strong>: for every hour, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.
 ZH: <strong>输沙通量场</strong>：对每个小时，按所选中值粒径 d（颗粒密度 ⟦#0⟧ kg/m³，g = ⟦#1⟧ m/s²）计算⟦0⟧的临界值与饱和输沙率，并取年平均；输沙势、脊线输沙通量与沙丘定向模式按⟦1⟧所述方法计算。输沙通量为单位宽度、单位地球年（⟦#3⟧ 天）内堆积沙的体积（堆积体积分数 ⟦#2⟧，含孔隙空间），单位为 m²/yr，与地球上相同。
-
-## c.7a26bd74 (About)
-EN: <strong>Dune map</strong>:⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧) plus the small dune fields of Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), merged into ⟦#3⟧ dune-field polygons (Mars ⟦#4⟧ sphere);⟦4⟧polygons: public domain (U.S. Geological Survey).
-ZH: <strong>沙丘分布图</strong>：⟦0⟧⟦1⟧（⟦2⟧；⟦3⟧）加上 Fenton（⟦#0⟧，Icarus ⟦#1⟧，⟦#2⟧）所测绘的小型沙丘区，合并为 ⟦#3⟧ 个沙丘区多边形（Mars ⟦#4⟧ 球体）；⟦4⟧多边形：公有领域（美国地质调查局）。
 
 ## c.c4698157 (About)
 EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧°). Negative values (convergence) imply deposition.
@@ -3168,3 +3160,23 @@ ZH: 无法加载示例网格单元。请点击地图上任意网格单元以打�
 ## c.f17421a6 (Layer popovers)
 EN: The Wind dataset selector switches between reanalysis wind statistics (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧°; ⟦#2⟧–⟦#3⟧).⟦2⟧, used by⟦3⟧, is a land-surface rerun driven by⟦4⟧atmospheric fields interpolated to its grid (Muñoz-Sabater et al. ⟦#4⟧), so its winds are not an independent estimate, and the datasets can still differ: e.g.,⟦5⟧reports⟦6⟧⟦#5⟧ m wind speeds ⟦#6⟧–⟦#7⟧ % below those of⟦7⟧. Where the datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
 ZH: “风场数据集”选择器用于在再分析风况统计数据之间切换（⟦0⟧，⟦#0⟧°；⟦1⟧，⟦#1⟧°；⟦#2⟧–⟦#3⟧）。⟦2⟧（⟦3⟧所采用）是由插值到其网格上的⟦4⟧大气场驱动的陆面重算产品（Muñoz-Sabater et al. ⟦#4⟧），因此其风场并非独立估计，但两个数据集之间仍可能存在差异：例如，⟦5⟧报告⟦6⟧的 ⟦#5⟧ m 风速比⟦7⟧低 ⟦#6⟧–⟦#7⟧%。若两个数据集给出不同结果，应视其为不确定。风场与输沙通量图层以及网格单元面板随所选数据集变化；沙丘区掩膜、干旱度和植被图层对所有数据集均相同。
+
+## c.cb7f6eba (Layer popovers)
+EN: ⟦0⟧polygons: public domain (U.S. Geological Survey);⟦1⟧dune fields:⟦2⟧
+ZH: ⟦0⟧多边形：公有领域（美国地质调查局）；⟦1⟧沙丘区：⟦2⟧
+
+# About
+
+## c.2905fdb9 (About)
+EN: <strong>Dune map</strong>:⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧) plus the small dune fields of Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), merged into ⟦#3⟧ dune-field polygons (Mars ⟦#4⟧ sphere);⟦4⟧polygons: public domain (U.S. Geological Survey);⟦5⟧dune fields:⟦6⟧.
+ZH: <strong>沙丘分布图</strong>：⟦0⟧⟦1⟧（⟦2⟧；⟦3⟧）加上 Fenton（⟦#0⟧，Icarus ⟦#1⟧，⟦#2⟧）所测绘的小型沙丘区，合并为 ⟦#3⟧ 个沙丘区多边形（Mars ⟦#4⟧ 球体）；⟦4⟧多边形：公有领域（美国地质调查局）；⟦5⟧沙丘区：⟦6⟧。
+
+# Unused (English changed or removed)
+
+## c.762593af (Unused (English changed or removed))
+EN: ⟦0⟧polygons: public domain (U.S. Geological Survey)
+ZH: ⟦0⟧多边形：公有领域（美国地质调查局）
+
+## c.7a26bd74 (Unused (English changed or removed))
+EN: <strong>Dune map</strong>:⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧) plus the small dune fields of Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), merged into ⟦#3⟧ dune-field polygons (Mars ⟦#4⟧ sphere);⟦4⟧polygons: public domain (U.S. Geological Survey).
+ZH: <strong>沙丘分布图</strong>：⟦0⟧⟦1⟧（⟦2⟧；⟦3⟧）加上 Fenton（⟦#0⟧，Icarus ⟦#1⟧，⟦#2⟧）所测绘的小型沙丘区，合并为 ⟦#3⟧ 个沙丘区多边形（Mars ⟦#4⟧ 球体）；⟦4⟧多边形：公有领域（美国地质调查局）。
