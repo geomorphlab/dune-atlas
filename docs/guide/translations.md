@@ -58,7 +58,10 @@ Either way a translation is shown only for the exact English it was made from; o
 2. An empty `FR:` / `ZH:` line shows the English on the site.
 3. **STALE** after a heading means the English changed after the translation was made: check the translation
    against the new English, then delete the word STALE.
-4. Send the edited file back (or open a pull request). Someone runs `npm run i18n` and commits both the `.md`
+4. Reviewers who prefer Word get a document built from the `.md`
+   (`python scripts/translations/review_docx.py build fr out.docx`); the returned document is applied with
+   `python scripts/translations/review_docx.py apply fr edited.docx` (comments and accidental English edits are
+   listed, the English is never taken from the document). Otherwise send the edited file back (or open a pull request). Someone runs `npm run i18n` and commits both the `.md`
    and the generated `.json`.
 
 ## For maintainers
