@@ -148,7 +148,7 @@ export function dunesOnlyToggle(store: Store): HTMLElement {
   cb.checked = !!store.state.dunesOnly;
   cb.addEventListener("change", () => store.set({ dunesOnly: cb.checked }));
   store.subscribe((st, ch) => { if (ch.has("dunesOnly")) cb.checked = !!st.dunesOnly; });
-  return h("label", { class: "inline dunes-only-row", for: "dunes-only", title: DUNES_ONLY_HELP }, cb, " Dunes only",
+  return h("label", { class: "inline dunes-only-row", for: "dunes-only", title: DUNES_ONLY_HELP }, cb, "Dunes only",
     h("span", { id: "dunes-only-help", class: "visually-hidden" }, DUNES_ONLY_HELP));
 }
 
@@ -158,7 +158,7 @@ export function namesToggle(store: Store): HTMLElement {
   cb.checked = !!store.state.names;
   cb.addEventListener("change", () => store.set({ names: cb.checked }));
   store.subscribe((st, ch) => { if (ch.has("names")) cb.checked = !!st.names; });
-  const label = h("label", { class: "inline", for: "show-names", title: PLACE_TEXT.toggleHelp }, cb, ` ${PLACE_TEXT.toggle}`,
+  const label = h("label", { class: "inline", for: "show-names", title: PLACE_TEXT.toggleHelp }, cb, PLACE_TEXT.toggle,
     h("span", { id: "show-names-help", class: "visually-hidden" }, PLACE_TEXT.toggleHelp));
   // the naming note beside the toggle (the same text as the dune layer's ⓘ, About and the search results)
   const t = infoToggle(PLACE_TEXT.aboutItem, `<p class="places-note">${placesNoteHtml(PLACES)}</p>`, "names");

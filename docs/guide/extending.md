@@ -135,7 +135,7 @@ Colours follow the basemap's `tone` in the registry (`dark`: pale sand with a da
 brown with a light halo), so a new basemap needs a `tone`. The toggle sits in the Dunes group when the
 list is enabled; it is remembered per body and is part of both link forms (`names=1`; short-link flag 64).
 A click on a label (or a pick in the search box) zooms to the feature and opens a popup with the name,
-line 2, type or countries, aliases, mapped dune area and the sources. The list's optional `credit` is the
+line 2, type or countries, other names (spelling-only variants of the name left out), named parts and the sources. The list's optional `credit` is the
 source line of map image exports while the names are shown; `note` is the naming note of the dune
 layer's ⓘ.
 

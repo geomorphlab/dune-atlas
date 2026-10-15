@@ -37,12 +37,11 @@ export interface PlaceList {
 /** texts of the name labels ('Show names', map/placelabels.ts) */
 export const PLACE_TEXT = {
   toggle: "Show names",
-  toggleHelp: "Label named dune fields and features on the map: the largest first, smaller ones as you zoom in. Click a name for its details.",
+  toggleHelp: "Label named dune fields and features on the map; where names would overlap, some appear only as you zoom in. Click a name for its details.",
   aliases: "Also called",
   includes: "Includes",
   aboutNames: "About these names",
   aboutItem: "Dune-field names",
-  dunes: "Mapped dune area",
   sources: "Sources",
   countries: "Countries",
   credit: "Feature names",
@@ -83,6 +82,28 @@ export function searchKey(s: string): string {
   return s.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase()
     .replace(/[ʿʾʻʼ'’‘`´]/g, "").replace(/ß/g, "ss").replace(/[æ]/g, "ae").replace(/[ø]/g, "o").replace(/[ł]/g, "l").replace(/[đ]/g, "d").replace(/[ı]/g, "i")
     .replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+}
+
+/** generic landform and descriptor words (after searchKey): two names that differ only in these, in case,
+ *  diacritics, punctuation or spacing ('Dune Field' / 'dunefield', 'Sand Hills' / 'Sandhills', 'Gale crater' /
+ *  'Gale Crater Dune Field') are the same name */
+const GENERIC_WORDS = /\b(?:the|of|coastal|aeolian|eolian|sand|sands|sandy|dune|dunes|dunefield|dunefields|field|fields|sandhill|sandhills|hill|hills|sea|seas|land|desert|deserts|erg|ergs|belt|region|area|massif|plain)\b/g;
+/** key under which variants of one name compare equal (see GENERIC_WORDS) */
+export function nameVariantKey(s: string): string {
+  return searchKey(s).replace(GENERIC_WORDS, " ").replace(/\s+/g, "");
+}
+/** the other names worth showing (popup 'Also called'): the alternative names, else the aliases, without
+ *  those that differ from line 1 (or from an earlier one) only by the generic words, case, diacritics,
+ *  punctuation or spacing; search still uses every name (searchNames) */
+export function otherNames(p: Place): { text: string; note?: string }[] {
+  const seen = new Set([nameVariantKey(p.line1)]);
+  const all = p.alt_names?.length ? p.alt_names : (p.aliases ?? []).filter((a) => !(p.includes ?? []).some((i) => i === a || i.startsWith(`${a} (`) || i.endsWith(`(${a})`))).map((text) => ({ text }));
+  return all.filter((a) => {
+    const k = nameVariantKey(a.text);
+    if (!k || seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
 }
 
 /** Damerau-Levenshtein (optimal string alignment) distance, with an early exit above `max` */
@@ -166,6 +187,8 @@ export function matchPlaces(query: string, places: Place[], limit = 8): PlaceHit
         if (s > best) { best = s; matched = c; kind = "country"; }
       }
     }
+    // a spelling-only variant of line 1 (nameVariantKey) is reported as the name itself
+    if (kind === "alias" && nameVariantKey(matched) === nameVariantKey(p.line1)) { matched = p.line1; kind = "name"; }
     if (best > 0) hits.push({ place: p, score: best, matched, kind });
   }
   return hits.sort((a, b) => b.score - a.score || (b.place.dune_km2 ?? 0) - (a.place.dune_km2 ?? 0) || a.place.line1.localeCompare(b.place.line1)).slice(0, limit);

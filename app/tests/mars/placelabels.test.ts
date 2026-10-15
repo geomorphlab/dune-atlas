@@ -33,33 +33,23 @@ describe("Mars name labels", () => {
       expect(f.properties!.line2).toBeUndefined();
     }
   });
-  it("large features at low zoom (Olympia Undae, the chasmata), small craters as you zoom in", () => {
-    expect(prop("Olympia Undae").minzoom).toBe(0);
-    const med = (a: number[]) => [...a].sort((x, y) => x - y)[Math.floor(a.length / 2)];
-    const chasmata = LIST.places.filter((p) => p.type === "Chasma").map((p) => prop(p.line1).minzoom);
-    const craters25 = LIST.places.filter((p) => p.type === "Crater" && p.radius_km <= 25).map((p) => prop(p.line1).minzoom);
-    expect(chasmata.length).toBeGreaterThan(5);
-    expect(craters25.length).toBeGreaterThan(5);
-    expect(med(chasmata)).toBeLessThan(med(craters25));
-    // threshold and priority follow labelRadius (radius and mapped dune area)
-    const byR = [...LIST.places].sort((a, b) => labelRadius(b) - labelRadius(a)).map((p) => prop(p.line1).minzoom);
-    expect(byR).toEqual([...byR].sort((a, b) => a - b));
-    expect(prop("Gale crater").minzoom).toBeLessThan(prop("Endeavour crater").minzoom);
-    expect(prop("Olympia Undae").rank).toBeLessThan(prop("Gale crater").rank);
-    expect(prop("Olympia Undae").size).toBe(20);
-    expect(prop("Endeavour crater").size).toBe(13);
+  it("every name at every zoom (only on-screen collisions hide one); large features placed first", () => {
+    for (const p of LIST.places) expect(prop(p.line1).minzoom, p.id).toBe(0);
+    const smallCrater = LIST.places.find((p) => p.type === "Crater" && p.radius_km <= 25)!;
+    expect(prop("Olympia Undae").rank).toBeLessThan(prop(smallCrater.line1).rank);
+    expect(prop("Olympia Undae").size).toBe(prop(smallCrater.line1).size);
   });
   it("near the pole and west of 0° E: centres as in the list (-180..180)", () => {
     const ou = fc.features.find((f) => f.properties!.line1 === "Olympia Undae")!.geometry.coordinates;
     expect(ou).toEqual([178.48, 81.16]);
-    expect(fc.features.find((f) => f.properties!.line1 === "Endeavour crater")!.geometry.coordinates).toEqual([-5.2, -2.28]);
+    expect(fc.features.find((f) => f.properties!.line1 === "Endeavour Crater Dune Field")!.geometry.coordinates).toEqual([-5.2, -2.28]);
   });
   it("popup: name, feature type, aliases, mapped dune area, the Gazetteer and the feature page", () => {
-    const el = placePopupContent(LIST.places.find((p) => p.line1 === "Gale crater")!);
-    expect(el.querySelector(".place-name")!.textContent).toBe("Gale crater");
+    const el = placePopupContent(LIST.places.find((p) => p.line1 === "Gale Crater Dune Field")!);
+    expect(el.querySelector(".place-name")!.textContent).toBe("Gale Crater Dune Field");
     expect(el.querySelector(".place-meta")!.textContent).toBe("Crater");
     expect(el.textContent).toContain("Also called: Bagnold Dunes");
-    expect(el.textContent).toMatch(/Mapped dune area: 836 km²/);
+    expect(el.textContent).not.toMatch(/km²|dune area/i);
     expect([...el.querySelectorAll("a")].map((a) => a.getAttribute("href"))).toEqual(["https://planetarynames.wr.usgs.gov/", "https://planetarynames.wr.usgs.gov/Feature/2071"]);
   });
   it("'Show names' in the Dunes group, off by default", () => {
@@ -72,7 +62,7 @@ describe("Mars name labels", () => {
     expect(cb.checked).toBe(false);
     const group = cb.closest("details.layer-group")!;
     expect(group.querySelector("summary")!.textContent).toBe("Dunes");
-    expect(cb.closest("label")!.textContent).toMatch(/^ Show names/);
+    expect(cb.closest("label")!.textContent).toMatch(/^Show names/);
     cb.checked = true; cb.dispatchEvent(new Event("change"));
     expect(store.state.names).toBe(true);
     store.set({ names: false });

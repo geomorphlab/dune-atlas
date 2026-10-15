@@ -8,7 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import zlib from "node:zlib";
 import { describe, expect, it, vi } from "vitest";
-import { loadPlaces, matchPlaces, placesNoteHtml, type Place } from "../src/core/search/places";
+import { loadPlaces, matchPlaces, nameVariantKey, otherNames, placesNoteHtml, type Place } from "../src/core/search/places";
 import { labelRadius, placeFeatures, placePopupContent, placesNeedRtl } from "../src/core/map/placelabels";
 import { SearchBox } from "../src/core/ui/search";
 import { DATA_SOURCES_HTML, renderLayerPanel } from "../src/core/ui/layerPanel";
@@ -26,8 +26,8 @@ const top = (q: string) => matchPlaces(q, P)[0];
 describe("Earth place list", () => {
   it("enabled, every approved row, names verbatim; no review columns", () => {
     expect(LIST.enabled).toBe(true);
-    expect(P).toHaveLength(274);
-    expect(byId("rub-al-khali-empty-quarter").line1).toBe("Rub' al Khali (Empty Quarter)");
+    expect(P).toHaveLength(303);
+    expect(byId("rub-al-khali-empty-quarter").line1).toBe("Rub' al Khali");
     const text = fs.readFileSync(FILE, "utf8");
     for (const col of ["confidence", "sensitivity", "pi_decision", "pi_note", "scores_source", "label_priority", "local_recognition", "aeolian_recognition", "single_dune", "verified", "reference_notes", "change_from_draft", "line2_reason"])
       expect(text, col).not.toContain(col);
@@ -51,7 +51,7 @@ describe("Earth place list", () => {
     expect(byId("kyzylkum-desert").line2).toEqual({ text: "Қизилқум", lang: "uz-Cyrl" });
     expect(byId("oleshky-sands").line2).toEqual({ text: "Олешківські піски", lang: "uk" });
     expect(byId("thar-desert").line2).toEqual({ text: "थार मरुस्थल", lang: "hi" });
-    expect(P.filter((p) => p.line2)).toHaveLength(83);
+    expect(P.filter((p) => p.line2)).toHaveLength(96);
   });
 });
 
@@ -126,16 +126,11 @@ describe("Earth name labels", () => {
     expect(placePopupContent(byId("thar-desert")).querySelector(".place-line2")!.textContent).toBe("थार मरुस्थल");
     expect(placesNeedRtl(LIST)).toBe(true);
   });
-  it("big ergs first: zoom threshold and priority by radius and mapped dune area", () => {
+  it("big ergs win collisions: priority by radius and mapped dune area; every name at every zoom, one size", () => {
     const sorted = [...P].sort((a, b) => labelRadius(b) - labelRadius(a));
     expect(sorted.slice(0, 3).map((p) => p.id)).toEqual(["rub-al-khali-empty-quarter", "kalahari", "taklamakan-desert"]);
-    expect(f("rub-al-khali-empty-quarter").minzoom).toBe(0);
-    expect(f("rub-al-khali-empty-quarter").size).toBe(20);
     expect(f("rub-al-khali-empty-quarter").rank).toBeLessThan(f("great-sand-dunes").rank);
-    expect(f("great-sand-dunes").minzoom).toBeGreaterThan(3);
-    // dense at low zoom: over 100 names eligible on the whole-globe view, every name by zoom 4.5
-    expect(P.filter((p) => f(p.id).minzoom <= 1.5).length).toBeGreaterThan(100);
-    for (const p of P) expect(f(p.id).minzoom, p.id).toBeLessThanOrEqual(4.5);
+    for (const p of P) { expect(f(p.id).minzoom, p.id).toBe(0); expect(f(p.id).size, p.id).toBe(f("great-sand-dunes").size); }
   });
   it("Great Sand Dunes popup: the Indigenous names with their languages", () => {
     const el = placePopupContent(byId("great-sand-dunes"));
@@ -156,5 +151,28 @@ describe("Earth name labels", () => {
     expect(row.closest("details.layer-group")!.querySelector("summary")!.textContent).toBe("Dunes");
     expect(row.querySelector(".info-popover")!.innerHTML).toContain(placesNoteHtml(LIST));
     expect(DATA_SOURCES_HTML).toContain(`<strong>Dune-field names</strong>: ${placesNoteHtml(LIST)}`);
+  });
+});
+
+describe("Earth other names: substantive differences only", () => {
+  it("spelling-only variants of the name are not shown as 'Also called' (search still finds them)", () => {
+    expect(nameVariantKey("Alexandria coastal dunefield")).toBe(nameVariantKey("Alexandria Coastal Dune Field"));
+    expect(nameVariantKey("Nebraska Sandhills")).toBe(nameVariantKey("Nebraska Sand Hills"));
+    expect(nameVariantKey("Rig-e-Yalan")).toBe(nameVariantKey("Rig-e Yalan"));
+    expect(nameVariantKey("Empty Quarter")).not.toBe(nameVariantKey("Rub' al Khali"));
+    const p = LIST.places.find((x) => x.id === "alexandria-coastal-dunefield")!;
+    expect(otherNames(p)).toEqual([]);
+    expect(placePopupContent(p).textContent).not.toContain("Also called");
+    const hit = matchPlaces("alexandria coastal dunefield", LIST.places)[0];
+    expect(hit).toMatchObject({ kind: "name", matched: "Alexandria Coastal Dune Field" });
+    const rub = LIST.places.find((x) => x.line1 === "Rub' al Khali")!;
+    expect(otherNames(rub).map((a) => a.text)).toContain("Empty Quarter");
+  });
+  it("no place shows a variant of its own name or the same name twice", () => {
+    for (const p of LIST.places) {
+      const keys = otherNames(p).map((a) => nameVariantKey(a.text));
+      expect(keys, p.id).not.toContain(nameVariantKey(p.line1));
+      expect(new Set(keys).size, p.id).toBe(keys.length);
+    }
   });
 });
