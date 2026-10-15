@@ -100,10 +100,10 @@ jobs:
       - run: npm test
       - run: npm run test:mars
       - run: npm run build
-        env: { VITE_DATA_BASE: "https://data.geomorphlab.org", VITE_USAGE_URL: "https://dune-atlas-usage.divine-dust-8d18.workers.dev/event" }
+        env: { VITE_DATA_BASE: "https://data.geomorphlab.org", VITE_USAGE_URL: "https://api.geomorphlab.org/v1/n" }
       # Mars atlas: the same UI, VITE_BODY=mars, served at /mars/ of the same Pages site
       - run: npm run build:mars
-        env: { VITE_BODY: mars, VITE_BASE: /mars/, VITE_DATA_BASE: "https://data.geomorphlab.org", VITE_SITE_URL: "https://map.geomorphlab.org/mars/", VITE_USAGE_URL: "https://dune-atlas-usage.divine-dust-8d18.workers.dev/event" }
+        env: { VITE_BODY: mars, VITE_BASE: /mars/, VITE_DATA_BASE: "https://data.geomorphlab.org", VITE_SITE_URL: "https://map.geomorphlab.org/mars/", VITE_USAGE_URL: "https://api.geomorphlab.org/v1/n" }
       - run: bash scripts/check-pages-layout.sh
       - if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3

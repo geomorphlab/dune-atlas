@@ -332,3 +332,17 @@ Cloudflare documentation pages, with the "last updated" date printed on each pag
 whether the free plan's largest page size allows the 1,000-row limit the queries ask for (step 7 shows
 `maxPageSize`); whether a daily run stays under 10 ms of CPU time; whether Wrangler needs extra read
 permissions on the token; how much ad-blockers reduce the counts.
+
+
+## Update (15 October 2026): own address, plain path, dashboard
+
+- **Address.** The counter also answers at `https://api.geomorphlab.org` (a custom domain of the Worker, set in
+  `wrangler.toml` `routes`; Cloudflare creates the DNS record on `npx wrangler deploy`). The atlas sends to
+  `https://api.geomorphlab.org/v1/n`. Content blockers stopped messages to `*.workers.dev/event` in testing
+  (`ERR_BLOCKED_BY_CLIENT`); `/event` and the workers.dev address still work.
+- **Request type.** The atlas sends an ordinary `fetch` with `keepalive` instead of `navigator.sendBeacon`
+  (blockers often stop every beacon); the beacon is used only where `fetch` is missing.
+- **Dashboard.** `https://api.geomorphlab.org/dashboard?key=<CSV key>`: visits per day (Earth, Mars), cumulative
+  downloads by type, data served per day, unique IP addresses per day (whole domain) and a country table, for
+  the last 30 days, 90 days, year or all; it reads `/usage.csv` in the browser and loads no other scripts.
+  Bookmark it; nothing needs to be run.

@@ -7,9 +7,9 @@ import { mapExportFilename } from "../../src/core/export/mapExport";
 describe("Mars download counter", () => {
   it("sends body mars and recognises the Mars file names", () => {
     expect(USAGE_URL).toBe("");
-    const beacon = vi.fn(() => true);
-    expect(sendUsage("map-image", 7, { url: "https://counter.example/event", nav: { sendBeacon: beacon } })).toBe(true);
-    expect(beacon).toHaveBeenCalledWith("https://counter.example/event", '{"type":"map-image","body":"mars","bytes":7}');
+    const f = vi.fn(async () => undefined);
+    expect(sendUsage("map-image", 7, { url: "https://counter.example/v1/n", fetch: f })).toBe(true);
+    expect(f).toHaveBeenCalledWith("https://counter.example/v1/n", expect.objectContaining({ body: '{"type":"map-image","body":"mars","bytes":7}' }));
     expect(downloadType(mapExportFilename("mcd", { lat: 1, lon: 2, zoom: 3 }, new Date("2026-10-15")))).toBe("map-image");
   });
 });

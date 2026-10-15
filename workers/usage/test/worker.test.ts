@@ -43,6 +43,11 @@ describe("POST /event", () => {
     const cols = (await rows("SELECT name FROM pragma_table_info('exports')")).map((r) => r.name);
     expect(cols).toEqual(["date", "country", "body", "type", "site", "count", "bytes"]);
   });
+  it("accepts the plain path /v1/n as well as /event", async () => {
+    const e = base();
+    const r = await route(new Request("https://api.geomorphlab.org/v1/n", { method: "POST", body: '{"type":"plot","body":"mars","bytes":3}', headers: { Origin: LIVE, "Content-Type": "text/plain;charset=UTF-8" } }), e, fetch, NOW);
+    expect(r.status).toBe(204);
+  });
   it("counts a local preview separately", async () => {
     expect((await route(post('{"type":"copy-code","body":"earth"}', "http://127.0.0.1:5173"), base(), fetch, NOW)).status).toBe(204);
     expect(await rows("SELECT site, type FROM exports")).toEqual([{ site: "preview", type: "copy-code" }]);
@@ -81,6 +86,16 @@ describe("CSV links", () => {
     expect((await route(get("/usage.csv", `Bearer ${KEY}`), e, fetch, NOW)).status).toBe(200);
     expect((await route(get(`/status.csv?key=${KEY}`), e, fetch, NOW)).status).toBe(200);
     expect((await route(get(`/check?key=wrong`), e, fetch, NOW)).status).toBe(403);
+  });
+  it("the dashboard page needs the key and draws from /usage.csv", async () => {
+    const e = base();
+    expect((await route(get("/dashboard"), e, fetch, NOW)).status).toBe(403);
+    const ok = await route(get(`/dashboard?key=${KEY}`), e, fetch, NOW);
+    expect(ok.status).toBe(200);
+    expect(ok.headers.get("Content-Type")).toMatch(/text\/html/);
+    const html = await ok.text();
+    expect(html).toContain("/usage.csv?key=");
+    expect(html).not.toMatch(/<script[^>]+src=/);
   });
   it("are closed while no key (or a short one) is set", async () => {
     expect((await route(get(`/usage.csv?key=short`), { ...base(), CSV_KEY: "short" }, fetch, NOW)).status).toBe(503);

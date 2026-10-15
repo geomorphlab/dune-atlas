@@ -1,11 +1,16 @@
 // Dune Atlas usage counter (one Cloudflare Worker with a D1 database; docs/guide/usage-counter.md).
-//   POST /event        one download from the atlas page: added to the day's total for the country
+//   GET  /dashboard    charts of the figures (key needed; reads /usage.csv)
+//   POST /v1/n (or /event) one download from the atlas page: added to the day's total for the country
+//                      (/v1/n: a plain path that content blockers do not single out)
 //   GET  /usage.csv    all daily figures (needs the CSV key)
 //   GET  /status.csv   outcome of the daily collection of Cloudflare's figures (needs the CSV key)
 //   GET  /check        tests the API token and what the free plan allows, writes nothing (needs the key)
 //   GET  /pull         collects Cloudflare's figures for ?from=YYYY-MM-DD&to=YYYY-MM-DD now (needs the key)
 //   scheduled          once a day (Cron Trigger in wrangler.toml): collects the previous three days
 // The CSV key is given as ?key=... or as the header "Authorization: Bearer ...".
+/** the message path the atlas uses (VITE_USAGE_URL); /event is still accepted */
+export const EVENT_PATH = "/v1/n";
+import { DASHBOARD_HTML } from "./dashboard";
 import { addEventStatement, countryCode, list, MAX_EVENT_BYTES, originKind, parseEvent, utcDate } from "./events";
 import { daysToCollect, dayRange, graphql, pullSource, settingsQuery, shorten, SOURCES, writeStatements, type Fetcher, type PullConfig, type Source } from "./pull";
 import { statusCsv, usageCsv, type ExportRow, type PulledDbRow, type StatusRow } from "./csv";
@@ -152,12 +157,13 @@ async function csvResponse(env: Env, which: "usage" | "status", now: number): Pr
 
 export async function route(request: Request, env: Env, fetcher: Fetcher = fetch, now = Date.now()): Promise<Response> {
   const url = new URL(request.url);
-  if (url.pathname === "/event") return handleEvent(request, env, now);
-  const keyed = ["/usage.csv", "/status.csv", "/check", "/pull"];
+  if (url.pathname === "/event" || url.pathname === EVENT_PATH) return handleEvent(request, env, now);
+  const keyed = ["/usage.csv", "/status.csv", "/check", "/pull", "/dashboard"];
   if (!keyed.includes(url.pathname)) return url.pathname === "/" ? text("Dune Atlas usage counter\n", 200) : text("not found", 404);
   if (request.method !== "GET") return text("method not allowed", 405, { Allow: "GET" });
   if ((env.CSV_KEY ?? "").length < MIN_KEY_LENGTH) return text("the CSV key (secret CSV_KEY) is not set", 503);
   if (!(await hasKey(request, env))) return text("key missing or wrong", 403);
+  if (url.pathname === "/dashboard") return new Response(DASHBOARD_HTML, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex", "Referrer-Policy": "no-referrer" } });
   if (url.pathname === "/usage.csv") return csvResponse(env, "usage", now);
   if (url.pathname === "/status.csv") return csvResponse(env, "status", now);
   if (url.pathname === "/check") return json(await check(env, fetcher, now));

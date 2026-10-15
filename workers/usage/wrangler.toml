@@ -10,6 +10,9 @@ account_id = "107c452850a690ed588d9b00c4283aa8"
 preview_urls = false
 # the free address https://dune-atlas-usage.<your-subdomain>.workers.dev
 workers_dev = true
+# the counter's own address on the lab domain (Cloudflare creates the DNS record on deploy); the plain
+# name and path (/v1/n) are not on content blockers' lists, unlike *.workers.dev/event
+routes = [{ pattern = "api.geomorphlab.org", custom_domain = true }]
 # Invocation logs off: they would record details of each request (such as the visitor's IP address).
 # The outcome of the daily collection is in status.csv instead.
 [observability]
