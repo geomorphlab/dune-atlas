@@ -5,7 +5,9 @@ name = "dune-atlas-usage"
 main = "src/index.ts"
 compatibility_date = "2026-10-01"
 # Cloudflare account id (not a secret): dashboard, Workers & Pages, Account Details
-account_id = "REPLACE_WITH_ACCOUNT_ID"
+account_id = "107c452850a690ed588d9b00c4283aa8"
+# no per-version preview addresses (only the one workers.dev address serves the counter)
+preview_urls = false
 # the free address https://dune-atlas-usage.<your-subdomain>.workers.dev
 workers_dev = true
 # Invocation logs off: they would record details of each request (such as the visitor's IP address).
@@ -21,14 +23,14 @@ crons = ["17 3 * * *"]
 binding = "DB"
 database_name = "dune-atlas-usage"
 # printed by `npx wrangler d1 create dune-atlas-usage`
-database_id = "REPLACE_WITH_DATABASE_ID"
+database_id = "f6c8ab27-f28b-4b2a-b2b9-3c88672711ef"
 migrations_dir = "migrations"
 
 [vars]
 # same value as account_id above
-CF_ACCOUNT_ID = "REPLACE_WITH_ACCOUNT_ID"
+CF_ACCOUNT_ID = "107c452850a690ed588d9b00c4283aa8"
 # zone id of geomorphlab.org: dashboard, the domain's Overview page, API section
-CF_ZONE_ID = "REPLACE_WITH_ZONE_ID"
+CF_ZONE_ID = "43a1a6c9db7a36858003336278872422"
 DATA_HOST = "data.geomorphlab.org"
 SITE_HOST = "map.geomorphlab.org"
 # optional: Web Analytics site tag (32 characters). Empty: the site is picked by its host name (SITE_HOST).

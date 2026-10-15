@@ -15,6 +15,6 @@ describe("Cloudflare Web Analytics snippet", () => {
     expect(out.indexOf("cloudflareinsights")).toBeLessThan(out.indexOf("</body>"));
   });
   it("About states how use is counted", () => {
-    expect(PRIVACY_NOTE).toBe("To understand how the atlas is used, we count page visits by country with Cloudflare Web Analytics. No cookies are set and no IP addresses are kept.");
+    expect(PRIVACY_NOTE).toBe("To understand how the atlas is used, we count page visits and downloads by country, with Cloudflare Web Analytics and a small counter of our own. No cookies are set and no IP addresses are kept.");
   });
 });
