@@ -231,13 +231,21 @@ min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 
 | Translations | Machine-drafted with the glossary, then a review pass for meaning and terminology (French: "calque" for map layers, "altitude", "commande"; Chinese: 临界摩阻风速, 临界值, 去向/来向); every string checked for formulas, markers, tags and protected terms. Awaiting review by the PI's PhD students (one French, one Chinese) in Word documents |
 | Maintenance | English edits: `npm run i18n` collects new text and the new strings are drafted in the same working session before release; otherwise the English is shown until then (CI warns, never blocks). docs/guide/translations.md |
 
+## Dune-field sources, Fenton licence, usage backup (PR #23, 16 October 2026)
+
+| item | done |
+|---|---|
+| Name sources | The 25 names whose only source was a tourism, list or blog page: sources searched in papers (each DOI checked on CrossRef: title, authors, year, journal), Wikipedia/Wikidata and official sites. PI's decision: replace the old source, except for Bilbunya Dunes, Kharan Desert and Apure-Capanaparo Dune Field (no paper found; the old source is kept after the new one). 22 names now cite at least one paper. Weaker matches the PI may revisit: Ica Dunes (Newell & Boyd 1955, "Ica desert"), Erg Makteïr and Erg Ouarane (Camps 1985, Encyclopédie berbère entry), Trarza Erg (Nouaceur 2013, Nouakchott), Elsen Tasarkhai (two forestry studies) |
+| Fenton (2020) licence | L. K. Fenton agreed by email (October 2026) to CC BY 4.0, with a citation of Fenton (2020). Shown as "MGD3 polygons: public domain (U.S. Geological Survey); Fenton (2020) dune fields: CC BY 4.0" in the layer info and About, and as the licence of the Fenton entry in the cell citations (DATA_LICENSE.md note 5) |
+| Usage backup | Private repository geomorphlab/dune-atlas-usage, weekly (Mondays 04:41 UTC); first run 15 October 2026 succeeded (docs/guide/usage-counter.md §5) |
+
 ## Open items (16 October 2026)
 
 | item | who | status |
 |---|---|---|
-| Licence of the Fenton (2020) Mars dune polygons | PI asks Lori Fenton | pending (DATA_LICENSE.md note 5) |
+| Licence of the Fenton (2020) Mars dune polygons | PI asked Lori Fenton | done: CC BY 4.0 (PR #23) |
 | Persian names of the six new Iran fields | PI's Iranian colleague | pending; names not shown until confirmed |
 | Student review of the French and Chinese text (incl. "potentiel de dérive" vs "potentiel de transport", "barkhane" vs "barchane", Chinese 16-point compass names) | PhD students via the PI | pending |
 | Second check from mainland China (language switch, Chinese text, a cell download, a map image export) | PI's colleague | after release |
-| Weak aggregator sources for a few dune-field names | PI | kept for now |
-| Weekly backup of usage.csv to GitHub | PI | offered, not requested |
+| Weak aggregator sources for a few dune-field names | agent | done: 25 names re-sourced (PR #23); five weaker matches listed above |
+| Weekly backup of usage.csv to GitHub | PI | done (PR #23 records it) |

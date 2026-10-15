@@ -2487,10 +2487,6 @@ FR: Les champs de dunes portent les noms approuvés par l’IAU des formations d
 EN: ⟦0⟧⟦1⟧(⟦2⟧) and⟦3⟧, merged, compiled by A. Gunn
 FR: ⟦0⟧⟦1⟧(⟦2⟧) et⟦3⟧, fusionnés, compilés par A. Gunn
 
-## c.762593af (Layer popovers)
-EN: ⟦0⟧polygons: public domain (U.S. Geological Survey)
-FR: Polygones⟦0⟧: domaine public (U.S. Geological Survey)
-
 ## c.7c3bca61 (Layer popovers)
 EN: ⟦0⟧and⟦1⟧merged into one polygon layer; invalid geometries repaired; coordinates rounded to 1e-⟦#0⟧°.
 FR: ⟦0⟧et⟦1⟧fusionnés en un seul calque de polygones ; géométries invalides corrigées ; coordonnées arrondies à 1e-⟦#0⟧°.
@@ -2664,10 +2660,6 @@ FR: <strong>Vents (⟦0⟧Mars⟦1⟧, version bêta ⟦#0⟧)</strong> : vents 
 ## c.c238d4e5 (About)
 EN: <strong>Sand-flux fields</strong>: for every hour, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.
 FR: <strong>Champs de flux de sable</strong> : pour chaque heure, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/yr, comme sur Terre.
-
-## c.7a26bd74 (About)
-EN: <strong>Dune map</strong>:⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧) plus the small dune fields of Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), merged into ⟦#3⟧ dune-field polygons (Mars ⟦#4⟧ sphere);⟦4⟧polygons: public domain (U.S. Geological Survey).
-FR: <strong>Carte des dunes</strong> :⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧), complétée par les petits champs de dunes de Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), fusionnés en ⟦#3⟧ polygones de champs de dunes (sphère Mars ⟦#4⟧) ; polygones⟦4⟧: domaine public (U.S. Geological Survey).
 
 ## c.c4698157 (About)
 EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧°). Negative values (convergence) imply deposition.
@@ -3169,7 +3161,25 @@ FR: La cellule d’exemple n’a pas pu être chargée. Cliquez sur n’importe 
 EN: The Wind dataset selector switches between reanalysis wind statistics (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧°; ⟦#2⟧–⟦#3⟧).⟦2⟧, used by⟦3⟧, is a land-surface rerun driven by⟦4⟧atmospheric fields interpolated to its grid (Muñoz-Sabater et al. ⟦#4⟧), so its winds are not an independent estimate, and the datasets can still differ: e.g.,⟦5⟧reports⟦6⟧⟦#5⟧ m wind speeds ⟦#6⟧–⟦#7⟧ % below those of⟦7⟧. Where the datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
 FR: Le sélecteur Jeu de données de vent permet de choisir entre des statistiques de vent issues de réanalyses (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° ; ⟦#2⟧–⟦#3⟧).⟦2⟧, utilisé par⟦3⟧, est une réexécution de la surface continentale pilotée par les champs atmosphériques de⟦4⟧interpolés sur sa grille (Muñoz-Sabater et al. ⟦#4⟧) : ses vents ne constituent donc pas une estimation indépendante, et les jeux de données peuvent malgré tout différer : par exemple,⟦5⟧indique des vitesses du vent à ⟦#5⟧ m de⟦6⟧inférieures de ⟦#6⟧–⟦#7⟧ % à celles de⟦7⟧. Là où les jeux de données donnent des résultats différents, considérez-les comme incertains. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; le masque des champs de dunes et les calques d’aridité et de végétation sont les mêmes pour tous les jeux de données.
 
+## c.cb7f6eba (Layer popovers)
+EN: ⟦0⟧polygons: public domain (U.S. Geological Survey);⟦1⟧dune fields:⟦2⟧
+FR: Polygones⟦0⟧: domaine public (U.S. Geological Survey) ; champs de dunes de⟦1⟧:⟦2⟧
+
+# About
+
+## c.2905fdb9 (About)
+EN: <strong>Dune map</strong>:⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧) plus the small dune fields of Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), merged into ⟦#3⟧ dune-field polygons (Mars ⟦#4⟧ sphere);⟦4⟧polygons: public domain (U.S. Geological Survey);⟦5⟧dune fields:⟦6⟧.
+FR: <strong>Carte des dunes</strong> :⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧), complétée par les petits champs de dunes de Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), fusionnés en ⟦#3⟧ polygones de champs de dunes (sphère Mars ⟦#4⟧) ; polygones⟦4⟧: domaine public (U.S. Geological Survey) ; champs de dunes de⟦5⟧:⟦6⟧.
+
 # Unused (English changed or removed)
+
+## c.762593af (Unused (English changed or removed))
+EN: ⟦0⟧polygons: public domain (U.S. Geological Survey)
+FR: Polygones⟦0⟧: domaine public (U.S. Geological Survey)
+
+## c.7a26bd74 (Unused (English changed or removed))
+EN: <strong>Dune map</strong>:⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧) plus the small dune fields of Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), merged into ⟦#3⟧ dune-field polygons (Mars ⟦#4⟧ sphere);⟦4⟧polygons: public domain (U.S. Geological Survey).
+FR: <strong>Carte des dunes</strong> :⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧), complétée par les petits champs de dunes de Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), fusionnés en ⟦#3⟧ polygones de champs de dunes (sphère Mars ⟦#4⟧) ; polygones⟦4⟧: domaine public (U.S. Geological Survey).
 
 ## c.9ca2c0fc (Unused (English changed or removed))
 EN: Concept: The two⟦0⟧wind datasets

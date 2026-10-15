@@ -38,7 +38,7 @@ export const BODY_CITATION_SOURCES: Record<string, CitationSource> = {
     entries: [
       { label: "Paper", text: "Hayward, R. K. et al. (2007). Mars Global Digital Dune Database and initial science results. Journal of Geophysical Research 112, E11007.", doi: MGD3_2007_DOI },
       { label: "Paper", text: "Hayward, R. K., Fenton, L. K. & Titus, T. N. (2014). Mars Global Digital Dune Database (MGD3): global dune distribution and wind pattern observations. Icarus 230, 38–46.", doi: MGD3_2014_DOI },
-      { label: "Paper", text: "Fenton, L. K. (2020). Updating the global inventory of dune fields on Mars and identification of many small dune fields. Icarus 352, 114018.", doi: FENTON_2020_DOI },
+      { label: "Paper", text: "Fenton, L. K. (2020). Updating the global inventory of dune fields on Mars and identification of many small dune fields. Icarus 352, 114018.", doi: FENTON_2020_DOI, license: "Dune-field polygons: CC BY 4.0 (permission of the author, October 2026)" },
     ],
   },
   dem: {

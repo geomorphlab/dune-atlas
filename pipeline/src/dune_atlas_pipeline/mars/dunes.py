@@ -430,7 +430,7 @@ def registry_fragment(summary: dict) -> dict:
             "citation": CITATION,
             "attribution": {"source": "USGS Mars Global Digital Dune Database (MGD3) and Fenton (2020), merged, compiled by A. Gunn",
                             "citation": "; ".join(DUNE_REFERENCES), "doi": "10.3133/ofr20121259",
-                            "licence": "MGD3 polygons: public domain (U.S. Geological Survey)",
+                            "licence": "MGD3 polygons: public domain (U.S. Geological Survey); Fenton (2020) dune fields: CC BY 4.0",
                             "url": "https://www.usgs.gov/centers/astrogeology-science-center/science/mars-global-digital-dune-database",
                             "changes": "MGD3 and Fenton (2020) merged into one polygon layer; invalid geometries repaired; coordinates rounded to 1e-6°."},
             # 'invert' view: the Mars surface without mapped dunes (complement of this layer, polar caps
