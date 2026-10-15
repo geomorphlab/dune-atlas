@@ -142,7 +142,7 @@ export function basemapInfoHtml(b: BasemapDef): string {
 }
 
 /** About: how use is counted (approved wording, October 2026; scripts/body-html.ts webAnalytics) */
-export const PRIVACY_NOTE = "To understand how the atlas is used, we count page visits by country with Cloudflare Web Analytics. No cookies are set and no IP addresses are kept.";
+export const PRIVACY_NOTE = "To understand how the atlas is used, we count page visits and downloads by country, with Cloudflare Web Analytics and a small counter of our own. No cookies are set and no IP addresses are kept.";
 
 /** 'Dunes only': one UI-wide switch, in the URL / share link; restricts every wind-derived map
  *  layer to the dataset's dune cells (map/dunemask.ts). Non-wind layers and the cell panel are unchanged. */
