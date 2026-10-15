@@ -1,0 +1,20 @@
+{
+  "name": "dune-atlas-usage",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Usage counter of the Dune Atlas: daily download totals per country and a daily copy of Cloudflare's analytics figures (docs/guide/usage-counter.md)",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json && tsc -p test/tsconfig.json",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261015.1",
+    "@types/node": "^22.20.5",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.4",
+    "wrangler": "^4.151.0"
+  }
+}

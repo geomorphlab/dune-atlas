@@ -383,6 +383,11 @@
           "type": "string",
           "description": "Optional LaTeX title from source attrs"
         },
+        "shortTitle": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Optional row label in the layer panel, where the group heading gives the context (e.g. 'Mask' under 'Dune Fields'); `title` is used everywhere else (Active layers, exports, accessible names)"
+        },
         "group": {
           "type": "string"
         },

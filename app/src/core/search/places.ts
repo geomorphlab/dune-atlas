@@ -36,7 +36,7 @@ export interface PlaceList {
 
 /** texts of the name labels ('Show names', map/placelabels.ts) */
 export const PLACE_TEXT = {
-  toggle: "Show names",
+  toggle: "Names",
   toggleHelp: "Label named dune fields and features on the map; where names would overlap, some appear only as you zoom in. Click a name for its details.",
   aliases: "Also called",
   includes: "Includes",

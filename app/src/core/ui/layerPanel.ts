@@ -17,6 +17,7 @@ import { DATASET_INFO, datasetFacts, datasetInfo, datasetSourceItem, datasetTool
 import { fieldInfo } from "../cell/fieldinfo";
 import { isDatasetDependent } from "../registry/merge";
 import { mathHtml } from "../util/math";
+import { markNoTranslate, noTranslateHtml, protectHtml, protectText } from "../util/notranslate";
 import { aboutSourceIds, AI_NOTICE, citationHtml, citationSources, fieldsCitation, fieldsLicence } from "../cell/citation";
 import { loadPlaces, placesAvailable, placesNoteHtml, PLACE_TEXT } from "../search/places";
 import { conceptLinkHtml } from "./concepts";
@@ -51,7 +52,7 @@ export const COMPARE_HTML = `<div class="earth-mars"><h4>Earth and Mars: what ca
 <p>DP values on the two planets can therefore be compared in order of magnitude, not as precise numbers. RDP/DP, RDD and the mode directions compare more directly, but each depends on the threshold or grain-diameter setting.</p></div>`;
 /** About: how to cite the map fields of every wind dataset (one format with the info popovers and the downloads). */
 export function fieldsCitationHtml(): string {
-  return `<h4 id="cite-fields" tabindex="-1">Citing the map fields</h4><ul class="sources">${Object.values(DATASET_INFO).map((d) => `<li><strong>${escapeHtml(`${d.name} ${d.resolution}`)}</strong>: ${richHtml(fieldsCitation(d.id))}. Licence: ${escapeHtml(fieldsLicence(d.id))}.</li>`).join("")}</ul>`;
+  return `<h4 id="cite-fields" tabindex="-1">Citing the map fields</h4><ul class="sources">${Object.values(DATASET_INFO).map((d) => `<li><strong>${protectText(`${d.name} ${d.resolution}`)}</strong>: ${noTranslateHtml(richHtml(fieldsCitation(d.id)))}. Licence: ${noTranslateHtml(escapeHtml(fieldsLicence(d.id)))}.</li>`).join("")}</ul>`;
 }
 export const INVERT_NOTE = PROFILE.invert.note;
 
@@ -59,10 +60,10 @@ const safeUrl = (u: string) => (/^https?:\/\//i.test(u) ? u : "");
 /** Rows of the structured attribution (registry `attribution`), in the fixed order Source, Citation,
  *  Data DOI, Licence, Link, Changes. */
 function attributionRows(a: LayerAttribution): string {
-  const row = (k: string, v: string | undefined, html?: string) => (v ? `<dt>${k}</dt><dd>${html ?? richHtml(v)}</dd>` : "");
+  const row = (k: string, v: string | undefined, html?: string, keep = false) => (v ? `<dt>${k}</dt><dd${keep ? ' translate="no"' : ""}>${html ?? richHtml(v)}</dd>` : "");
   const url = a.url ? safeUrl(a.url) : "";
   const doi = a.doi?.replace(/^doi:/i, "").replace(/^https?:\/\/doi\.org\//i, "");
-  return `${row("Source", a.source)}${row("Citation", a.citation)}${row("Data DOI", doi, doi ? `<a href="https://doi.org/${escapeHtml(doi)}" target="_blank" rel="noopener">doi:${escapeHtml(doi)}</a>` : "")}${row("Licence", a.licence)}${row("Link", url, url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(url.replace(/^https?:\/\//, "").slice(0, 60))}${url.length > 68 ? "…" : ""}</a>` : "")}${row("Changes", a.changes)}`;
+  return `${row("Source", a.source)}${row("Citation", a.citation, undefined, true)}${row("Data DOI", doi, doi ? `<a href="https://doi.org/${escapeHtml(doi)}" target="_blank" rel="noopener">doi:${escapeHtml(doi)}</a>` : "", true)}${row("Licence", a.licence)}${row("Link", url, url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(url.replace(/^https?:\/\//, "").slice(0, 60))}${url.length > 68 ? "…" : ""}</a>` : "", true)}${row("Changes", a.changes)}`;
 }
 /** Structured attribution (registry `attribution`): source, citation, licence, link, DOI, changes. */
 export function attributionHtml(a: LayerAttribution | undefined): string {
@@ -107,7 +108,7 @@ export function infoHtml(l: LayerDef, datasetId?: string): string {
   // the citation shared by the dataset's map fields is shown once, in About ("Citing the map fields"); the
   // popover links there instead of repeating it (one citation block per panel; other sources stay in full)
   const sources = sharesFieldsCitation(l, datasetId) ? row("Citation", SHARED_CITATION_LINK)
-    : l.attribution ? attributionRows(l.attribution) : l.citation ? row("Citation", richHtml(l.citation)) : "";
+    : l.attribution ? attributionRows(l.attribution) : l.citation ? row("Citation", noTranslateHtml(richHtml(l.citation))) : "";
   const def = l.description ? infoDefinition(l.description) : "";
   const note = l.group === "dunes" && (l.type === "pmtiles-vector" || l.type === "geojson-points") ? placesNoteHtml(PLACES) : "";   // the dune map (map/overlays isDuneMap)
   const naming = note ? `<p class="help places-note">${note}</p>` : "";
@@ -133,12 +134,15 @@ export function basemapInfoHtml(b: BasemapDef): string {
   const i = b.info ?? {};
   const row = (k: string, html: string) => (html ? `<dt>${k}</dt><dd>${html}</dd>` : "");
   const url = i.url ? safeUrl(i.url) : "";
-  const rows = row("Source", i.source ? richHtml(i.source) : "") + row("Resolution", i.resolution ? escapeHtml(i.resolution) : "")
+  const rows = row("Source", i.source ? richHtml(i.source) : "") + row("Resolution", i.resolution ? protectText(i.resolution) : "")
     + row("Coverage", i.coverage ? richHtml(i.coverage) : "")
     + row("Licence", i.licence ? richHtml(i.licence) : "")
-    + row("Link", url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(url.replace(/^https?:\/\//, "").replace(/\/$/, "").slice(0, 60))}${url.length > 68 ? "…" : ""}</a>` : "");
+    + row("Link", url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener" translate="no">${escapeHtml(url.replace(/^https?:\/\//, "").replace(/\/$/, "").slice(0, 60))}${url.length > 68 ? "…" : ""}</a>` : "");
   return `${i.description ? `<p class="info-def">${richHtml(i.description, mathHtml)}</p>` : ""}${rows ? `<dl class="attribution info-facts">${rows}</dl>` : ""}`;
 }
+
+/** About: how use is counted (approved wording, October 2026; scripts/body-html.ts webAnalytics) */
+export const PRIVACY_NOTE = "To understand how the atlas is used, we count page visits by country with Cloudflare Web Analytics. No cookies are set and no IP addresses are kept.";
 
 /** 'Dunes only': one UI-wide switch, in the URL / share link; restricts every wind-derived map
  *  layer to the dataset's dune cells (map/dunemask.ts). Non-wind layers and the cell panel are unchanged. */
@@ -152,23 +156,26 @@ export function dunesOnlyToggle(store: Store): HTMLElement {
     h("span", { id: "dunes-only-help", class: "visually-hidden" }, DUNES_ONLY_HELP));
 }
 
-/** 'Show names' (Dunes group): the dune-field name labels (map/placelabels.ts); remembered per body, in the link */
+/** 'Names' (Dune Fields group): the dune-field name labels (map/placelabels.ts), a row laid out as the layer
+ *  rows (tick box, name, ⓘ with what it does and the naming note); not a map layer (no opacity, not in
+ *  Active layers); remembered per body, in the link */
 export function namesToggle(store: Store): HTMLElement {
-  const cb = h("input", { type: "checkbox", id: "show-names", "aria-describedby": "show-names-help" }) as HTMLInputElement;
+  const cb = h("input", { type: "checkbox", id: "show-names", "aria-label": `Show ${PLACE_TEXT.aboutItem}`, "aria-describedby": "show-names-help" }) as HTMLInputElement;
   cb.checked = !!store.state.names;
   cb.addEventListener("change", () => store.set({ names: cb.checked }));
   store.subscribe((st, ch) => { if (ch.has("names")) cb.checked = !!st.names; });
-  const label = h("label", { class: "inline", for: "show-names", title: PLACE_TEXT.toggleHelp }, cb, PLACE_TEXT.toggle,
+  const label = h("label", { for: "show-names", title: PLACE_TEXT.toggleHelp }, PLACE_TEXT.toggle,
     h("span", { id: "show-names-help", class: "visually-hidden" }, PLACE_TEXT.toggleHelp));
-  // the naming note beside the toggle (the same text as the dune layer's ⓘ, About and the search results)
-  const t = infoToggle(PLACE_TEXT.aboutItem, `<p class="places-note">${placesNoteHtml(PLACES)}</p>`, "names");
-  return h("div", { class: "names-row" }, label, t.button, t.pop);
+  // the ⓘ: what the labels do, then the naming note (the same text as the mask's ⓘ, About and the search results)
+  const t = infoToggle(PLACE_TEXT.aboutItem, `<p class="info-def">${escapeHtml(PLACE_TEXT.toggleHelp)}</p><p class="help places-note">${placesNoteHtml(PLACES)}</p>`, "names");
+  return h("li", { class: "layer-item names-item" }, h("div", { class: "layer-row" }, cb, label, t.button), t.pop);
 }
 
 /** ⓘ button + popover pair (layers and basemaps) */
 function infoToggle(title: string, html: string, idBase: string): { button: HTMLButtonElement; pop: HTMLElement } {
   const infoId = nextId(`info-${idBase}`);
-  const button = h("button", { type: "button", class: "info-button", "aria-expanded": "false", "aria-controls": infoId, "aria-label": `About ${title}` }, "i") as HTMLButtonElement;
+  // translate="no": the letter "i" is the info symbol (a translator turned it into the pronoun: "je", "我")
+  const button = h("button", { type: "button", class: "info-button notranslate", translate: "no", "aria-expanded": "false", "aria-controls": infoId, "aria-label": `About ${title}` }, "i") as HTMLButtonElement;
   const pop = h("div", { id: infoId, class: "info-popover", hidden: true, role: "note", html });
   button.addEventListener("click", () => {
     const open = button.getAttribute("aria-expanded") !== "true";
@@ -184,7 +191,7 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
   // an explicit accessible name: a label of KaTeX alone was read as "on"
   const cb = h("input", { type: "checkbox", id: cid, checked: st0.visible, "aria-label": `Show ${l.title}` }) as HTMLInputElement;
   const infoId = nextId(`info-${l.id}`);
-  const info = h("button", { type: "button", class: "info-button", "aria-expanded": "false", "aria-controls": infoId, "aria-label": `About ${l.title}` }, "i");
+  const info = h("button", { type: "button", class: "info-button notranslate", translate: "no", "aria-expanded": "false", "aria-controls": infoId, "aria-label": `About ${l.title}` }, "i");
   const pop = h("div", { id: infoId, class: "info-popover", hidden: true, role: "note",
     html: infoHtml(l, store.state.dataset) });
   info.addEventListener("click", () => {
@@ -235,7 +242,7 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
     const sel = h("select", { "aria-label": `Colour map for ${l.title}` }) as HTMLSelectElement;
     for (const g of COLORMAP_GROUPS) {
       const og = h("optgroup", { label: g.label });
-      for (const n of g.names) if (COLORMAPS[n]) og.append(h("option", { value: n }, n));
+      for (const n of g.names) if (COLORMAPS[n]) og.append(h("option", { value: n, translate: "no" }, n));   // colour map names
       sel.append(og);
     }
     sel.addEventListener("change", () => store.setLayerConfig(l.id, { colormap: sel.value === l.display?.colormap ? undefined : sel.value }));
@@ -307,16 +314,16 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
     cb.checked = ls.visible;
     controls.hidden = !ls.visible || controls.childElementCount === 0;
     legend.hidden = !ls.visible;
-    legend.innerHTML = legendHtml(l, ls.cfg);
+    legend.innerHTML = protectHtml(legendHtml(l, ls.cfg));
     for (const r of refreshers) r(s);
   };
   const item = h("li", { class: "layer-item", "data-layer": l.id },
-    h("div", { class: "layer-row" }, cb, h("label", { for: cid, html: l.titleTex ? mathHtml(l.titleTex) : escapeHtml(l.title) }), info),
+    h("div", { class: "layer-row" }, cb, h("label", { for: cid, html: l.shortTitle ? escapeHtml(l.shortTitle) : l.titleTex ? mathHtml(l.titleTex) : escapeHtml(l.title) }), info),
     controls, legend, pop);
   refresh(store.state);
   store.subscribe((s, ch) => {
     // a dataset switch changes the layer's definition in place (colour limits, citation)
-    if (ch.has("dataset")) pop.innerHTML = infoHtml(l, store.state.dataset);
+    if (ch.has("dataset")) pop.innerHTML = protectHtml(infoHtml(l, store.state.dataset));
     if (ch.has("layers") || ch.has("dataset")) refresh(s);
   });
   return item;
@@ -426,7 +433,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     root.classList.add("collapsed");
   }
   const header = h("header", { class: "atlas-header" },
-    h("div", { class: "title-row" }, h("h1", {}, "Dune Atlas", " ", h("span", { class: "body-name" }, BODY_NAME)), toggle),
+    h("div", { class: "title-row" }, markNoTranslate(h("h1", {}, "Dune Atlas", " ", h("span", { class: "body-name" }, BODY_NAME))), toggle),
     h("p", { class: "subtitle", html: SUBTITLE_HTML }));
   if (opts.search) header.append(opts.search);   // search box (ui/search.ts): stays visible with the list collapsed
   if (opts.fullScreenUrl) { // embed: a pill on the map above the panel, not in the header
@@ -436,7 +443,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
   const datasets = reg.datasets ?? [];
   if (datasets.length >= 1) { // shown with a single dataset too (Mars: MCMC FV3)
     // short option text (name and grid) that fits the narrow embed panel; the tooltip has the details
-    const sel = h("select", { id: "dataset-select", "aria-label": "Wind dataset" }, ...datasets.map((d) => h("option", { value: d.id, title: datasetTooltip(d.id) || d.title }, datasetOptionLabel(d.id, d.title)))) as HTMLSelectElement;
+    const sel = h("select", { id: "dataset-select", "aria-label": "Wind dataset" }, ...datasets.map((d) => h("option", { value: d.id, title: datasetTooltip(d.id) || d.title, translate: "no" }, datasetOptionLabel(d.id, d.title)))) as HTMLSelectElement;
     sel.value = store.state.dataset;
     const tip = () => { sel.title = datasetTooltip(sel.value) || ""; };
     tip();
@@ -463,9 +470,9 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     if (g.description) det.append(h("p", { class: "help", html: mathHtml(g.description) }));
     const ul = h("ul", { class: "layer-list" });
     for (const l of layers) ul.append(layerItem(l, store));
+    // the name labels: a row of the Dune Fields group, where the body's place list is enabled
+    if (g.id === "dunes" && placesAvailable(PLACES)) ul.append(namesToggle(store));
     det.append(ul);
-    // the name labels: in the Dunes group, only where the body's place list is enabled (Earth: not yet)
-    if (g.id === "dunes" && placesAvailable(PLACES)) det.append(namesToggle(store));
     body.append(det);
   }
 
@@ -494,7 +501,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
 
   // "Get the whole grid" for the selected wind dataset (ui/bulkguide.ts), re-rendered on a dataset switch
   const bulk = h("div", { class: "bulk-wrap", html: bulkGuideHtml(store.state.dataset, "about-bulk") });
-  store.subscribe((s, ch) => { if (ch.has("dataset")) bulk.innerHTML = bulkGuideHtml(s.dataset, "about-bulk"); });
+  store.subscribe((s, ch) => { if (ch.has("dataset")) bulk.innerHTML = protectHtml(bulkGuideHtml(s.dataset, "about-bulk")); });
   wireBulkGuide(bulk);
   const notice = AI_NOTICE.replace(AUTHOR_EMAIL, `<a href="mailto:${AUTHOR_EMAIL}">${AUTHOR_EMAIL}</a>`);
   body.append(h("details", { class: "about" }, h("summary", {}, "About, data sources & citation"),
@@ -504,7 +511,8 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
       ${COMPARE_HTML}
       ${fieldsCitationHtml()}
       ${citationHtml(citationSources(aboutSourceIds()))}
-      ${ABOUT_CREDITS_NOTE_HTML}` }), bulk));
+      ${ABOUT_CREDITS_NOTE_HTML}
+      <p class="help privacy-note">${PRIVACY_NOTE}</p>` }), bulk));
   root.append(header, pinned, body);
   // links to a section of About (data-about = element id), e.g. the shared map-field citation of the ⓘ popovers
   root.addEventListener("click", (e) => {

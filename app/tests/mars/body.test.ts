@@ -137,7 +137,7 @@ describe("Mars: texts at the source, one field citation, FV3 licence, basemap in
     for (const b of reg.basemaps) expect([...basemapInfoHtml(b).matchAll(/<dt>([^<]+)<\/dt>/g)].map((m) => m[1]), b.id)
       .toEqual(b.id === "esri-hirise" ? ["Source", "Resolution", "Coverage", "Licence", "Link"] : ["Source", "Resolution", "Licence", "Link"]);
     // HiRISE: polar coverage note (docs/guide/mars.md)
-    expect(basemapInfoHtml(reg.basemaps.find((b) => b.id === "esri-hirise")!)).toContain("between about 65° S and 65° N; no imagery at higher latitudes in this mosaic (Esri OnMars).");
+    expect(basemapInfoHtml(reg.basemaps.find((b) => b.id === "esri-hirise")!).replace(/<[^>]+>/g, "")).toContain("between about 65° S and 65° N; no imagery at higher latitudes in this mosaic (Esri OnMars).");
     const root = document.createElement("div");
     renderLayerPanel(root, reg, new Store({ basemap: "x", projection: "globe", utIndex: 29, layers: {}, order: [], dataset: DEFAULT_VIEW.dataset, cell: null, embed: false } as never));
     expect(root.querySelectorAll(".basemap-row .info-button").length).toBe(6);

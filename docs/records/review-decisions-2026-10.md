@@ -181,3 +181,16 @@ min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 
 | No estimated numbers | The popup no longer shows a "Mapped dune area" (Earth radii are framing estimates, not measurements); help texts no longer say that larger fields are named first. The radius only sets the search zoom and, with the stored area, the label order |
 | Labels and panel | One label size (15 px), every name a candidate at every zoom, collisions resolved on screen; layer panel 360 px with aligned tick boxes |
 | Local preview | `vite.config.ts`: `/r2` proxy to the data server and, with `PREVIEW_MARS_ORIGIN`, `/mars/` forwarded to the Mars dev server, so one local address serves both atlases (dev only) |
+
+## Second batch (15 October 2026)
+
+| item | done |
+|---|---|
+| Help and Tour bubble | Shown on every page load until the first click (nothing remembered); text "Help and Tour"; the first-visit tour is unchanged |
+| Dune Fields group | Group "Dune Fields" with layer rows "Mask" (layer title "Dune-field mask" where there is no group heading) and "Names" (a layer-style row; its ⓘ wraps like the others); optional `shortTitle` in the layer schema |
+| Display controls | Gap restored between side-by-side controls |
+| Links | 505 links checked from GitHub's runners (doi.org registration for DOIs); hand check by the PI's browser agent; fixes: OpenPlanetaryMap page moved, K'gari (UNESCO 630), Selima (no www), Ghard Abu Muharik (PI's replacement), Sinai-Negev (DOI of Roskin et al. 2011; inlowgear target), Horqin (unsupported Baidu page removed), Mallee (Pell et al. 2001), Akchar (Kocurek et al. 1991), Hunshandake (Yang et al. 2013); Warren Dunes removed (its only source did not name it) |
+| Iran | From Abbasi et al. (2019, Aeolian Research; locations read from its Fig. 1), DESERT (2025) and Iran Nature (2021): 6 new fields (Rig-e Chah Jam, Hasanabad, Gonabad, Nog, Bahabad, Shor Gaz), sources added to 16, centres of Seh Qaleh Sarayan and Boshruyeh moved to the paper's fields, Rig-e Boshruyeh and Rig-e Zirkuh renamed; Persian forms read from a low-resolution legend left out until checked. Earth list: 308 fields |
+| Page translation (P1) | translate="no" on formulas, info buttons, acronyms and symbols, product and provider names, licences, citations and reference lists; tests fail on any unprotected term. Curated French and Chinese (option 2 of translation-plan.md) parked until after this release; reviewers: the PI's PhD students |
+| Link previews | Open Graph and Twitter card tags on both atlases: one title ("Dune Atlas · Earth & Mars"), text and 1200 × 630 image (public/og-image.png) |
+| Usage | Cloudflare Web Analytics snippet (production builds only, "spa": false); About privacy line (approved wording, "kept" for the site's text rule); download counter built in workers/usage (not deployed; docs/guide/usage-counter.md); the app sends nothing until VITE_USAGE_URL is set |

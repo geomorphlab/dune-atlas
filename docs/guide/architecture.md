@@ -174,9 +174,9 @@ within ±90°, texture coordinates in [0, 1]; the unpatched code fails these che
   `ui/helpText.ts`; `docs/reference/help-text.md` is generated from it (`npm run help-doc`, checked by a test)
   and the public-text test covers it. The tour (8 steps, no tour library) runs once on the first visit
   (localStorage `duneAtlas.tourSeen`; never in embed mode unless `?tour=1`) when the map first reports
-  idle, or after 8 s if it never does (`autostartTour`, `ui/tourBubble.ts`). A "Start tour" bubble points
-  at the help button (`ui/tourBubble.ts`) until the visitor has started the tour once
-  (`duneAtlas.tourStarted`; also in embed mode); the tour popover is placed below / above / right / left of
+  idle, or after 8 s if it never does (`autostartTour`, `ui/tourBubble.ts`). A "Help and Tour" bubble points
+  at the help button (`ui/tourBubble.ts`) on every page load until the first click (nothing is
+  remembered; also in embed mode); the tour popover is placed below / above / right / left of
   its highlight, whichever stays on screen and off the highlight (`tourPlacement`). A "Loading map…" pill
   (`ui/loading.ts`) shows on the first draw and after dataset, projection and basemap changes; step 1 highlights the
   help button. Steps highlight the first visible of their targets (else a centred popover);

@@ -5,11 +5,12 @@
 # `style` keys: fill -> MapLibre fill-layer paint (the app draws vector layers as fills only).
 groups:
   - id: dunes
-    title: Dunes
+    title: Dune Fields
     description: Global aeolian dune map on the 0.1° ERA5-Land grid (106,540 cells, 7.8 % of land area).
 layers:
   - id: dunes
-    title: Dune fields
+    title: Dune-field mask
+    shortTitle: Mask
     group: dunes
     type: pmtiles-vector
     source: dune-atlas/v1/dunes/dunes.pmtiles

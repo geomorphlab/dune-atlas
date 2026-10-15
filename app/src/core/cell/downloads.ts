@@ -3,6 +3,7 @@
 import { CELL_SOURCE_IDS } from "@body/citation";
 import { citationSources, citationText } from "./citation";
 import { datasetInfo } from "./datasetinfo";
+import { countDownload } from "../usage";
 
 /** "23.25° S, 15.00° E": cell centre with hemisphere letters, 2 decimals (never "-23.25 N") */
 export function latLonText(lat: number, lon: number): string {
@@ -22,14 +23,17 @@ export function citationFile(cell?: { iy: number; ix: number; lat: number; lon: 
   return citationText(head, citationSources(CELL_SOURCE_IDS, datasetId));
 }
 
-/** document event of every download (detail: { name }): the page confirms it (ui/tools.ts) */
+/** document event of every download (detail: { name, bytes }): the page confirms it (ui/tools.ts), and
+ *  the usage counter counts it by type and size (../usage.ts; nothing is sent unless VITE_USAGE_URL is set) */
 export const DOWNLOAD_EVENT = "duneatlas:download";
-export function announceDownload(name: string): void {
-  try { globalThis.document?.dispatchEvent(new CustomEvent(DOWNLOAD_EVENT, { detail: { name } })); } catch { /* no DOM */ }
+export function announceDownload(name: string, bytes = 0): void {
+  try { globalThis.document?.dispatchEvent(new CustomEvent(DOWNLOAD_EVENT, { detail: { name, bytes } })); } catch { /* no DOM */ }
+  countDownload(name, bytes);
 }
 
 export function triggerDownload(name: string, data: string | Uint8Array, mime: string): void {
-  const url = URL.createObjectURL(new Blob([data as BlobPart], { type: mime }));
+  const blob = new Blob([data as BlobPart], { type: mime });
+  const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
   a.download = name;
@@ -37,5 +41,5 @@ export function triggerDownload(name: string, data: string | Uint8Array, mime: s
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
-  announceDownload(name);
+  announceDownload(name, blob.size);
 }

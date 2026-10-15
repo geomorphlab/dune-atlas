@@ -49,7 +49,7 @@ describe("layer panel", () => {
     renderLayerPanel(root, reg, store);
   });
   it("renders one item per layer (checkbox, info) and one radio per basemap; no terrain toggle; opacity only in Active layers", () => {
-    expect(root.querySelectorAll(".layer-item").length).toBe(reg.layers.length);
+    expect(root.querySelectorAll(".layer-item[data-layer]").length).toBe(reg.layers.length);
     expect(root.querySelectorAll(".layer-item input.opacity").length).toBe(0);
     const visible = reg.layers.filter((l) => store.state.layers[l.id].visible).length;
     expect(root.querySelectorAll(".order-item input.opacity").length).toBe(visible);

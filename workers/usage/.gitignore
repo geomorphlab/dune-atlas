@@ -1,0 +1,3 @@
+# local Wrangler state and local secrets (never in git)
+.wrangler/
+.dev.vars*

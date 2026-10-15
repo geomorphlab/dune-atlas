@@ -27,6 +27,8 @@ export interface LayerDef {
   id: string;
   title: string;
   titleTex?: string;
+  /** row label in the layer panel, where the group heading gives the context (e.g. "Mask" under "Dune Fields") */
+  shortTitle?: string;
   group: string;
   type: LayerType;
   source: string;

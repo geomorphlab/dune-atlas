@@ -51,7 +51,7 @@ describe("content from docs/concepts (verbatim)", () => {
     for (const c of ALL.entries) for (const r of entryReferences(c)) expect(r, `${c.title}: ${r}`).toMatch(/doi:10\./);
     const dp = conceptBodyHtml(CONCEPTS.find((c) => c.id === "drift-potential-dp")!);
     expect(dp).toContain('href="https://doi.org/10.3133/pp1052"');
-    expect(dp).toContain("References: Fryberger &amp; Dean (1979); Gunn (2026).");
+    expect(dp).toContain('References: <span translate="no" class="notranslate">Fryberger &amp; Dean (1979); Gunn (2026).</span>');
     expect(conceptBodyHtml(CONCEPTS.find((c) => c.id === "wind-from-sand-toward")!)).not.toContain("References");
   });
 });

@@ -1,0 +1,38 @@
+# Dune Atlas usage counter: Cloudflare Worker settings (docs/guide/usage-counter.md).
+# No secrets here: the API token and the CSV key are set with `npx wrangler secret put` and live only
+# in Cloudflare. Replace the three REPLACE_WITH_... values before the first deploy (step 3 of the guide).
+name = "dune-atlas-usage"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+# Cloudflare account id (not a secret): dashboard, Workers & Pages, Account Details
+account_id = "REPLACE_WITH_ACCOUNT_ID"
+# the free address https://dune-atlas-usage.<your-subdomain>.workers.dev
+workers_dev = true
+# Invocation logs off: they would record details of each request (such as the visitor's IP address).
+# The outcome of the daily collection is in status.csv instead.
+[observability]
+enabled = false
+
+# once a day at 03:17 UTC: collects the previous three days of Cloudflare's figures
+[triggers]
+crons = ["17 3 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dune-atlas-usage"
+# printed by `npx wrangler d1 create dune-atlas-usage`
+database_id = "REPLACE_WITH_DATABASE_ID"
+migrations_dir = "migrations"
+
+[vars]
+# same value as account_id above
+CF_ACCOUNT_ID = "REPLACE_WITH_ACCOUNT_ID"
+# zone id of geomorphlab.org: dashboard, the domain's Overview page, API section
+CF_ZONE_ID = "REPLACE_WITH_ZONE_ID"
+DATA_HOST = "data.geomorphlab.org"
+SITE_HOST = "map.geomorphlab.org"
+# optional: Web Analytics site tag (32 characters). Empty: the site is picked by its host name (SITE_HOST).
+WEB_ANALYTICS_SITE_TAG = ""
+# downloads are accepted only from these pages; the preview origin is counted separately as "preview"
+ALLOWED_ORIGINS = "https://map.geomorphlab.org"
+PREVIEW_ORIGINS = "http://127.0.0.1:5173"

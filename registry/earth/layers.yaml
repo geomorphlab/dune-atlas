@@ -154,7 +154,7 @@ basemaps:
 groups:
   # ids match registry/earth/generated/*.yaml so the generated fragments update these in place
   - id: dunes
-    title: Dunes
+    title: Dune Fields
   - id: orientation
     title: Bedform orientation
     description: Compass bearings of the direction of dune migration / elongation (toward).
@@ -181,7 +181,8 @@ layers:
   # validate-registry rejects them.
   # ---------------------------------------------------------------------------------------
   - id: dunes
-    title: Sand dunes (0.1° cells)
+    title: Dune-field mask
+    shortTitle: Mask
     group: dunes
     type: geojson-points            # placeholder: fixture GeoJSON polygons; production = pmtiles-vector
     source: dunes.geojson

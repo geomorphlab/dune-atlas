@@ -1,10 +1,8 @@
-// "Start tour" speech bubble pointing at the Help (?) button. Shared by both atlases,
+// "Help and Tour" speech bubble pointing at the Help (?) button. Shared by both atlases,
 // including ?embed=1.
-//  - shown on arrival; when the tour starts by itself (first visit), shown after it closes only if it was
-//    skipped at step 1;
+//  - shown on every arrival (every page load), whether or not the visitor has taken the tour before; on a
+//    first visit, when the tour starts by itself, shown after it closes only if it was skipped at step 1;
 //  - a click on it (or Enter) starts the tour; Esc, or the first click anywhere else, hides it for this visit;
-//  - shown on later visits until the visitor has started the tour once (reached step 2 of an automatic start,
-//    or started it from the bubble or Help), per body (localStorage "duneAtlas[Mars].tourStarted"), then never;
 //  - placed left of the Help button, else below the tools column, else not shown: never over the planet
 //    button, the side (layer) panel or the cell panel;
 //  - placed again whenever the layout changes (window size, the tools column, the side and cell panels,
@@ -12,19 +10,13 @@
 //    hidden and appears as soon as one is free, until the first click;
 //  - no motion under prefers-reduced-motion (style.css).
 import { h } from "./dom";
-import { storageKey } from "../body";
 import type { TourEvent } from "./tour";
 
-export const TOUR_STARTED_KEY = storageKey("tourStarted"); // Earth "duneAtlas.tourStarted", Mars "duneAtlasMars.tourStarted"
-export const TOUR_BUBBLE_TEXT = "Start tour";
+export const TOUR_BUBBLE_TEXT = "Help and Tour";
 export const TOUR_BUBBLE_LABEL = "Start the guided tour of the atlas";
 /** elements the bubble must not cover */
 export const BUBBLE_AVOID = ["#layer-panel", "#cell-panel", ".planet-btn"];
 
-export function tourStarted(): boolean {
-  try { return localStorage.getItem(TOUR_STARTED_KEY) === "1"; } catch { return false; }
-}
-export function markTourStarted() { try { localStorage.setItem(TOUR_STARTED_KEY, "1"); } catch { /* private mode */ } }
 
 type Rect = { left: number; top: number; right: number; bottom: number };
 const hit = (a: Rect, b: Rect) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
@@ -46,9 +38,10 @@ export function bubblePlacement(help: Rect, column: Rect, size: { w: number; h: 
 }
 
 /** Arrival rule: show unless the visitor has started the tour once; with an automatic start, wait for it to end. */
-export function bubbleOnArrival(o: { started: boolean; autostart: boolean }): boolean { return !o.started && !o.autostart; }
+/** on arrival: always, except when the tour starts by itself (first visit) */
+export function bubbleOnArrival(o: { autostart: boolean }): boolean { return !o.autostart; }
 /** after an automatic tour closes: show only when it was skipped at step 1 */
-export function bubbleAfterTour(o: { started: boolean; completed: boolean; index: number }): boolean { return !o.started && !o.completed && o.index === 0; }
+export function bubbleAfterTour(o: { completed: boolean; index: number }): boolean { return !o.completed && o.index === 0; }
 
 export class TourBubble {
   el: HTMLButtonElement;
@@ -128,18 +121,18 @@ export class TourBubble {
   }
 }
 
-/** Wire the bubble to the tour: `autostart` = the tour starts by itself on this visit. Starting the tour from
- *  Help (`fromHelp`) or the bubble counts as started; so does reaching step 2. */
+/** Wire the bubble to the tour: `autostart` = the tour starts by itself on this visit. Once the visitor starts
+ *  the tour (bubble or Help), the bubble stays hidden for the rest of the visit. */
 export function wireTourBubble(tour: { listen(fn: (ev: TourEvent) => void): void; start(): void }, o: { autostart: boolean; doc?: Document }) {
   let userStart = false;
-  const start = () => { userStart = true; markTourStarted(); tour.start(); };
+  const start = () => { userStart = true; tour.start(); };
   const bubble = new TourBubble(start, o.doc);
   tour.listen((ev) => {
-    if (ev.type === "step") { bubble.hide(); if (ev.index >= 1) markTourStarted(); return; }
-    if (o.autostart && !userStart && bubbleAfterTour({ started: tourStarted(), completed: ev.completed, index: ev.index })) bubble.show();
+    if (ev.type === "step") { bubble.hide(); return; }
+    if (o.autostart && !userStart && bubbleAfterTour({ completed: ev.completed, index: ev.index })) bubble.show();
   });
-  if (bubbleOnArrival({ started: tourStarted(), autostart: o.autostart })) bubble.show();
-  return { bubble, fromHelp: () => { userStart = true; markTourStarted(); bubble.hide(true); tour.start(); } };
+  if (bubbleOnArrival({ autostart: o.autostart })) bubble.show();
+  return { bubble, fromHelp: () => { userStart = true; bubble.hide(true); tour.start(); } };
 }
 
 /** Start the first-visit tour once the map is idle, or after `fallbackMs` if it never goes idle (continuous

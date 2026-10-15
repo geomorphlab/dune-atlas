@@ -2,6 +2,11 @@
 export const HTML = {
   /** tab title: the group site style, identical for Earth and Mars (the header shows the body name) */
   title: "MGL - Dune Atlas",
-  description: "Interactive atlas of Martian dunes, wind regimes and sand-flux roses from hourly winds of a Mars climate model (e.g., the MCMC FV3 Mars GCM) with the transport law of Pähtz &amp; Durán (2023) and the methods outlined in Gunn (2026).",
+  description: "Interactive explorer for aeolian geomorphology on Earth and Mars. Developed by the Monash Geomorphology Lab.",
   noscript: "The Mars Dune Atlas needs JavaScript and WebGL.",
+  /** link previews (scripts/body-html.ts previewTags): one title, text and image (public/og-image.png) for the whole site */
+  ogTitle: "Dune Atlas · Earth & Mars",
+  url: "https://map.geomorphlab.org/mars/",
+  image: "https://map.geomorphlab.org/og-image.png",
+  imageAlt: "Dune Atlas globe of Africa and Europe with sand-flux streamlines over drift potential",
 };

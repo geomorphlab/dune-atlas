@@ -86,7 +86,7 @@ export class Tour {
   #seq = 0;
   #reposition = () => this.#place();
   #listeners: ((ev: TourEvent) => void)[] = [];
-  /** step shown / tour closed (used by the "Start tour" bubble, ui/tourBubble.ts) */
+  /** step shown / tour closed (used by the "Help and Tour" bubble, ui/tourBubble.ts) */
   listen(fn: (ev: TourEvent) => void) { this.#listeners.push(fn); }
   #emit(ev: TourEvent) { for (const f of this.#listeners) { try { f(ev); } catch (e) { console.warn("[dune-atlas] tour listener", e); } } }
 

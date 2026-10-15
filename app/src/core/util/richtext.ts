@@ -1,8 +1,10 @@
 // Safe links in registry text (descriptions, legend notes, attribution): `[label](https://…)` and
 // bare http(s) URLs become links that open in a new tab; every other character is escaped (or
 // rendered by `text`, e.g. mathHtml for $…$ TeX). Only http: / https: URLs are linked; anything
-// else (javascript:, data:, relative) stays plain text.
+// else (javascript:, data:, relative) stays plain text. Acronyms and names of the text, and the text of
+// bare URLs, are protected from page translators (util/notranslate.ts).
 import { escapeHtml } from "./format";
+import { NO_TRANSLATE_ATTRS, protectText } from "./notranslate";
 
 const TOKEN = /\[([^\]\n]{1,200})\]\(([^()\s]{1,500})\)|\bhttps?:\/\/[^\s<>"'`]+/gi;
 
@@ -17,7 +19,7 @@ function anchor(href: string, labelHtml: string): string {
 }
 
 /** Render `s` with safe links; `text` renders the non-link parts (default: HTML-escaped). */
-export function richHtml(s: string | undefined | null, text: (t: string) => string = escapeHtml): string {
+export function richHtml(s: string | undefined | null, text: (t: string) => string = protectText): string {
   if (!s) return "";
   let out = "", last = 0;
   for (const m of s.matchAll(TOKEN)) {
@@ -31,7 +33,7 @@ export function richHtml(s: string | undefined | null, text: (t: string) => stri
     const href = safeHttpUrl(url);
     if (!href) continue; // left as text
     out += text(s.slice(last, i));
-    out += anchor(href, label !== undefined ? text(label) : escapeHtml(url.replace(/^https?:\/\//i, "").replace(/\/$/, "")));
+    out += anchor(href, label !== undefined ? text(label) : `<span ${NO_TRANSLATE_ATTRS}>${escapeHtml(url.replace(/^https?:\/\//i, "").replace(/\/$/, ""))}</span>`);
     last = i + whole.length;
   }
   return out + text(s.slice(last));

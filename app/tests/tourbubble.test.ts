@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 // "Start tour" bubble: arrival / after-autostart rules, click / Enter starts the tour,
-// Esc or a click elsewhere hides it for the visit, remembered once the tour has been started, placement never
+// Esc or a click elsewhere hides it for the visit, back on every new visit, placement never
 // over the side panel, the cell panel or the planet button; plus the tour auto-start fallback and the loading
 // indicator.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { TOUR_STARTED_KEY, TOUR_BUBBLE_LABEL, bubbleAfterTour, bubbleOnArrival, bubblePlacement, autostartTour, tourStarted, wireTourBubble } from "../src/core/ui/tourBubble";
+import { TOUR_BUBBLE_LABEL, bubbleAfterTour, bubbleOnArrival, bubblePlacement, autostartTour, wireTourBubble } from "../src/core/ui/tourBubble";
 import { LoadingIndicator, WHEEL_ZOOM_RATE } from "../src/core/ui/loading";
 import type { TourEvent } from "../src/core/ui/tour";
 
@@ -24,15 +24,14 @@ function page() {
 const bubble = () => document.querySelector(".tour-bubble") as HTMLButtonElement;
 
 describe("arrival and after-tour rules", () => {
-  it("shown on arrival unless started or auto-starting", () => {
-    expect(bubbleOnArrival({ started: false, autostart: false })).toBe(true);
-    expect(bubbleOnArrival({ started: false, autostart: true })).toBe(false);
-    expect(bubbleOnArrival({ started: true, autostart: false })).toBe(false);
+  it("shown on every arrival unless the tour starts by itself", () => {
+    expect(bubbleOnArrival({ autostart: false })).toBe(true);
+    expect(bubbleOnArrival({ autostart: true })).toBe(false);
   });
   it("after an automatic tour: only when skipped at step 1", () => {
-    expect(bubbleAfterTour({ started: false, completed: false, index: 0 })).toBe(true);
-    expect(bubbleAfterTour({ started: false, completed: false, index: 3 })).toBe(false);
-    expect(bubbleAfterTour({ started: false, completed: true, index: 9 })).toBe(false);
+    expect(bubbleAfterTour({ completed: false, index: 0 })).toBe(true);
+    expect(bubbleAfterTour({ completed: false, index: 3 })).toBe(false);
+    expect(bubbleAfterTour({ completed: true, index: 9 })).toBe(false);
   });
 });
 
@@ -47,8 +46,8 @@ describe("TourBubble in the page", () => {
     bubble().click();
     expect(t.starts).toBe(1);
     expect(bubble().hidden).toBe(true);
-    expect(tourStarted()).toBe(true);
-    expect(mem.get(TOUR_STARTED_KEY)).toBe("1");
+    t.emit({ type: "end", completed: false, index: 0 });
+    expect(bubble().hidden).toBe(true);    // not back during this visit
   });
   it("Esc hides it for the visit", () => {
     const t = new FakeTour();
@@ -57,34 +56,37 @@ describe("TourBubble in the page", () => {
     expect(bubble().hidden).toBe(true);
     w.bubble.show();
     expect(bubble().hidden).toBe(true);    // dismissed for this visit
-    expect(tourStarted()).toBe(false);     // ... but back on the next visit
   });
   it("the first click anywhere else hides it", () => {
     wireTourBubble(new FakeTour(), { autostart: false });
     document.getElementById("layer-panel")!.dispatchEvent(new Event("pointerdown", { bubbles: true }));
     expect(bubble().hidden).toBe(true);
   });
-  it("auto-start skipped at step 1 shows it afterwards; reaching step 2 marks the tour started", () => {
+  it("back on every later visit, also after the tour has been taken (nothing is remembered)", () => {
+    let t = new FakeTour();
+    wireTourBubble(t, { autostart: false });
+    bubble().click(); t.emit({ type: "step", index: 5 }); t.emit({ type: "end", completed: true, index: 9 });
+    expect(mem.size).toBe(0);
+    page(); t = new FakeTour();
+    wireTourBubble(t, { autostart: false });
+    expect(bubble().hidden).toBe(false);
+  });
+  it("auto-start (first visit): hidden while the tour runs; shown afterwards only if skipped at step 1", () => {
     let t = new FakeTour();
     wireTourBubble(t, { autostart: true });
     expect(bubble().hidden).toBe(true);
     t.start(); t.emit({ type: "end", completed: false, index: 0 });
     expect(bubble().hidden).toBe(false);
-    expect(tourStarted()).toBe(false);
     page(); t = new FakeTour();
     wireTourBubble(t, { autostart: true });
     t.start(); t.emit({ type: "step", index: 1 }); t.emit({ type: "end", completed: false, index: 1 });
     expect(bubble().hidden).toBe(true);
-    expect(tourStarted()).toBe(true);
-    page(); wireTourBubble(new FakeTour(), { autostart: false });
-    expect(bubble().hidden).toBe(true);   // never again once started
   });
-  it("starting from Help counts as started", () => {
+  it("starting from Help hides it for the visit", () => {
     const t = new FakeTour();
     const w = wireTourBubble(t, { autostart: false });
     w.fromHelp();
     expect(t.starts).toBe(1);
-    expect(tourStarted()).toBe(true);
     t.emit({ type: "end", completed: false, index: 0 });
     expect(bubble().hidden).toBe(true);
   });

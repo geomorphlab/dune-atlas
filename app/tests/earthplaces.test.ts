@@ -26,7 +26,7 @@ const top = (q: string) => matchPlaces(q, P)[0];
 describe("Earth place list", () => {
   it("enabled, every approved row, names verbatim; no review columns", () => {
     expect(LIST.enabled).toBe(true);
-    expect(P).toHaveLength(303);
+    expect(P).toHaveLength(308);
     expect(byId("rub-al-khali-empty-quarter").line1).toBe("Rub' al Khali");
     const text = fs.readFileSync(FILE, "utf8");
     for (const col of ["confidence", "sensitivity", "pi_decision", "pi_note", "scores_source", "label_priority", "local_recognition", "aeolian_recognition", "single_dune", "verified", "reference_notes", "change_from_draft", "line2_reason"])
@@ -143,12 +143,15 @@ describe("Earth name labels", () => {
     expect(placePopupContent(byId("kalahari")).textContent).toContain("Includes: Northeastern Kalahari Dune Field, Northwestern Kalahari Dune Field");
     expect(placePopupContent(byId("thar-desert")).textContent).toContain("Includes: Cholistan Desert (صحرائے چولستان)");
   });
-  it("'Show names' in the Dunes group with the naming note beside it; the note in About", () => {
+  it("'Names' row in the Dune Fields group, laid out as a layer row, with the naming note in its ⓘ; the note in About", () => {
     const reg = loadRegistry().registry;
     document.body.innerHTML = '<aside id="layer-panel"></aside>';
     renderLayerPanel(document.getElementById("layer-panel")!, reg, new Store(initialAppState(reg, {}, "era5")));
-    const row = document.getElementById("show-names")!.closest(".names-row")!;
-    expect(row.closest("details.layer-group")!.querySelector("summary")!.textContent).toBe("Dunes");
+    const row = document.getElementById("show-names")!.closest("li.layer-item.names-item")!;
+    expect(row.closest("details.layer-group")!.querySelector("summary")!.textContent).toBe("Dune Fields");
+    expect(row.parentElement!.classList.contains("layer-list")).toBe(true);
+    expect(row.querySelector(".layer-row label")!.textContent).toMatch(/^Names/);
+    expect(row.parentElement!.querySelector('li[data-layer="dunes"] .layer-row label')!.textContent).toBe("Mask");
     expect(row.querySelector(".info-popover")!.innerHTML).toContain(placesNoteHtml(LIST));
     expect(DATA_SOURCES_HTML).toContain(`<strong>Dune-field names</strong>: ${placesNoteHtml(LIST)}`);
   });

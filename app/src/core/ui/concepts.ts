@@ -7,6 +7,7 @@ import conceptsMd from "../../../../docs/concepts/concepts-earth-mars.md?raw";
 import { BODY } from "../body";
 import { escapeHtml } from "../util/format";
 import { mathHtml } from "../util/math";
+import { NO_TRANSLATE_ATTRS } from "../util/notranslate";
 
 export type ConceptTag = "Earth" | "Mars" | "both";
 export interface Concept { id: string; title: string; tag: ConceptTag; paragraphs: string[]; refs: string[] }
@@ -77,11 +78,13 @@ export function entryReferences(c: Concept): string[] {
   return c.refs.map((r) => CONCEPT_REFERENCES.find((x) => x.key === refKey(r))?.text ?? r);
 }
 
-/** HTML of one entry: its paragraphs, the short references line and the full references */
+/** HTML of one entry: its paragraphs, the short references line and the full references. The references are
+ *  kept as written (translate="no"): a translated paper title does not exist and cannot be cited or found;
+ *  only the word "References" is left to the translator. */
 export function conceptBodyHtml(c: Concept): string {
   const paras = c.paragraphs.map((p) => `<p>${mathHtml(texify(p))}</p>`).join("");
   const refs = c.refs.length
-    ? `<p class="concept-refs">References: ${escapeHtml(c.refs.join("; "))}.</p><ul class="concept-reflist">${entryReferences(c).map((r) => `<li>${referenceHtml(r)}</li>`).join("")}</ul>`
+    ? `<p class="concept-refs">References: <span ${NO_TRANSLATE_ATTRS}>${escapeHtml(c.refs.join("; "))}.</span></p><ul class="concept-reflist" translate="no">${entryReferences(c).map((r) => `<li>${referenceHtml(r)}</li>`).join("")}</ul>`
     : "";
   return paras + refs;
 }
