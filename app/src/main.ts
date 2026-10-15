@@ -11,6 +11,7 @@ import { CONFIG } from "./core/config";
 import { parseUrlState, serializeUrlState, type UrlState } from "./core/urlstate";
 import { Store, type AppState } from "./core/store";
 import { defaultBasemap, setBasemap } from "./core/map/basemaps";
+import { BasemapWatch, repaintOnTileErrors } from "./core/map/basemapwatch";
 import { OverlayManager, ensureSelectedCellLayers, restoreOverlays } from "./core/map/overlays";
 import { setLayerPanelOpen, renderLayerPanel } from "./core/ui/layerPanel";
 import { versionFromPrefix } from "./core/cell/export";
@@ -149,8 +150,14 @@ const placeLabels = new PlaceLabels(map, {
 placeLabels.setVisible(!!store.state.names);
 if (placesNeedRtl(PLACES)) ensureRtlPlugin(maplibregl.setRTLTextPlugin, rtlPluginUrl);
 
+// notice when the chosen basemap cannot be loaded (provider down or blocked); set up before the app's
+// 'style.load' handler below, so it sees the basemap's own sources
+const basemapWatch = new BasemapWatch(map);
+// keep drawing when tiles fail with network errors (blocked basemap; otherwise the globe can stay blank)
+repaintOnTileErrors(map);
 function applyBasemap() {
   const b = reg.basemaps.find((x) => x.id === store.state.basemap) ?? defaultBasemap(reg.basemaps);
+  basemapWatch.start(b);
   setBasemap(map, b, store.state.projection);
 }
 
