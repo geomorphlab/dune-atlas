@@ -22,6 +22,7 @@ import { AUX_META, aridityClass } from "../../core/cell/auxinfo";
 import { DATASET_INFO, datasetInfo, type DatasetInfo } from "../../core/cell/datasetinfo";
 import { fieldInfo } from "../../core/cell/fieldinfo";
 import { citationFile, triggerDownload } from "../../core/cell/downloads";
+import { countCopy } from "../../core/usage";
 import { bulkGuideHtml, wireBulkGuide } from "../../core/ui/bulkguide";
 import { cellDataset, cellNetcdf, csvBundle, exportBaseName, type ExportMeta } from "../../core/cell/export";
 import type { CellStoreAttrs } from "../../core/cell/cellstore";
@@ -31,6 +32,7 @@ import { isPublishedField } from "../../core/util/constants";
 import { compassPoint } from "../../core/util/angles";
 import { escapeHtml, fmtLat, fmtLon, fmtNum, MISSING } from "../../core/util/format";
 import { mathHtml, mathOnly, textOnly } from "../../core/util/math";
+import { protectDom } from "../../core/util/notranslate";
 import { formatUt, thresholdControl } from "../../core/ui/threshold";
 import type { ThresholdDef } from "../../core/registry/types";
 import type { Store } from "../../core/store";
@@ -304,7 +306,7 @@ export class CellPanel {
     this.#root.hidden = false;
     document.body.classList.add("cell-open");
     const prev = this.#cell && this.#content?.isConnected && this.#scroll ? { cell: this.#cell, scrollTop: this.#scroll.scrollTop } : null;
-    const loading = () => { this.#frame({ iy, ix }).innerHTML = `<p class="status" role="status">Loading ${this.#ds().name} data for this cell…</p>`; };
+    const loading = () => { this.#frame({ iy, ix }).innerHTML = `<p class="status" role="status">Loading ${this.#ds().name} data for this cell…</p>`; protectDom(this.#root); };
     if (prev) this.#setBusy(true);
     else loading();
     try {
@@ -326,6 +328,7 @@ export class CellPanel {
       if (req !== this.#req) return;
       this.#setBusy(false);
       this.#frame({ iy, ix }).innerHTML = `<p class="status error" role="alert" title="${escapeHtml(String((e as Error)?.message ?? e))}">The data for this cell could not be loaded. Click the cell again to retry.</p>`;
+      protectDom(this.#root);
     }
   }
 
@@ -370,6 +373,7 @@ export class CellPanel {
       const ratio = Number.isFinite(v.ratio) ? fmtNum(v.ratio) : MISSING;
       return `<span class="meta-line other-line" data-dataset="${escapeHtml(id)}">${name} here: DP ${live(dp, R.dp, "left")}, RDD ${live(deg(v.rddBearing), BEARING_W(), "left")}, RDP/DP ${live(ratio, R.ratio, "left")}</span>`;
     }).join("");
+    protectDom(el);
   }
 
   setThreshold(i: number) {
@@ -430,6 +434,7 @@ export class CellPanel {
   /** build all sections for the current cell; keeps the scroll position unless `scrollTop` is given */
   render(scrollTop: number = this.#scroll?.scrollTop ?? 0) {
     this.#renderBody();
+    protectDom(this.#root);   // acronyms, symbols and names kept as written by page translators
     this.#restoreScroll(scrollTop);
   }
 
@@ -604,6 +609,7 @@ export class CellPanel {
       svg: (t) => qplotSvg(pq, pys, pax, Math.min(size, 420), t, true),
       legend: [{ kind: "swatches", items: [{ color: "#e3a33b", shape: "line", label: `${pq.titleTex}${pq.unitsTex ? ` (${pq.unitsTex})` : ""}` }, { color: "#e3a33b", shape: "dot", label: utTex(v.ut) }] }],
     };
+    protectDom(this.#root);
   }
 
   /** scroll position of the panel content (tour: restored exactly after the example cell) */
@@ -725,7 +731,7 @@ export class CellPanel {
     const base = () => exportBaseName(cell, this.#exportMeta().datasetId);
     const copy = btn("Copy citation", "Copy the citation text to the clipboard", () => {
       const t = citationFile(cell, this.#exportMeta().datasetId, this.#citeSetting());
-      void navigator.clipboard?.writeText(t).then(() => { copy.textContent = "Copied"; setTimeout(() => { copy.textContent = "Copy citation"; }, 1500); }, () => triggerDownload(`${base()}_citation.txt`, t, "text/plain"));
+      void navigator.clipboard?.writeText(t).then(() => { countCopy("copy-citation"); copy.textContent = "Copied"; setTimeout(() => { copy.textContent = "Copy citation"; }, 1500); }, () => triggerDownload(`${base()}_citation.txt`, t, "text/plain"));
     });
     return this.#section("downloads", "downloads", h("h3", { id: "dl-h" }, "Download & cite"),
       h("div", { class: "buttons" },

@@ -323,7 +323,7 @@ label.inline.dunes-only-row { display: flex; width: max-content; max-width: 100%
 .qplot-row select { flex: 1 1 auto; min-width: 0; max-width: 100%; }
 /* the slider's one help line keeps 12 px (one line in a 360 px embed frame; tests/embedlib.ts) */
 .threshold:not(.compact) > .help { font-size: 12px; }
-/* "Start tour" bubble: left of the Help button with a tail pointing right (or below the tools column, tail up) */
+/* "Help and Tour" bubble: left of the Help button with a tail pointing right (or below the tools column, tail up) */
 .tour-bubble { position: fixed; z-index: 40; padding: 6px 12px; border-radius: 14px; border: 1px solid var(--accent); background: var(--bg); color: var(--fg); font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.55); white-space: nowrap; animation: tour-bubble-in .35s ease-out; }
 .tour-bubble::after { content: ""; position: absolute; width: 8px; height: 8px; background: var(--bg); border: 1px solid var(--accent); border-width: 1px 1px 0 0; }
 .tour-bubble[data-tail="right"]::after { right: -5px; top: calc(50% - 4px); transform: rotate(45deg); }
@@ -394,8 +394,7 @@ label.inline.region-param, label.inline.region-range { display: flex; margin: 1p
 .region-progress { width: 100%; }
 .maplibregl-map.drawing-box .maplibregl-canvas { cursor: crosshair !important; }
 
-/* 'Show names' (Dunes group) and the name-label popup (map/placelabels.ts) */
-.layer-group .names-row { display: block; margin: 2px 0 6px 4px; font-size: 12.5px; }
+/* 'Names' (Dune Fields group) and the name-label popup (map/placelabels.ts) */
 .maplibregl-popup.place-popup .maplibregl-popup-content { background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; padding: 8px 26px 8px 10px; font-size: 12.5px; line-height: 1.4; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45); }
 .maplibregl-popup.place-popup .maplibregl-popup-close-button { color: var(--fg); font-size: 16px; padding: 0 6px; }
 .maplibregl-popup.place-popup .maplibregl-popup-tip { border-top-color: var(--line); border-bottom-color: var(--line); }
@@ -411,12 +410,12 @@ label.inline.region-param, label.inline.region-range { display: flex; margin: 1p
 /* Layer panel: one column of tick boxes and radio buttons (same size, no browser margins, one gap to the
    text), controls and popovers under a row aligned with its text; roomier spacing between groups and rows. */
 #layer-panel input[type=checkbox], #layer-panel input[type=radio] { width: var(--box); height: var(--box); margin: 0; flex: none; }
-#layer-panel .layer-row, #layer-panel .radio-row, #layer-panel .names-row { gap: var(--box-gap); }
+#layer-panel .layer-row, #layer-panel .radio-row { gap: var(--box-gap); }
 #layer-panel label.inline:not(.dataset-row) { gap: var(--box-gap); margin: 4px 0; }
+/* side-by-side controls (Display: Show as / Line colour, Colours / reversed, min / max / reset; Fill / Invert)
+   keep a clear gap between one control and the next label */
+#layer-panel :is(.display-opts, .cmap-box, .clim-row, .vec-box) label.inline:not(:last-child) { margin-right: 16px; }
 #layer-panel .dunes-only-row input { margin: 0; }
-#layer-panel .names-row { display: flex; flex-wrap: wrap; align-items: center; margin: 2px 0 4px; }
-#layer-panel .names-row > label.inline { flex: 1 1 auto; margin: 0; }
-#layer-panel .names-row > .info-popover { flex: 1 0 100%; }
 #layer-panel .layer-controls { padding-left: calc(var(--box) + var(--box-gap)); }
 #layer-panel .legend, #layer-panel .info-popover { margin-left: calc(var(--box) + var(--box-gap)); }
 #layer-panel .panel-body { padding: 2px 16px 16px; }

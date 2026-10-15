@@ -52,7 +52,7 @@ describe("Mars name labels", () => {
     expect(el.textContent).not.toMatch(/km²|dune area/i);
     expect([...el.querySelectorAll("a")].map((a) => a.getAttribute("href"))).toEqual(["https://planetarynames.wr.usgs.gov/", "https://planetarynames.wr.usgs.gov/Feature/2071"]);
   });
-  it("'Show names' in the Dunes group, off by default", () => {
+  it("'Names' row in the Dune Fields group, off by default", () => {
     const reg = loadRegistry().registry;
     document.body.innerHTML = '<aside id="layer-panel"></aside>';
     const store = new Store(initialAppState(reg, {}, reg.defaultDataset ?? "fv3-beta1"));
@@ -61,8 +61,9 @@ describe("Mars name labels", () => {
     expect(cb).not.toBeNull();
     expect(cb.checked).toBe(false);
     const group = cb.closest("details.layer-group")!;
-    expect(group.querySelector("summary")!.textContent).toBe("Dunes");
-    expect(cb.closest("label")!.textContent).toMatch(/^Show names/);
+    expect(group.querySelector("summary")!.textContent).toBe("Dune Fields");
+    expect(document.querySelector('label[for="show-names"]')!.textContent).toMatch(/^Names/);
+    expect(group.querySelector('li[data-layer="dunes"] .layer-row label')!.textContent).toBe("Mask");
     cb.checked = true; cb.dispatchEvent(new Event("change"));
     expect(store.state.names).toBe(true);
     store.set({ names: false });
@@ -75,7 +76,7 @@ describe("Mars name labels", () => {
     expect(LIST.credit).toMatch(/^Feature names: Gazetteer of Planetary Nomenclature/);
   });
   it("help: one sentence in Layers; no new tour step", () => {
-    expect(HELP_SECTIONS.find((s) => s.id === "layers")!.body).toMatch(/Show names, in the Dunes group, labels named dune fields and features on the map/);
+    expect(HELP_SECTIONS.find((s) => s.id === "layers")!.body).toMatch(/Names, in the Dune Fields group, labels named dune fields and features on the map/);
     expect(TOUR_STEPS.map((s) => s.id)).not.toContain("names");
     expect(TOUR_STEPS).toHaveLength(9);   // unchanged by the names
   });

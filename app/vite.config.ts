@@ -1,7 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { configDefaults, defineConfig } from "vitest/config";
-import { bodyHtml } from "./scripts/body-html";
+import { bodyHtml, webAnalytics } from "./scripts/body-html";
 import { HTML as EARTH_HTML } from "./src/bodies/earth/html";
 import { HTML as MARS_HTML } from "./src/bodies/mars/html";
 
@@ -15,7 +15,7 @@ const BODY_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "src
 // Served from the root of map.geomorphlab.org (custom domain on GitHub Pages).
 export default defineConfig({
   base: MARS ? (process.env.VITE_BASE || "/") : "/",
-  plugins: [bodyHtml(MARS ? MARS_HTML : EARTH_HTML)],
+  plugins: [bodyHtml(MARS ? MARS_HTML : EARTH_HTML), webAnalytics()],
   resolve: { alias: [{ find: /^@body\//, replacement: `${BODY_DIR}/` }] },
   server: {
     port: 5173,

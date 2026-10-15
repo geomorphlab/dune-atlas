@@ -108,13 +108,13 @@ basemaps:
     tiles: ["https://cartocdn-gusc.global.ssl.fastly.net/opmbuilder/api/v1/map/named/opm-mars-basemap-v0-2/all/{z}/{x}/{y}.png"]
     tileSize: 256
     maxzoom: 9
-    attribution: '<a href="https://www.openplanetary.org/opm" target="_blank" rel="noopener">OpenPlanetaryMap</a> / <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>; data NASA/JPL/GSFC (MOLA), NASA/JPL/ASU (THEMIS), USGS'
+    attribution: '<a href="https://openplanetarymap.org/basemaps/mars/opm-mars-basemap-v0-2/" target="_blank" rel="noopener">OpenPlanetaryMap</a> / <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>; data NASA/JPL/GSFC (MOLA), NASA/JPL/ASU (THEMIS), USGS'
     info:
       description: "OpenPlanetaryMap basemap of Mars: shaded relief and colour with feature names."
       source: "OpenPlanetaryMap / CARTO; data NASA/JPL/GSFC (MOLA), NASA/JPL/ASU (THEMIS), USGS"
       resolution: "About 160 m per pixel at the equator at the closest zoom"
       licence: "OpenPlanetaryMap terms (see link); NASA and USGS data in the public domain"
-      url: "https://www.openplanetary.org/opm"
+      url: "https://openplanetarymap.org/basemaps/mars/opm-mars-basemap-v0-2/"
   # Esri OnMars imagery services (geographic tiling, reprojected to Web Mercator in the browser by the
   # esri-mars:// protocol, src/mars/map/esri.ts); maxzoom = deepest service level + 1. Attributions follow
   # each ArcGIS item page's licence field (Esri credit + data credit).
@@ -182,7 +182,7 @@ basemaps:
 groups:
   # ids match the generated fragments (as Earth) so they update these in place
   - id: dunes
-    title: Dunes
+    title: Dune Fields
   - id: orientation
     title: Bedform orientation
     description: Compass bearings of the direction of dune migration / elongation (toward).
@@ -209,7 +209,8 @@ layers:
   # registry/mars/generated/qsat_fields.yaml.
   # -------------------------------------------------------------------------------------------
   - id: dunes
-    title: Dune fields
+    title: Dune-field mask
+    shortTitle: Mask
     group: dunes
     type: pmtiles-vector
     source: dune-atlas/mars/v1/dunes/dunes-r2.pmtiles

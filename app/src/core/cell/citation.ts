@@ -90,7 +90,8 @@ function entryKeys(s: CitationSource): string[] {
 
 const esc = (t: string) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const entryAnchor = (e: CitationEntry) => (e.doi ? `<a href="https://doi.org/${e.doi}" target="_blank" rel="noopener">doi:${e.doi}</a>` : e.url ? `<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.url.replace(/^https?:\/\//, ""))}</a>` : "");
-/** Grouped HTML list (panels): one item per source with its Paper / Data entries and notice. */
+/** Grouped HTML list (panels): one item per source with its Paper / Data entries and notice. The reference
+ *  text and its link are kept as written by page translators (translate="no"); the labels are translated. */
 export function citationHtml(sources: CitationSource[] = citationSources()): string {
-  return `<ul class="cite-list">${sources.map((s) => `<li><strong>${esc(s.title)}</strong><ul>${s.entries.map((e) => `<li>${esc(e.label)}: ${esc(e.text)} ${entryAnchor(e)}</li>`).join("")}</ul>${s.notice ? `<p class="help">${richHtml(s.notice)}</p>` : ""}</li>`).join("")}</ul>`;
+  return `<ul class="cite-list">${sources.map((s) => `<li><strong>${esc(s.title)}</strong><ul>${s.entries.map((e) => `<li>${esc(e.label)}: <span translate="no" class="notranslate">${esc(e.text)} ${entryAnchor(e)}</span></li>`).join("")}</ul>${s.notice ? `<p class="help">${richHtml(s.notice)}</p>` : ""}</li>`).join("")}</ul>`;
 }

@@ -198,7 +198,7 @@ export function downloadBlob(name: string, blob: Blob) {
   a.href = url; a.download = name;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 2000);
-  announceDownload(name);
+  announceDownload(name, blob.size);
 }
 
 /** Map PNG export request (camera button): basemap on/off, transparent background, progress stages */

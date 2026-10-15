@@ -5,12 +5,13 @@
 # Mars 2000 sphere), lon, lat (area centroid), west/south/east/north (bbox; west > east across +-180).
 groups:
 - id: dunes
-  title: Dunes
+  title: Dune Fields
   description: Mapped Martian dune fields (USGS Mars Global Digital Dune Database and Fenton 2020, 3,514 polygons,
     1.05 million km²).
 layers:
 - id: dunes
-  title: Dune fields
+  title: Dune-field mask
+  shortTitle: Mask
   group: dunes
   type: pmtiles-vector
   source: dune-atlas/mars/v1/dunes/dunes-r2.pmtiles

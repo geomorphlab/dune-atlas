@@ -416,11 +416,11 @@ def registry_fragment(summary: dict) -> dict:
     n = summary["n_features"]
     area = summary["total_area_km2"]
     return {
-        "groups": [{"id": "dunes", "title": "Dunes",
+        "groups": [{"id": "dunes", "title": "Dune Fields",
                     "description": (f"Mapped Martian dune fields (USGS Mars Global Digital Dune Database and Fenton "
                                     f"2020, {n:,} polygons, {area / 1e6:.2f} million km²).")}],
         "layers": [{
-            "id": "dunes", "title": "Dune fields", "group": "dunes", "type": "pmtiles-vector",
+            "id": "dunes", "title": "Dune-field mask", "shortTitle": "Mask", "group": "dunes", "type": "pmtiles-vector",
             "source": DUNES_KEY, "sourceLayer": "dunes",
             "visible": True, "opacity": 1, "queryable": True, "minzoom": 0, "maxzoom": 24,
             "description": (f"Mapped aeolian dune fields of Mars: the USGS Mars Global Digital Dune Database (MGD3; "

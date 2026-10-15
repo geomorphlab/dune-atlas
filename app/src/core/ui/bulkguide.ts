@@ -8,6 +8,7 @@ import { CONFIG } from "../config";
 import { datasetInfo } from "../cell/datasetinfo";
 import { fieldsLicence } from "../cell/citation";
 import { escapeHtml } from "../util/format";
+import { countCopy } from "../usage";
 import { APP_HOOKS } from "@body/app";
 import { PROFILE } from "@body/profile";
 
@@ -84,6 +85,6 @@ export function wireBulkGuide(root: HTMLElement) {
     const b = (e.target as Element | null)?.closest?.("button.copy-code[data-copy]") as HTMLButtonElement | null;
     if (!b) return;
     const code = root.ownerDocument.getElementById(b.dataset.copy!)?.textContent ?? "";
-    void navigator.clipboard?.writeText(code).then(() => { b.textContent = BULK_TEXT.copied; setTimeout(() => { b.textContent = BULK_TEXT.copy; }, 1500); }, () => undefined);
+    void navigator.clipboard?.writeText(code).then(() => { countCopy("copy-code"); b.textContent = BULK_TEXT.copied; setTimeout(() => { b.textContent = BULK_TEXT.copy; }, 1500); }, () => undefined);
   });
 }

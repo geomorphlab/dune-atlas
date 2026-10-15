@@ -83,7 +83,7 @@ describe("safe links in registry text", () => {
     expect(h).not.toContain("<b>");
     expect(h).not.toMatch(/href="javascript/);
     expect(h).toContain('<a href="https://ok.org/p?a=1&amp;b=2" target="_blank" rel="noopener noreferrer">ok</a>');
-    expect(h).toContain('<a href="https://bare.org/path" target="_blank" rel="noopener noreferrer">bare.org/path</a>.');
+    expect(h).toContain('<a href="https://bare.org/path" target="_blank" rel="noopener noreferrer"><span translate="no" class="notranslate">bare.org/path</span></a>.');
     expect(richHtml('[a"><img src=x onerror=1>](https://x.org/)')).not.toContain("<img");
     expect(richHtml('x https://x.org/"><script>')).not.toContain("<script");
     expect(richPlain("see [RAPP](https://map.geo-rapp.org/).")).toBe("see RAPP (https://map.geo-rapp.org/).");

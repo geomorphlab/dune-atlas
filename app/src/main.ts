@@ -18,6 +18,7 @@ import { CellPanel, readPlotChoice, defaultFieldLabel, type FieldLabel } from ".
 import { cellFeature, cellFromIndex, snapToCell, type Grid } from "./core/cell/snap";
 import { APP_HOOKS as HOOKS, type BodyCellStore } from "@body/app";
 import { centreOnCell } from "./core/map/centre";
+import { NoTranslateAttribution } from "./core/map/attribution";
 import { terseQuantity } from "./core/ui/terse";
 import { mathOnly } from "./core/util/math";
 import { shareFromHash, shareUrl, type ShareState } from "./core/share/shortlink";
@@ -121,7 +122,7 @@ if (!init.embed) map.addControl(new maplibregl.FullscreenControl(), "top-right")
 map.addControl(HOOKS.scaleControl(), "bottom-left");
 map.addControl(new CoordsControl(), "bottom-left"); // cursor lat, lon, beside the scale bar
 // attribution: follows the selected dataset
-const attributionFor = (ds: string) => new maplibregl.AttributionControl({
+const attributionFor = (ds: string) => new NoTranslateAttribution({
   compact: true,
   customAttribution: HOOKS.attribution(ds),
 });
@@ -299,7 +300,7 @@ const tools = new Tools({ startTour: () => tourStart.fromHelp(), shareLink: shar
   region: { lonRange: PROFILE.search.lonRange, context: regionContext, draw: () => boxDrawer.draw(), show: (b) => boxDrawer.show(b), run: runRegion } });
 map.addControl({ onAdd: () => tools.el, onRemove: () => tools.el.remove() }, "top-right");
 const autostart = shouldShowTour({ embed: init.embed, tourParam: !!url.tour, seen: tourSeen() });
-// "Start tour" bubble by the Help button; the automatic first-visit start also has a time-out
+// "Help and Tour" bubble by the Help button; the automatic first-visit start also has a time-out
 // fallback in case the map never reports idle
 const tourStart = wireTourBubble(tour, { autostart });
 if (autostart) autostartTour(map, () => { if (!tour.active) tour.start(); });
