@@ -2,6 +2,8 @@
 // PNG at 1x / 2x without panels, controls or attribution, optionally without the basemap
 // (transparent background), with the information strip BELOW the map. The strip content and the
 // file name are pure (tested); capture and compositing run in the browser.
+import { trcf, trNum } from "../../i18n";
+import { layerTitleText } from "../../i18n/keys";
 import type { Map as MlMap } from "maplibre-gl";
 import type { LayerDef, Registry } from "../registry/types";
 import type { AppState } from "../store";
@@ -67,7 +69,7 @@ function colorbarFor(l: LayerDef, cfg: AppState["layers"][string]["cfg"], ut: nu
   const ticks = legendTicks(l, cfg).map((v) => ({ pos: tickPosition(l, v, cfg), label: deg ? `${v}°` : tickLabel(v) }));
   // only what the bar does not show: units and the threshold (the ticks convey scale and limits)
   const detail = [exportUnits(l.units), l.thresholdAware ? `at ${utTex(ut)}` : ""].filter(Boolean).join(" · ");
-  return { kind: "colorbar", title: exportTitleTex(l), detail, colors: e.colors, ticks };
+  return { kind: "colorbar", title: exportTitleTex(trTitle(l)), detail: trNum(detail), colors: e.colors, ticks };
 }
 
 /** strip line while Dunes only is on and a wind-derived layer is shown */
@@ -88,24 +90,24 @@ export function mapStripItems(c: MapStripContext): StripItem[] {
     if (l.type === "zarr-field") {
       const e = effectiveDisplay(l, cfg);
       if (e.mode === "colormap") keys.push(colorbarFor(l, cfg, ut));
-      else sw.push({ color: e.vecColor, shape: e.mode === "arrows" && !isAxis(l) ? "arrow" : "line", label: `${exportTitleTex(l)} (${e.mode}, ${isAxis(l) ? "orientation axis" : "direction of transport"})${l.thresholdAware ? ` at ${utTex(ut)}` : ""}` });
+      else sw.push({ color: e.vecColor, shape: e.mode === "arrows" && !isAxis(l) ? "arrow" : "line", label: `${exportTitleTex(trTitle(l))} (${trNum(`${e.mode}, ${isAxis(l) ? "orientation axis" : "direction of transport"}`)})${l.thresholdAware ? ` ${trNum("at")} ${utTex(ut)}` : ""}` });
     } else {
       const v = vectorColors(l, cfg);
-      sw.push({ color: v.fill, shape: "box", label: v.invert ? `${exportTitleTex(l)}: ${PROFILE.invert.swatch}` : exportTitleTex(l) });
+      sw.push({ color: v.fill, shape: "box", label: v.invert ? `${exportTitleTex(trTitle(l))}: ${trNum(PROFILE.invert.swatch)}` : exportTitleTex(trTitle(l)) });
     }
   }
   if (sw.length) keys.push({ kind: "swatches", items: sw });
   // scale bar: at most 15 % of the image width; its length converted to strip units
   const sb0 = scaleBar(view, 0.15 * c.width);
   const sb = sb0 && { px: (sb0.px * STRIP_UNITS) / c.width, label: sb0.label };
-  keys.push({ kind: "mapkeys", bearing: view.bearing, northNote: view.proj === "globe" ? "north up at view centre" : undefined,
-    scale: sb, scaleNote: sb ? (view.proj === "globe" ? "at view centre" : `at ${fmtLat(view.lat)}`) : "Scale bar omitted: the scale varies strongly across this view" });
+  keys.push({ kind: "mapkeys", bearing: view.bearing, northNote: view.proj === "globe" ? trNum("north up at view centre") : undefined,
+    scale: sb, scaleNote: sb ? (view.proj === "globe" ? trNum("at view centre") : `${trNum("at")} ${fmtLat(view.lat)}`) : trNum("Scale bar omitted: the scale varies strongly across this view") });
   const text: StripItem[] = [
-    { kind: "heading", text: PROFILE.exports.mapHeading },
-    { kind: "text", text: `${PROJECTION_TEXT[view.proj]} · centre ${fmtLat(view.lat)}, ${fmtLon(view.lon)} · zoom ${view.zoom.toFixed(1)} · wind dataset ${ds.name} ${ds.resolution}, ${ds.period}${anyThr ? ` · ${PROFILE.control.exportName} ${utTex(ut)}` : ""}` },
+    { kind: "heading", text: trNum(PROFILE.exports.mapHeading) },
+    { kind: "text", text: `${trNum(PROJECTION_TEXT[view.proj])} · ${trNum("centre")} ${fmtLat(view.lat)}, ${fmtLon(view.lon)} · ${trNum("zoom")} ${view.zoom.toFixed(1)} · ${trNum("wind dataset")} ${ds.name} ${ds.resolution}, ${ds.period}${anyThr ? ` · ${trNum(PROFILE.control.exportName)} ${utTex(ut)}` : ""}` },
   ];
   // the Dunes only toggle changes what the wind-derived layers show: say so on the image
-  if (state.dunesOnly && visible.some((l) => isWindDerived(l))) text.push({ kind: "text", text: DUNES_ONLY_STRIP });
+  if (state.dunesOnly && visible.some((l) => isWindDerived(l))) text.push({ kind: "text", text: trNum(DUNES_ONLY_STRIP) });
   // sources: the paper, the wind dataset with its Copernicus notice, other external sources shown
   text.push({ kind: "text", text: MAP_DUNE_CREDIT });
   text.push({ kind: "text", text: windSourceText(state.dataset) });
@@ -114,7 +116,7 @@ export function mapStripItems(c: MapStripContext): StripItem[] {
   const bm = reg.basemaps.find((b) => b.id === state.basemap);
   if (c.includeBasemap && bm) text.push({ kind: "text", text: `Basemap: ${bm.title}${bm.attribution ? `, ${plain(bm.attribution.replace(/<[^>]+>/g, ""))}` : ""}.` });
   text.push({ kind: "text", text: `View: ${c.shareLink}`, muted: true });
-  text.push({ kind: "text", text: `Exported ${isoDate(c.date)} from ${PROFILE.exports.mapExportedFrom}.`, muted: true });
+  text.push({ kind: "text", text: trcf("Exported {date} from {site}.", { date: isoDate(c.date), site: PROFILE.exports.mapExportedFrom }, "Exported images"), muted: true });
   return [...keys, ...text];
 }
 
@@ -209,6 +211,8 @@ export const EXPORT_STAGES = {
   strip: "Adding colour bars, keys and sources…",
   encode: "Encoding the PNG…",
 } as const;
+/** a layer with its title in the current language (export labels) */
+const trTitle = (l: LayerDef) => ({ ...l, titleTex: layerTitleText(l) });
 /** Map export (map on top, strip below across the full width):
  *  capture, strip, white or transparent background, download, with progress stages; returns the file name and size. */
 export async function exportMapPng(map: MlMap, d: {

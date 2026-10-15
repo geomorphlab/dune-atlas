@@ -24,7 +24,7 @@
     "preview:mars": "VITE_BODY=mars vite preview",
     "validate-registry:mars": "vite-node scripts/validate-registry-mars.ts",
     "test:all": "vitest run; e=$?; VITE_BODY=mars vitest run || exit 1; exit $e",
-    "i18n": "vite-node scripts/i18n.ts && VITE_BODY=mars vite-node scripts/i18n.ts"
+    "i18n": "I18N_COLLECT=1 vitest run tests/i18ncollect.test.ts && I18N_COLLECT=1 VITE_BODY=mars vitest run tests/mars/i18ncollect.test.ts && vite-node scripts/i18n.ts && VITE_BODY=mars vite-node scripts/i18n.ts"
   },
   "dependencies": {
     "@carbonplan/zarr-layer": "0.4.3",

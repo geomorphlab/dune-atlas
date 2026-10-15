@@ -1298,5 +1298,1769 @@
  "cell.petalsFrom": {
   "text": "depuis",
   "en": "95cd8075"
+ },
+ "c.cbf0821a": {
+  "text": "À propos de {title}",
+  "en": "cbf0821a"
+ },
+ "c.e7dc4699": {
+  "text": "Monter {title}",
+  "en": "e7dc4699"
+ },
+ "c.ecdb15e0": {
+  "text": "Descendre {title}",
+  "en": "ecdb15e0"
+ },
+ "c.2ff214e6": {
+  "text": "Retirer {title} de la carte",
+  "en": "2ff214e6"
+ },
+ "c.33ff2167": {
+  "text": "Opacité de {title}",
+  "en": "33ff2167"
+ },
+ "c.a2de8b84": {
+  "text": "Afficher {title}",
+  "en": "a2de8b84"
+ },
+ "c.32a4672f": {
+  "text": "Couleur de remplissage de {title}",
+  "en": "32a4672f"
+ },
+ "c.9e5e6896": {
+  "text": "Noms des champs de dunes",
+  "en": "9e5e6896"
+ },
+ "c.ce3f61ab": {
+  "text": "Afficher {title} sous forme de",
+  "en": "ce3f61ab"
+ },
+ "c.1b597f46": {
+  "text": "Couleur des flèches / lignes de courant pour {title}",
+  "en": "1b597f46"
+ },
+ "c.7e0bca77": {
+  "text": "Espacement des lignes pour {title}, du plus fin au plus grossier",
+  "en": "7e0bca77"
+ },
+ "c.cf77fd20": {
+  "text": "Palette de couleurs pour {title}",
+  "en": "cf77fd20"
+ },
+ "c.30453a2a": {
+  "text": "Inverser la palette de couleurs pour {title}",
+  "en": "30453a2a"
+ },
+ "c.149cfa70": {
+  "text": "Minimum de l’échelle de couleurs pour {title}",
+  "en": "149cfa70"
+ },
+ "c.8b6b1072": {
+  "text": "Maximum de l’échelle de couleurs pour {title}",
+  "en": "8b6b1072"
+ },
+ "c.8c096bed": {
+  "text": "Échelle de couleurs logarithmique pour {title}",
+  "en": "8c096bed"
+ },
+ "c.e85083b1": {
+  "text": "ERA5-Land ⟦#0⟧°, ⟦#1⟧–⟦#2⟧ ; cellules terrestres : fraction du masque terre–mer > ⟦#3⟧",
+  "en": "e85083b1"
+ },
+ "c.c66b4f99": {
+  "text": "N’afficher les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) que dans les cellules comportant des dunes ; les autres calques et le panneau de la cellule restent inchangés.",
+  "en": "c66b4f99"
+ },
+ "c.e801d9a2": {
+  "text": "Rétablir la valeur par défaut de ⟦#0⟧ m/s",
+  "en": "e801d9a2"
+ },
+ "c.72156bc9": {
+  "text": "par défaut ⟦#0⟧ m/s",
+  "en": "72156bc9"
+ },
+ "c.95919b83": {
+  "text": "S’applique aux calques de la carte et au panneau de la cellule.",
+  "en": "95919b83"
+ },
+ "c.bf84b28e": {
+  "text": "La vitesse de frottement ⟦0⟧ au-delà de laquelle le vent met le sable en mouvement. Tous les calques de la carte qui dépendent du seuil (leur ⓘ l’indique) ainsi que le panneau de la cellule utilisent la valeur définie ici.",
+  "en": "bf84b28e"
+ },
+ "c.037dc143": {
+  "text": "La valeur par défaut, ⟦#0⟧ m/s, est celle utilisée pour l’analyse globale de⟦0⟧: une approximation globale courante, utilisée à la place de valeurs locales plus précises, et non calibrée pour un site particulier. Des valeurs comprises entre ⟦#1⟧ et ⟦#2⟧ m/s sont typiques ; pour un sable sec et meuble, le seuil dépend principalement de la taille et de la masse volumique des grains.",
+  "en": "037dc143"
+ },
+ "c.5b6d3e3c": {
+  "text": "Avec la longueur de rugosité de ⟦#0⟧ mm utilisée ici, ⟦#1⟧ m/s correspond à un vent à ⟦#2⟧ m de ⟦#3⟧ m/s (⟦#4⟧ nœuds) ; le seuil de ⟦#5⟧ nœuds de⟦0⟧correspond à environ ⟦#6⟧ m/s.",
+  "en": "5b6d3e3c"
+ },
+ "c.842a7a09": {
+  "text": "⟦#0⟧ valeurs de ⟦#1⟧ m/s à ⟦#2⟧ m/s ; valeur par défaut ⟦#3⟧ m/s (le repère sous le curseur). La version compacte située en haut du panneau de la cellule règle la même valeur.",
+  "en": "842a7a09"
+ },
+ "c.e764d433": {
+  "text": "Calques actifs, ordre d’affichage (le calque du haut est dessiné au-dessus)",
+  "en": "e764d433"
+ },
+ "c.fce503d3": {
+  "text": "Faire glisser pour réorganiser",
+  "en": "fce503d3"
+ },
+ "c.3f0212fb": {
+  "text": "Remplissage ⟦0⟧",
+  "en": "3f0212fb"
+ },
+ "c.82a20f6e": {
+  "text": "Inverser : colorer les terres SANS dunes cartographiées plutôt que les dunes. Les latitudes au-delà de ±⟦#0⟧° (intérieur de l’Antarctique) ne sont pas colorées.",
+  "en": "82a20f6e"
+ },
+ "c.c158f449": {
+  "text": "⟦0⟧ inverser (terres sans dunes)",
+  "en": "c158f449"
+ },
+ "c.4422e95b": {
+  "text": "Inverser : colorer les terres sans dunes",
+  "en": "4422e95b"
+ },
+ "c.785bb05c": {
+  "text": "Les cellules de dunes à ⟦#0⟧° de la carte des dunes, regroupées en ⟦#1⟧ champs de dunes de cellules ⟦#2⟧-connexes ; les contours des polygones suivent exactement les limites des cellules de la grille. La superficie est la somme des aires sphériques des cellules.",
+  "en": "785bb05c"
+ },
+ "c.2be0d726": {
+  "text": "Les noms des champs de dunes affichés sont issus de travaux et de données de recherche académique déjà publiés, de connaissances régionales et de recherches sur Internet. Les conventions de dénomination (langue, juridiction, orthographe, regroupement, etc.) ont été choisies par souci de clarté, mais peuvent être erronées ou offenser certains peuples. Veuillez contacter Andrew Gunn à l’adresse <a href=\"mailto:a.gunn@monash.edu\">a.gunn@monash.edu</a> si vous avez des suggestions de modifications, de suppressions ou d’ajouts.",
+  "en": "2be0d726"
+ },
+ "c.1226fbb4": {
+  "text": "Citation",
+  "en": "1226fbb4"
+ },
+ "c.ec7be404": {
+  "text": "Affiche les noms des champs de dunes et des entités nommées sur la carte ; lorsque des noms se chevaucheraient, certains n’apparaissent qu’en zoomant. Cliquez sur un nom pour afficher ses détails.",
+  "en": "ec7be404"
+ },
+ "c.1e62d767": {
+  "text": "Afficher en ⟦0⟧",
+  "en": "1e62d767"
+ },
+ "c.c739a747": {
+  "text": "palette de couleurs",
+  "en": "c739a747"
+ },
+ "c.8b3f7f3a": {
+  "text": "Couleur de ligne ⟦0⟧",
+  "en": "8b3f7f3a"
+ },
+ "c.f9cf5751": {
+  "text": "Espacement entre les flèches / lignes de courant : à gauche plus fin (lignes plus denses), à droite plus grossier",
+  "en": "f9cf5751"
+ },
+ "c.bc8b4ab6": {
+  "text": "Espacement <span class=\"spacing-end\">Plus fin</span>⟦0⟧<span class=\"spacing-end\">Plus grossier</span>",
+  "en": "bc8b4ab6"
+ },
+ "c.02860b5d": {
+  "text": "Couleurs ⟦0⟧",
+  "en": "02860b5d"
+ },
+ "c.9fbef08a": {
+  "text": "⟦0⟧ inversées",
+  "en": "9fbef08a"
+ },
+ "c.a9812c14": {
+  "text": "min ⟦0⟧",
+  "en": "a9812c14"
+ },
+ "c.c728f056": {
+  "text": "max ⟦0⟧",
+  "en": "c728f056"
+ },
+ "c.650d33c0": {
+  "text": "réinitialiser",
+  "en": "650d33c0"
+ },
+ "c.f5ecdead": {
+  "text": "Échelle de couleurs de ⟦#0⟧ à ⟦#1⟧",
+  "en": "f5ecdead"
+ },
+ "c.8fd4b665": {
+  "text": "les valeurs hors de l’intervalle sont affichées avec les couleurs des extrémités",
+  "en": "8fd4b665"
+ },
+ "c.40b6e257": {
+  "text": "Direction de migration⟦0⟧des dunes dont les crêtes ont l’orientation du mode d’instabilité du lit⟦1⟧: perpendiculaire à⟦2⟧, vers le côté où se dirige le flux net de sable à travers la crête (⟦3⟧;⟦4⟧).",
+  "en": "40b6e257"
+ },
+ "c.6ed4163c": {
+  "text": "Unités",
+  "en": "6ed4163c"
+ },
+ "c.d7ff288f": {
+  "text": "° (azimut, compté dans le sens horaire depuis le nord, vers lequel se déplace le sable)",
+  "en": "d7ff288f"
+ },
+ "c.56c1f3e5": {
+  "text": "Données de vent",
+  "en": "56c1f3e5"
+ },
+ "c.9b74c01c": {
+  "text": "Curseur",
+  "en": "9b74c01c"
+ },
+ "c.fc8f6378": {
+  "text": "Mis à jour avec la commande ⟦0⟧.",
+  "en": "fc8f6378"
+ },
+ "c.cb6596aa": {
+  "text": "Citer les champs de la carte (dans À propos)",
+  "en": "cb6596aa"
+ },
+ "c.27cf9488": {
+  "text": "Direction d’allongement⟦0⟧: direction dans laquelle une dune croît en longueur sans migrer, là où le flux net de sable à travers sa crête est nul et le flux net le long de celle-ci est positif (⟦1⟧). Elle s’applique aux dunes situées sur des lits où le sable est limité, qui croissent généralement à partir d’une source de sable fixe. Lorsqu’un régime de vents admet plusieurs directions de ce type, l’atlas affiche la plus stable.",
+  "en": "27cf9488"
+ },
+ "c.e2c0f300": {
+  "text": "Orientation de la crête⟦0⟧du mode d’instabilité du lit : axe (⟦#0⟧–⟦#1⟧°) des crêtes qui reçoivent le plus fort transport brut de sable à travers elles, en tenant compte de l’accélération du vent au-dessus de la crête (⟦1⟧;⟦2⟧). C’est aussi l’orientation de crête attendue pour les dunes qui migrent, comme les barkhanes. Les dunes ayant cette orientation migrent perpendiculairement à celle-ci, dans la direction⟦3⟧. En tant qu’axe, elle n’a pas de sens d’azimut : par exemple, ⟦#2⟧° et ⟦#3⟧° désignent la même droite.",
+  "en": "e2c0f300"
+ },
+ "c.96a1a48e": {
+  "text": "° (axe de la crête, ⟦#0⟧–⟦#1⟧°)",
+  "en": "96a1a48e"
+ },
+ "c.bc48cc14": {
+  "text": "Direction⟦0⟧, le long des crêtes ayant l’orientation du mode d’instabilité du lit⟦1⟧, dans laquelle pointe le flux net de sable le long de la crête, exprimée en azimut. Lorsque les crêtes sont obliques par rapport au transport net, le sable se déplace le long de celles-ci aussi bien qu’à travers elles ;⟦2⟧indique dans quel sens il se déplace le long de la crête.",
+  "en": "bc48cc14"
+ },
+ "c.9887f73f": {
+  "text": "Échelle de couleurs (logarithmique) de ⟦#0⟧ à ⟦#1⟧",
+  "en": "9887f73f"
+ },
+ "c.e7135998": {
+  "text": "Les limites encadrent zéro : échelle logarithmique symétrique, linéaire au voisinage de zéro",
+  "en": "e7135998"
+ },
+ "c.69ce2e68": {
+  "text": "L’échelle logarithmique exige min > ⟦#0⟧, ou min < ⟦#1⟧ < max (logarithmique symétrique)",
+  "en": "69ce2e68"
+ },
+ "c.8dcaa52f": {
+  "text": "Rapport des taux de croissance en hauteur des dunes selon les orientations d’allongement et d’instabilité du lit,⟦0⟧, compris entre ⟦#0⟧ et ⟦#1⟧. Il permet d’évaluer si les dunes qui s’allongent à partir d’une source de sable sur un lit pauvre en sable sont stables : dans les simulations numériques et pour les dunes situées autour du massif du Tibesti, des dunes linéaires en allongement se forment lorsque le rapport est supérieur à environ ⟦#2⟧, et des trains de barkhanes se forment en dessous (⟦1⟧;⟦2⟧). Il ne tient pas compte de la mobilité du lit ni des autres conditions aux limites.",
+  "en": "8dcaa52f"
+ },
+ "c.a776804c": {
+  "text": "Rapport du flux de sable net le long de la crête au flux net à travers la crête pour les crêtes dans l’orientation du mode d’instabilité du lit,⟦0⟧. Le transport le long de la crête tend à maintenir les crêtes rectilignes, tandis que le transport à travers la crête, qui entraîne la migration, tend à les rendre sinueuses (⟦1⟧) ; des valeurs plus élevées suggèrent donc des dunes à crête longue plus rectilignes sur des lits couverts de sable. Pour les dunes migrant sur des lits pauvres en sable, le rapport mesure l’asymétrie des flux de sable qui rend asymétriques des dunes telles que les barkhanes (⟦2⟧). Dans les exemples sur lit couvert de sable de⟦3⟧il vaut environ ⟦#0⟧ pour les dunes transverses, ⟦#1⟧ pour les dunes obliques et ⟦#2⟧ pour les dunes longitudinales. Le rapport tend vers l’infini lorsque son dénominateur (un flux net) tend vers zéro (valeurs affichées écrêtées à ±⟦#3⟧).",
+  "en": "a776804c"
+ },
+ "c.b4eb3711": {
+  "text": "Rapport du flux de sable brut à travers la crête au flux net à travers la crête pour les crêtes dans l’orientation du mode d’instabilité du lit,⟦0⟧, jamais inférieur à ⟦#0⟧ ; il traduit l’équilibre entre croissance en hauteur et migration. Des valeurs proches de ⟦#1⟧ signifient que le transport à travers la crête s’effectue dans un seul sens et que les dunes migrent principalement ; des valeurs élevées signifient qu’il s’inverse, faisant croître les dunes en hauteur avec une faible migration nette, ce qui peut aussi favoriser des crêtes plus rectilignes (⟦1⟧). Dans les exemples sur lit couvert de sable de⟦2⟧il vaut environ ⟦#2⟧ pour les dunes transverses, ⟦#3⟧ pour les dunes obliques et ⟦#4⟧ pour les dunes longitudinales. Le rapport tend vers l’infini lorsque son dénominateur (un flux net) tend vers zéro (valeurs affichées écrêtées à ±⟦#5⟧).",
+  "en": "b4eb3711"
+ },
+ "c.e3ecff1e": {
+  "text": "Rapport du flux de sable brut à travers la crête au flux net le long de la crête pour les dunes dans l’orientation du mode d’allongement,⟦0⟧, soit l’équilibre entre croissance en hauteur et allongement. Pour les dunes qui s’allongent sans migrer, c’est le paramètre censé distinguer leurs formes. Comparé à⟦1⟧, il indique si l’allongement ou la migration est le plus susceptible de déterminer la forme et l’orientation des dunes sur un lit pauvre en sable : la dynamique présentant le rapport le plus élevé favorise davantage la croissance en hauteur et devrait l’emporter (⟦2⟧). Le rapport tend vers l’infini lorsque son dénominateur (un flux net) tend vers zéro (valeurs affichées écrêtées à ±⟦#0⟧).",
+  "en": "e3ecff1e"
+ },
+ "c.e5c17d00": {
+  "text": "Fraction du temps pendant laquelle la vitesse de frottement sur lit plat est au-dessus du seuil⟦0⟧.",
+  "en": "e5c17d00"
+ },
+ "c.e68c470c": {
+  "text": "fraction (⟦#0⟧–⟦#1⟧)",
+  "en": "e68c470c"
+ },
+ "c.d66d70dc": {
+  "text": "Vitesse de frottement moyenne sur lit plat au-dessus du seuil, normalisée par le seuil⟦0⟧.",
+  "en": "d66d70dc"
+ },
+ "c.7aed9ffd": {
+  "text": "Fraction du flux de crête en mode d’instabilité du lit (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête.",
+  "en": "7aed9ffd"
+ },
+ "c.0d2dc35f": {
+  "text": "Fraction du flux de crête en mode d’allongement (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête.",
+  "en": "0d2dc35f"
+ },
+ "c.4c826ecf": {
+  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des classes de vitesse et de direction : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par an sur un lit plat entièrement recouvert de sable meuble (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement, avec le seuil fixé par le curseur. Les deux ne peuvent être convertis l’un en l’autre sans la distribution des vitesses du vent, et les classes d’énergie de Fryberger (moins de ⟦#2⟧, ⟦#3⟧–⟦#4⟧ et plus de ⟦#5⟧ unités vectorielles) ne s’appliquent pas à ces valeurs.",
+  "en": "4c826ecf"
+ },
+ "c.40039fa4": {
+  "text": "Norme du vecteur flux sur lit plat moyenné dans le temps,⟦0⟧: le volume net de sable compacté par mètre de largeur et par an, une fois compensés les transports de sens opposés. Mêmes unités que⟦1⟧;⟦2⟧≤⟦3⟧, l’égalité n’étant atteinte que lorsque tout le transport s’effectue dans une seule direction.",
+  "en": "40039fa4"
+ },
+ "c.4837126c": {
+  "text": "Direction du vecteur flux sur lit plat moyenné dans le temps,⟦0⟧, c’est-à-dire la direction vers laquelle se déplace le sable, exprimée en azimut (dans le sens horaire depuis le nord). Mal définie là où⟦1⟧est faible, car les transports de sens opposés se compensent presque entièrement.",
+  "en": "4837126c"
+ },
+ "c.e214427e": {
+  "text": "Variabilité directionnelle du flux de sable : rapport du potentiel de dérive résultant au potentiel de dérive total,⟦0⟧(⟦#0⟧ = multidirectionnel, ⟦#1⟧ = unidirectionnel). Non défini là où il n’y a pas de flux de sable (⟦1⟧). Classes de⟦2⟧: moins de ⟦#2⟧, faible (vents complexes ou bimodaux obtus) ; ⟦#3⟧–⟦#4⟧, intermédiaire (vents bimodaux obtus à aigus) ; plus de ⟦#5⟧, élevé (vents unimodaux). Seul le transport au-dessus du seuil est pris en compte ici, et la loi de flux diffère de celle de Fryberger : utilisez donc ces classes à titre indicatif.",
+  "en": "e214427e"
+ },
+ "c.d590db9a": {
+  "text": "Divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦0⟧, direction⟦1⟧) sur la sphère, d’après⟦2⟧, Méthodes⟦3⟧:⟦4⟧avec⟦5⟧,⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence du flux) impliquent un dépôt et les valeurs positives (divergence du flux) une érosion. Ces valeurs supposent un flux saturé et un apport illimité de sable meuble ; sur les surfaces rocheuses, encroûtées ou végétalisées, l’érosion réelle est donc limitée par le sable disponible. Pas de données sur les côtes (une cellule voisine ne dispose pas de données de vent) ni sur les rangées à ±⟦#0⟧°.",
+  "en": "d590db9a"
+ },
+ "c.925905dc": {
+  "text": "Global Aridity Index v3.1 (⟦#0⟧–⟦#1⟧) : précipitations annuelles moyennes divisées par l’évapotranspiration de référence, grille native à ⟦#2⟧″ (~⟦#3⟧ km).⟦0⟧classes : &lt; ⟦#4⟧ hyperaride, ⟦#5⟧–⟦#6⟧ aride, ⟦#7⟧–⟦#8⟧ semi-aride, ⟦#9⟧–⟦#10⟧ subhumide sec, &gt; ⟦#11⟧ humide. Les valeurs de ⟦#12⟧ signifient⟦1⟧≥ ⟦#13⟧ (saturation de la source). L’océan, l’Antarctique (au sud de ⟦#14⟧° S) et les glaces polaires où⟦2⟧vaut zéro n’ont pas de données.",
+  "en": "925905dc"
+ },
+ "c.ab99d29d": {
+  "text": "non utilisé (identique pour tous les jeux de données de vent)",
+  "en": "ab99d29d"
+ },
+ "c.71f5da7c": {
+  "text": "Indépendant du seuil : non affecté par la commande ⟦0⟧.",
+  "en": "71f5da7c"
+ },
+ "c.61e2a3f8": {
+  "text": "Source",
+  "en": "61e2a3f8"
+ },
+ "c.f9f78e2c": {
+  "text": "⟦0⟧, version ⟦#0⟧ (⟦1⟧ ; Zomer &amp; Trabucco), indice d’aridité annuel ai_v31_yr, ⟦#1⟧-⟦#2⟧, ⟦#3⟧ secondes d’arc",
+  "en": "f9f78e2c"
+ },
+ "c.735cb604": {
+  "text": "Données⟦0⟧",
+  "en": "735cb604"
+ },
+ "c.58c031d4": {
+  "text": "Licence",
+  "en": "58c031d4"
+ },
+ "c.8e08e589": {
+  "text": "Lien",
+  "en": "8e08e589"
+ },
+ "c.7ec50eea": {
+  "text": "Modifications",
+  "en": "7ec50eea"
+ },
+ "c.ac8f9d91": {
+  "text": "Traitement pour l’atlas : entiers de la source (⟦0⟧x ⟦#0⟧^⟦#1⟧) convertis en décimal⟦1⟧ ; pixels océaniques (sans⟦2⟧données) et pixels où⟦3⟧= ⟦#2⟧ définis comme sans données ; maximum de la source ⟦#3⟧ conservé comme ⟦#4⟧ (⟦4⟧&gt;= ⟦#5⟧) ; les vues de carte dézoomées affichent les moyennes des pixels natifs valides ; valeurs arrondies à une précision relative de ⟦#6⟧.2e-⟦#7⟧.",
+  "en": "ac8f9d91"
+ },
+ "c.d92bedb9": {
+  "text": "Couvert végétal total moyen (végétation verte et sèche, arbres compris ; % du sol), ⟦#0⟧–⟦#1⟧, issu du⟦0⟧Fractional Cover v3.1 (⟦#2⟧ m, mensuel), moyenné sur les cellules de ⟦#3⟧° pour les mois disposant de données valides. Calibré sur des sites de terrain australiens ; sature sous les canopées fermées. Le couvert total inclut la végétation non photosynthétique (matériel végétal sec et mort) ainsi que la végétation verte ; il peut donc être important là où peu de végétation verte est visible ; à comparer avec l’indice d’aridité. Pas de données sur l’océan, l’Antarctique, les terres au nord de ⟦#4⟧° N et les cellules du méridien ⟦#5⟧°. <a href=\"https://map.geo-rapp.org/\" target=\"_blank\" rel=\"noopener noreferrer\">Explorer la série temporelle mensuelle complète sur⟦1⟧</a>.",
+  "en": "d92bedb9"
+ },
+ "c.e467a70d": {
+  "text": "Fractional cover -⟦0⟧,⟦1⟧algorithme, version ⟦#0⟧ (⟦2⟧;⟦3⟧collection ⟦#1⟧/⟦#2⟧, médoïde mensuel, ⟦#3⟧ m) : couvert végétal total (végétation photosynthétique + non photosynthétique), ⟦#4⟧–⟦#5⟧ ; produit de végétation de⟦4⟧Rangeland and Pasture Productivity (⟦5⟧), hébergé par⟦6⟧",
+  "en": "e467a70d"
+ },
+ "c.8e5d4620": {
+  "text": "Traitement pour l’atlas : tuiles mensuelles de ⟦#0⟧ m moyennées à ⟦#1⟧° et sur ⟦#2⟧–⟦#3⟧ (tot_cov valide ≤ ⟦#4⟧ % ; mois sans données valides ignorés) ; les vues de carte dézoomées affichent les moyennes des cellules de ⟦#5⟧° valides ; valeurs arrondies à une précision relative de ⟦#6⟧.2e-⟦#7⟧.",
+  "en": "8e5d4620"
+ },
+ "c.42e7477f": {
+  "text": "Fond de carte vectoriel sombre⟦0⟧(routes, lieux, eau et occupation du sol), conçu pour s’afficher sous les couleurs de l’atlas.",
+  "en": "42e7477f"
+ },
+ "c.5018e106": {
+  "text": "⟦0⟧, à partir des données⟦1⟧(schéma⟦2⟧), style sombre",
+  "en": "5018e106"
+ },
+ "c.aee818af": {
+  "text": "Résolution",
+  "en": "aee818af"
+ },
+ "c.c432f449": {
+  "text": "Carte vectorielle, nette à tous les niveaux de zoom (détail à l’échelle de la rue)",
+  "en": "c432f449"
+ },
+ "c.9f1c6cab": {
+  "text": "Données cartographiques © contributeurs⟦0⟧(⟦1⟧) ; ©⟦2⟧",
+  "en": "9f1c6cab"
+ },
+ "c.0fce76d6": {
+  "text": "Mosaïque d’images satellitaires et aériennes de la surface terrestre.",
+  "en": "0fce76d6"
+ },
+ "c.7a9c10bd": {
+  "text": "⟦0⟧(⟦1⟧,⟦2⟧,⟦3⟧et la⟦4⟧)",
+  "en": "7a9c10bd"
+ },
+ "c.243e42f5": {
+  "text": "⟦#0⟧ m à l’échelle mondiale, ⟦#1⟧ m ou plus fin dans de nombreuses régions",
+  "en": "243e42f5"
+ },
+ "c.5d6289ac": {
+  "text": "Service⟦0⟧régi par le⟦1⟧/ les conditions d’utilisation",
+  "en": "5d6289ac"
+ },
+ "c.e32b80e2": {
+  "text": "Relief ombré d’un modèle numérique d’altitude ouvert à l’échelle mondiale (⟦0⟧).",
+  "en": "e32b80e2"
+ },
+ "c.22335d7a": {
+  "text": "⟦0⟧données d’altitude ouvertes :⟦1⟧modèles d’altitude ouverts mondiaux et nationaux, lorsqu’ils sont disponibles",
+  "en": "22335d7a"
+ },
+ "c.a5298609": {
+  "text": "Environ ⟦#0⟧ m à l’échelle mondiale, plus fin dans certains pays",
+  "en": "a5298609"
+ },
+ "c.a9596935": {
+  "text": "Licence ouverte propre à chaque source (par exemple la licence⟦0⟧), répertoriée par⟦1⟧",
+  "en": "a9596935"
+ },
+ "c.d7137982": {
+  "text": "Carte topographique avec courbes de niveau et ombrage du relief.",
+  "en": "d7137982"
+ },
+ "c.45fc789b": {
+  "text": "⟦0⟧, à partir des données⟦1⟧et des données d’altitude⟦2⟧",
+  "en": "45fc789b"
+ },
+ "c.b47179e7": {
+  "text": "Environ ⟦#0⟧ m par pixel à l’équateur au niveau de zoom le plus rapproché",
+  "en": "b47179e7"
+ },
+ "c.816ba161": {
+  "text": "Données cartographiques © contributeurs de⟦0⟧(⟦1⟧) ; style de carte ©⟦2⟧(⟦3⟧)",
+  "en": "816ba161"
+ },
+ "c.84e91972": {
+  "text": "Fond de carte vectoriel clair des⟦0⟧routes, lieux, plans d’eau et de l’occupation du sol (style⟦1⟧).",
+  "en": "84e91972"
+ },
+ "c.6bc2c76c": {
+  "text": "⟦0⟧, à partir des données⟦1⟧(schéma⟦2⟧), style⟦3⟧",
+  "en": "6bc2c76c"
+ },
+ "c.dfaf4b2e": {
+  "text": "Pour voir l’imagerie sous les calques colorés, réduisez leur opacité dans Calques actifs.",
+  "en": "dfaf4b2e"
+ },
+ "c.76b65eed": {
+  "text": "Cette page a été créée avec l’aide de Claude⟦0⟧. J’ai vérifié les fonctionnalités et les données sous-jacentes, mais si vous remarquez des problèmes ou des erreurs, veuillez me contacter à <a href=\"mailto:a.gunn@monash.edu\">a.gunn@monash.edu</a>.",
+  "en": "76b65eed"
+ },
+ "c.a8714914": {
+  "text": "Cliquez sur n’importe quelle cellule terrestre pour afficher sa rose des vents sur la période couverte par le jeu de données de vent choisi avec le sélecteur Jeu de données de vent, la rose des flux de sable au seuil sélectionné, les modes d’orientation des dunes et l’ensemble des paramètres du régime de vent.",
+  "en": "a8714914"
+ },
+ "c.51f21a4b": {
+  "text": "Sources des données",
+  "en": "51f21a4b"
+ },
+ "c.edcb7fbe": {
+  "text": "<strong>Histogrammes de vent et champs de flux de sable (⟦0⟧⟦#0⟧°)</strong> :⟦1⟧⟦#1⟧–⟦#2⟧, vents horaires à ⟦#3⟧ m (⟦#4⟧°;⟦2⟧,⟦3⟧) et paramètres qsat de⟦4⟧, données supplémentaires (⟦5⟧,⟦6⟧). Les potentiels de dérive (⟦7⟧,⟦8⟧,⟦9⟧,⟦10⟧) et les flux de crête sont des moyennes sur la série horaire.",
+  "en": "edcb7fbe"
+ },
+ "c.706c74d2": {
+  "text": "<strong>Histogrammes de vent et champs de flux de sable (⟦0⟧⟦#0⟧°)</strong> :⟦1⟧⟦#1⟧–⟦#2⟧, vents horaires à ⟦#3⟧ m sur la grille à ⟦#4⟧° (⟦2⟧;⟦3⟧,⟦4⟧, consultés via la réplique⟦5⟧Australia) ; les histogrammes et les ⟦#5⟧ champs de flux de sable sont calculés pour l’atlas selon les méthodes décrites dans⟦6⟧. Les cellules dont la fraction du masque terre–mer⟦7⟧est supérieure à ⟦#6⟧ (présence de terre dans la cellule) comportent des données de vent ; une cellule de ⟦#7⟧° est comptée comme cellule de dunes lorsqu’elle recouvre une cellule de dunes cartographiée à ⟦#8⟧°.",
+  "en": "706c74d2"
+ },
+ "c.a7651e74": {
+  "text": "<strong>Champs de flux de sable</strong> : pour chaque heure, la vitesse de frottement⟦0⟧= κ U₁₀ / ln(z/z₀) est obtenue à partir de la vitesse du vent à ⟦#0⟧ m U₁₀ (profil logarithmique du vent ; κ = ⟦#1⟧, z = ⟦#2⟧ m, longueur de rugosité z₀ = ⟦#3⟧ mm), ainsi que le taux de transport saturé de⟦1⟧, q = C ρ<sub>f</sub>⟦2⟧(u*² − u*,th²) / (g ρ<sub>s</sub> φ) pour⟦3⟧&gt;⟦4⟧, avec C = ⟦#4⟧, masse volumique de l’air ρ<sub>f</sub> = ⟦#5⟧ kg/m³, masse volumique des grains ρ<sub>s</sub> = ⟦#6⟧ kg/m³, compacité φ = ⟦#7⟧ et g = ⟦#8⟧ m/s², au seuil sélectionné⟦5⟧, moyenné sur ⟦#9⟧–⟦#10⟧ (⟦6⟧, Méthodes⟦7⟧). Les flux sont des volumes de sable compacté (porosité incluse) par mètre de largeur et par année de ⟦#11⟧ jours (m²/yr). Les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes passées en revue dans⟦8⟧.",
+  "en": "a7651e74"
+ },
+ "c.38fc33d0": {
+  "text": "<strong>Carte des dunes</strong> :⟦0⟧issue des données⟦1⟧(⟦2⟧,⟦3⟧), vectorisée en champs de dunes.",
+  "en": "38fc33d0"
+ },
+ "c.2bc3ff20": {
+  "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦1⟧, direction⟦2⟧) sur la sphère, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) avec q =⟦3⟧, θ =⟦4⟧, latitude φ, longitude λ et R = ⟦#0⟧ km, calculée par différences centrées sur la grille du jeu de données de vent sélectionné (⟦#1⟧° ou ⟦#2⟧°), d’après⟦5⟧, Méthodes⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence) traduisent un dépôt et les valeurs positives une érosion, en mètres de niveau du lit par millier d’années. Ces valeurs supposent un flux saturé et un apport illimité de sable meuble.",
+  "en": "2bc3ff20"
+ },
+ "c.79930b39": {
+  "text": "<strong>Indice d’aridité</strong> : Global Aridity Index v3.1 (⟦0⟧; Zomer,⟦1⟧), ⟦#0⟧–⟦#1⟧, grille native à ⟦#2⟧″,⟦2⟧ ; les océans et l’Antarctique (au sud de ⟦#3⟧° S) n’ont pas de données, et les valeurs ≥ ⟦#4⟧ se situent au sommet de la plage de la source. Le panneau affiché au clic indique la moyenne sur la cellule du jeu de données de vent sélectionné.",
+  "en": "79930b39"
+ },
+ "c.d9d754b4": {
+  "text": "<strong>Couvert végétal</strong> :⟦0⟧Fractional Cover v3.1 (⟦1⟧;⟦2⟧), couvert végétal total (végétation photosynthétique + végétation non photosynthétique), moyenne des valeurs mensuelles à ⟦#0⟧ m de ⟦#1⟧–⟦#2⟧ sur la grille à ⟦#3⟧°,⟦3⟧© ⟦#4⟧–⟦#5⟧⟦4⟧, hébergé par⟦5⟧ ; le produit de végétation de⟦6⟧. <a href=\"https://map.geo-rapp.org/\" target=\"_blank\" rel=\"noopener noreferrer\">Explorer la série temporelle complète sur⟦7⟧</a>. Le panneau de clic affiche la moyenne de la cellule et le nombre de mois valides.",
+  "en": "d9d754b4"
+ },
+ "c.c117cfda": {
+  "text": "<strong>Noms des champs de dunes</strong> : les noms de champs de dunes affichés sont issus de travaux et de données académiques déjà publiés, de connaissances régionales et de recherches sur Internet. Les conventions de dénomination (langue, juridiction, orthographe, regroupement, etc.) ont été choisies par souci de clarté, mais peuvent être erronées ou offenser certains peuples. Veuillez contacter Andrew Gunn à <a href=\"mailto:a.gunn@monash.edu\">a.gunn@monash.edu</a> si vous avez des suggestions de modifications, de suppressions ou d’ajouts.",
+  "en": "c117cfda"
+ },
+ "c.f43b95cb": {
+  "text": "Terre et Mars : ce qui peut être comparé",
+  "en": "f43b95cb"
+ },
+ "c.e1abc281": {
+  "text": "Les deux atlas calculent les mêmes grandeurs selon les méthodes décrites dans⟦0⟧ : le flux de sable saturé moyenné dans le temps sur un lit plat entièrement recouvert de sable meuble (⟦1⟧), sa résultante (⟦2⟧,⟦3⟧,⟦4⟧), les flux de crête, les modes d’orientation des dunes et la divergence du flux. Tous deux expriment les flux en volumes de sable compacté (compacité ⟦#0⟧, espace poreux inclus) par mètre de largeur et par année terrestre de ⟦#1⟧ jours (m²/yr), et tous deux représentent les roses des vents selon la direction d’où souffle le vent et les roses des flux de sable selon la direction vers laquelle se déplace le sable. Ils diffèrent sur quatre points.",
+  "en": "e1abc281"
+ },
+ "c.8cfd1c5c": {
+  "text": "<strong>Contrôle</strong> : sur Terre, le curseur fixe une vitesse de frottement seuil⟦0⟧unique pour toutes les heures (valeur par défaut ⟦#0⟧ m/s) ; sur Mars, il fixe le diamètre médian des grains d (valeur par défaut ⟦#1⟧ µm), et le seuil est calculé pour chaque heure à partir de d ainsi que de la masse volumique et de la température de l’air à cette heure.",
+  "en": "8cfd1c5c"
+ },
+ "c.182e7ab0": {
+  "text": "<strong>Loi de transport et profil de vent</strong> : sur Terre, on utilise la loi de transport de⟦0⟧, avec⟦1⟧à partir du vent à ⟦#0⟧ m et une longueur de rugosité de ⟦#1⟧ mm ; sur Mars, on utilise la loi de transport de⟦2⟧, avec⟦3⟧à partir du vent au niveau le plus bas (≈ ⟦#2⟧–⟦#3⟧ m) et un profil de paroi lisse sans longueur de rugosité.",
+  "en": "182e7ab0"
+ },
+ "c.3b78ea48": {
+  "text": "<strong>Vents et grille</strong> : sur Terre, on utilise une période de vents horaires issus de réanalyses (p. ex.⟦0⟧, grille à ⟦#0⟧° sur ⟦#1⟧ ans, ⟦#2⟧–⟦#3⟧) ; sur Mars, on utilise une année représentative (⟦#4⟧ sols, soit environ ⟦#5⟧ années terrestres) de vents horaires simulés (p. ex.⟦1⟧, grille à ⟦#6⟧°), de sorte qu’une cellule martienne peut couvrir plusieurs champs de dunes et que la variabilité interannuelle n’est pas échantillonnée.",
+  "en": "3b78ea48"
+ },
+ "c.6251885f": {
+  "text": "<strong>Téléchargements</strong> : les cellules terrestres fournissent un histogramme des vents et les champs en fonction du seuil (⟦0⟧,⟦1⟧) ; les cellules martiennes fournissent les séries horaires de vent et d’air ainsi que les champs en fonction du diamètre des grains (⟦2⟧,⟦3⟧).",
+  "en": "6251885f"
+ },
+ "c.ebb9f8a1": {
+  "text": "Les valeurs de⟦0⟧sur les deux planètes peuvent donc être comparées en ordre de grandeur, et non comme des valeurs précises.⟦1⟧,⟦2⟧et les directions des modes se comparent plus directement, mais chacun dépend du réglage du seuil ou du diamètre des grains.",
+  "en": "ebb9f8a1"
+ },
+ "c.8726a129": {
+  "text": "Citer les champs de la carte",
+  "en": "8726a129"
+ },
+ "c.dd3ddd79": {
+  "text": "<strong>⟦0⟧⟦#0⟧°</strong> : ⟦1⟧. Licence : ⟦2⟧.",
+  "en": "dd3ddd79"
+ },
+ "c.ac07bd37": {
+  "text": "⟦0⟧/ carte des dunes",
+  "en": "ac07bd37"
+ },
+ "c.935e4396": {
+  "text": "Article : ⟦0⟧",
+  "en": "935e4396"
+ },
+ "c.b35fcfde": {
+  "text": "Données (histogrammes de vent et champs de flux de sable) : ⟦0⟧",
+  "en": "b35fcfde"
+ },
+ "c.11b8f814": {
+  "text": "Données (carte des dunes :⟦0⟧, contenue dans l’enregistrement⟦1⟧) : ⟦2⟧",
+  "en": "11b8f814"
+ },
+ "c.e43657ea": {
+  "text": "Données : ⟦0⟧",
+  "en": "e43657ea"
+ },
+ "c.85811cee": {
+  "text": "Contient des informations⟦0⟧modifiées (⟦1⟧, ⟦#0⟧–⟦#1⟧). Ni la Commission européenne ni⟦2⟧ne sont responsables de l’usage qui pourrait être fait des informations⟦3⟧ou des données qu’elles contiennent.",
+  "en": "85811cee"
+ },
+ "c.5b675aea": {
+  "text": "Global Aridity Index (⟦0⟧)",
+  "en": "5b675aea"
+ },
+ "c.a60116c4": {
+  "text": "Couvert végétal (⟦0⟧Fractional Cover v3.1)",
+  "en": "a60116c4"
+ },
+ "c.6aa0a68b": {
+  "text": "Série chronologique mensuelle complète :⟦0⟧Map, <a href=\"https://map.geo-rapp.org/\" target=\"_blank\" rel=\"noopener noreferrer\">⟦1⟧</a>",
+  "en": "6aa0a68b"
+ },
+ "c.1a6f67b1": {
+  "text": "Contient des informations⟦0⟧modifiées. Les crédits des fonds de carte figurent dans l’attribution de la carte.",
+  "en": "1a6f67b1"
+ },
+ "c.3884b372": {
+  "text": "Afin de comprendre comment l’atlas est utilisé, nous comptabilisons les visites de pages et les téléchargements par pays, au moyen de Cloudflare Web Analytics et d’un petit compteur qui nous est propre. Aucun cookie n’est déposé et aucune adresse⟦0⟧n’est conservée.",
+  "en": "3884b372"
+ },
+ "c.ff5ee14a": {
+  "text": "Redimensionner le panneau (faire glisser ou utiliser les touches fléchées)",
+  "en": "ff5ee14a"
+ },
+ "c.a89ab2ab": {
+  "text": "Fermer le panneau de la cellule",
+  "en": "a89ab2ab"
+ },
+ "c.ed60e8c1": {
+  "text": "Chargement⟦0⟧des données de cette cellule…",
+  "en": "ed60e8c1"
+ },
+ "c.cd275e7b": {
+  "text": "Dunes présentes",
+  "en": "cd275e7b"
+ },
+ "c.f9cfdc68": {
+  "text": "Seuil ⟦0⟧ : <strong>⟦1⟧</strong>",
+  "en": "f9cfdc68"
+ },
+ "c.ea559417": {
+  "text": "Vent à ⟦#0⟧ m au seuil : ≈ ⟦0⟧",
+  "en": "ea559417"
+ },
+ "c.a5650846": {
+  "text": "Rose des vents",
+  "en": "a5650846"
+ },
+ "c.2632e454": {
+  "text": "Secteurs",
+  "en": "2632e454"
+ },
+ "c.fcba0503": {
+  "text": "Fréquence des vents horaires à ⟦#0⟧ m selon la direction d’où ils soufflent, ⟦#1⟧ secteurs, empilés par classe de vitesse ; ⟦#2⟧–⟦#3⟧ ; total de ⟦#4⟧ %.",
+  "en": "fcba0503"
+ },
+ "c.5d9e5efa": {
+  "text": "% des heures",
+  "en": "5d9e5efa"
+ },
+ "c.9f03a7d2": {
+  "text": "Direction D’OÙ souffle le vent (météorologique), ⟦#0⟧ secteurs de ⟦#1⟧° ; rayon = % des ⟦#2⟧ échantillons horaires comptabilisés (total de ⟦#3⟧ % ; les heures &gt; ⟦#4⟧ m/s ne figurent pas dans l’histogramme).⟦0⟧Vent à ⟦#5⟧ m, ⟦#6⟧–⟦#7⟧.",
+  "en": "9f03a7d2"
+ },
+ "c.aab9a2de": {
+  "text": "Exporter ce graphique (thème clair, avec la source des données et le lien)",
+  "en": "aab9a2de"
+ },
+ "c.e86349d3": {
+  "text": "Exporter",
+  "en": "e86349d3"
+ },
+ "c.7193769a": {
+  "text": "⟦0⟧ Fond transparent",
+  "en": "7193769a"
+ },
+ "c.29c9bdfd": {
+  "text": "Rose des flux de sable (moyennée dans le temps, transport vers)",
+  "en": "29c9bdfd"
+ },
+ "c.7789ddf5": {
+  "text": "Flux ⟦0⟧",
+  "en": "7789ddf5"
+ },
+ "c.6da97f0c": {
+  "text": "Mode de la rose des flux",
+  "en": "6da97f0c"
+ },
+ "c.58919355": {
+  "text": "Lit plat",
+  "en": "58919355"
+ },
+ "c.1eeb99cc": {
+  "text": "Allongement (αE)",
+  "en": "1eeb99cc"
+ },
+ "c.36c18d9e": {
+  "text": "Migration transverse (αH)",
+  "en": "36c18d9e"
+ },
+ "c.0530e499": {
+  "text": "Axe radial de la rose des flux",
+  "en": "0530e499"
+ },
+ "c.6d1a8a4e": {
+  "text": "⟦0⟧ % du total",
+  "en": "6d1a8a4e"
+ },
+ "c.1b0fc3f0": {
+  "text": "Direction des pétales de la rose des flux",
+  "en": "1b0fc3f0"
+ },
+ "c.e71fb327": {
+  "text": "Flux de sable sur lit plat moyenné dans le temps, selon la direction vers laquelle se déplace le sable, ⟦#0⟧ secteurs de ⟦#1⟧ degrés, empilés par excès de cisaillement u*f/u*,th, en pourcentage du flux total, pour u*,th ⟦#2⟧ m/s.",
+  "en": "e71fb327"
+ },
+ "c.04e86ff9": {
+  "text": "αH (orientation de la crête, mode d’instabilité du lit) : ⟦#0⟧° (axe)",
+  "en": "04e86ff9"
+ },
+ "c.1ef8a9c4": {
+  "text": "αE (direction d’allongement) : ⟦#0⟧° (ENE)",
+  "en": "1ef8a9c4"
+ },
+ "c.e9a52542": {
+  "text": "αT (direction de migration transverse) : ⟦#0⟧° (ENE)",
+  "en": "e9a52542"
+ },
+ "c.77cf5f77": {
+  "text": "RDD (direction de dérive résultante) : ⟦#0⟧° (ENE)",
+  "en": "77cf5f77"
+ },
+ "c.58e2a84e": {
+  "text": "% du flux total",
+  "en": "58e2a84e"
+ },
+ "c.8656e567": {
+  "text": "⟦#0⟧° (axe)",
+  "en": "8656e567"
+ },
+ "c.4a8617dc": {
+  "text": "⟦#0⟧° (ENE)",
+  "en": "4a8617dc"
+ },
+ "c.531a7c8d": {
+  "text": "<span class=\"cap-lead\"><strong>Lit plat</strong> : ⟦0⟧ = ⟦1⟧</span> Direction VERS laquelle se déplace le sable ; ⟦#0⟧ secteurs de ⟦#1⟧°. Rayon = % du flux total dans chaque secteur (somme : ⟦#2⟧ %). Flux saturé sur lit plat moyenné dans le temps (q d’après ⟦2⟧), Σ<sub>vitesse</sub> n·q / Σ<sub>total</sub> n à partir de l’histogramme des vents. Les couleurs subdivisent chaque secteur selon l’excès de cisaillement ⟦3⟧ des vents qui portent le flux (seul ⟦4⟧ transporte du sable).⟦5⟧,⟦6⟧,⟦7⟧,⟦8⟧et les flèches correspondent aux champs de la carte à ce seuil ; une direction est masquée là où le flux qui la définit est nul.",
+  "en": "531a7c8d"
+ },
+ "c.85f6094f": {
+  "text": "Modes en fonction du seuil (polaire : angle = direction, rayon = ⟦0⟧)",
+  "en": "85f6094f"
+ },
+ "c.2dbc70d1": {
+  "text": "Diagramme polaire des azimuts des modes d’orientation des dunes (angle) en fonction de la vitesse de frottement seuil (rayon, de ⟦#0⟧ m/s au centre à ⟦#1⟧ m/s en bordure)",
+  "en": "2dbc70d1"
+ },
+ "c.068b4cfe": {
+  "text": "rayon : u*,th (m/s)",
+  "en": "068b4cfe"
+ },
+ "c.6671ac04": {
+  "text": "Azimuts des modes (vers) pour ⟦0⟧ = ⟦#0⟧ m/s (centre) à ⟦#1⟧ m/s (bord) ; ⟦1⟧ est un axe, tracé dans les deux sens. Les tracés s’interrompent là où un mode n’est pas défini (aucun flux déterminant). Anneau en tirets et points : seuil actuel. Là où⟦2⟧est faible (en dessous d’environ ⟦#2⟧), les transports de sens opposés se compensent presque, de sorte que⟦3⟧est mal définie et peut varier jusqu’à ⟦#3⟧° pour une faible modification du seuil ou du jeu de données de vent. Les modes dépendent de l’ensemble de la rose des flux plutôt que de sa résultante : ⟦4⟧ suit l’orientation de la crête ⟦5⟧ qui maximise le transport brut à travers les crêtes ; cette direction peut donc rester stable et différer de⟦6⟧.",
+  "en": "6671ac04"
+ },
+ "c.6e844047": {
+  "text": "Potentiel de dérive⟦0⟧ en fonction du seuil",
+  "en": "6e844047"
+ },
+ "c.dc80e435": {
+  "text": "Graphique ⟦0⟧",
+  "en": "dc80e435"
+ },
+ "c.5c96f403": {
+  "text": "Grandeur représentée en fonction du seuil",
+  "en": "5c96f403"
+ },
+ "c.c4d7f978": {
+  "text": "Directionnalité du flux (RDP/DP)",
+  "en": "c4d7f978"
+ },
+ "c.985d469b": {
+  "text": "Potentiel de dérive (DP) en fonction du seuil",
+  "en": "985d469b"
+ },
+ "c.dd4757c8": {
+  "text": "<span class=\"cap-lead\">Au seuil actuel : ⟦0⟧</span> Potentiel de dérive (⟦1⟧) de cette cellule pour chaque seuil ; point et ligne tiretée : seuil actuel. Triangles en bordure supérieure ou inférieure : rapport infini (son dénominateur, un flux net, est nul ; ±⟦#0⟧ dans les données), non représenté.",
+  "en": "dd4757c8"
+ },
+ "c.a4c54ba4": {
+  "text": "Résumé de la cellule à ⟦0⟧ = ⟦1⟧",
+  "en": "a4c54ba4"
+ },
+ "c.3a105ef1": {
+  "text": "Symbole",
+  "en": "3a105ef1"
+ },
+ "c.2bf732f8": {
+  "text": "Grandeur",
+  "en": "2bf732f8"
+ },
+ "c.d147f96a": {
+  "text": "Valeur",
+  "en": "d147f96a"
+ },
+ "c.81062dcd": {
+  "text": "⟦#0⟧° <span class=\"unit\">(azimut, vers)</span>",
+  "en": "81062dcd"
+ },
+ "c.8ebe5564": {
+  "text": "⟦#0⟧ <span class=\"unit\">fraction (⟦#1⟧–⟦#2⟧)</span>",
+  "en": "8ebe5564"
+ },
+ "c.d9da59dc": {
+  "text": "Les valeurs négatives (convergence du flux) impliquent un dépôt",
+  "en": "d9da59dc"
+ },
+ "c.d169cc9f": {
+  "text": "⟦#0⟧° <span class=\"unit\">(axe, ⟦#1⟧–⟦#2⟧)</span>",
+  "en": "d169cc9f"
+ },
+ "c.6382f602": {
+  "text": "Moyenne sur la cellule, indépendante du seuil ; ⟦#0⟧ % de la cellule valide, ⟦#1⟧ % saturée",
+  "en": "6382f602"
+ },
+ "c.3d735122": {
+  "text": "Certains pixels sont à la valeur de saturation de la source ⟦#0⟧, la moyenne est donc une borne inférieure",
+  "en": "3d735122"
+ },
+ "c.7b8c5d3b": {
+  "text": "≥ ⟦#0⟧ <span class=\"unit\">(aride)</span>",
+  "en": "7b8c5d3b"
+ },
+ "c.e90a7bd5": {
+  "text": "Cellule",
+  "en": "e90a7bd5"
+ },
+ "c.14e8021b": {
+  "text": "Oui : la cellule chevauche au moins une cellule de dunes de ⟦#0⟧° de la carte des dunes (Gunn ⟦#1⟧)",
+  "en": "14e8021b"
+ },
+ "c.4e9f3590": {
+  "text": "oui",
+  "en": "4e9f3590"
+ },
+ "c.2410610b": {
+  "text": "Latitude, longitude du centre de la cellule",
+  "en": "2410610b"
+ },
+ "c.7a7dbf8c": {
+  "text": "Centre de la cellule",
+  "en": "7a7dbf8c"
+ },
+ "c.f42590f9": {
+  "text": "Les angles sont des azimuts de la direction du transport ; les flux sont convertis de m²/s en m²/yr ; — = non défini (p. ex. aucun flux de crête).",
+  "en": "f42590f9"
+ },
+ "c.4598f0fa": {
+  "text": "Histogramme du vent, tous les champs en fonction du seuil, roses des flux et métadonnées dans un seul fichier NetCDF-⟦#0⟧ (CF-⟦#1⟧)",
+  "en": "4598f0fa"
+ },
+ "c.f163afcc": {
+  "text": "wind_histogram.csv, fields_by_threshold.csv, flux_rose.csv, rose_16_sectors.csv (⟦#0⟧ secteurs, degrés), metadata.json et README.txt",
+  "en": "f163afcc"
+ },
+ "c.b46e7304": {
+  "text": "Archive⟦0⟧(.zip)",
+  "en": "b46e7304"
+ },
+ "c.a15445e7": {
+  "text": "Fichier texte de la citation",
+  "en": "a15445e7"
+ },
+ "c.3d8b79ca": {
+  "text": "Citation (⟦0⟧)",
+  "en": "3d8b79ca"
+ },
+ "c.94cd08c5": {
+  "text": "Copier le texte de la citation dans le presse-papiers",
+  "en": "94cd08c5"
+ },
+ "c.e4f8fbe5": {
+  "text": "Copier la citation",
+  "en": "e4f8fbe5"
+ },
+ "c.9a9cfc21": {
+  "text": "Obtenir la grille complète",
+  "en": "9a9cfc21"
+ },
+ "c.94880c62": {
+  "text": "L’atlas lit des dépôts⟦0⟧(v3) publics sur <a href=\"https://data.geomorphlab.org/\" target=\"_blank\" rel=\"noopener\">data.geomorphlab.org</a>, accessibles à tous, par exemple avec Python. Les champs cartographiques de⟦1⟧⟦#0⟧° sont stockés à raison d’un dépôt par variable, chacun contenant le champ en fonction de la vitesse de frottement seuil (⟦2⟧, ⟦#1⟧ valeurs), de la latitude ⟦3⟧ et de la longitude ⟦4⟧ (centres des cellules en degrés ; x de ⟦#2⟧ à ⟦#3⟧°, positif vers l’est). Le niveau ⟦5⟧ de chaque dépôt correspond à la grille à pleine résolution ; les niveaux ⟦#4⟧, ⟦#5⟧, … en sont des copies plus grossières destinées à la carte.",
+  "en": "94880c62"
+ },
+ "c.826bac69": {
+  "text": "Copier le code",
+  "en": "826bac69"
+ },
+ "c.c7598ba3": {
+  "text": "Variables (remplacer ⟦0⟧ dans le⟦1⟧) : ⟦2⟧, ⟦3⟧, ⟦4⟧, ⟦5⟧, ⟦6⟧, ⟦7⟧, ⟦8⟧, ⟦9⟧, ⟦10⟧, ⟦11⟧, ⟦12⟧, ⟦13⟧, ⟦14⟧, ⟦15⟧, ⟦16⟧, ⟦17⟧, ⟦18⟧, ⟦19⟧, ⟦20⟧, ⟦21⟧, ⟦22⟧, ⟦23⟧, ⟦24⟧, ⟦25⟧. Données par cellule du panneau de cellule : ⟦26⟧ (structure : <a href=\"https://github.com/geomorphlab/dune-atlas/blob/main/docs/reference/storage-layout.md\" target=\"_blank\" rel=\"noopener\">⟦27⟧</a>).",
+  "en": "c7598ba3"
+ },
+ "c.ce1afc80": {
+  "text": "Licence de ces champs cartographiques :⟦0⟧(⟦1⟧données supplémentaires). Licences de chaque dépôt : <a href=\"https://github.com/geomorphlab/dune-atlas/blob/main/DATA_LICENSE.md\" target=\"_blank\" rel=\"noopener\">⟦2⟧</a>. Veuillez citer les sources indiquées sous Télécharger et citer.",
+  "en": "ce1afc80"
+ },
+ "c.bf82bd88": {
+  "text": "infini (⟦#0⟧ dans les données).",
+  "en": "bf82bd88"
+ },
+ "c.4d123ca2": {
+  "text": "Cellule ⟦#0⟧, ⟦#1⟧",
+  "en": "4d123ca2"
+ },
+ "c.b316e3ad": {
+  "text": "En dehors du masque des terres⟦0⟧",
+  "en": "b316e3ad"
+ },
+ "c.d0a79f04": {
+  "text": "L’atlas calcule les roses des vents et les statistiques de flux de sable uniquement pour les cellules terrestres (fraction du masque terre–mer⟦0⟧&gt; ⟦#0⟧). Cette cellule est principalement constituée d’eau ; l’atlas ne dispose donc d’aucune statistique pour elle. Choisissez une cellule terrestre voisine, ou passez à⟦1⟧(les cellules côtières peuvent différer entre les deux masques des terres).",
+  "en": "d0a79f04"
+ },
+ "c.3d5c01ad": {
+  "text": "Cellule de ⟦#0⟧° : ligne ⟦#1⟧, colonne ⟦#2⟧ ; centre ⟦#3⟧°S, ⟦#4⟧°E.",
+  "en": "3d5c01ad"
+ },
+ "c.0f4659f8": {
+  "text": "L’atlas calcule les roses des vents et les statistiques de flux de sable uniquement pour les cellules terrestres (fraction du masque terre–mer⟦0⟧&gt; ⟦#0⟧). Cette cellule ne comporte aucune terre (fraction du masque terre–mer ⟦#1⟧) ; l’atlas ne dispose donc d’aucune statistique pour elle. Choisissez une cellule terrestre voisine, ou passez à⟦1⟧(les cellules côtières peuvent différer entre les deux masques des terres).",
+  "en": "0f4659f8"
+ },
+ "c.4f6e56eb": {
+  "text": "Passer à Mars",
+  "en": "4f6e56eb"
+ },
+ "c.cd86acc3": {
+  "text": "Fermer",
+  "en": "cd86acc3"
+ },
+ "c.3be5a9ed": {
+  "text": "Partager cette vue",
+  "en": "3be5a9ed"
+ },
+ "c.b03ebc37": {
+  "text": "Lien vers cette vue",
+  "en": "b03ebc37"
+ },
+ "c.23f990dc": {
+  "text": "Copier le lien",
+  "en": "23f990dc"
+ },
+ "c.db531243": {
+  "text": "Le lien restaure la position, le zoom, le jeu de données de vent, le seuil, le fond de carte, les calques actifs et la cellule sélectionnée.",
+  "en": "db531243"
+ },
+ "c.3887d7d3": {
+  "text": "Lien copié",
+  "en": "3887d7d3"
+ },
+ "c.46af3291": {
+  "text": "⟦0⟧ Inclure le fond de carte",
+  "en": "46af3291"
+ },
+ "c.e695bc35": {
+  "text": "⟦0⟧ Fond transparent (blanc par défaut)",
+  "en": "e695bc35"
+ },
+ "c.963b6004": {
+  "text": "⟦0⟧de la vue actuelle, de ⟦#0⟧–⟦#1⟧ pixels de large, sans les panneaux, sur fond blanc sauf si Fond transparent est coché. Les barres de couleur, les légendes, l’échelle et les sources des données sont ajoutées sous la carte.",
+  "en": "963b6004"
+ },
+ "c.f1d747de": {
+  "text": "Exporter⟦0⟧",
+  "en": "f1d747de"
+ },
+ "c.76ffaf4f": {
+  "text": "Rendu en cours…",
+  "en": "76ffaf4f"
+ },
+ "c.30a14bad": {
+  "text": "Affichage optimal en plein écran : ouvre cette vue dans un nouvel onglet",
+  "en": "30a14bad"
+ },
+ "c.a09f6b17": {
+  "text": "Ouvrir en plein écran ↗",
+  "en": "a09f6b17"
+ },
+ "c.84ba782e": {
+  "text": "Affichage optimal en plein écran",
+  "en": "84ba782e"
+ },
+ "c.0ba4b6a4": {
+  "text": "MCMC FV3 ⟦#0⟧°, une année martienne (6e année simulée, ⟦#1⟧ sols)",
+  "en": "0ba4b6a4"
+ },
+ "c.5b8eff97": {
+  "text": "Rétablir la valeur par défaut de ⟦#0⟧ µm",
+  "en": "5b8eff97"
+ },
+ "c.f2de880e": {
+  "text": "par défaut ⟦#0⟧ µm",
+  "en": "f2de880e"
+ },
+ "c.e7c53466": {
+  "text": "Le diamètre médian ⟦0⟧ des grains de sable. Chaque calque de la carte dépendant de la taille des grains (son ⓘ l’indique) ainsi que le panneau de cellule utilisent la valeur définie ici. La vitesse de frottement seuil ⟦1⟧ est calculée pour chaque heure à partir de ⟦2⟧ et de la masse volumique et de la température de l’air à cette heure (⟦3⟧).",
+  "en": "e7c53466"
+ },
+ "c.01554ec1": {
+  "text": "⟦#0⟧ valeurs espacées logarithmiquement de ⟦#1⟧ µm à ⟦#2⟧ µm ; valeur par défaut ⟦#3⟧ µm (le repère sous le curseur). La copie compacte en haut du panneau de cellule règle la même valeur.",
+  "en": "01554ec1"
+ },
+ "c.0068eba5": {
+  "text": "Inverser : colorer les zones SANS dunes cartographiées au lieu des dunes.",
+  "en": "0068eba5"
+ },
+ "c.a524d750": {
+  "text": "⟦0⟧ inverser (zones sans dunes)",
+  "en": "a524d750"
+ },
+ "c.227e780e": {
+  "text": "Inverser : colorer les zones sans dunes",
+  "en": "227e780e"
+ },
+ "c.5e016412": {
+  "text": "Champs de dunes éoliennes cartographiés sur Mars : le⟦0⟧⟦1⟧(⟦2⟧; équatorial⟦3⟧, polaire nord⟦4⟧, polaire sud⟦5⟧;⟦6⟧) ainsi que les petits champs de dunes de⟦7⟧, fusionnés en ⟦#0⟧ polygones (⟦#1⟧ km²).⟦8⟧cartographie les champs de plus de ⟦#2⟧ km² ; ⟦#3⟧ polygones sont plus petits (⟦9⟧). À moins de ⟦#4⟧° de l’équateur : ⟦#5⟧ polygones, ⟦#6⟧ km² (⟦10⟧et⟦11⟧).",
+  "en": "5e016412"
+ },
+ "c.2cb30509": {
+  "text": "Les champs de dunes portent les noms approuvés par l’IAU des formations dans lesquelles ils se trouvent, tirés du <a href=\"https://planetarynames.wr.usgs.gov/\" target=\"_blank\" rel=\"noopener\">Gazetteer of Planetary Nomenclature</a> (⟦0⟧) ; les undae sont des noms⟦1⟧qui désignent les champs de dunes eux-mêmes. Quelques noms informels sont inclus en tant qu’alias.",
+  "en": "2cb30509"
+ },
+ "c.b0aa5392": {
+  "text": "⟦0⟧⟦1⟧(⟦2⟧) et⟦3⟧, fusionnés, compilés par A. Gunn",
+  "en": "b0aa5392"
+ },
+ "c.762593af": {
+  "text": "Polygones⟦0⟧: domaine public (U.S. Geological Survey)",
+  "en": "762593af"
+ },
+ "c.7c3bca61": {
+  "text": "⟦0⟧et⟦1⟧fusionnés en un seul calque de polygones ; géométries invalides corrigées ; coordonnées arrondies à 1e-⟦#0⟧°.",
+  "en": "7c3bca61"
+ },
+ "c.bf621ba4": {
+  "text": "⟦0⟧⟦#0⟧°, une année martienne (6e année simulée, ⟦#1⟧ sols)",
+  "en": "bf621ba4"
+ },
+ "c.7fc88287": {
+  "text": "Se met à jour avec la commande du diamètre des grains ⟦0⟧.",
+  "en": "7fc88287"
+ },
+ "c.55593e77": {
+  "text": "Fraction du temps pendant laquelle la vitesse de frottement sur lit plat dépasse le seuil⟦0⟧. Le seuil est, pour chaque heure, le seuil d’arrêt⟦1⟧de⟦2⟧.",
+  "en": "55593e77"
+ },
+ "c.f1591313": {
+  "text": "Vitesse de frottement moyenne sur lit plat au-dessus du seuil, normalisée par le seuil⟦0⟧. Le seuil est, pour chaque heure, le seuil d’arrêt⟦1⟧de⟦2⟧.",
+  "en": "f1591313"
+ },
+ "c.8ab3c2ce": {
+  "text": "Fraction du flux de crête en mode d’instabilité du lit (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. Vaut ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête. Le seuil est, pour chaque heure, le seuil d’arrêt⟦2⟧de⟦3⟧.",
+  "en": "8ab3c2ce"
+ },
+ "c.8843ab2c": {
+  "text": "Fraction du flux de crête en mode d’allongement (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. Vaut ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête. Le seuil est, pour chaque heure, le seuil d’arrêt⟦2⟧de⟦3⟧.",
+  "en": "8843ab2c"
+ },
+ "c.5dd4040a": {
+  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des N heures de l’année martienne : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par année terrestre sur un lit plat entièrement couvert de sable meuble (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement avec un seuil déterminé à partir du diamètre des grains. Les deux ne peuvent pas être convertis l’un en l’autre, et les classes d’énergie de Fryberger ne s’appliquent pas à ces valeurs.",
+  "en": "5dd4040a"
+ },
+ "c.a2cd8175": {
+  "text": "Divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦0⟧, direction⟦1⟧) sur la sphère martienne, d’après⟦2⟧, Méthodes⟦3⟧:⟦4⟧avec⟦5⟧,⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence du flux) impliquent un dépôt et les valeurs positives (divergence du flux) une érosion. Ces valeurs supposent un flux saturé et un apport illimité de sable meuble ; ainsi, sur les surfaces rocheuses, encroûtées ou végétalisées, l’érosion réelle est limitée par le sable disponible.",
+  "en": "a2cd8175"
+ },
+ "c.75d2f7e2": {
+  "text": "Moyenne sur l’année martienne de la masse volumique horaire de l’air de la couche la plus basse⟦0⟧du modèle climatique du jeu de données de vent (⟦1⟧= pression au milieu de la couche la plus basse,⟦2⟧= température du niveau le plus bas).",
+  "en": "75d2f7e2"
+ },
+ "c.2a037b62": {
+  "text": "Indépendant du diamètre des grains : non affecté par la commande ⟦0⟧.",
+  "en": "2a037b62"
+ },
+ "c.9ebf3d9d": {
+  "text": "Sorties⟦0⟧Ames⟦1⟧; aucune licence indiquée (⟦2⟧données ouvertes)",
+  "en": "9ebf3d9d"
+ },
+ "c.eec05683": {
+  "text": "Altitude⟦0⟧de la surface par rapport à l’aréoïde martien (niveau de référence⟦1⟧), d’après le Mars⟦2⟧–⟦3⟧Blended⟦4⟧Global 200m v2. L’échelle de couleurs sature au-delà de ses bornes (Olympus Mons ⟦#0⟧ km, Hellas ⟦#1⟧ km).",
+  "en": "eec05683"
+ },
+ "c.1c27de48": {
+  "text": "Mars⟦0⟧–⟦1⟧Blended⟦2⟧Global 200m v2 (⟦3⟧; auteurs⟦4⟧,⟦5⟧,⟦6⟧; date de publication ⟦#0⟧-⟦#1⟧-⟦#2⟧)",
+  "en": "1c27de48"
+ },
+ "c.e98bd889": {
+  "text": "⟦0⟧(⟦1⟧),⟦2⟧(⟦3⟧). Tuiles d’altitude et de relief dérivées :⟦4⟧.",
+  "en": "e98bd889"
+ },
+ "c.eee562e1": {
+  "text": "Moyenne surfacique sur des pixels de ⟦#0⟧/⟦#1⟧° (~⟦#2⟧ km) du ⟦#3⟧ m⟦0⟧, arrondie à ⟦#4⟧ m ; aux échelles de carte plus petites (vue éloignée), des moyennes sont affichées (arrondi ≤ ⟦#5⟧ m).",
+  "en": "eee562e1"
+ },
+ "c.3704a8f0": {
+  "text": "Relief ombré du modèle d’altitude⟦0⟧fusionné.",
+  "en": "3704a8f0"
+ },
+ "c.db6c76a7": {
+  "text": "Mars⟦0⟧–⟦1⟧Blended⟦2⟧Global 200m v2 (⟦3⟧; Fergason,⟦4⟧)",
+  "en": "db6c76a7"
+ },
+ "c.2d12b94c": {
+  "text": "⟦#0⟧ m⟦0⟧, affiché jusqu’à environ ⟦#1⟧ m par pixel à l’équateur",
+  "en": "2d12b94c"
+ },
+ "c.2e1c0f7e": {
+  "text": "Fond de carte⟦0⟧de Mars : relief ombré et couleur avec les toponymes.",
+  "en": "2e1c0f7e"
+ },
+ "c.644998c7": {
+  "text": "⟦0⟧/⟦1⟧ ; données⟦2⟧(⟦3⟧),⟦4⟧(⟦5⟧),⟦6⟧",
+  "en": "644998c7"
+ },
+ "c.8540dd31": {
+  "text": "Conditions d’utilisation⟦0⟧(voir le lien) ; données⟦1⟧et⟦2⟧relevant du domaine public",
+  "en": "8540dd31"
+ },
+ "c.ee2e3cf3": {
+  "text": "Mosaïque globale en niveaux de gris d’images de la Context Camera (⟦0⟧) de⟦1⟧.",
+  "en": "ee2e3cf3"
+ },
+ "c.dcf459d8": {
+  "text": "⟦0⟧⟦1⟧(The⟦2⟧, Caltech ;⟦3⟧),⟦4⟧service⟦5⟧",
+  "en": "dcf459d8"
+ },
+ "c.4bee0614": {
+  "text": "Environ ⟦#0⟧ m par pixel",
+  "en": "4bee0614"
+ },
+ "c.297b433e": {
+  "text": "Utilisation libre à toutes fins, avec mention NASA/JPL/MSSS/The⟦0⟧ ;⟦1⟧service régi par⟦2⟧/ les conditions d’utilisation",
+  "en": "297b433e"
+ },
+ "c.2624acaf": {
+  "text": "Images⟦0⟧de⟦1⟧, là où⟦2⟧a acquis des images (une petite partie de la surface) ; ailleurs, la carte est sombre.",
+  "en": "2624acaf"
+ },
+ "c.95f469ee": {
+  "text": "⟦0⟧(⟦1⟧/⟦2⟧/⟦3⟧),⟦4⟧service⟦5⟧",
+  "en": "95f469ee"
+ },
+ "c.56370639": {
+  "text": "Jusqu’à environ ⟦#0⟧ cm par pixel ; couverture éparse",
+  "en": "56370639"
+ },
+ "c.c549e23b": {
+  "text": "Couverture",
+  "en": "c549e23b"
+ },
+ "c.81e9bb01": {
+  "text": "Emprises⟦0⟧entre environ ⟦#0⟧° S et ⟦#1⟧° N ; aucune image aux latitudes plus élevées dans cette mosaïque (⟦1⟧).",
+  "en": "81e9bb01"
+ },
+ "c.4a0cf606": {
+  "text": "Domaine public (images⟦0⟧) ; service⟦1⟧soumis au⟦2⟧/ aux conditions d’utilisation",
+  "en": "4a0cf606"
+ },
+ "c.e7debcd9": {
+  "text": "Mosaïque globale colorisée d’images des orbiteurs Viking.",
+  "en": "e7debcd9"
+ },
+ "c.8ec61eb6": {
+  "text": "⟦0⟧Colorized Global Mosaic (⟦1⟧/⟦2⟧/⟦3⟧), service⟦4⟧⟦5⟧",
+  "en": "8ec61eb6"
+ },
+ "c.773da507": {
+  "text": "Environ ⟦#0⟧ m par pixel (⟦#1⟧/⟦#2⟧°)",
+  "en": "773da507"
+ },
+ "c.a5d6c844": {
+  "text": "Domaine public (⟦0⟧) ; service⟦1⟧régi par le⟦2⟧/ les conditions d’utilisation",
+  "en": "a5d6c844"
+ },
+ "c.d62fb31c": {
+  "text": "Relief ombré codé en couleur du modèle d’altitude⟦0⟧fusionné.",
+  "en": "d62fb31c"
+ },
+ "c.7ab4f976": {
+  "text": "Relief ombré colorisé⟦0⟧(⟦1⟧, d’après le Mars⟦2⟧–⟦3⟧Blended⟦4⟧Global 200m v2), service⟦5⟧MColorDEM",
+  "en": "7ab4f976"
+ },
+ "c.6022c5f5": {
+  "text": "⟦#0⟧ m⟦0⟧, affiché jusqu’à environ ⟦#1⟧ m par pixel",
+  "en": "6022c5f5"
+ },
+ "c.5dbbfa26": {
+  "text": "Domaine public (⟦0⟧) ; citer le⟦1⟧(Fergason,⟦2⟧) ; service⟦3⟧soumis aux⟦4⟧/ conditions d’utilisation",
+  "en": "5dbbfa26"
+ },
+ "c.63c884fd": {
+  "text": "Cliquez sur n’importe quelle cellule pour afficher sa rose des vents sur l’année martienne du jeu de données de vent, la rose des flux de sable au diamètre de grain sélectionné, les modes d’orientation des dunes et tous les paramètres du régime des vents.",
+  "en": "63c884fd"
+ },
+ "c.692b1efa": {
+  "text": "<strong>Vents (⟦0⟧Mars⟦1⟧, version bêta ⟦#0⟧)</strong> : vents horaires du niveau le plus bas, température et pression de surface du modèle climatique global martien⟦2⟧Ames⟦3⟧fondé sur FV3 (simulation de référence c48, 6e année simulée), rééchantillonnés sur une grille de ⟦#1⟧° × ⟦#2⟧° (une cellule mesure environ ⟦#3⟧ km de côté à l’équateur, soit plus grande que la plupart des champs de dunes) : ⟦#4⟧ échantillons horaires, une année martienne. La carte représente chaque cellule par un carré ; un champ qui varie fortement d’une cellule à l’autre, comme le fait souvent⟦4⟧aux basses latitudes, paraît donc pixellisé. Masse volumique de l’air de la couche la plus basse ρ = p/(R T) ; la hauteur z du vent du niveau le plus bas découle de la pression et de la température horaires (⟦#5⟧–⟦#6⟧ m sur l’ensemble des cellules et des heures ; ⟦#7⟧–⟦#8⟧ m pendant ⟦#9⟧ % des heures des cellules dunaires ; le panneau de la cellule indique la plage de la cellule sélectionnée), et la vitesse de frottement⟦5⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#10⟧, éq. ⟦#11⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité).",
+  "en": "692b1efa"
+ },
+ "c.c238d4e5": {
+  "text": "<strong>Champs de flux de sable</strong> : pour chaque heure, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/yr, comme sur Terre.",
+  "en": "c238d4e5"
+ },
+ "c.7a26bd74": {
+  "text": "<strong>Carte des dunes</strong> :⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧), complétée par les petits champs de dunes de Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), fusionnés en ⟦#3⟧ polygones de champs de dunes (sphère Mars ⟦#4⟧) ; polygones⟦4⟧: domaine public (U.S. Geological Survey).",
+  "en": "7a26bd74"
+ },
+ "c.c4698157": {
+  "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur potentiel de dérive résultant (norme⟦1⟧, direction⟦2⟧) sur la sphère martienne (R = ⟦#0⟧ km), selon⟦3⟧, Methods⟦4⟧, avec des différences centrées sur la grille du jeu de données de vent (⟦#1⟧°). Les valeurs négatives (convergence) indiquent un dépôt.",
+  "en": "c4698157"
+ },
+ "c.5d754cff": {
+  "text": "<strong>Altitude et relief ombré</strong> :⟦0⟧–⟦1⟧fusionné⟦2⟧, ⟦#0⟧ m, v2 (Fergason,⟦3⟧,⟦4⟧) ; licence :⟦5⟧(⟦6⟧) et⟦7⟧(⟦8⟧). Tuiles d’altitude et de relief dérivées :⟦9⟧.",
+  "en": "5d754cff"
+ },
+ "c.530a3afd": {
+  "text": "<strong>Noms des champs de dunes</strong> : les champs de dunes portent les noms approuvés par l’IAU des formations dans lesquelles ils se trouvent, d’après le <a href=\"https://planetarynames.wr.usgs.gov/\" target=\"_blank\" rel=\"noopener\">Gazetteer of Planetary Nomenclature</a> (⟦0⟧) ; les undae sont des noms⟦1⟧désignant les champs de dunes eux-mêmes. Quelques noms informels sont inclus comme alias.",
+  "en": "530a3afd"
+ },
+ "c.50055b7f": {
+  "text": "Mars⟦0⟧(méthode)",
+  "en": "50055b7f"
+ },
+ "c.89d524a5": {
+  "text": "Méthode (champs du régime des vents et de l’orientation des dunes) : ⟦0⟧",
+  "en": "89d524a5"
+ },
+ "c.72a649e1": {
+  "text": "Séries de vent martiennes, champs de flux de sable et divergence du flux calculés pour le Mars⟦0⟧à partir des vents du niveau le plus bas de⟦1⟧avec la loi de transport de⟦2⟧et les méthodes décrites dans⟦3⟧.",
+  "en": "72a649e1"
+ },
+ "c.a9bc77d4": {
+  "text": "⟦0⟧Mars⟦1⟧, version bêta ⟦#0⟧",
+  "en": "a9bc77d4"
+ },
+ "c.c020e5a4": {
+  "text": "Physique du modèle : ⟦0⟧",
+  "en": "c020e5a4"
+ },
+ "c.8311cdd3": {
+  "text": "Loi de transport sédimentaire",
+  "en": "8311cdd3"
+ },
+ "c.ba79a508": {
+  "text": "Carte des dunes de Mars (⟦0⟧⟦1⟧et⟦2⟧, fusionnées)",
+  "en": "ba79a508"
+ },
+ "c.4f0fafb8": {
+  "text": "Topographie (⟦0⟧fusionnée⟦1⟧)",
+  "en": "4f0fafb8"
+ },
+ "c.900a3648": {
+  "text": "Les crédits des fonds de carte figurent dans l’attribution de la carte.",
+  "en": "900a3648"
+ },
+ "c.4a5374ef": {
+  "text": "Diamètre des grains ⟦0⟧ : <strong>⟦1⟧</strong>",
+  "en": "4a5374ef"
+ },
+ "c.85102ae2": {
+  "text": "Seuil ⟦0⟧, médiane sur les heures : <strong>⟦1⟧</strong>",
+  "en": "85102ae2"
+ },
+ "c.8d0e4128": {
+  "text": "⟦0⟧, ⟦#0⟧–⟦#1⟧ % des heures : ⟦1⟧",
+  "en": "8d0e4128"
+ },
+ "c.51b43106": {
+  "text": "Vent au niveau le plus bas au seuil (hauteur médiane ⟦#0⟧ m) : ≈ ⟦0⟧",
+  "en": "51b43106"
+ },
+ "c.de02b143": {
+  "text": "Heures au-dessus du seuil : ⟦0⟧",
+  "en": "de02b143"
+ },
+ "c.bd1de494": {
+  "text": "Fréquence des vents horaires au niveau le plus bas selon la direction d’où ils soufflent, ⟦#0⟧ secteurs, empilés par classe de vitesse ; une année martienne ; total de ⟦#1⟧ %.",
+  "en": "bd1de494"
+ },
+ "c.55fb0a53": {
+  "text": "m/s, niveau le plus bas du modèle",
+  "en": "55fb0a53"
+ },
+ "c.54424ba2": {
+  "text": "Direction D’OÙ souffle le vent (convention météorologique), ⟦#0⟧ secteurs de ⟦#1⟧° ; rayon = % des ⟦#2⟧ échantillons horaires (total de ⟦#3⟧ %).⟦0⟧vent au niveau le plus bas (hauteur dans cette cellule ⟦#4⟧–⟦#5⟧ m), une année martienne (6e année simulée, ⟦#6⟧ sols).",
+  "en": "54424ba2"
+ },
+ "c.705e31ee": {
+  "text": "Flux de sable sur lit plat moyenné dans le temps, selon la direction vers laquelle se déplace le sable, ⟦#0⟧ secteurs de ⟦#1⟧ degrés, empilés par excès de cisaillement u*/u*,th de chaque heure, en pourcentage du flux total, pour un diamètre des grains d = ⟦#2⟧ µm.",
+  "en": "705e31ee"
+ },
+ "c.4d7bcf52": {
+  "text": "αT (direction de migration transverse) : ⟦#0⟧° (ONO)",
+  "en": "4d7bcf52"
+ },
+ "c.7752b77c": {
+  "text": "RDD (direction de dérive résultante) : ⟦#0⟧° (ESE)",
+  "en": "7752b77c"
+ },
+ "c.33a5156c": {
+  "text": "⟦#0⟧° (ONO)",
+  "en": "33a5156c"
+ },
+ "c.4c3ff457": {
+  "text": "⟦#0⟧° (ESE)",
+  "en": "4c3ff457"
+ },
+ "c.94bd0d74": {
+  "text": "<span class=\"cap-lead\"><strong>Lit plat</strong> : ⟦0⟧ = ⟦1⟧</span> Direction VERS laquelle se déplace le sable ; ⟦#0⟧ secteurs de ⟦#1⟧°. Rayon = % du flux total dans chaque secteur (total de ⟦#2⟧ %). Flux saturé sur lit plat moyenné dans le temps (q d’après ⟦2⟧), Σ<sub>heures</sub> q / N sur les ⟦#3⟧ échantillons horaires, avec ⟦3⟧ de chaque heure déduite du vent au niveau le plus bas à sa hauteur z (profil de longueur de mélange pour paroi lisse,⟦4⟧éq. ⟦#4⟧) et le seuil ⟦5⟧ de chaque heure déduit de ⟦6⟧ ainsi que de la masse volumique et de la température de l’air à cette heure. Les couleurs divisent chaque secteur selon l’excès de cisaillement ⟦7⟧ des heures qui portent le flux (seul ⟦8⟧ transporte du sable).⟦9⟧,⟦10⟧,⟦11⟧,⟦12⟧et les flèches correspondent aux champs de la carte pour ce diamètre des grains ; une direction est masquée là où le flux qui la définit est nul.",
+  "en": "94bd0d74"
+ },
+ "c.92c30d6e": {
+  "text": "Modes en fonction du diamètre des grains (polaire : angle = direction, rayon = ⟦0⟧, échelle logarithmique)",
+  "en": "92c30d6e"
+ },
+ "c.0741b547": {
+  "text": "Diagramme polaire des azimuts des modes d’orientation des dunes (angle) en fonction du diamètre médian des grains (rayon, échelle logarithmique, de ⟦#0⟧ µm au centre à ⟦#1⟧ µm en périphérie)",
+  "en": "0741b547"
+ },
+ "c.830d966e": {
+  "text": "rayon : d (µm, échelle logarithmique)",
+  "en": "830d966e"
+ },
+ "c.76650ed5": {
+  "text": "Azimuts des modes (vers) pour ⟦0⟧ = ⟦#0⟧ µm (centre) à ⟦#1⟧ µm (bord), rayon logarithmique en ⟦1⟧ ; ⟦2⟧ est un axe, tracé dans les deux sens. Les tracés s’interrompent là où un mode n’est pas défini (aucun flux le définissant). Cercle en tirets et points : diamètre des grains actuel. Là où⟦3⟧est faible (inférieur à environ ⟦#2⟧), le transport dans des directions opposées se compense presque, de sorte que⟦4⟧est mal définie et peut varier jusqu’à ⟦#3⟧° pour une faible variation du diamètre des grains. Les modes dépendent de l’ensemble de la rose des flux plutôt que de sa résultante : ⟦5⟧ suit l’orientation de la crête ⟦6⟧ qui maximise le transport brut à travers les crêtes, et peut ainsi rester stable et différer de⟦7⟧.",
+  "en": "76650ed5"
+ },
+ "c.78ee9922": {
+  "text": "Potentiel de dérive⟦0⟧ en fonction du diamètre des grains",
+  "en": "78ee9922"
+ },
+ "c.d092fe06": {
+  "text": "Grandeur représentée en fonction du diamètre des grains",
+  "en": "d092fe06"
+ },
+ "c.28791e51": {
+  "text": "Vitesse de frottement seuil médiane (u*,th)",
+  "en": "28791e51"
+ },
+ "c.20d1128e": {
+  "text": "Potentiel de dérive (DP) en fonction du diamètre des grains",
+  "en": "20d1128e"
+ },
+ "c.50a517f6": {
+  "text": "<span class=\"cap-lead\">Pour le diamètre de grain actuel : ⟦0⟧</span> Potentiel de dérive (⟦1⟧) de cette cellule pour chaque diamètre de grain ; point et ligne tiretée : diamètre de grain actuel.",
+  "en": "50a517f6"
+ },
+ "c.2b98c4b5": {
+  "text": "⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> <span class=\"unit\">rapport</span>",
+  "en": "2b98c4b5"
+ },
+ "c.a6ed5186": {
+  "text": "Vitesse de frottement seuil pour ce d, médiane sur les heures",
+  "en": "a6ed5186"
+ },
+ "c.e89e84ed": {
+  "text": "Vitesse de frottement seuil médiane",
+  "en": "e89e84ed"
+ },
+ "c.08f8c08d": {
+  "text": "Masse volumique de l’air dans la couche la plus basse, médiane sur les heures",
+  "en": "08f8c08d"
+ },
+ "c.aef2a8bb": {
+  "text": "Masse volumique médiane de l’air",
+  "en": "aef2a8bb"
+ },
+ "c.701879e8": {
+  "text": "Masse volumique de l’air près de la surface, moyenne annuelle ; indépendante de la taille des grains",
+  "en": "701879e8"
+ },
+ "c.c898e618": {
+  "text": "Masse volumique moyenne de l’air",
+  "en": "c898e618"
+ },
+ "c.db547236": {
+  "text": "Moyenne par cellule du MNT MOLA–HRSC",
+  "en": "db547236"
+ },
+ "c.1059d6e4": {
+  "text": "Altitude",
+  "en": "1059d6e4"
+ },
+ "c.dcbbdd2f": {
+  "text": "Oui : la cellule chevauche au moins un polygone de dune de la carte fusionnée des dunes (USGS Mars Global Digital Dune Database et Fenton ⟦#0⟧) ; valeur entre crochets : fraction de la surface de la cellule occupée par des dunes",
+  "en": "dcbbdd2f"
+ },
+ "c.f2400fd6": {
+  "text": "oui <span class=\"unit\">(⟦#0⟧ %)</span>",
+  "en": "f2400fd6"
+ },
+ "c.52fc6f74": {
+  "text": "Séries horaires du vent et de l’air, tous les champs en fonction de la taille des grains, roses des flux et métadonnées dans un seul fichier NetCDF-⟦#0⟧ (CF-⟦#1⟧)",
+  "en": "52fc6f74"
+ },
+ "c.d4fc85c9": {
+  "text": "wind_series.csv, fields_by_grain_size.csv, flux_rose.csv, rose_16_sectors.csv (⟦#0⟧ secteurs, degrés), metadata.json et README.txt",
+  "en": "d4fc85c9"
+ },
+ "c.da36bb60": {
+  "text": "L’atlas lit des dépôts publics⟦0⟧(v3) hébergés sur <a href=\"https://data.geomorphlab.org/\" target=\"_blank\" rel=\"noopener\">data.geomorphlab.org</a>, lisibles par tous, par exemple avec Python. Les champs cartographiques de⟦1⟧⟦#0⟧° comportent un dépôt par variable, chacun contenant le champ en fonction du diamètre médian des grains (⟦2⟧, ⟦#1⟧ valeurs), de la latitude ⟦3⟧ et de la longitude ⟦4⟧ (centres des cellules en degrés ; x de ⟦#2⟧ à ⟦#3⟧°, positif vers l’est). Le niveau ⟦5⟧ de chaque dépôt correspond à la grille à pleine résolution ; les niveaux ⟦#4⟧, ⟦#5⟧, … sont des copies plus grossières destinées à la carte.",
+  "en": "da36bb60"
+ },
+ "c.d732de78": {
+  "text": "Variables (remplacez ⟦0⟧ dans le⟦1⟧) : ⟦2⟧, ⟦3⟧, ⟦4⟧, ⟦5⟧, ⟦6⟧, ⟦7⟧, ⟦8⟧, ⟦9⟧, ⟦10⟧, ⟦11⟧, ⟦12⟧, ⟦13⟧, ⟦14⟧, ⟦15⟧, ⟦16⟧, ⟦17⟧, ⟦18⟧, ⟦19⟧, ⟦20⟧, ⟦21⟧, ⟦22⟧, ⟦23⟧, ⟦24⟧, ⟦25⟧, ⟦26⟧. Données par cellule du panneau de cellule : ⟦27⟧ (structure : <a href=\"https://github.com/geomorphlab/dune-atlas/blob/main/docs/reference/storage-layout.md\" target=\"_blank\" rel=\"noopener\">⟦28⟧</a>).",
+  "en": "d732de78"
+ },
+ "c.930d7584": {
+  "text": "Licence de ces champs cartographiques : sortie du modèle⟦0⟧Ames⟦1⟧; aucune licence indiquée (⟦2⟧données ouvertes). Licences de tous les dépôts : <a href=\"https://github.com/geomorphlab/dune-atlas/blob/main/DATA_LICENSE.md\" target=\"_blank\" rel=\"noopener\">⟦3⟧</a>. Veuillez citer les sources indiquées sous Télécharger et citer.",
+  "en": "930d7584"
+ },
+ "c.a77cf12e": {
+  "text": "Passer à la Terre",
+  "en": "a77cf12e"
+ },
+ "c.e638d1ea": {
+  "text": "Le lien restaure la position, le zoom, le diamètre des grains, le fond de carte, les calques actifs et la cellule sélectionnée.",
+  "en": "e638d1ea"
+ },
+ "c.dae8c832": {
+  "text": "nord en haut au centre de la vue",
+  "en": "dae8c832"
+ },
+ "c.1aa05d8b": {
+  "text": "Barre d’échelle omise : l’échelle varie fortement dans cette vue",
+  "en": "1aa05d8b"
+ },
+ "c.28660749": {
+  "text": "Dune Atlas · map.geomorphlab.org",
+  "en": "28660749"
+ },
+ "c.fa0a24f0": {
+  "text": "Globe (vue en perspective)",
+  "en": "fa0a24f0"
+ },
+ "c.e4bb6ec6": {
+  "text": "centre",
+  "en": "e4bb6ec6"
+ },
+ "c.df92e232": {
+  "text": "zoom",
+  "en": "df92e232"
+ },
+ "c.83822b4f": {
+  "text": "Exporté le {date} depuis {site}.",
+  "en": "83822b4f"
+ },
+ "c.776a3af5": {
+  "text": "Rose des flux de sable",
+  "en": "776a3af5"
+ },
+ "c.709b1f1a": {
+  "text": "Rechercher des coordonnées",
+  "en": "709b1f1a"
+ },
+ "c.8ec38caf": {
+  "text": "Rechercher des lieux ou des coordonnées",
+  "en": "8ec38caf"
+ },
+ "c.d66567e4": {
+  "text": "Lecture impossible :",
+  "en": "d66567e4"
+ },
+ "c.11705e3e": {
+  "text": "Aucun lieu ni aucune coordonnée ne correspond.",
+  "en": "11705e3e"
+ },
+ "c.09abd476": {
+  "text": "Télécharger une région",
+  "en": "09abd476"
+ },
+ "c.ab8fe15e": {
+  "text": "Toutes les cellules du jeu de données de vent sélectionné dans une zone délimitée en latitude et longitude, dans un seul fichier NetCDF (CF-⟦#0⟧) accompagné d’un README.",
+  "en": "ab8fe15e"
+ },
+ "c.9cbd6922": {
+  "text": "Dessiner sur la carte",
+  "en": "9cbd6922"
+ },
+ "c.9e7eb071": {
+  "text": "Faites glisser sur la carte pour dessiner la zone ; Échap pour annuler.",
+  "en": "9e7eb071"
+ },
+ "c.675e4fa4": {
+  "text": "Nord",
+  "en": "675e4fa4"
+ },
+ "c.b3e29f1a": {
+  "text": "Sud",
+  "en": "b3e29f1a"
+ },
+ "c.6b1595ce": {
+  "text": "Ouest",
+  "en": "6b1595ce"
+ },
+ "c.6733095c": {
+  "text": "Est",
+  "en": "6733095c"
+ },
+ "c.fd7f93f9": {
+  "text": "Paramètres",
+  "en": "fd7f93f9"
+ },
+ "c.0bc7157e": {
+  "text": "Champs de flux de sable",
+  "en": "0bc7157e"
+ },
+ "c.13254bc4": {
+  "text": "tous",
+  "en": "13254bc4"
+ },
+ "c.ada7afdb": {
+  "text": "aucun",
+  "en": "ada7afdb"
+ },
+ "c.6c5af3c3": {
+  "text": "Indicateur de dune",
+  "en": "6c5af3c3"
+ },
+ "c.c718d127": {
+  "text": "Télécharger (.zip)",
+  "en": "c718d127"
+ },
+ "c.35afca3b": {
+  "text": "Annuler",
+  "en": "35afca3b"
+ },
+ "c.9c36b560": {
+  "text": "Récupération des cellules",
+  "en": "9c36b560"
+ },
+ "c.77b19672": {
+  "text": "Saisissez les limites ou dessinez une zone sur la carte.",
+  "en": "77b19672"
+ },
+ "c.144cc106": {
+  "text": "Chargement de la grille du jeu de données de vent…",
+  "en": "144cc106"
+ },
+ "c.971fcc50": {
+  "text": "La grille du jeu de données de vent n’a pas pu être chargée.",
+  "en": "971fcc50"
+ },
+ "c.bb7426bc": {
+  "text": "Histogramme du vent (heures par classe de vitesse et de direction)",
+  "en": "bb7426bc"
+ },
+ "c.b92a021d": {
+  "text": "Séries horaires du vent et de l’air (u, v, T, ρ, z)",
+  "en": "b92a021d"
+ },
+ "c.cc7fcd2b": {
+  "text": "Également appelé",
+  "en": "cc7fcd2b"
+ },
+ "c.c9ae189c": {
+  "text": "Comprend",
+  "en": "c9ae189c"
+ },
+ "c.3b5a9bd1": {
+  "text": "À propos de ces noms",
+  "en": "3b5a9bd1"
+ },
+ "c.a2c773d1": {
+  "text": "Sources",
+  "en": "a2c773d1"
+ },
+ "c.2062dc6d": {
+  "text": "Pays",
+  "en": "2062dc6d"
+ },
+ "c.1bb7f195": {
+  "text": "Noms des entités géographiques",
+  "en": "1bb7f195"
+ },
+ "c.e45d16ba": {
+  "text": "Tracé de la carte à la résolution d’export (chargement des tuiles ; cela peut prendre jusqu’à une minute)…",
+  "en": "e45d16ba"
+ },
+ "c.eb69782d": {
+  "text": "Ajout des barres de couleur, des légendes et des sources…",
+  "en": "eb69782d"
+ },
+ "c.3c511e52": {
+  "text": "Encodage du PNG…",
+  "en": "3c511e52"
+ },
+ "c.a19a24ae": {
+  "text": "Inclure le fond de carte",
+  "en": "a19a24ae"
+ },
+ "c.81360998": {
+  "text": "Exporter en PNG",
+  "en": "81360998"
+ },
+ "c.5d7718d4": {
+  "text": "Fond transparent (blanc par défaut)",
+  "en": "5d7718d4"
+ },
+ "c.fb00fe74": {
+  "text": "PNG de la vue actuelle, de ⟦#0⟧ à ⟦#1⟧ pixels de large, sans les panneaux, sur fond blanc sauf si Fond transparent est coché. Les barres de couleur, les légendes, l’échelle et les sources des données sont ajoutées sous la carte.",
+  "en": "fb00fe74"
+ },
+ "c.c20ad87a": {
+  "text": "Enregistré :",
+  "en": "c20ad87a"
+ },
+ "c.513b2f5e": {
+  "text": "Téléchargement lancé :",
+  "en": "513b2f5e"
+ },
+ "c.aceadefc": {
+  "text": "PNG",
+  "en": "aceadefc"
+ },
+ "c.2a21a5c1": {
+  "text": "SVG",
+  "en": "2a21a5c1"
+ },
+ "c.be3c479f": {
+  "text": "Fond transparent",
+  "en": "be3c479f"
+ },
+ "c.8092ebfc": {
+  "text": "La cellule d’exemple n’a pas pu être chargée. Cliquez sur n’importe quelle cellule terrestre de la carte pour ouvrir son panneau.",
+  "en": "8092ebfc"
+ },
+ "c.0489b765": {
+  "text": "Chargement de la carte…",
+  "en": "0489b765"
+ },
+ "c.78a767a8": {
+  "text": "au centre de la vue",
+  "en": "78a767a8"
+ },
+ "c.eb82bb19": {
+  "text": "Mars Dune Atlas",
+  "en": "eb82bb19"
+ },
+ "c.70583d0e": {
+  "text": "Dunes seulement : calques dérivés du vent affichés dans les cellules comportant des dunes.",
+  "en": "70583d0e"
+ },
+ "c.b72a8db3": {
+  "text": "La cellule d’exemple n’a pas pu être chargée. Cliquez sur n’importe quelle cellule de la carte pour ouvrir son panneau.",
+  "en": "b72a8db3"
+ },
+ "c.f17421a6": {
+  "text": "Le sélecteur Jeu de données de vent permet de choisir entre des statistiques de vent issues de réanalyses (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° ; ⟦#2⟧–⟦#3⟧).⟦2⟧, utilisé par⟦3⟧, est une réexécution de la surface continentale pilotée par les champs atmosphériques de⟦4⟧interpolés sur sa grille (Muñoz-Sabater et al. ⟦#4⟧) : ses vents ne constituent donc pas une estimation indépendante, et les jeux de données peuvent malgré tout différer : par exemple,⟦5⟧indique des vitesses du vent à ⟦#5⟧ m de⟦6⟧inférieures de ⟦#6⟧–⟦#7⟧ % à celles de⟦7⟧. Là où les jeux de données donnent des résultats différents, considérez-les comme incertains. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; le masque des champs de dunes et les calques d’aridité et de végétation sont les mêmes pour tous les jeux de données.",
+  "en": "f17421a6"
+ },
+ "c.9ca2c0fc": {
+  "text": "Concept : Les deux jeux de données de vent⟦0⟧",
+  "en": "9ca2c0fc"
+ },
+ "c.f1b21a41": {
+  "text": "Concept : Vitesse de frottement seuil",
+  "en": "f1b21a41"
+ },
+ "c.a9d65061": {
+  "text": "Concept : Direction de migration⟦0⟧",
+  "en": "a9d65061"
+ },
+ "c.3c3fcb95": {
+  "text": "Concept : Direction d’allongement⟦0⟧",
+  "en": "3c3fcb95"
+ },
+ "c.11f17d85": {
+  "text": "Concept : Orientation de la crête⟦0⟧",
+  "en": "11f17d85"
+ },
+ "c.34d51597": {
+  "text": "Concept : Direction du transport le long de la crête⟦0⟧",
+  "en": "34d51597"
+ },
+ "c.a9742ddf": {
+  "text": "Concept : Stabilité des dunes en allongement⟦0⟧",
+  "en": "a9742ddf"
+ },
+ "c.190c3133": {
+  "text": "Concept : Transport le long de la crête par rapport au transport à travers la crête⟦0⟧",
+  "en": "190c3133"
+ },
+ "c.7cc28259": {
+  "text": "Concept : Croissance en hauteur par rapport à la migration⟦0⟧",
+  "en": "7cc28259"
+ },
+ "c.e607dcd2": {
+  "text": "Concept : Morphologie des dunes en allongement⟦0⟧",
+  "en": "e607dcd2"
+ },
+ "c.ce4fe4b4": {
+  "text": "Concept : Potentiel de dérive (⟦0⟧)",
+  "en": "ce4fe4b4"
+ },
+ "c.6a117912": {
+  "text": "Concept : Potentiel de dérive résultant (⟦0⟧)",
+  "en": "6a117912"
+ },
+ "c.bdfc3381": {
+  "text": "Concept : Direction de dérive résultante (⟦0⟧)",
+  "en": "bdfc3381"
+ },
+ "c.3d61687f": {
+  "text": "Concept : Directionnalité (⟦0⟧)",
+  "en": "3d61687f"
+ },
+ "c.a85fff80": {
+  "text": "Concept : Divergence du flux",
+  "en": "a85fff80"
+ },
+ "c.7f316e8f": {
+  "text": "Concept : Taille des grains et seuil",
+  "en": "7f316e8f"
+ },
+ "c.0f656ead": {
+  "text": "Explorateur interactif de géomorphologie éolienne<br>Développé par le <a href=\"https://www.geomorphlab.org/\" target=\"_blank\" rel=\"noopener\">⟦0⟧</a>",
+  "en": "0f656ead"
+ },
+ "c.b053850f": {
+  "text": "⟦0⟧Dunes seulement<span class=\"visually-hidden\">Afficher les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) uniquement dans les cellules comportant des dunes ; les autres calques et le panneau de la cellule restent inchangés.</span>",
+  "en": "b053850f"
+ },
+ "c.49e605be": {
+  "text": "Noms<span class=\"visually-hidden\">Affiche les noms des champs de dunes et des entités nommées sur la carte ; lorsque des noms se chevaucheraient, certains n’apparaissent qu’en zoomant. Cliquez sur un nom pour afficher ses détails.</span>",
+  "en": "49e605be"
+ },
+ "c.c8524dc9": {
+  "text": "m²/yr (échelle logarithmique) · actuellement ⟦0⟧",
+  "en": "c8524dc9"
+ },
+ "c.34de0ec2": {
+  "text": "sans dimension · actuellement ⟦0⟧",
+  "en": "34de0ec2"
+ },
+ "c.68abf023": {
+  "text": "sans dimension (échelle logarithmique) · actuellement ⟦0⟧",
+  "en": "68abf023"
+ },
+ "c.b7c39c7e": {
+  "text": "Flux de sable sur lit plat : total (⟦0⟧), net (⟦1⟧), sa direction (⟦2⟧) et sa directionnalité (⟦3⟧).",
+  "en": "b7c39c7e"
+ },
+ "c.134786ef": {
+  "text": "m/kyr · actuellement ⟦0⟧",
+  "en": "134786ef"
+ },
+ "c.e5e3cf0d": {
+  "text": "sans dimension (échelle logarithmique)",
+  "en": "e5e3cf0d"
+ },
+ "c.7593a9c7": {
+  "text": "Sombre (⟦0⟧)",
+  "en": "7593a9c7"
+ },
+ "c.ba666c84": {
+  "text": "Imagerie satellite (⟦0⟧)",
+  "en": "ba666c84"
+ },
+ "c.66b8cf73": {
+  "text": "Relief ombré (⟦0⟧, 2D)",
+  "en": "66b8cf73"
+ },
+ "c.11b366b1": {
+  "text": "Topographique (⟦0⟧)",
+  "en": "11b366b1"
+ },
+ "c.211b69db": {
+  "text": "Clair (⟦0⟧⟦1⟧)",
+  "en": "211b69db"
+ },
+ "c.58a40f97": {
+  "text": "Vue en globe",
+  "en": "58a40f97"
+ },
+ "c.ca17f671": {
+  "text": "━⟦0⟧de l’atlas /⟦1⟧de Fryberger (m²/yr par⟦2⟧)",
+  "en": "ca17f671"
+ },
+ "c.52122a7b": {
+  "text": "Directionnalité (⟦0⟧)",
+  "en": "52122a7b"
+ },
+ "c.21c06928": {
+  "text": "Les deux jeux de données de vent⟦0⟧",
+  "en": "21c06928"
+ },
+ "c.a8f9ae9c": {
+  "text": "Altitude⟦0⟧(⟦1⟧)",
+  "en": "a8f9ae9c"
+ },
+ "c.8f36579f": {
+  "text": "Champs de dunes martiens cartographiés (⟦0⟧⟦1⟧et⟦2⟧, ⟦#0⟧ polygones, ⟦#1⟧ millions de km²).",
+  "en": "8f36579f"
+ },
+ "c.51af858a": {
+  "text": "⟦0⟧Mars (v0.2)",
+  "en": "51af858a"
+ },
+ "c.37a7f189": {
+  "text": "Mosaïque⟦0⟧, ⟦#0⟧ m (⟦1⟧⟦2⟧,⟦3⟧)",
+  "en": "37a7f189"
+ },
+ "c.b00669df": {
+  "text": "⟦0⟧, là où disponible (⟦1⟧)",
+  "en": "b00669df"
+ },
+ "c.64a11039": {
+  "text": "⟦0⟧couleur (⟦1⟧)",
+  "en": "64a11039"
+ },
+ "c.811007f9": {
+  "text": "Relief ombré en couleur⟦0⟧(⟦1⟧)",
+  "en": "811007f9"
+ },
+ "c.81a7ed6e": {
+  "text": "Le fond de carte initial est un relief ombré du modèle d’altitude fusionné⟦0⟧(Fergason,⟦1⟧), publié sous⟦2⟧(dérivé de⟦3⟧,⟦4⟧, et de⟦5⟧,⟦6⟧). Dans Fond de carte, vous pouvez aussi choisir⟦7⟧ainsi que l’imagerie de Mars proposée par⟦8⟧: la mosaïque globale⟦9⟧(environ ⟦#0⟧ m par pixel ; The⟦10⟧),⟦11⟧(jusqu’à environ ⟦#1⟧ cm par pixel), la mosaïque en couleur⟦12⟧et le relief ombré en couleur⟦13⟧.⟦14⟧ne couvre que la petite partie de la surface qu’il a imagée ; ailleurs, la carte est sombre. Les crédits figurent dans l’attribution de la carte.",
+  "en": "81a7ed6e"
+ },
+ "c.922ef60f": {
+  "text": "« Télécharger et citer », dans le panneau de la cellule, enregistre les séries horaires du vent et de l’air ainsi que tous les paramètres de la cellule au format⟦0⟧ou sous forme d’archive⟦1⟧, avec la citation de chaque source de données. Veuillez citer le jeu de données de vent,⟦2⟧pour la loi de transport et⟦3⟧, qui présente les méthodes.",
+  "en": "922ef60f"
  }
 }

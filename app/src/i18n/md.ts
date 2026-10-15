@@ -9,6 +9,8 @@ const HEADER = (tag: string, name: string) => `# Dune Atlas: ${name} text
 
 Edit only the text after \`${tag}:\`. Keep each translation on one line. Keep unchanged:
 - anything between $ signs (formulas, e.g. $u_{*,th}$), HTML tags such as <br> and <a href="…">…</a>, and {placeholders};
+- the markers ⟦0⟧, ⟦1⟧ … (a formula, a name, a number or a control is put there; it already carries its own
+  spaces, so write it exactly as in the English, with no space added) and ⟦#0⟧, ⟦#1⟧ … (numbers);
 - names of datasets, products and people, acronyms (DP, RDD, ERA5-Land …) and references.
 An empty \`${tag}:\` line shows the English on the site. **STALE** after a heading: the English was changed after it
 was translated; check the translation against the new English, then delete the word STALE.

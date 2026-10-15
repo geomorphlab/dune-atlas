@@ -9,7 +9,7 @@ import { parseTranslations, type MdEntry } from "../src/i18n/md";
 const ROOT = path.resolve(__dirname, "../..");
 export const LANG_FILES = [{ id: "fr", tag: "FR" }, { id: "zh-Hans", tag: "ZH" }] as const;
 const md = (id: string, tag: string) => parseTranslations(fs.readFileSync(path.join(ROOT, "docs/translations", `${id}.md`), "utf8"), tag);
-const FORM = /\$[^$]+\$/g, TAG = /<[^>]+>/g, PH = /\{\w+\}/g;
+const FORM = /\$[^$]+\$/g, TAG = /<[^>]+>/g, PH = /\{\w+\}|⟦#?\d+⟧/g;
 /** terms kept as written in every language (the protected terms of core/util/notranslate.ts that occur here) */
 const KEEP = ["DP", "RDP", "RDD", "RDP/DP", "VU", "ERA5-Land", "ERA5", "MOLA", "HRSC", "CTX", "HiRISE", "OpenFreeMap", "OpenTopoMap", "OpenPlanetaryMap", "Esri", "Mapterhorn", "NetCDF", "CSV", "PNG", "SVG", "README", "Gunn (2026)", "Fryberger & Dean (1979)", "Pähtz & Durán (2023)", "αT", "αE", "αH", "αO"];
 const sorted = (a: string[] | null) => [...(a ?? [])].sort();
@@ -18,7 +18,7 @@ const sorted = (a: string[] | null) => [...(a ?? [])].sort();
 export function translationProblems(en: string, text: string): string[] {
   const p: string[] = [];
   if (JSON.stringify(sorted(en.match(FORM))) !== JSON.stringify(sorted(text.match(FORM)))) p.push("formulas ($…$) differ from the English");
-  if (JSON.stringify(en.match(TAG) ?? []) !== JSON.stringify(text.match(TAG) ?? [])) p.push("HTML tags differ from the English");
+  if (JSON.stringify(sorted(en.match(TAG))) !== JSON.stringify(sorted(text.match(TAG)))) p.push("HTML tags differ from the English");
   if (JSON.stringify(sorted(en.match(PH))) !== JSON.stringify(sorted(text.match(PH)))) p.push("{placeholders} differ from the English");
   const ne = en.replace(FORM, ""), nt = text.replace(FORM, "");
   for (const k of KEEP) if (new RegExp(`(?<![\\w-])${k.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&")}(?![\\w-])`).test(ne) && !nt.includes(k)) p.push(`"${k}" must be kept as written`);

@@ -62,3 +62,39 @@ export function switchLang(to: Lang, loc: Pick<Location, "search" | "pathname" |
   const s = q.toString().replace(/%2C/g, ",").replace(/%3A/g, ":").replace(/%3D/g, "=");
   loc.assign(`${loc.pathname}${s ? `?${s}` : ""}${loc.hash}`);
 }
+
+// ---- Text keyed by its own English (popovers, About, cell panel, exports) ----
+// trc(english) looks the translation up by the fingerprint of the English itself (key "c.<hash>"): an edit
+// of the English makes a new key, so a stale translation can never be shown. The strings are collected from a
+// full render of each atlas (npm run i18n -> tests/i18ncollect.test.ts -> src/i18n/collected-<body>.json).
+/** set by tests/i18ncollect.test.ts: every English text passed to trc / trBlocks, with its area */
+export const COLLECTED = new Map<string, string>();
+export const contentKey = (en: string) => `c.${enHash(en)}`;
+export function trc(en: string, area = "Other"): string {
+  if (!en || !/\p{L}/u.test(en)) return en;
+  if ((globalThis as { __I18N_COLLECT__?: boolean }).__I18N_COLLECT__ && !COLLECTED.has(en)) COLLECTED.set(en, area);
+  return trIn(LANG, contentKey(en), en);
+}
+/** trc on text whose plain numbers vary (export captions, labels): the numbers become ⟦#0⟧ … in the key */
+export function trNum(text: string, area = "Exported images"): string {
+  if (LANG === "en" && !(globalThis as { __I18N_COLLECT__?: boolean }).__I18N_COLLECT__) return text;
+  const nums: string[] = [];
+  const tpl = text.replace(/(?<![\p{L}\p{N}_.,])[-−]?\d+(?:[.,]\d+)*(?![\p{L}\p{N}_])/gu, (m) => { nums.push(m); return `⟦#${nums.length - 1}⟧`; });
+  return trc(tpl, area).replace(/⟦#(\d+)⟧/g, (_m, i) => nums[Number(i)] ?? "");
+}
+/** trc on a template with {placeholders}, then filled */
+export const trcf = (en: string, vars: Record<string, string | number>, area = "Other") => fill(trc(en, area), vars);
+
+const BLOCK = /<(p|li|h3|h4|dt|dd|summary|figcaption|strong)(\s[^>]*)?>((?:(?!<\/?\1[\s>])[\s\S])*?)<\/\1>/g;
+/** translate each text block of an HTML fragment (paragraph, list item, heading, definition term or value) as
+ *  one unit; blocks marked translate="no", and text outside blocks, are kept */
+export function trBlocks(html: string, area: string): string {
+  if (LANG === "en" && !(globalThis as { __I18N_COLLECT__?: boolean }).__I18N_COLLECT__) return html;
+  return html.replace(BLOCK, (m, tag: string, attrs: string | undefined, inner: string) => {
+    if (/translate="no"/.test(attrs ?? "") || !/\p{L}/u.test(inner.replace(/<[^>]+>/g, ""))) return m;
+    // a list item holding a nested list: translate only up to the nested list
+    const cut = inner.search(/<(ul|ol|dl)[\s>]/);
+    if (cut >= 0) return `<${tag}${attrs ?? ""}>${trc(inner.slice(0, cut), area)}${inner.slice(cut)}</${tag}>`;
+    return `<${tag}${attrs ?? ""}>${trc(inner, area)}</${tag}>`;
+  });
+}

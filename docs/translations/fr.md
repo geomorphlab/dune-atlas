@@ -2,6 +2,8 @@
 
 Edit only the text after `FR:`. Keep each translation on one line. Keep unchanged:
 - anything between $ signs (formulas, e.g. $u_{*,th}$), HTML tags such as <br> and <a href="…">…</a>, and {placeholders};
+- the markers ⟦0⟧, ⟦1⟧ … (a formula, a name, a number or a control is put there; it already carries its own
+  spaces, so write it exactly as in the English, with no space added) and ⟦#0⟧, ⟦#1⟧ … (numbers);
 - names of datasets, products and people, acronyms (DP, RDD, ERA5-Land …) and references.
 An empty `FR:` line shows the English on the site. **STALE** after a heading: the English was changed after it
 was translated; check the translation against the new English, then delete the word STALE.
@@ -1382,3 +1384,1961 @@ FR: vers
 ## cell.petalsFrom (Interface)
 EN: from
 FR: depuis
+
+# Screen-reader labels and tooltips
+
+## c.cbf0821a (Screen-reader labels and tooltips)
+EN: About {title}
+FR: À propos de {title}
+
+## c.e7dc4699 (Screen-reader labels and tooltips)
+EN: Move {title} up
+FR: Monter {title}
+
+## c.ecdb15e0 (Screen-reader labels and tooltips)
+EN: Move {title} down
+FR: Descendre {title}
+
+## c.2ff214e6 (Screen-reader labels and tooltips)
+EN: Remove {title} from the map
+FR: Retirer {title} de la carte
+
+## c.33ff2167 (Screen-reader labels and tooltips)
+EN: Opacity of {title}
+FR: Opacité de {title}
+
+## c.a2de8b84 (Screen-reader labels and tooltips)
+EN: Show {title}
+FR: Afficher {title}
+
+## c.32a4672f (Screen-reader labels and tooltips)
+EN: Fill colour for {title}
+FR: Couleur de remplissage de {title}
+
+# Other
+
+## c.9e5e6896 (Other)
+EN: Dune-field names
+FR: Noms des champs de dunes
+
+# Screen-reader labels and tooltips
+
+## c.ce3f61ab (Screen-reader labels and tooltips)
+EN: Display {title} as
+FR: Afficher {title} sous forme de
+
+## c.1b597f46 (Screen-reader labels and tooltips)
+EN: Arrow / streamline colour for {title}
+FR: Couleur des flèches / lignes de courant pour {title}
+
+## c.7e0bca77 (Screen-reader labels and tooltips)
+EN: Line spacing for {title}, finer to coarser
+FR: Espacement des lignes pour {title}, du plus fin au plus grossier
+
+## c.cf77fd20 (Screen-reader labels and tooltips)
+EN: Colour map for {title}
+FR: Palette de couleurs pour {title}
+
+## c.30453a2a (Screen-reader labels and tooltips)
+EN: Reverse colour map for {title}
+FR: Inverser la palette de couleurs pour {title}
+
+## c.149cfa70 (Screen-reader labels and tooltips)
+EN: Colour scale minimum for {title}
+FR: Minimum de l’échelle de couleurs pour {title}
+
+## c.8b6b1072 (Screen-reader labels and tooltips)
+EN: Colour scale maximum for {title}
+FR: Maximum de l’échelle de couleurs pour {title}
+
+## c.8c096bed (Screen-reader labels and tooltips)
+EN: Logarithmic colour scale for {title}
+FR: Échelle de couleurs logarithmique pour {title}
+
+## c.e85083b1 (Screen-reader labels and tooltips)
+EN: ERA5-Land ⟦#0⟧°, ⟦#1⟧–⟦#2⟧; land cells: land–sea mask fraction > ⟦#3⟧
+FR: ERA5-Land ⟦#0⟧°, ⟦#1⟧–⟦#2⟧ ; cellules terrestres : fraction du masque terre–mer > ⟦#3⟧
+
+## c.c66b4f99 (Screen-reader labels and tooltips)
+EN: Draw the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in cells with dunes; the other layers and the cell panel are unchanged.
+FR: N’afficher les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) que dans les cellules comportant des dunes ; les autres calques et le panneau de la cellule restent inchangés.
+
+## c.e801d9a2 (Screen-reader labels and tooltips)
+EN: Reset to the default ⟦#0⟧ m/s
+FR: Rétablir la valeur par défaut de ⟦#0⟧ m/s
+
+# Layer panel
+
+## c.72156bc9 (Layer panel)
+EN: default ⟦#0⟧ m/s
+FR: par défaut ⟦#0⟧ m/s
+
+## c.95919b83 (Layer panel)
+EN: Applies to the map layers and the cell panel.
+FR: S’applique aux calques de la carte et au panneau de la cellule.
+
+# Layer popovers
+
+## c.bf84b28e (Layer popovers)
+EN: The friction velocity ⟦0⟧ above which the wind moves sand. Every threshold-dependent map layer (its ⓘ says so) and the cell panel use the value set here.
+FR: La vitesse de frottement ⟦0⟧ au-delà de laquelle le vent met le sable en mouvement. Tous les calques de la carte qui dépendent du seuil (leur ⓘ l’indique) ainsi que le panneau de la cellule utilisent la valeur définie ici.
+
+## c.037dc143 (Layer popovers)
+EN: The default, ⟦#0⟧ m/s, is the value used for the global analysis of⟦0⟧: a common global approximation used in place of more accurate local values, not calibrated for any site. Values between ⟦#1⟧ and ⟦#2⟧ m/s are typical; for loose, dry sand the threshold depends mainly on grain size and density.
+FR: La valeur par défaut, ⟦#0⟧ m/s, est celle utilisée pour l’analyse globale de⟦0⟧: une approximation globale courante, utilisée à la place de valeurs locales plus précises, et non calibrée pour un site particulier. Des valeurs comprises entre ⟦#1⟧ et ⟦#2⟧ m/s sont typiques ; pour un sable sec et meuble, le seuil dépend principalement de la taille et de la masse volumique des grains.
+
+## c.5b6d3e3c (Layer popovers)
+EN: With the roughness length of ⟦#0⟧ mm used here, ⟦#1⟧ m/s corresponds to a ⟦#2⟧ m wind of ⟦#3⟧ m/s (⟦#4⟧ knots); the ⟦#5⟧-knot threshold of⟦0⟧corresponds to about ⟦#6⟧ m/s.
+FR: Avec la longueur de rugosité de ⟦#0⟧ mm utilisée ici, ⟦#1⟧ m/s correspond à un vent à ⟦#2⟧ m de ⟦#3⟧ m/s (⟦#4⟧ nœuds) ; le seuil de ⟦#5⟧ nœuds de⟦0⟧correspond à environ ⟦#6⟧ m/s.
+
+## c.842a7a09 (Layer popovers)
+EN: ⟦#0⟧ values from ⟦#1⟧ m/s to ⟦#2⟧ m/s; default ⟦#3⟧ m/s (the mark under the slider). The compact copy at the top of the cell panel sets the same value.
+FR: ⟦#0⟧ valeurs de ⟦#1⟧ m/s à ⟦#2⟧ m/s ; valeur par défaut ⟦#3⟧ m/s (le repère sous le curseur). La version compacte située en haut du panneau de la cellule règle la même valeur.
+
+# Screen-reader labels and tooltips
+
+## c.e764d433 (Screen-reader labels and tooltips)
+EN: Active layers, drawing order (top is drawn on top)
+FR: Calques actifs, ordre d’affichage (le calque du haut est dessiné au-dessus)
+
+## c.fce503d3 (Screen-reader labels and tooltips)
+EN: Drag to reorder
+FR: Faire glisser pour réorganiser
+
+# Layer panel
+
+## c.3f0212fb (Layer panel)
+EN: Fill ⟦0⟧
+FR: Remplissage ⟦0⟧
+
+# Screen-reader labels and tooltips
+
+## c.82a20f6e (Screen-reader labels and tooltips)
+EN: Invert: colour the land WITHOUT mapped dunes instead of the dunes. Latitudes beyond ±⟦#0⟧° (interior Antarctica) are not coloured.
+FR: Inverser : colorer les terres SANS dunes cartographiées plutôt que les dunes. Les latitudes au-delà de ±⟦#0⟧° (intérieur de l’Antarctique) ne sont pas colorées.
+
+# Layer panel
+
+## c.c158f449 (Layer panel)
+EN: ⟦0⟧ invert (land without dunes)
+FR: ⟦0⟧ inverser (terres sans dunes)
+
+# Screen-reader labels and tooltips
+
+## c.4422e95b (Screen-reader labels and tooltips)
+EN: Invert: colour land without dunes
+FR: Inverser : colorer les terres sans dunes
+
+# Layer popovers
+
+## c.785bb05c (Layer popovers)
+EN: The ⟦#0⟧° dune cells of the dune map grouped into ⟦#1⟧ dune fields of ⟦#2⟧-connected cells; polygon edges follow the grid-cell boundaries exactly. Area is the sum of spherical cell areas.
+FR: Les cellules de dunes à ⟦#0⟧° de la carte des dunes, regroupées en ⟦#1⟧ champs de dunes de cellules ⟦#2⟧-connexes ; les contours des polygones suivent exactement les limites des cellules de la grille. La superficie est la somme des aires sphériques des cellules.
+
+## c.2be0d726 (Layer popovers)
+EN: Displayed dune field names are derived from previously published academic research and data, regional knowledge, and internet searches. Naming conventions (language, jurisdiction, spelling, merging, etc.) were chosen for clarity but may be wrong or offend certain peoples. Please contact Andrew Gunn at <a href="mailto:a.gunn@monash.edu">a.gunn@monash.edu</a> if you have any suggestions for changes, removals, or additions.
+FR: Les noms des champs de dunes affichés sont issus de travaux et de données de recherche académique déjà publiés, de connaissances régionales et de recherches sur Internet. Les conventions de dénomination (langue, juridiction, orthographe, regroupement, etc.) ont été choisies par souci de clarté, mais peuvent être erronées ou offenser certains peuples. Veuillez contacter Andrew Gunn à l’adresse <a href="mailto:a.gunn@monash.edu">a.gunn@monash.edu</a> si vous avez des suggestions de modifications, de suppressions ou d’ajouts.
+
+## c.1226fbb4 (Layer popovers)
+EN: Citation
+FR: Citation
+
+# Screen-reader labels and tooltips
+
+## c.ec7be404 (Screen-reader labels and tooltips)
+EN: Label named dune fields and features on the map; where names would overlap, some appear only as you zoom in. Click a name for its details.
+FR: Affiche les noms des champs de dunes et des entités nommées sur la carte ; lorsque des noms se chevaucheraient, certains n’apparaissent qu’en zoomant. Cliquez sur un nom pour afficher ses détails.
+
+# Layer panel
+
+## c.1e62d767 (Layer panel)
+EN: Show as ⟦0⟧
+FR: Afficher en ⟦0⟧
+
+## c.c739a747 (Layer panel)
+EN: colour map
+FR: palette de couleurs
+
+## c.8b3f7f3a (Layer panel)
+EN: Line colour ⟦0⟧
+FR: Couleur de ligne ⟦0⟧
+
+# Screen-reader labels and tooltips
+
+## c.f9cf5751 (Screen-reader labels and tooltips)
+EN: Spacing between arrows / streamlines: left finer (denser lines), right coarser
+FR: Espacement entre les flèches / lignes de courant : à gauche plus fin (lignes plus denses), à droite plus grossier
+
+# Layer panel
+
+## c.bc8b4ab6 (Layer panel)
+EN: Spacing <span class="spacing-end">Finer</span>⟦0⟧<span class="spacing-end">Coarser</span>
+FR: Espacement <span class="spacing-end">Plus fin</span>⟦0⟧<span class="spacing-end">Plus grossier</span>
+
+## c.02860b5d (Layer panel)
+EN: Colours ⟦0⟧
+FR: Couleurs ⟦0⟧
+
+## c.9fbef08a (Layer panel)
+EN: ⟦0⟧ reversed
+FR: ⟦0⟧ inversées
+
+## c.a9812c14 (Layer panel)
+EN: min ⟦0⟧
+FR: min ⟦0⟧
+
+## c.c728f056 (Layer panel)
+EN: max ⟦0⟧
+FR: max ⟦0⟧
+
+## c.650d33c0 (Layer panel)
+EN: reset
+FR: réinitialiser
+
+# Screen-reader labels and tooltips
+
+## c.f5ecdead (Screen-reader labels and tooltips)
+EN: Colour scale from ⟦#0⟧ to ⟦#1⟧
+FR: Échelle de couleurs de ⟦#0⟧ à ⟦#1⟧
+
+## c.8fd4b665 (Screen-reader labels and tooltips)
+EN: values outside the range are shown at the end colours
+FR: les valeurs hors de l’intervalle sont affichées avec les couleurs des extrémités
+
+# Layer popovers
+
+## c.40b6e257 (Layer popovers)
+EN: Migration direction⟦0⟧of dunes whose crests have the bed-instability orientation⟦1⟧: perpendicular to⟦2⟧, toward the side of the net sand flux across the crest (⟦3⟧;⟦4⟧).
+FR: Direction de migration⟦0⟧des dunes dont les crêtes ont l’orientation du mode d’instabilité du lit⟦1⟧: perpendiculaire à⟦2⟧, vers le côté où se dirige le flux net de sable à travers la crête (⟦3⟧;⟦4⟧).
+
+## c.6ed4163c (Layer popovers)
+EN: Units
+FR: Unités
+
+## c.d7ff288f (Layer popovers)
+EN: ° (compass bearing, clockwise from north, toward which sand moves)
+FR: ° (azimut, compté dans le sens horaire depuis le nord, vers lequel se déplace le sable)
+
+## c.56c1f3e5 (Layer popovers)
+EN: Wind data
+FR: Données de vent
+
+## c.9b74c01c (Layer popovers)
+EN: Slider
+FR: Curseur
+
+## c.fc8f6378 (Layer popovers)
+EN: Updates with the ⟦0⟧ control.
+FR: Mis à jour avec la commande ⟦0⟧.
+
+## c.cb6596aa (Layer popovers)
+EN: Citing the map fields (in About)
+FR: Citer les champs de la carte (dans À propos)
+
+## c.27cf9488 (Layer popovers)
+EN: Elongation direction⟦0⟧: the direction in which a dune grows in length without migrating, where the net sand flux across its crest is zero and the net flux along it is positive (⟦1⟧). It applies to dunes on beds with limited sand, typically growing from a fixed sand source. Where a wind regime allows several such directions, the atlas shows the most stable one.
+FR: Direction d’allongement⟦0⟧: direction dans laquelle une dune croît en longueur sans migrer, là où le flux net de sable à travers sa crête est nul et le flux net le long de celle-ci est positif (⟦1⟧). Elle s’applique aux dunes situées sur des lits où le sable est limité, qui croissent généralement à partir d’une source de sable fixe. Lorsqu’un régime de vents admet plusieurs directions de ce type, l’atlas affiche la plus stable.
+
+## c.e2c0f300 (Layer popovers)
+EN: Crest orientation⟦0⟧of the bed-instability mode: the axis (⟦#0⟧–⟦#1⟧°) of crests that receive the largest gross sand transport across them, including the speed-up of the wind over the crest (⟦1⟧;⟦2⟧). It is also the expected crest orientation of migrating dunes such as barchans. Dunes with this orientation migrate perpendicular to it, in direction⟦3⟧. As an axis it has no compass direction: e.g., ⟦#2⟧° and ⟦#3⟧° are the same line.
+FR: Orientation de la crête⟦0⟧du mode d’instabilité du lit : axe (⟦#0⟧–⟦#1⟧°) des crêtes qui reçoivent le plus fort transport brut de sable à travers elles, en tenant compte de l’accélération du vent au-dessus de la crête (⟦1⟧;⟦2⟧). C’est aussi l’orientation de crête attendue pour les dunes qui migrent, comme les barkhanes. Les dunes ayant cette orientation migrent perpendiculairement à celle-ci, dans la direction⟦3⟧. En tant qu’axe, elle n’a pas de sens d’azimut : par exemple, ⟦#2⟧° et ⟦#3⟧° désignent la même droite.
+
+## c.96a1a48e (Layer popovers)
+EN: ° (crest axis, ⟦#0⟧–⟦#1⟧°)
+FR: ° (axe de la crête, ⟦#0⟧–⟦#1⟧°)
+
+## c.bc48cc14 (Layer popovers)
+EN: Direction⟦0⟧along crests of the bed-instability orientation⟦1⟧in which the net sand flux along the crest points, as a compass bearing. Where crests are oblique to the net transport, sand moves along them as well as across them;⟦2⟧shows which way along the crest it moves.
+FR: Direction⟦0⟧, le long des crêtes ayant l’orientation du mode d’instabilité du lit⟦1⟧, dans laquelle pointe le flux net de sable le long de la crête, exprimée en azimut. Lorsque les crêtes sont obliques par rapport au transport net, le sable se déplace le long de celles-ci aussi bien qu’à travers elles ;⟦2⟧indique dans quel sens il se déplace le long de la crête.
+
+# Screen-reader labels and tooltips
+
+## c.9887f73f (Screen-reader labels and tooltips)
+EN: Colour scale (logarithmic) from ⟦#0⟧ to ⟦#1⟧
+FR: Échelle de couleurs (logarithmique) de ⟦#0⟧ à ⟦#1⟧
+
+## c.e7135998 (Screen-reader labels and tooltips)
+EN: Limits span zero: symmetric log scale, linear close to zero
+FR: Les limites encadrent zéro : échelle logarithmique symétrique, linéaire au voisinage de zéro
+
+## c.69ce2e68 (Screen-reader labels and tooltips)
+EN: Log scale needs min > ⟦#0⟧, or min < ⟦#1⟧ < max (symmetric log)
+FR: L’échelle logarithmique exige min > ⟦#0⟧, ou min < ⟦#1⟧ < max (logarithmique symétrique)
+
+# Layer popovers
+
+## c.8dcaa52f (Layer popovers)
+EN: Ratio of the growth rates in height of dunes in the elongation and bed-instability orientations,⟦0⟧, between ⟦#0⟧ and ⟦#1⟧. It assesses whether dunes elongating from a sand source on a starved bed are stable: in numerical simulations and in dunes around the Tibesti Massif, elongating linear dunes form where the ratio is above about ⟦#2⟧ and trains of barchans form below it (⟦1⟧;⟦2⟧). It does not take bed mobility or other boundary conditions into account.
+FR: Rapport des taux de croissance en hauteur des dunes selon les orientations d’allongement et d’instabilité du lit,⟦0⟧, compris entre ⟦#0⟧ et ⟦#1⟧. Il permet d’évaluer si les dunes qui s’allongent à partir d’une source de sable sur un lit pauvre en sable sont stables : dans les simulations numériques et pour les dunes situées autour du massif du Tibesti, des dunes linéaires en allongement se forment lorsque le rapport est supérieur à environ ⟦#2⟧, et des trains de barkhanes se forment en dessous (⟦1⟧;⟦2⟧). Il ne tient pas compte de la mobilité du lit ni des autres conditions aux limites.
+
+## c.a776804c (Layer popovers)
+EN: Net along-crest over net across-crest sand flux for crests of the bed-instability orientation,⟦0⟧. Along-crest transport tends to keep crests straight, while across-crest transport, which drives migration, tends to make them sinuous (⟦1⟧), so higher values suggest straighter long-crested dunes on sand-covered beds. For dunes migrating on starved beds, the ratio measures the asymmetry of sand fluxes that makes dunes such as barchans asymmetric (⟦2⟧). In the sand-covered-bed examples of⟦3⟧it is about ⟦#0⟧ for transverse, ⟦#1⟧ for oblique and ⟦#2⟧ for longitudinal dunes. The ratio goes to infinity where its denominator (a net flux) goes to zero (shown clipped to ±⟦#3⟧).
+FR: Rapport du flux de sable net le long de la crête au flux net à travers la crête pour les crêtes dans l’orientation du mode d’instabilité du lit,⟦0⟧. Le transport le long de la crête tend à maintenir les crêtes rectilignes, tandis que le transport à travers la crête, qui entraîne la migration, tend à les rendre sinueuses (⟦1⟧) ; des valeurs plus élevées suggèrent donc des dunes à crête longue plus rectilignes sur des lits couverts de sable. Pour les dunes migrant sur des lits pauvres en sable, le rapport mesure l’asymétrie des flux de sable qui rend asymétriques des dunes telles que les barkhanes (⟦2⟧). Dans les exemples sur lit couvert de sable de⟦3⟧il vaut environ ⟦#0⟧ pour les dunes transverses, ⟦#1⟧ pour les dunes obliques et ⟦#2⟧ pour les dunes longitudinales. Le rapport tend vers l’infini lorsque son dénominateur (un flux net) tend vers zéro (valeurs affichées écrêtées à ±⟦#3⟧).
+
+## c.b4eb3711 (Layer popovers)
+EN: Gross over net across-crest sand flux for crests of the bed-instability orientation,⟦0⟧, never below ⟦#0⟧: the balance between growth in height and migration. Values near ⟦#1⟧ mean that transport across the crest goes one way and the dunes mainly migrate; large values mean that it reverses, building the dunes up with little net migration, which may also favour straighter crests (⟦1⟧). In the sand-covered-bed examples of⟦2⟧it is about ⟦#2⟧ for transverse, ⟦#3⟧ for oblique and ⟦#4⟧ for longitudinal dunes. The ratio goes to infinity where its denominator (a net flux) goes to zero (shown clipped to ±⟦#5⟧).
+FR: Rapport du flux de sable brut à travers la crête au flux net à travers la crête pour les crêtes dans l’orientation du mode d’instabilité du lit,⟦0⟧, jamais inférieur à ⟦#0⟧ ; il traduit l’équilibre entre croissance en hauteur et migration. Des valeurs proches de ⟦#1⟧ signifient que le transport à travers la crête s’effectue dans un seul sens et que les dunes migrent principalement ; des valeurs élevées signifient qu’il s’inverse, faisant croître les dunes en hauteur avec une faible migration nette, ce qui peut aussi favoriser des crêtes plus rectilignes (⟦1⟧). Dans les exemples sur lit couvert de sable de⟦2⟧il vaut environ ⟦#2⟧ pour les dunes transverses, ⟦#3⟧ pour les dunes obliques et ⟦#4⟧ pour les dunes longitudinales. Le rapport tend vers l’infini lorsque son dénominateur (un flux net) tend vers zéro (valeurs affichées écrêtées à ±⟦#5⟧).
+
+## c.e3ecff1e (Layer popovers)
+EN: Gross across-crest over net along-crest sand flux for dunes in the elongation orientation,⟦0⟧: the balance between growth in height and elongation. For dunes that elongate without migrating, it is the parameter expected to distinguish their shapes. Compared with⟦1⟧, it indicates whether elongation or migration is more likely to set dune shape and orientation on a starved bed: the dynamic with the larger ratio favours growth in height more and is expected to prevail (⟦2⟧). The ratio goes to infinity where its denominator (a net flux) goes to zero (shown clipped to ±⟦#0⟧).
+FR: Rapport du flux de sable brut à travers la crête au flux net le long de la crête pour les dunes dans l’orientation du mode d’allongement,⟦0⟧, soit l’équilibre entre croissance en hauteur et allongement. Pour les dunes qui s’allongent sans migrer, c’est le paramètre censé distinguer leurs formes. Comparé à⟦1⟧, il indique si l’allongement ou la migration est le plus susceptible de déterminer la forme et l’orientation des dunes sur un lit pauvre en sable : la dynamique présentant le rapport le plus élevé favorise davantage la croissance en hauteur et devrait l’emporter (⟦2⟧). Le rapport tend vers l’infini lorsque son dénominateur (un flux net) tend vers zéro (valeurs affichées écrêtées à ±⟦#0⟧).
+
+## c.e5c17d00 (Layer popovers)
+EN: Fraction of time flat-bed friction velocity is above threshold⟦0⟧.
+FR: Fraction du temps pendant laquelle la vitesse de frottement sur lit plat est au-dessus du seuil⟦0⟧.
+
+## c.e68c470c (Layer popovers)
+EN: fraction (⟦#0⟧–⟦#1⟧)
+FR: fraction (⟦#0⟧–⟦#1⟧)
+
+## c.d66d70dc (Layer popovers)
+EN: Average above-threshold flat-bed friction velocity, normalised by threshold⟦0⟧.
+FR: Vitesse de frottement moyenne sur lit plat au-dessus du seuil, normalisée par le seuil⟦0⟧.
+
+## c.7aed9ffd (Layer popovers)
+EN: Fraction of bed-instability-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux.
+FR: Fraction du flux de crête en mode d’instabilité du lit (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête.
+
+## c.0d2dc35f (Layer popovers)
+EN: Fraction of elongation-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux.
+FR: Fraction du flux de crête en mode d’allongement (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête.
+
+## c.4c826ecf (Layer popovers)
+EN: Time-averaged flat-bed saturated sand flux,⟦0⟧over all speed and direction bins: the volume of packed sand per metre width that the wind could move per year over a flat bed fully covered by loose sand (⟦1⟧). Like the drift potential of⟦2⟧it measures the wind's capacity to transport sand, but it is a different quantity: Fryberger's⟦3⟧is in vector units, computed from ⟦#0⟧ m wind speeds in knots as⟦4⟧with a ⟦#1⟧-knot threshold, whereas this⟦5⟧is a physical flux computed from the friction velocity with the threshold set by the slider. The two cannot be converted into each other without the wind-speed distribution, and Fryberger's energy classes (below ⟦#2⟧, ⟦#3⟧–⟦#4⟧ and above ⟦#5⟧ vector units) do not apply to these values.
+FR: Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des classes de vitesse et de direction : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par an sur un lit plat entièrement recouvert de sable meuble (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement, avec le seuil fixé par le curseur. Les deux ne peuvent être convertis l’un en l’autre sans la distribution des vitesses du vent, et les classes d’énergie de Fryberger (moins de ⟦#2⟧, ⟦#3⟧–⟦#4⟧ et plus de ⟦#5⟧ unités vectorielles) ne s’appliquent pas à ces valeurs.
+
+## c.40039fa4 (Layer popovers)
+EN: Magnitude of the time-averaged flat-bed flux vector,⟦0⟧: the net volume of packed sand per metre width per year after transport in opposing directions has cancelled. Same units as⟦1⟧;⟦2⟧≤⟦3⟧, with equality only when all transport is in one direction.
+FR: Norme du vecteur flux sur lit plat moyenné dans le temps,⟦0⟧: le volume net de sable compacté par mètre de largeur et par an, une fois compensés les transports de sens opposés. Mêmes unités que⟦1⟧;⟦2⟧≤⟦3⟧, l’égalité n’étant atteinte que lorsque tout le transport s’effectue dans une seule direction.
+
+## c.4837126c (Layer popovers)
+EN: Direction of the time-averaged flat-bed flux vector,⟦0⟧, the direction sand moves, as a compass bearing (clockwise from north). Poorly defined where⟦1⟧is low, because transport in opposing directions nearly cancels.
+FR: Direction du vecteur flux sur lit plat moyenné dans le temps,⟦0⟧, c’est-à-dire la direction vers laquelle se déplace le sable, exprimée en azimut (dans le sens horaire depuis le nord). Mal définie là où⟦1⟧est faible, car les transports de sens opposés se compensent presque entièrement.
+
+## c.e214427e (Layer popovers)
+EN: Directional variability of sand flux: ratio of resultant to total drift potential,⟦0⟧(⟦#0⟧ = multidirectional, ⟦#1⟧ = unidirectional). Undefined where there is no sand flux (⟦1⟧).⟦2⟧classes: below ⟦#2⟧ low (complex or obtuse bimodal winds), ⟦#3⟧–⟦#4⟧ intermediate (obtuse to acute bimodal winds), above ⟦#5⟧ high (unimodal winds). Only transport above the threshold counts here, and the flux law differs from Fryberger's, so use the classes as a guide.
+FR: Variabilité directionnelle du flux de sable : rapport du potentiel de dérive résultant au potentiel de dérive total,⟦0⟧(⟦#0⟧ = multidirectionnel, ⟦#1⟧ = unidirectionnel). Non défini là où il n’y a pas de flux de sable (⟦1⟧). Classes de⟦2⟧: moins de ⟦#2⟧, faible (vents complexes ou bimodaux obtus) ; ⟦#3⟧–⟦#4⟧, intermédiaire (vents bimodaux obtus à aigus) ; plus de ⟦#5⟧, élevé (vents unimodaux). Seul le transport au-dessus du seuil est pris en compte ici, et la loi de flux diffère de celle de Fryberger : utilisez donc ces classes à titre indicatif.
+
+## c.d590db9a (Layer popovers)
+EN: Divergence of the time-averaged saturated sand-flux vector (magnitude⟦0⟧, direction⟦1⟧) on the sphere, following⟦2⟧, Methods⟦3⟧:⟦4⟧with⟦5⟧,⟦6⟧. By conservation of sand mass, negative values (flux convergence) imply deposition and positive values (flux divergence) erosion. The values assume a saturated flux and an unlimited supply of loose sand, so on rock, crusted or vegetated surfaces actual erosion is limited by the sand available. No data at coasts (a neighbouring cell has no wind data) and on the ±⟦#0⟧° rows.
+FR: Divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦0⟧, direction⟦1⟧) sur la sphère, d’après⟦2⟧, Méthodes⟦3⟧:⟦4⟧avec⟦5⟧,⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence du flux) impliquent un dépôt et les valeurs positives (divergence du flux) une érosion. Ces valeurs supposent un flux saturé et un apport illimité de sable meuble ; sur les surfaces rocheuses, encroûtées ou végétalisées, l’érosion réelle est donc limitée par le sable disponible. Pas de données sur les côtes (une cellule voisine ne dispose pas de données de vent) ni sur les rangées à ±⟦#0⟧°.
+
+## c.925905dc (Layer popovers)
+EN: Global Aridity Index v3.1 (⟦#0⟧–⟦#1⟧): mean annual precipitation divided by reference evapotranspiration, native ⟦#2⟧″ (~⟦#3⟧ km) grid.⟦0⟧classes: &lt; ⟦#4⟧ hyper-arid, ⟦#5⟧–⟦#6⟧ arid, ⟦#7⟧–⟦#8⟧ semi-arid, ⟦#9⟧–⟦#10⟧ dry sub-humid, &gt; ⟦#11⟧ humid. Values of ⟦#12⟧ mean⟦1⟧≥ ⟦#13⟧ (source saturation). Ocean, Antarctica (south of ⟦#14⟧° S) and polar ice with zero⟦2⟧have no data.
+FR: Global Aridity Index v3.1 (⟦#0⟧–⟦#1⟧) : précipitations annuelles moyennes divisées par l’évapotranspiration de référence, grille native à ⟦#2⟧″ (~⟦#3⟧ km).⟦0⟧classes : &lt; ⟦#4⟧ hyperaride, ⟦#5⟧–⟦#6⟧ aride, ⟦#7⟧–⟦#8⟧ semi-aride, ⟦#9⟧–⟦#10⟧ subhumide sec, &gt; ⟦#11⟧ humide. Les valeurs de ⟦#12⟧ signifient⟦1⟧≥ ⟦#13⟧ (saturation de la source). L’océan, l’Antarctique (au sud de ⟦#14⟧° S) et les glaces polaires où⟦2⟧vaut zéro n’ont pas de données.
+
+## c.ab99d29d (Layer popovers)
+EN: not used (the same for every wind dataset)
+FR: non utilisé (identique pour tous les jeux de données de vent)
+
+## c.71f5da7c (Layer popovers)
+EN: Threshold-independent: not affected by the ⟦0⟧ control.
+FR: Indépendant du seuil : non affecté par la commande ⟦0⟧.
+
+## c.61e2a3f8 (Layer popovers)
+EN: Source
+FR: Source
+
+## c.f9f78e2c (Layer popovers)
+EN: ⟦0⟧, Version ⟦#0⟧ (⟦1⟧; Zomer &amp; Trabucco), annual aridity index ai_v31_yr, ⟦#1⟧-⟦#2⟧, ⟦#3⟧ arc-seconds
+FR: ⟦0⟧, version ⟦#0⟧ (⟦1⟧ ; Zomer &amp; Trabucco), indice d’aridité annuel ai_v31_yr, ⟦#1⟧-⟦#2⟧, ⟦#3⟧ secondes d’arc
+
+## c.735cb604 (Layer popovers)
+EN: Data⟦0⟧
+FR: Données⟦0⟧
+
+## c.58c031d4 (Layer popovers)
+EN: Licence
+FR: Licence
+
+## c.8e08e589 (Layer popovers)
+EN: Link
+FR: Lien
+
+## c.7ec50eea (Layer popovers)
+EN: Changes
+FR: Modifications
+
+## c.ac8f9d91 (Layer popovers)
+EN: Processed for the atlas: source integers (⟦0⟧x ⟦#0⟧^⟦#1⟧) converted to decimal⟦1⟧; ocean (no⟦2⟧data) and⟦3⟧= ⟦#2⟧ pixels set to no data; the source maximum ⟦#3⟧ kept as ⟦#4⟧ (⟦4⟧&gt;= ⟦#5⟧); zoomed-out map views show means of the valid native pixels; values rounded to a relative precision of ⟦#6⟧.2e-⟦#7⟧.
+FR: Traitement pour l’atlas : entiers de la source (⟦0⟧x ⟦#0⟧^⟦#1⟧) convertis en décimal⟦1⟧ ; pixels océaniques (sans⟦2⟧données) et pixels où⟦3⟧= ⟦#2⟧ définis comme sans données ; maximum de la source ⟦#3⟧ conservé comme ⟦#4⟧ (⟦4⟧&gt;= ⟦#5⟧) ; les vues de carte dézoomées affichent les moyennes des pixels natifs valides ; valeurs arrondies à une précision relative de ⟦#6⟧.2e-⟦#7⟧.
+
+## c.d92bedb9 (Layer popovers)
+EN: Mean total vegetation cover (green plus dry vegetation, including trees; % of the ground), ⟦#0⟧–⟦#1⟧, from the⟦0⟧Fractional Cover v3.1 (⟦#2⟧ m, monthly) averaged onto the ⟦#3⟧° cells over the months with valid data. Calibrated against Australian field sites; saturates under closed canopies. Total cover includes non-photosynthetic vegetation (dry and dead plant material) as well as green vegetation, so it can be substantial where little green vegetation is visible; compare it with the aridity index. No data over ocean, Antarctica, land north of ⟦#4⟧° N and the ⟦#5⟧° meridian cells. <a href="https://map.geo-rapp.org/" target="_blank" rel="noopener noreferrer">Explore the full monthly time series at⟦1⟧</a>.
+FR: Couvert végétal total moyen (végétation verte et sèche, arbres compris ; % du sol), ⟦#0⟧–⟦#1⟧, issu du⟦0⟧Fractional Cover v3.1 (⟦#2⟧ m, mensuel), moyenné sur les cellules de ⟦#3⟧° pour les mois disposant de données valides. Calibré sur des sites de terrain australiens ; sature sous les canopées fermées. Le couvert total inclut la végétation non photosynthétique (matériel végétal sec et mort) ainsi que la végétation verte ; il peut donc être important là où peu de végétation verte est visible ; à comparer avec l’indice d’aridité. Pas de données sur l’océan, l’Antarctique, les terres au nord de ⟦#4⟧° N et les cellules du méridien ⟦#5⟧°. <a href="https://map.geo-rapp.org/" target="_blank" rel="noopener noreferrer">Explorer la série temporelle mensuelle complète sur⟦1⟧</a>.
+
+## c.e467a70d (Layer popovers)
+EN: Fractional cover -⟦0⟧,⟦1⟧algorithm, Version ⟦#0⟧ (⟦2⟧;⟦3⟧collection ⟦#1⟧/⟦#2⟧, monthly medoid, ⟦#3⟧ m): total vegetation cover (photosynthetic + non-photosynthetic vegetation), ⟦#4⟧–⟦#5⟧; the vegetation product of⟦4⟧Rangeland and Pasture Productivity (⟦5⟧), hosted by⟦6⟧
+FR: Fractional cover -⟦0⟧,⟦1⟧algorithme, version ⟦#0⟧ (⟦2⟧;⟦3⟧collection ⟦#1⟧/⟦#2⟧, médoïde mensuel, ⟦#3⟧ m) : couvert végétal total (végétation photosynthétique + non photosynthétique), ⟦#4⟧–⟦#5⟧ ; produit de végétation de⟦4⟧Rangeland and Pasture Productivity (⟦5⟧), hébergé par⟦6⟧
+
+## c.8e5d4620 (Layer popovers)
+EN: Processed for the atlas: monthly ⟦#0⟧ m tiles averaged to ⟦#1⟧° and over ⟦#2⟧–⟦#3⟧ (valid tot_cov ≤ ⟦#4⟧ %; months without valid data skipped); zoomed-out map views show means of the valid ⟦#5⟧° cells; values rounded to a relative precision of ⟦#6⟧.2e-⟦#7⟧.
+FR: Traitement pour l’atlas : tuiles mensuelles de ⟦#0⟧ m moyennées à ⟦#1⟧° et sur ⟦#2⟧–⟦#3⟧ (tot_cov valide ≤ ⟦#4⟧ % ; mois sans données valides ignorés) ; les vues de carte dézoomées affichent les moyennes des cellules de ⟦#5⟧° valides ; valeurs arrondies à une précision relative de ⟦#6⟧.2e-⟦#7⟧.
+
+## c.42e7477f (Layer popovers)
+EN: Dark vector basemap of⟦0⟧roads, places, water and land cover, styled to sit under the atlas colours.
+FR: Fond de carte vectoriel sombre⟦0⟧(routes, lieux, eau et occupation du sol), conçu pour s’afficher sous les couleurs de l’atlas.
+
+## c.5018e106 (Layer popovers)
+EN: ⟦0⟧, from⟦1⟧data (⟦2⟧schema), dark style
+FR: ⟦0⟧, à partir des données⟦1⟧(schéma⟦2⟧), style sombre
+
+## c.aee818af (Layer popovers)
+EN: Resolution
+FR: Résolution
+
+## c.c432f449 (Layer popovers)
+EN: Vector map, sharp at every zoom (street-level detail)
+FR: Carte vectorielle, nette à tous les niveaux de zoom (détail à l’échelle de la rue)
+
+## c.9f1c6cab (Layer popovers)
+EN: Map data ©⟦0⟧contributors (⟦1⟧); ©⟦2⟧
+FR: Données cartographiques © contributeurs⟦0⟧(⟦1⟧) ; ©⟦2⟧
+
+## c.0fce76d6 (Layer popovers)
+EN: Mosaic of satellite and aerial imagery of the land surface.
+FR: Mosaïque d’images satellitaires et aériennes de la surface terrestre.
+
+## c.7a9c10bd (Layer popovers)
+EN: ⟦0⟧(⟦1⟧,⟦2⟧,⟦3⟧and the⟦4⟧)
+FR: ⟦0⟧(⟦1⟧,⟦2⟧,⟦3⟧et la⟦4⟧)
+
+## c.243e42f5 (Layer popovers)
+EN: ⟦#0⟧ m worldwide, ⟦#1⟧ m or finer in many regions
+FR: ⟦#0⟧ m à l’échelle mondiale, ⟦#1⟧ m ou plus fin dans de nombreuses régions
+
+## c.5d6289ac (Layer popovers)
+EN: ⟦0⟧service under the⟦1⟧/ Terms of Use
+FR: Service⟦0⟧régi par le⟦1⟧/ les conditions d’utilisation
+
+## c.e32b80e2 (Layer popovers)
+EN: Shaded relief of an open global elevation model (⟦0⟧).
+FR: Relief ombré d’un modèle numérique d’altitude ouvert à l’échelle mondiale (⟦0⟧).
+
+## c.22335d7a (Layer popovers)
+EN: ⟦0⟧open elevation data:⟦1⟧worldwide and national open elevation models where available
+FR: ⟦0⟧données d’altitude ouvertes :⟦1⟧modèles d’altitude ouverts mondiaux et nationaux, lorsqu’ils sont disponibles
+
+## c.a5298609 (Layer popovers)
+EN: About ⟦#0⟧ m worldwide, finer in some countries
+FR: Environ ⟦#0⟧ m à l’échelle mondiale, plus fin dans certains pays
+
+## c.a9596935 (Layer popovers)
+EN: Each source's open licence (for example the⟦0⟧licence), listed by⟦1⟧
+FR: Licence ouverte propre à chaque source (par exemple la licence⟦0⟧), répertoriée par⟦1⟧
+
+## c.d7137982 (Layer popovers)
+EN: Topographic map with contour lines and hill shading.
+FR: Carte topographique avec courbes de niveau et ombrage du relief.
+
+## c.45fc789b (Layer popovers)
+EN: ⟦0⟧, from⟦1⟧data and⟦2⟧elevation
+FR: ⟦0⟧, à partir des données⟦1⟧et des données d’altitude⟦2⟧
+
+## c.b47179e7 (Layer popovers)
+EN: About ⟦#0⟧ m per pixel at the equator at the closest zoom
+FR: Environ ⟦#0⟧ m par pixel à l’équateur au niveau de zoom le plus rapproché
+
+## c.816ba161 (Layer popovers)
+EN: Map data ©⟦0⟧contributors (⟦1⟧); map style ©⟦2⟧(⟦3⟧)
+FR: Données cartographiques © contributeurs de⟦0⟧(⟦1⟧) ; style de carte ©⟦2⟧(⟦3⟧)
+
+## c.84e91972 (Layer popovers)
+EN: Light vector basemap of⟦0⟧roads, places, water and land cover (⟦1⟧style).
+FR: Fond de carte vectoriel clair des⟦0⟧routes, lieux, plans d’eau et de l’occupation du sol (style⟦1⟧).
+
+## c.6bc2c76c (Layer popovers)
+EN: ⟦0⟧, from⟦1⟧data (⟦2⟧schema),⟦3⟧style
+FR: ⟦0⟧, à partir des données⟦1⟧(schéma⟦2⟧), style⟦3⟧
+
+# Layer panel
+
+## c.dfaf4b2e (Layer panel)
+EN: To see the imagery under the colour layers, lower their opacity in Active layers.
+FR: Pour voir l’imagerie sous les calques colorés, réduisez leur opacité dans Calques actifs.
+
+# About
+
+## c.76b65eed (About)
+EN: This page was created with assistance from Claude⟦0⟧. I have reviewed the functionality and underlying data but if you notice any issues or errors please contact me at <a href="mailto:a.gunn@monash.edu">a.gunn@monash.edu</a>.
+FR: Cette page a été créée avec l’aide de Claude⟦0⟧. J’ai vérifié les fonctionnalités et les données sous-jacentes, mais si vous remarquez des problèmes ou des erreurs, veuillez me contacter à <a href="mailto:a.gunn@monash.edu">a.gunn@monash.edu</a>.
+
+## c.a8714914 (About)
+EN: Click any land cell to see its wind rose over the record of the wind dataset chosen with the Wind dataset selector, the sand-flux rose at the selected threshold, dune-orientation modes and all wind-regime parameters.
+FR: Cliquez sur n’importe quelle cellule terrestre pour afficher sa rose des vents sur la période couverte par le jeu de données de vent choisi avec le sélecteur Jeu de données de vent, la rose des flux de sable au seuil sélectionné, les modes d’orientation des dunes et l’ensemble des paramètres du régime de vent.
+
+## c.51f21a4b (About)
+EN: Data sources
+FR: Sources des données
+
+## c.edcb7fbe (About)
+EN: <strong>Wind histograms and sand-flux fields (⟦0⟧⟦#0⟧°)</strong>:⟦1⟧⟦#1⟧–⟦#2⟧ hourly ⟦#3⟧ m winds (⟦#4⟧°;⟦2⟧,⟦3⟧) and the qsat parameters of⟦4⟧, Supplementary Data (⟦5⟧,⟦6⟧). Drift potentials (⟦7⟧,⟦8⟧,⟦9⟧,⟦10⟧) and crest fluxes are averages over the hourly record.
+FR: <strong>Histogrammes de vent et champs de flux de sable (⟦0⟧⟦#0⟧°)</strong> :⟦1⟧⟦#1⟧–⟦#2⟧, vents horaires à ⟦#3⟧ m (⟦#4⟧°;⟦2⟧,⟦3⟧) et paramètres qsat de⟦4⟧, données supplémentaires (⟦5⟧,⟦6⟧). Les potentiels de dérive (⟦7⟧,⟦8⟧,⟦9⟧,⟦10⟧) et les flux de crête sont des moyennes sur la série horaire.
+
+## c.706c74d2 (About)
+EN: <strong>Wind histograms and sand-flux fields (⟦0⟧⟦#0⟧°)</strong>:⟦1⟧⟦#1⟧–⟦#2⟧ hourly ⟦#3⟧ m winds on the ⟦#4⟧° grid (⟦2⟧;⟦3⟧,⟦4⟧, accessed via the⟦5⟧Australia replica); the histograms and the ⟦#5⟧ sand-flux fields are computed for the atlas with the methods outlined in⟦6⟧. Cells with an⟦7⟧land–sea mask fraction above ⟦#6⟧ (any land in the cell) carry wind data; a ⟦#7⟧° cell counts as a dune cell where it overlaps a mapped ⟦#8⟧° dune cell.
+FR: <strong>Histogrammes de vent et champs de flux de sable (⟦0⟧⟦#0⟧°)</strong> :⟦1⟧⟦#1⟧–⟦#2⟧, vents horaires à ⟦#3⟧ m sur la grille à ⟦#4⟧° (⟦2⟧;⟦3⟧,⟦4⟧, consultés via la réplique⟦5⟧Australia) ; les histogrammes et les ⟦#5⟧ champs de flux de sable sont calculés pour l’atlas selon les méthodes décrites dans⟦6⟧. Les cellules dont la fraction du masque terre–mer⟦7⟧est supérieure à ⟦#6⟧ (présence de terre dans la cellule) comportent des données de vent ; une cellule de ⟦#7⟧° est comptée comme cellule de dunes lorsqu’elle recouvre une cellule de dunes cartographiée à ⟦#8⟧°.
+
+## c.a7651e74 (About)
+EN: <strong>Sand-flux fields</strong>: for every hour, the friction velocity⟦0⟧= κ U₁₀ / ln(z/z₀) from the ⟦#0⟧ m wind speed U₁₀ (logarithmic wind profile; κ = ⟦#1⟧, z = ⟦#2⟧ m, roughness length z₀ = ⟦#3⟧ mm) and the saturated transport rate of⟦1⟧, q = C ρ<sub>f</sub>⟦2⟧(u*² − u*,th²) / (g ρ<sub>s</sub> φ) for⟦3⟧&gt;⟦4⟧, with C = ⟦#4⟧, air density ρ<sub>f</sub> = ⟦#5⟧ kg/m³, grain density ρ<sub>s</sub> = ⟦#6⟧ kg/m³, packing fraction φ = ⟦#7⟧ and g = ⟦#8⟧ m/s², at the selected threshold⟦5⟧, averaged over ⟦#9⟧–⟦#10⟧ (⟦6⟧, Methods⟦7⟧). Fluxes are volumes of packed sand (pore space included) per metre width per year of ⟦#11⟧ days (m²/yr). Drift potentials, crest fluxes and dune-orientation modes follow the methods reviewed in⟦8⟧.
+FR: <strong>Champs de flux de sable</strong> : pour chaque heure, la vitesse de frottement⟦0⟧= κ U₁₀ / ln(z/z₀) est obtenue à partir de la vitesse du vent à ⟦#0⟧ m U₁₀ (profil logarithmique du vent ; κ = ⟦#1⟧, z = ⟦#2⟧ m, longueur de rugosité z₀ = ⟦#3⟧ mm), ainsi que le taux de transport saturé de⟦1⟧, q = C ρ<sub>f</sub>⟦2⟧(u*² − u*,th²) / (g ρ<sub>s</sub> φ) pour⟦3⟧&gt;⟦4⟧, avec C = ⟦#4⟧, masse volumique de l’air ρ<sub>f</sub> = ⟦#5⟧ kg/m³, masse volumique des grains ρ<sub>s</sub> = ⟦#6⟧ kg/m³, compacité φ = ⟦#7⟧ et g = ⟦#8⟧ m/s², au seuil sélectionné⟦5⟧, moyenné sur ⟦#9⟧–⟦#10⟧ (⟦6⟧, Méthodes⟦7⟧). Les flux sont des volumes de sable compacté (porosité incluse) par mètre de largeur et par année de ⟦#11⟧ jours (m²/yr). Les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes passées en revue dans⟦8⟧.
+
+## c.38fc33d0 (About)
+EN: <strong>Dune map</strong>:⟦0⟧from the⟦1⟧record (⟦2⟧,⟦3⟧), vectorised into dune fields.
+FR: <strong>Carte des dunes</strong> :⟦0⟧issue des données⟦1⟧(⟦2⟧,⟦3⟧), vectorisée en champs de dunes.
+
+## c.2bc3ff20 (About)
+EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the time-averaged saturated sand-flux vector (magnitude⟦1⟧, direction⟦2⟧) on the sphere, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) with q =⟦3⟧, θ =⟦4⟧, latitude φ, longitude λ and R = ⟦#0⟧ km, computed with central differences on the grid of the selected wind dataset (⟦#1⟧° or ⟦#2⟧°), following⟦5⟧, Methods⟦6⟧. By conservation of sand mass, negative values (convergence) imply deposition and positive values erosion, in metres of bed level per thousand years. The values assume a saturated flux and an unlimited supply of loose sand.
+FR: <strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦1⟧, direction⟦2⟧) sur la sphère, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) avec q =⟦3⟧, θ =⟦4⟧, latitude φ, longitude λ et R = ⟦#0⟧ km, calculée par différences centrées sur la grille du jeu de données de vent sélectionné (⟦#1⟧° ou ⟦#2⟧°), d’après⟦5⟧, Méthodes⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence) traduisent un dépôt et les valeurs positives une érosion, en mètres de niveau du lit par millier d’années. Ces valeurs supposent un flux saturé et un apport illimité de sable meuble.
+
+## c.79930b39 (About)
+EN: <strong>Aridity index</strong>: Global Aridity Index v3.1 (⟦0⟧; Zomer,⟦1⟧), ⟦#0⟧–⟦#1⟧, native ⟦#2⟧″ grid,⟦2⟧; ocean and Antarctica (south of ⟦#3⟧° S) have no data, values ≥ ⟦#4⟧ are at the top of the source range. The click panel shows the mean over the cell of the selected wind dataset.
+FR: <strong>Indice d’aridité</strong> : Global Aridity Index v3.1 (⟦0⟧; Zomer,⟦1⟧), ⟦#0⟧–⟦#1⟧, grille native à ⟦#2⟧″,⟦2⟧ ; les océans et l’Antarctique (au sud de ⟦#3⟧° S) n’ont pas de données, et les valeurs ≥ ⟦#4⟧ se situent au sommet de la plage de la source. Le panneau affiché au clic indique la moyenne sur la cellule du jeu de données de vent sélectionné.
+
+## c.d9d754b4 (About)
+EN: <strong>Vegetation cover</strong>:⟦0⟧Fractional Cover v3.1 (⟦1⟧;⟦2⟧), total vegetation cover (photosynthetic + non-photosynthetic vegetation), mean of the monthly ⟦#0⟧ m values ⟦#1⟧–⟦#2⟧ on the ⟦#3⟧° grid,⟦3⟧© ⟦#4⟧–⟦#5⟧⟦4⟧, hosted by⟦5⟧; the vegetation product of⟦6⟧. <a href="https://map.geo-rapp.org/" target="_blank" rel="noopener noreferrer">Explore the full time series at⟦7⟧</a>. The click panel shows the cell mean and the number of valid months.
+FR: <strong>Couvert végétal</strong> :⟦0⟧Fractional Cover v3.1 (⟦1⟧;⟦2⟧), couvert végétal total (végétation photosynthétique + végétation non photosynthétique), moyenne des valeurs mensuelles à ⟦#0⟧ m de ⟦#1⟧–⟦#2⟧ sur la grille à ⟦#3⟧°,⟦3⟧© ⟦#4⟧–⟦#5⟧⟦4⟧, hébergé par⟦5⟧ ; le produit de végétation de⟦6⟧. <a href="https://map.geo-rapp.org/" target="_blank" rel="noopener noreferrer">Explorer la série temporelle complète sur⟦7⟧</a>. Le panneau de clic affiche la moyenne de la cellule et le nombre de mois valides.
+
+## c.c117cfda (About)
+EN: <strong>Dune-field names</strong>: Displayed dune field names are derived from previously published academic research and data, regional knowledge, and internet searches. Naming conventions (language, jurisdiction, spelling, merging, etc.) were chosen for clarity but may be wrong or offend certain peoples. Please contact Andrew Gunn at <a href="mailto:a.gunn@monash.edu">a.gunn@monash.edu</a> if you have any suggestions for changes, removals, or additions.
+FR: <strong>Noms des champs de dunes</strong> : les noms de champs de dunes affichés sont issus de travaux et de données académiques déjà publiés, de connaissances régionales et de recherches sur Internet. Les conventions de dénomination (langue, juridiction, orthographe, regroupement, etc.) ont été choisies par souci de clarté, mais peuvent être erronées ou offenser certains peuples. Veuillez contacter Andrew Gunn à <a href="mailto:a.gunn@monash.edu">a.gunn@monash.edu</a> si vous avez des suggestions de modifications, de suppressions ou d’ajouts.
+
+## c.f43b95cb (About)
+EN: Earth and Mars: what can be compared
+FR: Terre et Mars : ce qui peut être comparé
+
+## c.e1abc281 (About)
+EN: Both atlases compute the same quantities with the methods outlined in⟦0⟧: the time-averaged saturated sand flux over a flat bed fully covered by loose sand (⟦1⟧), its resultant (⟦2⟧,⟦3⟧,⟦4⟧), crest fluxes, dune-orientation modes and flux divergence. Both report fluxes as volumes of packed sand (packing fraction ⟦#0⟧, pore space included) per metre width per Earth year of ⟦#1⟧ days (m²/yr), and both show wind roses as the direction the wind blows from and sand roses as the direction sand moves toward. They differ in four ways.
+FR: Les deux atlas calculent les mêmes grandeurs selon les méthodes décrites dans⟦0⟧ : le flux de sable saturé moyenné dans le temps sur un lit plat entièrement recouvert de sable meuble (⟦1⟧), sa résultante (⟦2⟧,⟦3⟧,⟦4⟧), les flux de crête, les modes d’orientation des dunes et la divergence du flux. Tous deux expriment les flux en volumes de sable compacté (compacité ⟦#0⟧, espace poreux inclus) par mètre de largeur et par année terrestre de ⟦#1⟧ jours (m²/yr), et tous deux représentent les roses des vents selon la direction d’où souffle le vent et les roses des flux de sable selon la direction vers laquelle se déplace le sable. Ils diffèrent sur quatre points.
+
+## c.8cfd1c5c (About)
+EN: <strong>Control</strong>: on Earth the slider sets one threshold friction velocity⟦0⟧for all hours (default ⟦#0⟧ m/s); on Mars it sets the median grain diameter d (default ⟦#1⟧ µm), and the threshold is computed for every hour from d and that hour's air density and temperature.
+FR: <strong>Contrôle</strong> : sur Terre, le curseur fixe une vitesse de frottement seuil⟦0⟧unique pour toutes les heures (valeur par défaut ⟦#0⟧ m/s) ; sur Mars, il fixe le diamètre médian des grains d (valeur par défaut ⟦#1⟧ µm), et le seuil est calculé pour chaque heure à partir de d ainsi que de la masse volumique et de la température de l’air à cette heure.
+
+## c.182e7ab0 (About)
+EN: <strong>Transport law and wind profile</strong>: Earth uses the transport law of⟦0⟧, with⟦1⟧from the ⟦#0⟧ m wind and a roughness length of ⟦#1⟧ mm; Mars uses the transport law of⟦2⟧, with⟦3⟧from the lowest-level wind (≈ ⟦#2⟧–⟦#3⟧ m) and a smooth-wall profile without a roughness length.
+FR: <strong>Loi de transport et profil de vent</strong> : sur Terre, on utilise la loi de transport de⟦0⟧, avec⟦1⟧à partir du vent à ⟦#0⟧ m et une longueur de rugosité de ⟦#1⟧ mm ; sur Mars, on utilise la loi de transport de⟦2⟧, avec⟦3⟧à partir du vent au niveau le plus bas (≈ ⟦#2⟧–⟦#3⟧ m) et un profil de paroi lisse sans longueur de rugosité.
+
+## c.3b78ea48 (About)
+EN: <strong>Winds and grid</strong>: Earth uses a period of hourly reanalysis winds (e.g.,⟦0⟧, ⟦#0⟧° grid for ⟦#1⟧ years ⟦#2⟧–⟦#3⟧); Mars uses a representative year (⟦#4⟧ sols, about ⟦#5⟧ Earth years) of hourly simulated winds (e.g.,⟦1⟧, ⟦#6⟧° grid), so one Mars cell can span several dune fields and year-to-year variability is not sampled.
+FR: <strong>Vents et grille</strong> : sur Terre, on utilise une période de vents horaires issus de réanalyses (p. ex.⟦0⟧, grille à ⟦#0⟧° sur ⟦#1⟧ ans, ⟦#2⟧–⟦#3⟧) ; sur Mars, on utilise une année représentative (⟦#4⟧ sols, soit environ ⟦#5⟧ années terrestres) de vents horaires simulés (p. ex.⟦1⟧, grille à ⟦#6⟧°), de sorte qu’une cellule martienne peut couvrir plusieurs champs de dunes et que la variabilité interannuelle n’est pas échantillonnée.
+
+## c.6251885f (About)
+EN: <strong>Downloads</strong>: Earth cells provide a wind histogram and the fields against threshold (⟦0⟧,⟦1⟧); Mars cells provide the hourly wind and air series and the fields against grain diameter (⟦2⟧,⟦3⟧).
+FR: <strong>Téléchargements</strong> : les cellules terrestres fournissent un histogramme des vents et les champs en fonction du seuil (⟦0⟧,⟦1⟧) ; les cellules martiennes fournissent les séries horaires de vent et d’air ainsi que les champs en fonction du diamètre des grains (⟦2⟧,⟦3⟧).
+
+## c.ebb9f8a1 (About)
+EN: ⟦0⟧values on the two planets can therefore be compared in order of magnitude, not as precise numbers.⟦1⟧,⟦2⟧and the mode directions compare more directly, but each depends on the threshold or grain-diameter setting.
+FR: Les valeurs de⟦0⟧sur les deux planètes peuvent donc être comparées en ordre de grandeur, et non comme des valeurs précises.⟦1⟧,⟦2⟧et les directions des modes se comparent plus directement, mais chacun dépend du réglage du seuil ou du diamètre des grains.
+
+## c.8726a129 (About)
+EN: Citing the map fields
+FR: Citer les champs de la carte
+
+## c.dd3ddd79 (About)
+EN: <strong>⟦0⟧⟦#0⟧°</strong>: ⟦1⟧. Licence: ⟦2⟧.
+FR: <strong>⟦0⟧⟦#0⟧°</strong> : ⟦1⟧. Licence : ⟦2⟧.
+
+## c.ac07bd37 (About)
+EN: ⟦0⟧/ dune map
+FR: ⟦0⟧/ carte des dunes
+
+## c.935e4396 (About)
+EN: Paper: ⟦0⟧
+FR: Article : ⟦0⟧
+
+## c.b35fcfde (About)
+EN: Data (wind histograms and sand-flux fields): ⟦0⟧
+FR: Données (histogrammes de vent et champs de flux de sable) : ⟦0⟧
+
+## c.11b8f814 (About)
+EN: Data (dune map:⟦0⟧, contained in the⟦1⟧record): ⟦2⟧
+FR: Données (carte des dunes :⟦0⟧, contenue dans l’enregistrement⟦1⟧) : ⟦2⟧
+
+## c.e43657ea (About)
+EN: Data: ⟦0⟧
+FR: Données : ⟦0⟧
+
+## c.85811cee (About)
+EN: Contains modified⟦0⟧information (⟦1⟧, ⟦#0⟧–⟦#1⟧). Neither the European Commission nor⟦2⟧is responsible for any use that may be made of the⟦3⟧information or data it contains.
+FR: Contient des informations⟦0⟧modifiées (⟦1⟧, ⟦#0⟧–⟦#1⟧). Ni la Commission européenne ni⟦2⟧ne sont responsables de l’usage qui pourrait être fait des informations⟦3⟧ou des données qu’elles contiennent.
+
+## c.5b675aea (About)
+EN: Global Aridity Index (⟦0⟧)
+FR: Global Aridity Index (⟦0⟧)
+
+## c.a60116c4 (About)
+EN: Vegetation cover (⟦0⟧Fractional Cover v3.1)
+FR: Couvert végétal (⟦0⟧Fractional Cover v3.1)
+
+## c.6aa0a68b (About)
+EN: Full monthly time series:⟦0⟧Map, <a href="https://map.geo-rapp.org/" target="_blank" rel="noopener noreferrer">⟦1⟧</a>
+FR: Série chronologique mensuelle complète :⟦0⟧Map, <a href="https://map.geo-rapp.org/" target="_blank" rel="noopener noreferrer">⟦1⟧</a>
+
+## c.1a6f67b1 (About)
+EN: Contains modified⟦0⟧information. Basemap credits are shown in the map attribution.
+FR: Contient des informations⟦0⟧modifiées. Les crédits des fonds de carte figurent dans l’attribution de la carte.
+
+## c.3884b372 (About)
+EN: To understand how the atlas is used, we count page visits and downloads by country, with Cloudflare Web Analytics and a small counter of our own. No cookies are set and no⟦0⟧addresses are kept.
+FR: Afin de comprendre comment l’atlas est utilisé, nous comptabilisons les visites de pages et les téléchargements par pays, au moyen de Cloudflare Web Analytics et d’un petit compteur qui nous est propre. Aucun cookie n’est déposé et aucune adresse⟦0⟧n’est conservée.
+
+# Screen-reader labels and tooltips
+
+## c.ff5ee14a (Screen-reader labels and tooltips)
+EN: Resize panel (drag, or use the arrow keys)
+FR: Redimensionner le panneau (faire glisser ou utiliser les touches fléchées)
+
+## c.a89ab2ab (Screen-reader labels and tooltips)
+EN: Close cell panel
+FR: Fermer le panneau de la cellule
+
+# Cell panel
+
+## c.ed60e8c1 (Cell panel)
+EN: Loading⟦0⟧data for this cell…
+FR: Chargement⟦0⟧des données de cette cellule…
+
+## c.cd275e7b (Cell panel)
+EN: Dunes present
+FR: Dunes présentes
+
+## c.f9cfdc68 (Cell panel)
+EN: Threshold ⟦0⟧: <strong>⟦1⟧</strong>
+FR: Seuil ⟦0⟧ : <strong>⟦1⟧</strong>
+
+## c.ea559417 (Cell panel)
+EN: Wind at ⟦#0⟧ m at the threshold: ≈ ⟦0⟧
+FR: Vent à ⟦#0⟧ m au seuil : ≈ ⟦0⟧
+
+## c.a5650846 (Cell panel)
+EN: Wind rose
+FR: Rose des vents
+
+## c.2632e454 (Cell panel)
+EN: Sectors
+FR: Secteurs
+
+## c.fcba0503 (Cell panel)
+EN: Frequency of hourly ⟦#0⟧ m winds by the direction they blow from, ⟦#1⟧ sectors, stacked by speed class; ⟦#2⟧–⟦#3⟧; sums to ⟦#4⟧ %.
+FR: Fréquence des vents horaires à ⟦#0⟧ m selon la direction d’où ils soufflent, ⟦#1⟧ secteurs, empilés par classe de vitesse ; ⟦#2⟧–⟦#3⟧ ; total de ⟦#4⟧ %.
+
+## c.5d9e5efa (Cell panel)
+EN: % of hours
+FR: % des heures
+
+## c.9f03a7d2 (Cell panel)
+EN: Direction the wind blows FROM (meteorological), ⟦#0⟧ sectors of ⟦#1⟧°; radius = % of the ⟦#2⟧ counted hourly samples (sums to ⟦#3⟧ %; hours &gt; ⟦#4⟧ m/s are not in the histogram).⟦0⟧⟦#5⟧ m wind ⟦#6⟧–⟦#7⟧.
+FR: Direction D’OÙ souffle le vent (météorologique), ⟦#0⟧ secteurs de ⟦#1⟧° ; rayon = % des ⟦#2⟧ échantillons horaires comptabilisés (total de ⟦#3⟧ % ; les heures &gt; ⟦#4⟧ m/s ne figurent pas dans l’histogramme).⟦0⟧Vent à ⟦#5⟧ m, ⟦#6⟧–⟦#7⟧.
+
+# Screen-reader labels and tooltips
+
+## c.aab9a2de (Screen-reader labels and tooltips)
+EN: Export this plot (light theme, with data source and link)
+FR: Exporter ce graphique (thème clair, avec la source des données et le lien)
+
+# Cell panel
+
+## c.e86349d3 (Cell panel)
+EN: Export
+FR: Exporter
+
+## c.7193769a (Cell panel)
+EN: ⟦0⟧ Transparent background
+FR: ⟦0⟧ Fond transparent
+
+## c.29c9bdfd (Cell panel)
+EN: Sand flux rose (time-averaged, transport toward)
+FR: Rose des flux de sable (moyennée dans le temps, transport vers)
+
+## c.7789ddf5 (Cell panel)
+EN: Flux ⟦0⟧
+FR: Flux ⟦0⟧
+
+# Screen-reader labels and tooltips
+
+## c.6da97f0c (Screen-reader labels and tooltips)
+EN: Flux rose mode
+FR: Mode de la rose des flux
+
+# Cell panel
+
+## c.58919355 (Cell panel)
+EN: Flat bed
+FR: Lit plat
+
+## c.1eeb99cc (Cell panel)
+EN: Elongation (αE)
+FR: Allongement (αE)
+
+## c.36c18d9e (Cell panel)
+EN: Transverse migration (αH)
+FR: Migration transverse (αH)
+
+# Screen-reader labels and tooltips
+
+## c.0530e499 (Screen-reader labels and tooltips)
+EN: Flux rose radial axis
+FR: Axe radial de la rose des flux
+
+# Cell panel
+
+## c.6d1a8a4e (Cell panel)
+EN: ⟦0⟧ % of total
+FR: ⟦0⟧ % du total
+
+# Screen-reader labels and tooltips
+
+## c.1b0fc3f0 (Screen-reader labels and tooltips)
+EN: Flux rose petal direction
+FR: Direction des pétales de la rose des flux
+
+# Cell panel
+
+## c.e71fb327 (Cell panel)
+EN: Time-averaged flat-bed sand flux by the direction sand moves toward, ⟦#0⟧ sectors of ⟦#1⟧ degrees, stacked by excess shear u*f/u*,th, percent of total flux, at u*,th ⟦#2⟧ m/s.
+FR: Flux de sable sur lit plat moyenné dans le temps, selon la direction vers laquelle se déplace le sable, ⟦#0⟧ secteurs de ⟦#1⟧ degrés, empilés par excès de cisaillement u*f/u*,th, en pourcentage du flux total, pour u*,th ⟦#2⟧ m/s.
+
+## c.04e86ff9 (Cell panel)
+EN: αH (crest orientation, bed-instability mode): ⟦#0⟧° (axis)
+FR: αH (orientation de la crête, mode d’instabilité du lit) : ⟦#0⟧° (axe)
+
+## c.1ef8a9c4 (Cell panel)
+EN: αE (elongation direction): ⟦#0⟧° (ENE)
+FR: αE (direction d’allongement) : ⟦#0⟧° (ENE)
+
+## c.e9a52542 (Cell panel)
+EN: αT (transverse migration direction): ⟦#0⟧° (ENE)
+FR: αT (direction de migration transverse) : ⟦#0⟧° (ENE)
+
+## c.77cf5f77 (Cell panel)
+EN: RDD (resultant drift direction): ⟦#0⟧° (ENE)
+FR: RDD (direction de dérive résultante) : ⟦#0⟧° (ENE)
+
+## c.58e2a84e (Cell panel)
+EN: % of total flux
+FR: % du flux total
+
+## c.8656e567 (Cell panel)
+EN: ⟦#0⟧° (axis)
+FR: ⟦#0⟧° (axe)
+
+## c.4a8617dc (Cell panel)
+EN: ⟦#0⟧° (ENE)
+FR: ⟦#0⟧° (ENE)
+
+## c.531a7c8d (Cell panel)
+EN: <span class="cap-lead"><strong>Flat bed</strong>: ⟦0⟧ = ⟦1⟧</span> Direction sand moves TOWARD; ⟦#0⟧ sectors of ⟦#1⟧°. Radius = % of the total flux in each sector (sums to ⟦#2⟧ %). Time-averaged saturated flat-bed flux (q from ⟦2⟧), Σ<sub>speed</sub> n·q / Σ<sub>all</sub> n from the wind histogram. Colours split each sector by the excess shear ⟦3⟧ of the winds carrying the flux (only ⟦4⟧ transports sand).⟦5⟧,⟦6⟧,⟦7⟧,⟦8⟧and the arrows are the map fields at this threshold; a direction is hidden where the flux defining it is zero.
+FR: <span class="cap-lead"><strong>Lit plat</strong> : ⟦0⟧ = ⟦1⟧</span> Direction VERS laquelle se déplace le sable ; ⟦#0⟧ secteurs de ⟦#1⟧°. Rayon = % du flux total dans chaque secteur (somme : ⟦#2⟧ %). Flux saturé sur lit plat moyenné dans le temps (q d’après ⟦2⟧), Σ<sub>vitesse</sub> n·q / Σ<sub>total</sub> n à partir de l’histogramme des vents. Les couleurs subdivisent chaque secteur selon l’excès de cisaillement ⟦3⟧ des vents qui portent le flux (seul ⟦4⟧ transporte du sable).⟦5⟧,⟦6⟧,⟦7⟧,⟦8⟧et les flèches correspondent aux champs de la carte à ce seuil ; une direction est masquée là où le flux qui la définit est nul.
+
+## c.85f6094f (Cell panel)
+EN: Modes vs threshold (polar: angle = direction, radius = ⟦0⟧)
+FR: Modes en fonction du seuil (polaire : angle = direction, rayon = ⟦0⟧)
+
+# Screen-reader labels and tooltips
+
+## c.2dbc70d1 (Screen-reader labels and tooltips)
+EN: Polar plot of dune-orientation mode bearings (angle) against threshold friction velocity (radius, ⟦#0⟧ m/s at the centre to ⟦#1⟧ m/s at the rim)
+FR: Diagramme polaire des azimuts des modes d’orientation des dunes (angle) en fonction de la vitesse de frottement seuil (rayon, de ⟦#0⟧ m/s au centre à ⟦#1⟧ m/s en bordure)
+
+# Cell panel
+
+## c.068b4cfe (Cell panel)
+EN: radius: u*,th (m/s)
+FR: rayon : u*,th (m/s)
+
+## c.6671ac04 (Cell panel)
+EN: Mode bearings (toward) for ⟦0⟧ = ⟦#0⟧ m/s (centre) to ⟦#1⟧ m/s (rim); ⟦1⟧ is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current threshold. Where⟦2⟧is low (below about ⟦#2⟧), transport in opposing directions nearly cancels, so⟦3⟧is poorly defined and can swing by up to ⟦#3⟧° with a small change of threshold or wind dataset. The modes depend on the whole flux rose rather than on its resultant: ⟦4⟧ follows the crest orientation ⟦5⟧ that maximises gross transport across crests, so it can stay steady and differ from⟦6⟧.
+FR: Azimuts des modes (vers) pour ⟦0⟧ = ⟦#0⟧ m/s (centre) à ⟦#1⟧ m/s (bord) ; ⟦1⟧ est un axe, tracé dans les deux sens. Les tracés s’interrompent là où un mode n’est pas défini (aucun flux déterminant). Anneau en tirets et points : seuil actuel. Là où⟦2⟧est faible (en dessous d’environ ⟦#2⟧), les transports de sens opposés se compensent presque, de sorte que⟦3⟧est mal définie et peut varier jusqu’à ⟦#3⟧° pour une faible modification du seuil ou du jeu de données de vent. Les modes dépendent de l’ensemble de la rose des flux plutôt que de sa résultante : ⟦4⟧ suit l’orientation de la crête ⟦5⟧ qui maximise le transport brut à travers les crêtes ; cette direction peut donc rester stable et différer de⟦6⟧.
+
+## c.6e844047 (Cell panel)
+EN: Drift potential⟦0⟧ vs threshold
+FR: Potentiel de dérive⟦0⟧ en fonction du seuil
+
+## c.dc80e435 (Cell panel)
+EN: Plot ⟦0⟧
+FR: Graphique ⟦0⟧
+
+# Screen-reader labels and tooltips
+
+## c.5c96f403 (Screen-reader labels and tooltips)
+EN: Quantity plotted against the threshold
+FR: Grandeur représentée en fonction du seuil
+
+# Cell panel
+
+## c.c4d7f978 (Cell panel)
+EN: Flux directionality (RDP/DP)
+FR: Directionnalité du flux (RDP/DP)
+
+# Screen-reader labels and tooltips
+
+## c.985d469b (Screen-reader labels and tooltips)
+EN: Drift potential (DP) vs threshold
+FR: Potentiel de dérive (DP) en fonction du seuil
+
+# Cell panel
+
+## c.dd4757c8 (Cell panel)
+EN: <span class="cap-lead">At the current threshold: ⟦0⟧</span> Drift potential (⟦1⟧) of this cell for every threshold; dot and dashed line: current threshold. Triangles at the top or bottom edge: infinite ratio (its denominator, a net flux, is zero; ±⟦#0⟧ in the data), not plotted.
+FR: <span class="cap-lead">Au seuil actuel : ⟦0⟧</span> Potentiel de dérive (⟦1⟧) de cette cellule pour chaque seuil ; point et ligne tiretée : seuil actuel. Triangles en bordure supérieure ou inférieure : rapport infini (son dénominateur, un flux net, est nul ; ±⟦#0⟧ dans les données), non représenté.
+
+## c.a4c54ba4 (Cell panel)
+EN: Cell summary at ⟦0⟧ = ⟦1⟧
+FR: Résumé de la cellule à ⟦0⟧ = ⟦1⟧
+
+## c.3a105ef1 (Cell panel)
+EN: Symbol
+FR: Symbole
+
+## c.2bf732f8 (Cell panel)
+EN: Quantity
+FR: Grandeur
+
+## c.d147f96a (Cell panel)
+EN: Value
+FR: Valeur
+
+## c.81062dcd (Cell panel)
+EN: ⟦#0⟧° <span class="unit">(bearing, toward)</span>
+FR: ⟦#0⟧° <span class="unit">(azimut, vers)</span>
+
+## c.8ebe5564 (Cell panel)
+EN: ⟦#0⟧ <span class="unit">fraction (⟦#1⟧–⟦#2⟧)</span>
+FR: ⟦#0⟧ <span class="unit">fraction (⟦#1⟧–⟦#2⟧)</span>
+
+# Screen-reader labels and tooltips
+
+## c.d9da59dc (Screen-reader labels and tooltips)
+EN: Negative values (flux convergence) imply deposition
+FR: Les valeurs négatives (convergence du flux) impliquent un dépôt
+
+# Cell panel
+
+## c.d169cc9f (Cell panel)
+EN: ⟦#0⟧° <span class="unit">(axis, ⟦#1⟧–⟦#2⟧)</span>
+FR: ⟦#0⟧° <span class="unit">(axe, ⟦#1⟧–⟦#2⟧)</span>
+
+# Screen-reader labels and tooltips
+
+## c.6382f602 (Screen-reader labels and tooltips)
+EN: Cell mean, threshold-independent; ⟦#0⟧ % of cell valid, ⟦#1⟧ % saturated
+FR: Moyenne sur la cellule, indépendante du seuil ; ⟦#0⟧ % de la cellule valide, ⟦#1⟧ % saturée
+
+## c.3d735122 (Screen-reader labels and tooltips)
+EN: Some pixels are at the source saturation value ⟦#0⟧, so the mean is a lower bound
+FR: Certains pixels sont à la valeur de saturation de la source ⟦#0⟧, la moyenne est donc une borne inférieure
+
+# Cell panel
+
+## c.7b8c5d3b (Cell panel)
+EN: ≥ ⟦#0⟧ <span class="unit">(arid)</span>
+FR: ≥ ⟦#0⟧ <span class="unit">(aride)</span>
+
+## c.e90a7bd5 (Cell panel)
+EN: Cell
+FR: Cellule
+
+# Screen-reader labels and tooltips
+
+## c.14e8021b (Screen-reader labels and tooltips)
+EN: Yes: the cell overlaps at least one ⟦#0⟧° dune cell of the dune map (Gunn ⟦#1⟧)
+FR: Oui : la cellule chevauche au moins une cellule de dunes de ⟦#0⟧° de la carte des dunes (Gunn ⟦#1⟧)
+
+# Cell panel
+
+## c.4e9f3590 (Cell panel)
+EN: yes
+FR: oui
+
+# Screen-reader labels and tooltips
+
+## c.2410610b (Screen-reader labels and tooltips)
+EN: Latitude, longitude of the cell centre
+FR: Latitude, longitude du centre de la cellule
+
+# Cell panel
+
+## c.7a7dbf8c (Cell panel)
+EN: Cell centre
+FR: Centre de la cellule
+
+## c.f42590f9 (Cell panel)
+EN: Angles are compass bearings of the transport direction; fluxes converted from m²/s to m²/yr; — = not defined (e.g. no crest flux).
+FR: Les angles sont des azimuts de la direction du transport ; les flux sont convertis de m²/s en m²/yr ; — = non défini (p. ex. aucun flux de crête).
+
+# Screen-reader labels and tooltips
+
+## c.4598f0fa (Screen-reader labels and tooltips)
+EN: Wind histogram, all fields vs threshold, flux roses and metadata in one NetCDF-⟦#0⟧ file (CF-⟦#1⟧)
+FR: Histogramme du vent, tous les champs en fonction du seuil, roses des flux et métadonnées dans un seul fichier NetCDF-⟦#0⟧ (CF-⟦#1⟧)
+
+## c.f163afcc (Screen-reader labels and tooltips)
+EN: wind_histogram.csv, fields_by_threshold.csv, flux_rose.csv, rose_16_sectors.csv (⟦#0⟧ sectors, degrees), metadata.json and README.txt
+FR: wind_histogram.csv, fields_by_threshold.csv, flux_rose.csv, rose_16_sectors.csv (⟦#0⟧ secteurs, degrés), metadata.json et README.txt
+
+# Cell panel
+
+## c.b46e7304 (Cell panel)
+EN: ⟦0⟧bundle (.zip)
+FR: Archive⟦0⟧(.zip)
+
+# Screen-reader labels and tooltips
+
+## c.a15445e7 (Screen-reader labels and tooltips)
+EN: Citation text file
+FR: Fichier texte de la citation
+
+# Cell panel
+
+## c.3d8b79ca (Cell panel)
+EN: Citation (⟦0⟧)
+FR: Citation (⟦0⟧)
+
+# Screen-reader labels and tooltips
+
+## c.94cd08c5 (Screen-reader labels and tooltips)
+EN: Copy the citation text to the clipboard
+FR: Copier le texte de la citation dans le presse-papiers
+
+# Cell panel
+
+## c.e4f8fbe5 (Cell panel)
+EN: Copy citation
+FR: Copier la citation
+
+## c.9a9cfc21 (Cell panel)
+EN: Get the whole grid
+FR: Obtenir la grille complète
+
+## c.94880c62 (Cell panel)
+EN: The atlas reads public⟦0⟧(v3) stores on <a href="https://data.geomorphlab.org/" target="_blank" rel="noopener">data.geomorphlab.org</a>, which anyone can read, e.g. with Python. The map fields of⟦1⟧⟦#0⟧° are one store per variable, each holding the field against the threshold friction velocity (⟦2⟧, ⟦#1⟧ values) and latitude ⟦3⟧ and longitude ⟦4⟧ (cell centres in degrees; x from ⟦#2⟧ to ⟦#3⟧°, east positive). Level ⟦5⟧ of each store is the full-resolution grid; levels ⟦#4⟧, ⟦#5⟧, … are coarser copies for the map.
+FR: L’atlas lit des dépôts⟦0⟧(v3) publics sur <a href="https://data.geomorphlab.org/" target="_blank" rel="noopener">data.geomorphlab.org</a>, accessibles à tous, par exemple avec Python. Les champs cartographiques de⟦1⟧⟦#0⟧° sont stockés à raison d’un dépôt par variable, chacun contenant le champ en fonction de la vitesse de frottement seuil (⟦2⟧, ⟦#1⟧ valeurs), de la latitude ⟦3⟧ et de la longitude ⟦4⟧ (centres des cellules en degrés ; x de ⟦#2⟧ à ⟦#3⟧°, positif vers l’est). Le niveau ⟦5⟧ de chaque dépôt correspond à la grille à pleine résolution ; les niveaux ⟦#4⟧, ⟦#5⟧, … en sont des copies plus grossières destinées à la carte.
+
+## c.826bac69 (Cell panel)
+EN: Copy code
+FR: Copier le code
+
+## c.c7598ba3 (Cell panel)
+EN: Variables (replace ⟦0⟧ in the⟦1⟧): ⟦2⟧, ⟦3⟧, ⟦4⟧, ⟦5⟧, ⟦6⟧, ⟦7⟧, ⟦8⟧, ⟦9⟧, ⟦10⟧, ⟦11⟧, ⟦12⟧, ⟦13⟧, ⟦14⟧, ⟦15⟧, ⟦16⟧, ⟦17⟧, ⟦18⟧, ⟦19⟧, ⟦20⟧, ⟦21⟧, ⟦22⟧, ⟦23⟧, ⟦24⟧, ⟦25⟧. Per-cell data of the cell panel: ⟦26⟧ (layout: <a href="https://github.com/geomorphlab/dune-atlas/blob/main/docs/reference/storage-layout.md" target="_blank" rel="noopener">⟦27⟧</a>).
+FR: Variables (remplacer ⟦0⟧ dans le⟦1⟧) : ⟦2⟧, ⟦3⟧, ⟦4⟧, ⟦5⟧, ⟦6⟧, ⟦7⟧, ⟦8⟧, ⟦9⟧, ⟦10⟧, ⟦11⟧, ⟦12⟧, ⟦13⟧, ⟦14⟧, ⟦15⟧, ⟦16⟧, ⟦17⟧, ⟦18⟧, ⟦19⟧, ⟦20⟧, ⟦21⟧, ⟦22⟧, ⟦23⟧, ⟦24⟧, ⟦25⟧. Données par cellule du panneau de cellule : ⟦26⟧ (structure : <a href="https://github.com/geomorphlab/dune-atlas/blob/main/docs/reference/storage-layout.md" target="_blank" rel="noopener">⟦27⟧</a>).
+
+## c.ce1afc80 (Cell panel)
+EN: Licence of these map fields:⟦0⟧(⟦1⟧Supplementary Data). Licences of every store: <a href="https://github.com/geomorphlab/dune-atlas/blob/main/DATA_LICENSE.md" target="_blank" rel="noopener">⟦2⟧</a>. Please cite the sources listed under Download &amp; cite.
+FR: Licence de ces champs cartographiques :⟦0⟧(⟦1⟧données supplémentaires). Licences de chaque dépôt : <a href="https://github.com/geomorphlab/dune-atlas/blob/main/DATA_LICENSE.md" target="_blank" rel="noopener">⟦2⟧</a>. Veuillez citer les sources indiquées sous Télécharger et citer.
+
+## c.bf82bd88 (Cell panel)
+EN: infinite (⟦#0⟧ in the data).
+FR: infini (⟦#0⟧ dans les données).
+
+## c.4d123ca2 (Cell panel)
+EN: Cell ⟦#0⟧, ⟦#1⟧
+FR: Cellule ⟦#0⟧, ⟦#1⟧
+
+# Other interface
+
+## c.b316e3ad (Other interface)
+EN: Outside the⟦0⟧land mask
+FR: En dehors du masque des terres⟦0⟧
+
+## c.d0a79f04 (Other interface)
+EN: The atlas computes wind roses and sand-flux statistics only for land cells (⟦0⟧land–sea mask fraction &gt; ⟦#0⟧). This cell is mainly water, so the atlas has no statistics for it. Choose a nearby land cell, or switch to⟦1⟧(coastal cells can differ between the two land masks).
+FR: L’atlas calcule les roses des vents et les statistiques de flux de sable uniquement pour les cellules terrestres (fraction du masque terre–mer⟦0⟧&gt; ⟦#0⟧). Cette cellule est principalement constituée d’eau ; l’atlas ne dispose donc d’aucune statistique pour elle. Choisissez une cellule terrestre voisine, ou passez à⟦1⟧(les cellules côtières peuvent différer entre les deux masques des terres).
+
+## c.3d5c01ad (Other interface)
+EN: ⟦#0⟧° cell: row ⟦#1⟧, column ⟦#2⟧; centre ⟦#3⟧°S, ⟦#4⟧°E.
+FR: Cellule de ⟦#0⟧° : ligne ⟦#1⟧, colonne ⟦#2⟧ ; centre ⟦#3⟧°S, ⟦#4⟧°E.
+
+## c.0f4659f8 (Other interface)
+EN: The atlas computes wind roses and sand-flux statistics only for land cells (⟦0⟧land–sea mask fraction &gt; ⟦#0⟧). This cell has no land (land–sea mask fraction ⟦#1⟧), so the atlas has no statistics for it. Choose a nearby land cell, or switch to⟦1⟧(coastal cells can differ between the two land masks).
+FR: L’atlas calcule les roses des vents et les statistiques de flux de sable uniquement pour les cellules terrestres (fraction du masque terre–mer⟦0⟧&gt; ⟦#0⟧). Cette cellule ne comporte aucune terre (fraction du masque terre–mer ⟦#1⟧) ; l’atlas ne dispose donc d’aucune statistique pour elle. Choisissez une cellule terrestre voisine, ou passez à⟦1⟧(les cellules côtières peuvent différer entre les deux masques des terres).
+
+# Screen-reader labels and tooltips
+
+## c.4f6e56eb (Screen-reader labels and tooltips)
+EN: Switch to Mars
+FR: Passer à Mars
+
+## c.cd86acc3 (Screen-reader labels and tooltips)
+EN: Close
+FR: Fermer
+
+# Tool panels
+
+## c.3be5a9ed (Tool panels)
+EN: Share this view
+FR: Partager cette vue
+
+# Screen-reader labels and tooltips
+
+## c.b03ebc37 (Screen-reader labels and tooltips)
+EN: Link to this view
+FR: Lien vers cette vue
+
+# Tool panels
+
+## c.23f990dc (Tool panels)
+EN: Copy link
+FR: Copier le lien
+
+## c.db531243 (Tool panels)
+EN: The link restores the position, zoom, wind dataset, threshold, basemap, active layers and the selected cell.
+FR: Le lien restaure la position, le zoom, le jeu de données de vent, le seuil, le fond de carte, les calques actifs et la cellule sélectionnée.
+
+# Other interface
+
+## c.3887d7d3 (Other interface)
+EN: Link copied
+FR: Lien copié
+
+# Tool panels
+
+## c.46af3291 (Tool panels)
+EN: ⟦0⟧ Include basemap
+FR: ⟦0⟧ Inclure le fond de carte
+
+## c.e695bc35 (Tool panels)
+EN: ⟦0⟧ Transparent background (default white)
+FR: ⟦0⟧ Fond transparent (blanc par défaut)
+
+## c.963b6004 (Tool panels)
+EN: ⟦0⟧of the current view, ⟦#0⟧–⟦#1⟧ pixels wide, without the panels, on a white background unless Transparent background is ticked. Colour bars, legends, scale and data sources are added below the map.
+FR: ⟦0⟧de la vue actuelle, de ⟦#0⟧–⟦#1⟧ pixels de large, sans les panneaux, sur fond blanc sauf si Fond transparent est coché. Les barres de couleur, les légendes, l’échelle et les sources des données sont ajoutées sous la carte.
+
+## c.f1d747de (Tool panels)
+EN: Export⟦0⟧
+FR: Exporter⟦0⟧
+
+# Screen-reader labels and tooltips
+
+## c.76ffaf4f (Screen-reader labels and tooltips)
+EN: Rendering…
+FR: Rendu en cours…
+
+## c.30a14bad (Screen-reader labels and tooltips)
+EN: Best viewed full screen: opens this view in a new tab
+FR: Affichage optimal en plein écran : ouvre cette vue dans un nouvel onglet
+
+# Other interface
+
+## c.a09f6b17 (Other interface)
+EN: Open full screen ↗
+FR: Ouvrir en plein écran ↗
+
+## c.84ba782e (Other interface)
+EN: Best viewed full screen
+FR: Affichage optimal en plein écran
+
+# Screen-reader labels and tooltips
+
+## c.0ba4b6a4 (Screen-reader labels and tooltips)
+EN: MCMC FV3 ⟦#0⟧°, one Mars year (6th simulated year, ⟦#1⟧ sols)
+FR: MCMC FV3 ⟦#0⟧°, une année martienne (6e année simulée, ⟦#1⟧ sols)
+
+## c.5b8eff97 (Screen-reader labels and tooltips)
+EN: Reset to the default ⟦#0⟧ µm
+FR: Rétablir la valeur par défaut de ⟦#0⟧ µm
+
+# Layer panel
+
+## c.f2de880e (Layer panel)
+EN: default ⟦#0⟧ µm
+FR: par défaut ⟦#0⟧ µm
+
+# Layer popovers
+
+## c.e7c53466 (Layer popovers)
+EN: The median diameter ⟦0⟧ of the sand grains. Every grain-size-dependent map layer (its ⓘ says so) and the cell panel use the value set here. The threshold friction velocity ⟦1⟧ is computed for every hour from ⟦2⟧ and that hour's air density and temperature (⟦3⟧).
+FR: Le diamètre médian ⟦0⟧ des grains de sable. Chaque calque de la carte dépendant de la taille des grains (son ⓘ l’indique) ainsi que le panneau de cellule utilisent la valeur définie ici. La vitesse de frottement seuil ⟦1⟧ est calculée pour chaque heure à partir de ⟦2⟧ et de la masse volumique et de la température de l’air à cette heure (⟦3⟧).
+
+## c.01554ec1 (Layer popovers)
+EN: ⟦#0⟧ log-spaced values from ⟦#1⟧ µm to ⟦#2⟧ µm; default ⟦#3⟧ µm (the mark under the slider). The compact copy at the top of the cell panel sets the same value.
+FR: ⟦#0⟧ valeurs espacées logarithmiquement de ⟦#1⟧ µm à ⟦#2⟧ µm ; valeur par défaut ⟦#3⟧ µm (le repère sous le curseur). La copie compacte en haut du panneau de cellule règle la même valeur.
+
+# Screen-reader labels and tooltips
+
+## c.0068eba5 (Screen-reader labels and tooltips)
+EN: Invert: colour the areas WITHOUT mapped dunes instead of the dunes.
+FR: Inverser : colorer les zones SANS dunes cartographiées au lieu des dunes.
+
+# Layer panel
+
+## c.a524d750 (Layer panel)
+EN: ⟦0⟧ invert (areas without dunes)
+FR: ⟦0⟧ inverser (zones sans dunes)
+
+# Screen-reader labels and tooltips
+
+## c.227e780e (Screen-reader labels and tooltips)
+EN: Invert: colour areas without dunes
+FR: Inverser : colorer les zones sans dunes
+
+# Layer popovers
+
+## c.5e016412 (Layer popovers)
+EN: Mapped aeolian dune fields of Mars: the⟦0⟧⟦1⟧(⟦2⟧; equatorial⟦3⟧, north polar⟦4⟧, south polar⟦5⟧;⟦6⟧) plus the small dune fields of⟦7⟧, merged into ⟦#0⟧ polygons (⟦#1⟧ km²).⟦8⟧maps fields larger than ⟦#2⟧ km²; ⟦#3⟧ polygons are smaller (⟦9⟧). Equatorward of ⟦#4⟧°: ⟦#5⟧ polygons, ⟦#6⟧ km² (⟦10⟧and⟦11⟧).
+FR: Champs de dunes éoliennes cartographiés sur Mars : le⟦0⟧⟦1⟧(⟦2⟧; équatorial⟦3⟧, polaire nord⟦4⟧, polaire sud⟦5⟧;⟦6⟧) ainsi que les petits champs de dunes de⟦7⟧, fusionnés en ⟦#0⟧ polygones (⟦#1⟧ km²).⟦8⟧cartographie les champs de plus de ⟦#2⟧ km² ; ⟦#3⟧ polygones sont plus petits (⟦9⟧). À moins de ⟦#4⟧° de l’équateur : ⟦#5⟧ polygones, ⟦#6⟧ km² (⟦10⟧et⟦11⟧).
+
+## c.2cb30509 (Layer popovers)
+EN: Dune fields are named after the IAU-approved names of the features they lie in, from the <a href="https://planetarynames.wr.usgs.gov/" target="_blank" rel="noopener">Gazetteer of Planetary Nomenclature</a> (⟦0⟧); undae are⟦1⟧names for dune fields themselves. A few informal names are included as aliases.
+FR: Les champs de dunes portent les noms approuvés par l’IAU des formations dans lesquelles ils se trouvent, tirés du <a href="https://planetarynames.wr.usgs.gov/" target="_blank" rel="noopener">Gazetteer of Planetary Nomenclature</a> (⟦0⟧) ; les undae sont des noms⟦1⟧qui désignent les champs de dunes eux-mêmes. Quelques noms informels sont inclus en tant qu’alias.
+
+## c.b0aa5392 (Layer popovers)
+EN: ⟦0⟧⟦1⟧(⟦2⟧) and⟦3⟧, merged, compiled by A. Gunn
+FR: ⟦0⟧⟦1⟧(⟦2⟧) et⟦3⟧, fusionnés, compilés par A. Gunn
+
+## c.762593af (Layer popovers)
+EN: ⟦0⟧polygons: public domain (U.S. Geological Survey)
+FR: Polygones⟦0⟧: domaine public (U.S. Geological Survey)
+
+## c.7c3bca61 (Layer popovers)
+EN: ⟦0⟧and⟦1⟧merged into one polygon layer; invalid geometries repaired; coordinates rounded to 1e-⟦#0⟧°.
+FR: ⟦0⟧et⟦1⟧fusionnés en un seul calque de polygones ; géométries invalides corrigées ; coordonnées arrondies à 1e-⟦#0⟧°.
+
+## c.bf621ba4 (Layer popovers)
+EN: ⟦0⟧⟦#0⟧°, one Mars year (6th simulated year, ⟦#1⟧ sols)
+FR: ⟦0⟧⟦#0⟧°, une année martienne (6e année simulée, ⟦#1⟧ sols)
+
+## c.7fc88287 (Layer popovers)
+EN: Updates with the grain-diameter ⟦0⟧ control.
+FR: Se met à jour avec la commande du diamètre des grains ⟦0⟧.
+
+## c.55593e77 (Layer popovers)
+EN: Fraction of time flat-bed friction velocity is above threshold⟦0⟧. The threshold is that hour's cessation threshold⟦1⟧of⟦2⟧.
+FR: Fraction du temps pendant laquelle la vitesse de frottement sur lit plat dépasse le seuil⟦0⟧. Le seuil est, pour chaque heure, le seuil d’arrêt⟦1⟧de⟦2⟧.
+
+## c.f1591313 (Layer popovers)
+EN: Average above-threshold flat-bed friction velocity, normalised by threshold⟦0⟧. The threshold is that hour's cessation threshold⟦1⟧of⟦2⟧.
+FR: Vitesse de frottement moyenne sur lit plat au-dessus du seuil, normalisée par le seuil⟦0⟧. Le seuil est, pour chaque heure, le seuil d’arrêt⟦1⟧de⟦2⟧.
+
+## c.8ab3c2ce (Layer popovers)
+EN: Fraction of bed-instability-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold⟦2⟧of⟦3⟧.
+FR: Fraction du flux de crête en mode d’instabilité du lit (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. Vaut ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête. Le seuil est, pour chaque heure, le seuil d’arrêt⟦2⟧de⟦3⟧.
+
+## c.8843ab2c (Layer popovers)
+EN: Fraction of elongation-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold⟦2⟧of⟦3⟧.
+FR: Fraction du flux de crête en mode d’allongement (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. Vaut ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête. Le seuil est, pour chaque heure, le seuil d’arrêt⟦2⟧de⟦3⟧.
+
+## c.5dd4040a (Layer popovers)
+EN: Time-averaged flat-bed saturated sand flux,⟦0⟧over all N hours of the Mars year: the volume of packed sand per metre width that the wind could move per Earth year over a flat bed fully covered by loose sand (⟦1⟧). Like the drift potential of⟦2⟧it measures the wind's capacity to transport sand, but it is a different quantity: Fryberger's⟦3⟧is in vector units, computed from ⟦#0⟧ m wind speeds in knots as⟦4⟧with a ⟦#1⟧-knot threshold, whereas this⟦5⟧is a physical flux computed from the friction velocity with a threshold computed from the grain diameter. The two cannot be converted into each other, and Fryberger's energy classes do not apply to these values.
+FR: Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des N heures de l’année martienne : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par année terrestre sur un lit plat entièrement couvert de sable meuble (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement avec un seuil déterminé à partir du diamètre des grains. Les deux ne peuvent pas être convertis l’un en l’autre, et les classes d’énergie de Fryberger ne s’appliquent pas à ces valeurs.
+
+## c.a2cd8175 (Layer popovers)
+EN: Divergence of the time-averaged saturated sand-flux vector (magnitude⟦0⟧, direction⟦1⟧) on the Mars sphere, following⟦2⟧, Methods⟦3⟧:⟦4⟧with⟦5⟧,⟦6⟧. By conservation of sand mass, negative values (flux convergence) imply deposition and positive values (flux divergence) erosion. The values assume a saturated flux and an unlimited supply of loose sand, so on rock, crusted or vegetated surfaces actual erosion is limited by the sand available.
+FR: Divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦0⟧, direction⟦1⟧) sur la sphère martienne, d’après⟦2⟧, Méthodes⟦3⟧:⟦4⟧avec⟦5⟧,⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence du flux) impliquent un dépôt et les valeurs positives (divergence du flux) une érosion. Ces valeurs supposent un flux saturé et un apport illimité de sable meuble ; ainsi, sur les surfaces rocheuses, encroûtées ou végétalisées, l’érosion réelle est limitée par le sable disponible.
+
+## c.75d2f7e2 (Layer popovers)
+EN: Mean over the Mars year of the hourly lowest-layer air density⟦0⟧of the wind dataset's climate model (⟦1⟧= mid pressure of the lowest layer,⟦2⟧= lowest-level temperature).
+FR: Moyenne sur l’année martienne de la masse volumique horaire de l’air de la couche la plus basse⟦0⟧du modèle climatique du jeu de données de vent (⟦1⟧= pression au milieu de la couche la plus basse,⟦2⟧= température du niveau le plus bas).
+
+## c.2a037b62 (Layer popovers)
+EN: Independent of the grain diameter: not affected by the ⟦0⟧ control.
+FR: Indépendant du diamètre des grains : non affecté par la commande ⟦0⟧.
+
+## c.9ebf3d9d (Layer popovers)
+EN: ⟦0⟧Ames⟦1⟧output; no licence stated (⟦2⟧open data)
+FR: Sorties⟦0⟧Ames⟦1⟧; aucune licence indiquée (⟦2⟧données ouvertes)
+
+## c.eec05683 (Layer popovers)
+EN: Elevation⟦0⟧of the surface relative to the Mars areoid (⟦1⟧datum), from the Mars⟦2⟧–⟦3⟧Blended⟦4⟧Global 200m v2. The colour scale saturates beyond its ends (Olympus Mons ⟦#0⟧ km, Hellas ⟦#1⟧ km).
+FR: Altitude⟦0⟧de la surface par rapport à l’aréoïde martien (niveau de référence⟦1⟧), d’après le Mars⟦2⟧–⟦3⟧Blended⟦4⟧Global 200m v2. L’échelle de couleurs sature au-delà de ses bornes (Olympus Mons ⟦#0⟧ km, Hellas ⟦#1⟧ km).
+
+## c.1c27de48 (Layer popovers)
+EN: Mars⟦0⟧–⟦1⟧Blended⟦2⟧Global 200m v2 (⟦3⟧; originators⟦4⟧,⟦5⟧,⟦6⟧; publication date ⟦#0⟧-⟦#1⟧-⟦#2⟧)
+FR: Mars⟦0⟧–⟦1⟧Blended⟦2⟧Global 200m v2 (⟦3⟧; auteurs⟦4⟧,⟦5⟧,⟦6⟧; date de publication ⟦#0⟧-⟦#1⟧-⟦#2⟧)
+
+## c.e98bd889 (Layer popovers)
+EN: ⟦0⟧(⟦1⟧),⟦2⟧(⟦3⟧). Derived elevation and relief tiles:⟦4⟧.
+FR: ⟦0⟧(⟦1⟧),⟦2⟧(⟦3⟧). Tuiles d’altitude et de relief dérivées :⟦4⟧.
+
+## c.eee562e1 (Layer popovers)
+EN: Area mean over ⟦#0⟧/⟦#1⟧° (~⟦#2⟧ km) pixels of the ⟦#3⟧ m⟦0⟧, rounded to ⟦#4⟧ m; zoomed-out map views show means (≤ ⟦#5⟧ m rounding).
+FR: Moyenne surfacique sur des pixels de ⟦#0⟧/⟦#1⟧° (~⟦#2⟧ km) du ⟦#3⟧ m⟦0⟧, arrondie à ⟦#4⟧ m ; aux échelles de carte plus petites (vue éloignée), des moyennes sont affichées (arrondi ≤ ⟦#5⟧ m).
+
+## c.3704a8f0 (Layer popovers)
+EN: Shaded relief of the⟦0⟧blended elevation model.
+FR: Relief ombré du modèle d’altitude⟦0⟧fusionné.
+
+## c.db6c76a7 (Layer popovers)
+EN: Mars⟦0⟧–⟦1⟧Blended⟦2⟧Global 200m v2 (⟦3⟧; Fergason,⟦4⟧)
+FR: Mars⟦0⟧–⟦1⟧Blended⟦2⟧Global 200m v2 (⟦3⟧; Fergason,⟦4⟧)
+
+## c.2d12b94c (Layer popovers)
+EN: ⟦#0⟧ m⟦0⟧, shown at up to about ⟦#1⟧ m per pixel at the equator
+FR: ⟦#0⟧ m⟦0⟧, affiché jusqu’à environ ⟦#1⟧ m par pixel à l’équateur
+
+## c.2e1c0f7e (Layer popovers)
+EN: ⟦0⟧basemap of Mars: shaded relief and colour with feature names.
+FR: Fond de carte⟦0⟧de Mars : relief ombré et couleur avec les toponymes.
+
+## c.644998c7 (Layer popovers)
+EN: ⟦0⟧/⟦1⟧; data⟦2⟧(⟦3⟧),⟦4⟧(⟦5⟧),⟦6⟧
+FR: ⟦0⟧/⟦1⟧ ; données⟦2⟧(⟦3⟧),⟦4⟧(⟦5⟧),⟦6⟧
+
+## c.8540dd31 (Layer popovers)
+EN: ⟦0⟧terms (see link);⟦1⟧and⟦2⟧data in the public domain
+FR: Conditions d’utilisation⟦0⟧(voir le lien) ; données⟦1⟧et⟦2⟧relevant du domaine public
+
+## c.ee2e3cf3 (Layer popovers)
+EN: Global greyscale mosaic of Context Camera (⟦0⟧) images of⟦1⟧.
+FR: Mosaïque globale en niveaux de gris d’images de la Context Camera (⟦0⟧) de⟦1⟧.
+
+## c.dcf459d8 (Layer popovers)
+EN: ⟦0⟧⟦1⟧(The⟦2⟧, Caltech;⟦3⟧),⟦4⟧service⟦5⟧
+FR: ⟦0⟧⟦1⟧(The⟦2⟧, Caltech ;⟦3⟧),⟦4⟧service⟦5⟧
+
+## c.4bee0614 (Layer popovers)
+EN: About ⟦#0⟧ m per pixel
+FR: Environ ⟦#0⟧ m par pixel
+
+## c.297b433e (Layer popovers)
+EN: Free use for all purposes, credit NASA/JPL/MSSS/The⟦0⟧;⟦1⟧service under the⟦2⟧/ Terms of Use
+FR: Utilisation libre à toutes fins, avec mention NASA/JPL/MSSS/The⟦0⟧ ;⟦1⟧service régi par⟦2⟧/ les conditions d’utilisation
+
+## c.2624acaf (Layer popovers)
+EN: ⟦0⟧images of⟦1⟧, where⟦2⟧has imaged (a small part of the surface); elsewhere the map is dark.
+FR: Images⟦0⟧de⟦1⟧, là où⟦2⟧a acquis des images (une petite partie de la surface) ; ailleurs, la carte est sombre.
+
+## c.95f469ee (Layer popovers)
+EN: ⟦0⟧(⟦1⟧/⟦2⟧/⟦3⟧),⟦4⟧service⟦5⟧
+FR: ⟦0⟧(⟦1⟧/⟦2⟧/⟦3⟧),⟦4⟧service⟦5⟧
+
+## c.56370639 (Layer popovers)
+EN: Down to about ⟦#0⟧ cm per pixel; sparse coverage
+FR: Jusqu’à environ ⟦#0⟧ cm par pixel ; couverture éparse
+
+## c.c549e23b (Layer popovers)
+EN: Coverage
+FR: Couverture
+
+## c.81e9bb01 (Layer popovers)
+EN: ⟦0⟧footprints between about ⟦#0⟧° S and ⟦#1⟧° N; no imagery at higher latitudes in this mosaic (⟦1⟧).
+FR: Emprises⟦0⟧entre environ ⟦#0⟧° S et ⟦#1⟧° N ; aucune image aux latitudes plus élevées dans cette mosaïque (⟦1⟧).
+
+## c.4a0cf606 (Layer popovers)
+EN: Public domain (⟦0⟧images);⟦1⟧service under the⟦2⟧/ Terms of Use
+FR: Domaine public (images⟦0⟧) ; service⟦1⟧soumis au⟦2⟧/ aux conditions d’utilisation
+
+## c.e7debcd9 (Layer popovers)
+EN: Colorized global mosaic of Viking Orbiter images.
+FR: Mosaïque globale colorisée d’images des orbiteurs Viking.
+
+## c.8ec61eb6 (Layer popovers)
+EN: ⟦0⟧Colorized Global Mosaic (⟦1⟧/⟦2⟧/⟦3⟧),⟦4⟧service⟦5⟧
+FR: ⟦0⟧Colorized Global Mosaic (⟦1⟧/⟦2⟧/⟦3⟧), service⟦4⟧⟦5⟧
+
+## c.773da507 (Layer popovers)
+EN: About ⟦#0⟧ m per pixel (⟦#1⟧/⟦#2⟧°)
+FR: Environ ⟦#0⟧ m par pixel (⟦#1⟧/⟦#2⟧°)
+
+## c.a5d6c844 (Layer popovers)
+EN: Public domain (⟦0⟧);⟦1⟧service under the⟦2⟧/ Terms of Use
+FR: Domaine public (⟦0⟧) ; service⟦1⟧régi par le⟦2⟧/ les conditions d’utilisation
+
+## c.d62fb31c (Layer popovers)
+EN: Colour-coded shaded relief of the⟦0⟧blended elevation model.
+FR: Relief ombré codé en couleur du modèle d’altitude⟦0⟧fusionné.
+
+## c.7ab4f976 (Layer popovers)
+EN: ⟦0⟧colorized shaded relief (⟦1⟧, from the Mars⟦2⟧–⟦3⟧Blended⟦4⟧Global 200m v2),⟦5⟧service MColorDEM
+FR: Relief ombré colorisé⟦0⟧(⟦1⟧, d’après le Mars⟦2⟧–⟦3⟧Blended⟦4⟧Global 200m v2), service⟦5⟧MColorDEM
+
+## c.6022c5f5 (Layer popovers)
+EN: ⟦#0⟧ m⟦0⟧, shown at up to about ⟦#1⟧ m per pixel
+FR: ⟦#0⟧ m⟦0⟧, affiché jusqu’à environ ⟦#1⟧ m par pixel
+
+## c.5dbbfa26 (Layer popovers)
+EN: Public domain (⟦0⟧); cite the⟦1⟧(Fergason,⟦2⟧);⟦3⟧service under the⟦4⟧/ Terms of Use
+FR: Domaine public (⟦0⟧) ; citer le⟦1⟧(Fergason,⟦2⟧) ; service⟦3⟧soumis aux⟦4⟧/ conditions d’utilisation
+
+# About
+
+## c.63c884fd (About)
+EN: Click any cell to see its wind rose over the Mars year of the wind dataset, the sand-flux rose at the selected grain diameter, dune-orientation modes and all wind-regime parameters.
+FR: Cliquez sur n’importe quelle cellule pour afficher sa rose des vents sur l’année martienne du jeu de données de vent, la rose des flux de sable au diamètre de grain sélectionné, les modes d’orientation des dunes et tous les paramètres du régime des vents.
+
+## c.692b1efa (About)
+EN: <strong>Winds (⟦0⟧Mars⟦1⟧, beta release ⟦#0⟧)</strong>: hourly lowest-level winds, temperature and surface pressure of the⟦2⟧Ames⟦3⟧FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to ⟦#1⟧° × ⟦#2⟧° (a cell is about ⟦#3⟧ km across at the equator, larger than most dune fields): ⟦#4⟧ hourly samples, one Mars year. The map draws each cell as one square, so a field that changes strongly from cell to cell, as⟦4⟧often does at low latitudes, looks blocky. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature (⟦#5⟧–⟦#6⟧ m over all cells and hours; ⟦#7⟧–⟦#8⟧ m in ⟦#9⟧ % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#10⟧, eq. ⟦#11⟧) under constant stress at that height (no roughness length).
+FR: <strong>Vents (⟦0⟧Mars⟦1⟧, version bêta ⟦#0⟧)</strong> : vents horaires du niveau le plus bas, température et pression de surface du modèle climatique global martien⟦2⟧Ames⟦3⟧fondé sur FV3 (simulation de référence c48, 6e année simulée), rééchantillonnés sur une grille de ⟦#1⟧° × ⟦#2⟧° (une cellule mesure environ ⟦#3⟧ km de côté à l’équateur, soit plus grande que la plupart des champs de dunes) : ⟦#4⟧ échantillons horaires, une année martienne. La carte représente chaque cellule par un carré ; un champ qui varie fortement d’une cellule à l’autre, comme le fait souvent⟦4⟧aux basses latitudes, paraît donc pixellisé. Masse volumique de l’air de la couche la plus basse ρ = p/(R T) ; la hauteur z du vent du niveau le plus bas découle de la pression et de la température horaires (⟦#5⟧–⟦#6⟧ m sur l’ensemble des cellules et des heures ; ⟦#7⟧–⟦#8⟧ m pendant ⟦#9⟧ % des heures des cellules dunaires ; le panneau de la cellule indique la plage de la cellule sélectionnée), et la vitesse de frottement⟦5⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#10⟧, éq. ⟦#11⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité).
+
+## c.c238d4e5 (About)
+EN: <strong>Sand-flux fields</strong>: for every hour, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.
+FR: <strong>Champs de flux de sable</strong> : pour chaque heure, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/yr, comme sur Terre.
+
+## c.7a26bd74 (About)
+EN: <strong>Dune map</strong>:⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧) plus the small dune fields of Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), merged into ⟦#3⟧ dune-field polygons (Mars ⟦#4⟧ sphere);⟦4⟧polygons: public domain (U.S. Geological Survey).
+FR: <strong>Carte des dunes</strong> :⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧), complétée par les petits champs de dunes de Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), fusionnés en ⟦#3⟧ polygones de champs de dunes (sphère Mars ⟦#4⟧) ; polygones⟦4⟧: domaine public (U.S. Geological Survey).
+
+## c.c4698157 (About)
+EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧°). Negative values (convergence) imply deposition.
+FR: <strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur potentiel de dérive résultant (norme⟦1⟧, direction⟦2⟧) sur la sphère martienne (R = ⟦#0⟧ km), selon⟦3⟧, Methods⟦4⟧, avec des différences centrées sur la grille du jeu de données de vent (⟦#1⟧°). Les valeurs négatives (convergence) indiquent un dépôt.
+
+## c.5d754cff (About)
+EN: <strong>Elevation and shaded relief</strong>:⟦0⟧–⟦1⟧blended⟦2⟧, ⟦#0⟧ m, v2 (Fergason,⟦3⟧,⟦4⟧); licence:⟦5⟧(⟦6⟧) and⟦7⟧(⟦8⟧). Derived elevation and relief tiles:⟦9⟧.
+FR: <strong>Altitude et relief ombré</strong> :⟦0⟧–⟦1⟧fusionné⟦2⟧, ⟦#0⟧ m, v2 (Fergason,⟦3⟧,⟦4⟧) ; licence :⟦5⟧(⟦6⟧) et⟦7⟧(⟦8⟧). Tuiles d’altitude et de relief dérivées :⟦9⟧.
+
+## c.530a3afd (About)
+EN: <strong>Dune-field names</strong>: Dune fields are named after the IAU-approved names of the features they lie in, from the <a href="https://planetarynames.wr.usgs.gov/" target="_blank" rel="noopener">Gazetteer of Planetary Nomenclature</a> (⟦0⟧); undae are⟦1⟧names for dune fields themselves. A few informal names are included as aliases.
+FR: <strong>Noms des champs de dunes</strong> : les champs de dunes portent les noms approuvés par l’IAU des formations dans lesquelles ils se trouvent, d’après le <a href="https://planetarynames.wr.usgs.gov/" target="_blank" rel="noopener">Gazetteer of Planetary Nomenclature</a> (⟦0⟧) ; les undae sont des noms⟦1⟧désignant les champs de dunes eux-mêmes. Quelques noms informels sont inclus comme alias.
+
+## c.50055b7f (About)
+EN: Mars⟦0⟧(method)
+FR: Mars⟦0⟧(méthode)
+
+## c.89d524a5 (About)
+EN: Method (wind-regime and dune-orientation fields): ⟦0⟧
+FR: Méthode (champs du régime des vents et de l’orientation des dunes) : ⟦0⟧
+
+## c.72a649e1 (About)
+EN: Mars wind series, sand-flux fields and flux divergence computed for the Mars⟦0⟧from the⟦1⟧lowest-level winds with the transport law of⟦2⟧and the methods outlined in⟦3⟧.
+FR: Séries de vent martiennes, champs de flux de sable et divergence du flux calculés pour le Mars⟦0⟧à partir des vents du niveau le plus bas de⟦1⟧avec la loi de transport de⟦2⟧et les méthodes décrites dans⟦3⟧.
+
+## c.a9bc77d4 (About)
+EN: ⟦0⟧Mars⟦1⟧, beta release ⟦#0⟧
+FR: ⟦0⟧Mars⟦1⟧, version bêta ⟦#0⟧
+
+## c.c020e5a4 (About)
+EN: Model physics: ⟦0⟧
+FR: Physique du modèle : ⟦0⟧
+
+## c.8311cdd3 (About)
+EN: Sediment transport law
+FR: Loi de transport sédimentaire
+
+## c.ba79a508 (About)
+EN: Mars dune map (⟦0⟧⟦1⟧and⟦2⟧, merged)
+FR: Carte des dunes de Mars (⟦0⟧⟦1⟧et⟦2⟧, fusionnées)
+
+## c.4f0fafb8 (About)
+EN: Topography (⟦0⟧blended⟦1⟧)
+FR: Topographie (⟦0⟧fusionnée⟦1⟧)
+
+## c.900a3648 (About)
+EN: Basemap credits are shown in the map attribution.
+FR: Les crédits des fonds de carte figurent dans l’attribution de la carte.
+
+# Cell panel
+
+## c.4a5374ef (Cell panel)
+EN: Grain diameter ⟦0⟧: <strong>⟦1⟧</strong>
+FR: Diamètre des grains ⟦0⟧ : <strong>⟦1⟧</strong>
+
+## c.85102ae2 (Cell panel)
+EN: Threshold ⟦0⟧, median over the hours: <strong>⟦1⟧</strong>
+FR: Seuil ⟦0⟧, médiane sur les heures : <strong>⟦1⟧</strong>
+
+## c.8d0e4128 (Cell panel)
+EN: ⟦0⟧, ⟦#0⟧–⟦#1⟧ % of the hours: ⟦1⟧
+FR: ⟦0⟧, ⟦#0⟧–⟦#1⟧ % des heures : ⟦1⟧
+
+## c.51b43106 (Cell panel)
+EN: Lowest-level wind at threshold (median height ⟦#0⟧ m): ≈ ⟦0⟧
+FR: Vent au niveau le plus bas au seuil (hauteur médiane ⟦#0⟧ m) : ≈ ⟦0⟧
+
+## c.de02b143 (Cell panel)
+EN: Hours above threshold: ⟦0⟧
+FR: Heures au-dessus du seuil : ⟦0⟧
+
+## c.bd1de494 (Cell panel)
+EN: Frequency of the hourly lowest-level winds by the direction they blow from, ⟦#0⟧ sectors, stacked by speed class; one Mars year; sums to ⟦#1⟧ %.
+FR: Fréquence des vents horaires au niveau le plus bas selon la direction d’où ils soufflent, ⟦#0⟧ secteurs, empilés par classe de vitesse ; une année martienne ; total de ⟦#1⟧ %.
+
+## c.55fb0a53 (Cell panel)
+EN: m/s, lowest model level
+FR: m/s, niveau le plus bas du modèle
+
+## c.54424ba2 (Cell panel)
+EN: Direction the wind blows FROM (meteorological), ⟦#0⟧ sectors of ⟦#1⟧°; radius = % of the ⟦#2⟧ hourly samples (sums to ⟦#3⟧ %).⟦0⟧lowest-level wind (height in this cell ⟦#4⟧–⟦#5⟧ m), one Mars year (6th simulated year, ⟦#6⟧ sols).
+FR: Direction D’OÙ souffle le vent (convention météorologique), ⟦#0⟧ secteurs de ⟦#1⟧° ; rayon = % des ⟦#2⟧ échantillons horaires (total de ⟦#3⟧ %).⟦0⟧vent au niveau le plus bas (hauteur dans cette cellule ⟦#4⟧–⟦#5⟧ m), une année martienne (6e année simulée, ⟦#6⟧ sols).
+
+## c.705e31ee (Cell panel)
+EN: Time-averaged flat-bed sand flux by the direction sand moves toward, ⟦#0⟧ sectors of ⟦#1⟧ degrees, stacked by excess shear u*/u*,th of each hour, percent of total flux, at grain diameter d = ⟦#2⟧ µm.
+FR: Flux de sable sur lit plat moyenné dans le temps, selon la direction vers laquelle se déplace le sable, ⟦#0⟧ secteurs de ⟦#1⟧ degrés, empilés par excès de cisaillement u*/u*,th de chaque heure, en pourcentage du flux total, pour un diamètre des grains d = ⟦#2⟧ µm.
+
+## c.4d7bcf52 (Cell panel)
+EN: αT (transverse migration direction): ⟦#0⟧° (WNW)
+FR: αT (direction de migration transverse) : ⟦#0⟧° (ONO)
+
+## c.7752b77c (Cell panel)
+EN: RDD (resultant drift direction): ⟦#0⟧° (ESE)
+FR: RDD (direction de dérive résultante) : ⟦#0⟧° (ESE)
+
+## c.33a5156c (Cell panel)
+EN: ⟦#0⟧° (WNW)
+FR: ⟦#0⟧° (ONO)
+
+## c.4c3ff457 (Cell panel)
+EN: ⟦#0⟧° (ESE)
+FR: ⟦#0⟧° (ESE)
+
+## c.94bd0d74 (Cell panel)
+EN: <span class="cap-lead"><strong>Flat bed</strong>: ⟦0⟧ = ⟦1⟧</span> Direction sand moves TOWARD; ⟦#0⟧ sectors of ⟦#1⟧°. Radius = % of the total flux in each sector (sums to ⟦#2⟧ %). Time-averaged saturated flat-bed flux (q from ⟦2⟧), Σ<sub>hours</sub> q / N over the ⟦#3⟧ hourly samples, with ⟦3⟧ of each hour from the lowest-level wind at its height z (smooth-wall mixing-length profile,⟦4⟧eq. ⟦#4⟧) and the threshold ⟦5⟧ of each hour from ⟦6⟧ and that hour's air density and temperature. Colours split each sector by the excess shear ⟦7⟧ of the hours carrying the flux (only ⟦8⟧ transports sand).⟦9⟧,⟦10⟧,⟦11⟧,⟦12⟧and the arrows are the map fields at this grain diameter; a direction is hidden where the flux defining it is zero.
+FR: <span class="cap-lead"><strong>Lit plat</strong> : ⟦0⟧ = ⟦1⟧</span> Direction VERS laquelle se déplace le sable ; ⟦#0⟧ secteurs de ⟦#1⟧°. Rayon = % du flux total dans chaque secteur (total de ⟦#2⟧ %). Flux saturé sur lit plat moyenné dans le temps (q d’après ⟦2⟧), Σ<sub>heures</sub> q / N sur les ⟦#3⟧ échantillons horaires, avec ⟦3⟧ de chaque heure déduite du vent au niveau le plus bas à sa hauteur z (profil de longueur de mélange pour paroi lisse,⟦4⟧éq. ⟦#4⟧) et le seuil ⟦5⟧ de chaque heure déduit de ⟦6⟧ ainsi que de la masse volumique et de la température de l’air à cette heure. Les couleurs divisent chaque secteur selon l’excès de cisaillement ⟦7⟧ des heures qui portent le flux (seul ⟦8⟧ transporte du sable).⟦9⟧,⟦10⟧,⟦11⟧,⟦12⟧et les flèches correspondent aux champs de la carte pour ce diamètre des grains ; une direction est masquée là où le flux qui la définit est nul.
+
+## c.92c30d6e (Cell panel)
+EN: Modes vs grain diameter (polar: angle = direction, radius = ⟦0⟧, log scale)
+FR: Modes en fonction du diamètre des grains (polaire : angle = direction, rayon = ⟦0⟧, échelle logarithmique)
+
+# Screen-reader labels and tooltips
+
+## c.0741b547 (Screen-reader labels and tooltips)
+EN: Polar plot of dune-orientation mode bearings (angle) against median grain diameter (radius, log scale, ⟦#0⟧ µm at the centre to ⟦#1⟧ µm at the rim)
+FR: Diagramme polaire des azimuts des modes d’orientation des dunes (angle) en fonction du diamètre médian des grains (rayon, échelle logarithmique, de ⟦#0⟧ µm au centre à ⟦#1⟧ µm en périphérie)
+
+# Cell panel
+
+## c.830d966e (Cell panel)
+EN: radius: d (µm, log scale)
+FR: rayon : d (µm, échelle logarithmique)
+
+## c.76650ed5 (Cell panel)
+EN: Mode bearings (toward) for ⟦0⟧ = ⟦#0⟧ µm (centre) to ⟦#1⟧ µm (rim), radius logarithmic in ⟦1⟧; ⟦2⟧ is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current grain diameter. Where⟦3⟧is low (below about ⟦#2⟧), transport in opposing directions nearly cancels, so⟦4⟧is poorly defined and can swing by up to ⟦#3⟧° with a small change of grain diameter. The modes depend on the whole flux rose rather than on its resultant: ⟦5⟧ follows the crest orientation ⟦6⟧ that maximises gross transport across crests, so it can stay steady and differ from⟦7⟧.
+FR: Azimuts des modes (vers) pour ⟦0⟧ = ⟦#0⟧ µm (centre) à ⟦#1⟧ µm (bord), rayon logarithmique en ⟦1⟧ ; ⟦2⟧ est un axe, tracé dans les deux sens. Les tracés s’interrompent là où un mode n’est pas défini (aucun flux le définissant). Cercle en tirets et points : diamètre des grains actuel. Là où⟦3⟧est faible (inférieur à environ ⟦#2⟧), le transport dans des directions opposées se compense presque, de sorte que⟦4⟧est mal définie et peut varier jusqu’à ⟦#3⟧° pour une faible variation du diamètre des grains. Les modes dépendent de l’ensemble de la rose des flux plutôt que de sa résultante : ⟦5⟧ suit l’orientation de la crête ⟦6⟧ qui maximise le transport brut à travers les crêtes, et peut ainsi rester stable et différer de⟦7⟧.
+
+## c.78ee9922 (Cell panel)
+EN: Drift potential⟦0⟧ vs grain diameter
+FR: Potentiel de dérive⟦0⟧ en fonction du diamètre des grains
+
+# Screen-reader labels and tooltips
+
+## c.d092fe06 (Screen-reader labels and tooltips)
+EN: Quantity plotted against the grain diameter
+FR: Grandeur représentée en fonction du diamètre des grains
+
+# Cell panel
+
+## c.28791e51 (Cell panel)
+EN: Median threshold friction velocity (u*,th)
+FR: Vitesse de frottement seuil médiane (u*,th)
+
+# Screen-reader labels and tooltips
+
+## c.20d1128e (Screen-reader labels and tooltips)
+EN: Drift potential (DP) vs grain diameter
+FR: Potentiel de dérive (DP) en fonction du diamètre des grains
+
+# Cell panel
+
+## c.50a517f6 (Cell panel)
+EN: <span class="cap-lead">At the current grain diameter: ⟦0⟧</span> Drift potential (⟦1⟧) of this cell for every grain diameter; dot and dashed line: current grain diameter.
+FR: <span class="cap-lead">Pour le diamètre de grain actuel : ⟦0⟧</span> Potentiel de dérive (⟦1⟧) de cette cellule pour chaque diamètre de grain ; point et ligne tiretée : diamètre de grain actuel.
+
+## c.2b98c4b5 (Cell panel)
+EN: ⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> <span class="unit">ratio</span>
+FR: ⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> <span class="unit">rapport</span>
+
+# Screen-reader labels and tooltips
+
+## c.a6ed5186 (Screen-reader labels and tooltips)
+EN: Threshold friction velocity at this d, median over the hours
+FR: Vitesse de frottement seuil pour ce d, médiane sur les heures
+
+# Cell panel
+
+## c.e89e84ed (Cell panel)
+EN: Median threshold friction velocity
+FR: Vitesse de frottement seuil médiane
+
+# Screen-reader labels and tooltips
+
+## c.08f8c08d (Screen-reader labels and tooltips)
+EN: Lowest-layer air density, median over the hours
+FR: Masse volumique de l’air dans la couche la plus basse, médiane sur les heures
+
+# Cell panel
+
+## c.aef2a8bb (Cell panel)
+EN: Median air density
+FR: Masse volumique médiane de l’air
+
+# Screen-reader labels and tooltips
+
+## c.701879e8 (Screen-reader labels and tooltips)
+EN: Near-surface air density, mean over the year; grain-size independent
+FR: Masse volumique de l’air près de la surface, moyenne annuelle ; indépendante de la taille des grains
+
+# Cell panel
+
+## c.c898e618 (Cell panel)
+EN: Mean air density
+FR: Masse volumique moyenne de l’air
+
+# Screen-reader labels and tooltips
+
+## c.db547236 (Screen-reader labels and tooltips)
+EN: Cell mean of the MOLA–HRSC DEM
+FR: Moyenne par cellule du MNT MOLA–HRSC
+
+# Cell panel
+
+## c.1059d6e4 (Cell panel)
+EN: Elevation
+FR: Altitude
+
+# Screen-reader labels and tooltips
+
+## c.dcbbdd2f (Screen-reader labels and tooltips)
+EN: Yes: the cell overlaps at least one dune polygon of the merged dune map (USGS Mars Global Digital Dune Database and Fenton ⟦#0⟧); value in brackets: dune area fraction of the cell
+FR: Oui : la cellule chevauche au moins un polygone de dune de la carte fusionnée des dunes (USGS Mars Global Digital Dune Database et Fenton ⟦#0⟧) ; valeur entre crochets : fraction de la surface de la cellule occupée par des dunes
+
+# Cell panel
+
+## c.f2400fd6 (Cell panel)
+EN: yes <span class="unit">(⟦#0⟧ %)</span>
+FR: oui <span class="unit">(⟦#0⟧ %)</span>
+
+# Screen-reader labels and tooltips
+
+## c.52fc6f74 (Screen-reader labels and tooltips)
+EN: Hourly wind and air series, all fields vs grain size, flux roses and metadata in one NetCDF-⟦#0⟧ file (CF-⟦#1⟧)
+FR: Séries horaires du vent et de l’air, tous les champs en fonction de la taille des grains, roses des flux et métadonnées dans un seul fichier NetCDF-⟦#0⟧ (CF-⟦#1⟧)
+
+## c.d4fc85c9 (Screen-reader labels and tooltips)
+EN: wind_series.csv, fields_by_grain_size.csv, flux_rose.csv, rose_16_sectors.csv (⟦#0⟧ sectors, degrees), metadata.json and README.txt
+FR: wind_series.csv, fields_by_grain_size.csv, flux_rose.csv, rose_16_sectors.csv (⟦#0⟧ secteurs, degrés), metadata.json et README.txt
+
+# Cell panel
+
+## c.da36bb60 (Cell panel)
+EN: The atlas reads public⟦0⟧(v3) stores on <a href="https://data.geomorphlab.org/" target="_blank" rel="noopener">data.geomorphlab.org</a>, which anyone can read, e.g. with Python. The map fields of⟦1⟧⟦#0⟧° are one store per variable, each holding the field against the median grain diameter (⟦2⟧, ⟦#1⟧ values) and latitude ⟦3⟧ and longitude ⟦4⟧ (cell centres in degrees; x from ⟦#2⟧ to ⟦#3⟧°, east positive). Level ⟦5⟧ of each store is the full-resolution grid; levels ⟦#4⟧, ⟦#5⟧, … are coarser copies for the map.
+FR: L’atlas lit des dépôts publics⟦0⟧(v3) hébergés sur <a href="https://data.geomorphlab.org/" target="_blank" rel="noopener">data.geomorphlab.org</a>, lisibles par tous, par exemple avec Python. Les champs cartographiques de⟦1⟧⟦#0⟧° comportent un dépôt par variable, chacun contenant le champ en fonction du diamètre médian des grains (⟦2⟧, ⟦#1⟧ valeurs), de la latitude ⟦3⟧ et de la longitude ⟦4⟧ (centres des cellules en degrés ; x de ⟦#2⟧ à ⟦#3⟧°, positif vers l’est). Le niveau ⟦5⟧ de chaque dépôt correspond à la grille à pleine résolution ; les niveaux ⟦#4⟧, ⟦#5⟧, … sont des copies plus grossières destinées à la carte.
+
+## c.d732de78 (Cell panel)
+EN: Variables (replace ⟦0⟧ in the⟦1⟧): ⟦2⟧, ⟦3⟧, ⟦4⟧, ⟦5⟧, ⟦6⟧, ⟦7⟧, ⟦8⟧, ⟦9⟧, ⟦10⟧, ⟦11⟧, ⟦12⟧, ⟦13⟧, ⟦14⟧, ⟦15⟧, ⟦16⟧, ⟦17⟧, ⟦18⟧, ⟦19⟧, ⟦20⟧, ⟦21⟧, ⟦22⟧, ⟦23⟧, ⟦24⟧, ⟦25⟧, ⟦26⟧. Per-cell data of the cell panel: ⟦27⟧ (layout: <a href="https://github.com/geomorphlab/dune-atlas/blob/main/docs/reference/storage-layout.md" target="_blank" rel="noopener">⟦28⟧</a>).
+FR: Variables (remplacez ⟦0⟧ dans le⟦1⟧) : ⟦2⟧, ⟦3⟧, ⟦4⟧, ⟦5⟧, ⟦6⟧, ⟦7⟧, ⟦8⟧, ⟦9⟧, ⟦10⟧, ⟦11⟧, ⟦12⟧, ⟦13⟧, ⟦14⟧, ⟦15⟧, ⟦16⟧, ⟦17⟧, ⟦18⟧, ⟦19⟧, ⟦20⟧, ⟦21⟧, ⟦22⟧, ⟦23⟧, ⟦24⟧, ⟦25⟧, ⟦26⟧. Données par cellule du panneau de cellule : ⟦27⟧ (structure : <a href="https://github.com/geomorphlab/dune-atlas/blob/main/docs/reference/storage-layout.md" target="_blank" rel="noopener">⟦28⟧</a>).
+
+## c.930d7584 (Cell panel)
+EN: Licence of these map fields:⟦0⟧Ames⟦1⟧output; no licence stated (⟦2⟧open data). Licences of every store: <a href="https://github.com/geomorphlab/dune-atlas/blob/main/DATA_LICENSE.md" target="_blank" rel="noopener">⟦3⟧</a>. Please cite the sources listed under Download &amp; cite.
+FR: Licence de ces champs cartographiques : sortie du modèle⟦0⟧Ames⟦1⟧; aucune licence indiquée (⟦2⟧données ouvertes). Licences de tous les dépôts : <a href="https://github.com/geomorphlab/dune-atlas/blob/main/DATA_LICENSE.md" target="_blank" rel="noopener">⟦3⟧</a>. Veuillez citer les sources indiquées sous Télécharger et citer.
+
+# Screen-reader labels and tooltips
+
+## c.a77cf12e (Screen-reader labels and tooltips)
+EN: Switch to Earth
+FR: Passer à la Terre
+
+# Tool panels
+
+## c.e638d1ea (Tool panels)
+EN: The link restores the position, zoom, grain diameter, basemap, active layers and the selected cell.
+FR: Le lien restaure la position, le zoom, le diamètre des grains, le fond de carte, les calques actifs et la cellule sélectionnée.
+
+# Exported images
+
+## c.dae8c832 (Exported images)
+EN: north up at view centre
+FR: nord en haut au centre de la vue
+
+## c.1aa05d8b (Exported images)
+EN: Scale bar omitted: the scale varies strongly across this view
+FR: Barre d’échelle omise : l’échelle varie fortement dans cette vue
+
+## c.28660749 (Exported images)
+EN: Dune Atlas · map.geomorphlab.org
+FR: Dune Atlas · map.geomorphlab.org
+
+## c.fa0a24f0 (Exported images)
+EN: Globe (perspective view)
+FR: Globe (vue en perspective)
+
+## c.e4bb6ec6 (Exported images)
+EN: centre
+FR: centre
+
+## c.df92e232 (Exported images)
+EN: zoom
+FR: zoom
+
+## c.83822b4f (Exported images)
+EN: Exported {date} from {site}.
+FR: Exporté le {date} depuis {site}.
+
+## c.776a3af5 (Exported images)
+EN: Sand flux rose
+FR: Rose des flux de sable
+
+# Search and messages
+
+## c.709b1f1a (Search and messages)
+EN: Search coordinates
+FR: Rechercher des coordonnées
+
+## c.8ec38caf (Search and messages)
+EN: Search places or coordinates
+FR: Rechercher des lieux ou des coordonnées
+
+## c.d66567e4 (Search and messages)
+EN: Cannot read:
+FR: Lecture impossible :
+
+## c.11705e3e (Search and messages)
+EN: No place or coordinates match.
+FR: Aucun lieu ni aucune coordonnée ne correspond.
+
+## c.09abd476 (Search and messages)
+EN: Download a region
+FR: Télécharger une région
+
+## c.ab8fe15e (Search and messages)
+EN: All cells of the selected wind dataset in a latitude-longitude box, in one NetCDF file (CF-⟦#0⟧) with a README.
+FR: Toutes les cellules du jeu de données de vent sélectionné dans une zone délimitée en latitude et longitude, dans un seul fichier NetCDF (CF-⟦#0⟧) accompagné d’un README.
+
+## c.9cbd6922 (Search and messages)
+EN: Draw on map
+FR: Dessiner sur la carte
+
+## c.9e7eb071 (Search and messages)
+EN: Drag on the map to draw the box; Esc cancels.
+FR: Faites glisser sur la carte pour dessiner la zone ; Échap pour annuler.
+
+## c.675e4fa4 (Search and messages)
+EN: North
+FR: Nord
+
+## c.b3e29f1a (Search and messages)
+EN: South
+FR: Sud
+
+## c.6b1595ce (Search and messages)
+EN: West
+FR: Ouest
+
+## c.6733095c (Search and messages)
+EN: East
+FR: Est
+
+## c.fd7f93f9 (Search and messages)
+EN: Parameters
+FR: Paramètres
+
+## c.0bc7157e (Search and messages)
+EN: Sand-flux fields
+FR: Champs de flux de sable
+
+## c.13254bc4 (Search and messages)
+EN: all
+FR: tous
+
+## c.ada7afdb (Search and messages)
+EN: none
+FR: aucun
+
+## c.6c5af3c3 (Search and messages)
+EN: Dune flag
+FR: Indicateur de dune
+
+## c.c718d127 (Search and messages)
+EN: Download (.zip)
+FR: Télécharger (.zip)
+
+## c.35afca3b (Search and messages)
+EN: Cancel
+FR: Annuler
+
+## c.9c36b560 (Search and messages)
+EN: Fetching cells
+FR: Récupération des cellules
+
+## c.77b19672 (Search and messages)
+EN: Type the bounds or draw a box on the map.
+FR: Saisissez les limites ou dessinez une zone sur la carte.
+
+## c.144cc106 (Search and messages)
+EN: Loading the grid of the wind dataset…
+FR: Chargement de la grille du jeu de données de vent…
+
+## c.971fcc50 (Search and messages)
+EN: The grid of the wind dataset could not be loaded.
+FR: La grille du jeu de données de vent n’a pas pu être chargée.
+
+## c.bb7426bc (Search and messages)
+EN: Wind histogram (hours per speed and direction bin)
+FR: Histogramme du vent (heures par classe de vitesse et de direction)
+
+## c.b92a021d (Search and messages)
+EN: Hourly wind and air series (u, v, T, ρ, z)
+FR: Séries horaires du vent et de l’air (u, v, T, ρ, z)
+
+## c.cc7fcd2b (Search and messages)
+EN: Also called
+FR: Également appelé
+
+## c.c9ae189c (Search and messages)
+EN: Includes
+FR: Comprend
+
+## c.3b5a9bd1 (Search and messages)
+EN: About these names
+FR: À propos de ces noms
+
+## c.a2c773d1 (Search and messages)
+EN: Sources
+FR: Sources
+
+## c.2062dc6d (Search and messages)
+EN: Countries
+FR: Pays
+
+## c.1bb7f195 (Search and messages)
+EN: Feature names
+FR: Noms des entités géographiques
+
+## c.e45d16ba (Search and messages)
+EN: Drawing the map at export resolution (loading tiles; this can take up to a minute)…
+FR: Tracé de la carte à la résolution d’export (chargement des tuiles ; cela peut prendre jusqu’à une minute)…
+
+## c.eb69782d (Search and messages)
+EN: Adding colour bars, keys and sources…
+FR: Ajout des barres de couleur, des légendes et des sources…
+
+## c.3c511e52 (Search and messages)
+EN: Encoding the PNG…
+FR: Encodage du PNG…
+
+# Tool panels
+
+## c.a19a24ae (Tool panels)
+EN: Include basemap
+FR: Inclure le fond de carte
+
+## c.81360998 (Tool panels)
+EN: Export PNG
+FR: Exporter en PNG
+
+## c.5d7718d4 (Tool panels)
+EN: Transparent background (default white)
+FR: Fond transparent (blanc par défaut)
+
+## c.fb00fe74 (Tool panels)
+EN: PNG of the current view, ⟦#0⟧–⟦#1⟧ pixels wide, without the panels, on a white background unless Transparent background is ticked. Colour bars, legends, scale and data sources are added below the map.
+FR: PNG de la vue actuelle, de ⟦#0⟧ à ⟦#1⟧ pixels de large, sans les panneaux, sur fond blanc sauf si Fond transparent est coché. Les barres de couleur, les légendes, l’échelle et les sources des données sont ajoutées sous la carte.
+
+## c.c20ad87a (Tool panels)
+EN: Saved:
+FR: Enregistré :
+
+## c.513b2f5e (Tool panels)
+EN: Download started:
+FR: Téléchargement lancé :
+
+## c.aceadefc (Tool panels)
+EN: PNG
+FR: PNG
+
+## c.2a21a5c1 (Tool panels)
+EN: SVG
+FR: SVG
+
+## c.be3c479f (Tool panels)
+EN: Transparent background
+FR: Fond transparent
+
+# Search and messages
+
+## c.8092ebfc (Search and messages)
+EN: The example cell could not be loaded. Click any land cell on the map to open its panel.
+FR: La cellule d’exemple n’a pas pu être chargée. Cliquez sur n’importe quelle cellule terrestre de la carte pour ouvrir son panneau.
+
+## c.0489b765 (Search and messages)
+EN: Loading map…
+FR: Chargement de la carte…
+
+# Exported images
+
+## c.78a767a8 (Exported images)
+EN: at view centre
+FR: au centre de la vue
+
+## c.eb82bb19 (Exported images)
+EN: Mars Dune Atlas
+FR: Mars Dune Atlas
+
+## c.70583d0e (Exported images)
+EN: Dunes only: wind-derived layers shown in cells with dunes.
+FR: Dunes seulement : calques dérivés du vent affichés dans les cellules comportant des dunes.
+
+# Search and messages
+
+## c.b72a8db3 (Search and messages)
+EN: The example cell could not be loaded. Click any cell on the map to open its panel.
+FR: La cellule d’exemple n’a pas pu être chargée. Cliquez sur n’importe quelle cellule de la carte pour ouvrir son panneau.
+
+# Layer popovers
+
+## c.f17421a6 (Layer popovers)
+EN: The Wind dataset selector switches between reanalysis wind statistics (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧°; ⟦#2⟧–⟦#3⟧).⟦2⟧, used by⟦3⟧, is a land-surface rerun driven by⟦4⟧atmospheric fields interpolated to its grid (Muñoz-Sabater et al. ⟦#4⟧), so its winds are not an independent estimate, and the datasets can still differ: e.g.,⟦5⟧reports⟦6⟧⟦#5⟧ m wind speeds ⟦#6⟧–⟦#7⟧ % below those of⟦7⟧. Where the datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
+FR: Le sélecteur Jeu de données de vent permet de choisir entre des statistiques de vent issues de réanalyses (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° ; ⟦#2⟧–⟦#3⟧).⟦2⟧, utilisé par⟦3⟧, est une réexécution de la surface continentale pilotée par les champs atmosphériques de⟦4⟧interpolés sur sa grille (Muñoz-Sabater et al. ⟦#4⟧) : ses vents ne constituent donc pas une estimation indépendante, et les jeux de données peuvent malgré tout différer : par exemple,⟦5⟧indique des vitesses du vent à ⟦#5⟧ m de⟦6⟧inférieures de ⟦#6⟧–⟦#7⟧ % à celles de⟦7⟧. Là où les jeux de données donnent des résultats différents, considérez-les comme incertains. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; le masque des champs de dunes et les calques d’aridité et de végétation sont les mêmes pour tous les jeux de données.
+
+# Unused (English changed or removed)
+
+## c.9ca2c0fc (Unused (English changed or removed))
+EN: Concept: The two⟦0⟧wind datasets
+FR: Concept : Les deux jeux de données de vent⟦0⟧
+
+## c.f1b21a41 (Unused (English changed or removed))
+EN: Concept: Threshold friction velocity
+FR: Concept : Vitesse de frottement seuil
+
+## c.a9d65061 (Unused (English changed or removed))
+EN: Concept: Migration direction⟦0⟧
+FR: Concept : Direction de migration⟦0⟧
+
+## c.3c3fcb95 (Unused (English changed or removed))
+EN: Concept: Elongation direction⟦0⟧
+FR: Concept : Direction d’allongement⟦0⟧
+
+## c.11f17d85 (Unused (English changed or removed))
+EN: Concept: Crest orientation⟦0⟧
+FR: Concept : Orientation de la crête⟦0⟧
+
+## c.34d51597 (Unused (English changed or removed))
+EN: Concept: Along-crest transport direction⟦0⟧
+FR: Concept : Direction du transport le long de la crête⟦0⟧
+
+## c.a9742ddf (Unused (English changed or removed))
+EN: Concept: Stability of elongating dunes⟦0⟧
+FR: Concept : Stabilité des dunes en allongement⟦0⟧
+
+## c.190c3133 (Unused (English changed or removed))
+EN: Concept: Along-crest versus across-crest transport⟦0⟧
+FR: Concept : Transport le long de la crête par rapport au transport à travers la crête⟦0⟧
+
+## c.7cc28259 (Unused (English changed or removed))
+EN: Concept: Growth in height versus migration⟦0⟧
+FR: Concept : Croissance en hauteur par rapport à la migration⟦0⟧
+
+## c.e607dcd2 (Unused (English changed or removed))
+EN: Concept: Morphology of elongating dunes⟦0⟧
+FR: Concept : Morphologie des dunes en allongement⟦0⟧
+
+## c.ce4fe4b4 (Unused (English changed or removed))
+EN: Concept: Drift potential (⟦0⟧)
+FR: Concept : Potentiel de dérive (⟦0⟧)
+
+## c.6a117912 (Unused (English changed or removed))
+EN: Concept: Resultant drift potential (⟦0⟧)
+FR: Concept : Potentiel de dérive résultant (⟦0⟧)
+
+## c.bdfc3381 (Unused (English changed or removed))
+EN: Concept: Resultant drift direction (⟦0⟧)
+FR: Concept : Direction de dérive résultante (⟦0⟧)
+
+## c.3d61687f (Unused (English changed or removed))
+EN: Concept: Directionality (⟦0⟧)
+FR: Concept : Directionnalité (⟦0⟧)
+
+## c.a85fff80 (Unused (English changed or removed))
+EN: Concept: Flux divergence
+FR: Concept : Divergence du flux
+
+## c.7f316e8f (Unused (English changed or removed))
+EN: Concept: Grain size and threshold
+FR: Concept : Taille des grains et seuil
+
+## c.0f656ead (Unused (English changed or removed))
+EN: Interactive explorer for aeolian geomorphology<br>Developed by the <a href="https://www.geomorphlab.org/" target="_blank" rel="noopener">⟦0⟧</a>
+FR: Explorateur interactif de géomorphologie éolienne<br>Développé par le <a href="https://www.geomorphlab.org/" target="_blank" rel="noopener">⟦0⟧</a>
+
+## c.b053850f (Unused (English changed or removed))
+EN: ⟦0⟧Dunes only<span class="visually-hidden">Draw the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in cells with dunes; the other layers and the cell panel are unchanged.</span>
+FR: ⟦0⟧Dunes seulement<span class="visually-hidden">Afficher les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) uniquement dans les cellules comportant des dunes ; les autres calques et le panneau de la cellule restent inchangés.</span>
+
+## c.49e605be (Unused (English changed or removed))
+EN: Names<span class="visually-hidden">Label named dune fields and features on the map; where names would overlap, some appear only as you zoom in. Click a name for its details.</span>
+FR: Noms<span class="visually-hidden">Affiche les noms des champs de dunes et des entités nommées sur la carte ; lorsque des noms se chevaucheraient, certains n’apparaissent qu’en zoomant. Cliquez sur un nom pour afficher ses détails.</span>
+
+## c.c8524dc9 (Unused (English changed or removed))
+EN: m²/yr (log scale) · at current ⟦0⟧
+FR: m²/yr (échelle logarithmique) · actuellement ⟦0⟧
+
+## c.34de0ec2 (Unused (English changed or removed))
+EN: dimensionless · at current ⟦0⟧
+FR: sans dimension · actuellement ⟦0⟧
+
+## c.68abf023 (Unused (English changed or removed))
+EN: dimensionless (log scale) · at current ⟦0⟧
+FR: sans dimension (échelle logarithmique) · actuellement ⟦0⟧
+
+## c.b7c39c7e (Unused (English changed or removed))
+EN: Flat-bed sand flux: total (⟦0⟧), net (⟦1⟧), its direction (⟦2⟧) and directionality (⟦3⟧).
+FR: Flux de sable sur lit plat : total (⟦0⟧), net (⟦1⟧), sa direction (⟦2⟧) et sa directionnalité (⟦3⟧).
+
+## c.134786ef (Unused (English changed or removed))
+EN: m/kyr · at current ⟦0⟧
+FR: m/kyr · actuellement ⟦0⟧
+
+## c.e5e3cf0d (Unused (English changed or removed))
+EN: dimensionless (log scale)
+FR: sans dimension (échelle logarithmique)
+
+## c.7593a9c7 (Unused (English changed or removed))
+EN: Dark (⟦0⟧)
+FR: Sombre (⟦0⟧)
+
+## c.ba666c84 (Unused (English changed or removed))
+EN: Satellite imagery (⟦0⟧)
+FR: Imagerie satellite (⟦0⟧)
+
+## c.66b8cf73 (Unused (English changed or removed))
+EN: Shaded relief (⟦0⟧, 2D)
+FR: Relief ombré (⟦0⟧, 2D)
+
+## c.11b366b1 (Unused (English changed or removed))
+EN: Topographic (⟦0⟧)
+FR: Topographique (⟦0⟧)
+
+## c.211b69db (Unused (English changed or removed))
+EN: Light (⟦0⟧⟦1⟧)
+FR: Clair (⟦0⟧⟦1⟧)
+
+## c.58a40f97 (Unused (English changed or removed))
+EN: Globe view
+FR: Vue en globe
+
+## c.ca17f671 (Unused (English changed or removed))
+EN: ━ Atlas⟦0⟧/ Fryberger⟦1⟧(m²/yr per⟦2⟧)
+FR: ━⟦0⟧de l’atlas /⟦1⟧de Fryberger (m²/yr par⟦2⟧)
+
+## c.52122a7b (Unused (English changed or removed))
+EN: Directionality (⟦0⟧)
+FR: Directionnalité (⟦0⟧)
+
+## c.21c06928 (Unused (English changed or removed))
+EN: The two⟦0⟧wind datasets
+FR: Les deux jeux de données de vent⟦0⟧
+
+## c.a8f9ae9c (Unused (English changed or removed))
+EN: Elevation⟦0⟧(⟦1⟧)
+FR: Altitude⟦0⟧(⟦1⟧)
+
+## c.8f36579f (Unused (English changed or removed))
+EN: Mapped Martian dune fields (⟦0⟧⟦1⟧and⟦2⟧, ⟦#0⟧ polygons, ⟦#1⟧ million km²).
+FR: Champs de dunes martiens cartographiés (⟦0⟧⟦1⟧et⟦2⟧, ⟦#0⟧ polygones, ⟦#1⟧ millions de km²).
+
+## c.51af858a (Unused (English changed or removed))
+EN: ⟦0⟧Mars (v0.2)
+FR: ⟦0⟧Mars (v0.2)
+
+## c.37a7f189 (Unused (English changed or removed))
+EN: ⟦0⟧mosaic, ⟦#0⟧ m (⟦1⟧⟦2⟧,⟦3⟧)
+FR: Mosaïque⟦0⟧, ⟦#0⟧ m (⟦1⟧⟦2⟧,⟦3⟧)
+
+## c.b00669df (Unused (English changed or removed))
+EN: ⟦0⟧, where imaged (⟦1⟧)
+FR: ⟦0⟧, là où disponible (⟦1⟧)
+
+## c.64a11039 (Unused (English changed or removed))
+EN: ⟦0⟧colour (⟦1⟧)
+FR: ⟦0⟧couleur (⟦1⟧)
+
+## c.811007f9 (Unused (English changed or removed))
+EN: ⟦0⟧colour shaded relief (⟦1⟧)
+FR: Relief ombré en couleur⟦0⟧(⟦1⟧)
+
+## c.81a7ed6e (Unused (English changed or removed))
+EN: The opening basemap is a shaded relief of the⟦0⟧blended elevation model (Fergason,⟦1⟧), released under⟦2⟧(derived from⟦3⟧,⟦4⟧, and⟦5⟧,⟦6⟧). Under Basemap you can also choose⟦7⟧and⟦8⟧'s Mars imagery: the global⟦9⟧mosaic (about ⟦#0⟧ m per pixel; The⟦10⟧),⟦11⟧(down to about ⟦#1⟧ cm per pixel), the⟦12⟧colour mosaic and the⟦13⟧colour shaded relief.⟦14⟧covers only the small part of the surface it has imaged; elsewhere the map is dark. Credits are in the map attribution.
+FR: Le fond de carte initial est un relief ombré du modèle d’altitude fusionné⟦0⟧(Fergason,⟦1⟧), publié sous⟦2⟧(dérivé de⟦3⟧,⟦4⟧, et de⟦5⟧,⟦6⟧). Dans Fond de carte, vous pouvez aussi choisir⟦7⟧ainsi que l’imagerie de Mars proposée par⟦8⟧: la mosaïque globale⟦9⟧(environ ⟦#0⟧ m par pixel ; The⟦10⟧),⟦11⟧(jusqu’à environ ⟦#1⟧ cm par pixel), la mosaïque en couleur⟦12⟧et le relief ombré en couleur⟦13⟧.⟦14⟧ne couvre que la petite partie de la surface qu’il a imagée ; ailleurs, la carte est sombre. Les crédits figurent dans l’attribution de la carte.
+
+## c.922ef60f (Unused (English changed or removed))
+EN: Download &amp; cite in the cell panel saves the hourly wind and air series and all parameters of the cell as⟦0⟧or as a⟦1⟧bundle, with the citation of every data source. Please cite the wind dataset,⟦2⟧for the transport law and⟦3⟧, which outlines the methods.
+FR: « Télécharger et citer », dans le panneau de la cellule, enregistre les séries horaires du vent et de l’air ainsi que tous les paramètres de la cellule au format⟦0⟧ou sous forme d’archive⟦1⟧, avec la citation de chaque source de données. Veuillez citer le jeu de données de vent,⟦2⟧pour la loi de transport et⟦3⟧, qui présente les méthodes.

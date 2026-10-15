@@ -2,6 +2,7 @@
 // Mars d) + click-to-cell panel. What differs per body comes from the @body modules (hooks: @body/app).
 import { applyHtmlLang, LANG } from "./i18n";
 import { langSwitch } from "./i18n/switcher";
+import { startDomTranslation } from "./i18n/dom";
 import { storageKey } from "./core/body";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "katex/dist/katex.min.css";
@@ -57,6 +58,7 @@ import { DATA_LICENSE_URL } from "./core/ui/bulkguide";
 import { BODY } from "./core/body";
 
 applyHtmlLang();
+startDomTranslation();   // French / Chinese: rendered text (i18n/dom.ts)
 const { registry: reg, errors } = loadRegistry();
 if (errors.length) console.warn("registry merge:", errors);
 const dataBase = CONFIG.dataBase ?? reg.dataBase;
