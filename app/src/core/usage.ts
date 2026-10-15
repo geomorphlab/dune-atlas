@@ -8,7 +8,7 @@ import { BODY, type Body } from "./body";
 export type UsageType = "map-image" | "region" | "cell-netcdf" | "cell-csv" | "citation" | "plot" | "copy-code" | "copy-citation";
 
 const env = (import.meta.env ?? {}) as Partial<Record<string, string>>;
-/** counter address from the build (VITE_USAGE_URL, e.g. https://dune-atlas-usage.<subdomain>.workers.dev/event) */
+/** counter address from the build (VITE_USAGE_URL, e.g. https://api.geomorphlab.org/v1/n) */
 export const USAGE_URL = (env.VITE_USAGE_URL ?? "").trim();
 
 /** export type of a downloaded file, from its name (names: mapExport.ts, main.ts runRegion, cellPanel.ts,
@@ -45,12 +45,15 @@ export function sendUsage(type: UsageType, bytes = 0, deps: UsageDeps = {}): boo
   if (!url) return false;
   const msg = usageMessage(type, deps.body ?? BODY, bytes);
   try {
-    const nav = deps.nav ?? (globalThis.navigator as UsageDeps["nav"]);
-    if (nav?.sendBeacon && nav.sendBeacon(url, msg)) return true;
+    // fetch with keepalive first (content blockers often stop every sendBeacon "ping" request); the beacon
+    // only where fetch is missing
     const f = deps.fetch ?? globalThis.fetch;
-    if (!f) return false;
-    void Promise.resolve(f(url, { method: "POST", body: msg, keepalive: true, mode: "cors", credentials: "omit", headers: { "Content-Type": "text/plain;charset=UTF-8" } })).catch(() => undefined);
-    return true;
+    if (f) {
+      void Promise.resolve(f(url, { method: "POST", body: msg, keepalive: true, mode: "cors", credentials: "omit", headers: { "Content-Type": "text/plain;charset=UTF-8" } })).catch(() => undefined);
+      return true;
+    }
+    const nav = deps.nav ?? (globalThis.navigator as UsageDeps["nav"]);
+    return !!(nav?.sendBeacon && nav.sendBeacon(url, msg));
   } catch {
     return false;
   }

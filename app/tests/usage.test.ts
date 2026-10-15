@@ -11,7 +11,7 @@ import { PLOT_KEYS, plotFilename } from "../src/core/export/plotExport";
 import { exportBaseName } from "../src/core/cell/export";
 import { announceDownload, DOWNLOAD_EVENT } from "../src/core/cell/downloads";
 
-const URL_ = "https://dune-atlas-usage.example.workers.dev/event";
+const URL_ = "https://api.example.org/v1/n";
 afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); vi.resetModules(); });
 
 describe("export type from the file name", () => {
@@ -51,53 +51,58 @@ describe("sending", () => {
     expect(beacon).not.toHaveBeenCalled();
     expect(f).not.toHaveBeenCalled();
   });
-  it("uses the browser's beacon with plain text", () => {
-    const beacon = vi.fn(() => true);
-    expect(sendUsage("cell-netcdf", 2048, { url: URL_, body: "earth", nav: { sendBeacon: beacon } })).toBe(true);
-    expect(beacon).toHaveBeenCalledWith(URL_, '{"type":"cell-netcdf","body":"earth","bytes":2048}');
+  it("sends a keepalive request with plain text and no cookies (not the beacon, which blockers often stop)", () => {
+    const f = vi.fn(async () => undefined), beacon = vi.fn(() => true);
+    expect(sendUsage("cell-netcdf", 2048, { url: URL_, body: "earth", nav: { sendBeacon: beacon }, fetch: f })).toBe(true);
+    expect(f).toHaveBeenCalledWith(URL_, expect.objectContaining({ method: "POST", keepalive: true, credentials: "omit", body: '{"type":"cell-netcdf","body":"earth","bytes":2048}' }));
+    expect(beacon).not.toHaveBeenCalled();
   });
-  it("falls back to a keepalive request without cookies when the beacon is missing or refused", () => {
-    const f = vi.fn(async () => undefined);
-    expect(sendUsage("plot", 5, { url: URL_, body: "mars", nav: { sendBeacon: () => false }, fetch: f })).toBe(true);
-    expect(f).toHaveBeenCalledWith(URL_, expect.objectContaining({ method: "POST", keepalive: true, credentials: "omit", body: '{"type":"plot","body":"mars","bytes":5}' }));
-    expect(sendUsage("plot", 5, { url: URL_, body: "mars", nav: {}, fetch: f })).toBe(true);
+  it("uses the beacon only where fetch is missing", () => {
+    const beacon = vi.fn(() => true);
+    vi.stubGlobal("fetch", undefined);
+    expect(sendUsage("plot", 5, { url: URL_, body: "mars", nav: { sendBeacon: beacon } })).toBe(true);
+    expect(beacon).toHaveBeenCalledWith(URL_, '{"type":"plot","body":"mars","bytes":5}');
+    vi.unstubAllGlobals();
   });
   it("a failing counter never throws into the download", async () => {
     const reject = vi.fn(async () => { throw new Error("blocked"); });
     expect(sendUsage("region", 1, { url: URL_, nav: {}, fetch: reject })).toBe(true);
+    vi.stubGlobal("fetch", undefined);
     expect(sendUsage("region", 1, { url: URL_, nav: { sendBeacon: () => { throw new Error("no"); } } })).toBe(false);
+    vi.unstubAllGlobals();
     await Promise.resolve();
   });
   it("unknown file names are not counted; copies are counted with size 0", () => {
-    const beacon = vi.fn(() => true);
-    expect(countDownload("readme.md", 10, { url: URL_, nav: { sendBeacon: beacon } })).toBe(false);
-    expect(countCopy("copy-citation", { url: URL_, body: "earth", nav: { sendBeacon: beacon } })).toBe(true);
-    expect(beacon).toHaveBeenCalledWith(URL_, '{"type":"copy-citation","body":"earth","bytes":0}');
+    const f = vi.fn(async () => undefined);
+    expect(countDownload("readme.md", 10, { url: URL_, fetch: f })).toBe(false);
+    expect(countCopy("copy-citation", { url: URL_, body: "earth", fetch: f })).toBe(true);
+    expect(f).toHaveBeenCalledWith(URL_, expect.objectContaining({ body: '{"type":"copy-citation","body":"earth","bytes":0}' }));
   });
 });
 
 describe("in the page", () => {
   it("every download announces its name and size, and is counted when the build sets VITE_USAGE_URL", async () => {
     vi.stubEnv("VITE_USAGE_URL", URL_);
-    const beacon = vi.fn(() => true);
-    vi.stubGlobal("navigator", { sendBeacon: beacon });
+    const f = vi.fn(async () => undefined);
+    vi.stubGlobal("fetch", f);
     const { announceDownload: announce } = await import("../src/core/cell/downloads");
     const seen: unknown[] = [];
     document.addEventListener(DOWNLOAD_EVENT, (e) => seen.push((e as CustomEvent).detail));
     announce("dune-atlas_era5_1_2_citation.txt", 321);
     expect(seen).toEqual([{ name: "dune-atlas_era5_1_2_citation.txt", bytes: 321 }]);
-    expect(beacon).toHaveBeenCalledWith(URL_, '{"type":"citation","body":"earth","bytes":321}');
+    expect(f).toHaveBeenCalledWith(URL_, expect.objectContaining({ body: '{"type":"citation","body":"earth","bytes":321}' }));
   });
   it("Copy code in 'Get the whole grid' is counted after the code is copied", async () => {
     vi.stubEnv("VITE_USAGE_URL", URL_);
-    const beacon = vi.fn(() => true), write = vi.fn(async () => {});
-    vi.stubGlobal("navigator", { sendBeacon: beacon, clipboard: { writeText: write } });
+    const f = vi.fn(async () => undefined), write = vi.fn(async () => {});
+    vi.stubGlobal("fetch", f);
+    vi.stubGlobal("navigator", { clipboard: { writeText: write } });
     const { wireBulkGuide } = await import("../src/core/ui/bulkguide");
     document.body.innerHTML = '<div id="r"><pre id="c-code">print(1)</pre><button class="copy-code" data-copy="c-code">Copy code</button></div>';
     const root = document.getElementById("r")!;
     wireBulkGuide(root);
     (root.querySelector("button") as HTMLButtonElement).click();
-    await vi.waitFor(() => expect(beacon).toHaveBeenCalledWith(URL_, '{"type":"copy-code","body":"earth","bytes":0}'));
+    await vi.waitFor(() => expect(f).toHaveBeenCalledWith(URL_, expect.objectContaining({ body: '{"type":"copy-code","body":"earth","bytes":0}' })));
   });
 });
 
