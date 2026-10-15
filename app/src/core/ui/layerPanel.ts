@@ -3,9 +3,13 @@
 //   outside the scroll area) | scrolling body: 'Active layers' = the visible layers in drawing
 //   order (drag or move up/down; top = drawn on top; opacity slider; × to hide), groups ->
 //   layers (toggle, info, display controls, legend), basemap radio + globe toggle, About & citation.
-import { t as ui, tr } from "../../i18n";
+import { LANG, t as ui, tr, trc, trcf } from "../../i18n";
+import { texToText } from "../util/tex";
 import { SUBTITLE_EN } from "../../i18n/subtitle";
 import { basemapKey, groupKey, layerKey, layerTitleText } from "../../i18n/keys";
+const SR = "Screen-reader labels and tooltips";
+/** a layer's name in screen-reader labels: the plain English title, or the translated one */
+const ariaTitle = (l: LayerDef | undefined, fallback = "") => (!l ? fallback : LANG === "en" ? l.title : texToText(layerTitleText(l)));
 import { richHtml } from "../util/richtext";
 import type { BasemapDef, LayerAttribution, LayerDef, Registry } from "../registry/types";
 import type { Store, AppState } from "../store";
@@ -163,7 +167,7 @@ export function dunesOnlyToggle(store: Store): HTMLElement {
  *  rows (tick box, name, ⓘ with what it does and the naming note); not a map layer (no opacity, not in
  *  Active layers); remembered per body, in the link */
 export function namesToggle(store: Store): HTMLElement {
-  const cb = h("input", { type: "checkbox", id: "show-names", "aria-label": `Show ${PLACE_TEXT.aboutItem}`, "aria-describedby": "show-names-help" }) as HTMLInputElement;
+  const cb = h("input", { type: "checkbox", id: "show-names", "aria-label": trcf("Show {title}", { title: trc(PLACE_TEXT.aboutItem) }, SR), "data-i18n-attrs": "no", "aria-describedby": "show-names-help" }) as HTMLInputElement;
   cb.checked = !!store.state.names;
   cb.addEventListener("change", () => store.set({ names: cb.checked }));
   store.subscribe((st, ch) => { if (ch.has("names")) cb.checked = !!st.names; });
@@ -178,7 +182,7 @@ export function namesToggle(store: Store): HTMLElement {
 function infoToggle(title: string, html: string, idBase: string): { button: HTMLButtonElement; pop: HTMLElement } {
   const infoId = nextId(`info-${idBase}`);
   // translate="no": the letter "i" is the info symbol (a translator turned it into the pronoun: "je", "我")
-  const button = h("button", { type: "button", class: "info-button notranslate", translate: "no", "aria-expanded": "false", "aria-controls": infoId, "aria-label": `About ${title}` }, "i") as HTMLButtonElement;
+  const button = h("button", { type: "button", class: "info-button notranslate", translate: "no", "aria-expanded": "false", "aria-controls": infoId, "aria-label": trcf("About {title}", { title: trc(title) }, SR), "data-i18n-attrs": "no" }, "i") as HTMLButtonElement;
   const pop = h("div", { id: infoId, class: "info-popover", hidden: true, role: "note", html });
   button.addEventListener("click", () => {
     const open = button.getAttribute("aria-expanded") !== "true";
@@ -192,9 +196,9 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
   const cid = nextId(`lyr-${l.id}`);
   const st0 = store.state.layers[l.id] ?? { visible: false, opacity: l.opacity ?? 1 };
   // an explicit accessible name: a label of KaTeX alone was read as "on"
-  const cb = h("input", { type: "checkbox", id: cid, checked: st0.visible, "aria-label": `Show ${l.title}` }) as HTMLInputElement;
+  const cb = h("input", { type: "checkbox", id: cid, checked: st0.visible, "aria-label": trcf("Show {title}", { title: ariaTitle(l) }, SR), "data-i18n-attrs": "no" }) as HTMLInputElement;
   const infoId = nextId(`info-${l.id}`);
-  const info = h("button", { type: "button", class: "info-button notranslate", translate: "no", "aria-expanded": "false", "aria-controls": infoId, "aria-label": `About ${l.title}` }, "i");
+  const info = h("button", { type: "button", class: "info-button notranslate", translate: "no", "aria-expanded": "false", "aria-controls": infoId, "aria-label": trcf("About {title}", { title: ariaTitle(l) }, SR), "data-i18n-attrs": "no" }, "i");
   const pop = h("div", { id: infoId, class: "info-popover", hidden: true, role: "note",
     html: infoHtml(l, store.state.dataset) });
   info.addEventListener("click", () => {
@@ -214,16 +218,16 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
     const disp = h("details", { class: "display-opts" }, h("summary", {}, ui("panel.display")));
     // render mode (directional fields)
     if (isDirectional(l)) {
-      const mode = h("select", { "aria-label": `Display ${l.title} as` },
+      const mode = h("select", { "aria-label": trcf("Display {title} as", { title: ariaTitle(l) }, SR), "data-i18n-attrs": "no" },
         h("option", { value: "colormap" }, "colour map"), h("option", { value: "arrows" }, "arrows"), h("option", { value: "streamlines" }, "streamlines")) as HTMLSelectElement;
       mode.addEventListener("change", () => store.setLayerConfig(l.id, { mode: mode.value === "colormap" ? undefined : (mode.value as RenderMode) }));
-      const vc = h("input", { type: "color", "aria-label": `Arrow / streamline colour for ${l.title}` }) as HTMLInputElement;
+      const vc = h("input", { type: "color", "aria-label": trcf("Arrow / streamline colour for {title}", { title: ariaTitle(l) }, SR), "data-i18n-attrs": "no" }) as HTMLInputElement;
       vc.addEventListener("change", () => store.setLayerConfig(l.id, { vecColor: vc.value }));
       const vcRow = h("label", { class: "inline" }, "Line colour ", vc);
       // spacing: the km step is the only state (store / URL); the screen px conversion is internal
       // to the map adapter and never written back here. No numeric readout (the on-screen spacing
       // depends on the zoom): endpoint labels Finer (left, denser lines) / Coarser (right).
-      const ds = h("input", { type: "range", min: 0, max: SPACING_KM_STEPS.length - 1, step: 1, "aria-label": `Line spacing for ${l.title}, finer to coarser` }) as HTMLInputElement;
+      const ds = h("input", { type: "range", min: 0, max: SPACING_KM_STEPS.length - 1, step: 1, "aria-label": trcf("Line spacing for {title}, finer to coarser", { title: ariaTitle(l) }, SR), "data-i18n-attrs": "no" }) as HTMLInputElement;
       const valueText = () => `${SPACING_STEP_NAMES[Number(ds.value)] ?? ""}`;
       const kmAt = () => SPACING_KM_STEPS[Number(ds.value)];
       ds.addEventListener("input", () => ds.setAttribute("aria-valuetext", valueText()));
@@ -242,17 +246,17 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
       });
     }
     // colormap, reverse, clim, log
-    const sel = h("select", { "aria-label": `Colour map for ${l.title}` }) as HTMLSelectElement;
+    const sel = h("select", { "aria-label": trcf("Colour map for {title}", { title: ariaTitle(l) }, SR), "data-i18n-attrs": "no" }) as HTMLSelectElement;
     for (const g of COLORMAP_GROUPS) {
       const og = h("optgroup", { label: g.label });
       for (const n of g.names) if (COLORMAPS[n]) og.append(h("option", { value: n, translate: "no" }, n));   // colour map names
       sel.append(og);
     }
     sel.addEventListener("change", () => store.setLayerConfig(l.id, { colormap: sel.value === l.display?.colormap ? undefined : sel.value }));
-    const rev = h("input", { type: "checkbox", "aria-label": `Reverse colour map for ${l.title}` }) as HTMLInputElement;
+    const rev = h("input", { type: "checkbox", "aria-label": trcf("Reverse colour map for {title}", { title: ariaTitle(l) }, SR), "data-i18n-attrs": "no" }) as HTMLInputElement;
     rev.addEventListener("change", () => store.setLayerConfig(l.id, { reverse: rev.checked || undefined }));
-    const lo = h("input", { type: "number", step: "any", class: "clim", "aria-label": `Colour scale minimum for ${l.title}` }) as HTMLInputElement;
-    const hi = h("input", { type: "number", step: "any", class: "clim", "aria-label": `Colour scale maximum for ${l.title}` }) as HTMLInputElement;
+    const lo = h("input", { type: "number", step: "any", class: "clim", "aria-label": trcf("Colour scale minimum for {title}", { title: ariaTitle(l) }, SR), "data-i18n-attrs": "no" }) as HTMLInputElement;
+    const hi = h("input", { type: "number", step: "any", class: "clim", "aria-label": trcf("Colour scale maximum for {title}", { title: ariaTitle(l) }, SR), "data-i18n-attrs": "no" }) as HTMLInputElement;
     const climMsg = h("span", { class: "help", role: "status" });
     const setClim = () => {
       const a = Number(lo.value), b = Number(hi.value);
@@ -269,7 +273,7 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
       h("label", { class: "inline" }, "Colours ", sel), h("label", { class: "inline" }, rev, " reversed"),
       h("div", { class: "clim-row" }, h("label", { class: "inline" }, "min ", lo), h("label", { class: "inline" }, "max ", hi), reset, climMsg));
     if (canLog(l)) {
-      const lg = h("input", { type: "checkbox", "aria-label": `Logarithmic colour scale for ${l.title}` }) as HTMLInputElement;
+      const lg = h("input", { type: "checkbox", "aria-label": trcf("Logarithmic colour scale for {title}", { title: ariaTitle(l) }, SR), "data-i18n-attrs": "no" }) as HTMLInputElement;
       const lgHint = h("span", { class: "hint log-hint" });
       const lgRow = h("label", { class: "inline" }, lg, " log scale ", lgHint);
       lg.addEventListener("change", () => store.setLayerConfig(l.id, { log: lg.checked === !!l.display?.log ? undefined : lg.checked }));
@@ -295,7 +299,7 @@ function layerItem(l: LayerDef, store: Store): HTMLElement {
     });
     controls.append(disp);
   } else if (l.type === "pmtiles-vector" || l.type === "geojson-points") {
-    const fc = h("input", { type: "color", "aria-label": `Fill colour for ${l.title}` }) as HTMLInputElement;
+    const fc = h("input", { type: "color", "aria-label": trcf("Fill colour for {title}", { title: ariaTitle(l) }, SR), "data-i18n-attrs": "no" }) as HTMLInputElement;
     fc.addEventListener("input", () => store.setLayerConfig(l.id, { fill: fc.value }));
     const box = h("div", { class: "vec-box" }, h("label", { class: "inline" }, "Fill ", fc));
     if (l.invertSource) {
@@ -346,17 +350,17 @@ function orderList(reg: Registry, store: Store): HTMLElement {
   const row = (id: string): HTMLElement => {
     const l = reg.layers.find((x) => x.id === id);
     const ids = () => visibleIds(store.state);
-    const up = h("button", { type: "button", class: "move", "aria-label": `Move ${title(id)} up` }, "▲");
-    const down = h("button", { type: "button", class: "move", "aria-label": `Move ${title(id)} down` }, "▼");
+    const up = h("button", { type: "button", class: "move", "aria-label": trcf("Move {title} up", { title: ariaTitle(reg.layers.find((x) => x.id === id), title(id)) }, SR), "data-i18n-attrs": "no" }, "▲");
+    const down = h("button", { type: "button", class: "move", "aria-label": trcf("Move {title} down", { title: ariaTitle(reg.layers.find((x) => x.id === id), title(id)) }, SR), "data-i18n-attrs": "no" }, "▼");
     up.addEventListener("click", () => { const v = ids(), k = v.indexOf(id); if (k > 0) { store.moveLayer(id, store.state.order.indexOf(v[k - 1])); focusMove(id, "up"); } });
     down.addEventListener("click", () => { const v = ids(), k = v.indexOf(id); if (k >= 0 && k < v.length - 1) { store.moveLayer(id, store.state.order.indexOf(v[k + 1])); focusMove(id, "down"); } });
     // × hides the layer (same state as unticking it in the layer list)
-    const rm = h("button", { type: "button", class: "remove", "aria-label": `Remove ${title(id)} from the map`, title: "Remove (untick layer)" }, "×");
+    const rm = h("button", { type: "button", class: "remove", "aria-label": trcf("Remove {title} from the map", { title: ariaTitle(reg.layers.find((x) => x.id === id), title(id)) }, SR), "data-i18n-attrs": "no", title: "Remove (untick layer)" }, "×");
     rm.addEventListener("click", () => {
       store.setLayer(id, { visible: false });
       (ol.querySelector(".order-item .remove") as HTMLButtonElement | null)?.focus();
     });
-    const op = h("input", { type: "range", min: 0, max: 1, step: 0.05, value: store.state.layers[id]?.opacity ?? 1, class: "opacity", "aria-label": `Opacity of ${title(id)}`, title: "Opacity", draggable: "false" }) as HTMLInputElement;
+    const op = h("input", { type: "range", min: 0, max: 1, step: 0.05, value: store.state.layers[id]?.opacity ?? 1, class: "opacity", "aria-label": trcf("Opacity of {title}", { title: ariaTitle(reg.layers.find((x) => x.id === id), title(id)) }, SR), "data-i18n-attrs": "no", title: "Opacity", draggable: "false" }) as HTMLInputElement;
     op.addEventListener("input", () => store.setLayer(id, { opacity: Number(op.value) }));
     // a slider drag must not start a row drag
     op.addEventListener("pointerdown", () => { li.draggable = false; });
@@ -507,7 +511,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
   store.subscribe((s, ch) => { if (ch.has("dataset")) bulk.innerHTML = protectHtml(bulkGuideHtml(s.dataset, "about-bulk")); });
   wireBulkGuide(bulk);
   const notice = AI_NOTICE.replace(AUTHOR_EMAIL, `<a href="mailto:${AUTHOR_EMAIL}">${AUTHOR_EMAIL}</a>`);
-  body.append(h("details", { class: "about" }, h("summary", {}, "About, data sources & citation"),
+  body.append(h("details", { class: "about" }, h("summary", {}, tr("help.aboutLink", "About, data sources & citation")),
     h("div", { html: `<p class="ai-notice">${notice}</p>
       ${ABOUT_INTRO_HTML}
       ${DATA_SOURCES_HTML}

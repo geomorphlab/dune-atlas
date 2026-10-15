@@ -1,6 +1,9 @@
 // Export of the cell-panel plots (wind rose, flux rose, modes vs threshold, qsdiv vs threshold) as
 // SVG or PNG: re-rendered in the LIGHT theme with a transparent background and the on-screen
 // settings, with an information strip below. Composition and names are pure (tested).
+import { trcf, trNum } from "../../i18n";
+/** legend labels and texts of a plot export in the current language */
+const trStripItem = (it: StripItem): StripItem => it.kind === "swatches" ? { ...it, items: it.items.map((x) => ({ ...x, label: trNum(x.label) })) } : "text" in it ? { ...it, text: trNum(it.text) } : it;
 import { exportPlotTheme, LIGHT_THEME, type PlotTheme } from "../cell/plottheme";
 import type { DatasetInfo } from "../cell/datasetinfo";
 import { plotDataCredit } from "@body/citation";
@@ -49,13 +52,13 @@ export function plotFilename(key: PlotKey, datasetId: string, cell: { lat: numbe
 export function plotStripItems(spec: PlotExportSpec, c: PlotExportContext): StripItem[] {
   const d = c.dataset;
   return [
-    ...spec.legend,
-    { kind: "heading", text: spec.title },
-    { kind: "text", text: `Cell centre ${fmtLat(c.cell.lat)}, ${fmtLon(c.cell.lon)} · ${d.name} ${d.resolution}, ${d.period}${spec.thresholdDependent ? ` · ${PROFILE.control.exportName} ${utTex(c.ut)}` : ""}` },
+    ...spec.legend.map(trStripItem),
+    { kind: "heading", text: trNum(spec.title) },
+    { kind: "text", text: `${trNum("Cell centre")} ${fmtLat(c.cell.lat)}, ${fmtLon(c.cell.lon)} · ${d.name} ${d.resolution}, ${d.period}${spec.thresholdDependent ? ` · ${PROFILE.control.exportName} ${utTex(c.ut)}` : ""}` },
     ...(spec.caption ? [{ kind: "text", text: spec.caption } as StripItem] : []),
     { kind: "text", text: plotDataCredit(windSourceText(d.id)) },
     { kind: "text", text: `View: ${c.shareLink}`, muted: true },
-    { kind: "text", text: `Exported ${isoDate(c.date)} from ${PROFILE.exports.plotExportedFrom}.`, muted: true },
+    { kind: "text", text: trcf("Exported {date} from {site}.", { date: isoDate(c.date), site: PROFILE.exports.plotExportedFrom }, "Exported images"), muted: true },
   ];
 }
 

@@ -194,3 +194,50 @@ min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 
 | Page translation (P1) | translate="no" on formulas, info buttons, acronyms and symbols, product and provider names, licences, citations and reference lists; tests fail on any unprotected term. Curated French and Chinese (option 2 of translation-plan.md) parked until after this release; reviewers: the PI's PhD students |
 | Link previews | Open Graph and Twitter card tags on both atlases: one title ("Dune Atlas · Earth & Mars"), text and 1200 × 630 image (public/og-image.png) |
 | Usage | Cloudflare Web Analytics snippet (production builds only, "spa": false); About privacy line (approved wording, "kept" for the site's text rule); download counter built in workers/usage (not deployed; docs/guide/usage-counter.md); the app sends nothing until VITE_USAGE_URL is set |
+
+## Usage counter and dashboard (PRs #14–#17, 15 October 2026)
+
+| item | done |
+|---|---|
+| Counter | Worker `dune-atlas-usage` at api.geomorphlab.org (own domain, so ad blockers that block workers.dev do not stop it): `/v1/n` receives download and copy events; a nightly run (03:17 UTC) collects the three previous days of Cloudflare figures (data host requests and bytes by country, zone-wide unique visitors, Web Analytics visits by country) into D1. Deployed by the PI with `npx wrangler deploy` (CI does not deploy Workers) |
+| Dashboard | Private page `/dashboard?key=<CSV key>`: totals, visits per day by planet, downloads by kind, and "By country" (Visits / Downloads / Data served) as a world map with a colour bar and the top 15 as bars; its own bar-chart icon (PR #17), distinct from the atlas's lab icon |
+| Data start | Web Analytics visits from 15 October 2026 (the tag went live at 06:01 UTC); data-host figures back-filled from 12 October |
+| Decisions | Defaults of the analytics proposal (one Worker, D1, zone-wide unique visitors); privacy line in About as approved; Cloudflare API token valid one year (renewal reminder October 2027, steps in docs/guide/usage-counter.md) |
+
+## Flux rose, DP comparison and labels (PR #18, 15 October 2026)
+
+| item | done |
+|---|---|
+| Petal switch | "Petals: toward / from" on the sand-flux rose (both atlases); drawing only (each petal turned 180°), nothing recalculated; the arrows (RDD, αT, αE, αO, αH) stay toward, as in Fryberger & Dean; bearings, map, modes plot and downloads stay toward; heading, caption and exported figure follow the switch; remembered per atlas |
+| DP comparison | Concepts, "Drift potential (DP)" (Earth only): atlas DP and Fryberger DP for a steady wind against U₁₀ (m/s and knots), with their ratio below (log axis); own threshold slider with "map value"; readout with fixed-width values |
+| Labels | Dune-field names white (was cream) on dark basemaps, outline 2.5 px, for legibility over the yellow ends of the colour maps |
+| Wording | Help and Concepts sentences on the switch approved by the PI |
+
+## Mainland China test and blocked basemaps (PR #19, 15 October 2026)
+
+| item | done |
+|---|---|
+| China test | Tested by a colleague's contact in mainland China: site, data, cell panel and default basemaps load without a VPN (5–10 s to the first map); OpenTopoMap and OpenPlanetaryMap do not; HiRISE taken as working (same Esri server as the Mars basemaps that loaded) |
+| Basemap notice | A closable notice when 4 tiles of the chosen basemap fail with none loaded (or its style file fails): "could not be loaded from its provider … choose another basemap"; no location detection |
+| Blank-globe fix | The map redraws on every tile error (MapLibre issue #8716): switching away from a blocked basemap no longer leaves a blank globe |
+
+## French and Simplified Chinese (PRs #20–#21, 15–16 October 2026)
+
+| item | done |
+|---|---|
+| Switch | EN / FR / 中文 as its own column of square buttons below the planet button (PI's choice); reloads in the same view with `?lang=`; remembered for both atlases; never automatic; `<html lang>` set; Chinese pages use the system's CJK fonts |
+| Scope | First option 2 (interface, help, tour, layer names, legends, basemaps, Concepts; PR #20), then everything on screen (PI's decision; PR #21): popovers, About, cell panel, tool panels, messages, tooltips and screen-reader labels, exported image text. Downloads, required credit lines and references stay English |
+| Mechanism | Keyed strings (`tr`, `t`) plus rendered text translated on the page (`src/i18n/dom.ts`: units with formulas, names, live numbers, controls and numbers as markers, looked up by the fingerprint of the English). A translation is shown only for the exact English it was made from |
+| Translations | Machine-drafted with the glossary, then a review pass for meaning and terminology (French: "calque" for map layers, "altitude", "commande"; Chinese: 临界摩阻风速, 临界值, 去向/来向); every string checked for formulas, markers, tags and protected terms. Awaiting review by the PI's PhD students (one French, one Chinese) in Word documents |
+| Maintenance | English edits: `npm run i18n` collects new text and the new strings are drafted in the same working session before release; otherwise the English is shown until then (CI warns, never blocks). docs/guide/translations.md |
+
+## Open items (16 October 2026)
+
+| item | who | status |
+|---|---|---|
+| Licence of the Fenton (2020) Mars dune polygons | PI asks Lori Fenton | pending (DATA_LICENSE.md note 5) |
+| Persian names of the six new Iran fields | PI's Iranian colleague | pending; names not shown until confirmed |
+| Student review of the French and Chinese text (incl. "potentiel de dérive" vs "potentiel de transport", "barkhane" vs "barchane", Chinese 16-point compass names) | PhD students via the PI | pending |
+| Second check from mainland China (language switch, Chinese text, a cell download, a map image export) | PI's colleague | after release |
+| Weak aggregator sources for a few dune-field names | PI | kept for now |
+| Weekly backup of usage.csv to GitHub | PI | offered, not requested |

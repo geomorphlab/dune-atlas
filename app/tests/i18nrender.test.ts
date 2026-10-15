@@ -34,4 +34,24 @@ describe("rendered in another language", () => {
     expect(document.documentElement.lang).toBe("zh-Hans");
     for (const s of ["当前图层", "输沙势", "底图", "沙丘区"]) expect(panel).toContain(s);
   });
+  it("French: popovers, About and the dunes-only switch translated on the page (observer)", async () => {
+    vi.resetModules();
+    history.replaceState(null, "", "/?lang=fr");
+    document.body.innerHTML = '<aside id="layer-panel"></aside>';
+    const { startDomTranslation } = await import("../src/i18n/dom");
+    startDomTranslation();
+    const { loadRegistry } = await import("../src/core/registry/load");
+    const { Store } = await import("../src/core/store");
+    const { renderLayerPanel } = await import("../src/core/ui/layerPanel");
+    const { DEFAULT_VIEW } = await import("../src/core/defaultview");
+    const reg = loadRegistry().registry;
+    renderLayerPanel(document.getElementById("layer-panel")!, reg, new Store({ basemap: reg.basemaps[0].id, projection: "globe", utIndex: 14, layers: {}, order: [], dataset: DEFAULT_VIEW.dataset, cell: null, embed: false } as never));
+    await new Promise((r) => setTimeout(r, 0));
+    const about = document.querySelector("details.about")!.textContent ?? "";
+    expect(about).toContain("Sources des données");
+    const dp = document.querySelector('[data-layer="dpm"] .info-popover')?.textContent ?? "";
+    expect(dp.length).toBeGreaterThan(50);
+    expect(dp).not.toMatch(/\bthe saturated sand flux\b/i);
+    expect(document.querySelector(".dunes-only-row")!.textContent).toContain("Dunes seulement");
+  });
 });
