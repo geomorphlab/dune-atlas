@@ -9,7 +9,7 @@ import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import { validateStyleMin } from "@maplibre/maplibre-gl-style-spec";
 import {
-  BASEMAP_LABELS_KEPT, dotImage, DOT, ensureRtlPlugin, isRtl, LABEL_STYLE, LABEL_ZOOM, LINE2_SMALLER, PLACE_DOT, labelMinZoom, labelSize, LOCAL_IDEOGRAPH_FONTS, mapDrawable, PLACE_LABELS, PLACE_SOURCE,
+  BASEMAP_LABELS_KEPT, dotImage, DOT, ensureRtlPlugin, isRtl, LABEL_SIZE, LABEL_STYLE, LABEL_ZOOM, LINE2_SMALLER, PLACE_DOT, labelMinZoom, labelSize, LOCAL_IDEOGRAPH_FONTS, mapDrawable, PLACE_LABELS, PLACE_SOURCE,
   placeFeatures, placeLabelLayer, PlaceLabels, placePopupContent, placesNeedRtl,
 } from "../src/core/map/placelabels";
 import { firstSymbolLayer, SELECTED_CELL_BOTTOM } from "../src/core/map/overlays";
@@ -46,22 +46,16 @@ describe("label features", () => {
     expect(f("dateline").geometry.coordinates).toEqual([179.9, -10]);
     expect(placeFeatures({ enabled: true, places: [P({ id: "x", line1: "X", lon: 354.8 })] }).features[0].geometry.coordinates[0]).toBeCloseTo(-5.2, 6);
   });
-  it("larger features: lower zoom threshold, larger text, placed first", () => {
-    expect(f("rub-al-khali").properties!.minzoom).toBe(0);   // large fields from the whole-globe view
-    expect(f("dasht-e-lut").properties!.minzoom).toBe(0);
-    expect(f("dasht-e-lut").properties!.minzoom).toBeLessThan(f("dateline").properties!.minzoom);
-    expect(f("dateline").properties!.minzoom).toBeLessThan(f("tibet-field").properties!.minzoom);
+  it("every name at every zoom and one size; collisions keep the larger feature (placed first)", () => {
+    for (const x of fc.features) expect(x.properties!.minzoom, x.properties!.id).toBe(0);
+    expect(f("rub-al-khali").properties!.size).toBe(f("tibet-field").properties!.size);
     expect(f("rub-al-khali").properties!.rank).toBeLessThan(f("thar").properties!.rank);   // 500 km before 400 km
     expect(f("thar").properties!.rank).toBeLessThan(f("dateline").properties!.rank);
-    expect(labelSize(10)).toBe(13);
-    expect(labelSize(400)).toBe(20);
-    expect(labelSize(10000)).toBe(20);
-    expect(labelSize(100)).toBeGreaterThan(13);
-    expect(labelMinZoom(LABEL_ZOOM.rAll)).toBe(0);
-    expect(labelMinZoom(1e5)).toBe(0);
-    expect(labelMinZoom(LABEL_ZOOM.rLast)).toBe(LABEL_ZOOM.max);
-    expect(labelMinZoom(0.01)).toBe(LABEL_ZOOM.max);
-    expect(LABEL_ZOOM.max).toBeLessThanOrEqual(5);   // every name by zoom 4-5
+    expect(labelSize(10)).toBe(LABEL_SIZE.min);
+    expect(labelSize(10000)).toBe(LABEL_SIZE.max);
+    expect(LABEL_SIZE.min).toBe(LABEL_SIZE.max);
+    expect(labelMinZoom(0.01)).toBe(0);
+    expect(LABEL_ZOOM.max).toBe(0);
   });
   it("line 2 in Arabic, Persian, Urdu, Chinese and Cyrillic on the map; Tibetan only in the popup", () => {
     for (const id of ["rub-al-khali", "dasht-e-lut", "thar", "taklamakan", "ryn-peski"]) expect(f(id).properties!.line2, id).toBe(FIXTURE.places.find((p) => p.id === id)!.line2!.text);
@@ -253,7 +247,7 @@ describe("popup", () => {
     expect([l2.textContent, l2.getAttribute("lang"), l2.getAttribute("dir")]).toEqual(["الربع الخالي", "ar", "auto"]);
     expect(el.querySelector(".place-meta")!.textContent).toBe("Saudi Arabia, Oman, United Arab Emirates, Yemen");
     expect(el.textContent).toContain("Also called: Empty Quarter");
-    expect(el.textContent).toContain("Mapped dune area: 560,000 km²");
+    expect(el.textContent).not.toMatch(/km²|dune area/i);
     const a = [...el.querySelectorAll("a")];
     expect(a.map((x) => x.getAttribute("href"))).toEqual(["https://example.org/names/", "https://example.org/feature/1"]);
     expect(a.every((x) => x.getAttribute("rel") === "noopener")).toBe(true);

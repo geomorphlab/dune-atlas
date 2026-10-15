@@ -94,7 +94,7 @@ export function checkSlider() {
 export function checkCss() {
   const rule = (sel: string) => { const m = CSS.match(new RegExp(`${sel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*\\{([^}]*)\\}`)); return m?.[1] ?? ""; };
   expect(rule(".embed-bar")).toMatch(/position: absolute; top: 10px; left: 10px/);
-  expect(CSS).toMatch(/body\.embed \{ --panel-w: min\(330px, calc\(100vw - 70px\)\); \}/);
+  expect(CSS).toMatch(/body\.embed \{ --panel-w: min\(345px, calc\(100vw - 70px\)\); \}/);
   expect(rule("body.embed #layer-panel")).toMatch(/top: 44px; max-height: calc\(100% - 94px\)/);
   expect(CSS).toMatch(/@media \(max-width: 439px\) \{ \.embed-note \{ display: none; \} \}/);
   expect(rule("label.inline.dataset-row")).toMatch(/display: flex/);
@@ -108,7 +108,7 @@ export function checkCss() {
 /** width budgets: [row, needed px, available px] at viewport width W */
 export function budgets(W: number, embed: boolean) {
   const { root, reg } = mountPanel(embed);
-  const panelW = W <= 720 ? (embed ? Math.min(330, W - 70) : W - 70) : 330; // style.css: body.embed caps --panel-w
+  const panelW = W <= 720 ? (embed ? Math.min(345, W - 70) : W - 70) : 360; // style.css: body.embed caps --panel-w
   const inner = panelW - 2 - 24; // border, 12 px padding each side
   const rows: [string, number, number][] = [];
   const h1 = embed ? 15 : 18;

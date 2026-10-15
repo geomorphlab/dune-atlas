@@ -21,6 +21,20 @@ export default defineConfig({
     port: 5173,
     // registry/*.yaml and registry/earth/qsat_field_metadata.json live one level above app/
     fs: { allow: [".."] },
+    // Local preview against the live data without CORS: with VITE_DATA_BASE=http://<host>:<port>/r2 the dev
+    // server forwards /r2/* to the data server (dev only; not used by builds).
+    proxy: {
+      "/r2": {
+        target: process.env.PREVIEW_DATA_ORIGIN || "https://data.geomorphlab.org",
+        changeOrigin: true,
+        rewrite: (p: string) => p.replace(/^\/r2/, ""),
+      },
+      // One local address for both planets, laid out as the live site: with PREVIEW_MARS_ORIGIN set (the
+      // Mars dev server, run with VITE_BASE=/mars/), the Earth dev server forwards /mars/* to it (dev only).
+      ...(!MARS && process.env.PREVIEW_MARS_ORIGIN
+        ? { "^/mars(/|$)": { target: process.env.PREVIEW_MARS_ORIGIN, changeOrigin: true, ws: true } }
+        : {}),
+    },
   },
   build: {
     target: "es2022",

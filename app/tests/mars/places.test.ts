@@ -38,11 +38,11 @@ describe("Mars place list", () => {
   });
   it.each([
     // name, type, lat, lon (° E), from the Gazetteer feature pages
-    ["Gale crater", "Crater", -5.37, 137.81],
-    ["Nili Patera", "Patera", 8.97, 67.17],
-    ["Proctor crater", "Crater", -47.63, 29.72],
+    ["Gale Crater Dune Field", "Crater", -5.37, 137.81],
+    ["Nili Patera Dune Field", "Patera", 8.97, 67.17],
+    ["Proctor Crater Dune Field", "Crater", -47.63, 29.72],
     ["Olympia Undae", "Unda", 81.16, 178.48],
-    ["Endeavour crater", "Crater", -2.28, -5.2],
+    ["Endeavour Crater Dune Field", "Crater", -2.28, -5.2],
   ])("%s: centre and type", (n, type, lat, lon) => {
     const p = byName(n);
     expect(p.type).toBe(type);
@@ -50,14 +50,14 @@ describe("Mars place list", () => {
     expect(p.lon).toBeCloseTo(lon, 1);
   });
   it("Endeavour (west of the prime meridian) frames the map around 5° W", () => {
-    const [w, , e] = placeBounds(byName("Endeavour crater"), PROFILE.radiusM / 1000);
+    const [w, , e] = placeBounds(byName("Endeavour Crater Dune Field"), PROFILE.radiusM / 1000);
     expect((w + e) / 2).toBeCloseTo(-5.2, 1);
   });
   it("a 0-360° E input resolves to -180..180 (Endeavour: 354.80° E = -5.20)", () => {
     const r = parseCoordinates("-2.28, 354.80", PROFILE.search.lonRange);
     expect(r).toMatchObject({ ok: true, lat: -2.28 });
     expect(r.ok && r.lon).toBeCloseTo(-5.2, 6);
-    expect(r.ok && r.lon).toBeCloseTo(byName("Endeavour crater").lon, 2);
+    expect(r.ok && r.lon).toBeCloseTo(byName("Endeavour Crater Dune Field").lon, 2);
     expect(r.ok && r.note).toBe("354.8° E = 5.2° W");
     expect(formatCoord(-2.28, 354.8, PROFILE.search.lonRange, 2)).toBe("2.28° S, 5.20° W");
     const b = new SearchBox({ lonRange: PROFILE.search.lonRange, example: PROFILE.search.example, places: LIST, goTo: vi.fn(async () => ""), goToPlace: (p: Place) => p.line1 });
@@ -65,7 +65,7 @@ describe("Mars place list", () => {
     expect(b.status.textContent).toBe("Go to 2.2800° S, 5.2000° W (354.8° E = 5.2° W)");
   });
   it("the example cell of the tour (Nili Patera) is the place's cell", () => {
-    const p = byName("Nili Patera");
+    const p = byName("Nili Patera Dune Field");
     expect(Math.abs(p.lat - 9)).toBeLessThan(1);
     expect(Math.abs(p.lon - 67)).toBeLessThan(1);
   });
@@ -73,11 +73,11 @@ describe("Mars place list", () => {
 
 describe("Mars named search", () => {
   it("aliases find their features", () => {
-    expect(matchPlaces("Bagnold Dunes", LIST.places)[0]).toMatchObject({ matched: "Bagnold Dunes", place: { line1: "Gale crater" } });
+    expect(matchPlaces("Bagnold Dunes", LIST.places)[0]).toMatchObject({ matched: "Bagnold Dunes", place: { line1: "Gale Crater Dune Field" } });
     expect(matchPlaces("north polar erg", LIST.places)[0].place.line1).toBe("Olympia Undae");
-    expect(matchPlaces("Nili Patera dune field", LIST.places)[0].place.line1).toBe("Nili Patera");
-    expect(matchPlaces("gale", LIST.places)[0].place.line1).toBe("Gale crater");
-    expect(matchPlaces("Proctor", LIST.places)[0].place.line1).toBe("Proctor crater");
+    expect(matchPlaces("Nili Patera dune field", LIST.places)[0].place.line1).toBe("Nili Patera Dune Field");
+    expect(matchPlaces("gale", LIST.places)[0].place.line1).toBe("Gale Crater Dune Field");
+    expect(matchPlaces("Proctor", LIST.places)[0].place.line1).toBe("Proctor Crater Dune Field");
   });
   it("ranked by match, then by mapped dune area", () => {
     const hits = matchPlaces("undae", LIST.places, 20);
@@ -92,7 +92,7 @@ describe("Mars named search", () => {
     expect(b.el.querySelector("label")!.textContent).toBe(SEARCH_TEXT.labelPlaces);
     b.input.value = "gale"; b.input.dispatchEvent(new Event("input"));
     const li = b.list.querySelector("li")!;
-    expect(li.querySelector(".hit-line1")!.textContent).toBe("Gale crater");
+    expect(li.querySelector(".hit-line1")!.textContent).toBe("Gale Crater Dune Field");
     expect(li.querySelector(".hit-type")!.textContent).toBe("Crater");
     expect(li.querySelector(".hit-country")).toBeNull();
     expect(b.list.hidden).toBe(false);
@@ -100,8 +100,8 @@ describe("Mars named search", () => {
   it("the dune layer's ⓘ carries the Mars naming note (and not Earth's)", () => {
     const dunes = loadRegistry().registry.layers.find((l) => l.id === "dunes")!;
     const html = infoHtml(dunes);
-    expect(LIST.note).toBe("Dune-field names are IAU-approved feature names from the Gazetteer of Planetary Nomenclature (IAU/USGS), with a few informal aliases.");
-    expect(html).toContain('<p class="help places-note">Dune-field names are IAU-approved feature names from the <a href="https://planetarynames.wr.usgs.gov/" target="_blank" rel="noopener">Gazetteer of Planetary Nomenclature</a> (IAU/USGS), with a few informal aliases.</p>');
+    expect(LIST.note).toBe("Dune fields are named after the IAU-approved names of the features they lie in, from the Gazetteer of Planetary Nomenclature (IAU/USGS); undae are IAU names for dune fields themselves. A few informal names are included as aliases.");
+    expect(html).toContain('<p class="help places-note">Dune fields are named after the IAU-approved names of the features they lie in, from the <a href="https://planetarynames.wr.usgs.gov/" target="_blank" rel="noopener">Gazetteer of Planetary Nomenclature</a> (IAU/USGS); undae are IAU names for dune fields themselves. A few informal names are included as aliases.</p>');
     expect(html).not.toContain("monash");
     for (const l of loadRegistry().registry.layers.filter((x) => x.id !== "dunes")) expect(infoHtml(l), l.id).not.toContain("places-note");
   });

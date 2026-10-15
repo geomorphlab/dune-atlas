@@ -24,6 +24,7 @@ LANGS = [
     (r"^Cyrillic; Kazakh", "kk"), (r"^Cyrillic; Russian", "ru"), (r"^Cyrillic; Mongolian", "mn-Cyrl"),
     (r"^Cyrillic; Yakut", "sah"), (r"^Cyrillic; Serbian", "sr-Cyrl"), (r"^Cyrillic; Ukrainian", "uk"),
     (r"^Cyrillic; Uzbek", "uz-Cyrl"), (r"^(Simplified Chinese|Han)", "zh-Hans"), (r"^Devanagari; Hindi", "hi"),
+    (r"^Kanji; .*; Japanese", "ja"),
 ]
 
 

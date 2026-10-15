@@ -4,7 +4,10 @@
   color-scheme: dark;
   --space: #05070b; --bg: #141a21; --bg2: #1c232c; --bg3: #252e39; --fg: #e6e9ed; --muted: #9aa5b1;
   --line: #2f3a46; --accent: #ffd166; --link: #74c0fc; --danger: #ff6b6b;
-  --panel-w: 330px; --cell-w: 390px;
+  --panel-w: 360px; --cell-w: 410px;
+  /* one column of tick boxes in the layer panel: box size and the gap to its text (controls below a row
+     are indented by their sum) */
+  --box: 15px; --box-gap: 7px;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 14px; color: var(--fg);
 }
 html, body { margin: 0; height: 100%; background: var(--space); }
@@ -205,7 +208,7 @@ body.embed #layer-panel { top: 44px; max-height: calc(100% - 94px); }
 @media (max-width: 720px) {
   :root { --panel-w: calc(100vw - 70px); }
   /* embed: never wider than on the desktop, so the map stays visible beside the panel */
-  body.embed { --panel-w: min(330px, calc(100vw - 70px)); }
+  body.embed { --panel-w: min(345px, calc(100vw - 70px)); }
   #cell-panel { left: 0; right: 0; top: auto; bottom: 0; width: auto; max-width: none; height: var(--cell-h, 60vh); max-height: 90vh; border-radius: 10px 10px 0 0; flex-direction: column; }
   .resize-handle { width: auto; height: 14px; cursor: ns-resize; }
   .resize-handle::after { content: ""; display: block; width: 40px; height: 4px; background: var(--muted); border-radius: 2px; margin: 5px auto 0; }
@@ -404,3 +407,28 @@ label.inline.region-param, label.inline.region-range { display: flex; margin: 1p
 .place-popup-body .place-note { color: var(--muted); font-size: 11.5px; }
 .maplibregl-popup.place-popup .maplibregl-popup-content { max-height: 340px; overflow-y: auto; }
 .place-popup-body a { color: var(--link); }
+
+/* Layer panel: one column of tick boxes and radio buttons (same size, no browser margins, one gap to the
+   text), controls and popovers under a row aligned with its text; roomier spacing between groups and rows. */
+#layer-panel input[type=checkbox], #layer-panel input[type=radio] { width: var(--box); height: var(--box); margin: 0; flex: none; }
+#layer-panel .layer-row, #layer-panel .radio-row, #layer-panel .names-row { gap: var(--box-gap); }
+#layer-panel label.inline:not(.dataset-row) { gap: var(--box-gap); margin: 4px 0; }
+#layer-panel .dunes-only-row input { margin: 0; }
+#layer-panel .names-row { display: flex; flex-wrap: wrap; align-items: center; margin: 2px 0 4px; }
+#layer-panel .names-row > label.inline { flex: 1 1 auto; margin: 0; }
+#layer-panel .names-row > .info-popover { flex: 1 0 100%; }
+#layer-panel .layer-controls { padding-left: calc(var(--box) + var(--box-gap)); }
+#layer-panel .legend, #layer-panel .info-popover { margin-left: calc(var(--box) + var(--box-gap)); }
+#layer-panel .panel-body { padding: 2px 16px 16px; }
+#layer-panel .layer-group { margin: 12px 0; }
+#layer-panel .layer-group summary { padding: 6px 0; font-size: 14.5px; }
+#layer-panel .layer-item { padding: 8px 0 9px; }
+#layer-panel .layer-row label { line-height: 1.35; }
+#layer-panel .radio-row { padding: 4px 0; }
+#layer-panel .basemaps { margin-top: 14px; padding-top: 10px; }
+#layer-panel .about summary { margin-top: 14px; }
+/* cell panel: a little more room around sections */
+.cell-head { padding: 10px 16px; }
+.cell-threshold { padding: 8px 16px 4px; }
+.cell-body { padding: 6px 16px 16px; }
+.cell-body h3, .cell-body summary { margin: 16px 0 6px; }

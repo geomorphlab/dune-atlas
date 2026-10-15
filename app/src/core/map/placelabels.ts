@@ -18,7 +18,7 @@
 // need complex shaping MapLibre does not do (e.g. Tibetan, Devanagari, Mongolian) keep line 2 for the
 // popup only.
 import type { GeoJSONSource, Map as MlMap, MapMouseEvent, PointLike, Popup } from "maplibre-gl";
-import { placeBounds, placesAvailable, PLACE_TEXT, type Place, type PlaceList } from "../search/places";
+import { otherNames, placeBounds, placesAvailable, PLACE_TEXT, type Place, type PlaceList } from "../search/places";
 export { PLACE_TEXT };
 import { h } from "../ui/dom";
 import { PLACE_LABELS, SELECTED_CELL_BOTTOM, firstSymbolLayer } from "./overlays";
@@ -29,10 +29,12 @@ export const PLACE_SOURCE = "place-labels-src";
 export const PLACE_LABEL_FONT = ["Noto Sans Italic"];
 /** map option localIdeographFontFamily: CJK glyphs drawn from local fonts */
 export const LOCAL_IDEOGRAPH_FONTS = "'Noto Sans CJK SC', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans', 'Microsoft YaHei', 'Source Han Sans SC', sans-serif";
-/** zoom at which a label appears: 0 at labelRadius >= rAll (km), `max` at <= rLast, log-linear between */
-export const LABEL_ZOOM = { rAll: 100, rLast: 8, max: 4.5 } as const;
-/** text size range (px) from the smallest to the largest features; line 2 is LINE2_SMALLER px smaller */
-export const LABEL_SIZE = { min: 13, max: 20, rSmall: 10, rLarge: 400 } as const;
+/** zoom at which a label appears. max = 0: every label is a candidate at every zoom, and only on-screen
+ *  collisions (resolved in screen pixels, larger features first via symbol-sort-key) hide one, so a small
+ *  field with nothing near it is named even when zoomed out, on the globe and on the flat map alike */
+export const LABEL_ZOOM = { rAll: 100, rLast: 8, max: 0 } as const;
+/** text size (px): one size for every name (min = max); line 2 is LINE2_SMALLER px smaller */
+export const LABEL_SIZE = { min: 15, max: 15, rSmall: 10, rLarge: 400 } as const;
 export const LINE2_SMALLER = 2;
 export const LABEL_STYLE = {
   dark: { text: "#e8d3a8", halo: "rgba(10, 8, 5, 0.95)" },
@@ -135,19 +137,20 @@ export function dotImage(): { width: number; height: number; data: Uint8Array } 
   return { width: n, height: n, data };
 }
 
-/** the label's popup content: name, line 2, feature type or countries, aliases, mapped dune area, sources */
+/** the label's popup content: name, line 2, feature type or countries, other names, named parts, sources */
 export function placePopupContent(p: Place): HTMLElement {
   const rows: HTMLElement[] = [h("p", { class: "place-name" }, p.line1)];
   if (p.line2) rows.push(h("p", { class: "place-line2", lang: p.line2.lang, dir: "auto" }, p.line2.text));
   const meta = [p.type, p.countries?.length ? p.countries.join(", ") : undefined].filter(Boolean).join(" · ");
   if (meta) rows.push(h("p", { class: "place-meta" }, meta));
-  // other names: the alternative names with their notes (script, meaning, language); else the aliases
-  if (p.alt_names?.length) {
+  // other names: the alternative names with their notes (script, meaning, language); else the aliases;
+  // spelling-only variants of the name (otherNames) are not shown
+  const other = otherNames(p);
+  if (p.alt_names?.length && other.length) {
     rows.push(h("p", { class: "place-row" }, `${PLACE_TEXT.aliases}:`),
-      h("ul", { class: "place-alt" }, ...p.alt_names.map((a) => h("li", {}, h("span", { dir: "auto" }, a.text), ...(a.note ? [" ", h("span", { class: "place-note" }, `(${a.note})`)] : [])))));
-  } else if (p.aliases?.length) rows.push(h("p", { class: "place-row" }, `${PLACE_TEXT.aliases}: ${p.aliases.join(", ")}`));
+      h("ul", { class: "place-alt" }, ...other.map((a) => h("li", {}, h("span", { dir: "auto" }, a.text), ...(a.note ? [" ", h("span", { class: "place-note" }, `(${a.note})`)] : [])))));
+  } else if (other.length) rows.push(h("p", { class: "place-row" }, `${PLACE_TEXT.aliases}: ${other.map((a) => a.text).join(", ")}`));
   if (p.includes?.length) rows.push(h("p", { class: "place-row" }, `${PLACE_TEXT.includes}: ${p.includes.join(", ")}`));
-  if (p.dune_km2 !== undefined) rows.push(h("p", { class: "place-row" }, `${PLACE_TEXT.dunes}: ${Math.round(p.dune_km2).toLocaleString("en-GB")} km²`));
   const src = h("ul", { class: "place-sources" }, ...p.sources.map((s) => h("li", {}, ...linkify(s))));
   rows.push(h("p", { class: "place-row place-src-head" }, `${PLACE_TEXT.sources}:`), src);
   return h("div", { class: "place-popup-body" }, ...rows);

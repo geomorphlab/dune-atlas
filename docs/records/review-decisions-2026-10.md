@@ -169,3 +169,15 @@ misses 9–14 min (fixtures 9.3–13.9 min alone). PR #9 (workflow change, every
 min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 min (cache hit: fixtures
 0.1 min, app 2.1, pipeline 2.9); `main` after the merge (run 38650814140) 10.1 min (one rebuild in the
 `main` scope: Earth 5.9, Mars 4.2 min in parallel; app 3.3, pipeline 3.6, deploy 0.2).
+
+## Names clean-up and label tweaks (15 October 2026)
+
+| item | done |
+|---|---|
+| Earth naming rules | Line 1: one name in Latin script, no brackets (moved names become other names); an official dual name where one exists, else the name most used for the dunes; at most one landform word (local words such as Erg, Rig, Nafud, Peski, Els count); no place qualifier except to tell apart two fields of the same name; hyphens in joined names, Persian names as "Rig-e Name"; Kazakh names romanised (BGN/PCGN) on line 1 with the Cyrillic on line 2. Line 2: the non-Latin form only. Tottori Sand Dunes: 鳥取砂丘 (Japanese) |
+| Earth list | 303 fields: the 29 dropped as small (with mapped dunes) re-added; the fields with no mapped dunes in reach stay out. GSC spelling "Chilsholm" shown as Chisholm Sand Hills |
+| Mars names | Undae keep their IAU names; other features "<IAU name> Dune Field" (craters "<Name> Crater Dune Field"); naming note updated |
+| Other names | The popup and search results leave out names that differ from the name (or from one already listed) only in a generic landform or descriptor word, case, accents, punctuation or spacing; search still finds them |
+| No estimated numbers | The popup no longer shows a "Mapped dune area" (Earth radii are framing estimates, not measurements); help texts no longer say that larger fields are named first. The radius only sets the search zoom and, with the stored area, the label order |
+| Labels and panel | One label size (15 px), every name a candidate at every zoom, collisions resolved on screen; layer panel 360 px with aligned tick boxes |
+| Local preview | `vite.config.ts`: `/r2` proxy to the data server and, with `PREVIEW_MARS_ORIGIN`, `/mars/` forwarded to the Mars dev server, so one local address serves both atlases (dev only) |
