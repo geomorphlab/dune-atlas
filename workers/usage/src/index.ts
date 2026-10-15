@@ -10,7 +10,7 @@
 // The CSV key is given as ?key=... or as the header "Authorization: Bearer ...".
 /** the message path the atlas uses (VITE_USAGE_URL); /event is still accepted */
 export const EVENT_PATH = "/v1/n";
-import { DASHBOARD_HTML } from "./dashboard";
+import { DASHBOARD_HTML, ICON_ICO_BASE64 } from "./dashboard";
 import { addEventStatement, countryCode, list, MAX_EVENT_BYTES, originKind, parseEvent, utcDate } from "./events";
 import { daysToCollect, dayRange, graphql, pullSource, settingsQuery, shorten, SOURCES, writeStatements, type Fetcher, type PullConfig, type Source } from "./pull";
 import { statusCsv, usageCsv, type ExportRow, type PulledDbRow, type StatusRow } from "./csv";
@@ -158,6 +158,10 @@ async function csvResponse(env: Env, which: "usage" | "status", now: number): Pr
 export async function route(request: Request, env: Env, fetcher: Fetcher = fetch, now = Date.now()): Promise<Response> {
   const url = new URL(request.url);
   if (url.pathname === "/event" || url.pathname === EVENT_PATH) return handleEvent(request, env, now);
+  if (url.pathname === "/favicon.ico") {
+    const b = Uint8Array.from(atob(ICON_ICO_BASE64), (c) => c.charCodeAt(0));
+    return new Response(b, { headers: { "Content-Type": "image/x-icon", "Cache-Control": "public, max-age=604800" } });
+  }
   const keyed = ["/usage.csv", "/status.csv", "/check", "/pull", "/dashboard"];
   if (!keyed.includes(url.pathname)) return url.pathname === "/" ? text("Dune Atlas usage counter\n", 200) : text("not found", 404);
   if (request.method !== "GET") return text("method not allowed", 405, { Allow: "GET" });
