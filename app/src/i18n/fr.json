@@ -132,8 +132,8 @@
   "en": "7a137040"
  },
  "earth.help.concepts.body": {
-  "text": "Le bouton Concepts (mortier, sous le bouton Aide) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.",
-  "en": "e5f5c516"
+  "text": "Le bouton Concepts {icon_concepts} (sous le bouton Aide {icon_help}) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.",
+  "en": "239635d1"
  },
  "earth.help.search.title": {
   "text": "Recherche",
@@ -148,8 +148,8 @@
   "en": "a63656ea"
  },
  "earth.help.cell.body": {
-  "text": "Cliquez sur n’importe quelle cellule terrestre pour ouvrir le panneau de cellule : la rose des vents, la rose des flux de sable au seuil actuel, les modes d’orientation des dunes en fonction du seuil, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers l’endroit où se déplace le sable ; l’interrupteur Pétales au-dessus de la rose les inverse pour montrer plutôt d’où vient le vent (les flèches pointent toujours vers la direction de transport). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude et la longitude sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton en forme de réticule à côté du titre de la cellule centre la carte sur la cellule (en ne zoomant que si la cellule est trop petite pour être visible).",
-  "en": "cff60dc4"
+  "text": "Cliquez sur n’importe quelle cellule terrestre pour ouvrir le panneau de cellule : la rose des vents, la rose des flux de sable au seuil actuel, les modes d’orientation des dunes en fonction du seuil, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers l’endroit où se déplace le sable ; l’interrupteur Pétales au-dessus de la rose les inverse pour montrer plutôt d’où vient le vent (les flèches pointent toujours vers la direction de transport). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude et la longitude sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton {icon_centre} à côté du titre de la cellule centre la carte sur la cellule (en ne zoomant que si la cellule est trop petite pour être visible).",
+  "en": "56ecf77d"
  },
  "earth.help.datasets.title": {
   "text": "Jeux de données de vent",
@@ -172,40 +172,40 @@
   "en": "1ededbc8"
  },
  "earth.help.region.body": {
-  "text": "Le bouton situé sous l’appareil photo (un cadre en pointillés) enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres, puis choisissez tous les seuils ou le seuil actuel. La taille est estimée au fur et à mesure et ne peut dépasser ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète sous Télécharger et citer.",
-  "en": "14add06e"
+  "text": "Le bouton de région {icon_region}, sous le bouton appareil photo {icon_camera}, enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres, puis choisissez tous les seuils ou le seuil actuel. La taille est estimée au fur et à mesure et ne peut dépasser ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète sous Télécharger et citer.",
+  "en": "c88add45"
  },
  "earth.help.images.title": {
   "text": "Exporter des images",
   "en": "7ede8ef5"
  },
  "earth.help.images.body": {
-  "text": "Exporter l’image de la carte (bouton appareil photo, en haut à droite) enregistre la vue actuelle au format PNG, avec une largeur de 1600 à 2400 pixels (1,5 fois sa largeur à l’écran), avec ou sans fond de carte, sur fond blanc ou transparent. Sous la carte figurent les barres de couleur, les légendes, la flèche du nord et la barre d’échelle, puis la vue, le jeu de données de vent et les sources des données. Chaque graphique du panneau de cellule dispose d’un menu Exporter qui produit un PNG (1600 pixels de large) ou un SVG en thème clair, avec la même mise en page.",
-  "en": "de092154"
+  "text": "Exporter l’image de la carte (bouton appareil photo {icon_camera}, en haut à droite) enregistre la vue actuelle au format PNG, avec une largeur de 1600 à 2400 pixels (1,5 fois sa largeur à l’écran), avec ou sans fond de carte, sur fond blanc ou transparent. Sous la carte figurent les barres de couleur, les légendes, la flèche du nord et la barre d’échelle, puis la vue, le jeu de données de vent et les sources des données. Chaque graphique du panneau de cellule dispose d’un menu Exporter qui produit un PNG (1600 pixels de large) ou un SVG en thème clair, avec la même mise en page.",
+  "en": "d8fe6f6f"
  },
  "earth.help.share.title": {
   "text": "Partager la vue",
   "en": "eee8fa99"
  },
  "earth.help.share.body": {
-  "text": "Le bouton de partage (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, jeu de données de vent, seuil, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient aussi en permanence un lien complet vers la vue actuelle.",
-  "en": "a481f212"
+  "text": "Le bouton de partage {icon_share} (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, jeu de données de vent, seuil, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient aussi en permanence un lien complet vers la vue actuelle.",
+  "en": "fcd5f3c5"
  },
  "earth.tour.help.title": {
   "text": "Bienvenue dans le Dune Atlas",
   "en": "62096a5c"
  },
  "earth.tour.help.body": {
-  "text": "Cette courte visite guidée présente les principales commandes. Le bouton Aide (?), mis en évidence ici dans le coin supérieur droit, ouvre un aide-mémoire et relance cette visite à tout moment.",
-  "en": "dc80d674"
+  "text": "Cette courte visite guidée présente les principales commandes. Le bouton Aide {icon_help}, mis en évidence ici dans le coin supérieur droit, ouvre un aide-mémoire et relance cette visite à tout moment.",
+  "en": "0835997f"
  },
  "earth.tour.concepts.title": {
   "text": "Concepts",
   "en": "7a137040"
  },
  "earth.tour.concepts.body": {
-  "text": "Le bouton Concepts (mortier) explique la signification des grandeurs représentées sur la carte, avec leurs références. Le ⓘ de chaque calque renvoie à l’entrée correspondante.",
-  "en": "a93f5ddc"
+  "text": "Le bouton Concepts {icon_concepts} explique la signification des grandeurs représentées sur la carte, avec leurs références. Le ⓘ de chaque calque renvoie à l’entrée correspondante.",
+  "en": "1266f675"
  },
  "earth.tour.map.title": {
   "text": "La carte",
@@ -244,8 +244,8 @@
   "en": "110fdce7"
  },
  "earth.tour.cell.body": {
-  "text": "Cliquer sur une cellule terrestre ouvre le panneau de cellule, présenté ici pour une cellule de dunes de la Namib Sand Sea : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de tous les paramètres. Le panneau possède en haut son propre curseur $u_{*,th}$ (encadré), lié au curseur principal. En bas, vous pouvez télécharger ces données dans des fichiers NetCDF ou CSV et accéder aux informations de citation. Le réticule à côté de son titre centre la carte sur la cellule.",
-  "en": "8a1d4323"
+  "text": "Cliquer sur une cellule terrestre ouvre le panneau de cellule, présenté ici pour une cellule de dunes de la Namib Sand Sea : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de tous les paramètres. Le panneau possède en haut son propre curseur $u_{*,th}$ (encadré), lié au curseur principal. En bas, vous pouvez télécharger ces données dans des fichiers NetCDF ou CSV et accéder aux informations de citation. Le bouton {icon_centre} à côté de son titre centre la carte sur la cellule.",
+  "en": "10265f2c"
  },
  "earth.tour.dataset.title": {
   "text": "Jeu de données de vent",
@@ -268,8 +268,8 @@
   "en": "e65791dd"
  },
  "earth.tour.planet.body": {
-  "text": "La Terre et Mars partagent cet atlas : le bouton planète, sous l’appareil photo, permet de passer de l’une à l’autre, et chaque atlas rouvre la dernière vue que vous y aviez.",
-  "en": "d3ce9da4"
+  "text": "La Terre et Mars partagent cet atlas : le bouton planète {icon_planet}, sous le bouton appareil photo {icon_camera}, permet de passer de l’une à l’autre, et chaque atlas rouvre la dernière vue que vous y aviez.",
+  "en": "5143d1c1"
  },
  "earth.group.dunes": {
   "text": "Champs de dunes",
@@ -796,8 +796,8 @@
   "en": "7a137040"
  },
  "mars.help.concepts.body": {
-  "text": "Le bouton Concepts (mortier, sous le bouton Aide) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.",
-  "en": "e5f5c516"
+  "text": "Le bouton Concepts {icon_concepts} (sous le bouton Aide {icon_help}) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.",
+  "en": "239635d1"
  },
  "mars.help.search.title": {
   "text": "Recherche",
@@ -812,16 +812,16 @@
   "en": "a63656ea"
  },
  "mars.help.cell.body": {
-  "text": "Cliquez sur une cellule pour ouvrir le panneau de cellule : la rose des vents, la rose des flux de sable au diamètre de grain actuel, les modes d’orientation des dunes en fonction du diamètre des grains, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers la direction où se déplace le sable ; le commutateur Pétales au-dessus de la rose permet de leur faire indiquer plutôt la direction d’où vient le vent (les flèches pointent toujours « vers »). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude planétocentrique et la longitude est sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton à réticule à côté du titre de la cellule centre la carte sur la cellule (en zoomant uniquement si la cellule était trop petite pour être visible).",
-  "en": "2ffc8c39"
+  "text": "Cliquez sur une cellule pour ouvrir le panneau de cellule : la rose des vents, la rose des flux de sable au diamètre de grain actuel, les modes d’orientation des dunes en fonction du diamètre des grains, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers la direction où se déplace le sable ; le commutateur Pétales au-dessus de la rose permet de leur faire indiquer plutôt la direction d’où vient le vent (les flèches pointent toujours « vers »). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude planétocentrique et la longitude est sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton {icon_centre} à côté du titre de la cellule centre la carte sur la cellule (en zoomant uniquement si la cellule était trop petite pour être visible).",
+  "en": "920c4690"
  },
  "mars.help.datasets.title": {
   "text": "Jeu de données de vent",
   "en": "9f43d0a3"
  },
  "mars.help.datasets.body": {
-  "text": "Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (MCMC FV3, 2° ; EMARS, 6° × 5,14° ; MACDA, 5°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille : MCMC FV3 est une simulation libre d’un modèle climatique ; EMARS et MACDA sont des réanalyses de l’année martienne 30, qui assimilent dans un modèle climatique des observations de l’atmosphère faites par des sondes spatiales. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Lorsque les jeux de données donnent des résultats différents, considérez ces résultats comme incertains. Pas de données EMARS au-delà de 87,43° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur 84,86° N.",
-  "en": "39486870"
+  "text": "Les vents sont les vents horaires du niveau le plus bas d’un modèle climatique martien sur une année martienne (par exemple, le Mars Global Climate Model fondé sur MCMC FV3, version bêta 1 : grille de 2°, 16 032 échantillons horaires). Les calques de vent et de flux de sable ainsi que le panneau de cellule utilisent le jeu de données affiché dans le sélecteur Jeu de données de vent.",
+  "en": "02206cc1"
  },
  "mars.help.basemaps.title": {
   "text": "Fonds de carte",
@@ -844,40 +844,40 @@
   "en": "1ededbc8"
  },
  "mars.help.region.body": {
-  "text": "Le bouton situé sous l’appareil photo (un cadre en pointillés) enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres et choisissez tous les diamètres de grain ou le diamètre actuel ; la taille est estimée au fur et à mesure et limitée à ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète dans Télécharger et citer.",
-  "en": "d991f22b"
+  "text": "Le bouton de région {icon_region}, sous le bouton appareil photo {icon_camera}, enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres et choisissez tous les diamètres de grain ou le diamètre actuel ; la taille est estimée au fur et à mesure et limitée à ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète dans Télécharger et citer.",
+  "en": "0169545a"
  },
  "mars.help.images.title": {
   "text": "Exporter des images",
   "en": "7ede8ef5"
  },
  "mars.help.images.body": {
-  "text": "Exporter l’image de la carte (bouton appareil photo, en haut à droite) enregistre la vue actuelle au format PNG, avec une largeur de 1600 à 2400 pixels (1,5 fois sa largeur à l’écran), avec ou sans fond de carte, sur fond blanc ou transparent. Sous la carte figurent les barres de couleur, les légendes, la flèche du nord et la barre d’échelle, puis la vue, le jeu de données de vent et les sources des données. Chaque graphique du panneau de cellule dispose d’un menu Exporter qui produit un PNG (1600 pixels de large) ou un SVG en thème clair, avec la même mise en page.",
-  "en": "de092154"
+  "text": "Exporter l’image de la carte (bouton appareil photo {icon_camera}, en haut à droite) enregistre la vue actuelle au format PNG, avec une largeur de 1600 à 2400 pixels (1,5 fois sa largeur à l’écran), avec ou sans fond de carte, sur fond blanc ou transparent. Sous la carte figurent les barres de couleur, les légendes, la flèche du nord et la barre d’échelle, puis la vue, le jeu de données de vent et les sources des données. Chaque graphique du panneau de cellule dispose d’un menu Exporter qui produit un PNG (1600 pixels de large) ou un SVG en thème clair, avec la même mise en page.",
+  "en": "d8fe6f6f"
  },
  "mars.help.share.title": {
   "text": "Partager la vue",
   "en": "eee8fa99"
  },
  "mars.help.share.body": {
-  "text": "Le bouton de partage (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, diamètre des grains, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient en outre toujours un lien complet vers la vue actuelle.",
-  "en": "9e8b4f15"
+  "text": "Le bouton de partage {icon_share} (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, diamètre des grains, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient en outre toujours un lien complet vers la vue actuelle.",
+  "en": "5d810b74"
  },
  "mars.tour.help.title": {
   "text": "Bienvenue dans le Mars Dune Atlas",
   "en": "d2ba1abd"
  },
  "mars.tour.help.body": {
-  "text": "Cette courte visite guidée présente les principales commandes. Le bouton Aide (?), mis en évidence ici dans le coin supérieur droit, ouvre un aide-mémoire et relance cette visite à tout moment.",
-  "en": "dc80d674"
+  "text": "Cette courte visite guidée présente les principales commandes. Le bouton Aide {icon_help}, mis en évidence ici dans le coin supérieur droit, ouvre un aide-mémoire et relance cette visite à tout moment.",
+  "en": "0835997f"
  },
  "mars.tour.concepts.title": {
   "text": "Concepts",
   "en": "7a137040"
  },
  "mars.tour.concepts.body": {
-  "text": "Le bouton Concepts (mortier) explique la signification des grandeurs représentées sur la carte, avec leurs références. Le ⓘ de chaque calque renvoie à l’entrée correspondante.",
-  "en": "a93f5ddc"
+  "text": "Le bouton Concepts {icon_concepts} explique la signification des grandeurs représentées sur la carte, avec leurs références. Le ⓘ de chaque calque renvoie à l’entrée correspondante.",
+  "en": "1266f675"
  },
  "mars.tour.map.title": {
   "text": "La carte",
@@ -916,8 +916,8 @@
   "en": "8f49db10"
  },
  "mars.tour.cell.body": {
-  "text": "Cliquer sur une cellule ouvre le panneau de la cellule, présenté ici pour le champ de dunes de Nili Patera (9° N, 67° E) : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de l’ensemble des paramètres. Le panneau possède son propre curseur de diamètre des grains en haut (encadré), lié au curseur principal. En bas, vous pouvez télécharger ces données sous forme de fichiers NetCDF ou CSV et accéder aux informations de citation. Le réticule à côté de son titre centre la carte sur la cellule.",
-  "en": "2bc693ff"
+  "text": "Cliquer sur une cellule ouvre le panneau de la cellule, présenté ici pour le champ de dunes de Nili Patera (9° N, 67° E) : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de l’ensemble des paramètres. Le panneau possède son propre curseur de diamètre des grains en haut (encadré), lié au curseur principal. En bas, vous pouvez télécharger ces données sous forme de fichiers NetCDF ou CSV et accéder aux informations de citation. Le bouton {icon_centre} à côté de son titre centre la carte sur la cellule.",
+  "en": "78b0f9a0"
  },
  "mars.tour.tools.title": {
   "text": "Partager et exporter",
@@ -932,8 +932,8 @@
   "en": "e65791dd"
  },
  "mars.tour.planet.body": {
-  "text": "La Terre et Mars partagent cet atlas : le bouton planète, sous l’appareil photo, permet de passer de l’une à l’autre, et chaque atlas rouvre la dernière vue que vous y aviez.",
-  "en": "d3ce9da4"
+  "text": "La Terre et Mars partagent cet atlas : le bouton planète {icon_planet}, sous le bouton appareil photo {icon_camera}, permet de passer de l’une à l’autre, et chaque atlas rouvre la dernière vue que vous y aviez.",
+  "en": "5143d1c1"
  },
  "mars.group.dunes": {
   "text": "Champs de dunes",
@@ -1955,18 +1955,6 @@
   "text": "αH (orientation de la crête, mode d’instabilité du lit) : ⟦#0⟧° (axe)",
   "en": "04e86ff9"
  },
- "c.1ef8a9c4": {
-  "text": "αE (direction d’allongement) : ⟦#0⟧° (ENE)",
-  "en": "1ef8a9c4"
- },
- "c.e9a52542": {
-  "text": "αT (direction de migration transverse) : ⟦#0⟧° (ENE)",
-  "en": "e9a52542"
- },
- "c.77cf5f77": {
-  "text": "RDD (direction de dérive résultante) : ⟦#0⟧° (ENE)",
-  "en": "77cf5f77"
- },
  "c.58e2a84e": {
   "text": "% du flux total",
   "en": "58e2a84e"
@@ -1974,10 +1962,6 @@
  "c.8656e567": {
   "text": "⟦#0⟧° (axe)",
   "en": "8656e567"
- },
- "c.4a8617dc": {
-  "text": "⟦#0⟧° (ENE)",
-  "en": "4a8617dc"
  },
  "c.531a7c8d": {
   "text": "<span class=\"cap-lead\"><strong>Lit plat</strong> : ⟦0⟧ = ⟦1⟧</span> Direction VERS laquelle se déplace le sable ; ⟦#0⟧ secteurs de ⟦#1⟧°. Rayon = % du flux total dans chaque secteur (somme : ⟦#2⟧ %). Flux saturé sur lit plat moyenné dans le temps (q d’après ⟦2⟧), Σ<sub>vitesse</sub> n·q / Σ<sub>total</sub> n à partir de l’histogramme des vents. Les couleurs subdivisent chaque secteur selon l’excès de cisaillement ⟦3⟧ des vents qui portent le flux (seul ⟦4⟧ transporte du sable).⟦5⟧,⟦6⟧,⟦7⟧,⟦8⟧et les flèches correspondent aux champs de la carte à ce seuil ; une direction est masquée là où le flux qui la définit est nul.",
@@ -2431,9 +2415,17 @@
   "text": "Cliquez sur n’importe quelle cellule pour afficher sa rose des vents sur l’année martienne du jeu de données de vent, la rose des flux de sable au diamètre de grain sélectionné, les modes d’orientation des dunes et tous les paramètres du régime des vents.",
   "en": "63c884fd"
  },
+ "c.692b1efa": {
+  "text": "<strong>Vents (⟦0⟧Mars⟦1⟧, version bêta ⟦#0⟧)</strong> : vents horaires du niveau le plus bas, température et pression de surface du modèle climatique global martien⟦2⟧Ames⟦3⟧fondé sur FV3 (simulation de référence c48, 6e année simulée), rééchantillonnés sur une grille de ⟦#1⟧° × ⟦#2⟧° (une cellule mesure environ ⟦#3⟧ km de côté à l’équateur, soit plus grande que la plupart des champs de dunes) : ⟦#4⟧ échantillons horaires, une année martienne. La carte représente chaque cellule par un carré ; un champ qui varie fortement d’une cellule à l’autre, comme le fait souvent⟦4⟧aux basses latitudes, paraît donc pixellisé. Masse volumique de l’air de la couche la plus basse ρ = p/(R T) ; la hauteur z du vent du niveau le plus bas découle de la pression et de la température horaires (⟦#5⟧–⟦#6⟧ m sur l’ensemble des cellules et des heures ; ⟦#7⟧–⟦#8⟧ m pendant ⟦#9⟧ % des heures des cellules dunaires ; le panneau de la cellule indique la plage de la cellule sélectionnée), et la vitesse de frottement⟦5⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#10⟧, éq. ⟦#11⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité).",
+  "en": "692b1efa"
+ },
  "c.c238d4e5": {
   "text": "<strong>Champs de flux de sable</strong> : pour chaque heure, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/yr, comme sur Terre.",
   "en": "c238d4e5"
+ },
+ "c.c4698157": {
+  "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur potentiel de dérive résultant (norme⟦1⟧, direction⟦2⟧) sur la sphère martienne (R = ⟦#0⟧ km), selon⟦3⟧, Methods⟦4⟧, avec des différences centrées sur la grille du jeu de données de vent (⟦#1⟧°). Les valeurs négatives (convergence) indiquent un dépôt.",
+  "en": "c4698157"
  },
  "c.5d754cff": {
   "text": "<strong>Altitude et relief ombré</strong> :⟦0⟧–⟦1⟧fusionné⟦2⟧, ⟦#0⟧ m, v2 (Fergason,⟦3⟧,⟦4⟧) ; licence :⟦5⟧(⟦6⟧) et⟦7⟧(⟦8⟧). Tuiles d’altitude et de relief dérivées :⟦9⟧.",
@@ -2514,22 +2506,6 @@
  "c.705e31ee": {
   "text": "Flux de sable sur lit plat moyenné dans le temps, selon la direction vers laquelle se déplace le sable, ⟦#0⟧ secteurs de ⟦#1⟧ degrés, empilés par excès de cisaillement u*/u*,th de chaque heure, en pourcentage du flux total, pour un diamètre des grains d = ⟦#2⟧ µm.",
   "en": "705e31ee"
- },
- "c.4d7bcf52": {
-  "text": "αT (direction de migration transverse) : ⟦#0⟧° (ONO)",
-  "en": "4d7bcf52"
- },
- "c.7752b77c": {
-  "text": "RDD (direction de dérive résultante) : ⟦#0⟧° (ESE)",
-  "en": "7752b77c"
- },
- "c.33a5156c": {
-  "text": "⟦#0⟧° (ONO)",
-  "en": "33a5156c"
- },
- "c.4c3ff457": {
-  "text": "⟦#0⟧° (ESE)",
-  "en": "4c3ff457"
  },
  "c.94bd0d74": {
   "text": "<span class=\"cap-lead\"><strong>Lit plat</strong> : ⟦0⟧ = ⟦1⟧</span> Direction VERS laquelle se déplace le sable ; ⟦#0⟧ secteurs de ⟦#1⟧°. Rayon = % du flux total dans chaque secteur (total de ⟦#2⟧ %). Flux saturé sur lit plat moyenné dans le temps (q d’après ⟦2⟧), Σ<sub>heures</sub> q / N sur les ⟦#3⟧ échantillons horaires, avec ⟦3⟧ de chaque heure déduite du vent au niveau le plus bas à sa hauteur z (profil de longueur de mélange pour paroi lisse,⟦4⟧éq. ⟦#4⟧) et le seuil ⟦5⟧ de chaque heure déduit de ⟦6⟧ ainsi que de la masse volumique et de la température de l’air à cette heure. Les couleurs divisent chaque secteur selon l’excès de cisaillement ⟦7⟧ des heures qui portent le flux (seul ⟦8⟧ transporte du sable).⟦9⟧,⟦10⟧,⟦11⟧,⟦12⟧et les flèches correspondent aux champs de la carte pour ce diamètre des grains ; une direction est masquée là où le flux qui la définit est nul.",
@@ -2883,57 +2859,53 @@
   "text": "<strong>Carte des dunes</strong> :⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧), complétée par les petits champs de dunes de Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), fusionnés en ⟦#3⟧ polygones de champs de dunes (sphère Mars ⟦#4⟧) ; polygones⟦4⟧: domaine public (U.S. Geological Survey) ; champs de dunes de⟦5⟧:⟦6⟧.",
   "en": "2905fdb9"
  },
- "c.c27adfd9": {
-  "text": "Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° × ⟦#2⟧° ;⟦2⟧, ⟦#3⟧°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille :⟦3⟧est une simulation libre d’un modèle climatique ;⟦4⟧et⟦5⟧sont des réanalyses de l’année martienne ⟦#4⟧, qui assimilent dans un modèle climatique des observations de l’atmosphère faites par des sondes spatiales. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Lorsque les jeux de données donnent des résultats différents, considérez ces résultats comme incertains. Pas de données⟦6⟧au-delà de ⟦#5⟧° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur ⟦#6⟧° N.",
-  "en": "c27adfd9"
+ "c.15ee00d5": {
+  "text": "Centrer la carte sur cette cellule",
+  "en": "15ee00d5"
  },
- "c.6cd16937": {
-  "text": "<strong>Vents (⟦0⟧Mars⟦1⟧, version bêta ⟦#0⟧)</strong> : vents horaires du niveau le plus bas, température et pression de surface du modèle climatique global martien⟦2⟧Ames⟦3⟧fondé sur FV3 (simulation de référence c48, 6e année simulée), rééchantillonnés sur une grille de ⟦#1⟧° × ⟦#2⟧° (une cellule mesure environ ⟦#3⟧ km de côté à l’équateur, soit plus grande que la plupart des champs de dunes) : ⟦#4⟧ échantillons horaires, une année martienne. La carte représente chaque cellule par un carré ; un champ qui varie fortement d’une cellule à l’autre, comme le fait souvent⟦4⟧aux basses latitudes, paraît donc pixellisé. Masse volumique de l’air de la couche la plus basse ρ = p/(R T) ; la hauteur z du vent du niveau le plus bas découle de la pression et de la température horaires (⟦#5⟧–⟦#6⟧ m sur l’ensemble des cellules et des heures ; ⟦#7⟧–⟦#8⟧ m pendant ⟦#9⟧ % des heures des cellules dunaires ; le panneau de la cellule indique la plage de la cellule sélectionnée), et la vitesse de frottement⟦5⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#10⟧, éq. ⟦#11⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité). Explorez et téléchargez l’ensemble des sorties du modèle dans l’interface web <a href=\"https://data.nas.nasa.gov/mcmc/portals/web-interface/\" target=\"_blank\" rel=\"noopener noreferrer\">⟦6⟧Ames⟦7⟧Data Portal</a>.",
-  "en": "6cd16937"
+ "c.3f2cdfbd": {
+  "text": "αE (direction d’allongement) : ⟦#0⟧° (⟦#1⟧)",
+  "en": "3f2cdfbd"
  },
- "c.5228f7bf": {
-  "text": "<strong>Vents (⟦0⟧v1.0, réanalyse, année martienne ⟦#0⟧)</strong> : moyenne horaire de l’ensemble d’analyses des vents du niveau le plus bas, de la température et de la pression de surface de l’Ensemble Mars Atmosphere Reanalysis System (⟦1⟧) v1.0 (⟦2⟧ ; lue dans la copie⟦3⟧prête à l’analyse), année martienne ⟦#1⟧, sur sa grille native de ⟦#2⟧° en longitude × ⟦#3⟧° en latitude (⟦#4⟧ × ⟦#5⟧ cellules, environ ⟦#6⟧ km × ⟦#7⟧ km à l’équateur). Les deux rangées polaires de demi-largeur de la grille⟦4⟧ne sont pas utilisées ; la grille s’arrête donc à ±⟦#8⟧° : il n’y a aucune cellule⟦5⟧au-delà vers le pôle. Les vents sont moyennés depuis la grille⟦6⟧décalée vers les centres des cellules. Masse volumique de l’air de la couche la plus basse ρ = p/(R T) ; la hauteur z du vent du niveau le plus bas découle de la pression et de la température horaires, et la vitesse de frottement⟦7⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#9⟧, éq. ⟦#10⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité). La couche⟦8⟧la plus basse est épaisse : cette hauteur est donc de ⟦#11⟧–⟦#12⟧ m au-dessus de la surface (médiane ⟦#13⟧ m ;⟦9⟧⟦#14⟧–⟦#15⟧ m,⟦10⟧⟦#16⟧–⟦#17⟧ m) : le vent et⟦11⟧se rapportent à un niveau bien plus élevé que dans les autres jeux de données martiens. Données et documentation : <a href=\"https://doi.org/10.18113/D3W375\" target=\"_blank\" rel=\"noopener noreferrer\">⟦12⟧v1.0 sur le Penn State Data Commons</a> ; la copie prête à l’analyse lue par l’atlas, <a href=\"https://huggingface.co/datasets/ananyo01/ARCO-EMARS\" target=\"_blank\" rel=\"noopener noreferrer\">⟦13⟧</a>, avec des <a href=\"https://github.com/GalacticBobster/ARCO-Mars-Examples\" target=\"_blank\" rel=\"noopener noreferrer\">exemples Python pour la lire et la représenter</a>.",
-  "en": "5228f7bf"
+ "c.b36b7be7": {
+  "text": "αT (direction de migration transverse) : ⟦#0⟧° (⟦#1⟧)",
+  "en": "b36b7be7"
  },
- "c.9192f9b0": {
-  "text": "<strong>Vents (⟦0⟧v2.0, réanalyse, année martienne ⟦#0⟧)</strong> : vents du niveau le plus bas, température et pression de surface, un échantillon toutes les deux heures martiennes, de la réanalyse Mars Analysis Correction Data Assimilation (⟦1⟧) v2.0 (⟦2⟧,⟦3⟧Centre for Environmental Data Analysis ; lue dans la copie⟦4⟧prête à l’analyse), année martienne ⟦#1⟧, sur sa grille native de ⟦#2⟧° (⟦#3⟧ × ⟦#4⟧ cellules, environ ⟦#5⟧ km de côté à l’équateur ; la première colonne est centrée sur ⟦#6⟧°). Les vents sont ceux du niveau le plus bas du modèle (σ = ⟦#7⟧) ; masse volumique de l’air ρ = p/(R T) avec p = σ p<sub>s</sub>, hauteur de ce niveau z = (R T/g) ln(⟦#8⟧/σ), et la vitesse de frottement⟦5⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#9⟧, éq. ⟦#10⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité) ; ce niveau se situe à ⟦#11⟧–⟦#12⟧ m au-dessus de la surface (⟦6⟧⟦#13⟧–⟦#14⟧ m). Pendant l’année martienne ⟦#15⟧, les ⟦#16⟧ premiers échantillons (Ls ⟦#17⟧–⟦#18⟧°) assimilent les colonnes de poussière de Mars Odyssey⟦7⟧et les autres les profils⟦8⟧⟦9⟧de température et de poussière. Données, documentation et explorateur de fichiers : <a href=\"https://catalogue.ceda.ac.uk/uuid/cd037a9ea387438fabf4d674dbe53088/\" target=\"_blank\" rel=\"noopener noreferrer\">⟦10⟧v2.0 dans le⟦11⟧Archive</a> ; la copie prête à l’analyse lue par l’atlas : <a href=\"https://huggingface.co/datasets/ananyo01/ARCO-MACDA\" target=\"_blank\" rel=\"noopener noreferrer\">⟦12⟧</a>. Contains public sector information licensed under the Open Government Licence v3.0 (⟦13⟧v2.0,⟦14⟧Centre for Environmental Data Analysis).",
-  "en": "9192f9b0"
+ "c.7c7e35d8": {
+  "text": "RDD (direction de dérive résultante) : ⟦#0⟧° (⟦#1⟧)",
+  "en": "7c7e35d8"
  },
- "c.912ef7dd": {
-  "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur potentiel de dérive résultant (norme⟦1⟧, direction⟦2⟧) sur la sphère martienne (R = ⟦#0⟧ km), selon⟦3⟧, Methods⟦4⟧, avec des différences centrées sur la grille du jeu de données de vent (⟦#1⟧° ou ⟦#2⟧° × ⟦#3⟧° ou ⟦#4⟧°). Les valeurs négatives (convergence) indiquent un dépôt.",
-  "en": "912ef7dd"
+ "c.1ef8a9c4": {
+  "text": "αE (direction d’allongement) : ⟦#0⟧° (ENE)",
+  "en": "1ef8a9c4"
  },
- "c.c682ba25": {
-  "text": "<strong>⟦0⟧⟦#0⟧° × ⟦#1⟧°</strong> : ⟦1⟧. Licence : ⟦2⟧.",
-  "en": "c682ba25"
+ "c.e9a52542": {
+  "text": "αT (direction de migration transverse) : ⟦#0⟧° (ENE)",
+  "en": "e9a52542"
  },
- "c.48251db8": {
-  "text": "Interface web (explorer les sorties du modèle) : ⟦0⟧",
-  "en": "48251db8"
+ "c.77cf5f77": {
+  "text": "RDD (direction de dérive résultante) : ⟦#0⟧° (ENE)",
+  "en": "77cf5f77"
  },
- "c.251cd18d": {
-  "text": "Réanalyse ⟦0⟧v1.0 (année martienne ⟦#0⟧)",
-  "en": "251cd18d"
+ "c.4a8617dc": {
+  "text": "⟦#0⟧° (ENE)",
+  "en": "4a8617dc"
  },
- "c.19395603": {
-  "text": "Données (copie prête à l’analyse lue par l’atlas) : ⟦0⟧",
-  "en": "19395603"
+ "c.4d7bcf52": {
+  "text": "αT (direction de migration transverse) : ⟦#0⟧° (ONO)",
+  "en": "4d7bcf52"
  },
- "c.8227d6a0": {
-  "text": "Réanalyse ⟦0⟧v2.0 (année martienne ⟦#0⟧)",
-  "en": "8227d6a0"
+ "c.7752b77c": {
+  "text": "RDD (direction de dérive résultante) : ⟦#0⟧° (ESE)",
+  "en": "7752b77c"
  },
- "c.db5eb4dc": {
-  "text": "Contains public sector information licensed under the Open Government Licence v3.0 (⟦0⟧v2.0,⟦1⟧Centre for Environmental Data Analysis).",
-  "en": "db5eb4dc"
+ "c.33a5156c": {
+  "text": "⟦#0⟧° (ONO)",
+  "en": "33a5156c"
  },
- "c.692b1efa": {
-  "text": "<strong>Vents (⟦0⟧Mars⟦1⟧, version bêta ⟦#0⟧)</strong> : vents horaires du niveau le plus bas, température et pression de surface du modèle climatique global martien⟦2⟧Ames⟦3⟧fondé sur FV3 (simulation de référence c48, 6e année simulée), rééchantillonnés sur une grille de ⟦#1⟧° × ⟦#2⟧° (une cellule mesure environ ⟦#3⟧ km de côté à l’équateur, soit plus grande que la plupart des champs de dunes) : ⟦#4⟧ échantillons horaires, une année martienne. La carte représente chaque cellule par un carré ; un champ qui varie fortement d’une cellule à l’autre, comme le fait souvent⟦4⟧aux basses latitudes, paraît donc pixellisé. Masse volumique de l’air de la couche la plus basse ρ = p/(R T) ; la hauteur z du vent du niveau le plus bas découle de la pression et de la température horaires (⟦#5⟧–⟦#6⟧ m sur l’ensemble des cellules et des heures ; ⟦#7⟧–⟦#8⟧ m pendant ⟦#9⟧ % des heures des cellules dunaires ; le panneau de la cellule indique la plage de la cellule sélectionnée), et la vitesse de frottement⟦5⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#10⟧, éq. ⟦#11⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité).",
-  "en": "692b1efa"
- },
- "c.c4698157": {
-  "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur potentiel de dérive résultant (norme⟦1⟧, direction⟦2⟧) sur la sphère martienne (R = ⟦#0⟧ km), selon⟦3⟧, Methods⟦4⟧, avec des différences centrées sur la grille du jeu de données de vent (⟦#1⟧°). Les valeurs négatives (convergence) indiquent un dépôt.",
-  "en": "c4698157"
+ "c.4c3ff457": {
+  "text": "⟦#0⟧° (ESE)",
+  "en": "4c3ff457"
  },
  "c.762593af": {
   "text": "Polygones⟦0⟧: domaine public (U.S. Geological Survey)",

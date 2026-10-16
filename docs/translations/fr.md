@@ -146,8 +146,8 @@ EN: Concepts
 FR: Concepts
 
 ## earth.help.concepts.body (Help panel)
-EN: The Concepts button (mortarboard, under the Help button) explains the quantities of the atlas, each with its references. The Concept link in a layer's ⓘ opens its entry.
-FR: Le bouton Concepts (mortier, sous le bouton Aide) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.
+EN: The Concepts button {icon_concepts} (under the Help button {icon_help}) explains the quantities of the atlas, each with its references. The Concept link in a layer's ⓘ opens its entry.
+FR: Le bouton Concepts {icon_concepts} (sous le bouton Aide {icon_help}) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.
 
 ## earth.help.search.title (Help panel)
 EN: Search
@@ -162,8 +162,8 @@ EN: Clicking a cell
 FR: Cliquer sur une cellule
 
 ## earth.help.cell.body (Help panel)
-EN: Click any land cell to open the cell panel: the wind rose, the sand-flux rose at the current threshold, dune-orientation modes against the threshold, the flux divergence and a table of all parameters. Sand-flux rose petals point toward where sand moves; the Petals switch above the rose turns them to show where the wind comes from instead (the arrows always point toward). Section headings fold and unfold. Close the panel with × or Esc. The latitude and longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The crosshair button next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).
-FR: Cliquez sur n’importe quelle cellule terrestre pour ouvrir le panneau de cellule : la rose des vents, la rose des flux de sable au seuil actuel, les modes d’orientation des dunes en fonction du seuil, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers l’endroit où se déplace le sable ; l’interrupteur Pétales au-dessus de la rose les inverse pour montrer plutôt d’où vient le vent (les flèches pointent toujours vers la direction de transport). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude et la longitude sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton en forme de réticule à côté du titre de la cellule centre la carte sur la cellule (en ne zoomant que si la cellule est trop petite pour être visible).
+EN: Click any land cell to open the cell panel: the wind rose, the sand-flux rose at the current threshold, dune-orientation modes against the threshold, the flux divergence and a table of all parameters. Sand-flux rose petals point toward where sand moves; the Petals switch above the rose turns them to show where the wind comes from instead (the arrows always point toward). Section headings fold and unfold. Close the panel with × or Esc. The latitude and longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The button {icon_centre} next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).
+FR: Cliquez sur n’importe quelle cellule terrestre pour ouvrir le panneau de cellule : la rose des vents, la rose des flux de sable au seuil actuel, les modes d’orientation des dunes en fonction du seuil, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers l’endroit où se déplace le sable ; l’interrupteur Pétales au-dessus de la rose les inverse pour montrer plutôt d’où vient le vent (les flèches pointent toujours vers la direction de transport). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude et la longitude sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton {icon_centre} à côté du titre de la cellule centre la carte sur la cellule (en ne zoomant que si la cellule est trop petite pour être visible).
 
 ## earth.help.datasets.title (Help panel)
 EN: Wind datasets
@@ -186,24 +186,24 @@ EN: Downloading a region
 FR: Télécharger une région
 
 ## earth.help.region.body (Help panel)
-EN: The button below the camera (a dashed box) saves every cell of the selected wind dataset in a latitude-longitude box as one NetCDF file with a README. Type the bounds, or press Draw on map and drag a box on the map (Esc cancels). Tick the parameters and choose every threshold or the current one; the size is estimated as you go and is limited to what a browser can hold. For the whole grid, see Get the whole grid under Download & cite.
-FR: Le bouton situé sous l’appareil photo (un cadre en pointillés) enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres, puis choisissez tous les seuils ou le seuil actuel. La taille est estimée au fur et à mesure et ne peut dépasser ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète sous Télécharger et citer.
+EN: The region button {icon_region}, below the camera button {icon_camera}, saves every cell of the selected wind dataset in a latitude-longitude box as one NetCDF file with a README. Type the bounds, or press Draw on map and drag a box on the map (Esc cancels). Tick the parameters and choose every threshold or the current one; the size is estimated as you go and is limited to what a browser can hold. For the whole grid, see Get the whole grid under Download & cite.
+FR: Le bouton de région {icon_region}, sous le bouton appareil photo {icon_camera}, enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres, puis choisissez tous les seuils ou le seuil actuel. La taille est estimée au fur et à mesure et ne peut dépasser ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète sous Télécharger et citer.
 
 ## earth.help.images.title (Help panel)
 EN: Exporting images
 FR: Exporter des images
 
 ## earth.help.images.body (Help panel)
-EN: Export map image (camera button, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap, on a white or transparent background. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.
-FR: Exporter l’image de la carte (bouton appareil photo, en haut à droite) enregistre la vue actuelle au format PNG, avec une largeur de 1600 à 2400 pixels (1,5 fois sa largeur à l’écran), avec ou sans fond de carte, sur fond blanc ou transparent. Sous la carte figurent les barres de couleur, les légendes, la flèche du nord et la barre d’échelle, puis la vue, le jeu de données de vent et les sources des données. Chaque graphique du panneau de cellule dispose d’un menu Exporter qui produit un PNG (1600 pixels de large) ou un SVG en thème clair, avec la même mise en page.
+EN: Export map image (camera button {icon_camera}, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap, on a white or transparent background. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.
+FR: Exporter l’image de la carte (bouton appareil photo {icon_camera}, en haut à droite) enregistre la vue actuelle au format PNG, avec une largeur de 1600 à 2400 pixels (1,5 fois sa largeur à l’écran), avec ou sans fond de carte, sur fond blanc ou transparent. Sous la carte figurent les barres de couleur, les légendes, la flèche du nord et la barre d’échelle, puis la vue, le jeu de données de vent et les sources des données. Chaque graphique du panneau de cellule dispose d’un menu Exporter qui produit un PNG (1600 pixels de large) ou un SVG en thème clair, avec la même mise en page.
 
 ## earth.help.share.title (Help panel)
 EN: Sharing the view
 FR: Partager la vue
 
 ## earth.help.share.body (Help panel)
-EN: The share button (top right) copies a short link that restores this view: position, zoom, globe or flat map, wind dataset, threshold, basemap, the active layers with their display settings, and the selected cell. The address bar also always holds a full link to the current view.
-FR: Le bouton de partage (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, jeu de données de vent, seuil, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient aussi en permanence un lien complet vers la vue actuelle.
+EN: The share button {icon_share} (top right) copies a short link that restores this view: position, zoom, globe or flat map, wind dataset, threshold, basemap, the active layers with their display settings, and the selected cell. The address bar also always holds a full link to the current view.
+FR: Le bouton de partage {icon_share} (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, jeu de données de vent, seuil, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient aussi en permanence un lien complet vers la vue actuelle.
 
 # Guided tour
 
@@ -212,16 +212,16 @@ EN: Welcome to the Dune Atlas
 FR: Bienvenue dans le Dune Atlas
 
 ## earth.tour.help.body (Guided tour)
-EN: This short tour shows the main controls. The Help button (?) highlighted here, in the top-right corner, opens a quick reference and restarts this tour at any time.
-FR: Cette courte visite guidée présente les principales commandes. Le bouton Aide (?), mis en évidence ici dans le coin supérieur droit, ouvre un aide-mémoire et relance cette visite à tout moment.
+EN: This short tour shows the main controls. The Help button {icon_help} highlighted here, in the top-right corner, opens a quick reference and restarts this tour at any time.
+FR: Cette courte visite guidée présente les principales commandes. Le bouton Aide {icon_help}, mis en évidence ici dans le coin supérieur droit, ouvre un aide-mémoire et relance cette visite à tout moment.
 
 ## earth.tour.concepts.title (Guided tour)
 EN: Concepts
 FR: Concepts
 
 ## earth.tour.concepts.body (Guided tour)
-EN: The Concepts button (mortarboard) explains what the quantities on the map mean, with references. Each layer's ⓘ links to its entry.
-FR: Le bouton Concepts (mortier) explique la signification des grandeurs représentées sur la carte, avec leurs références. Le ⓘ de chaque calque renvoie à l’entrée correspondante.
+EN: The Concepts button {icon_concepts} explains what the quantities on the map mean, with references. Each layer's ⓘ links to its entry.
+FR: Le bouton Concepts {icon_concepts} explique la signification des grandeurs représentées sur la carte, avec leurs références. Le ⓘ de chaque calque renvoie à l’entrée correspondante.
 
 ## earth.tour.map.title (Guided tour)
 EN: The map
@@ -260,8 +260,8 @@ EN: Click a land cell
 FR: Cliquez sur une cellule terrestre
 
 ## earth.tour.cell.body (Guided tour)
-EN: Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The crosshair next to its title centres the map on the cell.
-FR: Cliquer sur une cellule terrestre ouvre le panneau de cellule, présenté ici pour une cellule de dunes de la Namib Sand Sea : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de tous les paramètres. Le panneau possède en haut son propre curseur $u_{*,th}$ (encadré), lié au curseur principal. En bas, vous pouvez télécharger ces données dans des fichiers NetCDF ou CSV et accéder aux informations de citation. Le réticule à côté de son titre centre la carte sur la cellule.
+EN: Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The button {icon_centre} next to its title centres the map on the cell.
+FR: Cliquer sur une cellule terrestre ouvre le panneau de cellule, présenté ici pour une cellule de dunes de la Namib Sand Sea : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de tous les paramètres. Le panneau possède en haut son propre curseur $u_{*,th}$ (encadré), lié au curseur principal. En bas, vous pouvez télécharger ces données dans des fichiers NetCDF ou CSV et accéder aux informations de citation. Le bouton {icon_centre} à côté de son titre centre la carte sur la cellule.
 
 ## earth.tour.dataset.title (Guided tour)
 EN: Wind dataset
@@ -284,8 +284,8 @@ EN: Switch planet
 FR: Changer de planète
 
 ## earth.tour.planet.body (Guided tour)
-EN: Earth and Mars share this atlas: the planet button below the camera swaps between them, and each atlas reopens the view you last had there.
-FR: La Terre et Mars partagent cet atlas : le bouton planète, sous l’appareil photo, permet de passer de l’une à l’autre, et chaque atlas rouvre la dernière vue que vous y aviez.
+EN: Earth and Mars share this atlas: the planet button {icon_planet}, below the camera button {icon_camera}, swaps between them, and each atlas reopens the view you last had there.
+FR: La Terre et Mars partagent cet atlas : le bouton planète {icon_planet}, sous le bouton appareil photo {icon_camera}, permet de passer de l’une à l’autre, et chaque atlas rouvre la dernière vue que vous y aviez.
 
 # Layer groups
 
@@ -846,8 +846,8 @@ EN: Concepts
 FR: Concepts
 
 ## mars.help.concepts.body (Help panel)
-EN: The Concepts button (mortarboard, under the Help button) explains the quantities of the atlas, each with its references. The Concept link in a layer's ⓘ opens its entry.
-FR: Le bouton Concepts (mortier, sous le bouton Aide) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.
+EN: The Concepts button {icon_concepts} (under the Help button {icon_help}) explains the quantities of the atlas, each with its references. The Concept link in a layer's ⓘ opens its entry.
+FR: Le bouton Concepts {icon_concepts} (sous le bouton Aide {icon_help}) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.
 
 ## mars.help.search.title (Help panel)
 EN: Search
@@ -862,16 +862,16 @@ EN: Clicking a cell
 FR: Cliquer sur une cellule
 
 ## mars.help.cell.body (Help panel)
-EN: Click any cell to open the cell panel: the wind rose, the sand-flux rose at the current grain diameter, dune-orientation modes against the grain diameter, the flux divergence and a table of all parameters. Sand-flux rose petals point toward where sand moves; the Petals switch above the rose turns them to show where the wind comes from instead (the arrows always point toward). Section headings fold and unfold. Close the panel with × or Esc. The planetocentric latitude and east longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The crosshair button next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).
-FR: Cliquez sur une cellule pour ouvrir le panneau de cellule : la rose des vents, la rose des flux de sable au diamètre de grain actuel, les modes d’orientation des dunes en fonction du diamètre des grains, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers la direction où se déplace le sable ; le commutateur Pétales au-dessus de la rose permet de leur faire indiquer plutôt la direction d’où vient le vent (les flèches pointent toujours « vers »). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude planétocentrique et la longitude est sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton à réticule à côté du titre de la cellule centre la carte sur la cellule (en zoomant uniquement si la cellule était trop petite pour être visible).
+EN: Click any cell to open the cell panel: the wind rose, the sand-flux rose at the current grain diameter, dune-orientation modes against the grain diameter, the flux divergence and a table of all parameters. Sand-flux rose petals point toward where sand moves; the Petals switch above the rose turns them to show where the wind comes from instead (the arrows always point toward). Section headings fold and unfold. Close the panel with × or Esc. The planetocentric latitude and east longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The button {icon_centre} next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).
+FR: Cliquez sur une cellule pour ouvrir le panneau de cellule : la rose des vents, la rose des flux de sable au diamètre de grain actuel, les modes d’orientation des dunes en fonction du diamètre des grains, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers la direction où se déplace le sable ; le commutateur Pétales au-dessus de la rose permet de leur faire indiquer plutôt la direction d’où vient le vent (les flèches pointent toujours « vers »). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude planétocentrique et la longitude est sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton {icon_centre} à côté du titre de la cellule centre la carte sur la cellule (en zoomant uniquement si la cellule était trop petite pour être visible).
 
 ## mars.help.datasets.title (Help panel)
 EN: Wind dataset
 FR: Jeu de données de vent
 
 ## mars.help.datasets.body (Help panel)
-EN: The Wind dataset selector switches between Mars wind datasets (MCMC FV3, 2°; EMARS, 6° × 5.14°; MACDA, 5°), each one Mars year of lowest-level winds on its own grid: MCMC FV3 is a free-running climate-model simulation; EMARS and MACDA are reanalyses of Mars Year 30, which assimilate spacecraft observations of the atmosphere into a climate model. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain. No EMARS data poleward of 87.43° N: the northernmost cells of its grid are centred at 84.86° N.
-FR: Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (MCMC FV3, 2° ; EMARS, 6° × 5,14° ; MACDA, 5°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille : MCMC FV3 est une simulation libre d’un modèle climatique ; EMARS et MACDA sont des réanalyses de l’année martienne 30, qui assimilent dans un modèle climatique des observations de l’atmosphère faites par des sondes spatiales. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Lorsque les jeux de données donnent des résultats différents, considérez ces résultats comme incertains. Pas de données EMARS au-delà de 87,43° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur 84,86° N.
+EN: The winds are the hourly lowest-level winds of a Mars climate model over one Mars year (e.g., the MCMC FV3-based Mars Global Climate Model, beta release 1: 2° grid, 16,032 hourly samples). The wind and sand-flux layers and the cell panel use the dataset shown in the Wind dataset selector.
+FR: Les vents sont les vents horaires du niveau le plus bas d’un modèle climatique martien sur une année martienne (par exemple, le Mars Global Climate Model fondé sur MCMC FV3, version bêta 1 : grille de 2°, 16 032 échantillons horaires). Les calques de vent et de flux de sable ainsi que le panneau de cellule utilisent le jeu de données affiché dans le sélecteur Jeu de données de vent.
 
 ## mars.help.basemaps.title (Help panel)
 EN: Basemaps
@@ -894,24 +894,24 @@ EN: Downloading a region
 FR: Télécharger une région
 
 ## mars.help.region.body (Help panel)
-EN: The button below the camera (a dashed box) saves every cell of the selected wind dataset in a latitude-longitude box as one NetCDF file with a README. Type the bounds, or press Draw on map and drag a box on the map (Esc cancels). Tick the parameters and choose every grain diameter or the current one; the size is estimated as you go and is limited to what a browser can hold. For the whole grid, see Get the whole grid under Download & cite.
-FR: Le bouton situé sous l’appareil photo (un cadre en pointillés) enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres et choisissez tous les diamètres de grain ou le diamètre actuel ; la taille est estimée au fur et à mesure et limitée à ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète dans Télécharger et citer.
+EN: The region button {icon_region}, below the camera button {icon_camera}, saves every cell of the selected wind dataset in a latitude-longitude box as one NetCDF file with a README. Type the bounds, or press Draw on map and drag a box on the map (Esc cancels). Tick the parameters and choose every grain diameter or the current one; the size is estimated as you go and is limited to what a browser can hold. For the whole grid, see Get the whole grid under Download & cite.
+FR: Le bouton de région {icon_region}, sous le bouton appareil photo {icon_camera}, enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres et choisissez tous les diamètres de grain ou le diamètre actuel ; la taille est estimée au fur et à mesure et limitée à ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète dans Télécharger et citer.
 
 ## mars.help.images.title (Help panel)
 EN: Exporting images
 FR: Exporter des images
 
 ## mars.help.images.body (Help panel)
-EN: Export map image (camera button, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap, on a white or transparent background. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.
-FR: Exporter l’image de la carte (bouton appareil photo, en haut à droite) enregistre la vue actuelle au format PNG, avec une largeur de 1600 à 2400 pixels (1,5 fois sa largeur à l’écran), avec ou sans fond de carte, sur fond blanc ou transparent. Sous la carte figurent les barres de couleur, les légendes, la flèche du nord et la barre d’échelle, puis la vue, le jeu de données de vent et les sources des données. Chaque graphique du panneau de cellule dispose d’un menu Exporter qui produit un PNG (1600 pixels de large) ou un SVG en thème clair, avec la même mise en page.
+EN: Export map image (camera button {icon_camera}, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap, on a white or transparent background. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.
+FR: Exporter l’image de la carte (bouton appareil photo {icon_camera}, en haut à droite) enregistre la vue actuelle au format PNG, avec une largeur de 1600 à 2400 pixels (1,5 fois sa largeur à l’écran), avec ou sans fond de carte, sur fond blanc ou transparent. Sous la carte figurent les barres de couleur, les légendes, la flèche du nord et la barre d’échelle, puis la vue, le jeu de données de vent et les sources des données. Chaque graphique du panneau de cellule dispose d’un menu Exporter qui produit un PNG (1600 pixels de large) ou un SVG en thème clair, avec la même mise en page.
 
 ## mars.help.share.title (Help panel)
 EN: Sharing the view
 FR: Partager la vue
 
 ## mars.help.share.body (Help panel)
-EN: The share button (top right) copies a short link that restores this view: position, zoom, globe or flat map, grain diameter, basemap, the active layers with their display settings, and the selected cell. The address bar also always holds a full link to the current view.
-FR: Le bouton de partage (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, diamètre des grains, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient en outre toujours un lien complet vers la vue actuelle.
+EN: The share button {icon_share} (top right) copies a short link that restores this view: position, zoom, globe or flat map, grain diameter, basemap, the active layers with their display settings, and the selected cell. The address bar also always holds a full link to the current view.
+FR: Le bouton de partage {icon_share} (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, diamètre des grains, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient en outre toujours un lien complet vers la vue actuelle.
 
 # Guided tour
 
@@ -920,16 +920,16 @@ EN: Welcome to the Mars Dune Atlas
 FR: Bienvenue dans le Mars Dune Atlas
 
 ## mars.tour.help.body (Guided tour)
-EN: This short tour shows the main controls. The Help button (?) highlighted here, in the top-right corner, opens a quick reference and restarts this tour at any time.
-FR: Cette courte visite guidée présente les principales commandes. Le bouton Aide (?), mis en évidence ici dans le coin supérieur droit, ouvre un aide-mémoire et relance cette visite à tout moment.
+EN: This short tour shows the main controls. The Help button {icon_help} highlighted here, in the top-right corner, opens a quick reference and restarts this tour at any time.
+FR: Cette courte visite guidée présente les principales commandes. Le bouton Aide {icon_help}, mis en évidence ici dans le coin supérieur droit, ouvre un aide-mémoire et relance cette visite à tout moment.
 
 ## mars.tour.concepts.title (Guided tour)
 EN: Concepts
 FR: Concepts
 
 ## mars.tour.concepts.body (Guided tour)
-EN: The Concepts button (mortarboard) explains what the quantities on the map mean, with references. Each layer's ⓘ links to its entry.
-FR: Le bouton Concepts (mortier) explique la signification des grandeurs représentées sur la carte, avec leurs références. Le ⓘ de chaque calque renvoie à l’entrée correspondante.
+EN: The Concepts button {icon_concepts} explains what the quantities on the map mean, with references. Each layer's ⓘ links to its entry.
+FR: Le bouton Concepts {icon_concepts} explique la signification des grandeurs représentées sur la carte, avec leurs références. Le ⓘ de chaque calque renvoie à l’entrée correspondante.
 
 ## mars.tour.map.title (Guided tour)
 EN: The map
@@ -968,8 +968,8 @@ EN: Click a cell
 FR: Cliquez sur une cellule
 
 ## mars.tour.cell.body (Guided tour)
-EN: Clicking a cell opens the cell panel, shown here for the dune field of Nili Patera (9° N, 67° E): wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own grain-diameter slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The crosshair next to its title centres the map on the cell.
-FR: Cliquer sur une cellule ouvre le panneau de la cellule, présenté ici pour le champ de dunes de Nili Patera (9° N, 67° E) : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de l’ensemble des paramètres. Le panneau possède son propre curseur de diamètre des grains en haut (encadré), lié au curseur principal. En bas, vous pouvez télécharger ces données sous forme de fichiers NetCDF ou CSV et accéder aux informations de citation. Le réticule à côté de son titre centre la carte sur la cellule.
+EN: Clicking a cell opens the cell panel, shown here for the dune field of Nili Patera (9° N, 67° E): wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own grain-diameter slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The button {icon_centre} next to its title centres the map on the cell.
+FR: Cliquer sur une cellule ouvre le panneau de la cellule, présenté ici pour le champ de dunes de Nili Patera (9° N, 67° E) : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de l’ensemble des paramètres. Le panneau possède son propre curseur de diamètre des grains en haut (encadré), lié au curseur principal. En bas, vous pouvez télécharger ces données sous forme de fichiers NetCDF ou CSV et accéder aux informations de citation. Le bouton {icon_centre} à côté de son titre centre la carte sur la cellule.
 
 ## mars.tour.tools.title (Guided tour)
 EN: Share and export
@@ -984,8 +984,8 @@ EN: Switch planet
 FR: Changer de planète
 
 ## mars.tour.planet.body (Guided tour)
-EN: Earth and Mars share this atlas: the planet button below the camera swaps between them, and each atlas reopens the view you last had there.
-FR: La Terre et Mars partagent cet atlas : le bouton planète, sous l’appareil photo, permet de passer de l’une à l’autre, et chaque atlas rouvre la dernière vue que vous y aviez.
+EN: Earth and Mars share this atlas: the planet button {icon_planet}, below the camera button {icon_camera}, swaps between them, and each atlas reopens the view you last had there.
+FR: La Terre et Mars partagent cet atlas : le bouton planète {icon_planet}, sous le bouton appareil photo {icon_camera}, permet de passer de l’une à l’autre, et chaque atlas rouvre la dernière vue que vous y aviez.
 
 # Layer groups
 
@@ -2103,18 +2103,6 @@ FR: Flux de sable sur lit plat moyenné dans le temps, selon la direction vers l
 EN: αH (crest orientation, bed-instability mode): ⟦#0⟧° (axis)
 FR: αH (orientation de la crête, mode d’instabilité du lit) : ⟦#0⟧° (axe)
 
-## c.1ef8a9c4 (Cell panel)
-EN: αE (elongation direction): ⟦#0⟧° (ENE)
-FR: αE (direction d’allongement) : ⟦#0⟧° (ENE)
-
-## c.e9a52542 (Cell panel)
-EN: αT (transverse migration direction): ⟦#0⟧° (ENE)
-FR: αT (direction de migration transverse) : ⟦#0⟧° (ENE)
-
-## c.77cf5f77 (Cell panel)
-EN: RDD (resultant drift direction): ⟦#0⟧° (ENE)
-FR: RDD (direction de dérive résultante) : ⟦#0⟧° (ENE)
-
 ## c.58e2a84e (Cell panel)
 EN: % of total flux
 FR: % du flux total
@@ -2122,10 +2110,6 @@ FR: % du flux total
 ## c.8656e567 (Cell panel)
 EN: ⟦#0⟧° (axis)
 FR: ⟦#0⟧° (axe)
-
-## c.4a8617dc (Cell panel)
-EN: ⟦#0⟧° (ENE)
-FR: ⟦#0⟧° (ENE)
 
 ## c.531a7c8d (Cell panel)
 EN: <span class="cap-lead"><strong>Flat bed</strong>: ⟦0⟧ = ⟦1⟧</span> Direction sand moves TOWARD; ⟦#0⟧ sectors of ⟦#1⟧°. Radius = % of the total flux in each sector (sums to ⟦#2⟧ %). Time-averaged saturated flat-bed flux (q from ⟦2⟧), Σ<sub>speed</sub> n·q / Σ<sub>all</sub> n from the wind histogram. Colours split each sector by the excess shear ⟦3⟧ of the winds carrying the flux (only ⟦4⟧ transports sand).⟦5⟧,⟦6⟧,⟦7⟧,⟦8⟧and the arrows are the map fields at this threshold; a direction is hidden where the flux defining it is zero.
@@ -2353,11 +2337,13 @@ FR: Cellule de ⟦#0⟧° : ligne ⟦#1⟧, colonne ⟦#2⟧ ; centre ⟦#3⟧°
 EN: The atlas computes wind roses and sand-flux statistics only for land cells (⟦0⟧land–sea mask fraction &gt; ⟦#0⟧). This cell has no land (land–sea mask fraction ⟦#1⟧), so the atlas has no statistics for it. Choose a nearby land cell, or switch to⟦1⟧(coastal cells can differ between the two land masks).
 FR: L’atlas calcule les roses des vents et les statistiques de flux de sable uniquement pour les cellules terrestres (fraction du masque terre–mer⟦0⟧&gt; ⟦#0⟧). Cette cellule ne comporte aucune terre (fraction du masque terre–mer ⟦#1⟧) ; l’atlas ne dispose donc d’aucune statistique pour elle. Choisissez une cellule terrestre voisine, ou passez à⟦1⟧(les cellules côtières peuvent différer entre les deux masques des terres).
 
-# Screen-reader labels and tooltips
+# Other
 
-## c.4f6e56eb (Screen-reader labels and tooltips)
+## c.4f6e56eb (Other)
 EN: Switch to Mars
 FR: Passer à Mars
+
+# Screen-reader labels and tooltips
 
 ## c.cd86acc3 (Screen-reader labels and tooltips)
 EN: Close
@@ -2653,9 +2639,17 @@ FR: Domaine public (⟦0⟧) ; citer le⟦1⟧(Fergason,⟦2⟧) ; service⟦3�
 EN: Click any cell to see its wind rose over the Mars year of the wind dataset, the sand-flux rose at the selected grain diameter, dune-orientation modes and all wind-regime parameters.
 FR: Cliquez sur n’importe quelle cellule pour afficher sa rose des vents sur l’année martienne du jeu de données de vent, la rose des flux de sable au diamètre de grain sélectionné, les modes d’orientation des dunes et tous les paramètres du régime des vents.
 
+## c.692b1efa (About)
+EN: <strong>Winds (⟦0⟧Mars⟦1⟧, beta release ⟦#0⟧)</strong>: hourly lowest-level winds, temperature and surface pressure of the⟦2⟧Ames⟦3⟧FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to ⟦#1⟧° × ⟦#2⟧° (a cell is about ⟦#3⟧ km across at the equator, larger than most dune fields): ⟦#4⟧ hourly samples, one Mars year. The map draws each cell as one square, so a field that changes strongly from cell to cell, as⟦4⟧often does at low latitudes, looks blocky. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature (⟦#5⟧–⟦#6⟧ m over all cells and hours; ⟦#7⟧–⟦#8⟧ m in ⟦#9⟧ % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#10⟧, eq. ⟦#11⟧) under constant stress at that height (no roughness length).
+FR: <strong>Vents (⟦0⟧Mars⟦1⟧, version bêta ⟦#0⟧)</strong> : vents horaires du niveau le plus bas, température et pression de surface du modèle climatique global martien⟦2⟧Ames⟦3⟧fondé sur FV3 (simulation de référence c48, 6e année simulée), rééchantillonnés sur une grille de ⟦#1⟧° × ⟦#2⟧° (une cellule mesure environ ⟦#3⟧ km de côté à l’équateur, soit plus grande que la plupart des champs de dunes) : ⟦#4⟧ échantillons horaires, une année martienne. La carte représente chaque cellule par un carré ; un champ qui varie fortement d’une cellule à l’autre, comme le fait souvent⟦4⟧aux basses latitudes, paraît donc pixellisé. Masse volumique de l’air de la couche la plus basse ρ = p/(R T) ; la hauteur z du vent du niveau le plus bas découle de la pression et de la température horaires (⟦#5⟧–⟦#6⟧ m sur l’ensemble des cellules et des heures ; ⟦#7⟧–⟦#8⟧ m pendant ⟦#9⟧ % des heures des cellules dunaires ; le panneau de la cellule indique la plage de la cellule sélectionnée), et la vitesse de frottement⟦5⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#10⟧, éq. ⟦#11⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité).
+
 ## c.c238d4e5 (About)
 EN: <strong>Sand-flux fields</strong>: for every hour, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.
 FR: <strong>Champs de flux de sable</strong> : pour chaque heure, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/yr, comme sur Terre.
+
+## c.c4698157 (About)
+EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧°). Negative values (convergence) imply deposition.
+FR: <strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur potentiel de dérive résultant (norme⟦1⟧, direction⟦2⟧) sur la sphère martienne (R = ⟦#0⟧ km), selon⟦3⟧, Methods⟦4⟧, avec des différences centrées sur la grille du jeu de données de vent (⟦#1⟧°). Les valeurs négatives (convergence) indiquent un dépôt.
 
 ## c.5d754cff (About)
 EN: <strong>Elevation and shaded relief</strong>:⟦0⟧–⟦1⟧blended⟦2⟧, ⟦#0⟧ m, v2 (Fergason,⟦3⟧,⟦4⟧); licence:⟦5⟧(⟦6⟧) and⟦7⟧(⟦8⟧). Derived elevation and relief tiles:⟦9⟧.
@@ -2738,22 +2732,6 @@ FR: Direction D’OÙ souffle le vent (convention météorologique), ⟦#0⟧ se
 ## c.705e31ee (Cell panel)
 EN: Time-averaged flat-bed sand flux by the direction sand moves toward, ⟦#0⟧ sectors of ⟦#1⟧ degrees, stacked by excess shear u*/u*,th of each hour, percent of total flux, at grain diameter d = ⟦#2⟧ µm.
 FR: Flux de sable sur lit plat moyenné dans le temps, selon la direction vers laquelle se déplace le sable, ⟦#0⟧ secteurs de ⟦#1⟧ degrés, empilés par excès de cisaillement u*/u*,th de chaque heure, en pourcentage du flux total, pour un diamètre des grains d = ⟦#2⟧ µm.
-
-## c.4d7bcf52 (Cell panel)
-EN: αT (transverse migration direction): ⟦#0⟧° (WNW)
-FR: αT (direction de migration transverse) : ⟦#0⟧° (ONO)
-
-## c.7752b77c (Cell panel)
-EN: RDD (resultant drift direction): ⟦#0⟧° (ESE)
-FR: RDD (direction de dérive résultante) : ⟦#0⟧° (ESE)
-
-## c.33a5156c (Cell panel)
-EN: ⟦#0⟧° (WNW)
-FR: ⟦#0⟧° (ONO)
-
-## c.4c3ff457 (Cell panel)
-EN: ⟦#0⟧° (ESE)
-FR: ⟦#0⟧° (ESE)
 
 ## c.94bd0d74 (Cell panel)
 EN: <span class="cap-lead"><strong>Flat bed</strong>: ⟦0⟧ = ⟦1⟧</span> Direction sand moves TOWARD; ⟦#0⟧ sectors of ⟦#1⟧°. Radius = % of the total flux in each sector (sums to ⟦#2⟧ %). Time-averaged saturated flat-bed flux (q from ⟦2⟧), Σ<sub>hours</sub> q / N over the ⟦#3⟧ hourly samples, with ⟦3⟧ of each hour from the lowest-level wind at its height z (smooth-wall mixing-length profile,⟦4⟧eq. ⟦#4⟧) and the threshold ⟦5⟧ of each hour from ⟦6⟧ and that hour's air density and temperature. Colours split each sector by the excess shear ⟦7⟧ of the hours carrying the flux (only ⟦8⟧ transports sand).⟦9⟧,⟦10⟧,⟦11⟧,⟦12⟧and the arrows are the map fields at this grain diameter; a direction is hidden where the flux defining it is zero.
@@ -2895,9 +2873,9 @@ FR: Variables (remplacez ⟦0⟧ dans le⟦1⟧) : ⟦2⟧, ⟦3⟧, ⟦4⟧, �
 EN: Licence of these map fields:⟦0⟧Ames⟦1⟧output; no licence stated (⟦2⟧open data). Licences of every store: <a href="https://github.com/geomorphlab/dune-atlas/blob/main/DATA_LICENSE.md" target="_blank" rel="noopener">⟦3⟧</a>. Please cite the sources listed under Download &amp; cite.
 FR: Licence de ces champs cartographiques : sortie du modèle⟦0⟧Ames⟦1⟧; aucune licence indiquée (⟦2⟧données ouvertes). Licences de tous les dépôts : <a href="https://github.com/geomorphlab/dune-atlas/blob/main/DATA_LICENSE.md" target="_blank" rel="noopener">⟦3⟧</a>. Veuillez citer les sources indiquées sous Télécharger et citer.
 
-# Screen-reader labels and tooltips
+# Other
 
-## c.a77cf12e (Screen-reader labels and tooltips)
+## c.a77cf12e (Other)
 EN: Switch to Earth
 FR: Passer à la Terre
 
@@ -2959,9 +2937,13 @@ FR: Lecture impossible :
 EN: No place or coordinates match.
 FR: Aucun lieu ni aucune coordonnée ne correspond.
 
-## c.09abd476 (Search and messages)
+# Other
+
+## c.09abd476 (Other)
 EN: Download a region
 FR: Télécharger une région
+
+# Search and messages
 
 ## c.ab8fe15e (Search and messages)
 EN: All cells of the selected wind dataset in a latitude-longitude box, in one NetCDF file (CF-⟦#0⟧) with a README.
@@ -3163,63 +3145,59 @@ FR: Polygones⟦0⟧: domaine public (U.S. Geological Survey) ; champs de dunes 
 EN: <strong>Dune map</strong>:⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧) plus the small dune fields of Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), merged into ⟦#3⟧ dune-field polygons (Mars ⟦#4⟧ sphere);⟦4⟧polygons: public domain (U.S. Geological Survey);⟦5⟧dune fields:⟦6⟧.
 FR: <strong>Carte des dunes</strong> :⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧), complétée par les petits champs de dunes de Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), fusionnés en ⟦#3⟧ polygones de champs de dunes (sphère Mars ⟦#4⟧) ; polygones⟦4⟧: domaine public (U.S. Geological Survey) ; champs de dunes de⟦5⟧:⟦6⟧.
 
-# Layer popovers
+# Other
 
-## c.c27adfd9 (Layer popovers)
-EN: The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°), each one Mars year of lowest-level winds on its own grid:⟦3⟧is a free-running climate-model simulation;⟦4⟧and⟦5⟧are reanalyses of Mars Year ⟦#4⟧, which assimilate spacecraft observations of the atmosphere into a climate model. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain. No⟦6⟧data poleward of ⟦#5⟧° N: the northernmost cells of its grid are centred at ⟦#6⟧° N.
-FR: Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° × ⟦#2⟧° ;⟦2⟧, ⟦#3⟧°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille :⟦3⟧est une simulation libre d’un modèle climatique ;⟦4⟧et⟦5⟧sont des réanalyses de l’année martienne ⟦#4⟧, qui assimilent dans un modèle climatique des observations de l’atmosphère faites par des sondes spatiales. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Lorsque les jeux de données donnent des résultats différents, considérez ces résultats comme incertains. Pas de données⟦6⟧au-delà de ⟦#5⟧° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur ⟦#6⟧° N.
+## c.15ee00d5 (Other)
+EN: Centre map on this cell
+FR: Centrer la carte sur cette cellule
 
-# About
+# Cell panel
 
-## c.6cd16937 (About)
-EN: <strong>Winds (⟦0⟧Mars⟦1⟧, beta release ⟦#0⟧)</strong>: hourly lowest-level winds, temperature and surface pressure of the⟦2⟧Ames⟦3⟧FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to ⟦#1⟧° × ⟦#2⟧° (a cell is about ⟦#3⟧ km across at the equator, larger than most dune fields): ⟦#4⟧ hourly samples, one Mars year. The map draws each cell as one square, so a field that changes strongly from cell to cell, as⟦4⟧often does at low latitudes, looks blocky. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature (⟦#5⟧–⟦#6⟧ m over all cells and hours; ⟦#7⟧–⟦#8⟧ m in ⟦#9⟧ % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#10⟧, eq. ⟦#11⟧) under constant stress at that height (no roughness length). Explore and download the full model output in the <a href="https://data.nas.nasa.gov/mcmc/portals/web-interface/" target="_blank" rel="noopener noreferrer">⟦6⟧Ames⟦7⟧Data Portal web interface</a>.
-FR: <strong>Vents (⟦0⟧Mars⟦1⟧, version bêta ⟦#0⟧)</strong> : vents horaires du niveau le plus bas, température et pression de surface du modèle climatique global martien⟦2⟧Ames⟦3⟧fondé sur FV3 (simulation de référence c48, 6e année simulée), rééchantillonnés sur une grille de ⟦#1⟧° × ⟦#2⟧° (une cellule mesure environ ⟦#3⟧ km de côté à l’équateur, soit plus grande que la plupart des champs de dunes) : ⟦#4⟧ échantillons horaires, une année martienne. La carte représente chaque cellule par un carré ; un champ qui varie fortement d’une cellule à l’autre, comme le fait souvent⟦4⟧aux basses latitudes, paraît donc pixellisé. Masse volumique de l’air de la couche la plus basse ρ = p/(R T) ; la hauteur z du vent du niveau le plus bas découle de la pression et de la température horaires (⟦#5⟧–⟦#6⟧ m sur l’ensemble des cellules et des heures ; ⟦#7⟧–⟦#8⟧ m pendant ⟦#9⟧ % des heures des cellules dunaires ; le panneau de la cellule indique la plage de la cellule sélectionnée), et la vitesse de frottement⟦5⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#10⟧, éq. ⟦#11⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité). Explorez et téléchargez l’ensemble des sorties du modèle dans l’interface web <a href="https://data.nas.nasa.gov/mcmc/portals/web-interface/" target="_blank" rel="noopener noreferrer">⟦6⟧Ames⟦7⟧Data Portal</a>.
+## c.3f2cdfbd (Cell panel)
+EN: αE (elongation direction): ⟦#0⟧° (⟦#1⟧)
+FR: αE (direction d’allongement) : ⟦#0⟧° (⟦#1⟧)
 
-## c.5228f7bf (About)
-EN: <strong>Winds (⟦0⟧v1.0 reanalysis, Mars Year ⟦#0⟧)</strong>: hourly analysis ensemble mean of the lowest-level winds, temperature and surface pressure of the Ensemble Mars Atmosphere Reanalysis System (⟦1⟧) v1.0 (⟦2⟧; read from the analysis-ready⟦3⟧copy), Mars Year ⟦#1⟧, on its native grid of ⟦#2⟧° in longitude × ⟦#3⟧° in latitude (⟦#4⟧ × ⟦#5⟧ cells, about ⟦#6⟧ km × ⟦#7⟧ km at the equator). The two half-width polar rows of⟦4⟧are not used, so the grid ends at ±⟦#8⟧°: there is no⟦5⟧cell poleward of it. The winds are averaged from the staggered⟦6⟧grid onto the cell centres. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature, and the friction velocity⟦7⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#9⟧, eq. ⟦#10⟧) under constant stress at that height (no roughness length). The lowest⟦8⟧layer is thick, so that height is ⟦#11⟧–⟦#12⟧ m above the surface (median ⟦#13⟧ m;⟦9⟧⟦#14⟧–⟦#15⟧ m,⟦10⟧⟦#16⟧–⟦#17⟧ m): the wind and⟦11⟧refer to a much higher level than in the other Mars datasets. Data and documentation: <a href="https://doi.org/10.18113/D3W375" target="_blank" rel="noopener noreferrer">⟦12⟧v1.0 at the Penn State Data Commons</a>; the analysis-ready copy read by the atlas, <a href="https://huggingface.co/datasets/ananyo01/ARCO-EMARS" target="_blank" rel="noopener noreferrer">⟦13⟧</a>, with <a href="https://github.com/GalacticBobster/ARCO-Mars-Examples" target="_blank" rel="noopener noreferrer">Python examples for reading and plotting it</a>.
-FR: <strong>Vents (⟦0⟧v1.0, réanalyse, année martienne ⟦#0⟧)</strong> : moyenne horaire de l’ensemble d’analyses des vents du niveau le plus bas, de la température et de la pression de surface de l’Ensemble Mars Atmosphere Reanalysis System (⟦1⟧) v1.0 (⟦2⟧ ; lue dans la copie⟦3⟧prête à l’analyse), année martienne ⟦#1⟧, sur sa grille native de ⟦#2⟧° en longitude × ⟦#3⟧° en latitude (⟦#4⟧ × ⟦#5⟧ cellules, environ ⟦#6⟧ km × ⟦#7⟧ km à l’équateur). Les deux rangées polaires de demi-largeur de la grille⟦4⟧ne sont pas utilisées ; la grille s’arrête donc à ±⟦#8⟧° : il n’y a aucune cellule⟦5⟧au-delà vers le pôle. Les vents sont moyennés depuis la grille⟦6⟧décalée vers les centres des cellules. Masse volumique de l’air de la couche la plus basse ρ = p/(R T) ; la hauteur z du vent du niveau le plus bas découle de la pression et de la température horaires, et la vitesse de frottement⟦7⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#9⟧, éq. ⟦#10⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité). La couche⟦8⟧la plus basse est épaisse : cette hauteur est donc de ⟦#11⟧–⟦#12⟧ m au-dessus de la surface (médiane ⟦#13⟧ m ;⟦9⟧⟦#14⟧–⟦#15⟧ m,⟦10⟧⟦#16⟧–⟦#17⟧ m) : le vent et⟦11⟧se rapportent à un niveau bien plus élevé que dans les autres jeux de données martiens. Données et documentation : <a href="https://doi.org/10.18113/D3W375" target="_blank" rel="noopener noreferrer">⟦12⟧v1.0 sur le Penn State Data Commons</a> ; la copie prête à l’analyse lue par l’atlas, <a href="https://huggingface.co/datasets/ananyo01/ARCO-EMARS" target="_blank" rel="noopener noreferrer">⟦13⟧</a>, avec des <a href="https://github.com/GalacticBobster/ARCO-Mars-Examples" target="_blank" rel="noopener noreferrer">exemples Python pour la lire et la représenter</a>.
+## c.b36b7be7 (Cell panel)
+EN: αT (transverse migration direction): ⟦#0⟧° (⟦#1⟧)
+FR: αT (direction de migration transverse) : ⟦#0⟧° (⟦#1⟧)
 
-## c.9192f9b0 (About)
-EN: <strong>Winds (⟦0⟧v2.0 reanalysis, Mars Year ⟦#0⟧)</strong>: lowest-level winds, temperature and surface pressure, one sample every two Mars hours, of the Mars Analysis Correction Data Assimilation (⟦1⟧) v2.0 reanalysis (⟦2⟧,⟦3⟧Centre for Environmental Data Analysis; read from the analysis-ready⟦4⟧copy), Mars Year ⟦#1⟧, on its native ⟦#2⟧° grid (⟦#3⟧ × ⟦#4⟧ cells, about ⟦#5⟧ km across at the equator; the first column is centred on ⟦#6⟧°). The winds are those of the lowest model level (σ = ⟦#7⟧); air density ρ = p/(R T) with p = σ p<sub>s</sub>, the height of that level z = (R T/g) ln(⟦#8⟧/σ), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#9⟧, eq. ⟦#10⟧) under constant stress at that height (no roughness length); that level is ⟦#11⟧–⟦#12⟧ m above the surface (⟦6⟧⟦#13⟧–⟦#14⟧ m). In Mars Year ⟦#15⟧ the first ⟦#16⟧ samples (Ls ⟦#17⟧–⟦#18⟧°) assimilate Mars Odyssey⟦7⟧column dust, the others⟦8⟧⟦9⟧temperature and dust profiles. Data, documentation and file browser: <a href="https://catalogue.ceda.ac.uk/uuid/cd037a9ea387438fabf4d674dbe53088/" target="_blank" rel="noopener noreferrer">⟦10⟧v2.0 in the⟦11⟧Archive</a>; the analysis-ready copy read by the atlas: <a href="https://huggingface.co/datasets/ananyo01/ARCO-MACDA" target="_blank" rel="noopener noreferrer">⟦12⟧</a>. Contains public sector information licensed under the Open Government Licence v3.0 (⟦13⟧v2.0,⟦14⟧Centre for Environmental Data Analysis).
-FR: <strong>Vents (⟦0⟧v2.0, réanalyse, année martienne ⟦#0⟧)</strong> : vents du niveau le plus bas, température et pression de surface, un échantillon toutes les deux heures martiennes, de la réanalyse Mars Analysis Correction Data Assimilation (⟦1⟧) v2.0 (⟦2⟧,⟦3⟧Centre for Environmental Data Analysis ; lue dans la copie⟦4⟧prête à l’analyse), année martienne ⟦#1⟧, sur sa grille native de ⟦#2⟧° (⟦#3⟧ × ⟦#4⟧ cellules, environ ⟦#5⟧ km de côté à l’équateur ; la première colonne est centrée sur ⟦#6⟧°). Les vents sont ceux du niveau le plus bas du modèle (σ = ⟦#7⟧) ; masse volumique de l’air ρ = p/(R T) avec p = σ p<sub>s</sub>, hauteur de ce niveau z = (R T/g) ln(⟦#8⟧/σ), et la vitesse de frottement⟦5⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#9⟧, éq. ⟦#10⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité) ; ce niveau se situe à ⟦#11⟧–⟦#12⟧ m au-dessus de la surface (⟦6⟧⟦#13⟧–⟦#14⟧ m). Pendant l’année martienne ⟦#15⟧, les ⟦#16⟧ premiers échantillons (Ls ⟦#17⟧–⟦#18⟧°) assimilent les colonnes de poussière de Mars Odyssey⟦7⟧et les autres les profils⟦8⟧⟦9⟧de température et de poussière. Données, documentation et explorateur de fichiers : <a href="https://catalogue.ceda.ac.uk/uuid/cd037a9ea387438fabf4d674dbe53088/" target="_blank" rel="noopener noreferrer">⟦10⟧v2.0 dans le⟦11⟧Archive</a> ; la copie prête à l’analyse lue par l’atlas : <a href="https://huggingface.co/datasets/ananyo01/ARCO-MACDA" target="_blank" rel="noopener noreferrer">⟦12⟧</a>. Contains public sector information licensed under the Open Government Licence v3.0 (⟦13⟧v2.0,⟦14⟧Centre for Environmental Data Analysis).
-
-## c.912ef7dd (About)
-EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧° or ⟦#2⟧° × ⟦#3⟧° or ⟦#4⟧°). Negative values (convergence) imply deposition.
-FR: <strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur potentiel de dérive résultant (norme⟦1⟧, direction⟦2⟧) sur la sphère martienne (R = ⟦#0⟧ km), selon⟦3⟧, Methods⟦4⟧, avec des différences centrées sur la grille du jeu de données de vent (⟦#1⟧° ou ⟦#2⟧° × ⟦#3⟧° ou ⟦#4⟧°). Les valeurs négatives (convergence) indiquent un dépôt.
-
-## c.c682ba25 (About)
-EN: <strong>⟦0⟧⟦#0⟧° × ⟦#1⟧°</strong>: ⟦1⟧. Licence: ⟦2⟧.
-FR: <strong>⟦0⟧⟦#0⟧° × ⟦#1⟧°</strong> : ⟦1⟧. Licence : ⟦2⟧.
-
-## c.48251db8 (About)
-EN: Web interface (explore the model output): ⟦0⟧
-FR: Interface web (explorer les sorties du modèle) : ⟦0⟧
-
-## c.251cd18d (About)
-EN: ⟦0⟧v1.0 reanalysis (Mars Year ⟦#0⟧)
-FR: Réanalyse ⟦0⟧v1.0 (année martienne ⟦#0⟧)
-
-## c.19395603 (About)
-EN: Data (analysis-ready copy read by the atlas): ⟦0⟧
-FR: Données (copie prête à l’analyse lue par l’atlas) : ⟦0⟧
-
-## c.8227d6a0 (About)
-EN: ⟦0⟧v2.0 reanalysis (Mars Year ⟦#0⟧)
-FR: Réanalyse ⟦0⟧v2.0 (année martienne ⟦#0⟧)
-
-## c.db5eb4dc (About)
-EN: Contains public sector information licensed under the Open Government Licence v3.0 (⟦0⟧v2.0,⟦1⟧Centre for Environmental Data Analysis).
-FR: Contains public sector information licensed under the Open Government Licence v3.0 (⟦0⟧v2.0,⟦1⟧Centre for Environmental Data Analysis).
+## c.7c7e35d8 (Cell panel)
+EN: RDD (resultant drift direction): ⟦#0⟧° (⟦#1⟧)
+FR: RDD (direction de dérive résultante) : ⟦#0⟧° (⟦#1⟧)
 
 # Unused (English changed or removed)
 
-## c.692b1efa (Unused (English changed or removed))
-EN: <strong>Winds (⟦0⟧Mars⟦1⟧, beta release ⟦#0⟧)</strong>: hourly lowest-level winds, temperature and surface pressure of the⟦2⟧Ames⟦3⟧FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to ⟦#1⟧° × ⟦#2⟧° (a cell is about ⟦#3⟧ km across at the equator, larger than most dune fields): ⟦#4⟧ hourly samples, one Mars year. The map draws each cell as one square, so a field that changes strongly from cell to cell, as⟦4⟧often does at low latitudes, looks blocky. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature (⟦#5⟧–⟦#6⟧ m over all cells and hours; ⟦#7⟧–⟦#8⟧ m in ⟦#9⟧ % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#10⟧, eq. ⟦#11⟧) under constant stress at that height (no roughness length).
-FR: <strong>Vents (⟦0⟧Mars⟦1⟧, version bêta ⟦#0⟧)</strong> : vents horaires du niveau le plus bas, température et pression de surface du modèle climatique global martien⟦2⟧Ames⟦3⟧fondé sur FV3 (simulation de référence c48, 6e année simulée), rééchantillonnés sur une grille de ⟦#1⟧° × ⟦#2⟧° (une cellule mesure environ ⟦#3⟧ km de côté à l’équateur, soit plus grande que la plupart des champs de dunes) : ⟦#4⟧ échantillons horaires, une année martienne. La carte représente chaque cellule par un carré ; un champ qui varie fortement d’une cellule à l’autre, comme le fait souvent⟦4⟧aux basses latitudes, paraît donc pixellisé. Masse volumique de l’air de la couche la plus basse ρ = p/(R T) ; la hauteur z du vent du niveau le plus bas découle de la pression et de la température horaires (⟦#5⟧–⟦#6⟧ m sur l’ensemble des cellules et des heures ; ⟦#7⟧–⟦#8⟧ m pendant ⟦#9⟧ % des heures des cellules dunaires ; le panneau de la cellule indique la plage de la cellule sélectionnée), et la vitesse de frottement⟦5⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#10⟧, éq. ⟦#11⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité).
+## c.1ef8a9c4 (Unused (English changed or removed))
+EN: αE (elongation direction): ⟦#0⟧° (ENE)
+FR: αE (direction d’allongement) : ⟦#0⟧° (ENE)
 
-## c.c4698157 (Unused (English changed or removed))
-EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧°). Negative values (convergence) imply deposition.
-FR: <strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur potentiel de dérive résultant (norme⟦1⟧, direction⟦2⟧) sur la sphère martienne (R = ⟦#0⟧ km), selon⟦3⟧, Methods⟦4⟧, avec des différences centrées sur la grille du jeu de données de vent (⟦#1⟧°). Les valeurs négatives (convergence) indiquent un dépôt.
+## c.e9a52542 (Unused (English changed or removed))
+EN: αT (transverse migration direction): ⟦#0⟧° (ENE)
+FR: αT (direction de migration transverse) : ⟦#0⟧° (ENE)
+
+## c.77cf5f77 (Unused (English changed or removed))
+EN: RDD (resultant drift direction): ⟦#0⟧° (ENE)
+FR: RDD (direction de dérive résultante) : ⟦#0⟧° (ENE)
+
+## c.4a8617dc (Unused (English changed or removed))
+EN: ⟦#0⟧° (ENE)
+FR: ⟦#0⟧° (ENE)
+
+## c.4d7bcf52 (Unused (English changed or removed))
+EN: αT (transverse migration direction): ⟦#0⟧° (WNW)
+FR: αT (direction de migration transverse) : ⟦#0⟧° (ONO)
+
+## c.7752b77c (Unused (English changed or removed))
+EN: RDD (resultant drift direction): ⟦#0⟧° (ESE)
+FR: RDD (direction de dérive résultante) : ⟦#0⟧° (ESE)
+
+## c.33a5156c (Unused (English changed or removed))
+EN: ⟦#0⟧° (WNW)
+FR: ⟦#0⟧° (ONO)
+
+## c.4c3ff457 (Unused (English changed or removed))
+EN: ⟦#0⟧° (ESE)
+FR: ⟦#0⟧° (ESE)
 
 ## c.762593af (Unused (English changed or removed))
 EN: ⟦0⟧polygons: public domain (U.S. Geological Survey)

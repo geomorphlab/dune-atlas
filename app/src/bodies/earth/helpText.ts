@@ -20,7 +20,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "concepts", title: "Concepts",
-    body: "The Concepts button (mortarboard, under the Help button) explains the quantities of the atlas, each with its references. The Concept link in a layer's ⓘ opens its entry.",
+    body: "The Concepts button {icon_concepts} (under the Help button {icon_help}) explains the quantities of the atlas, each with its references. The Concept link in a layer's ⓘ opens its entry.",
   },
   {
     id: "search", title: "Search",
@@ -28,7 +28,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "cell", title: "Clicking a cell",
-    body: "Click any land cell to open the cell panel: the wind rose, the sand-flux rose at the current threshold, dune-orientation modes against the threshold, the flux divergence and a table of all parameters. Sand-flux rose petals point toward where sand moves; the Petals switch above the rose turns them to show where the wind comes from instead (the arrows always point toward). Section headings fold and unfold. Close the panel with × or Esc. The latitude and longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The crosshair button next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).",
+    body: "Click any land cell to open the cell panel: the wind rose, the sand-flux rose at the current threshold, dune-orientation modes against the threshold, the flux divergence and a table of all parameters. Sand-flux rose petals point toward where sand moves; the Petals switch above the rose turns them to show where the wind comes from instead (the arrows always point toward). Section headings fold and unfold. Close the panel with × or Esc. The latitude and longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The button {icon_centre} next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).",
   },
   {
     id: "datasets", title: "Wind datasets",
@@ -40,26 +40,26 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "region", title: "Downloading a region",
-    body: "The button below the camera (a dashed box) saves every cell of the selected wind dataset in a latitude-longitude box as one NetCDF file with a README. Type the bounds, or press Draw on map and drag a box on the map (Esc cancels). Tick the parameters and choose every threshold or the current one; the size is estimated as you go and is limited to what a browser can hold. For the whole grid, see Get the whole grid under Download & cite.",
+    body: "The region button {icon_region}, below the camera button {icon_camera}, saves every cell of the selected wind dataset in a latitude-longitude box as one NetCDF file with a README. Type the bounds, or press Draw on map and drag a box on the map (Esc cancels). Tick the parameters and choose every threshold or the current one; the size is estimated as you go and is limited to what a browser can hold. For the whole grid, see Get the whole grid under Download & cite.",
   },
   {
     id: "images", title: "Exporting images",
-    body: "Export map image (camera button, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap, on a white or transparent background. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.",
+    body: "Export map image (camera button {icon_camera}, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap, on a white or transparent background. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.",
   },
   {
     id: "share", title: "Sharing the view",
-    body: "The share button (top right) copies a short link that restores this view: position, zoom, globe or flat map, wind dataset, threshold, basemap, the active layers with their display settings, and the selected cell. The address bar also always holds a full link to the current view.",
+    body: "The share button {icon_share} (top right) copies a short link that restores this view: position, zoom, globe or flat map, wind dataset, threshold, basemap, the active layers with their display settings, and the selected cell. The address bar also always holds a full link to the current view.",
   },
 ];
 
 export const TOUR_STEPS: TourStep[] = [
   {
     id: "help", targets: [".atlas-tools .help-btn"], title: "Welcome to the Dune Atlas",
-    body: "This short tour shows the main controls. The Help button (?) highlighted here, in the top-right corner, opens a quick reference and restarts this tour at any time.",
+    body: "This short tour shows the main controls. The Help button {icon_help} highlighted here, in the top-right corner, opens a quick reference and restarts this tour at any time.",
   },
   {
     id: "concepts", targets: [".atlas-tools .concepts-btn"], title: "Concepts",
-    body: "The Concepts button (mortarboard) explains what the quantities on the map mean, with references. Each layer's ⓘ links to its entry.",
+    body: "The Concepts button {icon_concepts} explains what the quantities on the map mean, with references. Each layer's ⓘ links to its entry.",
   },
   {
     id: "map", targets: ["#map"], title: "The map",
@@ -79,7 +79,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "cell", targets: ["#cell-panel:not([hidden])", "#map"], title: "Click a land cell",
-    body: "Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The crosshair next to its title centres the map on the cell.",
+    body: "Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The button {icon_centre} next to its title centres the map on the cell.",
   },
   {
     id: "dataset", targets: ["#dataset-select", "#layer-panel .panel-toggle"], title: "Wind dataset",
@@ -91,7 +91,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "planet", targets: [".atlas-tools .planet-btn", ".atlas-tools"], title: "Switch planet",
-    body: "Earth and Mars share this atlas: the planet button below the camera swaps between them, and each atlas reopens the view you last had there.",
+    body: "Earth and Mars share this atlas: the planet button {icon_planet}, below the camera button {icon_camera}, swaps between them, and each atlas reopens the view you last had there.",
   },
 ];
 

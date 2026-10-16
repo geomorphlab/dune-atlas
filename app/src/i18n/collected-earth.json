@@ -660,15 +660,15 @@
   "area": "Cell panel"
  },
  {
-  "en": "αE (elongation direction): ⟦#0⟧° (ENE)",
+  "en": "αE (elongation direction): ⟦#0⟧° (⟦#1⟧)",
   "area": "Cell panel"
  },
  {
-  "en": "αT (transverse migration direction): ⟦#0⟧° (ENE)",
+  "en": "αT (transverse migration direction): ⟦#0⟧° (⟦#1⟧)",
   "area": "Cell panel"
  },
  {
-  "en": "RDD (resultant drift direction): ⟦#0⟧° (ENE)",
+  "en": "RDD (resultant drift direction): ⟦#0⟧° (⟦#1⟧)",
   "area": "Cell panel"
  },
  {
@@ -677,10 +677,6 @@
  },
  {
   "en": "⟦#0⟧° (axis)",
-  "area": "Cell panel"
- },
- {
-  "en": "⟦#0⟧° (ENE)",
   "area": "Cell panel"
  },
  {
@@ -900,8 +896,16 @@
   "area": "Exported images"
  },
  {
+  "en": "Download a region",
+  "area": "Other"
+ },
+ {
   "en": "Switch to Mars",
-  "area": "Screen-reader labels and tooltips"
+  "area": "Other"
+ },
+ {
+  "en": "Centre map on this cell",
+  "area": "Other"
  },
  {
   "en": "Close",
@@ -961,10 +965,6 @@
  },
  {
   "en": "No place or coordinates match.",
-  "area": "Search and messages"
- },
- {
-  "en": "Download a region",
   "area": "Search and messages"
  },
  {

@@ -57,7 +57,11 @@ describe("guided tour", () => {
     expect(pop.getAttribute("aria-modal")).toBe("true");
     expect(pop.querySelector(".tour-count")!.textContent).toBe(`Step 1 of ${TOUR_STEPS.length}`);
     expect(pop.querySelector(".tour-count")!.getAttribute("aria-live")).toBe("polite");
-    expect(pop.textContent).toMatch(/Help button \(\?\)/);
+    expect(pop.textContent).toMatch(/Help button +highlighted/);
+    // the Help button's own icon is drawn in the text, labelled for screen readers
+    const icon = pop.querySelector('.text-icon[role="img"]') as HTMLElement;
+    expect(icon.getAttribute("aria-label")).toBe("Help and tour");
+    expect(icon.querySelector("svg")).not.toBeNull();
     expect(pop.textContent).toMatch(/restarts this tour/);
     expect(pop.dataset.anchor).toBe(".atlas-tools .help-btn");
     const spot = document.querySelector(".tour-spot") as HTMLElement;

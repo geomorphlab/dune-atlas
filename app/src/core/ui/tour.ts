@@ -8,6 +8,7 @@ import { h } from "./dom";
 import { storageKey } from "../body";
 import { mathHtml } from "../util/math";
 import { TOUR_STEPS, type TourStep } from "./helpText";
+import { withIcons } from "./texticons";
 
 export const TOUR_SEEN_KEY = storageKey("tourSeen"); // Earth "duneAtlas.tourSeen", Mars "duneAtlasMars.tourSeen" (body.ts)
 
@@ -154,7 +155,7 @@ export class Tour {
     const q = (c: string) => this.#pop.querySelector(c) as HTMLElement;
     q(".tour-count").textContent = fill(t("tour.step"), { i: i + 1, n });
     q("#tour-title").innerHTML = mathHtml(tr(tourKey(s.id, "title"), s.title));
-    q("#tour-body").innerHTML = `<p>${mathHtml(tr(tourKey(s.id, "body"), s.body))}</p>`;
+    q("#tour-body").innerHTML = `<p>${withIcons(mathHtml(tr(tourKey(s.id, "body"), s.body)))}</p>`;
     // leave the previous step (restore), then enter this one; re-anchor once it is ready
     const my = ++this.#seq;
     const hook = this.#hooks[s.id];
