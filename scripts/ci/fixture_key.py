@@ -24,7 +24,8 @@ GENERATORS = {
 }
 # repository data the generators read (fields.load_metadata, field names) and the Python dependencies
 DATA = ["registry/earth/qsat_field_metadata.json", "registry/earth/datasets/*/qsat_field_metadata.json",
-        "registry/mars/qsat_field_metadata.json", "registry/field_names.json", "pipeline/pyproject.toml"]
+        "registry/mars/qsat_field_metadata.json", "registry/field_names.json", "pipeline/pyproject.toml",
+        "pipeline/src/dune_atlas_pipeline/mars/dataset_specs/*.json"]
 
 
 def _module_file(name: str, extra: list[Path]) -> Path | None:

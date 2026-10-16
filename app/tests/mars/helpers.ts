@@ -4,7 +4,8 @@ import path from "node:path";
 import fixture from "../fixtures/mars-rose-parity.json";
 import type { MarsCellData, MarsSeries } from "../../src/bodies/mars/cell/cellstore";
 import { MARS_BINS } from "../../src/bodies/mars/cell/cellstore";
-import { cellFromIndex } from "../../src/core/cell/snap";
+import { cellFromIndex, snapToCell } from "../../src/core/cell/snap";
+import { marsTiming } from "../../src/bodies/mars/datasets";
 import { M } from "../../src/bodies/mars/marsphysics";
 import { MARS_GRID } from "../../src/bodies/mars/body";
 import { C } from "../../src/core/util/constants";
@@ -29,10 +30,20 @@ export function makeMarsCell(k = 0, o: Partial<MarsCellData> = {}): MarsCellData
   return {
     ...ref, body: "mars", hist: new Uint32Array(0), fields, fieldVars: FIELD_VARS, bins: MARS_BINS, utValues: M.D_VALUES_UM, grid: MARS_GRID,
     dune: true, duneFrac: 0.04, hasData: true, totalHours: n - 3, series,
-    ls: Float32Array.from({ length: n }, (_, h) => (360 * h) / 16032), sol: Float32Array.from({ length: n }, (_, h) => h / 24), dValuesUm: M.D_VALUES_UM,
+    ls: Float32Array.from({ length: n }, (_, h) => (360 * h) / 16032), sol: Float32Array.from({ length: n }, (_, h) => h / 24), dValuesUm: M.D_VALUES_UM, samplesPerSol: 24,
     aux: { series: { qsdiv: Float32Array.from({ length: 64 }, (_, i) => -2e-4 + i * 5e-6) }, scalars: { rho_mean: 0.0153, elev_mean: -1840 }, attrs: {} },
     ...o,
   };
+}
+
+/** A cell of another Mars wind dataset (registry entry `datasetId`: its grid and samples per sol), at the grid
+ *  cell nearest (lon, lat), with the fixture series of `makeMarsCell(k)` read as that dataset's samples. */
+export function makeDatasetCell(datasetId: string, lon: number, lat: number, k = 0, o: Partial<MarsCellData> = {}): MarsCellData {
+  const t = marsTiming(datasetId);
+  const c = snapToCell(lon, lat, t.grid);
+  if (!c) throw new Error(`no ${datasetId} cell at ${lat}, ${lon}`);
+  const base = makeMarsCell(k), n = base.series.u.length, sps = t.sampling.samplesPerSol;
+  return { ...base, ...c, grid: t.grid, samplesPerSol: sps, datasetId, sol: Float32Array.from({ length: n }, (_, h) => h / sps), ...o };
 }
 
 /** local range-read store over a zarr directory (as tests/cellstore.test.ts) */
@@ -52,3 +63,6 @@ export const FIXTURE_ROOT = path.resolve(__dirname, "../../../staging/fixture-ma
 // dataset stores moved to mars/v2 with the packed-sand fluxes (phi = 0.6); body-level objects stay under mars/v1
 export const FIXTURE_DS = path.resolve(__dirname, "../../../staging/fixture-mars/dune-atlas/mars/v2/datasets/fv3-beta1");
 export const haveFixture = fs.existsSync(path.join(FIXTURE_DS, "cells.zarr", "zarr.json"));
+/** fixture stores of a wind dataset (make_fixture.py writes fv3-beta1, emars-v1-my30 and macda-v2-my30) */
+export const fixtureDataset = (id: string) => path.resolve(__dirname, `../../../staging/fixture-mars/dune-atlas/mars/v2/datasets/${id}`);
+export const haveDatasetFixture = (id: string) => fs.existsSync(path.join(fixtureDataset(id), "cells.zarr", "zarr.json"));

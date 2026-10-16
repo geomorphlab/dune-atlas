@@ -3,7 +3,7 @@
 // `credits`, `citationSources`), so a dataset is added in the registry alone. Unknown ids fall back to the
 // default dataset. The resolution and the 30″ pixel count per cell can also be derived from a cell-store
 // grid.
-import type { Grid } from "./snap";
+import { gridLatRange, type Grid } from "./snap";
 import { loadRegistry } from "../registry/load";
 import type { CitationSourceDef, DatasetCredits, DatasetInfoDef } from "../registry/types";
 
@@ -55,6 +55,32 @@ export function cellSizeDeg(grid?: Pick<Grid, "dlat">, id?: string): number {
 export function resolutionText(deg: number): string {
   return `${Number(deg.toPrecision(6))}°`;
 }
+/** grid spacing of a cell-store grid as text: "2°" (square cells), "6° × 5.14°" (longitude × latitude) */
+export function gridResolutionText(g: Pick<Grid, "dlat" | "dlon">): string {
+  const dy = Math.abs(g.dlat), dx = Math.abs(g.dlon);
+  if (Math.abs(dx - dy) < 1e-9) return resolutionText(dy);
+  const r = (v: number) => `${Number(v.toPrecision(3))}°`;
+  return `${r(dx)} × ${r(dy)}`;
+}
+
+/** cell-centre grid of a dataset from its registry entry (`info.grid`; the cell store's root attrs grid) */
+export function datasetGrid(id?: string): Grid | undefined {
+  const g = datasetInfo(id)?.grid;
+  return g ? { lat0: g.lat0, dlat: g.dlat, lon0: g.lon0, dlon: g.dlon, ny: g.ny, nx: g.nx } : undefined;
+}
+
+const latText = (v: number) => `${Number(Math.abs(v).toFixed(2))}° ${v >= 0 ? "N" : "S"}`;
+/** Why a point has no cell: it lies poleward of the rows of a grid that stops short of the pole
+ *  (snap.ts gridLatRange), e.g. "No EMARS v1.0 data poleward of 87.43° N: the northernmost cells of its grid
+ *  are centred at 84.86° N." */
+export function outsideGridText(lat: number, g: Grid, name: string): string {
+  const [s, n] = gridLatRange(g), north = lat >= 0;
+  const centre = north ? Math.max(g.lat0, g.lat0 + g.dlat * (g.ny - 1)) : Math.min(g.lat0, g.lat0 + g.dlat * (g.ny - 1));
+  return north
+    ? `No ${name} data poleward of ${latText(n)}: the northernmost cells of its grid are centred at ${latText(centre)}.`
+    : `No ${name} data poleward of ${latText(s)}: the southernmost cells of its grid are centred at ${latText(centre)}.`;
+}
+
 /** nominal number of 30-arc-second pixels in one cell (0.1°: 144, 0.25°: 900) */
 export function pixelsPerCell(deg: number): number {
   return Math.round((deg * 120) ** 2);
