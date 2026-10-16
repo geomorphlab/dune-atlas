@@ -2,26 +2,23 @@
 // every bearing value) or "from" (the direction the transporting wind comes from, as on the wind rose). Only
 // the drawing turns: each petal is drawn 180° round, nothing is recalculated. The arrows on the rose (RDD and
 // the dune-orientation modes) always point toward, as in Fryberger & Dean (1979), and bearing values, map
-// layers and downloaded data keep the toward convention. The choice is remembered in the browser, per atlas
-// (like every other setting: body.ts storageKey).
+// layers and downloaded data keep the toward convention. The choice is kept for the visit, for both atlases
+// (core/visit.ts).
 import { t } from "../../i18n";
-import { storageKey } from "../body";
+import { sharedKey, visitGet, visitSet } from "../visit";
 
 export type PetalConvention = "toward" | "from";
 export const PETAL_CONVENTIONS: readonly PetalConvention[] = ["toward", "from"];
 export const DEFAULT_PETALS: PetalConvention = "toward";
-export const PETALS_STORAGE_KEY = storageKey("fluxRosePetals");
+export const PETALS_STORAGE_KEY = sharedKey("fluxRosePetals");
 
 export function loadPetals(): PetalConvention {
-  try {
-    const v = localStorage.getItem(PETALS_STORAGE_KEY);
-    if (v === "toward" || v === "from") return v;
-  } catch { /* private mode */ }
-  return DEFAULT_PETALS;
+  const v = visitGet(PETALS_STORAGE_KEY);
+  return v === "toward" || v === "from" ? v : DEFAULT_PETALS;
 }
 
 export function savePetals(p: PetalConvention): void {
-  try { localStorage.setItem(PETALS_STORAGE_KEY, p); } catch { /* private mode */ }
+  visitSet(PETALS_STORAGE_KEY, p);
 }
 
 /** rotation (deg) of the petals of the flux rose: 0 for toward, 180 for from */

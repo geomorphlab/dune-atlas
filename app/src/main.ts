@@ -56,8 +56,10 @@ import { writeZip } from "./core/cell/zip";
 import { triggerDownload } from "./core/cell/downloads";
 import { DATA_LICENSE_URL } from "./core/ui/bulkguide";
 import { BODY } from "./core/body";
+import { dropRetiredLocal, visitGet, visitSet } from "./core/visit";
 
 applyHtmlLang();
+dropRetiredLocal();   // settings of earlier versions kept between visits (core/visit.ts)
 startDomTranslation();   // French / Chinese: rendered text (i18n/dom.ts)
 const { registry: reg, errors } = loadRegistry();
 if (errors.length) console.warn("registry merge:", errors);
@@ -66,12 +68,12 @@ if (HOOKS.prepareBasemaps) reg.basemaps = HOOKS.prepareBasemaps(reg.basemaps, da
 // ---- initial state: short share link (#v=…) > ?query permalink > the default view
 // (defaultview.ts). Wind dataset: the link's; query permalinks without one are the registry
 // defaultDataset (Earth: ERA5-Land, as they were written); with no view state in the URL, a returning
-// user's explicit choice (localStorage) or the default view's. Layer definitions follow it.
+// visitor's choice earlier in this visit (core/visit.ts) or the default view's. Layer definitions follow it.
 const DATASET_KEY = storageKey("dataset"); // "duneAtlas.dataset" / "duneAtlasMars.dataset" (body.ts)
-const storedDataset = (() => { try { return localStorage.getItem(DATASET_KEY) ?? undefined; } catch { return undefined; } })();
-// planet button return (?resume=1): this atlas's last view, stored per body on every view change
+const storedDataset = visitGet(DATASET_KEY) ?? undefined;
+// planet button return (?resume=1): this atlas's last view in this visit, stored per body on every view change
 const LAST_VIEW_KEY = storageKey(LAST_VIEW);
-const storedView = (() => { try { return localStorage.getItem(LAST_VIEW_KEY); } catch { return null; } })();
+const storedView = visitGet(LAST_VIEW_KEY);
 const query0 = parseUrlState(location.search);
 const start = resolveInitialState(shareFromHash(location.hash), resumeQuery(query0, storedView), reg.defaultDataset, storedDataset);
 const url: UrlState = start.url;
@@ -84,18 +86,18 @@ const init: AppState = initialAppState(reg, url, initDataset);
 // plotted quantity of the cell panel: the link's, else the visitor's last choice (per body), else DP
 if (!init.plotY) { const p = readPlotChoice(); if (p) init.plotY = p; }
 // dune-field name labels ('Show names'): the link's setting; opened without view state, the visitor's
-// last choice on this atlas (per body); never where the body's place list is not shown (Earth for now)
+// choice earlier in this visit on this atlas (per body); never where the body's place list is not shown (Earth for now)
 const PLACES = loadPlaces();
 const NAMES_KEY = storageKey("names");
 if (!placesAvailable(PLACES)) delete init.names;
-else if (start.source === "default") { try { if (localStorage.getItem(NAMES_KEY) === "1") init.names = true; } catch { /* private mode */ } }
+else if (start.source === "default" && visitGet(NAMES_KEY) === "1") init.names = true;
 const store = new Store(init);
 // a dataset switch swaps the layer definitions (sources, colour limits, citations) and resets
 // colour-limit overrides of the swapped layers in the same state change
 store.intercept((patch, cur) => {
   if (patch.dataset === undefined || patch.dataset === cur.dataset) return patch;
   const changed = applyDatasetLayers(reg, patch.dataset);
-  try { localStorage.setItem(DATASET_KEY, patch.dataset); } catch { /* private mode */ }
+  visitSet(DATASET_KEY, patch.dataset);
   return { ...patch, layers: layersForDatasetSwitch(patch.layers ?? cur.layers, changed) };
 });
 if (init.embed) document.body.classList.add("embed");
@@ -394,7 +396,7 @@ function scheduleUrl() {
   urlTimer = window.setTimeout(() => {
     const q = serializeUrlState(currentUrlState());
     history.replaceState(null, "", q === openingQuery ? (store.state.embed ? "?embed=1" : location.pathname) : q || location.pathname);
-    try { localStorage.setItem(LAST_VIEW_KEY, q); } catch { /* private mode */ }
+    visitSet(LAST_VIEW_KEY, q);
   }, 250);
 }
 map.on("moveend", scheduleUrl);
@@ -421,9 +423,9 @@ store.subscribe((s, ch) => {
     });
   }
   if (ch.has("dunesOnly")) overlays.setDunesOnly(!!s.dunesOnly);   // 'Dunes only' (map/dunemask.ts)
-  if (ch.has("names")) {   // 'Show names' (map/placelabels.ts): remembered per body
+  if (ch.has("names")) {   // 'Show names' (map/placelabels.ts): kept for the visit, per body
     placeLabels.setVisible(!!s.names);
-    try { localStorage.setItem(NAMES_KEY, s.names ? "1" : "0"); } catch { /* private mode */ }
+    visitSet(NAMES_KEY, s.names ? "1" : "0");
   }
   if (ch.has("basemap")) placeLabels.setTone(basemapTone());
   if (ch.has("order")) overlays.setOrder(s.order);

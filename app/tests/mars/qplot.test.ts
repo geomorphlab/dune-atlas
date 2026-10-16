@@ -11,6 +11,7 @@ import { checkLinePlotOptions, xTickFit } from "../qplotlib";
 
 const mem = new Map<string, string>();
 vi.stubGlobal("localStorage", { getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => { mem.set(k, v); }, removeItem: (k: string) => { mem.delete(k); }, clear: () => mem.clear() });
+vi.stubGlobal("sessionStorage", { getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => { mem.set(k, v); }, removeItem: (k: string) => { mem.delete(k); }, clear: () => mem.clear() });  // visit settings (core/visit.ts)
 
 describe("quantity plot (Mars)", () => {
   it("DP by default vs grain diameter; median threshold offered; choice stored under the Mars key; export name", async () => {

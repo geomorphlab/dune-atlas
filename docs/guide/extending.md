@@ -140,7 +140,7 @@ log-linearly to 4.5 at 8 km (`LABEL_ZOOM`), and collisions are resolved by size,
 drawn above the names and never overlap them.
 Colours follow the basemap's `tone` in the registry (`dark`: pale sand with a dark halo; `light`: dark
 brown with a light halo), so a new basemap needs a `tone`. The toggle sits in the Dunes group when the
-list is enabled; it is remembered per body and is part of both link forms (`names=1`; short-link flag 64).
+list is enabled; it is kept for the visit, per body (`core/visit.ts`), and is part of both link forms (`names=1`; short-link flag 64).
 A click on a label (or a pick in the search box) zooms to the feature and opens a popup with the name,
 line 2, type or countries, other names (spelling-only variants of the name left out), named parts and the sources. The list's optional `credit` is the
 source line of map image exports while the names are shown; `note` is the naming note of the dune

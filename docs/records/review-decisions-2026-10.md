@@ -247,6 +247,14 @@ min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 
 | Icons in text | Tia's accessibility comment: the help panel and tour show the buttons' own icons instead of naming them ("mortarboard", "crosshair", "(?)", "a dashed box"), written {icon_concepts}, {icon_help}, {icon_share}, {icon_camera}, {icon_region}, {icon_planet}, {icon_centre} in the English and the translations (ui/texticons.ts); each icon is an image labelled with the button's name for screen readers; the help document writes them as [Concepts icon] etc. French and Chinese updated to match |
 | Compass points in the cell panel | Directions such as "RDD …: 112° (ESE)" were translated only when that exact direction had been collected as an example. The compass point is now a variable like the number (one translation per line, i18n COMPASS_NAMES), shown in the reader's language. Names chosen by the PI: Chinese 北, 北东北, 东北, 东北东, 东, 东南东, 东南, 南东南, 南, 南西南, 西南, 西南西, 西, 西北西, 西北, 北西北; French N, NNE, NE, ENE, E, ESE, SE, SSE, S, SSO, SO, OSO, O, ONO, NO, NNO. Exported files keep the English points |
 
+## Opening state and remembered settings (16 October 2026)
+
+| item | done |
+|---|---|
+| What a returning visitor keeps | PI's choice "Language only": a new visit opens exactly like a first visit (default view, its dataset, default panel layout). Kept between visits (localStorage): the language and the tour flag. Kept for the visit only (sessionStorage of the tab, so through reloads and planet switches): wind dataset, 'Show names', plotted quantity, petal direction, open / closed panel sections and groups, cell-panel size, each atlas's last view (planet button). Settings earlier versions kept in localStorage are removed on load (core/visit.ts) |
+| Panel layout | Same rule in both panels and both atlases: layer groups as in the registry (Dune Fields, Bedform orientation, Drift potential, Related data open; Crest-normal/parallel fluxes, Ratios & morphology indices, Wind statistics folded), Active layers open, Display and About folded; cell panel: every section open, table groups folded as the layer groups. The layer panel's groups are now kept for the visit like the cell panel's (before: never remembered); layout keys shared by both atlases |
+| Planet button | carries the language (`lang=`), so a page opened from a `?lang=` link stays in that language on the other planet |
+
 ## Open items (16 October 2026)
 
 | item | who | status |

@@ -32,7 +32,7 @@ imported by shared code as `@body/<module>` and selected by `VITE_BODY` at build
 | `src/core/map/overlays.ts` | lazily adds/removes overlays, keeps registry order below basemap labels, re-attaches after a basemap swap, fans out the threshold |
 | `src/core/ui/layerPanel.ts`, `legend.ts`, `threshold.ts` | registry-generated panel: dataset selector (> 1 dataset), pinned u\*,th control, 'Active layers' list (drawing order: drag / move buttons, opacity slider per row, × to hide), groups, toggles, display options (colormap chooser, reverse, clim + reset, log, render mode, line colour, spacing (Finer … Coarser); fill colour + invert for vectors), legends, info popovers, basemap radio, globe toggle, About & citation |
 | `src/core/util/math.ts` | KaTeX rendering of `$…$` segments (titles, units, descriptions, table symbols) with a plain fallback (`tex.ts`) |
-| `src/core/ui/cellPanel.ts` | the body's cell panel (`@body/cellPanel`: `src/bodies/earth/cellPanel.ts`, `src/bodies/mars/cellPanel.ts`; shared helpers `ui/panelcommon.ts`). Earth: click-to-cell side panel / bottom sheet (resizable, width/height in localStorage, figures re-render to fit): compact synced u\*,th control, wind + flux roses (flux mode flat/elongation/transverse, petals stacked by excess shear, sector sliders, %/m²/yr axis), polar modes plot, flux divergence vs threshold (cells-aux), Symbol/Quantity/Value table, downloads; every section (wind rose, flux rose, modes, qsdiv, cell summary, download & cite) is a `<details class="section">` whose `<summary>` holds the section `<h3>`, open by default, state in localStorage `duneAtlas.cellPanel.<key>Open` (`PANEL_SECTIONS`) |
+| `src/core/ui/cellPanel.ts` | the body's cell panel (`@body/cellPanel`: `src/bodies/earth/cellPanel.ts`, `src/bodies/mars/cellPanel.ts`; shared helpers `ui/panelcommon.ts`). Earth: click-to-cell side panel / bottom sheet (resizable, width/height kept for the visit, figures re-render to fit): compact synced u\*,th control, wind + flux roses (flux mode flat/elongation/transverse, petals stacked by excess shear, sector sliders, %/m²/yr axis), polar modes plot, flux divergence vs threshold (cells-aux), Symbol/Quantity/Value table, downloads; every section (wind rose, flux rose, modes, qsdiv, cell summary, download & cite) is a `<details class="section">` whose `<summary>` holds the section `<h3>`, open by default, state kept for the visit in sessionStorage `duneAtlas.cellPanel.<key>Open`, shared by both atlases (`PANEL_SECTIONS`, `core/visit.ts`) |
 | `src/core/cell/snap.ts` | lon/lat → nearest cell of the store's grid (root attrs `grid`; antimeridian wrap, polar clamp, any spacing / lon0) |
 | `src/core/cell/cellstore.ts` | zarrita reader for `cells.zarr` (`hist`, `fields`, `dunes`) + caching store (shard indexes, metadata) |
 | `src/core/cell/flux.ts` | line-for-line port of `pipeline/.../flux.py` (bins from the store attrs): `fluxRose`, `dpRdpRdd` (time-averaged flat-bed flux), `crestFluxRose` (crest flux with speed-up), `fluxRoseByExcessShear` |
@@ -134,9 +134,9 @@ within ±90°, texture coordinates in [0, 1]; the unpatched code fails these che
   swaps them into the shared layer objects in place (base copies kept for switching back) and
   returns the changed ids. Choice: the share link's dataset; a `?query` permalink's `dataset=`, or
   `defaultDataset` (ERA5-Land) if it has none (permalinks were written without it for ERA5-Land;
-  the app now always writes it); with no view state in the URL, the user's last explicit switch
-  (localStorage `duneAtlas.dataset`), else the default view's (ERA5). A switch goes
-  through `Store.intercept`: definitions swapped, persisted, colour-limit overrides of the
+  the app now always writes it); with no view state in the URL, a switch earlier in the same visit
+  (sessionStorage `duneAtlas.dataset`, `core/visit.ts`), else the default view's (ERA5). A switch goes
+  through `Store.intercept`: definitions swapped, kept for the visit, colour-limit overrides of the
   swapped layers dropped (`layersForDatasetSwitch`; colormap, reverse, log, mode, colours,
   opacity, visibility and order kept); then the overlays re-resolve their sources
   (`setDatasetPrefix` + `reattach`), the cell store reopens and the selected location is
@@ -366,7 +366,7 @@ within ±90°, texture coordinates in [0, 1]; the unpatched code fails these che
   `Σ_speed n·q / Σ_all n` (the same reduction as the fields), caption states the
   mode and total (DP or ⟨|Q(α)|⟩); petals aggregated into 8–128 sectors (slider) by the direction sand moves TOWARD (the Petals switch, `core/cell/petals.ts`, draws each petal 180° round to show the
   direction the wind comes FROM instead; nothing is recalculated, arrows, bearing values and downloads stay toward;
-  remembered in the browser per atlas); radial
+  kept for the visit, both atlases: `core/visit.ts`); radial
   axis % of total flux (sums to 100; default) or m²/yr (sums to DP), DP stated in the caption. There is no reduction option. DP, RDP, RDP/DP and RDD in the panel, the RDD
   arrow and the RDD line in the modes plot are the cell-store fields at the current
   threshold (so the panel matches the map); arrows αT, αE (toward) and the αH axis likewise.

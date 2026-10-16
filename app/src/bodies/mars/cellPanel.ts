@@ -9,6 +9,7 @@ import { groupedBody, wireTableGroups } from "../../core/ui/tablegroups";
 import { utTex } from "../../core/export/labels"; // plot-export legend: the slider value
 import { terseQuantity } from "../../core/ui/terse";
 import { storageKey } from "../../core/body";
+import { sharedKey, visitGet, visitSet } from "../../core/visit";
 import type { CellData } from "../../core/cell/cellstore";
 import { cellFromIndex, type Grid } from "../../core/cell/snap";
 import { fieldValue } from "../../core/cell/cellstore";
@@ -157,11 +158,11 @@ const SECTION_DEFAULT_OPEN: Record<PanelSection, boolean> = { windRose: true, fl
 function readSectionOpen(): Record<PanelSection, boolean> {
   const out = { ...SECTION_DEFAULT_OPEN };
   for (const k of PANEL_SECTIONS) {
-    try { const v = localStorage.getItem(sectionOpenKey(k)); if (v === "0" || v === "1") out[k] = v === "1"; } catch { /* private mode */ }
+    const v = visitGet(sectionOpenKey(k)); if (v === "0" || v === "1") out[k] = v === "1";
   }
   return out;
 }
-const WIDTH_KEY = storageKey("cellPanel.width"), HEIGHT_KEY = storageKey("cellPanel.height");
+const WIDTH_KEY = sharedKey("cellPanel.width"), HEIGHT_KEY = sharedKey("cellPanel.height");
 const isNarrow = () => !!globalThis.matchMedia?.("(max-width: 720px)").matches;
 
 function binSlider(label: string, value: number, choices: number[], onChange: (n: number) => void): HTMLElement {
@@ -193,14 +194,14 @@ export class CellPanel {
   #fluxAxis: "pct" | "abs" = "pct";
   /** convention of the flux rose petals (remembered in the browser; core/cell/petals.ts) */
   #petals: PetalConvention = loadPetals();
-  /** open state of the collapsible sections (localStorage) */
+  /** open state of the collapsible sections (kept for the visit: core/visit.ts) */
   #open = readSectionOpen();
   /** a collapsible section: <details> whose <summary> holds the section's <h3> heading */
   #section(key: PanelSection, cls: string, title: HTMLElement, ...children: (Node | null | undefined)[]) {
     const det = h("details", { class: `section ${cls}`, "data-section": key, open: this.#open[key] }, h("summary", {}, title), ...children);
     det.addEventListener("toggle", () => {
       this.#open[key] = det.open;
-      try { localStorage.setItem(sectionOpenKey(key), det.open ? "1" : "0"); } catch { /* ignore */ }
+      visitSet(sectionOpenKey(key), det.open ? "1" : "0");
     });
     return det;
   }
@@ -227,7 +228,7 @@ export class CellPanel {
   }
   #setPlot(id: string) {
     this.#plotY = id;
-    try { localStorage.setItem(storageKey(PLOT_STORAGE), id); } catch { /* private mode */ }
+    visitSet(storageKey(PLOT_STORAGE), id);
     this.#opts.plot?.set(id);
     this.update();
   }
@@ -269,12 +270,12 @@ export class CellPanel {
   }
 
   #restoreSize() {
-    try {
-      const w = Number(localStorage.getItem(WIDTH_KEY));
+    {
+      const w = Number(visitGet(WIDTH_KEY));
       if (w >= PANEL_MIN_W) document.documentElement.style.setProperty("--cell-w", `${w}px`);
-      const hh = Number(localStorage.getItem(HEIGHT_KEY));
+      const hh = Number(visitGet(HEIGHT_KEY));
       if (hh > 0) document.documentElement.style.setProperty("--cell-h", `${hh}vh`);
-    } catch { /* no storage */ }
+    }
   }
 
   /** Drag handle: left edge (desktop, width) or top edge (bottom sheet, height). Keyboard:
@@ -285,12 +286,12 @@ export class CellPanel {
       const max = Math.max(PANEL_MIN_W, 0.7 * window.innerWidth);
       const v = Math.round(Math.max(PANEL_MIN_W, Math.min(max, w)));
       document.documentElement.style.setProperty("--cell-w", `${v}px`);
-      try { localStorage.setItem(WIDTH_KEY, String(v)); } catch { /* ignore */ }
+      visitSet(WIDTH_KEY, String(v));
     };
     const setH = (vh: number) => {
       const v = Math.round(Math.max(25, Math.min(90, vh)));
       document.documentElement.style.setProperty("--cell-h", `${v}vh`);
-      try { localStorage.setItem(HEIGHT_KEY, String(v)); } catch { /* ignore */ }
+      visitSet(HEIGHT_KEY, String(v));
     };
     let start: { x: number; y: number; w: number; h: number } | null = null;
     hd.addEventListener("pointerdown", (e) => {

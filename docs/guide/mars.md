@@ -37,10 +37,13 @@ nothing else in the app re-implements the physics.
   both (e.g. `http://localhost:5174/` when the two dev servers run side by side).
 * Tour: both tours end with the step `planet` ("Switch planet") on that button, after `tools`;
   `docs/reference/help-text.md` is regenerated from the Earth texts (`npm run help-doc`).
-* Same-origin storage: every localStorage key goes through `storageKey`: Earth keys are unchanged
-  (`duneAtlas.tourSeen`, `duneAtlas.dataset`, `duneAtlas.cellPanel.*`); Mars keys are `duneAtlasMars.*`, so
-  the Mars first-visit tour still shows after visiting Earth (`tests/mars/body.test.ts` also checks that no
-  source writes an un-namespaced key). No sessionStorage, no service worker; assets are emitted under the
+* Same-origin storage (`core/visit.ts`): between visits only the language (`duneAtlas.lang`, both atlases) and
+  the tour flag (`duneAtlas.tourSeen` / `duneAtlasMars.tourSeen`, so the Mars first-visit tour still shows after
+  visiting Earth) stay in localStorage. Everything else is kept for the visit in sessionStorage: per atlas the
+  dataset, names, plotted quantity and last view (`duneAtlas.*` / `duneAtlasMars.*`); for both atlases the panel
+  layout (`duneAtlas.cellPanel.*`, `duneAtlas.layerPanel.groups`, `duneAtlas.fluxRosePetals`). Settings earlier
+  versions kept in localStorage are removed on load (`dropRetiredLocal`). `tests/mars/body.test.ts` checks that no
+  source writes a literal key. No service worker; assets are emitted under the
   Vite base and data URLs are absolute (`VITE_DATA_BASE`), so nothing breaks under `/mars/`.
 * Deployment (`.github/workflows/ci.yml`, job `app`): `validate-registry:mars`, `test:mars`, `build:mars` with
   `VITE_BODY=mars VITE_BASE=/mars/ VITE_DATA_BASE=https://data.geomorphlab.org

@@ -1,7 +1,7 @@
 // Cell summary table: rows in collapsible groups, as the layer panel's groups. The group of a
 // row follows its layer group in the registry (tests/tablegroups.test.ts checks titles and membership against the
-// registry of both atlases); open / closed is remembered per group and per body ("duneAtlas[Mars].cellPanel.tableGroups").
-import { storageKey } from "../body";
+// registry of both atlases); open / closed is kept per group for the visit, for both atlases ("duneAtlas.cellPanel.tableGroups", core/visit.ts).
+import { sharedKey, visitFlags, visitSet } from "../visit";
 import { escapeHtml } from "../util/format";
 
 export interface TableGroup { id: string; title: string; collapsed: boolean; rows: string[] }
@@ -15,21 +15,22 @@ export const TABLE_GROUPS: TableGroup[] = [
   { id: "related", title: "Related data", collapsed: false, rows: ["ai_mean", "tot_cov_mean", "rho_mean", "elev_mean"] },
   { id: "cell", title: "Cell", collapsed: false, rows: ["dunes", "centre"] },
 ];
-export const TABLE_GROUPS_KEY = storageKey("cellPanel.tableGroups");
+export const TABLE_GROUPS_KEY = sharedKey("cellPanel.tableGroups");
 
 let state: Record<string, boolean> | null = null;
 /** open state per group: stored choice, else the group's default */
 export function tableGroupOpen(): Record<string, boolean> {
   if (!state) {
     state = Object.fromEntries(TABLE_GROUPS.map((g) => [g.id, !g.collapsed]));
-    try { const s = JSON.parse(localStorage.getItem(TABLE_GROUPS_KEY) ?? "{}"); for (const g of TABLE_GROUPS) if (typeof s[g.id] === "boolean") state[g.id] = s[g.id]; } catch { /* private mode / bad JSON */ }
+    const s = visitFlags(TABLE_GROUPS_KEY);
+    for (const g of TABLE_GROUPS) if (typeof s[g.id] === "boolean") state[g.id] = s[g.id];
   }
   return state;
 }
 export function setTableGroupOpen(id: string, open: boolean) {
   const s = tableGroupOpen();
   s[id] = open;
-  try { localStorage.setItem(TABLE_GROUPS_KEY, JSON.stringify(s)); } catch { /* private mode */ }
+  visitSet(TABLE_GROUPS_KEY, JSON.stringify(s));
 }
 /** tests: forget the in-memory state */
 export function resetTableGroups() { state = null; }

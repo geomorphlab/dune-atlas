@@ -59,10 +59,10 @@ describe("Mars build: planet toggle, header, storage", () => {
     const css = fs.readFileSync(path.resolve(__dirname, "../../src/core/style.css"), "utf8");
     expect(css).toMatch(/\.atlas-header h1 \.body-name \{ color: var\(--muted\)/);
   });
-  it("every storage key is duneAtlasMars.*; the Earth tour flag does not suppress the Mars tour", () => {
+  it("per-atlas keys are duneAtlasMars.*, panel layout keys shared; the Earth tour flag does not suppress the Mars tour", () => {
     expect(TOUR_SEEN_KEY).toBe("duneAtlasMars.tourSeen");
-    expect(sectionOpenKey("windRose")).toBe("duneAtlasMars.cellPanel.windRoseOpen");
-    expect(MODES_OPEN_KEY).toBe("duneAtlasMars.cellPanel.modesOpen");
+    expect(sectionOpenKey("windRose")).toBe("duneAtlas.cellPanel.windRoseOpen"); // panel layout: both atlases (core/visit.ts)
+    expect(MODES_OPEN_KEY).toBe("duneAtlas.cellPanel.modesOpen");
     expect(storageKey("dataset")).toBe("duneAtlasMars.dataset");
     localStorage.clear();
     localStorage.setItem("duneAtlas.tourSeen", "1"); // visited Earth first

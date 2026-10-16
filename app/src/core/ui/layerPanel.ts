@@ -20,6 +20,7 @@ import { ABOUT_CREDITS_NOTE_HTML, ABOUT_INTRO_HTML, DATA_SOURCES_ITEMS_HTML, DAT
 import { embedBar } from "./embed";
 import { escapeHtml } from "../util/format";
 import { BODY_NAME } from "../body";
+import { sharedKey, visitFlags, visitSet } from "../visit";
 import { DATASET_INFO, datasetFacts, datasetInfo, datasetSourceItem, datasetTooltip } from "../cell/datasetinfo";
 import { fieldInfo } from "../cell/fieldinfo";
 import { isDatasetDependent } from "../registry/merge";
@@ -408,13 +409,22 @@ function orderList(reg: Registry, store: Store): HTMLElement {
     const b = ol.querySelector(`.order-item[data-layer="${id}"] .move:nth-of-type(${dir === "up" ? 1 : 2})`) as HTMLButtonElement | null;
     (b && !b.disabled ? b : (ol.querySelector(`.order-item[data-layer="${id}"] .move:not([disabled])`) as HTMLButtonElement | null))?.focus();
   };
-  const wrap = h("details", { class: "order", open: true }, h("summary", {}, ui("panel.active")), ol);
+  const wrap = h("details", { class: "order", open: panelGroupOpen("active", true) }, h("summary", {}, ui("panel.active")), ol);
+  rememberPanelGroup(wrap, "active");
   render(store.state);
   store.subscribe((s, ch) => { if (ch.has("order") || ch.has("layers")) render(s); });
   return wrap;
 }
 
 /** open / collapse the layer list (the Layers button does the same) */
+/** Open / closed layer-panel groups (the registry groups and "active", the drawing-order list): the registry's
+ *  default (`collapsed`), or the visitor's choice earlier in this visit, for both atlases (core/visit.ts), as the
+ *  cell panel's sections and table groups. */
+export const LAYER_GROUPS_KEY = sharedKey("layerPanel.groups");
+export const panelGroupOpen = (id: string, def: boolean) => visitFlags(LAYER_GROUPS_KEY)[id] ?? def;
+function rememberPanelGroup(det: HTMLDetailsElement, id: string) {
+  det.addEventListener("toggle", () => visitSet(LAYER_GROUPS_KEY, JSON.stringify({ ...visitFlags(LAYER_GROUPS_KEY), [id]: det.open })));
+}
 export function setLayerPanelOpen(root: HTMLElement, open: boolean) {
   root.querySelector(".panel-toggle")?.setAttribute("aria-expanded", String(open));
   root.classList.toggle("collapsed", !open);
@@ -473,7 +483,8 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
   for (const g of reg.groups) {
     const layers = reg.layers.filter((l) => l.group === g.id);
     if (!layers.length) continue;
-    const det = h("details", { class: "layer-group", open: !g.collapsed }, h("summary", {}, tr(groupKey(g.id), g.title)));
+    const det = h("details", { class: "layer-group", open: panelGroupOpen(g.id, !g.collapsed) }, h("summary", {}, tr(groupKey(g.id), g.title)));
+    rememberPanelGroup(det, g.id);
     if (g.description) det.append(h("p", { class: "help", html: mathHtml(tr(groupKey(g.id, "desc"), g.description)) }));
     const ul = h("ul", { class: "layer-list" });
     for (const l of layers) ul.append(layerItem(l, store));
