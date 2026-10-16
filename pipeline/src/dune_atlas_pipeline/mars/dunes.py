@@ -269,9 +269,9 @@ def build_vector_pmtiles(geojson: str, out: str) -> str:
 
 
 # ----------------------------------------------------------------------------- overlap fraction on the 2-deg grid
-def contract_axes():
-    lat = GRID["lat0"] + GRID["dlat"] * np.arange(GRID["ny"], dtype="f8")
-    lon = GRID["lon0"] + GRID["dlon"] * np.arange(GRID["nx"], dtype="f8")
+def contract_axes(grid: dict = GRID):
+    lat = grid["lat0"] + grid["dlat"] * np.arange(grid["ny"], dtype="f8")
+    lon = grid["lon0"] + grid["dlon"] * np.arange(grid["nx"], dtype="f8")
     return lat, lon
 
 
@@ -281,23 +281,33 @@ def cea(geom):
     return shapely.transform(geom, lambda c: np.column_stack([np.radians(c[:, 0]), np.sin(np.radians(c[:, 1]))]))
 
 
-def overlap_fraction(geoms) -> np.ndarray:
-    """(90, 180) float64 dune area fraction per contract-grid cell."""
+def overlap_fraction(geoms, grid: dict = GRID) -> np.ndarray:
+    """(ny, nx) float64 dune area fraction per cell of `grid` (default the FV3 2° contract grid). A cell that
+    crosses the antimeridian (e.g. centred on -180°) is split into its two parts within [-180, 180]."""
     import shapely
     from shapely import STRtree, box
-    lat, lon = contract_axes()
-    hl, hn = abs(GRID["dlat"]) / 2, GRID["dlon"] / 2
+    lat, lon = contract_axes(grid)
+    hl, hn = abs(grid["dlat"]) / 2, grid["dlon"] / 2
     I, J = np.meshgrid(np.arange(len(lat)), np.arange(len(lon)), indexing="ij")
     I, J = I.ravel(), J.ravel()
-    boxes = box(lon[J] - hn, lat[I] - hl, lon[J] + hn, lat[I] + hl)
+    w, e = lon[J] - hn, lon[J] + hn
+    pieces = [(I, J, np.maximum(w, -180.0), np.minimum(e, 180.0))]
+    lo, hi = w < -180, e > 180
+    if lo.any():
+        pieces.append((I[lo], J[lo], w[lo] + 360, np.full(lo.sum(), 180.0)))
+    if hi.any():
+        pieces.append((I[hi], J[hi], np.full(hi.sum(), -180.0), e[hi] - 360))
+    PI = np.concatenate([p[0] for p in pieces]); PJ = np.concatenate([p[1] for p in pieces])
+    boxes = box(np.concatenate([p[2] for p in pieces]), lat[PI] - hl, np.concatenate([p[3] for p in pieces]),
+                lat[PI] + hl)
     geoms = np.asarray(list(geoms), dtype=object)
     tree = STRtree(boxes)
     gi, bi = tree.query(geoms, predicate="intersects")
     inter = shapely.intersection(geoms[gi], boxes[bi])
     a = np.array([cea(g).area for g in inter])
-    cell_area = np.radians(GRID["dlon"]) * (np.sin(np.radians(lat + hl)) - np.sin(np.radians(lat - hl)))
+    cell_area = np.radians(grid["dlon"]) * (np.sin(np.radians(lat + hl)) - np.sin(np.radians(lat - hl)))
     frac = np.zeros((len(lat), len(lon)))
-    np.add.at(frac, (I[bi], J[bi]), a)
+    np.add.at(frac, (PI[bi], PJ[bi]), a)
     frac /= cell_area[:, None]
     return frac
 

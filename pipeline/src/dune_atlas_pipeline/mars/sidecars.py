@@ -34,9 +34,9 @@ from . import pyramids as PY
 from .fields import QSAT_VARS
 
 REPO = Path(__file__).resolve().parents[4]
-META_JSON = REPO / "registry" / "mars" / "qsat_field_metadata.json"
-GEN = REPO / "registry" / "mars" / "generated"
-PREFIX = "dune-atlas/mars/v2/datasets/fv3-beta1"
+META_JSON = REPO / CE.DS.meta_json
+GEN = REPO / CE.DS.registry_dir
+PREFIX = CE.DS.prefix
 K = M.D_DEFAULT_INDEX
 D_TEXT = f" Shown at the selected median grain diameter d (default {int(M.D_VALUES_UM[K])} µm)."
 EARTH_UT_TEXT = (f" Shown at the selected threshold friction velocity u*,th "
@@ -45,17 +45,13 @@ THRESHOLD_NOTE = (r" The threshold is that hour's cessation threshold $u_{\ast,t
                   r"(2023).")
 # Citation of the atlas-derived fields, one format with Earth (fields.fields_citation; app mars/cell/citation.ts
 # fieldsCitation): "Gunn, A. (2026). ... doi:...; transport law: ...; winds: ...".
-GCM_WINDS = ("MCMC FV3-based Mars GCM Beta Output Release 1, one Mars year of hourly lowest-level winds (NASA Ames "
-             "Mars Climate Modeling Center (2023), https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model "
-             "physics: Haberle, R. M. et al. (2019). Icarus 333, 130–164. doi:10.1016/j.icarus.2019.03.026)")
+GCM_WINDS = CE.DS.winds_phrase
 CITATION = (f"{EF.PAPER_CITATION}; transport law: Pähtz, T. & Durán, O. (2023). Scaling laws for planetary sediment "
             f"transport from DEM-RANS numerical simulations. Journal of Fluid Mechanics 963, A20. "
             f"doi:10.1017/jfm.2023.343; winds: {GCM_WINDS}")
-GCM_CITATION = ("NASA Ames Mars Climate Modeling Center (2023). MCMC FV3-based Mars GCM Beta Output Release 1. "
-                "https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics: Haberle, R. M. et al. "
-                "(2019). Icarus 333, 130–164. doi:10.1016/j.icarus.2019.03.026")
-# Licence row of everything derived from the FV3 output
-LICENCE = "NASA Ames MCMC output; no licence stated (NASA open data)"
+GCM_CITATION = CE.DS.gcm_citation
+# Licence row of everything derived from the dataset's winds
+LICENCE = CE.DS.licence
 ATTRIBUTION = {"citation": CITATION, "licence": LICENCE}
 
 
@@ -110,8 +106,7 @@ def qsdiv_attrs() -> dict:
         "long_name_latex": r"\nabla\cdot\vec{q_s}",
         "description": ("Divergence of the time-averaged flat-bed saturated sand-flux vector (magnitude RDP, direction "
                         "RDD) on the sphere, div q = 1/(R cos φ)[∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ], R = 3389.5 km "
-                        "(Mars), central differences on the 2° grid (periodic in longitude, one-sided at the ±89° "
-                        "rows). Negative values (flux convergence) imply deposition, positive values erosion."),
+                        "(Mars), central differences " + CE.DS.qsdiv_grid_text + ". Negative values (flux convergence) imply deposition, positive values erosion."),
         "description_tex": (r"$\nabla\cdot\vec{q_s} = \frac{1}{R\cos\phi}\left[\frac{\partial (q\cos\theta)}{\partial\lambda}"
                             r" + \frac{\partial (q\sin\theta\cos\phi)}{\partial\phi}\right]$ with $q = RDP$, "
                             r"$\theta = RDD$, $R = 3389.5$ km; negative values imply deposition."),
@@ -140,7 +135,7 @@ def load_elev_mean(npz) -> tuple[np.ndarray, str]:
 def elev_attrs(source: str) -> dict:
     from .terrain import DEM_ATTRIBUTION as A
     return {"long_name": "Mean elevation of the cell", "long_name_latex": r"\overline{z}", "units": "m",
-            "description": ("Spherical-area-weighted mean over the 2° cell of the 1/64° area-mean grid of the MGS MOLA – MEX "
+            "description": ("Spherical-area-weighted mean over " + CE.DS.cell_text + " of the 1/64° area-mean grid of the MGS MOLA – MEX "
                             "HRSC blended DEM (200 m), heights above the Mars 2000 areoid (mars/terrain.py)."),
             "source": source, "citation": A["citation"], "url": A["url"], "licence": A["licence"],
             "changes": A["changes"]}
@@ -159,7 +154,7 @@ def write_cells_aux(out: str, qsdiv: np.ndarray, rho_mean: np.ndarray, elev_mean
         "title": "dune-atlas Mars per-cell auxiliary variables (sidecar to cells.zarr)", "body": "mars",
         "grid": CE.GRID, "d_values_um": [int(x) for x in M.D_VALUES_UM], "d_default_index": int(K),
         "cells": CE.NY * CE.NX, "variables": [], "conventions": CONVENTIONS, "dataset": CE.DATASET["id"],
-        "dataset_name": CE.DATASET["name"], "dataset_resolution": "2°"})
+        "dataset_name": CE.DATASET["name"], "dataset_resolution": CE.DS.resolution_text})
     qa = qsdiv_attrs()
     data = np.moveaxis(qsdiv, 0, -1).astype("f4")                         # (lat, lon, d)
     a = root.create_array("qsdiv", shape=data.shape, dtype="float32", chunks=(CA.SHARD, CA.SHARD, data.shape[2]),
@@ -176,8 +171,7 @@ def write_cells_aux(out: str, qsdiv: np.ndarray, rho_mean: np.ndarray, elev_mean
     CA.write_variable(root, "rho_mean", rho_mean, allcells, {
         "long_name": "Near-surface air density, mean over the Mars year", "long_name_latex": r"\overline{\rho_f}",
         "units": "kg m-3",
-        "description": ("Mean over the 16,032 hours of the Mars year of the lowest-layer air density rho_f = p/(R T) "
-                        "(p = mid pressure of the lowest FV3 layer, T = temp_bot, R = 191.8 J kg-1 K-1)."),
+        "description": CE.DS.rho_description,
         "source": GCM_CITATION, "licence": LICENCE})
     if elev_mean is not None:
         CA.write_variable(root, "elev_mean", elev_mean, allcells, elev_attrs(elev_source))
@@ -210,7 +204,7 @@ def extra_fragment(qsdiv_clim, rho_clim) -> dict:
                          r"values assume a saturated flux and an unlimited supply of loose sand, so on rock, crusted or "
                          r"vegetated surfaces actual erosion is limited by the sand available."),
          # Mars has no land mask, and the
-         # divergence is defined in every cell (one-sided differences at the ±89° rows).
+         # divergence is defined in every cell (one-sided differences at the first and last rows).
          "citation": CITATION, "attribution": dict(ATTRIBUTION), "visible": False, "opacity": 0.85, "queryable": False,
          "display": {"transform": "scale", "scale": 1000.0, "colormap": "piyg", "clim": list(qsdiv_clim)}},
         {"id": "rho_mean", "title": "Near-surface air density", "titleTex": r"Near-surface air density $\overline{\rho_f}$",
@@ -240,7 +234,8 @@ def write_fragments(meta: dict, qsdiv_clim, rho_clim, gen=GEN) -> list[Path]:
     ex = extra_fragment(qsdiv_clim, rho_clim)
     p2 = gen / "x_extra_fields.yaml"
     p2.write_text(hdr.replace("from fields.FIELD_META and\n# registry/mars/qsat_field_metadata.json",
-                              "(qsdiv: RDP/RDD divergence with R_MARS;\n# rho_mean: FV3 annual mean)")
+                              "(qsdiv: RDP/RDD divergence with R_MARS;\n# rho_mean: "
+                              + ("FV3" if CE.DS.id == "fv3-beta1" else CE.DS.id) + " annual mean)")
                   + f"# qsdiv clim: ± p98 of |qsdiv| over dune cells (cover > 1 %) at d = {int(M.D_VALUES_UM[K])} µm, m/kyr; rho_mean clim:\n"
                   "# p2/p98 over all cells.\n"
                   + yaml.safe_dump(ex, sort_keys=False, allow_unicode=True, width=110))

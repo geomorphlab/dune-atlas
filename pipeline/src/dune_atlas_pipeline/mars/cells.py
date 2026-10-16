@@ -1,5 +1,7 @@
-"""Mars `cells.zarr` from the MCMC FV3 GCM beta release 1 (one Mars year, hourly, 2°): per-cell hourly series
-and the 23 fields x 64 grain sizes (docs/reference/mars-spec.md section 6, data contract of the Mars build).
+"""Mars `cells.zarr` of a wind dataset (mars/datasets.py; DUNE_ATLAS_MARS_DATASET, default the MCMC FV3 GCM beta
+release 1, one Mars year, hourly, 2°): per-cell series and the 23 fields x 64 grain sizes (docs/reference/mars-spec.md
+section 6, data contract of the Mars build). Other datasets are read from a contract source store (read_contract) on
+their own grid; the description below is FV3's.
 
 Grid (contract): rows lat 89 -> -89 (lat0 = 89, dlat = -2), columns lon -179 -> 179 (lon0 = -179, dlon = 2), cell
 centres. The FV3 arrays (lat ascending -89..89, lon 1..359) are flipped in latitude and rolled by 90 columns:
@@ -30,13 +32,20 @@ import time
 import numpy as np
 
 from . import constants as M
+from . import datasets as D
 from . import physics as P
 
 SHARD = 16
-NY, NX, NT = 90, 180, 16032
-GRID = {"lat0": 89, "dlat": -2, "lon0": -179, "dlon": 2, "ny": NY, "nx": NX, "cell_registration": "centre"}
-LAT = GRID["lat0"] + GRID["dlat"] * np.arange(NY)
-LON = GRID["lon0"] + GRID["dlon"] * np.arange(NX)
+# The active dataset (mars/datasets.py; DUNE_ATLAS_MARS_DATASET, default fv3-beta1) fixes the grid, the series
+# length and every dataset text written below.
+DS = D.active()
+NY, NX = DS.ny, DS.nx
+NT = DS.n_samples
+GRID = dict(DS.grid)
+LAT, LON = DS.axes()
+if DS.id == "fv3-beta1":                      # the published FV3 axes are integer-valued (int64 attrs/arrays)
+    LAT = GRID["lat0"] + GRID["dlat"] * np.arange(NY)
+    LON = GRID["lon0"] + GRID["dlon"] * np.arange(NX)
 SERIES_UNITS = {"u": "m/s", "v": "m/s", "T": "K", "rho": "kg m-3", "z": "m"}
 # contract tolerances of the bit-rounded series: absolute for u, v, T; relative for rho
 SERIES_TOL = {"u": ("abs", 0.005), "v": ("abs", 0.005), "T": ("abs", 0.02), "rho": ("rel", 5e-4), "z": ("abs", 1e-3)}
@@ -44,25 +53,7 @@ NV = len(M.SERIES_VARS)
 assert tuple(SERIES_UNITS) == tuple(M.SERIES_VARS) == tuple(SERIES_TOL)
 FV3_FILE = "03340.atmos_daily.nc"
 FV3_VARS = {"u": "ucomp_bot", "v": "vcomp_bot", "T": "temp_bot", "ps": "ps"}
-DATASET = {
-    "id": "fv3-beta1",
-    "name": "MCMC FV3 Mars GCM, beta release 1 (2°, hourly, one Mars year)",
-    "resolution_deg": 2, "n_hours": NT,
-    "source": "https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/",
-    "citation": ("NASA Ames Mars Climate Modeling Center (2023). FV3-based Mars Global Climate Model, Beta Output "
-                 "Release 1: c48 reference simulation, sixth simulated year, regridded to 2° x 2°, hourly "
-                 "(03340.atmos_daily.nc). https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/. Model "
-                 "physics: Haberle, R.M. et al. (2019) Documentation of the NASA/Ames Legacy Mars Global Climate "
-                 "Model: Simulations of the present seasonal water cycle. Icarus 333, 130-164. "
-                 "doi:10.1016/j.icarus.2019.03.026"),
-    "transport_law": ("Pähtz, T. & Durán, O. (2023) Scaling laws for planetary sediment transport from DEM-RANS "
-                      "numerical simulations. J. Fluid Mech. 963, A20. doi:10.1017/jfm.2023.343 (eqs. 3.2, 3.20, "
-                      "5.1; two typo corrections, docs/reference/mars-spec.md)"),
-    "fields_method": ("23 sand-flux fields at 64 median grain diameters from the hourly lowest-level winds, "
-                      "time-averaged over the Mars year (one sample per hour), per-hour threshold and flux "
-                      "(Pähtz & Durán 2023) with the crest-mode methods outlined in Gunn (2026) Nat Commun "
-                      "doi:10.1038/s41467-026-75466-y"),
-}
+DATASET = DS.dataset_attrs()
 SHARDS_Y = list(range(0, NY, SHARD))
 SHARDS_X = list(range(0, NX, SHARD))
 
@@ -143,10 +134,53 @@ def series_stack(src: dict) -> np.ndarray:
     return s
 
 
+def read_contract(path: str, log=print) -> dict:
+    """Series of a dataset whose extraction script wrote a contract source store (zarr v3): arrays u, v, T, ps
+    (lat, lon, time) float32 already on the dataset grid in contract orientation (rows north to south, columns
+    from lon0), 1-D ls (deg) and sol; attrs `dataset` (= DS.id), `grid` (= GRID) and `interfaces` {ak_bottom,
+    bk_bottom, ak_top, bk_top} of the lowest layer (Pa, 1). Returns the read_fv3 dict."""
+    import zarr
+    t0 = time.time()
+    g = zarr.open_group(path, mode="r")
+    assert g.attrs["dataset"] == DS.id, (g.attrs["dataset"], DS.id)
+    assert {k: g.attrs["grid"][k] for k in GRID} == GRID, (g.attrs["grid"], GRID)
+    out = {}
+    for k in ("u", "v", "T", "ps"):
+        a = np.ascontiguousarray(g[k][...], "f4")
+        assert a.ndim == 3 and a.shape[:2] == (NY, NX) and np.isfinite(a).all(), (k, a.shape)
+        out[k] = a
+        log(f"read {k} {time.time() - t0:.0f}s")
+    nt = out["T"].shape[-1]
+    assert NT is None or nt == NT, (nt, NT)
+    ab = {k: float(g.attrs["interfaces"][k]) for k in ("ak_bottom", "bk_bottom", "ak_top", "bk_top")}
+    ps, T = out["ps"].astype("f8"), out["T"].astype("f8")
+    p, rho = P.air_state(ps, T, ab["ak_bottom"], ab["bk_bottom"], ab["ak_top"], ab["bk_top"])
+    out["rho"] = rho.astype("f4")
+    out["p"] = p.astype("f4")
+    out["z"] = P.layer_height(ps, T, ab["ak_bottom"], ab["bk_bottom"], ab["ak_top"], ab["bk_top"]).astype("f4")
+    out["ls"] = np.asarray(g["ls"][...], "f4")
+    out["sol"] = np.asarray(g["sol"][...], "f4")
+    assert out["ls"].shape == out["sol"].shape == (nt,)
+    out["ak_bk"] = ab
+    return out
+
+
+def read_source(path: str, log=print) -> dict:
+    """The active dataset's series: the FV3 NetCDF folder or a contract source store."""
+    return read_fv3(path, log) if DS.reader == "fv3" else read_contract(path, log)
+
+
 def load_dunefrac(npz: str) -> np.ndarray:
+    """Dune-cover fraction on the active grid: FV3 from the FV3-orientation npz (frac, lat -89..89, lon 1..359);
+    other datasets from native_grid.py's npz (frac, lat, lon in contract orientation)."""
     z = np.load(npz)
-    assert np.allclose(z["lat"], np.arange(-89, 90, 2)) and np.allclose(z["lon"], np.arange(1, 360, 2))
-    return fv3_to_contract(np.asarray(z["frac"], "f8")).astype("f4")
+    if DS.reader == "fv3":
+        assert np.allclose(z["lat"], np.arange(-89, 90, 2)) and np.allclose(z["lon"], np.arange(1, 360, 2))
+        return fv3_to_contract(np.asarray(z["frac"], "f8")).astype("f4")
+    np.testing.assert_allclose(z["lat"], LAT, atol=1e-9); np.testing.assert_allclose(z["lon"], LON, atol=1e-9)
+    f = np.asarray(z["frac"], "f4")
+    assert f.shape == (NY, NX)
+    return f
 
 
 # ---------------------------------------------------------------------------------------------- store
@@ -161,23 +195,19 @@ def _sharding(inner, typesize=4):
 def root_attrs(keepbits: dict, extra: dict | None = None) -> dict:
     from .fields import QSAT_VARS
     a = {
-        "title": "dune-atlas Mars cell store: MCMC FV3 GCM beta release 1 hourly lowest-level winds, air state "
-                 "and sand-flux fields at 64 grain sizes",
-        "body": "mars", "grid": GRID, "dataset": DATASET, "license": "CC-BY-4.0",
+        "title": DS.store_title,
+        "body": "mars", "grid": GRID, "dataset": DATASET, "license": DS.license_spdx,
         "field_vars": list(QSAT_VARS), "fields_index": "d (grain size), d_values_um",
         "d_values_um": [int(x) for x in M.D_VALUES_UM], "d_default_index": int(M.D_DEFAULT_INDEX),
         "series_vars": list(M.SERIES_VARS), "series_units": SERIES_UNITS,
         "series_keepbits": keepbits,
-        "series_note": ("u, v = ucomp_bot, vcomp_bot, the wind at that hour's lowest-level height z; T = temp_bot; "
-                        "rho = p/(R T) with p the mid pressure of the lowest layer; z = (R T/g) ln(p_lo/p) with p_lo = "
-                        "ak[-1] + bk[-1] ps; float32 with mantissas rounded to series_keepbits (|error| <= 0.005 m/s, "
-                        "0.02 K, 0.05 % rho, 1 mm z). Fields are computed from the unrounded values."),
+        "series_note": DS.series_note,
         "ustar_method": ("u* per hour from |U| at height z through the smooth-wall mixing-length profile of Pähtz & "
                          "Durán (2023) eq. 2.2 under constant stress (no roughness length), tabulated in "
                          "mars/profile_table.json; nu = mu(T)/rho (Sutherland, CO2); bisection in ln u* (60 steps)"),
         "profile": {k: P._TABLE[k] for k in ("kappa", "damping", "log_layer_c")} | {"n_points": len(P.LN_X)},
-        "ls_definition": "areocentric solar longitude, FV3 areo modulo 360 (deg)",
-        "sol_definition": "FV3 time (sols since the start of the simulation), one sample per hour",
+        "ls_definition": DS.ls_definition,
+        "sol_definition": DS.sol_definition,
         "ua_convention": "arctan2(v, u): direction the wind blows toward, radians CCW from east",
         "dunes_definition": ("fraction of the cell area covered by dune polygons (PI shapefile aggregated from the "
                              "USGS Mars Dune Digital Database; spherical geodesic areas on the Mars 2000 sphere)"),
@@ -302,7 +332,7 @@ def build(fv3_dir, dunefrac_npz, out, workdir, nproc=48, shards=None, export=Non
     prog = open(os.path.join(workdir, "progress.jsonl"), "a")
     T0 = time.time()
     _write_json(status, {"phase": "read", "t": 0})
-    src = read_fv3(fv3_dir, log)
+    src = read_source(fv3_dir, log)
     t_read = time.time() - T0
     series = series_stack(src)
     # keepbits from the data maxima (whole grid), then the realised errors on the whole grid
@@ -482,7 +512,7 @@ def splice(fv3_dir, store, index, workdir, nproc=16, log=print, shards=None):
     prog = open(os.path.join(workdir, "progress.jsonl"), "a")
     T0 = time.time()
     _write_json(status, {"phase": "read"})
-    src = read_fv3(fv3_dir, log)
+    src = read_source(fv3_dir, log)
     series = series_stack(src)
     del src
     g = zarr.open_group(store, mode="r+", zarr_format=3)
@@ -661,7 +691,8 @@ def main(argv=None):
     p = argparse.ArgumentParser(prog="python -m dune_atlas_pipeline.mars.cells")
     sub = p.add_subparsers(dest="cmd", required=True)
     b = sub.add_parser("build")
-    b.add_argument("--fv3", required=True); b.add_argument("--dunefrac", required=True)
+    b.add_argument("--fv3", "--source", dest="fv3", required=True,
+                   help="FV3 NetCDF folder (fv3-beta1) or contract source store (other datasets)"); b.add_argument("--dunefrac", required=True)
     b.add_argument("--out", required=True); b.add_argument("--workdir", required=True)
     b.add_argument("--nproc", type=int, default=48)
     b.add_argument("--shards", nargs="*", help="sy,sx shard origins (pilot)")
@@ -670,7 +701,8 @@ def main(argv=None):
     v = sub.add_parser("validate")
     v.add_argument("--store", required=True); v.add_argument("--out")
     sp = sub.add_parser("splice", help="recompute one grain-size node of `fields` in place (on a copy)")
-    sp.add_argument("--fv3", required=True); sp.add_argument("--store", required=True)
+    sp.add_argument("--fv3", "--source", dest="fv3", required=True,
+                   help="FV3 NetCDF folder (fv3-beta1) or contract source store (other datasets)"); sp.add_argument("--store", required=True)
     sp.add_argument("--index", type=int, required=True); sp.add_argument("--workdir", required=True)
     sp.add_argument("--nproc", type=int, default=16)
     vs = sub.add_parser("validate-splice")

@@ -5,13 +5,14 @@ module runs the same steps with the grain-size axis `d`:
 
 1. fields.display_array converts to display units exactly as on Earth (fluxes m^2/s -> m^2/yr, ratios clipped
    to +-6e4, angles in radians, attrs from fields.FIELD_META and the Mars qsat_field_metadata.json);
-2. the (d=64, y, x) Dataset goes through topozarr.create_pyramid (EPSG:4326, pixel registration); at 2° the grid
+2. the (d=64, y, x) Dataset goes through topozarr.create_pyramid (EPSG:4326, pixel registration); at FV3's 2° the grid
    is 180 px wide, so there is one level (fields.choose_levels(180) == 1; coarser levels would follow the Earth
    rules via fields.coarse_levels);
 3. every level is rewritten with blosc zstd-5 byte-shuffle and 12-bit mantissas (fields._rewrite_array /
    fields.bitround), keeping topozarr's shapes, chunks, shards and attrs.
 2-D layers (rho_mean) use nativepyramid.write_native_pyramid (dims (y, x), as the Earth aridity layer).
-Grid: rows lat 89 -> -89, columns lon -179 -> 179 (cells.GRID); cell edges x0 = -180, y0 = 90, 2° pixels.
+Grid: the active dataset's (cells.GRID, datasets.py; FV3 rows lat 89 -> -89, columns lon -179 -> 179, cell edges
+x0 = -180, y0 = 90, 2° pixels).
 """
 from __future__ import annotations
 
@@ -25,14 +26,9 @@ from . import cells as CE
 from . import constants as M
 
 D_COORD = np.asarray(M.D_VALUES_UM, "float64")
-SOURCE = ("Fields computed for the Mars dune atlas from the MCMC FV3-based Mars GCM Beta Output Release 1 hourly "
-          "lowest-level winds, temperature and air density (NASA Ames Mars Climate Modeling Center 2023; model "
-          "physics Haberle et al. 2019, Icarus 333, 130-164, doi:10.1016/j.icarus.2019.03.026), with the per-hour "
-          "threshold and transport rate of Pähtz & Durán (2023) J. Fluid Mech. 963, A20, doi:10.1017/jfm.2023.343, "
-          "and the crest-mode methods outlined in Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. "
-          "Nature Communications. doi:10.1038/s41467-026-75466-y")
+SOURCE = CE.DS.pyramid_source
 DATASET_ATTRS = {"body": "mars", "dune_atlas:dataset": CE.DATASET["id"], "dataset_name": CE.DATASET["name"],
-                 "dataset_resolution": "2°", "dataset_n_hours": CE.NT, "dataset_citation": CE.DATASET["citation"],
+                 "dataset_resolution": CE.DS.resolution_text, "dataset_n_hours": CE.NT, "dataset_citation": CE.DATASET["citation"],
                  "dataset_source": CE.DATASET["source"], "transport_law": CE.DATASET["transport_law"]}
 
 
@@ -104,13 +100,14 @@ def build_field_pyramid(arr3: np.ndarray, var: str, out: str, meta: dict, src_at
 
 def build_2d_pyramid(arr2: np.ndarray, var: str, out: str, *, var_attrs: dict, title: str, clim, colormap: str,
                      keepbits: int | None = 12) -> dict:
-    """2-D (y, x) layer (e.g. rho_mean) with nativepyramid.write_native_pyramid (one level at 2°)."""
+    """2-D (y, x) layer (e.g. rho_mean) with nativepyramid.write_native_pyramid (one level on the dataset grid)."""
     from ..nativepyramid import common_factors, write_native_pyramid
     assert arr2.shape == (CE.NY, CE.NX)
     root_attrs = {"title": f"dune-atlas Mars field: {title}", "source": SOURCE, "license": "CC-BY-4.0",
                   "dune_atlas:resampling": "count-weighted nan-mean of native pixels per f x f window",
                   "dune_atlas:threshold_independent": True, **DATASET_ATTRS}
-    return write_native_pyramid(out, var, np.asarray(arr2, "f4"), x0=-180.0, y0=90.0, dx=2.0, dy=-2.0,
+    x0, y0, dx, dy = CE.DS.edges()
+    return write_native_pyramid(out, var, np.asarray(arr2, "f4"), x0=x0, y0=y0, dx=dx, dy=dy,
                                 factors=common_factors(CE.NY, CE.NX), var_attrs=var_attrs, root_attrs=root_attrs,
                                 zarr_layer_hint={"clim": list(clim), "colormap": colormap}, keepbits=keepbits,
                                 chunk=CE.NX, shard_chunks=1)
