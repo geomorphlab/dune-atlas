@@ -56,8 +56,10 @@ export function harmonizeAux(aux: CellAux): CellAux {
   return out;
 }
 
-/** Description of an aux variable for a grid of `deg` degree cells. */
-export function auxDescription(v: string, deg = 0.1): string {
+/** Description of an aux variable for a grid of `deg` degree cells (`degLon`: the longitude spacing of
+ *  non-square cells; the Earth grids are square, so the text uses `deg`). */
+export function auxDescription(v: string, deg = 0.1, degLon = deg): string {
+  void degLon;
   const d = AUX_META[v]?.description ?? "";
   return d.replace(/\{res\}/g, resolutionText(deg)).replace(/\{half\}/g, resolutionText(deg / 2)).replace(/\{npx\}/g, String(pixelsPerCell(deg)))
     .replace(/\{regrid\}/g, deg > 0.1 + 1e-9 ? " (area-weighted mean of the 0.1° cell means over the cell footprint)" : "");
@@ -89,7 +91,9 @@ export function restateLicence(licence: string): string {
 
 /** Attributes of an aux variable for the NetCDF / metadata.json: description, source and processing
  *  defined here; citation, DOI, licence and link from the store attrs. */
-export function auxSourceAttrs(aux: CellAux, v: string, deg = 0.1): Record<string, string> {
+/** source statement of a per-cell variable (`degLon`, `datasetId`: as Mars; the Earth texts need neither) */
+export function auxSourceAttrs(aux: CellAux, v: string, deg = 0.1, degLon = deg, datasetId?: string): Record<string, string> {
+  void degLon; void datasetId;
   const a = aux.attrs[v] ?? {};
   const out: Record<string, string> = {};
   const str = (k: string) => (typeof a[k] === "string" ? (a[k] as string) : undefined);

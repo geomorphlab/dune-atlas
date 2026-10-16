@@ -143,6 +143,10 @@ export interface DatasetInfoDef {
   name: string; resolution: string; resDeg: number; period: string; nHours: number;
   landRule: string; landThreshold: number; nonLandReason: string; dunesRule: string;
   fieldsFrom: "paper" | "atlas"; sourceTitle?: string; sourceHtml: string;
+  /** cell-centre grid of the cell store (non-square cells, rows that stop short of the poles) */
+  grid?: { lat0: number; dlat: number; lon0: number; dlon: number; ny: number; nx: number };
+  /** per-sample series (Mars): samples per sol and the long names of the downloads' time columns */
+  series?: { samplesPerSol: number; indexText?: string; solText?: string };
 }
 /** registry `datasets[].credits` */
 export interface DatasetCredits {

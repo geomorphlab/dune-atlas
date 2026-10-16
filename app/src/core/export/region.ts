@@ -191,9 +191,9 @@ export function regionNetcdf(cells: (CellData | null)[], grid: { iys: number[]; 
       if (!aux) return;
       if (series && aux.series[v]) ks.forEach((k, j) => { data[j * n + p] = aux.series[v][k]; });
       else if (!series && v in aux.scalars) data[p] = aux.scalars[v];
-      if (!Object.keys(src).length && (aux.series[v] || v in aux.scalars)) src = auxSourceAttrs(aux, v, dlat);
+      if (!Object.keys(src).length && (aux.series[v] || v in aux.scalars)) src = auxSourceAttrs(aux, v, dlat, dlon, ds.id);
     });
-    const attrs: NcAttrs = { long_name: am.longName, long_name_latex: `${am.longName} $${am.symbolTex}$`, units: am.units, description: texToPlain(auxDescription(v, dlat)), _FillValue: F(NaN), coordinates: series ? coordAttr : "lat lon" };
+    const attrs: NcAttrs = { long_name: am.longName, long_name_latex: `${am.longName} $${am.symbolTex}$`, units: am.units, description: texToPlain(auxDescription(v, dlat, dlon)), _FillValue: F(NaN), coordinates: series ? coordAttr : "lat lon" };
     for (const k of ["source", "references", "license", "url", "comment", "method"]) if (src[k]) attrs[k] = texToPlain(src[k]);
     vars.push({ name: v, type: "float", dims: series ? thrDims(["lat", "lon"]) : ["lat", "lon"], data, attrs });
   }
@@ -207,8 +207,8 @@ export function regionNetcdf(cells: (CellData | null)[], grid: { iys: number[]; 
     if (s.series) {
       const nh = s.series.u.length;
       dims.push({ name: "hour", size: nh });
-      vars.push({ name: "hour", type: "int", dims: ["hour"], data: Int32Array.from({ length: nh }, (_, k) => k), attrs: { long_name: "hour index of the record", units: "1" } });
-      if (s.sol) vars.push({ name: "sol", type: "float", dims: ["hour"], data: s.sol, attrs: { long_name: "sol of the simulation", units: "1" } });
+      vars.push({ name: "hour", type: "int", dims: ["hour"], data: Int32Array.from({ length: nh }, (_, k) => k), attrs: { long_name: ds.series?.indexText ?? "hour index of the record", units: "1" } });
+      if (s.sol) vars.push({ name: "sol", type: "float", dims: ["hour"], data: s.sol, attrs: { long_name: ds.series?.solText ?? "sol of the simulation", units: "1" } });
       if (s.ls) vars.push({ name: "ls", type: "float", dims: ["hour"], data: s.ls, attrs: { long_name: "areocentric solar longitude Ls (0-360)", units: "degree" } });
       const SER: [string, string, string][] = [["u", "m s-1", "lowest-level eastward wind (toward east)"], ["v", "m s-1", "lowest-level northward wind (toward north)"], ["T", "K", "lowest-level air temperature"], ["rho", "kg m-3", "lowest-layer air density"], ["z", "m", "height of the lowest-level wind above the surface"]];
       for (const [nm, units, ln] of SER) {
@@ -236,6 +236,7 @@ export function regionNetcdf(cells: (CellData | null)[], grid: { iys: number[]; 
       source: meta.datasetTitle,
       dataset_id: meta.datasetId,
       data_version: meta.dataVersion,
+      ...(ds.series ? { samples_per_sol: I(ds.series.samplesPerSol) } : {}),
       references: referencesLine(citationSources(CELL_SOURCE_IDS, ds.id)),
       fields_citation: fieldsCitation(ds.id),
       fields_license: fieldsLicence(ds.id),

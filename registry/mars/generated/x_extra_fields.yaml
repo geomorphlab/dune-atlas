@@ -26,15 +26,15 @@ layers:
     transport law: Pähtz, T. & Durán, O. (2023). Scaling laws for planetary sediment transport from DEM-RANS numerical
     simulations. Journal of Fluid Mechanics 963, A20. doi:10.1017/jfm.2023.343; winds: MCMC FV3-based Mars GCM Beta
     Output Release 1, one Mars year of hourly lowest-level winds (NASA Ames Mars Climate Modeling Center (2023),
-    https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics: Haberle, R. M. et al. (2019). Icarus
-    333, 130–164. doi:10.1016/j.icarus.2019.03.026)'
+    doi:10.25966/rjgg-r639, https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics: Haberle,
+    R. M. et al. (2019). Icarus 333, 130–164. doi:10.1016/j.icarus.2019.03.026)'
   attribution:
     citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
       transport law: Pähtz, T. & Durán, O. (2023). Scaling laws for planetary sediment transport from DEM-RANS numerical
       simulations. Journal of Fluid Mechanics 963, A20. doi:10.1017/jfm.2023.343; winds: MCMC FV3-based Mars GCM
       Beta Output Release 1, one Mars year of hourly lowest-level winds (NASA Ames Mars Climate Modeling Center
-      (2023), https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics: Haberle, R. M. et al.
-      (2019). Icarus 333, 130–164. doi:10.1016/j.icarus.2019.03.026)'
+      (2023), doi:10.25966/rjgg-r639, https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics:
+      Haberle, R. M. et al. (2019). Icarus 333, 130–164. doi:10.1016/j.icarus.2019.03.026)'
     licence: NASA Ames MCMC output; no licence stated (NASA open data)
   visible: false
   opacity: 0.85
@@ -57,11 +57,13 @@ layers:
   units: kg/m³
   description: Mean over the Mars year of the hourly lowest-layer air density $\rho_f = p/(R T)$ of the wind dataset's
     climate model ($p$ = mid pressure of the lowest layer, $T$ = lowest-level temperature).
-  citation: 'NASA Ames Mars Climate Modeling Center (2023). MCMC FV3-based Mars GCM Beta Output Release 1. https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/;
-    model physics: Haberle, R. M. et al. (2019). Icarus 333, 130–164. doi:10.1016/j.icarus.2019.03.026'
+  citation: 'NASA Ames Mars Climate Modeling Center (2023). MCMC FV3-based Mars GCM Beta Output Release 1. doi:10.25966/rjgg-r639,
+    https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics: Haberle, R. M. et al. (2019). Icarus
+    333, 130–164. doi:10.1016/j.icarus.2019.03.026'
   attribution:
-    citation: 'NASA Ames Mars Climate Modeling Center (2023). MCMC FV3-based Mars GCM Beta Output Release 1. https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/;
-      model physics: Haberle, R. M. et al. (2019). Icarus 333, 130–164. doi:10.1016/j.icarus.2019.03.026'
+    citation: 'NASA Ames Mars Climate Modeling Center (2023). MCMC FV3-based Mars GCM Beta Output Release 1. doi:10.25966/rjgg-r639,
+      https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics: Haberle, R. M. et al. (2019).
+      Icarus 333, 130–164. doi:10.1016/j.icarus.2019.03.026'
     licence: NASA Ames MCMC output; no licence stated (NASA open data)
   visible: false
   opacity: 0.85

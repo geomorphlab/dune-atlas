@@ -3,7 +3,7 @@
   "modules": {
     "src/bodies/earth/cellPanel.ts": {
       "mars": "src/bodies/mars/cellPanel.ts",
-      "blob": "55dc127f9cdf29cee3857bda3b74125e789bd9f3"
+      "blob": "911dba46b41dd6507571fc353a8c73e4a4b16e8a"
     },
     "src/core/cell/analysis.ts": {
       "mars": "src/bodies/mars/cell/analysis.ts",

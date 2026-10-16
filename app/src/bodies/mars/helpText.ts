@@ -2,11 +2,14 @@
 // and ui/tourHooks.ts serve both). Shared labels and types: ui/helpText.ts. Inline maths as $...$
 // (KaTeX); everything else plain text.
 import type { HelpSection, TourStep } from "../../core/ui/helpText";
-import { datasetFacts } from "../../core/cell/datasetinfo";
+import { DATASET_INFO, datasetFacts, outsideGridText } from "../../core/cell/datasetinfo";
+import { gridLatRange } from "../../core/cell/snap";
 import { mathHtml } from "../../core/util/math";
 
-/** the Wind dataset selector's ⓘ (Earth has an info text here); one Mars dataset: no ⓘ */
-export const DATASET_INFO_TEXT = "";
+/** datasets whose rows stop short of the poles: where their cells end (registry info.grid) */
+const coverageNotes = () => Object.values(DATASET_INFO).filter((d) => d.grid && gridLatRange(d.grid)[1] < 90 - 1e-6).map((d) => outsideGridText(1, d.grid!, d.name));
+/** the Wind dataset selector's ⓘ (with more than one dataset; the facts from the registry entries) */
+export const DATASET_INFO_TEXT = Object.keys(DATASET_INFO).length < 2 ? "" : `The Wind dataset selector switches between Mars wind datasets (${Object.values(DATASET_INFO).map((d) => `${d.name}, ${d.resolution}`).join("; ")}), each one Mars year of lowest-level winds on its own grid: MCMC FV3 is a free-running climate-model simulation; EMARS and MACDA are reanalyses of Mars Year 30, which assimilate spacecraft observations of the atmosphere into a climate model. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain.${coverageNotes().map((t) => ` ${t}`).join("")}`;
 
 export const HELP_SECTIONS: HelpSection[] = [
   {
@@ -31,7 +34,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "datasets", title: "Wind dataset",
-    body: "The winds are the hourly lowest-level winds of a Mars climate model over one Mars year (e.g., the MCMC FV3-based Mars Global Climate Model, beta release 1: 2° grid, 16,032 hourly samples). The wind and sand-flux layers and the cell panel use the dataset shown in the Wind dataset selector.",
+    body: DATASET_INFO_TEXT || "The winds are the hourly lowest-level winds of a Mars climate model over one Mars year (e.g., the MCMC FV3-based Mars Global Climate Model, beta release 1: 2° grid, 16,032 hourly samples). The wind and sand-flux layers and the cell panel use the dataset shown in the Wind dataset selector.",
   },
   {
     id: "basemaps", title: "Basemaps",

@@ -295,10 +295,26 @@ export class CellPanel {
   close() {
     this.#req++;
     this.#cell = null;
+    this.#outside = false;
     this.#root.hidden = true;
     this.#root.replaceChildren();
     this.#content = null;
     document.body.classList.remove("cell-open");
+  }
+
+  /** the panel shows why a point has no cell (showOutside) */
+  #outside = false;
+  get outsideShown(): boolean { return this.#outside; }
+  /** A point without a cell of the wind dataset (poleward of a grid whose rows stop short of the pole):
+   *  the panel says so, with the reason `text` (core/cell/datasetinfo.ts outsideGridText). */
+  showOutside(lat: number, lon: number, text: string) {
+    this.#req++;
+    this.#cell = null;
+    this.#root.hidden = false;
+    document.body.classList.add("cell-open");
+    this.#frame({ iy: -1, ix: -1, lat, lon }).innerHTML = `<div class="empty-state" role="status"><p><strong>No ${escapeHtml(this.#ds().name)} cell at this point</strong></p><p>${escapeHtml(text)}</p></div>`;
+    this.#outside = true;
+    protectDom(this.#root);
   }
 
   /** Show a cell. Re-showing the same location (the same cell, or the cell of another wind dataset
@@ -306,6 +322,7 @@ export class CellPanel {
    *  data are in, then re-renders at the same scroll position; another location starts at the top.
    *  Collapsed sections are kept in both cases (#open). */
   async show(store: CellStore | Promise<CellStore>, iy: number, ix: number) {
+    this.#outside = false;
     const req = ++this.#req;
     this.#root.hidden = false;
     document.body.classList.add("cell-open");

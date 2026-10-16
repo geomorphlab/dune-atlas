@@ -1,0 +1,39 @@
+{
+ "$comment": "Spec of the MACDA v2.0 MY30 dataset (mars/datasets.py). n_samples, ls_definition and sol_definition are set by the extraction (mars/sources/macda.py).",
+ "id": "macda-v2-my30",
+ "name": "MACDA v2.0 reanalysis, Mars Year 30 (5°, every 2 Mars hours)",
+ "resolution_text": "5°",
+ "grid": {
+  "lat0": 87.5,
+  "dlat": -5.0,
+  "lon0": -180.0,
+  "dlon": 5.0,
+  "ny": 36,
+  "nx": 72,
+  "cell_registration": "centre"
+ },
+ "samples_per_sol": 12,
+ "n_samples": 8023,
+ "prefix": "dune-atlas/mars/v2/datasets/macda-v2-my30",
+ "reader": "contract",
+ "source": "https://doi.org/10.5285/cd037a9ea387438fabf4d674dbe53088",
+ "citation": "Valeanu, A., Rajendran, K., Montabone, L. & Read, P. L. (2026). Mars Analysis Correction Data Assimilation (MACDA): Atmospheric and surface fields produced from assimilated MGS/TES, ODY/THEMIS, and MRO/MCS observations, v2.0. NERC EDS Centre for Environmental Data Analysis. doi:10.5285/cd037a9ea387438fabf4d674dbe53088; read from Bhattacharya, A. (2026). ARCO-MACDA: Analysis-Ready Cloud-Optimized MACDA Reanalysis. Hugging Face. doi:10.57967/hf/8771. Mars Year 30 (ODY/THEMIS assimilation to Ls 19°, MRO/MCS after), 12 samples per sol, lowest sigma level (0.9995), native grid.",
+ "licence": "MACDA v2.0: UK Open Government Licence v3.0 (CEDA)",
+ "license_spdx": "OGL-UK-3.0",
+ "winds_phrase": "MACDA v2.0 reanalysis, Mars Year 30 lowest-level winds every two Mars hours (Valeanu, A., Rajendran, K., Montabone, L. & Read, P. L. (2026). Mars Analysis Correction Data Assimilation (MACDA): Atmospheric and surface fields produced from assimilated MGS/TES, ODY/THEMIS, and MRO/MCS observations, v2.0. NERC EDS Centre for Environmental Data Analysis. doi:10.5285/cd037a9ea387438fabf4d674dbe53088; read from Bhattacharya, A. (2026). ARCO-MACDA: Analysis-Ready Cloud-Optimized MACDA Reanalysis. Hugging Face. doi:10.57967/hf/8771)",
+ "gcm_citation": "Valeanu, A., Rajendran, K., Montabone, L. & Read, P. L. (2026). Mars Analysis Correction Data Assimilation (MACDA): Atmospheric and surface fields produced from assimilated MGS/TES, ODY/THEMIS, and MRO/MCS observations, v2.0. NERC EDS Centre for Environmental Data Analysis. doi:10.5285/cd037a9ea387438fabf4d674dbe53088; read from Bhattacharya, A. (2026). ARCO-MACDA: Analysis-Ready Cloud-Optimized MACDA Reanalysis. Hugging Face. doi:10.57967/hf/8771",
+ "store_title": "dune-atlas Mars cell store: MACDA v2.0 reanalysis (Mars Year 30) two-hourly lowest-level winds, air state and sand-flux fields at 64 grain sizes",
+ "series_note": "u, v = uwind, vwind of the lowest sigma level s = 0.9995 (the wind at that sample's height z); T = temp of that level; rho = p/(R T) with p = s ps; z = (R T/g) ln(1/s); float32 with mantissas rounded to series_keepbits (|error| <= 0.005 m/s, 0.02 K, 0.05 % rho, 1 mm z). Fields are computed from the unrounded values.",
+ "ls_definition": "MACDA model solar longitude Ls (deg; 0 at time 0, the start of MY24; not the astronomical Ls); Mars Year 30 = every step with MACDA MY_Ls = 30, Ls 0.034 to 359.983",
+ "sol_definition": "MACDA time (sols since the start of MY24; the fraction of a sol is the mean solar time of day at the prime meridian), one sample every two Mars hours, 4011.667 to 4680.167 in Mars Year 30",
+ "pyramid_source": "Fields computed for the Mars dune atlas from the MACDA v2.0 reanalysis (Valeanu et al. 2026, CEDA, doi:10.5285/cd037a9ea387438fabf4d674dbe53088; read from ARCO-MACDA, doi:10.57967/hf/8771), Mars Year 30 two-hourly lowest-level winds, temperature and air density, with the per-hour threshold and transport rate of Pähtz & Durán (2023) J. Fluid Mech. 963, A20, doi:10.1017/jfm.2023.343, and the crest-mode methods outlined in Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y",
+ "qsdiv_grid_text": "on the MACDA 5° grid (periodic in longitude, one-sided at the ±87.5° rows)",
+ "rho_description": "Mean over the two-hourly samples of Mars Year 30 of the lowest-level air density rho_f = p/(R T) (p = s ps at the lowest sigma level s = 0.9995, T = temp of that level, R = 191.8 J kg-1 K-1).",
+ "cell_text": "the 5° cell",
+ "registry_dir": "registry/mars/datasets/macda-v2-my30",
+ "meta_json": "registry/mars/datasets/macda-v2-my30/qsat_field_metadata.json",
+ "fields_method": "23 sand-flux fields at 64 median grain diameters from the lowest-level winds, time-averaged over Mars Year 30 (one sample every two Mars hours), per-sample threshold and flux (Pähtz & Durán 2023) with the crest-mode methods outlined in Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y",
+ "notes": {
+  "resolution_deg": 5.0
+ }
+}
