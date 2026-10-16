@@ -138,8 +138,8 @@ EN: Layers and Active layers
 ZH: 图层与当前图层
 
 ## earth.help.layers.body (Help panel)
-EN: Tick a layer to show it. The ⓘ button gives its definition, units and data source; Display changes its colours, colour limits and scale, or shows direction fields as arrows or streamlines, with a spacing slider from Finer (denser lines) to Coarser. Active layers lists what is on the map, top first: drag a row or use the arrows to change the drawing order, set the opacity with its slider, and remove a layer with ×. Dunes only (under the Wind dataset selector) draws every wind-derived layer (sand-flux fields, flux divergence, arrows and streamlines) only in the cells with dunes of the dataset; dunes, aridity, vegetation and the basemaps are unchanged, and the cell panel still works for any cell. The setting is part of the link. Names, in the Dune Fields group, labels named dune fields on the map (where names would overlap, some appear only as you zoom in) and hides the basemap's place names other than countries and states while it is on; click a name to zoom to the field and see its other names, countries and sources.
-ZH: 勾选图层即可将其显示。ⓘ 按钮给出该图层的定义、单位和数据来源；“显示”可更改其颜色、颜色范围和标度，或将方向场显示为箭头或流线，并提供从“更细”（线条更密）到“更粗”的间距滑块。“当前图层”列出地图上显示的内容，顶层排在最前：拖动某一行或使用箭头可更改绘制顺序，用其滑块设置不透明度，点击 × 可移除图层。“仅沙丘”（位于“风场数据集”选择器下方）使所有由风场派生的图层（输沙通量场、输沙通量散度、箭头和流线）仅在该数据集中有沙丘的网格单元内绘制；沙丘、干旱度、植被和底图不受影响，网格单元面板仍适用于任何网格单元。该设置包含在链接中。“沙丘区”组中的“名称”在地图上标注已命名的沙丘区（名称会重叠之处，部分名称仅在放大后才显示），开启时会隐藏底图中除国家和州以外的地名；点击某一名称可缩放至该沙丘区，并查看其其他名称、所属国家和来源。
+EN: Tick a layer to show it. The ⓘ button gives its definition, units and data source; Display changes its colours, colour limits and scale, or shows direction fields as arrows or streamlines, with a spacing slider from Finer (denser lines) to Coarser. Active layers lists what is on the map, top first: drag a row or use the arrows to change the drawing order, set the opacity with its slider, and remove a layer with ×. Dunes only (under the Wind dataset selector) draws every wind-derived layer (sand-flux fields, flux divergence, arrows and streamlines) only in the cells with dunes of the dataset, and draws the dune map at no more than 50 % opacity so that these cells show through it; aridity, vegetation and the basemaps are unchanged, and the cell panel still works for any cell. The setting is part of the link. Names, in the Dune Fields group, labels named dune fields on the map (where names would overlap, some appear only as you zoom in) and hides the basemap's place names other than countries and states while it is on; click a name to zoom to the field and see its other names, countries and sources.
+ZH: 勾选图层即可将其显示。ⓘ 按钮给出该图层的定义、单位和数据来源；"显示"可更改其颜色、颜色范围和标度，或将方向场显示为箭头或流线，并提供从"更细"（线条更密）到"更粗"的间距滑块。"当前图层"列出地图上显示的内容，顶层排在最前：拖动某一行或使用箭头可更改绘制顺序，用其滑块设置不透明度，点击 × 可移除图层。"仅沙丘"（位于"风场数据集"选择器下方）会使所有由风场派生的图层（输沙通量场、输沙通量散度、箭头和流线）仅在该数据集中有沙丘的网格单元内绘制，并将沙丘图以不超过 50% 的不透明度绘制，使这些网格单元透过沙丘图显示；干旱度、植被和底图不受影响，网格单元面板仍适用于任何网格单元。该设置包含在链接中。"沙丘区"组中的"名称"在地图上标注已命名的沙丘区（名称会重叠之处，部分名称仅在放大后才显示），开启时会隐藏底图中除国家和州以外的地名；点击某一名称可缩放至该沙丘区，并查看其其他名称、所属国家和来源。
 
 ## earth.help.concepts.title (Help panel)
 EN: Concepts
@@ -838,8 +838,8 @@ EN: Layers and Active layers
 ZH: 图层与当前图层
 
 ## mars.help.layers.body (Help panel)
-EN: Tick a layer to show it. The ⓘ button gives its definition, units and data source; Display changes its colours, colour limits and scale, or shows direction fields as arrows or streamlines, with a spacing slider from Finer (denser lines) to Coarser. Active layers lists what is on the map, top first: drag a row or use the arrows to change the drawing order, set the opacity with its slider, and remove a layer with ×. Dunes only (under the Wind dataset selector) draws every wind-derived layer (sand-flux fields, flux divergence, arrows and streamlines) only in the cells with dunes of the dataset; dunes, elevation, air density and the basemaps are unchanged, and the cell panel still works for any cell. The setting is part of the link. Names, in the Dune Fields group, labels named dune fields and features on the map (where names would overlap, some appear only as you zoom in); click a name to zoom to the feature and see its type, other names and sources.
-ZH: 勾选某一图层即可显示。ⓘ 按钮给出其定义、单位和数据来源；“显示”用于更改其配色、颜色范围与标度，或将方向场显示为箭头或流线，并可通过间距滑块在“更细”（线条更密）与“更粗”之间调节。“当前图层”列出地图上显示的内容，最上层排在最前：拖动某一行或使用箭头可改变绘制顺序，用其滑块设置不透明度，点击 × 移除图层。“仅沙丘”（位于“风场数据集”选择器下方）使所有由风场衍生的图层（输沙通量场、输沙通量散度、箭头和流线）仅在该数据集中有沙丘的网格单元内绘制；沙丘、高程、空气密度和底图不受影响，网格单元面板对任何网格单元仍然可用。该设置会包含在链接中。“沙丘区”组中的“名称”在地图上标注已命名的沙丘区和地物（名称重叠时，部分名称仅在放大后才显示）；点击名称可缩放至该地物，并查看其类型、其他名称和来源。
+EN: Tick a layer to show it. The ⓘ button gives its definition, units and data source; Display changes its colours, colour limits and scale, or shows direction fields as arrows or streamlines, with a spacing slider from Finer (denser lines) to Coarser. Active layers lists what is on the map, top first: drag a row or use the arrows to change the drawing order, set the opacity with its slider, and remove a layer with ×. Dunes only (under the Wind dataset selector) draws every wind-derived layer (sand-flux fields, flux divergence, arrows and streamlines) only in the cells with dunes of the dataset, and draws the dune map at no more than 50 % opacity so that these cells show through it; elevation, air density and the basemaps are unchanged, and the cell panel still works for any cell. The setting is part of the link. Names, in the Dune Fields group, labels named dune fields and features on the map (where names would overlap, some appear only as you zoom in); click a name to zoom to the feature and see its type, other names and sources.
+ZH: 勾选某一图层即可显示。ⓘ 按钮给出其定义、单位和数据来源；“显示”用于更改其配色、颜色范围与标度，或将方向场显示为箭头或流线，并可通过间距滑块在“更细”（线条更密）与“更粗”之间调节。“当前图层”列出地图上显示的内容，最上层排在最前：拖动某一行或使用箭头可改变绘制顺序，用其滑块设置不透明度，点击 × 移除图层。“仅沙丘”（位于“风场数据集”选择器下方）使所有由风场衍生的图层（输沙通量场、输沙通量散度、箭头和流线）仅在该数据集中有沙丘的网格单元内绘制，并将沙丘图的不透明度设为不超过50%，以便透过沙丘图看到这些网格单元；高程、空气密度和底图不受影响，网格单元面板对任何网格单元仍然可用。该设置会包含在链接中。“沙丘区”组中的“名称”在地图上标注已命名的沙丘区和地物（名称重叠时，部分名称仅在放大后才显示）；点击名称可缩放至该地物，并查看其类型、其他名称和来源。
 
 ## mars.help.concepts.title (Help panel)
 EN: Concepts
@@ -3237,7 +3237,25 @@ ZH: ⟦0⟧ = ⟦#0⟧ µm（中心）至 ⟦#1⟧ µm（边缘）的模式方�
 EN: Go to
 ZH: 前往
 
+# Layer popovers
+
+## c.97317967 (Layer popovers)
+EN: The other layers, the cell panel and the downloads are unchanged.
+ZH: 其他图层、网格单元面板和下载内容不变。
+
+## c.33496956 (Layer popovers)
+EN: While it is on, the dune map is drawn at no more than ⟦#0⟧ % opacity, so the colours of the dune cells show through it. Its own opacity setting applies again when Dunes only is off.
+ZH: 开启时，沙丘分布图的不透明度不超过 ⟦#0⟧%，以便透过它看到沙丘网格单元的颜色。关闭“仅沙丘”后，沙丘分布图恢复其自身的不透明度设置。
+
+## c.0b5ec76e (Layer popovers)
+EN: Dunes only draws the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in the cells of the selected wind dataset that contain mapped dunes.
+ZH: “仅沙丘”只在所选风场数据集中含有已制图沙丘的网格单元内绘制由风场导出的图层（输沙通量场、输沙通量散度、箭头和流线）。
+
 # Unused (English changed or removed)
+
+## c.30170ce5 (Unused (English changed or removed))
+EN: Dunes only draws the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in the cells of the selected wind dataset that contain mapped dunes; the other cells of these layers are left empty.
+ZH: “仅沙丘”只在所选风场数据集中含有已制图沙丘的网格单元内绘制由风场导出的图层（输沙通量场、输沙通量散度、箭头和流线）；这些图层的其他网格单元留空。
 
 ## c.037dc143 (Unused (English changed or removed))
 EN: The default, ⟦#0⟧ m/s, is the value used for the global analysis of⟦0⟧: a common global approximation used in place of more accurate local values, not calibrated for any site. Values between ⟦#1⟧ and ⟦#2⟧ m/s are typical; for loose, dry sand the threshold depends mainly on grain size and density.

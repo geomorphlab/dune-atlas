@@ -53,7 +53,7 @@ Phase 1 of the restructuring was published directly as `6742bca` (before branch 
 | L5 | One name per quantity; fix the αH legend | done | `cdbbbed`, `6adf251` | αH "Crest orientation, bed-instability mode", read as an axis. |
 | L6 | RDD unstable at low RDP/DP; αT can differ from RDD | done | `cdbbbed`; PR #3 | Modes caption; Concepts entries RDD and αT. |
 | L7 | Vegetation caveat on bare desert | done | `cdbbbed` | |
-| L8 | Dunes only should show the data; 0.25° mask footprint | partly done | `d247c65` | Dune map drawn as outlines with Dunes only. Footprint comparison deferred. |
+| L8 | Dunes only should show the data; 0.25° mask footprint | partly done | `d247c65`; changed 16 Oct | Dune map drawn as outlines with Dunes only (suited to ERA5-Land, when it was the only dataset). 16 Oct (PI): the dune map keeps its fill and is drawn at no more than 50 % opacity while Dunes only is on; Dunes only has an ⓘ saying what it does and this. Footprint comparison deferred. |
 | L9 | Regional download or a link to the full grid with an xarray example; DOI for the ERA5 0.25° fields | partly done | PR #4 | Download a region (box drawn or typed, CF-1.8 NetCDF with README) and the Get the whole grid guide (public Zarr stores, Python example generated from the registry). A DOI for the ERA5 0.25° fields deferred (no Zenodo deposit for now); they keep the "computed for the Dune Atlas" wording. |
 | L10 | Why 0.15 m/s, grain size, reanalysis bias; which dataset to use | done | `6adf251`, `41a6495`; PR #3 | Threshold and dataset ⓘ; Concepts entries on the threshold and the two ERA5 datasets (Baas 2026 as an example). |
 | L11 | Caption gaps | done | `caf086f` | As U8. |
