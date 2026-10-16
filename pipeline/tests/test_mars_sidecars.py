@@ -78,7 +78,7 @@ def test_build_all(tmp_path):
     np.testing.assert_allclose(aux["qsdiv"][:, :, 29], SC.compute_qsdiv(fields)[29], rtol=1e-6)
     meta = json.load(open(tmp_path / "meta.json"))
     assert set(meta) == set(QV) and meta["dpm"]["p98"] > meta["dpm"]["p2"]
-    assert "hours of the Mars year" in meta["dpm"]["description"]
+    assert "samples of the Mars year" in meta["dpm"]["description"]   # dataset-agnostic: hourly or two-hourly
     q = yaml.safe_load(open(tmp_path / "gen" / "qsat_fields.yaml"))
     assert sorted(l["id"] for l in q["layers"]) == sorted(QV)
     for lay in q["layers"]:

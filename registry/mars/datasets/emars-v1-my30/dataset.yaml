@@ -1,0 +1,99 @@
+# EMARS v1.0, Mars Year 30: registry entry of this wind dataset (a `datasets` list entry, schema registry/layers.schema.json
+# datasets.items), merged with registry/mars/layers.yaml by the app (core/registry/load.ts). The layer fragments of
+# the dataset (qsat_fields.yaml, x_extra_fields.yaml: sources, colour limits, citations) and qsat_field_metadata.json
+# are written by the pipeline (mars/sidecars.py with DUNE_ATLAS_MARS_DATASET=emars-v1-my30); without them its layers keep
+# the definitions of registry/mars/generated/ with this dataset's sources ('{dataset}' = the prefix below).
+- id: emars-v1-my30
+  title: EMARS v1.0 (MY30)
+  prefix: dune-atlas/mars/v2/datasets/emars-v1-my30
+  description: 'EMARS v1.0 reanalysis, Mars Year 30 (6° × 5.14°, hourly analysis ensemble mean; no cells
+    poleward of ±87.43°): lowest-level winds, temperature and air density.'
+  citation: 'Greybush, S. J., Kalnay, E., Wilson, R. J., Hoffman, R. N., Nehrkorn, T., Leidner, M., et al.
+    (2018). The Ensemble Mars Atmosphere Reanalysis System (EMARS) Version 1.0 Dataset. Penn State Data
+    Commons. doi:10.18113/D3W375; read from Bhattacharya, A. (2026). ARCO-EMARS: Analysis-Ready
+    Cloud-Optimized EMARS Reanalysis. Hugging Face. doi:10.57967/hf/8859'
+  cellAuxStores: ['{dataset}/cells-aux.zarr']
+  info:
+    name: EMARS
+    resolution: 6° × 5.14°
+    resDeg: 5.142857142857143
+    period: 'one Mars year (Mars Year 30)'
+    nHours: 16046   # samples of the built store (the app takes the length from the cell store's series)
+    landRule: 'every cell (Mars has no land mask: all 2,040 cells carry wind data); the grid stops at ±87.43°
+      latitude (no polar rows)'
+    landThreshold: 0
+    nonLandReason: ''
+    kind: reanalysis of Mars Year 30, with spacecraft observations of the atmosphere assimilated into a climate model
+    dunesRule: 'the cell overlaps at least one dune polygon of the merged dune map (USGS Mars Global Digital
+      Dune Database and Fenton 2020)'
+    fieldsFrom: atlas
+    sourceTitle: 'Winds (EMARS v1.0 reanalysis, Mars Year 30)'
+    sourceHtml: 'hourly analysis ensemble mean of the lowest-level winds, temperature and surface pressure of
+      the Ensemble Mars Atmosphere Reanalysis System (EMARS) v1.0 (Greybush et al. 2018, 2019; read
+      from the analysis-ready ARCO-EMARS copy), Mars Year 30, on its native grid of 6° in longitude ×
+      5.14° in latitude (34 × 60 cells, about 355 km × 305 km at the equator). The two half-width
+      polar rows of EMARS are not used, so the grid ends at ±87.43°. The winds are averaged from the staggered EMARS grid onto the cell centres. Air density
+      of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly
+      pressure and temperature, and the friction velocity u* comes from the smooth-wall mixing-length
+      profile of Pähtz &amp; Durán (2023, eq. 2.2) under constant stress at that height (no roughness
+      length). The lowest EMARS layer is thick, so that height is 22–50 m above the surface (median 35 m; FV3 1.5–3.2 m, MACDA 3.6–7.3 m). Data and documentation: <a href="https://doi.org/10.18113/D3W375" target="_blank" rel="noopener noreferrer">EMARS v1.0
+      at the Penn State Data Commons</a>; the analysis-ready copy read by the atlas, <a
+      href="https://huggingface.co/datasets/ananyo01/ARCO-EMARS" target="_blank" rel="noopener noreferrer">ARCO-EMARS</a>, with <a
+      href="https://github.com/GalacticBobster/ARCO-Mars-Examples" target="_blank" rel="noopener noreferrer">Python examples for reading and
+      plotting it</a>.'
+    grid: { lat0: 84.85714285714286, dlat: -5.142857142857143, lon0: -177.0, dlon: 6.0, ny: 34, nx: 60 }
+    series:
+      samplesPerSol: 24
+      indexText: 'hour index of the record (0 = first hour of Mars Year 30)'
+      solText: 'sols since the start of Mars Year 30 (one sample per Mars hour)'
+  credits:
+    sources:
+    - dune-atlas-mars-emars
+    - emars
+    - pahtz-duran
+    - dunes
+    dataSource: emars
+    fieldsCitation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications.
+      doi:10.1038/s41467-026-75466-y; transport law: Pähtz, T. & Durán, O. (2023). Scaling laws
+      for planetary sediment transport from DEM-RANS numerical simulations. Journal of Fluid
+      Mechanics 963, A20. doi:10.1017/jfm.2023.343; winds: EMARS v1.0 reanalysis, Mars Year 30
+      hourly lowest-level winds (Greybush, S. J., Kalnay, E., Wilson, R. J., Hoffman, R. N.,
+      Nehrkorn, T., Leidner, M., et al. (2018). The Ensemble Mars Atmosphere Reanalysis System
+      (EMARS) Version 1.0 Dataset. Penn State Data Commons. doi:10.18113/D3W375; read from
+      Bhattacharya, A. (2026). ARCO-EMARS: Analysis-Ready Cloud-Optimized EMARS Reanalysis.
+      Hugging Face. doi:10.57967/hf/8859)'
+    fieldsLicence: 'EMARS v1.0 (Penn State Data Commons); CC BY 4.0 as labelled by ARCO-EMARS (licence of the
+      original record to be confirmed)'
+    windSourceText: 'Wind: EMARS v1.0 reanalysis (Greybush et al. 2018, doi:10.18113/D3W375; read from
+      ARCO-EMARS, doi:10.57967/hf/8859), Mars Year 30, hourly lowest-level wind (analysis ensemble
+      mean), 6° × 5.14°'
+  citationSources:
+  - id: dune-atlas-mars-emars
+    title: 'Mars Dune Atlas (method)'
+    entries:
+    - label: Method (wind-regime and dune-orientation fields)
+      text: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications.'
+      doi: '10.1038/s41467-026-75466-y'
+      key: method_wind_regime_and_dune_orientation_fields
+    notice: 'Mars wind series, sand-flux fields and flux divergence computed for the Mars Dune Atlas from the
+      EMARS v1.0 lowest-level winds of Mars Year 30 with the transport law of Pähtz & Durán (2023) and the
+      methods outlined in Gunn (2026).'
+  - id: emars
+    title: 'EMARS v1.0 reanalysis (Mars Year 30)'
+    entries:
+    - label: Paper
+      text: 'Greybush, S. J., Kalnay, E., Wilson, R. J., Hoffman, R. N., Nehrkorn, T., Leidner, M., et al.
+        (2019). The Ensemble Mars Atmosphere Reanalysis System (EMARS) Version 1.0. Geoscience Data Journal
+        6(2), 137–150.'
+      doi: '10.1002/gdj3.77'
+    - label: Data
+      text: 'Greybush, S. J., Kalnay, E., Wilson, R. J., Hoffman, R. N., Nehrkorn, T., Leidner, M., et al.
+        (2018). The Ensemble Mars Atmosphere Reanalysis System (EMARS) Version 1.0 Dataset. Penn State Data
+        Commons.'
+      doi: '10.18113/D3W375'
+    - label: Data (analysis-ready copy read by the atlas)
+      text: 'Bhattacharya, A. (2026). ARCO-EMARS: Analysis-Ready Cloud-Optimized EMARS Reanalysis. Hugging
+        Face.'
+      doi: '10.57967/hf/8859'
+      license: 'CC BY 4.0 (as labelled by ARCO-EMARS)'
+      key: data_arco

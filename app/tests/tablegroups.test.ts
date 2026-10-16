@@ -8,6 +8,7 @@ import { checkGroupsMatchRegistry } from "./tablegroupslib";
 
 const mem = new Map<string, string>();
 vi.stubGlobal("localStorage", { getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => { mem.set(k, v); }, removeItem: (k: string) => { mem.delete(k); } });
+vi.stubGlobal("sessionStorage", { getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => { mem.set(k, v); }, removeItem: (k: string) => { mem.delete(k); } });  // visit settings (core/visit.ts)
 const row = (id: string) => `<tr data-field="${id}"><td class="sym">x</td><th scope="row">${id}</th><td class="num">1</td></tr>`;
 
 describe("summary table groups", () => {

@@ -20,19 +20,19 @@ Tick a layer to show it. The ⓘ button gives its definition, units and data sou
 
 ### Concepts
 
-The Concepts button (mortarboard, under the Help button) explains the quantities of the atlas, each with its references. The Concept link in a layer's ⓘ opens its entry.
+The Concepts button [Concepts icon] (under the Help button [Help icon]) explains the quantities of the atlas, each with its references. The Concept link in a layer's ⓘ opens its entry.
 
 ### Search
 
-Type a dune-field name (e.g. Namib Sand Sea or Rub' al Khali), a country, or a latitude and a longitude in the box at the top of the layer panel. Names match either line of a label and the other names a field is known by, including its named parts, ignoring accents; the list under the box shows each match with its countries and the best matches first. Coordinates can be in decimal degrees or in degrees, minutes and seconds, signed or with N, S, E or W (e.g. -24.5, 15.2 or 24°30′S 15°12′E). Latitude comes first unless the letters say otherwise. The line under the box shows how the text was read; Enter moves the map there and opens the cell panel when the cell has data.
+Type a dune-field name (e.g. Namib Sand Sea or Rub' al Khali), a country, or a latitude and a longitude in the box at the top of the layer panel. Names match either line of a label and the other names a field is known by, including its named parts, ignoring accents; the list under the box shows each match with its countries and the best matches first. Coordinates can be in decimal degrees or in degrees, minutes and seconds, signed or with N, S, E or W (e.g. -24.5, 15.2 or 24°30′S 15°12′E). Latitude comes first unless the letters say otherwise. While you type coordinates, the line under the box shows the position they were read as (“Go to …”); Enter moves the map there and opens the cell panel when the cell has data.
 
 ### Clicking a cell
 
-Click any land cell to open the cell panel: the wind rose, the sand-flux rose at the current threshold, dune-orientation modes against the threshold, the flux divergence and a table of all parameters. Sand-flux rose petals point toward where sand moves; the Petals switch above the rose turns them to show where the wind comes from instead (the arrows always point toward). Section headings fold and unfold. Close the panel with × or Esc. The latitude and longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The crosshair button next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).
+Click any land cell to open the cell panel: the wind rose, the sand-flux rose at the current threshold, dune-orientation modes against the threshold, the flux divergence and a table of all parameters. Sand-flux rose petals point toward where sand moves; the “Petals: toward / from” choice above the rose turns them to show where the wind comes from instead (the arrows always point toward). Section headings fold and unfold. Close the panel with × or Esc. The latitude and longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The button [centre-map icon] next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).
 
 ### Wind datasets
 
-The Wind dataset selector switches between reanalysis wind statistics (ERA5-Land, 0.1°; ERA5, 0.25°; 1950–2024). ERA5-Land, used by Gunn (2026), is a land-surface rerun driven by ERA5 atmospheric fields interpolated to its grid (Muñoz-Sabater et al. 2021), so its winds are not an independent estimate, and the datasets can still differ: e.g., Baas (2026) reports ERA5-Land 10 m wind speeds 20–30 % below those of ERA5. Where the datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
+The Wind dataset selector switches between wind datasets (ERA5-Land, 0.1°, 1950–2024; ERA5, 0.25°, 1950–2024). ERA5-Land, used by Gunn (2026), re-runs ECMWF's land-surface model driven by ERA5 atmospheric fields interpolated to its 0.1° grid (Muñoz-Sabater et al. 2021); Baas (2026) reports its 10 m wind speeds 20–30 % below those of ERA5. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
 
 ### Downloads and citation
 
@@ -40,15 +40,15 @@ Download & cite in the cell panel saves the wind histogram and all parameters of
 
 ### Downloading a region
 
-The button below the camera (a dashed box) saves every cell of the selected wind dataset in a latitude-longitude box as one NetCDF file with a README. Type the bounds, or press Draw on map and drag a box on the map (Esc cancels). Tick the parameters and choose every threshold or the current one; the size is estimated as you go and is limited to what a browser can hold. For the whole grid, see Get the whole grid under Download & cite.
+The region button [region icon], below the camera button [camera icon], saves every cell of the selected wind dataset in a latitude-longitude box as one NetCDF file with a README. Type the bounds, or press Draw on map and drag a box on the map (Esc cancels). Tick the parameters and choose every threshold or the current one; the size is estimated as you go and is limited to what a browser can hold. For the whole grid, see Get the whole grid under Download & cite.
 
 ### Exporting images
 
-Export map image (camera button, top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap, on a white or transparent background. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.
+Export map image (camera button [camera icon], top right) saves the current view as a PNG 1600–2400 pixels wide (1.5 times its on-screen width), with or without the basemap, on a white or transparent background. Below the map come the colour bars, legends, north arrow and scale bar, then the view, wind dataset and data sources. Each plot in the cell panel has an Export menu for a PNG (1600 pixels wide) or an SVG in a light theme with the same layout.
 
 ### Sharing the view
 
-The share button (top right) copies a short link that restores this view: position, zoom, globe or flat map, wind dataset, threshold, basemap, the active layers with their display settings, and the selected cell. The address bar also always holds a full link to the current view.
+The share button [share icon] (top right) copies a short link that restores this view: position, zoom, globe or flat map, wind dataset, threshold, basemap, the active layers with their display settings, and the selected cell. The address bar also always holds a full link to the current view.
 
 ## Guided tour
 
@@ -58,13 +58,13 @@ Shown once on the first visit (not in embed mode unless `?tour=1`). Buttons: Bac
 
 Highlights: `.atlas-tools .help-btn`
 
-This short tour shows the main controls. The Help button (?) highlighted here, in the top-right corner, opens a quick reference and restarts this tour at any time.
+This short tour shows the main controls. The Help button [Help icon] highlighted here, in the top-right corner, opens a quick reference and restarts this tour at any time.
 
 ### 2. Concepts
 
 Highlights: `.atlas-tools .concepts-btn`
 
-The Concepts button (mortarboard) explains what the quantities on the map mean, with references. Each layer's ⓘ links to its entry.
+The Concepts button [Concepts icon] explains what the quantities on the map mean, with references. Each layer's ⓘ links to its entry.
 
 ### 3. The map
 
@@ -94,7 +94,7 @@ The layers on the map, top first. Drag a row or use the arrows to change which l
 
 Highlights: `#cell-panel:not([hidden])` or `#map`
 
-Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The crosshair next to its title centres the map on the cell.
+Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one. At the bottom, Download & cite saves these data as NetCDF or CSV, with the citations. The button [centre-map icon] next to its title centres the map on the cell.
 
 ### 8. Wind dataset
 
@@ -112,7 +112,7 @@ Copy a short link to this view, export the map as an image with colour bars, sca
 
 Highlights: `.atlas-tools .planet-btn` or `.atlas-tools`
 
-Earth and Mars share this atlas: the planet button below the camera swaps between them, and each atlas reopens the view you last had there.
+Earth and Mars share this atlas: the planet button [planet icon], below the camera button [camera icon], swaps between them, and each atlas reopens the view you last had there.
 
 Fallback (example cell not loaded): The example cell could not be loaded. Click any land cell on the map to open its panel.
 

@@ -1,0 +1,104 @@
+# MACDA v2.0, Mars Year 30: registry entry of this wind dataset (a `datasets` list entry, schema registry/layers.schema.json
+# datasets.items), merged with registry/mars/layers.yaml by the app (core/registry/load.ts). The layer fragments of
+# the dataset (qsat_fields.yaml, x_extra_fields.yaml: sources, colour limits, citations) and qsat_field_metadata.json
+# are written by the pipeline (mars/sidecars.py with DUNE_ATLAS_MARS_DATASET=macda-v2-my30); without them its layers keep
+# the definitions of registry/mars/generated/ with this dataset's sources ('{dataset}' = the prefix below).
+- id: macda-v2-my30
+  title: MACDA v2.0 (MY30)
+  prefix: dune-atlas/mars/v2/datasets/macda-v2-my30
+  description: 'MACDA v2.0 reanalysis, Mars Year 30 (5°, one sample every two Mars hours): lowest-level winds,
+    temperature and air density.'
+  citation: 'Valeanu, A., Rajendran, K., Montabone, L. & Read, P. L. (2026). Mars Analysis Correction Data
+    Assimilation (MACDA): Atmospheric and surface fields produced from assimilated MGS/TES, ODY/THEMIS,
+    and MRO/MCS observations, v2.0. NERC EDS Centre for Environmental Data Analysis.
+    doi:10.5285/cd037a9ea387438fabf4d674dbe53088; read from Bhattacharya, A. (2026). ARCO-MACDA:
+    Analysis-Ready Cloud-Optimized MACDA Reanalysis. Hugging Face. doi:10.57967/hf/8771'
+  cellAuxStores: ['{dataset}/cells-aux.zarr']
+  info:
+    name: MACDA
+    resolution: 5°
+    resDeg: 5.0
+    period: 'one Mars year (Mars Year 30)'
+    nHours: 8023   # samples of the built store (the app takes the length from the cell store's series)
+    landRule: 'every cell (Mars has no land mask: all 2,592 cells carry wind data)'
+    landThreshold: 0
+    nonLandReason: ''
+    kind: reanalysis of Mars Year 30, with spacecraft observations of the atmosphere assimilated into a climate model
+    dunesRule: 'the cell overlaps at least one dune polygon of the merged dune map (USGS Mars Global Digital
+      Dune Database and Fenton 2020)'
+    fieldsFrom: atlas
+    sourceTitle: 'Winds (MACDA v2.0 reanalysis, Mars Year 30)'
+    sourceHtml: 'lowest-level winds, temperature and surface pressure, one sample every two Mars hours, of the
+      Mars Analysis Correction Data Assimilation (MACDA) v2.0 reanalysis (Valeanu et al. 2026, NERC
+      EDS Centre for Environmental Data Analysis; read from the analysis-ready ARCO-MACDA copy), Mars
+      Year 30, on its native 5° grid (36 × 72 cells, about 295 km across at the equator; the first
+      column is centred on 180°). The winds are those of the lowest model level (σ = 0.9995); air
+      density ρ = p/(R T) with p = σ p<sub>s</sub>, the height of that level z = (R T/g) ln(1/σ), and
+      the friction velocity u* comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán
+      (2023, eq. 2.2) under constant stress at that height (no roughness length); that level is 3.6–7.3 m
+      above the surface (FV3 1.5–3.2 m). In Mars Year 30 the first 461 samples (Ls 0–19°) assimilate Mars
+      Odyssey THEMIS column dust, the others Mars Reconnaissance Orbiter MCS temperature and dust profiles.
+      Data, documentation and file browser: <a
+      href="https://catalogue.ceda.ac.uk/uuid/cd037a9ea387438fabf4d674dbe53088/" target="_blank" rel="noopener noreferrer">MACDA v2.0 in the
+      CEDA Archive</a>; the analysis-ready copy read by the atlas: <a
+      href="https://huggingface.co/datasets/ananyo01/ARCO-MACDA" target="_blank" rel="noopener noreferrer">ARCO-MACDA</a>. Contains public
+      sector information licensed under the Open Government Licence v3.0 (MACDA v2.0, NERC EDS Centre
+      for Environmental Data Analysis).'
+    grid: { lat0: 87.5, dlat: -5.0, lon0: -180.0, dlon: 5.0, ny: 36, nx: 72 }
+    series:
+      samplesPerSol: 12
+      indexText: 'sample index of the record (one sample every two Mars hours; 0 = first sample of Mars Year
+        30)'
+      solText: 'MACDA time: sols since the start of Mars Year 24 (the fraction of a sol is the mean solar time at
+        the prime meridian; one sample every two Mars hours)'
+  credits:
+    sources:
+    - dune-atlas-mars-macda
+    - macda
+    - pahtz-duran
+    - dunes
+    dataSource: macda
+    fieldsCitation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications.
+      doi:10.1038/s41467-026-75466-y; transport law: Pähtz, T. & Durán, O. (2023). Scaling laws
+      for planetary sediment transport from DEM-RANS numerical simulations. Journal of Fluid
+      Mechanics 963, A20. doi:10.1017/jfm.2023.343; winds: MACDA v2.0 reanalysis, Mars Year 30
+      lowest-level winds every two Mars hours (Valeanu, A., Rajendran, K., Montabone, L. & Read,
+      P. L. (2026). Mars Analysis Correction Data Assimilation (MACDA): Atmospheric and surface
+      fields produced from assimilated MGS/TES, ODY/THEMIS, and MRO/MCS observations, v2.0. NERC
+      EDS Centre for Environmental Data Analysis. doi:10.5285/cd037a9ea387438fabf4d674dbe53088;
+      read from Bhattacharya, A. (2026). ARCO-MACDA: Analysis-Ready Cloud-Optimized MACDA
+      Reanalysis. Hugging Face. doi:10.57967/hf/8771)'
+    fieldsLicence: 'MACDA v2.0: UK Open Government Licence v3.0 (CEDA)'
+    windSourceText: 'Wind: MACDA v2.0 reanalysis (Valeanu et al. 2026,
+      doi:10.5285/cd037a9ea387438fabf4d674dbe53088, Open Government Licence v3.0; read from
+      ARCO-MACDA, doi:10.57967/hf/8771), Mars Year 30, lowest-level wind every two Mars hours, 5°'
+    notice: 'Contains public sector information licensed under the Open Government Licence v3.0 (MACDA v2.0, NERC EDS
+      Centre for Environmental Data Analysis).'
+  citationSources:
+  - id: dune-atlas-mars-macda
+    title: 'Mars Dune Atlas (method)'
+    entries:
+    - label: Method (wind-regime and dune-orientation fields)
+      text: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications.'
+      doi: '10.1038/s41467-026-75466-y'
+      key: method_wind_regime_and_dune_orientation_fields
+    notice: 'Mars wind series, sand-flux fields and flux divergence computed for the Mars Dune Atlas from the
+      MACDA v2.0 lowest-level winds of Mars Year 30 with the transport law of Pähtz & Durán (2023) and the
+      methods outlined in Gunn (2026).'
+  - id: macda
+    title: 'MACDA v2.0 reanalysis (Mars Year 30)'
+    entries:
+    - label: Data
+      text: 'Valeanu, A., Rajendran, K., Montabone, L. & Read, P. L. (2026). Mars Analysis Correction Data
+        Assimilation (MACDA): Atmospheric and surface fields produced from assimilated MGS/TES, ODY/THEMIS,
+        and MRO/MCS observations, v2.0. NERC EDS Centre for Environmental Data Analysis.'
+      doi: '10.5285/cd037a9ea387438fabf4d674dbe53088'
+      license: 'UK Open Government Licence v3.0'
+    - label: Data (analysis-ready copy read by the atlas)
+      text: 'Bhattacharya, A. (2026). ARCO-MACDA: Analysis-Ready Cloud-Optimized MACDA Reanalysis. Hugging
+        Face.'
+      doi: '10.57967/hf/8771'
+      license: 'CC BY 4.0 (as labelled by ARCO-MACDA)'
+      key: data_arco
+    notice: 'Contains public sector information licensed under the Open Government Licence v3.0 (MACDA v2.0,
+      NERC EDS Centre for Environmental Data Analysis).'

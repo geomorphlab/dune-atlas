@@ -152,7 +152,7 @@ describe("tour step 6 (cell): example cell opened without moving the map, then r
     expect(stepIndex("cell")).toBe(6);
     expect(s.body).toMatch(/Namib/);
     expect(s.body).toMatch(/u_\{\*,th\}/);
-    expect(s.body).toBe("Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The crosshair next to its title centres the map on the cell.");
+    expect(s.body).toBe("Clicking a land cell opens the cell panel, shown here for a dune cell in the Namib Sand Sea: wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own $u_{*,th}$ slider at the top (outlined), linked to the main one. At the bottom, Download & cite saves these data as NetCDF or CSV, with the citations. The button {icon_centre} next to its title centres the map on the cell.");
   });
   for (const how of ["next", "back", "skip", "esc", "outside"]) {
     it(`no prior selection: example shown, slider outlined; leaving by ${how} closes the panel again`, async () => {

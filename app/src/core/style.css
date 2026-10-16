@@ -80,7 +80,9 @@ label.inline.dataset-row { display: flex; align-items: center; gap: 6px; margin:
 .dataset-row select { flex: 1 1 auto; min-width: 0; width: 100%; }
 /* Wind dataset row with its ⓘ */
 .dataset-line { display: flex; flex-wrap: wrap; align-items: center; column-gap: 6px; }
-.dataset-line > .info-popover { flex: 1 0 100%; }
+/* own line below the selector; may shrink so its left indent, padding and border stay inside the panel (it ran past
+   the right edge: 100 % wide plus the indent) */
+.dataset-line > .info-popover { flex: 1 1 100%; min-width: 0; box-sizing: border-box; }
 .dataset-line > label.inline.dataset-row { flex: 1 1 auto; min-width: 0; }
 .dataset-line > .info-button { flex: 0 0 auto; margin-bottom: 4px; }
 .layer-group { margin: 8px 0; }
@@ -252,6 +254,10 @@ body.embed #layer-panel { top: 44px; max-height: calc(100% - 94px); }
 /* map tools (help, share, export) under the zoom buttons */
 .atlas-tools button.tool-btn { filter: none; color: var(--fg); display: flex; align-items: center; justify-content: center; }
 .atlas-tools button.tool-btn[aria-expanded="true"] { background: var(--bg3); color: var(--accent); }
+/* a tool button's icon inside help and tour text (ui/texticons.ts): the button's own symbol on its own background */
+/* sized to sit inside the text line (1.15em box from 0.22em below the baseline), so it never opens up the line spacing */
+.text-icon { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: 1.15em; height: 1.15em; margin: 0 0.08em; vertical-align: -0.22em; line-height: 1; border: 1px solid var(--line); border-radius: 3px; background: var(--bg2); color: var(--fg); }
+.text-icon svg { width: 0.9em; height: 0.9em; display: block; }
 .tool-pop { position: fixed; z-index: 20; width: min(340px, calc(100vw - 70px)); max-height: calc(100vh - 24px); overflow-y: auto;
   background: var(--bg); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 4px 18px rgba(0,0,0,.65); padding: 8px 12px 12px; }
 .tool-pop header { display: flex; align-items: center; justify-content: space-between; }

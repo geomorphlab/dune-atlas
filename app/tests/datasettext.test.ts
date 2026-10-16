@@ -12,7 +12,7 @@ describe("dataset-selector text (§4 item 1)", () => {
     expect(DATASET_INFO_TEXT).toContain(datasetFacts("period"));
   });
   it("gives the Baas (2026) comparison as an example in the dataset text only", () => {
-    expect(DATASET_INFO_TEXT).toMatch(/e\.g\., Baas \(2026\) reports ERA5-Land 10 m wind speeds 20–30 % below those of ERA5/);
+    expect(DATASET_INFO_TEXT).toMatch(/Baas \(2026\) reports its 10 m wind speeds 20–30 % below those of ERA5/);
     expect(THRESHOLD_INFO_DEFAULT).not.toMatch(/Baas/);
   });
 });

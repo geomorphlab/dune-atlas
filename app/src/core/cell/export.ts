@@ -11,10 +11,19 @@ import { analyseCell, modeDefined } from "./analysis";
 import { compassPoint } from "../util/angles";
 import { latLonText } from "./downloads";
 import { fieldInfo } from "./fieldinfo";
-import { AI_NOTICE, citationJson, citationSources, citationText, datasetNotice, fieldsCitation, fieldsLicence, referencesLine } from "./citation";
-import { CELL_SOURCE_IDS } from "@body/citation";
+import { citationJson, fileAiNotice, citationSources, citationText, datasetNotice, fieldsCitation, fieldsLicence, referencesLine } from "./citation";
+import { CELL_SOURCE_IDS, DUNE_FLAG_LICENCE, DUNE_FLAG_LONG_NAME } from "@body/citation";
 import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "./auxinfo";
 import { DATASET_INFO, datasetInfo, resolutionText, type DatasetInfo } from "./datasetinfo";
+import { cellEdges, colLon, GRID_INDEX_COMMENT, GRID_REGISTRATION, latBounds, licenceStatement, noticeAttrs, rowLat, timeCoverage } from "./exportmeta";
+import { PROFILE } from "@body/profile";
+import { BODY } from "../body";
+/** the atlas in titles and README headings: "Dune Atlas" (Earth) / "Mars Dune Atlas" */
+export const ATLAS_NAME = BODY === "mars" ? "Mars Dune Atlas" : "Dune Atlas";
+/** public address of this atlas, as named in downloads */
+export const ATLAS_SITE = BODY === "mars" ? "map.geomorphlab.org/mars" : "map.geomorphlab.org";
+/** AI-assistance notice written into every download of this atlas (the website that produced the file) */
+export const FILE_AI_NOTICE = fileAiNotice(ATLAS_NAME, ATLAS_SITE);
 
 /** The wind dataset of a cell: from the export metadata id, else from the cell grid spacing. */
 export function cellDataset(cell: Pick<CellData, "grid">, datasetId?: string): DatasetInfo {
@@ -23,6 +32,9 @@ export function cellDataset(cell: Pick<CellData, "grid">, datasetId?: string): D
   return Object.values(DATASET_INFO).find((x) => Math.abs(x.resDeg - d) < 1e-9) ?? datasetInfo();
 }
 const cellDeg = (cell: Pick<CellData, "grid">, ds: DatasetInfo) => Math.abs(cell.grid?.dlat ?? ds.resDeg);
+/** global \`source\` of a download: how the data were produced (the dataset title is in dataset_title) */
+export const sourceText = (ds: Pick<DatasetInfo, "name" | "resolution" | "period">) =>
+  `${ATLAS_NAME} cell store of the ${ds.name} ${ds.resolution} wind dataset (${ds.period}); sand-flux fields as cited in fields_citation`;
 import { writeNetcdf3, type NcAttrs, type NcVariable } from "./netcdf3";
 import { writeZip, type DeflateRaw } from "./zip";
 
@@ -44,24 +56,25 @@ export interface ExportMeta {
 /** rose_16_sectors.csv: the wind and sand-flux roses of the panel in 16 compass sectors, degrees,
  *  at the panel's threshold (Earth) or grain size (Mars); both builds. */
 export const ROSE16_FILE = "rose_16_sectors.csv";
-export const rose16Columns = (axis: CsvColumn): CsvColumn[] => [
+export const ROSE16_NOT_IN_NETCDF = "not in the NetCDF (from the wind histogram or series and flux_rose at the panel setting)";
+export const rose16Columns = (axis: CsvColumn, samples = "hours"): CsvColumn[] => [
   axis,
   { name: "sector", units: "1", longName: "compass sector (16 sectors of 22.5 degrees, centred on N, NNE, NE, ...)" },
   { name: "sector_centre_bearing", units: "degree", longName: "bearing of the sector centre, clockwise from north" },
   { name: "sector_start_bearing", units: "degree", longName: "bearing of the sector's first edge (centre - 11.25)" },
   { name: "sector_end_bearing", units: "degree", longName: "bearing of the sector's second edge (centre + 11.25)" },
-  { name: "wind_from_percent", units: "percent", longName: "wind rose: % of the counted hours with the wind blowing FROM this sector" },
+  { name: "wind_from_percent", units: "percent", longName: `wind rose: % of the counted ${samples} with the wind blowing FROM this sector` },
   { name: "sand_flux_toward", units: "m2 yr-1", longName: "sand flux rose: time-averaged flat-bed saturated sand flux moving TOWARD this sector" },
   { name: "sand_flux_toward_percent", units: "percent", longName: "sand flux rose: % of the total flat-bed sand flux (sums to 100)" },
-];
-/** rows of rose_16_sectors.csv from per-sector wind (% of hours, FROM) and flux (m2/yr, TOWARD) values */
-export function rose16Csv(axis: CsvColumn, axisValue: string, windFromPct: number[], flux: number[], fluxPct: number[]): string {
+].map((c, i) => (i === 0 ? c : { ...c, netcdf: ROSE16_NOT_IN_NETCDF }));
+/** rows of rose_16_sectors.csv from per-sector wind (% of samples, FROM) and flux (m2/yr, TOWARD) values */
+export function rose16Csv(axis: CsvColumn, axisValue: string, windFromPct: number[], flux: number[], fluxPct: number[], samples = "hours"): string {
   const b3 = (v: number) => String(Math.round(((v % 360) + 360) % 360 * 100) / 100);
   const rows = windFromPct.map((w, k) => {
     const c = k * 22.5;
     return [axisValue, compassPoint(c), b3(c), b3(c - 11.25), b3(c + 11.25), Number(w.toFixed(4)).toString(), fmtF32(flux[k]), Number(fluxPct[k].toFixed(4)).toString()];
   });
-  return csvTable(rose16Columns(axis), rows);
+  return csvTable(rose16Columns(axis, samples), rows);
 }
 /** rose_16_sectors.csv of an Earth cell at slider position `k` */
 export function rose16CsvEarth(cell: CellData, k: number): string {
@@ -70,7 +83,6 @@ export function rose16CsvEarth(cell: CellData, k: number): string {
 }
 
 export const INSTITUTION = "Geomorphology Lab, Monash University";
-export const LICENSE = "CC BY 4.0";
 export const ROSE_MODES = ["flat_bed", "elongation", "transverse"] as const;
 
 /** "v1" from a dataset prefix such as dune-atlas/v1 (else ""). */
@@ -97,16 +109,16 @@ const bearingFrom = (a: number) => (mathToBearingDeg(a) + 180) % 360;
 /** A CSV column: NetCDF variable name, UDUNITS units, long name (UTF-8, with the symbol). The CSV
  *  header is `csvName(name)` (plain ASCII snake_case, csvnames.ts); units and long names are documented
  *  in README.txt and metadata.json. */
-export interface CsvColumn { name: string; units: string; longName: string }
+export interface CsvColumn { name: string; units: string; longName: string; /** where the column is in the NetCDF when not a variable of the same name */ netcdf?: string }
 /** CSV: UTF-8 with BOM, ONE header row of ASCII snake_case names (csvnames.ts), then data rows. */
 export function csvTable(cols: CsvColumn[], rows: string[][]): string {
   const head = cols.map((c) => csvCell(csvName(c.name))).join(",");
   return UTF8_BOM + [head, ...rows.map((r) => r.join(","))].join("\n") + "\n";
 }
 /** metadata.json column entry: CSV header, NetCDF name, units, long name. */
-export const csvColumnJson = (x: CsvColumn) => ({ name: csvName(x.name), netcdf_name: x.name, units: x.units, long_name: x.longName });
+export const csvColumnJson = (x: CsvColumn) => ({ name: csvName(x.name), netcdf_name: x.netcdf ?? x.name, units: x.units, long_name: x.longName });
 /** README column line: CSV header [units] long name (NetCDF: name). */
-export const csvColumnDoc = (c: CsvColumn) => `    ${csvName(c.name).padEnd(44)} [${c.units}] ${c.longName} (NetCDF: ${c.name})`;
+export const csvColumnDoc = (c: CsvColumn) => `    ${csvName(c.name).padEnd(44)} [${c.units}] ${c.longName} (NetCDF: ${c.netcdf ?? c.name})`;
 /** README paragraph on the CSV layout (both builds). */
 export const CSV_LAYOUT_TEXT = `CSV layout (all files)
 ----------------------
@@ -123,8 +135,8 @@ Read with
  *  precision and order as the NetCDF ua_bin coordinates). */
 export const DIR_COLUMNS: CsvColumn[] = [
   { name: "ua_bin", units: "radian", longName: "direction bin centre: direction the wind blows (and sand moves) TOWARD, counter-clockwise from east" },
-  { name: "ua_bin_lo", units: "radian", longName: "direction bin lower edge (toward, counter-clockwise from east)" },
-  { name: "ua_bin_hi", units: "radian", longName: "direction bin upper edge (toward, counter-clockwise from east)" },
+  { name: "ua_bin_lo", units: "radian", longName: "direction bin lower edge (toward, counter-clockwise from east)", netcdf: "ua_bin_bnds[:, 0]" },
+  { name: "ua_bin_hi", units: "radian", longName: "direction bin upper edge (toward, counter-clockwise from east)", netcdf: "ua_bin_bnds[:, 1]" },
   { name: "ua_bin_bearing_toward", units: "degree", longName: "compass bearing TOWARD at the direction bin centre (clockwise from north)" },
   { name: "ua_bin_bearing_from", units: "degree", longName: "compass bearing the wind blows FROM at the direction bin centre (meteorological)" },
 ];
@@ -134,7 +146,7 @@ function dirCells(ae: ArrayLike<number>, ac: ArrayLike<number>): string[][] {
 const UT_COLUMN: CsvColumn = { name: "ut", units: "m s-1", longName: "threshold friction velocity u*,th" };
 
 export function exportBaseName(cell: { lat: number; lon: number }, datasetId: string): string {
-  return `dune-atlas_${datasetId || "dataset"}_${r6(cell.lat)}_${r6(cell.lon)}`;
+  return `${PROFILE.filePrefix}_${datasetId || "dataset"}_${r6(cell.lat)}_${r6(cell.lon)}`;
 }
 
 /** CF-style unit string from the source TeX-ish unit. */
@@ -201,27 +213,29 @@ export function cellNetcdf(cell: CellData, meta: ExportMeta): Uint8Array {
   const ut = cell.utValues ?? C.UT_VALUES;
   const g = cell.grid;
   const when = (meta.generated ?? new Date()).toISOString();
+  const lat = rowLat(g, cell.iy), lon = colLon(g, cell.ix), edges = cellEdges(lat, lon, g);
   const pubVars = cell.fieldVars.map((v, i) => ({ v, i })).filter(({ v }) => isPublishedField(v));
   const rose = fluxRoseTable(cell);
   const NAME_LEN = 16;
   const F = (v: number) => ({ type: "float" as const, values: v });
   const vars: NcVariable[] = [
     { name: "um_bin", type: "double", dims: ["um_bin"], data: Array.from(uc), attrs: { long_name: "10 m wind speed bin centre", units: "m s-1", bounds: "um_bin_bnds" } },
-    { name: "um_bin_bnds", type: "double", dims: ["um_bin", "nv"], data: Array.from({ length: nUm * 2 }, (_, k) => ue[(k >> 1) + (k & 1)]), attrs: { long_name: "10 m wind speed bin edges", units: "m s-1" } },
+    { name: "um_bin_bnds", type: "double", dims: ["um_bin", "nv"], data: Array.from({ length: nUm * 2 }, (_, k) => ue[(k >> 1) + (k & 1)]), attrs: {} },
     { name: "ua_bin", type: "double", dims: ["ua_bin"], data: Array.from(ac), attrs: {
       long_name: "wind direction bin centre: direction the wind blows TOWARD, counter-clockwise from east", units: "radian", bounds: "ua_bin_bnds",
       comment: "arctan2(v10, u10) (source convention). Compass bearing toward = (90 - degrees(ua_bin)) mod 360 (ua_bin_bearing_toward); from = toward + 180 (ua_bin_bearing_from)." } },
-    { name: "ua_bin_bnds", type: "double", dims: ["ua_bin", "nv"], data: Array.from({ length: nUa * 2 }, (_, k) => ae[(k >> 1) + (k & 1)]), attrs: { long_name: "wind direction bin edges (toward, counter-clockwise from east)", units: "radian" } },
+    { name: "ua_bin_bnds", type: "double", dims: ["ua_bin", "nv"], data: Array.from({ length: nUa * 2 }, (_, k) => ae[(k >> 1) + (k & 1)]), attrs: {} },
     { name: "ua_bin_bearing_from", type: "double", dims: ["ua_bin"], data: Array.from(ac, bearingFrom), attrs: { long_name: "compass bearing the wind blows FROM at the direction-bin centre (meteorological convention)", units: "degree" } },
     { name: "ua_bin_bearing_toward", type: "double", dims: ["ua_bin"], data: Array.from(ac, bearingToward), attrs: { long_name: "compass bearing TOWARD at the direction-bin centre (clockwise from north)", units: "degree" } },
     { name: "ut", type: "double", dims: ["ut"], data: ut.slice(0, n).map(ut2), attrs: { long_name: "threshold friction velocity u*,th", long_name_latex: "$u_{\\ast,th}$", units: "m s-1", comment: "64 values from 0.01 to 0.64 m s-1 in steps of 0.01 m s-1" } },
-    { name: "latitude", type: "double", dims: [], data: [cell.lat], attrs: { standard_name: "latitude", long_name: "latitude of the cell centre", units: "degrees_north" } },
-    { name: "longitude", type: "double", dims: [], data: [cell.lon], attrs: { standard_name: "longitude", long_name: "longitude of the cell centre", units: "degrees_east" } },
+    { name: "latitude", type: "double", dims: [], data: [lat], attrs: { standard_name: "latitude", long_name: "latitude of the cell centre", units: "degrees_north", bounds: "lat_bnds" } },
+    { name: "lat_bnds", type: "double", dims: ["nv"], data: latBounds(lat, g.dlat), attrs: {} },
+    { name: "longitude", type: "double", dims: [], data: [lon], attrs: { standard_name: "longitude", long_name: "longitude of the cell centre", units: "degrees_east", bounds: "lon_bnds" } },
+    { name: "lon_bnds", type: "double", dims: ["nv"], data: [edges.west, edges.east], attrs: {} },
     ...(["cell_y", "cell_x"] as const).map((nm): NcVariable => ({ name: nm, type: "int", dims: [], data: [nm === "cell_y" ? cell.iy : cell.ix], attrs: {
       long_name: nm === "cell_y" ? "grid row index (0 = northernmost row)" : "grid column index (0 = westernmost column)",
       units: "1", grid_lat0: g.lat0, grid_dlat: g.dlat, grid_lon0: g.lon0, grid_dlon: g.dlon, grid_ny: { type: "int", values: g.ny }, grid_nx: { type: "int", values: g.nx },
-      grid_registration: "pixel: lat0/lon0 are the centre of cell (0, 0); cell (y, x) spans centre ± d/2",
-      comment: "latitude = grid_lat0 + grid_dlat * cell_y; longitude = grid_lon0 + grid_dlon * cell_x" } })),
+      grid_registration: GRID_REGISTRATION, comment: GRID_INDEX_COMMENT } })),
     { name: "wind_hist", type: "int", dims: ["um_bin", "ua_bin"], data: cell.hist, attrs: {
       long_name: `hours per 10 m wind speed and direction bin, ${ds.name} ${ds.period.replace("–", "-")}`, units: "h",
       total_hours_binned: { type: "int", values: cell.totalHours },
@@ -232,10 +246,10 @@ export function cellNetcdf(cell: CellData, meta: ExportMeta): Uint8Array {
       const attrs: NcAttrs = { long_name: m.longName, long_name_latex: m.longNameLatex, units: m.units, description: m.description, description_latex: m.descriptionLatex, _FillValue: F(NaN), coordinates: "latitude longitude" };
       return { name: v, type: "float", dims: ["ut"], data: cell.fields.subarray(i * n, i * n + n), attrs };
     }),
-    { name: "dune_present", type: "int", dims: [], data: [cell.dune ? 1 : 0], attrs: { long_name: "cell mapped as containing wind-blown sand dunes", comment: `1 = ${ds.dunesRule}`, flag_values: { type: "int", values: [0, 1] }, flag_meanings: "no_dunes dunes", units: "1" } },
+    { name: "dune_present", type: "int", dims: [], data: [cell.dune ? 1 : 0], attrs: { long_name: DUNE_FLAG_LONG_NAME, comment: `1 = ${ds.dunesRule}`, flag_values: { type: "int", values: [0, 1] }, flag_meanings: "no_dunes dunes", units: "1", license: DUNE_FLAG_LICENCE } },
     ...auxVars(cell.aux).map((v): NcVariable => {
       const m = AUX_META[v], aux = cell.aux!;
-      const src = auxSourceAttrs(aux, v, deg);
+      const src = auxSourceAttrs(aux, v, deg, Math.abs(g.dlon), ds.id);
       const attrs: NcAttrs = { long_name: m.longName, long_name_latex: `${m.longName} $${m.symbolTex}$`, units: m.units,
         description: texToPlain(auxDescription(v, deg)), _FillValue: F(NaN), coordinates: "latitude longitude" };
       for (const k of ["source", "references", "license", "url", "comment", "method"]) if (src[k]) attrs[k] = texToPlain(src[k]);
@@ -243,7 +257,7 @@ export function cellNetcdf(cell: CellData, meta: ExportMeta): Uint8Array {
         ? { name: v, type: "float", dims: ["ut"], data: Float32Array.from(aux.series[v]), attrs }
         : { name: v, type: "float", dims: [], data: Float32Array.of(aux.scalars[v]), attrs };
     }),
-    { name: "rose_mode", type: "int", dims: ["rose_mode"], data: [0, 1, 2], attrs: { long_name: "flux rose mode", flag_values: { type: "int", values: [0, 1, 2] }, flag_meanings: ROSE_MODES.join(" ") } },
+    { name: "rose_mode", type: "int", dims: ["rose_mode"], data: [0, 1, 2], attrs: { long_name: "flux rose mode", units: "1", flag_values: { type: "int", values: [0, 1, 2] }, flag_meanings: ROSE_MODES.join(" ") } },
     { name: "rose_mode_name", type: "char", dims: ["rose_mode", "name_strlen"], data: [...ROSE_MODES], attrs: { long_name: "flux rose mode name" } },
     { name: "flux_rose", type: "float", dims: ["rose_mode", "ut", "ua_bin"], data: Float32Array.from(rose.flatMap((m) => m.flatMap((r) => Array.from(r)))), attrs: {
       long_name: "time-averaged sand flux per direction bin (toward)", units: "m2 yr-1", _FillValue: F(NaN),
@@ -253,35 +267,40 @@ export function cellNetcdf(cell: CellData, meta: ExportMeta): Uint8Array {
   return writeNetcdf3({
     dims: [{ name: "um_bin", size: nUm }, { name: "ua_bin", size: nUa }, { name: "ut", size: n }, { name: "nv", size: 2 }, { name: "rose_mode", size: 3 }, { name: "name_strlen", size: NAME_LEN }],
     attrs: {
-      title: `Dune Atlas cell export: ${ds.name} 10 m wind histogram and sand-flux parameters at ${cell.lat}° N, ${cell.lon}° E (${ds.resolution} cell)`,
+      title: `Dune Atlas cell export: ${ds.name} 10 m wind histogram and sand-flux parameters at ${latLonText(lat, lon)} (${ds.resolution} cell)`,
       institution: INSTITUTION,
-      source: meta.datasetTitle,
+      source: sourceText(ds),
       dataset_id: meta.datasetId,
+      dataset_title: meta.datasetTitle,
       data_version: meta.dataVersion,
       references: referencesLine(citationSources(CELL_SOURCE_IDS, ds.id)),
       fields_citation: fieldsCitation(ds.id),
       fields_license: fieldsLicence(ds.id),
       geospatial_lat_resolution: `${resolutionText(deg)}`.replace("°", " degree"),
       geospatial_lon_resolution: `${resolutionText(Math.abs(cell.grid?.dlon ?? deg))}`.replace("°", " degree"),
-      license: LICENSE,
+      geospatial_lat_min: edges.south, geospatial_lat_max: edges.north, geospatial_lon_min: edges.west, geospatial_lon_max: edges.east,
+      ...timeCoverage(ds),
+      license: licenceStatement(ds.id),
+      ...noticeAttrs(ds.id),
       Conventions: "CF-1.8",
+      date_created: when,
       history: `${when}: downloaded from ${meta.permalink}`,
-      comment: AI_NOTICE,
+      comment: FILE_AI_NOTICE,
     },
     vars,
   });
 }
 
 /** Column definitions of the CSV files (also in metadata.json and README.txt). */
-export function csvColumns(cell: CellData, attrs?: ExportMeta["storeAttrs"]): Record<string, CsvColumn[]> {
-  const pub = cell.fieldVars.filter(isPublishedField);
+export function csvColumns(cell: CellData, attrs?: ExportMeta["storeAttrs"], datasetId?: string): Record<string, CsvColumn[]> {
+  const pub = cell.fieldVars.filter(isPublishedField), ds = cellDataset(cell, datasetId);
   return {
     "wind_histogram.csv": [
       { name: "um_bin", units: "m s-1", longName: "10 m wind speed bin centre" },
-      { name: "um_bin_lo", units: "m s-1", longName: "10 m wind speed bin lower edge" },
-      { name: "um_bin_hi", units: "m s-1", longName: "10 m wind speed bin upper edge" },
+      { name: "um_bin_lo", units: "m s-1", longName: "10 m wind speed bin lower edge", netcdf: "um_bin_bnds[:, 0]" },
+      { name: "um_bin_hi", units: "m s-1", longName: "10 m wind speed bin upper edge", netcdf: "um_bin_bnds[:, 1]" },
       ...DIR_COLUMNS,
-      { name: "wind_hist", units: "h", longName: `hours in the speed x direction bin, ${cellDataset(cell).name} ${cellDataset(cell).period.replace(/–/g, "-")} (hours with U10 > 20 m/s not binned)` },
+      { name: "wind_hist", units: "h", longName: `hours in the speed x direction bin, ${ds.name} ${ds.period.replace(/–/g, "-")} (hours with U10 > 20 m/s not binned)` },
     ],
     "fields_by_threshold.csv": [UT_COLUMN, ...pub.map((v) => { const m = fieldMeta(v, attrs); return { name: v, units: m.units, longName: m.longName }; }),
       ...auxVars(cell.aux).filter((v) => AUX_META[v].kind === "series").map((v) => ({ name: v, units: AUX_META[v].units, longName: AUX_META[v].longName }))],
@@ -296,7 +315,7 @@ export function csvColumns(cell: CellData, attrs?: ExportMeta["storeAttrs"]): Re
 }
 
 /** wind_histogram.csv: tidy long format, one row per (um_bin, ua_bin), C order as the NetCDF. */
-export function windHistogramCsv(cell: CellData): string {
+export function windHistogramCsv(cell: CellData, datasetId?: string): string {
   const { ue, ae, uc, ac } = bins(cell);
   const nUa = ac.length;
   const dir = dirCells(ae, ac);
@@ -305,7 +324,7 @@ export function windHistogramCsv(cell: CellData): string {
     const sp = [fmtF64(uc[i]), fmtF64(ue[i]), fmtF64(ue[i + 1])];
     for (let j = 0; j < nUa; j++) rows.push([...sp, ...dir[j], String(cell.hist[i * nUa + j])]);
   }
-  return csvTable(csvColumns(cell)["wind_histogram.csv"], rows);
+  return csvTable(csvColumns(cell, undefined, datasetId)["wind_histogram.csv"], rows);
 }
 
 /** fields_by_threshold.csv: one row per u*,th; columns ut + the fields (NetCDF names,
@@ -337,10 +356,11 @@ export function fluxRoseCsv(cell: CellData): string {
 export function metadataJson(cell: CellData, meta: ExportMeta): string {
   const ds = cellDataset(cell, meta.datasetId), deg = cellDeg(cell, ds);
   const pub = cell.fieldVars.filter(isPublishedField);
-  const cols = csvColumns(cell, meta.storeAttrs);
+  const cols = csvColumns(cell, meta.storeAttrs, meta.datasetId);
+  const lat = rowLat(cell.grid, cell.iy), lon = colLon(cell.grid, cell.ix);
   return JSON.stringify({
-    cell: { latitude: cell.lat, longitude: cell.lon, cell_y: cell.iy, cell_x: cell.ix, grid_index: cell.id, dune_present: cell.dune, total_hours_binned: cell.totalHours },
-    grid: { ...cell.grid, resolution: resolutionText(deg), registration: "pixel: lat0/lon0 are the centre of cell (0, 0); cell (y, x) spans centre ± d/2" },
+    cell: { latitude: lat, longitude: lon, bounds: cellEdges(lat, lon, cell.grid), cell_y: cell.iy, cell_x: cell.ix, grid_index: cell.id, dune_present: cell.dune, total_hours_binned: cell.totalHours },
+    grid: { ...cell.grid, resolution: resolutionText(deg), registration: GRID_REGISTRATION },
     dataset: { id: meta.datasetId, title: meta.datasetTitle, version: meta.dataVersion },
     conventions: {
       wind_direction: "direction_bin_centre (NetCDF ua_bin) = arctan2(v10, u10) = direction the wind blows TOWARD, radians counter-clockwise from east; bearing_toward = (90 - degrees(direction_bin_centre)) mod 360; bearing_from = toward + 180",
@@ -349,27 +369,28 @@ export function metadataJson(cell: CellData, meta: ExportMeta): string {
       missing: "empty CSV cell (NetCDF: _FillValue) = undefined (e.g. no crest flux)",
       csv_headers: "UTF-8 with BOM; one header row of ASCII snake_case names; per column: name (CSV header), netcdf_name, units (UDUNITS), long_name in files.<csv>.columns",
       dune_present: `1 = ${ds.dunesRule}`,
-      land_cells: `wind data: ${ds.landRule}`,
+      cells_with_data: ds.landRule,
+      coordinates: "WGS 84 latitude (degrees north) and longitude (degrees east, -180..180)",
     },
     ut: (cell.utValues ?? C.UT_VALUES).slice(0, nUt(cell)).map(ut2),
     files: Object.fromEntries(Object.entries(cols).map(([f, c]) => [f, { columns: c.map(csvColumnJson) }])),
     fields: Object.fromEntries(pub.map((v) => { const m = fieldMeta(v, meta.storeAttrs); return [v, { long_name: m.longName, long_name_latex: m.longNameLatex, units: m.units, description: m.description, description_latex: m.descriptionLatex }]; })),
     aux: Object.fromEntries(auxVars(cell.aux).map((v) => {
-      const m = AUX_META[v], src = auxSourceAttrs(cell.aux!, v, deg);
+      const m = AUX_META[v], src = auxSourceAttrs(cell.aux!, v, deg, Math.abs(cell.grid.dlon), ds.id);
       const value = m.kind === "series" ? undefined : (Number.isFinite(cell.aux!.scalars[v]) ? cell.aux!.scalars[v] : null);
       return [v, { long_name: m.longName, long_name_latex: `${m.longName} $${m.symbolTex}$`, units: m.units, ...(m.kind === "scalar" ? { value } : { in_file: "fields_by_threshold.csv" }),
         description: texToPlain(auxDescription(v, deg)), ...Object.fromEntries(["source", "references", "license", "url", "comment", "method"].filter((k) => src[k]).map((k) => [k, texToPlain(src[k])])) }];
     })),
     citation: citationJson(citationSources(CELL_SOURCE_IDS, ds.id)),
     fields_citation: fieldsCitation(ds.id), fields_license: fieldsLicence(ds.id),
-    license: LICENSE, institution: INSTITUTION, copernicus_notice: datasetNotice(ds.id),
-    generated: (meta.generated ?? new Date()).toISOString(), permalink: meta.permalink, ai_notice: AI_NOTICE,
+    license: licenceStatement(ds.id), dune_present_license: DUNE_FLAG_LICENCE, ...noticeAttrs(ds.id), institution: INSTITUTION,
+    generated: (meta.generated ?? new Date()).toISOString(), permalink: meta.permalink, ai_notice: FILE_AI_NOTICE,
   }, null, 1) + "\n";
 }
 
 export function readmeText(cell: CellData, meta: ExportMeta): string {
   const ds = cellDataset(cell, meta.datasetId);
-  const cols = csvColumns(cell, meta.storeAttrs);
+  const cols = csvColumns(cell, meta.storeAttrs, meta.datasetId);
   const colDoc = (f: string) => cols[f].map(csvColumnDoc).join("\n");
   return `Dune Atlas cell export
 ======================
@@ -398,7 +419,7 @@ ${colDoc("flux_rose.csv")}
 
 ${ROSE16_FILE}  The panel's wind rose and flat-bed sand flux rose in 16 compass sectors (degrees), at
   ${utText(cell, meta)}: one row per sector. Wind: % of the counted hours blowing FROM the sector; sand flux:
-  m2 yr-1 moving TOWARD the sector. For other thresholds or sectors use flux_rose.csv.
+  m2 yr-1 moving TOWARD the sector. flux_rose.csv has every threshold and all 128 direction bins.
 ${colDoc(ROSE16_FILE)}
 
 metadata.json  Cell coordinates, grid, conventions, column definitions, field long names
@@ -419,9 +440,10 @@ ${citationText("", citationSources(CELL_SOURCE_IDS, ds.id)).trim()}
 
 Cite the sand-flux fields as: ${fieldsCitation(ds.id)}. Licence of the fields: ${fieldsLicence(ds.id)}.
 
-Licence: ${LICENSE}.
+Licence: ${licenceStatement(ds.id)}${datasetNotice(ds.id) ? `\n${datasetNotice(ds.id)}` : ""}
+Dune flag (dune_present): ${DUNE_FLAG_LICENCE}.
 
-${AI_NOTICE}
+${FILE_AI_NOTICE}
 `;
 }
 
@@ -430,7 +452,7 @@ ${AI_NOTICE}
 export function csvBundle(cell: CellData, meta: ExportMeta, deflate?: DeflateRaw | null): Promise<Uint8Array> {
   return writeZip([
     { name: "README.txt", data: readmeText(cell, meta) },
-    { name: "wind_histogram.csv", data: windHistogramCsv(cell) },
+    { name: "wind_histogram.csv", data: windHistogramCsv(cell, meta.datasetId) },
     { name: "fields_by_threshold.csv", data: fieldsByThresholdCsv(cell, meta.storeAttrs) },
     { name: "flux_rose.csv", data: fluxRoseCsv(cell) },
     { name: ROSE16_FILE, data: rose16CsvEarth(cell, rose16Index(cell, meta)) },

@@ -40,6 +40,7 @@ export const UI = {
   "cell.petals": "Petals:",
   "cell.petalsToward": "toward",
   "cell.petalsFrom": "from",
+  "search.goTo": "Go to",
   "basemap.failed": "The basemap “{title}” could not be loaded from its provider. It may be blocked on your network or temporarily unavailable. Please choose another basemap.",
 } as const;
 export type UiKey = keyof typeof UI;

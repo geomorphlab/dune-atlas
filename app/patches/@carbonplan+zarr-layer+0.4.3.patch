@@ -109,10 +109,10 @@ index d4f9c22..0f828ab 100644
    }
 -  const minWorld = Math.floor((west + 180) / 360);
 -  const maxWorld = Math.floor((effectiveEast + 180) / 360);
-+  // dune-atlas patch: antimeridian - 1° padding so the part of an edge column beyond ±180 (drawn in
-+  // the neighbouring world copy) is drawn when the viewport only touches the seam
-+  const minWorld = Math.floor((west - 1 + 180) / 360);
-+  const maxWorld = Math.floor((effectiveEast + 1 + 180) / 360);
++  // dune-atlas patch: antimeridian - 3° padding so the part of an edge column beyond ±180 (drawn in
++  // the neighbouring world copy, up to half a 5° cell) is drawn when the viewport only touches the seam
++  const minWorld = Math.floor((west - 3 + 180) / 360);
++  const maxWorld = Math.floor((effectiveEast + 3 + 180) / 360);
    const worldOffsets = [];
    for (let i = minWorld; i <= maxWorld; i++) {
      worldOffsets.push(i);

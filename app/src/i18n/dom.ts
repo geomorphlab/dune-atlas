@@ -6,7 +6,7 @@
 // placeholders. Kept nodes are moved, not recreated, so references and listeners on them survive; only plain
 // inline markup (links, bold, line breaks) is rebuilt. Attributes title, aria-label, placeholder and alt are
 // translated whole. A MutationObserver applies this to everything the atlas adds or changes.
-import { COLLECTED, LANG, trIn, contentKey } from "./index";
+import { COLLECTED, LANG, trIn, contentKey, varTemplate, fillVars } from "./index";
 
 /** nodes kept as they are inside a unit (placeholders) */
 const KEEP_SEL = '.katex, .tex-fallback, [translate="no"], .notranslate, .live-num, input, select, textarea, button, svg, img, canvas, code, pre, output, kbd';
@@ -17,8 +17,6 @@ const KEYED_SEL = '[data-help], .concept-link, #tour-title, #tour-body, .tour-co
 /** inline markup kept inside a unit (rebuilt from the translation) */
 const INLINE = new Set(["A", "STRONG", "EM", "B", "I", "SUB", "SUP", "BR", "SPAN", "SMALL", "ABBR", "Q", "U", "MARK"]);
 const ATTRS = ["title", "aria-label", "placeholder", "alt"];
-/** a number standing alone (not inside a word such as ERA5 or FV3) */
-const NUM = /(?<![\p{L}\p{N}_.,])[-−]?\d+(?:[.,]\d+)*(?![\p{L}\p{N}_])/gu;
 const AREA_OF: [string, string][] = [
   [".info-popover", "Layer popovers"], ["details.about", "About"], ["#cell-panel", "Cell panel"],
   [".tool-pop", "Tool panels"], [".tour", "Guided tour"], ["#layer-panel", "Layer panel"],
@@ -29,10 +27,15 @@ const active = () => LANG !== "en" || collecting();
 const isKeep = (n: Node): boolean => n.nodeType === 1 && ((n as Element).matches(KEEP_SEL) || !INLINE.has((n as Element).tagName));
 
 /** template of a unit: its HTML with kept nodes and numbers as placeholders */
-export function unitTemplate(el: Element): { template: string; kept: Node[]; nums: string[] } {
+export function unitTemplate(el: Element): { template: string; kept: Node[]; nums: string[]; local: boolean } {
   const kept: Node[] = [], nums: string[] = [];
+  let local = false;
   const ser = (n: Node): string => {
-    if (n.nodeType === 3) return escapeText(n.nodeValue ?? "").replace(NUM, (m) => { nums.push(m); return `⟦#${nums.length - 1}⟧`; });
+    if (n.nodeType === 3) {   // numbers and compass points: placeholders numbered across the whole unit
+      const v = varTemplate(escapeText(n.nodeValue ?? ""));
+      if (v.local) local = true;
+      return v.tpl.replace(/⟦#(\d+)⟧/g, (_m, i) => { nums.push(v.nums[Number(i)]); return `⟦#${nums.length - 1}⟧`; });
+    }
     if (n.nodeType !== 1) return "";
     const e = n as Element;
     if (isKeep(e)) { kept.push(e); return `⟦${kept.length - 1}⟧`; }
@@ -41,7 +44,7 @@ export function unitTemplate(el: Element): { template: string; kept: Node[]; num
     return `<${e.tagName.toLowerCase()}${attrs}>${[...e.childNodes].map(ser).join("")}</${e.tagName.toLowerCase()}>`;
   };
   const t = [...el.childNodes].map(ser).join("").replace(/\s+/g, " ").trim();
-  return { template: t, kept, nums };
+  return { template: t, kept, nums, local };
 }
 const escapeText = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const hasWords = (t: string) => /\p{L}{2,}/u.test(t.replace(/⟦#?\d+⟧|<[^>]+>|&\w+;/g, " "));
@@ -53,12 +56,13 @@ function areaOf(el: Element): string {
 
 /** translate one unit in place (its children are rebuilt, the element itself is kept) */
 function translateUnit(el: Element) {
-  const { template, kept, nums } = unitTemplate(el);
-  if (!hasWords(template)) return;
-  if (collecting()) { if (!COLLECTED.has(template) && !el.closest(KEYED_SEL)) COLLECTED.set(template, areaOf(el)); return; }
-  const out = trIn(LANG, contentKey(template), template);
-  if (out === template) return;
-  const html = out.replace(/⟦#(\d+)⟧/g, (_m, i) => nums[Number(i)] ?? "").replace(/⟦(\d+)⟧/g, (_m, i) => `<i data-i18n-slot="${i}"></i>`);
+  const { template, kept, nums, local } = unitTemplate(el);
+  const words = hasWords(template);
+  if (!words && !local) return;
+  if (collecting()) { if (words && !COLLECTED.has(template) && !el.closest(KEYED_SEL)) COLLECTED.set(template, areaOf(el)); return; }
+  const out = words ? trIn(LANG, contentKey(template), template) : template;
+  if (out === template && !local) return;   // a compass point alone ("292° (WNW)") is still given its local name
+  const html = fillVars(out, nums).replace(/⟦(\d+)⟧/g, (_m, i) => `<i data-i18n-slot="${i}"></i>`);
   const tpl = el.ownerDocument.createElement("template");
   tpl.innerHTML = html;
   tpl.content.querySelectorAll("[data-i18n-slot]").forEach((s) => { const n = kept[Number(s.getAttribute("data-i18n-slot"))]; if (n) s.replaceWith(n); else s.remove(); });
@@ -70,11 +74,10 @@ function translateAttrs(el: Element) {
   for (const a of ATTRS) {
     const v = el.getAttribute(a);
     if (!v || !hasWords(v)) continue;
-    const nums: string[] = [];
-    const tplt = v.replace(/\s+/g, " ").trim().replace(NUM, (m) => { nums.push(m); return `⟦#${nums.length - 1}⟧`; });
+    const { tpl: tplt, nums, local } = varTemplate(v.replace(/\s+/g, " ").trim());
     if (collecting()) { if (!COLLECTED.has(tplt)) COLLECTED.set(tplt, "Screen-reader labels and tooltips"); continue; }
     const out = trIn(LANG, contentKey(tplt), tplt);
-    if (out !== tplt) el.setAttribute(a, out.replace(/⟦#(\d+)⟧/g, (_m, i) => nums[Number(i)] ?? ""));
+    if (out !== tplt || local) el.setAttribute(a, fillVars(out, nums));
   }
 }
 

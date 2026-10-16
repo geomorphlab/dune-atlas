@@ -20,6 +20,7 @@ import { ABOUT_CREDITS_NOTE_HTML, ABOUT_INTRO_HTML, DATA_SOURCES_ITEMS_HTML, DAT
 import { embedBar } from "./embed";
 import { escapeHtml } from "../util/format";
 import { BODY_NAME } from "../body";
+import { sharedKey, visitFlags, visitSet } from "../visit";
 import { DATASET_INFO, datasetFacts, datasetInfo, datasetSourceItem, datasetTooltip } from "../cell/datasetinfo";
 import { fieldInfo } from "../cell/fieldinfo";
 import { isDatasetDependent } from "../registry/merge";
@@ -47,16 +48,16 @@ export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class="sources">
   ${Object.values(DATASET_INFO).map(datasetSourceItem).join("\n  ")}
   ${DATA_SOURCES_ITEMS_HTML}${placesAvailable(PLACES) ? `\n  <li class="places-note"><strong>${PLACE_TEXT.aboutItem}</strong>: ${placesNoteHtml(PLACES)}</li>` : ""}
 </ul>`;
-/** About: "Earth and Mars: what can be compared" (identical in both atlases) */
-export const COMPARE_HTML = `<div class="earth-mars"><h4>Earth and Mars: what can be compared</h4>
+/** About: "Earth and Mars: methods and data" (identical in both atlases) */
+export const COMPARE_HTML = `<div class="earth-mars"><h4>Earth and Mars: methods and data</h4>
 <p>Both atlases compute the same quantities with the methods outlined in Gunn (2026): the time-averaged saturated sand flux over a flat bed fully covered by loose sand (DP), its resultant (RDP, RDD, RDP/DP), crest fluxes, dune-orientation modes and flux divergence. Both report fluxes as volumes of packed sand (packing fraction 0.6, pore space included) per metre width per Earth year of 365.25 days (m²/yr), and both show wind roses as the direction the wind blows from and sand roses as the direction sand moves toward. They differ in four ways.</p>
 <ul class="sources">
-  <li><strong>Control</strong>: on Earth the slider sets one threshold friction velocity u*,th for all hours (default 0.15 m/s); on Mars it sets the median grain diameter d (default 200 µm), and the threshold is computed for every hour from d and that hour's air density and temperature.</li>
-  <li><strong>Transport law and wind profile</strong>: Earth uses the transport law of Martin &amp; Kok (2017), with u* from the 10 m wind and a roughness length of 1 mm; Mars uses the transport law of Pähtz &amp; Durán (2023), with u* from the lowest-level wind (≈ 1.6–3 m) and a smooth-wall profile without a roughness length.</li>
-  <li><strong>Winds and grid</strong>: Earth uses a period of hourly reanalysis winds (e.g., ERA5-Land, 0.1° grid for 75 years 1950–2024); Mars uses a representative year (668 sols, about 1.9 Earth years) of hourly simulated winds (e.g., MCMC FV3, 2° grid), so one Mars cell can span several dune fields and year-to-year variability is not sampled.</li>
-  <li><strong>Downloads</strong>: Earth cells provide a wind histogram and the fields against threshold (wind_histogram.csv, fields_by_threshold.csv); Mars cells provide the hourly wind and air series and the fields against grain diameter (wind_series.csv, fields_by_grain_size.csv).</li>
+  <li><strong>Control</strong>: on Earth the slider sets one threshold friction velocity u*,th for the whole record (default 0.15 m/s); on Mars it sets the median grain diameter d (default 200 µm), and the threshold is computed for each time step of the wind record from d and that step's air density and temperature.</li>
+  <li><strong>Transport law and wind profile</strong>: Earth uses the transport law of Martin &amp; Kok (2017), with u* from the 10 m wind and a roughness length of 1 mm; Mars uses the transport law of Pähtz &amp; Durán (2023), with u* from the wind at the lowest level of the wind dataset (its height above the surface differs between datasets) and a smooth-wall profile without a roughness length.</li>
+  <li><strong>Winds and grid</strong>: Earth uses decades of hourly reanalysis winds (e.g., ERA5-Land, 0.1° grid, 1950–2024); Mars uses one Mars year (668 sols, about 1.9 Earth years) of winds from a climate-model simulation or a reanalysis (e.g., MCMC FV3, 2° grid, about 120 km at the equator), with no year-to-year variation.</li>
+  <li><strong>Downloads</strong>: Earth cells provide a wind histogram and the fields against threshold (wind_histogram.csv, fields_by_threshold.csv); Mars cells provide the wind and air series and the fields against grain diameter (wind_series.csv, fields_by_grain_size.csv).</li>
 </ul>
-<p>DP values on the two planets can therefore be compared in order of magnitude, not as precise numbers. RDP/DP, RDD and the mode directions compare more directly, but each depends on the threshold or grain-diameter setting.</p></div>`;
+<p>On both planets, DP, RDP/DP, RDD and the mode directions depend on the threshold or grain-diameter setting.</p></div>`;
 /** About: how to cite the map fields of every wind dataset (one format with the info popovers and the downloads). */
 export function fieldsCitationHtml(): string {
   return `<h4 id="cite-fields" tabindex="-1">Citing the map fields</h4><ul class="sources">${Object.values(DATASET_INFO).map((d) => `<li><strong>${protectText(`${d.name} ${d.resolution}`)}</strong>: ${noTranslateHtml(richHtml(fieldsCitation(d.id)))}. Licence: ${noTranslateHtml(escapeHtml(fieldsLicence(d.id)))}.</li>`).join("")}</ul>`;
@@ -408,13 +409,22 @@ function orderList(reg: Registry, store: Store): HTMLElement {
     const b = ol.querySelector(`.order-item[data-layer="${id}"] .move:nth-of-type(${dir === "up" ? 1 : 2})`) as HTMLButtonElement | null;
     (b && !b.disabled ? b : (ol.querySelector(`.order-item[data-layer="${id}"] .move:not([disabled])`) as HTMLButtonElement | null))?.focus();
   };
-  const wrap = h("details", { class: "order", open: true }, h("summary", {}, ui("panel.active")), ol);
+  const wrap = h("details", { class: "order", open: panelGroupOpen("active", true) }, h("summary", {}, ui("panel.active")), ol);
+  rememberPanelGroup(wrap, "active");
   render(store.state);
   store.subscribe((s, ch) => { if (ch.has("order") || ch.has("layers")) render(s); });
   return wrap;
 }
 
 /** open / collapse the layer list (the Layers button does the same) */
+/** Open / closed layer-panel groups (the registry groups and "active", the drawing-order list): the registry's
+ *  default (`collapsed`), or the visitor's choice earlier in this visit, for both atlases (core/visit.ts), as the
+ *  cell panel's sections and table groups. */
+export const LAYER_GROUPS_KEY = sharedKey("layerPanel.groups");
+export const panelGroupOpen = (id: string, def: boolean) => visitFlags(LAYER_GROUPS_KEY)[id] ?? def;
+function rememberPanelGroup(det: HTMLDetailsElement, id: string) {
+  det.addEventListener("toggle", () => visitSet(LAYER_GROUPS_KEY, JSON.stringify({ ...visitFlags(LAYER_GROUPS_KEY), [id]: det.open })));
+}
 export function setLayerPanelOpen(root: HTMLElement, open: boolean) {
   root.querySelector(".panel-toggle")?.setAttribute("aria-expanded", String(open));
   root.classList.toggle("collapsed", !open);
@@ -473,7 +483,8 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
   for (const g of reg.groups) {
     const layers = reg.layers.filter((l) => l.group === g.id);
     if (!layers.length) continue;
-    const det = h("details", { class: "layer-group", open: !g.collapsed }, h("summary", {}, tr(groupKey(g.id), g.title)));
+    const det = h("details", { class: "layer-group", open: panelGroupOpen(g.id, !g.collapsed) }, h("summary", {}, tr(groupKey(g.id), g.title)));
+    rememberPanelGroup(det, g.id);
     if (g.description) det.append(h("p", { class: "help", html: mathHtml(tr(groupKey(g.id, "desc"), g.description)) }));
     const ul = h("ul", { class: "layer-list" });
     for (const l of layers) ul.append(layerItem(l, store));

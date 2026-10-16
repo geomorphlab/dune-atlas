@@ -8,13 +8,15 @@ from the Geomorphology Lab, Monash University.
 
 ## What it shows
 
-- **Earth**: the global dune map of Gunn (2026); per-cell wind regimes from ERA5-Land (0.1°) and ERA5
-  (0.25°) hourly 10 m winds, 1950–2024; 23 sand-flux quantities (drift potentials, resultant drift
+- **Earth**: the global dune map of Gunn (2026); per-cell wind regimes from the hourly 10 m winds of a choice
+  of wind datasets (now ERA5-Land 0.1° and ERA5 0.25°, 1950–2024); 23 sand-flux quantities (drift potentials, resultant drift
   direction, dune-orientation modes, crest fluxes and their ratios) at 64 threshold friction velocities;
   flux divergence; aridity index and vegetation cover.
-- **Mars**: dune fields from the USGS Mars Global Digital Dune Database and Fenton (2020); hourly winds,
-  temperature and air density of one Mars year from the MCMC FV3 Mars GCM (beta release 1, 2°); sand
-  flux from the transport law of Pähtz & Durán (2023) at 64 median grain diameters; MOLA–HRSC relief.
+- **Mars**: dune fields from the USGS Mars Global Digital Dune Database and Fenton (2020); one Mars year of
+  lowest-level winds, temperature and air density from a choice of wind datasets (now the MCMC FV3 Mars GCM
+  simulation, beta release 1, 2°, hourly; and the EMARS v1.0, 6° × 5.14°, hourly, and MACDA v2.0, 5°, every two
+  Mars hours, reanalyses of Mars Year 30); sand flux from the transport law of Pähtz & Durán (2023) at 64 median
+  grain diameters; MOLA–HRSC relief.
 - **Cell panel** (click any cell): wind and sand-flux roses, dune-orientation modes, a summary table, and
   downloads of the cell's data (NetCDF, CSV bundle) with citation text.
 - **Share and export**: short links to any view; map and plot images with colour bars, scale and sources.
@@ -42,7 +44,7 @@ Please cite the paper (preferred citation; also in [`CITATION.cff`](CITATION.cff
 
 Cite the data you use as well: the atlas's Earth wind histograms and sand-flux fields are the
 Supplementary Data of the paper (Gunn 2026, Zenodo, https://doi.org/10.5281/zenodo.20046812); every other
-source (ERA5, ERA5-Land, aridity, vegetation, the Mars GCM, dune databases and DEM) is listed with its
+source (the wind datasets, aridity, vegetation, dune databases and DEMs) is listed with its
 citation in each layer's information, in the downloads of every cell, and in
 [`docs/reference/sources.md`](docs/reference/sources.md).
 
@@ -56,6 +58,8 @@ CORS enabled), so they can be read directly by any zarr v3 or PMTiles client:
 | Earth, ERA5-Land 0.1° | `dune-atlas/v1/` | `cells.zarr` (per-cell wind histograms and fields at 64 thresholds), `cells-aux*.zarr` (flux divergence, aridity, vegetation), `fields/<field>.zarr` (map pyramids), `dunes/*.pmtiles` |
 | Earth, ERA5 0.25° | `dune-atlas/v2/datasets/era5/` | the same stores on the 0.25° grid |
 | Mars, MCMC FV3 2° | `dune-atlas/mars/v2/datasets/fv3-beta1/` | `cells.zarr` (hourly series and fields at 64 grain diameters), `cells-aux.zarr`, `fields/<field>.zarr` |
+| Mars, EMARS v1.0 MY30 6° × 5.14° | `dune-atlas/mars/v2/datasets/emars-v1-my30/` | the same stores (hourly series) |
+| Mars, MACDA v2.0 MY30 5° | `dune-atlas/mars/v2/datasets/macda-v2-my30/` | the same stores (one sample every two Mars hours) |
 | Mars, other | `dune-atlas/mars/v1/` | `dunes/*.pmtiles`, `fields/elevation.zarr`, `basemaps/hrsc-mola-terrarium.pmtiles` |
 
 Published objects are never overwritten: a new data version gets a new prefix. The store layout is
@@ -65,8 +69,9 @@ cell panel's downloads are the simplest route to the data.
 ## Data and licences
 
 The code is released under the MIT licence ([`LICENSE`](LICENSE)). The data products carry the licences of
-their sources, which differ between products (for example CC BY 4.0 for the Earth ERA5 and ERA5-Land products and
-CC BY-SA 3.0 IGO for the Mars relief tiles); see the per-product table in
+their sources, which differ between products (for example CC BY 4.0 for the Earth ERA5 and ERA5-Land products, the
+UK Open Government Licence v3.0 for the MACDA products and CC BY-SA 3.0 IGO for the Mars relief tiles); every
+download states the licence of its wind dataset; see the per-product table in
 [`DATA_LICENSE.md`](DATA_LICENSE.md). Basemap tiles are subject to their providers' terms.
 
 This page was created with assistance from Claude AI. I have reviewed the functionality and underlying
@@ -90,8 +95,8 @@ To work offline or on new data, build a small local fixture and serve it with HT
 
 ## How the data are produced
 
-Source data (the paper's wind histograms and sand-flux fields, reanalysis winds, the Mars GCM output, dune
-maps, DEMs) are converted by the Python package in `pipeline/` into web-optimised stores: sharded zarr v3
+Source data (the paper's wind histograms and sand-flux fields, the wind datasets: reanalyses and climate-model
+output, dune maps, DEMs) are converted by the Python package in `pipeline/` into web-optimised stores: sharded zarr v3
 cell stores, GeoZarr map pyramids and PMTiles. Large builds run on an HPC system (`pipeline/gadi/`). The
 stores are uploaded once to the data bucket, and the pipeline writes the matching registry entries
 (`registry/`), from which the app builds its layer list. See

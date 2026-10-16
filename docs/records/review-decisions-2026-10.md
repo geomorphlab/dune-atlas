@@ -239,13 +239,58 @@ min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 
 | Fenton (2020) licence | L. K. Fenton agreed by email (October 2026) to CC BY 4.0, with a citation of Fenton (2020). Shown as "MGD3 polygons: public domain (U.S. Geological Survey); Fenton (2020) dune fields: CC BY 4.0" in the layer info and About, and as the licence of the Fenton entry in the cell citations (DATA_LICENSE.md note 5) |
 | Usage backup | Private repository geomorphlab/dune-atlas-usage, weekly (Mondays 04:41 UTC); first run 15 October 2026 succeeded (docs/guide/usage-counter.md §5) |
 
+## Chinese review and icons in help text (PR #24, 16 October 2026)
+
+| item | done |
+|---|---|
+| Chinese review | 36 rows from the PI's Chinese PhD student (spreadsheet DuneAtlas-CN-YL.xlsx), trusted as given: 25 strings replaced, and the corrected terms carried into 86 more strings: 阴影地形 (shaded relief), 拼接图 (mosaic), 扇区 (rose petals), 摩阻风速 (friction velocity), 风成沙丘 (aeolian dune), 床面失稳 (bed instability, incl. 床面失稳模式), 输沙通量汇／源 (flux convergence / divergence), 稳态风 (steady wind), 再分析数据集 (reanalysis), 模型 for a climate or land-surface model (模式 kept for dune-orientation modes), 轨道卫星 (orbiter), 沙丘朝向 (how dunes orient), 时间段 (hours), 合成输沙势 for RDP. Two readings kept the English content: "Petals:" as 扇区： (label colon) and "Shaded relief (Mapterhorn, 2D)" as 阴影地形（Mapterhorn，2D）. Glossary updated (docs/translations/translation-glossary.csv) |
+| Icons in text | Tia's accessibility comment: the help panel and tour show the buttons' own icons instead of naming them ("mortarboard", "crosshair", "(?)", "a dashed box"), written {icon_concepts}, {icon_help}, {icon_share}, {icon_camera}, {icon_region}, {icon_planet}, {icon_centre} in the English and the translations (ui/texticons.ts); each icon is an image labelled with the button's name for screen readers; the help document writes them as [Concepts icon] etc. French and Chinese updated to match |
+| Compass points in the cell panel | Directions such as "RDD …: 112° (ESE)" were translated only when that exact direction had been collected as an example. The compass point is now a variable like the number (one translation per line, i18n COMPASS_NAMES), shown in the reader's language. Names chosen by the PI: Chinese 北, 北东北, 东北, 东北东, 东, 东南东, 东南, 南东南, 南, 南西南, 西南, 西南西, 西, 西北西, 西北, 北西北; French N, NNE, NE, ENE, E, ESE, SE, SSE, S, SSO, SO, OSO, O, ONO, NO, NNO. Exported files keep the English points |
+
+## Opening state and remembered settings (16 October 2026)
+
+| item | done |
+|---|---|
+| What a returning visitor keeps | PI's choice "Language only": a new visit opens exactly like a first visit (default view, its dataset, default panel layout). Kept between visits (localStorage): the language and the tour flag. Kept for the visit only (sessionStorage of the tab, so through reloads and planet switches): wind dataset, 'Show names', plotted quantity, petal direction, open / closed panel sections and groups, cell-panel size, each atlas's last view (planet button). Settings earlier versions kept in localStorage are removed on load (core/visit.ts) |
+| Panel layout | Same rule in both panels and both atlases: layer groups as in the registry (Dune Fields, Bedform orientation, Drift potential, Related data open; Crest-normal/parallel fluxes, Ratios & morphology indices, Wind statistics folded), Active layers open, Display and About folded; cell panel: every section open, table groups folded as the layer groups. The layer panel's groups are now kept for the visit like the cell panel's (before: never remembered); layout keys shared by both atlases |
+| Planet button | carries the language (`lang=`), so a page opened from a `?lang=` link stays in that language on the other planet |
+
+## Downloads and dataset-agnostic wording (16 October 2026)
+
+| item | done |
+|---|---|
+| Download audit | every download of the five wind datasets checked against the live stores: values exact; licence, notice, bounds, coverage, MACDA sampling and consistency fixes (docs/records/download-and-wording-audit-2026-10.md) |
+| PI decisions | Concepts "The wind datasets" and "for each time step"; GitHub description and topics updated; JRA-3Q-derived products CC BY-NC-SA 4.0; JRA-3Q drawn on a fitted regular grid with exact latitudes in the files |
+| Dataset wording | generic text names no dataset: registry `info.kind`, `info.note`, `info.landShort`, `credits.mapNotice`; Mars texts by time step / sample; French and Chinese for the 17 changed strings (to be reviewed with the student reviews) |
+
 ## Open items (16 October 2026)
 
 | item | who | status |
 |---|---|---|
 | Licence of the Fenton (2020) Mars dune polygons | PI asked Lori Fenton | done: CC BY 4.0 (PR #23) |
 | Persian names of the six new Iran fields | PI's Iranian colleague | pending; names not shown until confirmed |
-| Student review of the French and Chinese text (incl. "potentiel de dérive" vs "potentiel de transport", "barkhane" vs "barchane", Chinese 16-point compass names) | PhD students via the PI | pending |
+| Student review of the French text (incl. "potentiel de dérive" vs "potentiel de transport", "barkhane" vs "barchane") | Tia via the PI | pending |
+| Student review of the Chinese text | Chinese PhD student via the PI | first corrections applied (PR #24); compass names chosen by the PI (PR #24) |
 | Second check from mainland China (language switch, Chinese text, a cell download, a map image export) | PI's colleague | after release |
 | Weak aggregator sources for a few dune-field names | agent | done: 25 names re-sourced (PR #23); five weaker matches listed above |
 | Weekly backup of usage.csv to GitHub | PI | done (PR #23 records it) |
+
+## PI preview of 16 October (branch features/visit-defaults)
+
+| Report | Finding | Change |
+|---|---|---|
+| Wind dataset ⓘ: text box wrap | The popover was 100 % of the line wide plus its left indent, padding and border, so it ran past the right edge of the panel. | `.dataset-line > .info-popover` may shrink (`flex: 1 1 100%; min-width: 0; box-sizing: border-box`). |
+| Selector tooltip "what is this?" | The hover text of the Wind dataset menu options (name, grid, period and land rule of each dataset). | None. |
+| Site-wide tone | Review of all public English (staging/language-review/language-review.csv, 47 rows): advice on use ("treat as uncertain", "use as a guide", "do not apply"), judgements of datasets and methods ("not an independent estimate", "poorly defined", "approximation"), repetition and jargon. | All 47 applied: app texts, registry, pipeline definitions (fields.py, vegetation.py, mars/sidecars.py, then the registry fragments regenerated), Concepts. About heading "Earth and Mars: methods and data". The Mars grain-diameter ⓘ says "for each time step" (MACDA: every two Mars hours). |
+| ERA5 ocean cell mentions ERA5-Land | The non-land message named the other datasets. | Each dataset's message names only its own land rule. |
+| Download comment "This page was created …" | Downloads carried the notice written for the web page. | Downloads (NetCDF `comment`, README.txt, metadata.json `ai_notice`, region files) carry a file notice: produced by, and downloaded from, the Dune Atlas website (map.geomorphlab.org or /mars); the website and the code that produced the file were created with assistance from Claude AI. The page keeps its own notice. |
+| MACDA south pole at the antimeridian | Not a rendering fault: in the MACDA data the column of cells centred on 180° has lower lowest-level winds than its neighbours near the south pole (MY30 cell store at 82.5° S: mean speed 12.2 m/s against 15.7 and 16.0 m/s either side; at 87.5° S 10.7 against 13.1 and 13.4 m/s). The same column is low in the ARCO-MACDA source arrays (three 10-sol chunks checked), and the pipeline only rolls MACDA columns, without interpolation. FV3 and EMARS are smooth across 180°. | None to the data; the PI decides whether the MACDA source text should say so. |
+| Ring of a polar cell drawn at 85° | The ring is a circle layer, drawn from Web Mercator tiles, which end at 85.05°. | On the globe the ring of a cell poleward of 85° is a screen-space marker at the true cell centre (hidden on the far side of the globe, fading with zoom like the circle layer); the flat map is unchanged. |
+| Region export stuck at "90 of 93" (FV3, over the antimeridian near 75° S) | Not reproduced outside the browser (the same box, 3 × 31 cells, with and without wind, 12 requests at a time, completes). A request that never returns left the export waiting, and Cancel only acted between cells. | Each cell may take at most 45 s; it is read again up to 3 times in all, then the export stops with a message naming the cell. Cancel acts at once. |
+
+Tia's notes on the Help text (16 October):
+- "The line under the box shows how the text was read" now reads "While you type coordinates, the line under the box shows the position they were read as ("Go to …")". The "Go to" of that line is now translated (Aller à, 前往).
+- The Petals switch exists (flux-rose section, under "% of total / m²/yr": "Petals: toward / from"); Help now names it as "Petals: toward / from".
+- Map image width: the code asks for 1.5 × the on-screen map width, kept within 1600–2400 px, and tags the PNG 300 dpi. Under check: the pixel sizes Tia got.
+
+French and Chinese: the 47 changed entries and the new "Go to" key were machine-drafted with the glossary (npm run i18n: 0 untranslated, 0 stale). They are not yet reviewed by Tia or YL.

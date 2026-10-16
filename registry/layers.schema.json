@@ -259,7 +259,7 @@
               "nHours": {
                 "type": "integer",
                 "minimum": 1,
-                "description": "hours in the record"
+                "description": "samples in the record (hours for hourly data); the app takes the exact count from the cell store (series length)"
               },
               "landRule": {
                 "type": "string",
@@ -267,7 +267,7 @@
               },
               "landThreshold": {
                 "type": "number",
-                "description": "land–sea mask fraction above which a cell carries wind data"
+                "description": "land fraction (the dataset's land–sea mask or land-fraction field) above which a cell carries wind data"
               },
               "nonLandReason": {
                 "type": "string",
@@ -291,6 +291,34 @@
               "sourceHtml": {
                 "type": "string",
                 "description": "About, Data sources: the dataset's item (HTML)"
+              },
+              "grid": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["lat0", "dlat", "lon0", "dlon", "ny", "nx"],
+                "description": "cell-centre grid of the cell store (= its root attrs grid): row iy at lat0 + dlat * iy (north to south, dlat < 0), column ix at lon0 + dlon * ix. Cells may be non-square (|dlat| != dlon) and the rows need not reach the poles: there are no cells poleward of lat0 - dlat / 2. Used before the cell store is open and for the latitude coverage of the panel and search.",
+                "properties": {
+                  "lat0": { "type": "number", "minimum": -90, "maximum": 90 },
+                  "dlat": { "type": "number", "exclusiveMaximum": 0 },
+                  "lon0": { "type": "number", "minimum": -180, "maximum": 180 },
+                  "dlon": { "type": "number", "exclusiveMinimum": 0 },
+                  "ny": { "type": "integer", "minimum": 1 },
+                  "nx": { "type": "integer", "minimum": 1 }
+                }
+              },
+              "kind": { "type": "string", "description": "what the dataset is, without its name, read after 'Name: ' in the Wind dataset ⓘ (e.g. 'free-running climate-model simulation')" },
+              "note": { "type": "string", "description": "a sentence about this dataset for the Wind dataset ⓘ (e.g. how it relates to another dataset)" },
+              "landShort": { "type": "string", "description": "land rule of the selector tooltip, e.g. 'land cells: land–sea mask fraction > 0' (datasets with a land mask)" },
+              "series": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["samplesPerSol"],
+                "description": "datasets with per-sample series (Mars): the sampling and the long names of the time columns of the cell downloads",
+                "properties": {
+                  "samplesPerSol": { "type": "integer", "minimum": 1, "maximum": 96, "description": "samples per sol (24: hourly, 12: every two Mars hours)" },
+                  "indexText": { "type": "string", "description": "long name of the sample-index column (hour) of the downloads" },
+                  "solText": { "type": "string", "description": "long name of the sol column of the downloads" }
+                }
               }
             }
           },
@@ -329,6 +357,7 @@
                 "type": "string",
                 "description": "wind line of image exports"
               },
+              "mapNotice": { "type": "string", "description": "short attribution line on the map and in About while the dataset is selected (e.g. the Copernicus statement)" },
               "notice": {
                 "type": "string",
                 "description": "data notice written into downloads (e.g. the Copernicus notice)"

@@ -107,21 +107,21 @@ FIELD_DEFINITIONS = {
             r"covered by loose sand (Gunn 2026). Like the drift potential of Fryberger & Dean (1979) it measures the "
             r"wind's capacity to transport sand, but it is a different quantity: Fryberger's DP is in vector units, "
             r"computed from 10 m wind speeds in knots as $V^2(V - V_t)$ with a 12-knot threshold, whereas this DP is a "
-            r"physical flux computed from the friction velocity with the threshold set by the slider. The two cannot "
-            r"be converted into each other without the wind-speed distribution, and Fryberger's energy classes (below "
-            r"200, 200–400 and above 400 vector units) do not apply to these values."),
+            r"physical flux computed from the friction velocity with the threshold set by the slider. The ratio of "
+            r"the two depends on the wind-speed distribution, and Fryberger's energy classes (below 200, 200–400 and "
+            r"above 400 vector units) are in vector units."),
     "rdpm": (r"Magnitude of the time-averaged flat-bed flux vector, $RDP = |\sum n q e^{i\theta}| / \sum n$: the net "
              r"volume of packed sand per metre width per year after transport in opposing directions has cancelled. "
              r"Same units as DP; RDP ≤ DP, with equality only when all transport is in one direction."),
     "rdpa": (r"Direction of the time-averaged flat-bed flux vector, $\arg \sum n q e^{i\theta}$, the direction sand "
-             r"moves, as a compass bearing (clockwise from north). Poorly defined where RDP/DP is low, because "
-             r"transport in opposing directions nearly cancels."),
+             r"moves, as a compass bearing (clockwise from north). Where RDP/DP is low, transport in opposing "
+             r"directions nearly cancels, and a small change of the threshold or the winds can turn this direction by up "
+             r"to 180°."),
     "qha_rdp_dp": (r"Directional variability of sand flux: ratio of resultant to total drift potential, $RDP/DP$ "
                    r"(0 = multidirectional, 1 = unidirectional). Undefined where there is no sand flux ($DP = 0$). "
                    r"Fryberger & Dean (1979) classes: below 0.3 low (complex or obtuse bimodal winds), 0.3–0.8 "
-                   r"intermediate (obtuse to acute bimodal winds), above 0.8 high (unimodal winds). Only transport "
-                   r"above the threshold counts here, and the flux law differs from Fryberger's, so use the classes "
-                   r"as a guide."),
+                   r"intermediate (obtuse to acute bimodal winds), above 0.8 high (unimodal winds). Here only "
+                   r"transport above the threshold counts, and the flux law differs from Fryberger's."),
     "at": (r"Migration direction $\alpha_T$ of dunes whose crests have the bed-instability orientation $\alpha_H$: "
            r"perpendicular to $\alpha_H$, toward the side of the net sand flux across the crest (Gunn 2026; Courrech "
            r"du Pont et al. 2024)."),
@@ -147,8 +147,9 @@ FIELD_DEFINITIONS = {
                    r"$|\langle Q_{\parallel}(\alpha_H)\rangle/\langle Q_{\bot}(\alpha_H)\rangle|$. Along-crest "
                    r"transport tends to keep crests straight, while across-crest transport, which drives migration, "
                    r"tends to make them sinuous (Rubin 2012), so higher values suggest straighter long-crested dunes "
-                   r"on sand-covered beds. For dunes migrating on starved beds, the ratio measures the asymmetry of "
-                   r"sand fluxes that makes dunes such as barchans asymmetric (Courrech du Pont et al. 2024). In the "
+                   r"on sand-covered beds. For dunes migrating on starved beds, the ratio measures how far the "
+                   r"migration direction departs from the direction of the sand flux on the dune, which makes dunes such "
+                   r"as barchans asymmetric (Courrech du Pont et al. 2024). In the "
                    r"sand-covered-bed examples of Courrech du Pont et al. (2024) it is about 0.03 for transverse, 0.4 "
                    r"for oblique and 22 for longitudinal dunes. The ratio goes to infinity where its denominator (a "
                    r"net flux) goes to zero (shown clipped to ±60,000)."),
@@ -169,16 +170,17 @@ FIELD_DEFINITIONS = {
                    r"(Courrech du Pont et al. 2024). The ratio goes to infinity where its denominator (a net flux) goes "
                    r"to zero (shown clipped to ±60,000)."),
 }
-# Mars wording: DP is averaged over the hours of the Mars year with a grain-size threshold.
+# Mars wording: DP is averaged over the samples of the Mars year (one per Mars hour or every two Mars hours, depending on
+# the wind dataset) with a grain-size threshold.
 MARS_FIELD_DEFINITIONS = {
-    "dpm": (r"Time-averaged flat-bed saturated sand flux, $DP = \sum q / N$ over all N hours of the Mars year: the "
+    "dpm": (r"Time-averaged flat-bed saturated sand flux, $DP = \sum q / N$ over all N samples of the Mars year: the "
             r"volume of packed sand per metre width that the wind could move per Earth year over a flat bed fully "
             r"covered by loose sand (Gunn 2026). Like the drift potential of Fryberger & Dean (1979) it measures the "
             r"wind's capacity to transport sand, but it is a different quantity: Fryberger's DP is in vector units, "
             r"computed from 10 m wind speeds in knots as $V^2(V - V_t)$ with a 12-knot threshold, whereas this DP is a "
             r"physical flux computed from the friction velocity with a threshold computed from the grain diameter. "
-            r"The two cannot be converted into each other, and Fryberger's energy classes do not apply to these "
-            r"values."),
+            r"There is no fixed ratio between the two, and Fryberger's energy classes (below 200, 200–400 and above "
+            r"400 vector units) are in vector units."),
 }
 
 
@@ -252,7 +254,7 @@ GROUPS = [
     {"id": "crest-fluxes", "title": "Crest-normal/parallel fluxes", "collapsed": True,
      "description": "Net and absolute sand flux resolved across (normal to) and along (parallel to) predicted crests."},
     {"id": "morphology", "title": "Ratios & morphology indices", "collapsed": True,
-     "description": "Dimensionless flux ratios that discriminate dune morphology and stability."},
+     "description": "Dimensionless flux ratios related to dune morphology and stability."},
     {"id": "wind", "title": "Wind statistics", "collapsed": True,
      "description": "How often and how strongly the flat-bed friction velocity exceeds the threshold."},
 ]

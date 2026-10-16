@@ -36,11 +36,26 @@ export function cellFromIndex(iy: number, ix: number, g: Grid = ERA5_LAND_GRID):
   return { iy, ix, lat: round6(g.lat0 + g.dlat * iy), lon: round6(wrapLon(g.lon0 + g.dlon * ix)), id: iy * g.nx + ix };
 }
 
+/** Latitudes [south, north] covered by the grid's rows (outer cell edges, clipped to ±90). Rows need not
+ *  reach the poles: a grid with outer centres at ±84.86° and 5.14° rows covers ±87.43° only. */
+export function gridLatRange(g: Grid): [number, number] {
+  const a = g.lat0 - g.dlat / 2, b = g.lat0 + g.dlat * (g.ny - 1) + g.dlat / 2;
+  return [Math.max(-90, Math.min(a, b)), Math.min(90, Math.max(a, b))];
+}
+
+/** Does the grid have a cell at latitude `lat`? Beyond a pole-reaching outer row, yes (snapToCell clamps). */
+export function coversLat(g: Grid, lat: number): boolean {
+  const [s, n] = gridLatRange(g), eps = 1e-9, pole = 90 - 1e-6;
+  return (lat >= s - eps || s <= -pole) && (lat <= n + eps || n >= pole);
+}
+
 /** Nearest cell centre to (lng, lat). Longitude wraps across the antimeridian for global grids;
- *  latitude clamps to the first/last row. Returns null for non-finite input or points outside a
- *  regional grid. */
+ *  latitude clamps to the first/last row where that row reaches the pole. Returns null for non-finite
+ *  input, points outside a regional grid and points poleward of rows that stop short of the pole
+ *  (gridLatRange). */
 export function snapToCell(lng: number, lat: number, g: Grid = ERA5_LAND_GRID): CellRef | null {
   if (!Number.isFinite(lng) || !Number.isFinite(lat)) return null;
+  if (!coversLat(g, lat)) return null;
   let ix: number;
   if (isGlobal(g)) {
     const off = (((lng - g.lon0) % 360) + 360) % 360; // degrees east of column 0

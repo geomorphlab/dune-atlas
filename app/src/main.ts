@@ -19,7 +19,7 @@ import { OverlayManager, ensureSelectedCellLayers, restoreOverlays } from "./cor
 import { setLayerPanelOpen, renderLayerPanel } from "./core/ui/layerPanel";
 import { versionFromPrefix } from "./core/cell/export";
 import { CellPanel, readPlotChoice, defaultFieldLabel, type FieldLabel } from "./core/ui/cellPanel";
-import { cellFeature, cellFromIndex, snapToCell, type Grid } from "./core/cell/snap";
+import { cellFeature, cellFromIndex, coversLat, snapToCell, wrapLon, type Grid } from "./core/cell/snap";
 import { APP_HOOKS as HOOKS, type BodyCellStore } from "@body/app";
 import { centreOnCell } from "./core/map/centre";
 import { NoTranslateAttribution } from "./core/map/attribution";
@@ -44,20 +44,22 @@ import { ensureRtlPlugin, LOCAL_IDEOGRAPH_FONTS, PlaceLabels, placesNeedRtl, typ
 // the RTL text plugin as an asset of the build (self-hosted; the package exports only its source entry)
 import rtlPluginUrl from "../node_modules/@mapbox/mapbox-gl-rtl-text/dist/mapbox-gl-rtl-text.js?url";
 import { formatCoord } from "./core/search/coords";
-import { datasetInfo } from "./core/cell/datasetinfo";
+import { datasetGrid, datasetInfo, outsideGridText } from "./core/cell/datasetinfo";
 import { PROFILE } from "@body/profile";
 import { BoxDrawer } from "./core/map/boxdraw";
 import { boxCells, fetchRegion, normaliseBox, regionNetcdf, regionReadme, type Box, type RegionMeta, type RegionSelection } from "./core/export/region";
 import { REGION_TEXT, type RegionContext } from "./core/ui/regionExport";
 import { AUX_META } from "./core/cell/auxinfo";
-import { cfUnits } from "./core/cell/export";
+import { cfUnits, ut2 } from "./core/cell/export";
 import { isPublishedField } from "./core/util/constants";
 import { writeZip } from "./core/cell/zip";
 import { triggerDownload } from "./core/cell/downloads";
 import { DATA_LICENSE_URL } from "./core/ui/bulkguide";
 import { BODY } from "./core/body";
+import { dropRetiredLocal, visitGet, visitSet } from "./core/visit";
 
 applyHtmlLang();
+dropRetiredLocal();   // settings of earlier versions kept between visits (core/visit.ts)
 startDomTranslation();   // French / Chinese: rendered text (i18n/dom.ts)
 const { registry: reg, errors } = loadRegistry();
 if (errors.length) console.warn("registry merge:", errors);
@@ -66,12 +68,12 @@ if (HOOKS.prepareBasemaps) reg.basemaps = HOOKS.prepareBasemaps(reg.basemaps, da
 // ---- initial state: short share link (#v=…) > ?query permalink > the default view
 // (defaultview.ts). Wind dataset: the link's; query permalinks without one are the registry
 // defaultDataset (Earth: ERA5-Land, as they were written); with no view state in the URL, a returning
-// user's explicit choice (localStorage) or the default view's. Layer definitions follow it.
+// visitor's choice earlier in this visit (core/visit.ts) or the default view's. Layer definitions follow it.
 const DATASET_KEY = storageKey("dataset"); // "duneAtlas.dataset" / "duneAtlasMars.dataset" (body.ts)
-const storedDataset = (() => { try { return localStorage.getItem(DATASET_KEY) ?? undefined; } catch { return undefined; } })();
-// planet button return (?resume=1): this atlas's last view, stored per body on every view change
+const storedDataset = visitGet(DATASET_KEY) ?? undefined;
+// planet button return (?resume=1): this atlas's last view in this visit, stored per body on every view change
 const LAST_VIEW_KEY = storageKey(LAST_VIEW);
-const storedView = (() => { try { return localStorage.getItem(LAST_VIEW_KEY); } catch { return null; } })();
+const storedView = visitGet(LAST_VIEW_KEY);
 const query0 = parseUrlState(location.search);
 const start = resolveInitialState(shareFromHash(location.hash), resumeQuery(query0, storedView), reg.defaultDataset, storedDataset);
 const url: UrlState = start.url;
@@ -84,18 +86,18 @@ const init: AppState = initialAppState(reg, url, initDataset);
 // plotted quantity of the cell panel: the link's, else the visitor's last choice (per body), else DP
 if (!init.plotY) { const p = readPlotChoice(); if (p) init.plotY = p; }
 // dune-field name labels ('Show names'): the link's setting; opened without view state, the visitor's
-// last choice on this atlas (per body); never where the body's place list is not shown (Earth for now)
+// choice earlier in this visit on this atlas (per body); never where the body's place list is not shown (Earth for now)
 const PLACES = loadPlaces();
 const NAMES_KEY = storageKey("names");
 if (!placesAvailable(PLACES)) delete init.names;
-else if (start.source === "default") { try { if (localStorage.getItem(NAMES_KEY) === "1") init.names = true; } catch { /* private mode */ } }
+else if (start.source === "default" && visitGet(NAMES_KEY) === "1") init.names = true;
 const store = new Store(init);
 // a dataset switch swaps the layer definitions (sources, colour limits, citations) and resets
 // colour-limit overrides of the swapped layers in the same state change
 store.intercept((patch, cur) => {
   if (patch.dataset === undefined || patch.dataset === cur.dataset) return patch;
   const changed = applyDatasetLayers(reg, patch.dataset);
-  try { localStorage.setItem(DATASET_KEY, patch.dataset); } catch { /* private mode */ }
+  visitSet(DATASET_KEY, patch.dataset);
   return { ...patch, layers: layersForDatasetSwitch(patch.layers ?? cur.layers, changed) };
 });
 if (init.embed) document.body.classList.add("embed");
@@ -166,8 +168,9 @@ function applyBasemap() {
   setBasemap(map, b, store.state.projection);
 }
 
-/** grid of the current dataset's cell store (from its root attrs); the body's default grid until opened */
-let grid: Grid = HOOKS.defaultGrid;
+/** grid of the current dataset's cell store (from its root attrs); until opened, the registry entry's
+ *  (`info.grid`), else the body's default grid */
+let grid: Grid = datasetGrid(store.state.dataset) ?? HOOKS.defaultGrid;
 
 function selectedCellFeature(): GeoJSON.FeatureCollection | null {
   const c = store.state.cell;
@@ -253,7 +256,7 @@ function openOtherStore(id: string): Promise<BodyCellStore> {
 }
 const panel = new CellPanel(document.getElementById("cell-panel")!, init.utIndex, {
   windSectors: CONFIG.windRoseSectors, fluxSectors: CONFIG.fluxRoseSectors,
-  onClose: () => store.set({ cell: null }), plot: { get: () => store.state.plotY, set: (id) => store.set({ plotY: id }) }, onCentre: (c) => { centreOnCell(map, c, Math.abs(grid.dlat)); }, fieldLabel, threshold: { def: reg.threshold, store }, shareLink: () => shareLinkNow(),
+  onClose: () => { if (store.state.cell) store.set({ cell: null }); else panel.close(); }, plot: { get: () => store.state.plotY, set: (id) => store.set({ plotY: id }) }, onCentre: (c) => { centreOnCell(map, c, Math.abs(grid.dlat)); }, fieldLabel, threshold: { def: reg.threshold, store }, shareLink: () => shareLinkNow(),
   // the other wind datasets at the same location (Earth cell panel line), their stores opened on first use
   otherDatasets: () => (reg.datasets ?? []).filter((d) => d.id !== store.state.dataset).map((d) => ({ id: d.id, open: () => openOtherStore(d.id) })),
   exportMeta: () => {
@@ -296,7 +299,12 @@ async function runRegion(box: Box, sel: RegionSelection, o: { onProgress: (d: nu
   const t = reg.threshold;
   const meta: RegionMeta = {
     datasetId: ds?.id ?? "", datasetTitle: ds?.title ?? "", dataVersion: versionFromPrefix(ds?.prefix), permalink: fullScreenUrl(), box, body: BODY,
-    axis: { name: t.dim ?? "ut", units: t.units === "µm" ? "um" : cfUnits(t.units), longName: PROFILE.control.exportName, values: cs.utValues },
+    axis: (() => {
+      // Earth thresholds are exactly 2 decimals (as in the cell downloads); Mars grain diameters are whole micrometres
+      const units = t.units === "µm" ? "um" : cfUnits(t.units), values = cs.utValues.map((v) => (BODY === "mars" ? v : ut2(v)));
+      return { name: t.dim ?? "ut", units, longName: PROFILE.control.exportName, values, symbolTex: PROFILE.control.symbolTex,
+        comment: `${values.length} values from ${values[0]} to ${values[values.length - 1]} ${units}` };
+    })(),
     storeAttrs: cs.attrs as RegionMeta["storeAttrs"], generated: new Date(),
   };
   const nc = regionNetcdf(data, cells, g, sel, meta);
@@ -328,7 +336,7 @@ async function goToPoint(lat: number, lon: number): Promise<string> {
   map.flyTo({ center: [lng, lat], zoom: Math.max(map.getZoom(), searchZoom(g.dlat)), essential: true });
   if (!cs) return `${where}: the cell data could not be loaded.`;
   const c = snapToCell(lng, lat, g);
-  if (!c) return `${where}: outside the grid of the wind dataset.`;
+  if (!c) return coversLat(g, lat) ? `${where}: outside the grid of the wind dataset.` : `${where}: ${outsideGridText(lat, g, datasetInfo(store.state.dataset).name)}`;
   const d = await cs.query(c.iy, c.ix);
   if (!d.hasData) {
     const why = datasetInfo(store.state.dataset).nonLandReason;
@@ -351,10 +359,17 @@ map.on("click", async (e) => {
   try { grid = (await getCellStore()).grid; } catch { /* keep the fallback grid */ }
   const c = snapToCell(e.lngLat.lng, e.lngLat.lat, grid);
   if (c) store.set({ cell: [c.iy, c.ix] });
+  else showOutside(e.lngLat.lat, e.lngLat.lng, grid);
 });
+/** a point poleward of a grid that stops short of the pole (EMARS): the cell panel says why there is no cell */
+function showOutside(lat: number, lon: number, g: Grid) {
+  if (Math.abs(lat) > 90 || coversLat(g, lat)) return;
+  store.set({ cell: null });
+  panel.showOutside(lat, wrapLon(lon), outsideGridText(lat, g, datasetInfo(store.state.dataset).name));
+}
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && placeLabels.popupOpen) { placeLabels.closePopup(); return; }   // Esc: the name popup first
-  if (escapeClosesCell(e) && store.state.cell && !tour.active && !tools.open && !tourStart.bubble.shown) store.set({ cell: null }); });
+  if (escapeClosesCell(e) && (store.state.cell || panel.outsideShown) && !tour.active && !tools.open && !tourStart.bubble.shown) { if (store.state.cell) store.set({ cell: null }); else panel.close(); } });
 
 // ---- state -> map/panels/URL ----
 function currentUrlState(): UrlState {
@@ -386,7 +401,7 @@ function scheduleUrl() {
   urlTimer = window.setTimeout(() => {
     const q = serializeUrlState(currentUrlState());
     history.replaceState(null, "", q === openingQuery ? (store.state.embed ? "?embed=1" : location.pathname) : q || location.pathname);
-    try { localStorage.setItem(LAST_VIEW_KEY, q); } catch { /* private mode */ }
+    visitSet(LAST_VIEW_KEY, q);
   }, 250);
 }
 map.on("moveend", scheduleUrl);
@@ -409,12 +424,13 @@ store.subscribe((s, ch) => {
       const cur = store.state.cell;
       if (c && cur && cur[0] === c.iy && cur[1] === c.ix) void panel.show(cs, c.iy, c.ix); // same indices: reload data
       else store.set({ cell: c ? [c.iy, c.ix] : null });
+      if (prev && !c) showOutside(prev.lat, prev.lon, cs.grid); // e.g. a polar FV3 cell, EMARS selected
     });
   }
   if (ch.has("dunesOnly")) overlays.setDunesOnly(!!s.dunesOnly);   // 'Dunes only' (map/dunemask.ts)
-  if (ch.has("names")) {   // 'Show names' (map/placelabels.ts): remembered per body
+  if (ch.has("names")) {   // 'Show names' (map/placelabels.ts): kept for the visit, per body
     placeLabels.setVisible(!!s.names);
-    try { localStorage.setItem(NAMES_KEY, s.names ? "1" : "0"); } catch { /* private mode */ }
+    visitSet(NAMES_KEY, s.names ? "1" : "0");
   }
   if (ch.has("basemap")) placeLabels.setTone(basemapTone());
   if (ch.has("order")) overlays.setOrder(s.order);

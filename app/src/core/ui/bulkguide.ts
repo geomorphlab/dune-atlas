@@ -13,7 +13,8 @@ import { APP_HOOKS } from "@body/app";
 import { PROFILE } from "@body/profile";
 
 /** the licences of every store (repository file) */
-export const DATA_LICENSE_URL = "https://github.com/geomorphlab/dune-atlas/blob/main/DATA_LICENSE.md";
+import { DATA_LICENSE_URL } from "../cell/exportmeta";
+export { DATA_LICENSE_URL };
 export const STORAGE_LAYOUT_URL = "https://github.com/geomorphlab/dune-atlas/blob/main/docs/reference/storage-layout.md";
 export const BULK_TEXT = { title: "Get the whole grid", copy: "Copy code", copied: "Copied" };
 

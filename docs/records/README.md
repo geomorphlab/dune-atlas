@@ -17,6 +17,7 @@ are kept at the git tag `records-2026-10`.
 | [validation-mars-fields.md](validation-mars-fields.md) | Mars wind fields, cell store and sidecars (FV3 beta 1; §11: v2, fluxes of packed sand) | `dune-atlas/mars/v1/`, `mars/v2/datasets/fv3-beta1/` |
 | [validation-mars-terrain.md](validation-mars-terrain.md) | Mars relief tiles, elevation and dune tiles | `dune-atlas/mars/v1/` |
 | [validation-mars.md](validation-mars.md) | Mars atlas integration and first release | `dune-atlas/mars/v1/` |
+| [validation-mars-wind-datasets-app.md](validation-mars-wind-datasets-app.md) | Mars app with the EMARS v1.0 and MACDA v2.0 (MY30) wind datasets next to FV3: grids, sampling, panel, downloads, fixture | `mars/v2/datasets/{emars-v1-my30, macda-v2-my30}/` (not yet built) |
 | [refactor-baseline.md](refactor-baseline.md) | baseline of the 2026 code restructuring (builds, tests, snapshots) | — |
 | [review-decisions-2026-10.md](review-decisions-2026-10.md) | outcome of every suggestion of the October 2026 user, learner and codebase reviews | — |
 | [refactor-equivalence.md](refactor-equivalence.md) | equivalence checks of the restructuring into a shared core and per-planet folders (phases 2 and 3) | — |

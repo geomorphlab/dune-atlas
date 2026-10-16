@@ -1,7 +1,7 @@
 // Mars per-cell auxiliary variables (cells-aux.zarr: qsdiv (lat, lon, d), rho_mean, elev_mean) as
 // shown in the panel and written to the downloads. The divergence uses the Mars radius.
 import type { CellAux } from "../../core/cell/cellstore";
-import { resolutionText } from "../../core/cell/datasetinfo";
+import { datasetInfo, gridResolutionText } from "../../core/cell/datasetinfo";
 import type { AuxMeta } from "../../core/cell/auxinfo";
 import { R_MARS } from "./body";
 import { DEM_CITATION, DEM_LICENCE, DERIVED_DEM_LICENCE } from "./citation";
@@ -14,7 +14,7 @@ export const AUX_META: Record<string, AuxMeta> = {
   },
   rho_mean: {
     longName: "Near-surface air density, mean over the year", symbolTex: "\\overline{\\rho_f}", units: "kg m-3", kind: "scalar",
-    description: "Mean of the hourly lowest-layer air density ρ_f = p/(R T) of the {res} cell over the Mars year.",
+    description: "Mean of the lowest-layer air density ρ_f = p/(R T) of the {res} cell over the samples of the Mars year.",
   },
   elev_mean: {
     longName: "Elevation, mean over the cell", symbolTex: "\\overline{z}", units: "m", kind: "scalar",
@@ -35,9 +35,13 @@ export function harmonizeAux(aux: CellAux): CellAux {
   return out;
 }
 
-export function auxDescription(v: string, deg = 2): string {
+/** cell size as text: "2°", "6° × 5.14°" (longitude × latitude spacing degLon × deg) */
+const cellText = (deg: number, degLon = deg) => gridResolutionText({ dlat: deg, dlon: degLon });
+
+/** description with {res} = the cell size (latitude spacing `deg`, longitude spacing `degLon`) */
+export function auxDescription(v: string, deg = 2, degLon = deg): string {
   const d = AUX_META[v]?.description ?? "";
-  return d.replace(/\{res\}/g, resolutionText(deg)).replace(/\{half\}/g, resolutionText(deg / 2));
+  return d.replace(/\{res\}/g, cellText(deg, degLon)).replace(/\{half\}/g, cellText(deg / 2, degLon / 2));
 }
 
 export function auxVars(aux: CellAux | undefined): string[] {
@@ -46,21 +50,25 @@ export function auxVars(aux: CellAux | undefined): string[] {
 }
 
 export const QSDIV_SOURCE = "Derived by the Mars Dune Atlas from rdpm and rdpa (winds of the wind dataset, Pähtz & Durán 2023 transport law)";
-export const QSDIV_METHOD = (deg: number) => `Gunn (2026) Methods M6: central differences on the ${resolutionText(deg)} grid, periodic in longitude, R = ${(R_MARS / 1000).toFixed(1)} km`;
+export const QSDIV_METHOD = (deg: number, degLon = deg) => `Gunn (2026) Methods M6: central differences on the ${cellText(deg, degLon)} grid, periodic in longitude, R = ${(R_MARS / 1000).toFixed(1)} km`;
 
-export function auxSourceAttrs(aux: CellAux, v: string, deg = 2): Record<string, string> {
+/** source statement of a per-cell variable; `datasetId`: the wind dataset of the cell (default: the default dataset) */
+export function auxSourceAttrs(aux: CellAux, v: string, deg = 2, degLon = deg, datasetId?: string): Record<string, string> {
   const a = aux.attrs[v] ?? {};
   const out: Record<string, string> = {};
   const str = (k: string) => (typeof a[k] === "string" ? (a[k] as string) : undefined);
-  if (AUX_META[v]) out.description = auxDescription(v, deg);
-  if (v === "qsdiv") { out.source = QSDIV_SOURCE; out.method = QSDIV_METHOD(deg); }
-  else if (v === "elev_mean") { out.source = str("source") ?? "Mars MGS MOLA - MEX HRSC Blended DEM Global 200m v2 (USGS Astrogeology Science Center)"; out.license = `${DEM_LICENCE}. ${DERIVED_DEM_LICENCE}`; out.references = DEM_CITATION; }
-  else if (v === "rho_mean") out.source = str("source") ?? "MCMC FV3 Mars GCM beta release 1: lowest-layer p/(R T)";
+  if (AUX_META[v]) out.description = auxDescription(v, deg, degLon);
+  if (v === "qsdiv") { out.source = QSDIV_SOURCE; out.method = QSDIV_METHOD(deg, degLon); }
+  else if (v === "elev_mean") { out.source = (str("source") ?? "Mars MGS MOLA – MEX HRSC Blended DEM Global 200m v2 (USGS Astrogeology Science Center)").replace("MOLA - MEX", "MOLA – MEX") /* one spelling in every dataset */; out.license = `${DEM_LICENCE}. ${DERIVED_DEM_LICENCE}`; out.references = DEM_CITATION; }
+  else if (v === "rho_mean") {
+    const ds = datasetInfo(datasetId);
+    out.source = str("source") ?? (ds.id === "fv3-beta1" ? "MCMC FV3 Mars GCM beta release 1: lowest-layer p/(R T)" : `${ds.name}: lowest-layer p/(R T)`);
+  }
   else if (str("source")) out.source = str("source")!;
   const cite = [str("citation"), str("doi") ? `data doi:${str("doi")}` : undefined].filter(Boolean).join("; ");
   if (cite) out.references = cite;
-  // FV3-derived values: license comes from fieldsLicence() (the v1 store attrs say CC BY 4.0 for rho_mean; superseded)
-  if (v === "rho_mean" || v === "qsdiv") out.license = fieldsLicence();
+  // wind-derived values: the licence of the dataset's fields (the FV3 v1 store attrs say CC BY 4.0 for rho_mean; superseded)
+  if (v === "rho_mean" || v === "qsdiv") out.license = fieldsLicence(datasetId);
   else if (str("licence") && v !== "elev_mean") out.license = str("licence")!;
   if (str("url")) out.url = str("url")!;
   return out;

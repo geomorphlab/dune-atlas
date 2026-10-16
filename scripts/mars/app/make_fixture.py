@@ -8,6 +8,13 @@ v2/ since the packed-sand fluxes, phi = 0.6, the body-level elevation pyramid st
   datasets/fv3-beta1/cells-aux.zarr   qsdiv (90,180,64), rho_mean, elev_mean (90,180)
   datasets/fv3-beta1/fields/<v>.zarr  GeoZarr pyramids (topozarr layout, dims (d, y, x)) of a few fields,
                                       qsdiv and rho_mean (2-D); fields/elevation.zarr (2-D)
+  datasets/emars-v1-my30/...          the same stores on the EMARS grid (34 x 60 cells of 6° x 5.14°, rows to
+                                      ±84.86° only), 16,044 hourly samples (24 per sol)
+  datasets/macda-v2-my30/...          the same stores on the MACDA grid (36 x 72 cells of 5°, first column centred
+                                      on -180°), 8,028 samples (12 per sol, every two Mars hours)
+
+The grids come from the pipeline's dataset specs (mars/dataset_specs/<id>.json); the sample counts of the two
+reanalyses are fixture choices (their builds set the real ones). --datasets selects which datasets are written.
 
 The series are synthetic (fixture_common.py). Physics is pipeline mars/physics.py (never re-implemented);
 the 23 fields follow the Earth definitions (qsat_compute.py) with the per-hour Mars transport law:
@@ -18,8 +25,10 @@ Dunes: the real overlap fraction (assessment artifact fv3_dunefrac.npz, FV3 grid
 contract grid.
 
     cd <repo> && nice python scripts/mars/app/make_fixture.py [--dunefrac <npz>] [--out staging/fixture-mars]
+                                                             [--datasets fv3-beta1,emars-v1-my30,macda-v2-my30]
 
-Without --dunefrac the dune fraction is synthetic (synthetic_dunefrac), as in CI.
+Without --dunefrac the dune fraction is synthetic (synthetic_dunefrac), as in CI; the EMARS and MACDA stores always
+use the synthetic one (on their grids).
 """
 from __future__ import annotations
 
@@ -41,12 +50,12 @@ sys.path.insert(0, str(HERE))
 
 from dune_atlas_pipeline import constants as EC  # noqa: E402  (QSAT_VARS, field order)
 from dune_atlas_pipeline.mars import constants as M  # noqa: E402
+from dune_atlas_pipeline.mars.datasets import get as get_dataset  # noqa: E402  (grids of the dataset specs)
 from dune_atlas_pipeline.mars import physics as P  # noqa: E402
 from dune_atlas_pipeline.qsat_compute import DO, DO_BED0, _bedmode, _elongationmode  # noqa: E402
 import fixture_common as FC  # noqa: E402
 
 PREFIX = "dune-atlas/mars/v1"                        # body-level objects (elevation, basemaps, dunes)
-DS = "dune-atlas/mars/v2/datasets/fv3-beta1"         # dataset stores (v2: packed-sand fluxes q = Q/(rho_p phi))
 FIELD_VARS = list(EC.QSAT_VARS)
 D = M.D_VALUES                    # (64,) m
 SHARD = 16
@@ -59,6 +68,39 @@ DATASET = {"id": "fv3-beta1", "name": "MCMC FV3 Mars GCM, beta release 1 (2°, h
 FIXTURE_NOTE = "SYNTHETIC development fixture (scripts/mars/app/make_fixture.py): not science data"
 
 
+class FixtureDataset:
+    """Grid, sampling and store attrs of one wind dataset of the fixture."""
+
+    def __init__(self, id, grid, n_samples, samples_per_sol, shards, dataset, seed, title):
+        self.id, self.grid, self.n, self.sps, self.shards, self.dataset, self.seed, self.title = (
+            id, grid, n_samples, samples_per_sol, shards, dataset, seed, title)
+        self.ny, self.nx = int(grid["ny"]), int(grid["nx"])
+        self.prefix = f"dune-atlas/mars/v2/datasets/{id}"
+
+    def lat(self):
+        return (self.grid["lat0"] + self.grid["dlat"] * np.arange(self.ny)).astype("f8")
+
+    def lon(self):
+        return (self.grid["lon0"] + self.grid["dlon"] * np.arange(self.nx)).astype("f8")
+
+
+def _reanalysis(id, n_samples, shards, seed):
+    d = get_dataset(id)
+    attrs = {"id": d.id, "name": d.name, "resolution_deg": d.notes.get("resolution_deg", d.resolution_text), "n_hours": n_samples,
+             "samples_per_sol": d.samples_per_sol, "source": d.source, "citation": d.citation}
+    return FixtureDataset(id, dict(d.grid), n_samples, d.samples_per_sol, shards, attrs, seed, f"Mars dune atlas cell store, {d.id} (FIXTURE)")
+
+
+# FV3: the published layout (fixture_common grid and series); EMARS and MACDA: their native grids, one Mars year
+# (668.5 sols) at 24 and 12 samples per sol; shards: Nili Patera, plus the north and south edges of EMARS
+# (no polar rows) and the columns either side of the antimeridian of MACDA (column 0 centred on -180°)
+FIXTURE_DATASETS = {
+    "fv3-beta1": FixtureDataset("fv3-beta1", FC.GRID_ATTRS, FC.N_HOURS, 24, "2,7;0,10;0,3", DATASET, 0, "Mars dune atlas cell store (FIXTURE)"),
+    "emars-v1-my30": _reanalysis("emars-v1-my30", 16044, "0,2;2,3", 30_000_001),
+    "macda-v2-my30": _reanalysis("macda-v2-my30", 8028, "1,3;1,0;1,4", 30_000_002),
+}
+
+
 def bitround(a, keepbits):
     drop = 23 - keepbits
     b = np.asarray(a, "f4").view(np.uint32).copy()
@@ -68,8 +110,13 @@ def bitround(a, keepbits):
     return b.view(np.float32)
 
 
-def cell_series(iy, ix):
-    s = FC.synth_series(iy, ix)
+def cell_series(iy, ix, ds="fv3-beta1"):
+    F = FIXTURE_DATASETS[ds]
+    if ds == "fv3-beta1":
+        s = FC.synth_series(iy, ix)
+    else:
+        lat, lon = F.lat()[iy], F.lon()[ix]
+        s = FC.synth_series_at(lat, lon, F.seed + 1_000_003 * int(iy) + int(ix), F.n, F.sps)
     out = {k: bitround(s[k], KEEPBITS[k]) for k in ("u", "v", "T", "rho", "z")}
     out["ls"], out["sol"] = s["ls"].astype("f4"), s["sol"].astype("f4")
     return out
@@ -158,16 +205,17 @@ def all_fields(u, v, T, rho, z):
 
 
 def _shard_job(args):
-    sy, sx = args
+    ds, sy, sx = args
+    F = FIXTURE_DATASETS[ds]
     t0 = time.time()
     y0, x0 = sy * SHARD, sx * SHARD
-    ys, xs = range(y0, min(FC.NY, y0 + SHARD)), range(x0, min(FC.NX, x0 + SHARD))
-    ser = np.full((len(ys), len(xs), 5, FC.N_HOURS), np.nan, "f4")
+    ys, xs = range(y0, min(F.ny, y0 + SHARD)), range(x0, min(F.nx, x0 + SHARD))
+    ser = np.full((len(ys), len(xs), 5, F.n), np.nan, "f4")
     fld = np.full((len(ys), len(xs), len(FIELD_VARS), 64), np.nan, "f4")
     ls = sol = None
     for a, iy in enumerate(ys):
         for b, ix in enumerate(xs):
-            c = cell_series(iy, ix)
+            c = cell_series(iy, ix, ds)
             ls, sol = c["ls"], c["sol"]
             for k, name in enumerate(("u", "v", "T", "rho", "z")):
                 ser[a, b, k] = c[name]
@@ -177,11 +225,13 @@ def _shard_job(args):
     return (sy, sx, ser, fld, ls, sol, time.time() - t0)
 
 
-def _map_job(iy):
-    row = {v: np.full((FC.NX, 64), np.nan) for v in ("dpm", "rdpm", "rdpa", "qha_rdp_dp", "uft", "ufm")}
-    rho_mean = np.full(FC.NX, np.nan)
-    for ix in range(FC.NX):
-        s = FC.synth_series(iy, ix)
+def _map_job(args):
+    ds, iy = args
+    F = FIXTURE_DATASETS[ds]
+    row = {v: np.full((F.nx, 64), np.nan) for v in ("dpm", "rdpm", "rdpa", "qha_rdp_dp", "uft", "ufm")}
+    rho_mean = np.full(F.nx, np.nan)
+    for ix in range(F.nx):
+        s = FC.synth_series(iy, ix) if ds == "fv3-beta1" else cell_series(iy, ix, ds)
         u, v, T, zz = (bitround(s[k], KEEPBITS[k]).astype("f8") for k in ("u", "v", "T", "z"))
         rho = bitround(s["rho"], KEEPBITS["rho"]).astype("f8")
         rho_mean[ix] = rho.mean()
@@ -207,16 +257,18 @@ def _pool(workers):
         return _Serial()
 
 
-def write_cells(root_dir: Path, shards, dunefrac, workers, log=print):
+def write_cells(root_dir: Path, shards, dunefrac, workers, log=print, ds="fv3-beta1"):
     import zarr
     from zarr.codecs import BloscCodec
     from dune_atlas_pipeline.cellstore import _sharding
-    out = root_dir / DS / "cells.zarr"
+    F = FIXTURE_DATASETS[ds]
+    NY, NX, NT = F.ny, F.nx, F.n
+    out = root_dir / F.prefix / "cells.zarr"
     if out.exists():
         shutil.rmtree(out)
     g = zarr.open_group(str(out), mode="w", zarr_format=3)
     g.attrs.update({
-        "title": "Mars dune atlas cell store (FIXTURE)", "note": FIXTURE_NOTE, "grid": FC.GRID_ATTRS, "body": "mars", "dataset": DATASET,
+        "title": F.title, "note": FIXTURE_NOTE, "grid": F.grid, "body": "mars", "dataset": F.dataset,
         "field_vars": FIELD_VARS, "d_values_um": [int(x) for x in M.D_VALUES_UM], "d_default_index": int(M.D_DEFAULT_INDEX),
         "series_vars": list(M.SERIES_VARS), "series_units": {"u": "m s-1", "v": "m s-1", "T": "K", "rho": "kg m-3", "z": "m"},
         "series_keepbits": KEEPBITS,
@@ -224,43 +276,44 @@ def write_cells(root_dir: Path, shards, dunefrac, workers, log=print):
                                                   "DSTAR_MIN", "UPLUS_MIN", "C1", "C2", "KN_A", "KN_B", "KN_C", "GA_SQRT_S_MIN", "BETA", "DASPECT", "S2Y")},
         "fixture_shards": [list(s) for s in shards],
     })
-    series = g.create_array("series", shape=(FC.NY, FC.NX, 5, FC.N_HOURS), dtype="float32", chunks=(SHARD, SHARD, 5, FC.N_HOURS),
-                            serializer=_sharding((1, 1, 5, FC.N_HOURS), 4), compressors=None, fill_value=np.nan,
+    series = g.create_array("series", shape=(NY, NX, 5, NT), dtype="float32", chunks=(SHARD, SHARD, 5, NT),
+                            serializer=_sharding((1, 1, 5, NT), 4), compressors=None, fill_value=np.nan,
                             dimension_names=["latitude", "longitude", "variable", "hour"])
-    fields = g.create_array("fields", shape=(FC.NY, FC.NX, len(FIELD_VARS), 64), dtype="float32", chunks=(SHARD, SHARD, len(FIELD_VARS), 64),
+    fields = g.create_array("fields", shape=(NY, NX, len(FIELD_VARS), 64), dtype="float32", chunks=(SHARD, SHARD, len(FIELD_VARS), 64),
                             serializer=_sharding((1, 1, len(FIELD_VARS), 64), 4), compressors=None, fill_value=np.nan,
                             dimension_names=["latitude", "longitude", "variable", "d"])
     blosc = [BloscCodec(cname="zstd", clevel=5, shuffle="bitshuffle", typesize=4)]
-    g.create_array("dunes", shape=(FC.NY, FC.NX), dtype="float32", chunks=(FC.NY, FC.NX), compressors=blosc, fill_value=np.nan,
+    g.create_array("dunes", shape=(NY, NX), dtype="float32", chunks=(NY, NX), compressors=blosc, fill_value=np.nan,
                    dimension_names=["latitude", "longitude"])[...] = dunefrac.astype("f4")
-    g.create_array("dune", shape=(FC.NY, FC.NX), dtype="uint8", chunks=(FC.NY, FC.NX), compressors=blosc, fill_value=0,
+    g.create_array("dune", shape=(NY, NX), dtype="uint8", chunks=(NY, NX), compressors=blosc, fill_value=0,
                    dimension_names=["latitude", "longitude"])[...] = (dunefrac > 0).astype("u1")
-    fld_all = np.full((FC.NY, FC.NX, len(FIELD_VARS), 64), np.nan, "f4")
+    fld_all = np.full((NY, NX, len(FIELD_VARS), 64), np.nan, "f4")
     ls = sol = None
     with _pool(workers) as ex:
-        for sy, sx, ser, fld, ls_, sol_, dt in ex.map(_shard_job, shards):
+        for sy, sx, ser, fld, ls_, sol_, dt in ex.map(_shard_job, [(ds, *s) for s in shards]):
             y0, x0 = sy * SHARD, sx * SHARD
             series[y0:y0 + ser.shape[0], x0:x0 + ser.shape[1]] = ser
             fields[y0:y0 + fld.shape[0], x0:x0 + fld.shape[1]] = fld
             fld_all[y0:y0 + fld.shape[0], x0:x0 + fld.shape[1]] = fld
             ls, sol = ls_, sol_
-            log(f"shard ({sy},{sx}) {ser.shape[0]}x{ser.shape[1]} cells {dt:.0f}s")
-    g.create_array("ls", shape=(FC.N_HOURS,), dtype="float32", chunks=(FC.N_HOURS,), compressors=blosc, dimension_names=["hour"],
+            log(f"{ds} shard ({sy},{sx}) {ser.shape[0]}x{ser.shape[1]} cells {dt:.0f}s")
+    g.create_array("ls", shape=(NT,), dtype="float32", chunks=(NT,), compressors=blosc, dimension_names=["hour"],
                    attributes={"units": "degree", "long_name": "areocentric solar longitude"})[...] = ls
-    g.create_array("sol", shape=(FC.N_HOURS,), dtype="float32", chunks=(FC.N_HOURS,), compressors=blosc, dimension_names=["hour"],
+    g.create_array("sol", shape=(NT,), dtype="float32", chunks=(NT,), compressors=blosc, dimension_names=["hour"],
                    attributes={"units": "1", "long_name": "sol"})[...] = sol
     return fld_all
 
 
-def write_aux(root_dir: Path, qsdiv, rho_mean, elev_mean):
+def write_aux(root_dir: Path, qsdiv, rho_mean, elev_mean, ds="fv3-beta1"):
     import zarr
     from zarr.codecs import BloscCodec
     from dune_atlas_pipeline.cellsaux import _sharding as aux_sharding
-    out = root_dir / DS / "cells-aux.zarr"
+    F = FIXTURE_DATASETS[ds]
+    out = root_dir / F.prefix / "cells-aux.zarr"
     if out.exists():
         shutil.rmtree(out)
     g = zarr.open_group(str(out), mode="w", zarr_format=3)
-    g.attrs.update({"title": "Mars per-cell auxiliary variables (FIXTURE)", "note": FIXTURE_NOTE, "grid": FC.GRID_ATTRS,
+    g.attrs.update({"title": "Mars per-cell auxiliary variables (FIXTURE)", "note": FIXTURE_NOTE, "grid": F.grid,
                     "d_values_um": [int(x) for x in M.D_VALUES_UM], "d_default_index": int(M.D_DEFAULT_INDEX), "variables": []})
     a = g.create_array("qsdiv", shape=qsdiv.shape, dtype="float32", chunks=(SHARD, SHARD, 64), serializer=aux_sharding((1, 1, 64)), compressors=None,
                        fill_value=np.nan, dimension_names=["latitude", "longitude", "d"],
@@ -308,49 +361,41 @@ def synthetic_dunefrac(lat, lon):
     return np.clip(blob(9, 67, 5) + blob(-48, 30, 4) + erg, 0, 1)
 
 
-def main(argv=None):
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--out", default=str(REPO / "staging" / "fixture-mars"))
-    ap.add_argument("--dunefrac", help="fv3_dunefrac.npz (frac on the FV3 grid lat -89..89, lon 1..359); "
-                    "default: a synthetic dune fraction (synthetic_dunefrac)")
-    ap.add_argument("--shards", default="2,7;0,10;0,3", help="shard (row, col) list: Nili Patera; north polar erg x2")
-    ap.add_argument("--workers", type=int, default=4)
-    a = ap.parse_args(argv)
-    root = Path(a.out)
-    shards = [tuple(int(x) for x in s.split(",")) for s in a.shards.split(";")]
-    t0 = time.time()
-    lat = FC.lat_of(np.arange(FC.NY)).astype("f8"); lon = FC.lon_of(np.arange(FC.NX)).astype("f8")
-    if a.dunefrac:
-        z = np.load(a.dunefrac)
-        frac = np.roll(z["frac"][::-1], 90, axis=1)                    # FV3 (lat asc, lon 1..359) -> contract grid
-        assert np.allclose(np.roll(z["lon"], 90)[0], 181) and z["lat"][::-1][0] == 89
-    else:
-        frac = synthetic_dunefrac(lat, lon)
-    fld_all = write_cells(root, shards, frac, a.workers)
-    print(f"cells.zarr {time.time() - t0:.0f}s", flush=True)
+def build_dataset(root: Path, ds: str, shards, frac, workers, t0, log=print) -> dict:
+    """cells.zarr, cells-aux.zarr and the field pyramids of one wind dataset; returns its stats."""
+    F = FIXTURE_DATASETS[ds]
+    lat, lon = F.lat(), F.lon()
+    fld_all = write_cells(root, shards, frac, workers, log=log, ds=ds)
+    print(f"{ds} cells.zarr {time.time() - t0:.0f}s", flush=True)
     # map fields on the whole grid (subsampled hours), the shards' exact values on top
-    mp = {v: np.full((FC.NY, FC.NX, 64), np.nan) for v in ("dpm", "rdpm", "rdpa", "qha_rdp_dp", "uft", "ufm")}
-    rho_mean = np.full((FC.NY, FC.NX), np.nan)
-    with _pool(a.workers) as ex:
-        for iy, row, rm in ex.map(_map_job, range(FC.NY), chunksize=2):
+    mp = {v: np.full((F.ny, F.nx, 64), np.nan) for v in ("dpm", "rdpm", "rdpa", "qha_rdp_dp", "uft", "ufm")}
+    rho_mean = np.full((F.ny, F.nx), np.nan)
+    with _pool(workers) as ex:
+        for iy, row, rm in ex.map(_map_job, [(ds, iy) for iy in range(F.ny)], chunksize=2):
             for k in mp:
                 mp[k][iy] = row[k]
             rho_mean[iy] = rm
-    print(f"map fields {time.time() - t0:.0f}s", flush=True)
+    print(f"{ds} map fields {time.time() - t0:.0f}s", flush=True)
     have = np.isfinite(fld_all[..., FIELD_VARS.index("dpm"), 0])
     for k in mp:
         mp[k][have] = fld_all[have][:, FIELD_VARS.index(k)]
-    extra = {v: np.full((FC.NY, FC.NX, 64), np.nan) for v in ("at", "ae", "ab", "qacb", "qace")}
+    extra = {v: np.full((F.ny, F.nx, 64), np.nan) for v in ("at", "ae", "ab", "qacb", "qace")}
     for v in extra:
         extra[v][have] = fld_all[have][:, FIELD_VARS.index(v)]
     from dune_atlas_pipeline.qsdiv import divergence
     qsdiv = np.stack([divergence(mp["rdpm"][..., k], mp["rdpa"][..., k], lat, lon, R=M.R_MARS) for k in range(64)], -1) * M.S2Y
-    # elevation: native 0.25 deg 2-D grid and the 2-deg cell means
-    elat = 90 - 0.125 - 0.25 * np.arange(720); elon = -180 + 0.125 + 0.25 * np.arange(1440)
-    elev = FC.elevation(elat[:, None], elon[None, :])
-    elev_mean = elev.reshape(90, 8, 180, 8).mean((1, 3))
-    write_aux(root, qsdiv, rho_mean, elev_mean)
-    fdir = root / DS / "fields"
+    if ds == "fv3-beta1":
+        # elevation: native 0.25 deg 2-D grid and the 2-deg cell means
+        elat = 90 - 0.125 - 0.25 * np.arange(720); elon = -180 + 0.125 + 0.25 * np.arange(1440)
+        elev = FC.elevation(elat[:, None], elon[None, :])
+        elev_mean = elev.reshape(90, 8, 180, 8).mean((1, 3))
+    else:
+        # cell means of 8 x 8 points per cell
+        off = (np.arange(8) + 0.5) / 8 - 0.5
+        la = (lat[:, None] + F.grid["dlat"] * off[None, :]).ravel(); lo = (lon[:, None] + F.grid["dlon"] * off[None, :]).ravel()
+        elev_mean = FC.elevation(la[:, None], lo[None, :]).reshape(F.ny, 8, F.nx, 8).mean((1, 3))
+    write_aux(root, qsdiv, rho_mean, elev_mean, ds=ds)
+    fdir = root / F.prefix / "fields"
     fdir.mkdir(parents=True, exist_ok=True)
     flux = {"dpm", "rdpm", "qacb", "qace"}
     for v, arr in {**mp, **extra}.items():
@@ -358,10 +403,41 @@ def main(argv=None):
         write_pyramid(fdir / f"{v}.zarr", v, np.moveaxis(disp, -1, 0), lat, lon, 2, "m²/yr" if v in flux else "rad" if v in ("rdpa", "at", "ae", "ab") else "1")
     write_pyramid(fdir / "qsdiv.zarr", "qsdiv", np.moveaxis(qsdiv, -1, 0), lat, lon, 2, "m/yr")
     write_pyramid(fdir / "rho_mean.zarr", "rho_mean", rho_mean, lat, lon, 2, "kg m-3")
-    write_pyramid(root / PREFIX / "fields" / "elevation.zarr", "elevation", elev, elat, elon, 3, "m")
-    stats = {"shards": shards, "seconds": round(time.time() - t0), "dpm_d29_shards_m2yr": [float(np.nanmin(mp["dpm"][have][:, 29]) * M.S2Y), float(np.nanmax(mp["dpm"][have][:, 29]) * M.S2Y)],
-             "rho_mean_range": [float(np.nanmin(rho_mean)), float(np.nanmax(rho_mean))]}
-    (root / "FIXTURE.json").write_text(json.dumps({"note": FIXTURE_NOTE, **stats}, indent=1))
+    if ds == "fv3-beta1":
+        write_pyramid(root / PREFIX / "fields" / "elevation.zarr", "elevation", elev, elat, elon, 3, "m")
+    return {"shards": shards, "seconds": round(time.time() - t0), "dpm_d29_shards_m2yr": [float(np.nanmin(mp["dpm"][have][:, 29]) * M.S2Y), float(np.nanmax(mp["dpm"][have][:, 29]) * M.S2Y)],
+            "rho_mean_range": [float(np.nanmin(rho_mean)), float(np.nanmax(rho_mean))]}
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--out", default=str(REPO / "staging" / "fixture-mars"))
+    ap.add_argument("--dunefrac", help="fv3_dunefrac.npz (frac on the FV3 grid lat -89..89, lon 1..359); "
+                    "default: a synthetic dune fraction (synthetic_dunefrac)")
+    ap.add_argument("--shards", default=FIXTURE_DATASETS["fv3-beta1"].shards, help="FV3 shard (row, col) list: Nili Patera; north polar erg x2")
+    ap.add_argument("--datasets", default=",".join(FIXTURE_DATASETS), help="wind datasets to write (comma-separated ids)")
+    ap.add_argument("--workers", type=int, default=4)
+    a = ap.parse_args(argv)
+    root = Path(a.out)
+    ids = [x for x in a.datasets.split(",") if x]
+    for x in ids:
+        if x not in FIXTURE_DATASETS:
+            ap.error(f"unknown dataset {x} (one of {', '.join(FIXTURE_DATASETS)})")
+    t0 = time.time()
+    stats = {}
+    for ds in ids:
+        F = FIXTURE_DATASETS[ds]
+        shards = [tuple(int(x) for x in s.split(",")) for s in (a.shards if ds == "fv3-beta1" else F.shards).split(";")]
+        lat, lon = F.lat(), F.lon()
+        if ds == "fv3-beta1" and a.dunefrac:
+            z = np.load(a.dunefrac)
+            frac = np.roll(z["frac"][::-1], 90, axis=1)                    # FV3 (lat asc, lon 1..359) -> contract grid
+            assert np.allclose(np.roll(z["lon"], 90)[0], 181) and z["lat"][::-1][0] == 89
+        else:
+            frac = synthetic_dunefrac(lat, lon)
+        stats[ds] = build_dataset(root, ds, shards, frac, a.workers, t0)
+    top = stats.get("fv3-beta1", {})
+    (root / "FIXTURE.json").write_text(json.dumps({"note": FIXTURE_NOTE, **top, "datasets": stats}, indent=1))
     print(json.dumps(stats))
 
 

@@ -3,8 +3,9 @@ make_fixture_tiles.py). NOT science data: smooth analytic topography and hourly 
 magnitudes (lowest-level winds 0-25 m/s, T 145-300 K, rho 0.005-0.03 kg m^-3, a CO2 seasonal pressure
 cycle, diurnal tides, slope winds and red noise), deterministic per cell.
 
-Grid = the data contract: rows lat 89 -> -89 (lat0 89, dlat -2), columns lon -179 -> 179 (lon0 -179,
-dlon 2), cell centres, 90 x 180.
+Grid = the data contract of MCMC FV3: rows lat 89 -> -89 (lat0 89, dlat -2), columns lon -179 -> 179 (lon0 -179,
+dlon 2), cell centres, 90 x 180. synth_series_at gives the series at any point and sampling (the fixture stores of the
+other wind datasets: EMARS 24 and MACDA 12 samples per sol).
 """
 import numpy as np
 
@@ -55,7 +56,7 @@ def _slope(lat, lon, h=0.5):
 
 
 def _ar1(rng, n, tau_h, sigma):
-    """Red noise with e-folding time tau_h hours and stationary std sigma."""
+    """Red noise with e-folding time tau_h samples and stationary std sigma."""
     from scipy.signal import lfilter
     a = np.exp(-1.0 / tau_h)
     e = rng.standard_normal(n) * sigma * np.sqrt(1 - a * a)
@@ -64,22 +65,30 @@ def _ar1(rng, n, tau_h, sigma):
 
 
 def synth_series(iy, ix, n_hours=N_HOURS):
-    """Hourly (u, v, T, rho, z, ls, sol) float64 arrays of one cell (deterministic); rho and z from the lowest-layer
-    mid pressure (pipeline air_state / layer_height formulas): z ~ 1.6-3.3 m."""
-    lat, lon = float(lat_of(iy)), float(lon_of(ix))
-    rng = np.random.default_rng(1_000_003 * int(iy) + int(ix) + 7)
+    """Hourly (u, v, T, rho, z, ls, sol) float64 arrays of one cell of the FV3 grid (deterministic); rho and z from the
+    lowest-layer mid pressure (pipeline air_state / layer_height formulas): z ~ 1.6-3.3 m."""
+    return synth_series_at(float(lat_of(iy)), float(lon_of(ix)), 1_000_003 * int(iy) + int(ix) + 7, n_hours)
+
+
+def synth_series_at(lat, lon, seed, n_samples, samples_per_sol=24):
+    """(u, v, T, rho, z, ls, sol) float64 arrays at (lat, lon), `samples_per_sol` samples per sol (24: hourly, the
+    FV3 values of synth_series), from the random seed `seed`."""
+    lat, lon = float(lat), float(lon)
+    rng = np.random.default_rng(seed)
+    n_hours = n_samples
     t = np.arange(n_hours, dtype="f8")
-    sol = t / 24.0
+    hpd = 24.0 / samples_per_sol                     # Mars hours per sample
+    sol = t / samples_per_sol
     lsr = 2 * np.pi * t / n_hours
     ls = np.degrees(lsr + 0.0934 * np.sin(lsr - np.radians(250.0))) % 360.0   # mild eccentricity
-    lt = (t % 24 + lon / 15.0) % 24
+    lt = ((t * hpd) % 24 + lon / 15.0) % 24
     z = float(elevation(lat, lon))
     ps = 610.0 * np.exp(-z / 11100.0) * (1 + 0.12 * np.sin(lsr - 0.8) - 0.05 * np.cos(2 * lsr))
     dec = np.radians(25.2) * np.sin(np.radians(ls))
     cz = np.cos(np.radians(lat) - dec)
     tbar = 150.0 + 70.0 * np.clip(cz, 0, 1) ** 0.6 - 4.0 * z / 10000.0
     amp = 32.0 * np.clip(cz, 0.05, 1) ** 0.5
-    T = np.maximum(tbar + amp * np.cos(2 * np.pi * (lt - 14.5) / 24.0), 145.0) + _ar1(rng, n_hours, 48, 2.5)
+    T = np.maximum(tbar + amp * np.cos(2 * np.pi * (lt - 14.5) / 24.0), 145.0) + _ar1(rng, n_hours, 48 / hpd, 2.5)
     T = np.maximum(T, 143.0)
     p_lo = AK_LO + BK_LO * ps
     p_mid = 0.5 * (p_lo + (AK_HI + BK_HI * ps))
@@ -99,6 +108,6 @@ def synth_series(iy, ix, n_hours=N_HOURS):
     vs = -k * night * zy / g
     if lat > 72:     # katabatic outflow from the north polar cap
         vs = vs - 4.0 * np.clip(night, 0, None)
-    u = u0 + ut + us + _ar1(rng, n_hours, 30, 3.5)
-    v = v0 + vt + vs + _ar1(rng, n_hours, 30, 3.0)
+    u = u0 + ut + us + _ar1(rng, n_hours, 30 / hpd, 3.5)
+    v = v0 + vt + vs + _ar1(rng, n_hours, 30 / hpd, 3.0)
     return {"u": u, "v": v, "T": T, "rho": rho, "z": zl, "ls": ls, "sol": sol}

@@ -12,6 +12,8 @@ import { legendTicks, tickLabel, tickPosition } from "../ui/legend";
 import { texToPlain } from "../util/plaintext";
 import { datasetInfo } from "../cell/datasetinfo";
 import { MAP_DUNE_CREDIT, MAP_LAYER_CREDITS } from "@body/citation";
+/** a layer credit line: fixed, or that of the selected wind dataset */
+const creditText = (c: string | ((datasetId: string) => string), datasetId: string) => (typeof c === "function" ? c(datasetId) : c);
 import { windSourceText } from "../cell/citation";
 import { STRIP_UNITS, stripSvg, type StripItem } from "./strip";
 import type { MathRenderer } from "./texsvg";
@@ -111,7 +113,7 @@ export function mapStripItems(c: MapStripContext): StripItem[] {
   // sources: the paper, the wind dataset with its Copernicus notice, other external sources shown
   text.push({ kind: "text", text: MAP_DUNE_CREDIT });
   text.push({ kind: "text", text: windSourceText(state.dataset) });
-  for (const [id, credit] of Object.entries(MAP_LAYER_CREDITS)) if (visible.some((l) => l.id === id)) text.push({ kind: "text", text: credit });
+  for (const [id, credit] of Object.entries(MAP_LAYER_CREDITS)) if (visible.some((l) => l.id === id)) text.push({ kind: "text", text: creditText(credit, state.dataset) });
   if (state.names && c.namesCredit) text.push({ kind: "text", text: c.namesCredit });
   const bm = reg.basemaps.find((b) => b.id === state.basemap);
   if (c.includeBasemap && bm) text.push({ kind: "text", text: `Basemap: ${bm.title}${bm.attribution ? `, ${plain(bm.attribution.replace(/<[^>]+>/g, ""))}` : ""}.` });

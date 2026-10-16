@@ -42,9 +42,13 @@ describe("Mars build: planet toggle, header, storage", () => {
     const sub = root.querySelector(".subtitle")!;
     expect(sub.innerHTML.split("<br>").map((x) => x.replace(/<[^>]+>/g, ""))).toEqual(["Interactive explorer for aeolian geomorphology", "Developed by the Monash Geomorphology Lab"]);
     expect(sub.querySelector("a")!.getAttribute("target")).toBe("_blank");
-    // the Wind dataset selector is shown with the single Mars dataset
+    // the Wind dataset selector: MCMC FV3 (default), EMARS and MACDA (name and grid; tooltip with the period)
     const sel = root.querySelector("#dataset-select") as HTMLSelectElement;
-    expect([...sel.options].map((o) => [o.value, o.textContent, o.title])).toEqual([["fv3-beta1", "MCMC FV3 2°", "MCMC FV3 2°, one Mars year (6th simulated year, 668 sols)"]]);
+    expect([...sel.options].map((o) => [o.value, o.textContent, o.title])).toEqual([
+      ["fv3-beta1", "MCMC FV3 2°", "MCMC FV3 2°, one Mars year (6th simulated year, 668 sols)"],
+      ["emars-v1-my30", "EMARS 6° × 5.14°", "EMARS 6° × 5.14°, one Mars year (Mars Year 30)"],
+      ["macda-v2-my30", "MACDA 5°", "MACDA 5°, one Mars year (Mars Year 30)"],
+    ]);
     expect(sel.title).toBe("MCMC FV3 2°, one Mars year (6th simulated year, 668 sols)");
     expect(root.querySelector(".dataset-row")!.textContent).toMatch(/^Wind dataset/);
     // dune invert toggle (Terrain's invert tiles; key is the default until reported)
@@ -55,10 +59,10 @@ describe("Mars build: planet toggle, header, storage", () => {
     const css = fs.readFileSync(path.resolve(__dirname, "../../src/core/style.css"), "utf8");
     expect(css).toMatch(/\.atlas-header h1 \.body-name \{ color: var\(--muted\)/);
   });
-  it("every storage key is duneAtlasMars.*; the Earth tour flag does not suppress the Mars tour", () => {
+  it("per-atlas keys are duneAtlasMars.*, panel layout keys shared; the Earth tour flag does not suppress the Mars tour", () => {
     expect(TOUR_SEEN_KEY).toBe("duneAtlasMars.tourSeen");
-    expect(sectionOpenKey("windRose")).toBe("duneAtlasMars.cellPanel.windRoseOpen");
-    expect(MODES_OPEN_KEY).toBe("duneAtlasMars.cellPanel.modesOpen");
+    expect(sectionOpenKey("windRose")).toBe("duneAtlas.cellPanel.windRoseOpen"); // panel layout: both atlases (core/visit.ts)
+    expect(MODES_OPEN_KEY).toBe("duneAtlas.cellPanel.modesOpen");
     expect(storageKey("dataset")).toBe("duneAtlasMars.dataset");
     localStorage.clear();
     localStorage.setItem("duneAtlas.tourSeen", "1"); // visited Earth first

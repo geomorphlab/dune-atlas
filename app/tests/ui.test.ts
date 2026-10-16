@@ -5,7 +5,7 @@ import { describe, expect, it, beforeEach, vi } from "vitest";
 import fixture from "./fixtures/flux-parity.json";
 import { loadRegistry } from "../src/core/registry/load";
 import { Store, type AppState } from "../src/core/store";
-import { renderLayerPanel, AI_NOTICE } from "../src/core/ui/layerPanel";
+import { renderLayerPanel, AI_NOTICE, LAYER_GROUPS_KEY } from "../src/core/ui/layerPanel";
 import { metersPerPixel, spacingToPx, SPACING_KM_STEPS } from "../src/core/layerconfig";
 import { CellPanel, MODES_OPEN_KEY, PANEL_SECTIONS, sameLocation, sectionOpenKey } from "../src/core/ui/cellPanel";
 import { CONFIG } from "../src/core/config";
@@ -38,6 +38,7 @@ const memStorage = (() => {
   return { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => { m.set(k, String(v)); }, removeItem: (k: string) => { m.delete(k); }, clear: () => m.clear(), key: (i: number) => [...m.keys()][i] ?? null, get length() { return m.size; } };
 })();
 vi.stubGlobal("localStorage", memStorage);
+vi.stubGlobal("sessionStorage", memStorage);   // visit settings (core/visit.ts)
 const fire = (el: Element, type: string) => el.dispatchEvent(new Event(type));
 
 describe("layer panel", () => {
@@ -56,6 +57,22 @@ describe("layer panel", () => {
     expect(root.querySelectorAll('input[name="basemap"]').length).toBe(reg.basemaps.length);
     expect(root.querySelector("#opt-terrain")).toBeNull();
     expect(root.textContent).not.toMatch(/3D terrain/i);
+  });
+  it("groups open as in the registry; a fold is kept for the visit (both atlases), as the cell panel's sections", () => {
+    const grp = (r: HTMLElement, id: string) => r.querySelector(`details.layer-group:has(.layer-item[data-layer="${id}"])`) as HTMLDetailsElement;
+    const wind = reg.groups.find((g) => g.id === "wind")!;
+    expect(wind.collapsed).toBe(true);
+    const windLayer = reg.layers.find((l) => l.group === "wind")!.id, driftLayer = reg.layers.find((l) => l.group === "drift")!.id;
+    expect(grp(root, windLayer).open).toBe(false);
+    expect(grp(root, driftLayer).open).toBe(true);
+    expect((root.querySelector("details.order") as HTMLDetailsElement).open).toBe(true);
+    grp(root, windLayer).open = true; fire(grp(root, windLayer), "toggle");
+    grp(root, driftLayer).open = false; fire(grp(root, driftLayer), "toggle");
+    expect(JSON.parse(memStorage.getItem(LAYER_GROUPS_KEY)!)).toEqual({ wind: true, drift: false });
+    expect(LAYER_GROUPS_KEY).toBe("duneAtlas.layerPanel.groups");
+    renderLayerPanel(root, reg, new Store(initState()));
+    expect([grp(root, windLayer).open, grp(root, driftLayer).open]).toEqual([true, false]);
+    memStorage.removeItem(LAYER_GROUPS_KEY);
   });
   it("threshold control is pinned outside the scrolling body, prominent and labelled", () => {
     const pinned = root.querySelector(".pinned")!;
@@ -304,7 +321,7 @@ describe("cell panel", () => {
     expect(root.querySelector(".cell-meta")!.textContent).toContain("0.41 m/s");
     expect(root.querySelector("#cell-ut-slider")).toBe(mini); // not rebuilt while dragging
   });
-  it("modes plot: a collapse is remembered in localStorage for new panels", async () => {
+  it("modes plot: a collapse is remembered for the visit for new panels", async () => {
     await open();
     const det = root.querySelector("details.modes") as HTMLDetailsElement;
     det.open = false; det.dispatchEvent(new Event("toggle"));
@@ -479,14 +496,14 @@ describe("cell panel", () => {
     // polar plot: current-threshold markers only for defined modes (αT, αH both ways)
     expect((root.querySelector("svg.modes-plot")!.innerHTML.match(/class="current-mode"/g) ?? []).length).toBe(3);
   });
-  it("resizable: drag handle with keyboard resizing, persisted in localStorage", async () => {
+  it("resizable: drag handle with keyboard resizing, kept for the visit", async () => {
     const mem = new Map<string, string>();
-    (globalThis as unknown as { localStorage: Pick<Storage, "getItem" | "setItem"> }).localStorage = { getItem: (k) => mem.get(k) ?? null, setItem: (k, v) => void mem.set(k, String(v)) };
+    (globalThis as unknown as { sessionStorage: Pick<Storage, "getItem" | "setItem"> }).sessionStorage = { getItem: (k) => mem.get(k) ?? null, setItem: (k, v) => void mem.set(k, String(v)) };
     await open();
     const hd = root.querySelector(".resize-handle") as HTMLElement;
     expect(hd.getAttribute("role")).toBe("separator");
     hd.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
-    const w = Number(localStorage.getItem("duneAtlas.cellPanel.width"));
+    const w = Number(sessionStorage.getItem("duneAtlas.cellPanel.width"));
     expect(w).toBeGreaterThanOrEqual(320);
     expect(document.documentElement.style.getPropertyValue("--cell-w")).toBe(`${w}px`);
   });

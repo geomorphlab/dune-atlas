@@ -3,7 +3,7 @@
 // (UDUNITS) and source statements are defined here; the store attrs give citation, DOI, licence and link.
 import type { CellAux } from "../../core/cell/cellstore";
 import type { AuxMeta } from "../../core/cell/auxinfo";
-import { pixelsPerCell, resolutionText } from "../../core/cell/datasetinfo";
+import { datasetInfo, pixelsPerCell, resolutionText } from "../../core/cell/datasetinfo";
 
 export const AUX_META: Record<string, AuxMeta> = {
   qsdiv: {
@@ -56,8 +56,10 @@ export function harmonizeAux(aux: CellAux): CellAux {
   return out;
 }
 
-/** Description of an aux variable for a grid of `deg` degree cells. */
-export function auxDescription(v: string, deg = 0.1): string {
+/** Description of an aux variable for a grid of `deg` degree cells (`degLon`: the longitude spacing of
+ *  non-square cells; the Earth grids are square, so the text uses `deg`). */
+export function auxDescription(v: string, deg = 0.1, degLon = deg): string {
+  void degLon;
   const d = AUX_META[v]?.description ?? "";
   return d.replace(/\{res\}/g, resolutionText(deg)).replace(/\{half\}/g, resolutionText(deg / 2)).replace(/\{npx\}/g, String(pixelsPerCell(deg)))
     .replace(/\{regrid\}/g, deg > 0.1 + 1e-9 ? " (area-weighted mean of the 0.1° cell means over the cell footprint)" : "");
@@ -71,6 +73,12 @@ export function auxVars(aux: CellAux | undefined): string[] {
 
 /** Source statement of the flux divergence (derived by the atlas from the Gunn (2026) data). */
 export const QSDIV_SOURCE = "Computed for the Dune Atlas from rdpm and rdpa of Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y; data doi:10.5281/zenodo.20046812";
+/** source of the flux divergence of a dataset: from the paper's fields (its data record) or from the fields the atlas
+ *  computed for the dataset with the methods of the paper */
+export function qsdivSource(datasetId?: string): string {
+  const d = datasetInfo(datasetId);
+  return d.fieldsFrom === "paper" ? QSDIV_SOURCE : `Computed for the Dune Atlas from rdpm and rdpa of the ${d.name} ${d.resolution} sand-flux fields, which the atlas computed with the methods of Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y`;
+}
 /** Processing of the aridity data (as in the registry attribution of the aridity layer). */
 export const ARIDITY_CHANGES = "Processed for the atlas: source integers (AI x 10^4) converted to decimal AI; ocean (no ET0 data) and ET0 = 0 pixels set to no data; the source maximum 65535 kept as 6.5535 (AI >= 6.5535); 0.1° cell means of the valid 30-arc-second pixels.";
 
@@ -89,13 +97,15 @@ export function restateLicence(licence: string): string {
 
 /** Attributes of an aux variable for the NetCDF / metadata.json: description, source and processing
  *  defined here; citation, DOI, licence and link from the store attrs. */
-export function auxSourceAttrs(aux: CellAux, v: string, deg = 0.1): Record<string, string> {
+/** source statement of a per-cell variable (`degLon`, `datasetId`: as Mars; the Earth texts need neither) */
+export function auxSourceAttrs(aux: CellAux, v: string, deg = 0.1, degLon = deg, datasetId?: string): Record<string, string> {
+  void degLon;
   const a = aux.attrs[v] ?? {};
   const out: Record<string, string> = {};
   const str = (k: string) => (typeof a[k] === "string" ? (a[k] as string) : undefined);
   if (AUX_META[v]) out.description = auxDescription(v, deg);
   if (v === "qsdiv") {
-    out.source = QSDIV_SOURCE;
+    out.source = qsdivSource(datasetId);
     out.method = `Gunn (2026) Methods M6: central differences on the ${resolutionText(deg)} grid, periodic in longitude, R = 6371 km`;
   } else if (str("source")) out.source = str("source")!;
   const cite = [str("citation"), str("doi") ? `data doi:${str("doi")}` : undefined].filter(Boolean).join("; ");
