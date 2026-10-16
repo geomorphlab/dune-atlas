@@ -175,7 +175,8 @@ def extract(out: str, year: int = YEAR, threads: int = 3, log=print) -> dict:
         assert rep["n"] == ds.n_samples, (rep["n"], ds.n_samples)
     ct = R.chunk_shape("uwind")[0]
     assert all(R.chunk_shape(v)[0] == ct for v in (*VARS.values(), "swflux"))
-    pos = np.empty(t.size, "i8"); pos[:] = -1; pos[idx] = np.arange(idx.size)
+    pos = np.full(t.size, -1, "i8")                 # output position of each store step (-1: not selected)
+    pos[idx] = np.arange(idx.size)
     chunks = np.unique(idx // ct)
     arrs = {k: np.empty((ds.ny, ds.nx, idx.size), "f4") for k in VARS}
     sun = np.full(idx.size, np.nan)

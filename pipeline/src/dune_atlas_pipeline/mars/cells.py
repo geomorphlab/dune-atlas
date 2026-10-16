@@ -440,7 +440,9 @@ def validate(out: str, n_cells: int = 6, n_recompute: int = 2, seed: int = 0, ce
     rng = np.random.default_rng(seed)
     if cells is None:
         cells = list(zip(rng.integers(0, NY, n_cells).tolist(), rng.integers(0, NX, n_cells).tolist()))
-    ranges = {"u": (-80, 80), "v": (-80, 80), "T": (100, 350), "rho": (1e-4, 0.1), "z": (0.5, 5.0)}
+    # z depends on the dataset's lowest level (FV3 1.5-3.2 m; sigma 0.9995: 0.026 m/K x T): spec notes z_range_m
+    ranges = {"u": (-80, 80), "v": (-80, 80), "T": (100, 350), "rho": (1e-4, 0.1),
+              "z": tuple(DS.notes.get("z_range_m", (0.5, 5.0)))}
     rec = []
     for i, j in cells:
         x = S[i, j]
