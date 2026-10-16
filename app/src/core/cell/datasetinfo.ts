@@ -25,14 +25,26 @@ export function datasetCredits(id?: string): DatasetCredits {
   return (id && CREDITS[id]) || CREDITS[DEFAULT_ID];
 }
 
-/** Tooltip of the Wind dataset selector (app text; not the generated registry description, which
- *  names store internals): "ERA5 0.25°, 1950–2024; land cells: land–sea mask fraction > 0". A dataset
+/** Tooltip of the Wind dataset selector (not the generated registry description, which names store internals):
+ *  "ERA5 0.25°, 1950–2024; land cells: land–sea mask fraction > 0" (the registry info.landShort). A dataset
  *  without a land mask (empty nonLandReason: every cell has data) has no land clause. */
 export function datasetTooltip(id: string): string {
   const d = DATASET_INFO[id];
   if (!d) return "";
-  return d.nonLandReason ? `${d.name} ${d.resolution}, ${d.period}; land cells: land–sea mask fraction > ${d.landThreshold}` : `${d.name} ${d.resolution}, ${d.period}`;
+  return d.nonLandReason ? `${d.name} ${d.resolution}, ${d.period}; ${d.landShort ?? "land cells only"}` : `${d.name} ${d.resolution}, ${d.period}`;
 }
+/** "MCMC FV3: free-running climate-model simulation; EMARS and MACDA: reanalysis of ..." (registry info.kind; datasets
+ *  of the same kind named together), "" if no dataset has a kind */
+export function datasetKindsText(infos: DatasetInfo[] = Object.values(DATASET_INFO)): string {
+  const by = new Map<string, string[]>();
+  for (const d of infos) if (d.kind) by.set(d.kind, [...(by.get(d.kind) ?? []), d.name]);
+  const and = (xs: string[]) => (xs.length < 2 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
+  return [...by].map(([k, names]) => `${and(names)}: ${k}`).join("; ");
+}
+/** the registry notes of the datasets (info.note), one sentence each */
+export const datasetNotes = (infos: DatasetInfo[] = Object.values(DATASET_INFO)): string[] => infos.flatMap((d) => (d.note ? [d.note] : []));
+/** map / About attribution lines of the datasets (credits.mapNotice), without repeats */
+export const datasetMapNotices = (ids: string[] = Object.keys(DATASET_INFO)): string[] => [...new Set(ids.flatMap((id) => { const n = datasetCredits(id).mapNotice; return n ? [n] : []; }))];
 
 /** distinct values of one dataset fact, joined with " or " (e.g. the grids "0.1° or 0.25°", the period
  *  "1950–2024"): general text names the datasets' facts from this table, never by hand */

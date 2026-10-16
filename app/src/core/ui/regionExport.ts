@@ -36,7 +36,7 @@ export const REGION_TEXT = {
   download: "Download (.zip)", cancel: "Cancel", working: "Fetching cells",
   empty: "Type the bounds or draw a box on the map.",
   loading: "Loading the grid of the wind dataset…", loadFailed: "The grid of the wind dataset could not be loaded.",
-  windHist: "Wind histogram (hours per speed and direction bin)", windSeries: "Hourly wind and air series (u, v, T, ρ, z)",
+  windHist: "Wind histogram (hours per speed and direction bin)", windSeries: "Wind and air series (u, v, T, ρ, z)",
 };
 
 /** the popover's state between openings (bounds and choices) */

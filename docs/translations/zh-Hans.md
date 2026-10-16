@@ -169,8 +169,8 @@ ZH: 点击任意陆地网格单元即可打开网格单元面板：风玫瑰图�
 EN: Wind datasets
 ZH: 风场数据集
 
-## earth.help.datasets.body (Help panel)
-EN: The Wind dataset selector switches between reanalysis wind statistics (ERA5-Land, 0.1°; ERA5, 0.25°; 1950–2024). ERA5-Land, used by Gunn (2026), is a land-surface rerun driven by ERA5 atmospheric fields interpolated to its grid (Muñoz-Sabater et al. 2021), so its winds are not an independent estimate, and the datasets can still differ: e.g., Baas (2026) reports ERA5-Land 10 m wind speeds 20–30 % below those of ERA5. Where the datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
+## earth.help.datasets.body STALE (Help panel)
+EN: The Wind dataset selector switches between wind datasets (ERA5-Land, 0.1°, 1950–2024; ERA5, 0.25°, 1950–2024). ERA5-Land, used by Gunn (2026), is a land-surface rerun driven by ERA5 atmospheric fields interpolated to its grid (Muñoz-Sabater et al. 2021), so its winds are not an independent estimate, and the datasets can still differ: e.g., Baas (2026) reports ERA5-Land 10 m wind speeds 20–30 % below those of ERA5. Where the datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
 ZH: “风场数据集”选择器可在不同的再分析数据集风况统计之间切换（ERA5-Land，0.1°；ERA5，0.25°；1950–2024 年）。Gunn (2026) 所用的 ERA5-Land 是由插值到其网格上的 ERA5 大气场驱动的陆面重运行产品（Muñoz-Sabater et al. 2021），因此其风场并非独立估计，但各数据集之间仍可能存在差异：例如，Baas (2026) 报告 ERA5-Land 的 10 m 风速比 ERA5 低 20–30 %。在各数据集结果不一致之处，应将结果视为不确定。风场与输沙通量图层以及网格单元面板随所选数据集变化；沙丘区掩膜、干旱指数与植被图层对所有数据集均相同。
 
 ## earth.help.downloads.title (Help panel)
@@ -829,8 +829,8 @@ ZH: 地球图集提供 1950–2024 年两套逐小时 10 m 风速序列。ERA5 �
 EN: Median grain diameter $d$
 ZH: 沙粒中值粒径 $d$
 
-## mars.help.threshold.body (Help panel)
-EN: Sand moves when the friction velocity of the wind exceeds a threshold that depends on the grain size and on the thin Martian air. The slider at the top of the layer panel sets the median grain diameter d (50–1000 µm, default 200 µm) for every grain-size-dependent map layer and for the cell panel. For every hour of the Mars year the threshold $u_{*,th}$ is computed from d and that hour's air density and temperature (Pähtz & Durán 2023).
+## mars.help.threshold.body STALE (Help panel)
+EN: Sand moves when the friction velocity of the wind exceeds a threshold that depends on the grain size and on the thin Martian air. The slider at the top of the layer panel sets the median grain diameter d (50–1000 µm, default 200 µm) for every grain-size-dependent map layer and for the cell panel. For every time step of the wind dataset (each of its samples of the Mars year) the threshold $u_{*,th}$ is computed from d and that step's air density and temperature (Pähtz & Durán 2023).
 ZH: 当摩阻风速超过某一临界值时，沙粒开始运动，该临界风速取决于粒径以及稀薄的火星大气。图层面板顶部的滑块用于设定中值粒径 d（50–1000 µm，默认 200 µm），该值适用于所有依赖粒径的地图图层以及网格单元面板。对于火星年的每一小时，临界值 $u_{*,th}$ 均由 d 以及该小时的空气密度和温度计算得出（Pähtz & Durán 2023）。
 
 ## mars.help.layers.title (Help panel)
@@ -869,8 +869,8 @@ ZH: 点击任意网格单元即可打开网格单元面板：其中包括风玫�
 EN: Wind dataset
 ZH: 风场数据集
 
-## mars.help.datasets.body (Help panel)
-EN: The Wind dataset selector switches between Mars wind datasets (MCMC FV3, 2°; EMARS, 6° × 5.14°; MACDA, 5°), each one Mars year of lowest-level winds on its own grid: MCMC FV3 is a free-running climate-model simulation; EMARS and MACDA are reanalyses of Mars Year 30, which assimilate spacecraft observations of the atmosphere into a climate model. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain. No EMARS data poleward of 87.43° N: the northernmost cells of its grid are centred at 84.86° N.
+## mars.help.datasets.body STALE (Help panel)
+EN: The Wind dataset selector switches between Mars wind datasets (MCMC FV3, 2°; EMARS, 6° × 5.14°; MACDA, 5°), each one Mars year of lowest-level winds on its own grid (MCMC FV3: free-running climate-model simulation; EMARS and MACDA: reanalysis of Mars Year 30, with spacecraft observations of the atmosphere assimilated into a climate model). The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain. No EMARS data poleward of 87.43° N: the northernmost cells of its grid are centred at 84.86° N.
 ZH: “风场数据集”选择器可在不同的火星风场数据集之间切换（MCMC FV3，2°；EMARS，6°×5.14°；MACDA，5°），每个数据集均为各自网格上一个火星年的最低层风：MCMC FV3 是自由运行的气候模型模拟；EMARS 和 MACDA 是第 30 个火星年的再分析数据集，将航天器对大气的观测同化到气候模型中。风场与输沙通量图层以及网格单元面板随所选数据集而变；沙丘图和高程对所有数据集都相同。若各数据集给出的结果不同，应将其视为不确定。87.43° N 以北无 EMARS 数据：其网格最北一行单元的中心位于 84.86° N。
 
 ## mars.help.basemaps.title (Help panel)
@@ -885,8 +885,8 @@ ZH: 初始底图为 MOLA–HRSC 融合高程模型的阴影地形（Fergason, Ha
 EN: Downloads and citation
 ZH: 下载与引用
 
-## mars.help.downloads.body (Help panel)
-EN: Download & cite in the cell panel saves the hourly wind and air series and all parameters of the cell as NetCDF or as a CSV bundle, with the citation of every data source. Please cite the wind dataset, Pähtz & Durán (2023) for the transport law and Gunn (2026), which outlines the methods.
+## mars.help.downloads.body STALE (Help panel)
+EN: Download & cite in the cell panel saves the wind and air series and all parameters of the cell as NetCDF or as a CSV bundle, with the citation of every data source. Please cite the wind dataset, Pähtz & Durán (2023) for the transport law and Gunn (2026), which outlines the methods.
 ZH: 网格单元面板中的“下载与引用”可将该网格单元的逐小时风与大气序列及全部参数保存为 NetCDF 文件或 CSV 文件包，并附每个数据来源的引用信息。请引用所用风场数据集、输沙定律的出处 Pähtz & Durán (2023)，以及概述方法的 Gunn (2026)。
 
 ## mars.help.region.title (Help panel)
@@ -943,8 +943,8 @@ ZH: 拖动以平移地图；滚动鼠标滚轮、双指捏合或使用 + 和 −
 EN: Median grain diameter $d$
 ZH: 中值粒径 $d$
 
-## mars.tour.threshold.body (Guided tour)
-EN: This slider sets the grain diameter. The threshold friction velocity is computed for every hour from d and the hour's air density and temperature; every grain-size-dependent layer and the cell panel update as you move it.
+## mars.tour.threshold.body STALE (Guided tour)
+EN: This slider sets the grain diameter. The threshold friction velocity is computed for every time step from d and that step's air density and temperature; every grain-size-dependent layer and the cell panel update as you move it.
 ZH: 此滑块用于设置粒径。临界摩阻风速根据 d 以及该小时的空气密度和温度逐小时计算；移动滑块时，所有依赖粒径的图层及网格单元面板都会随之更新。
 
 ## mars.tour.layers.title (Guided tour)
@@ -1911,22 +1911,6 @@ ZH: 地球与火星：可比较之处
 EN: Both atlases compute the same quantities with the methods outlined in⟦0⟧: the time-averaged saturated sand flux over a flat bed fully covered by loose sand (⟦1⟧), its resultant (⟦2⟧,⟦3⟧,⟦4⟧), crest fluxes, dune-orientation modes and flux divergence. Both report fluxes as volumes of packed sand (packing fraction ⟦#0⟧, pore space included) per metre width per Earth year of ⟦#1⟧ days (m²/yr), and both show wind roses as the direction the wind blows from and sand roses as the direction sand moves toward. They differ in four ways.
 ZH: 两套图集均采用⟦0⟧所述方法计算相同的物理量：平坦床面完全被松散沙覆盖时的时间平均饱和输沙率（⟦1⟧）、其合成量（⟦2⟧、⟦3⟧、⟦4⟧）、脊线输沙通量、沙丘朝向模式及输沙通量散度。两者均以单位宽度、以 ⟦#1⟧ 天为一个地球年计的堆积沙体积（堆积体积分数 ⟦#0⟧，含孔隙空间）（m²/yr）报告输沙通量，并均以风来向绘制风玫瑰图、以沙去向绘制输沙玫瑰图。二者在四个方面有所不同。
 
-## c.8cfd1c5c (About)
-EN: <strong>Control</strong>: on Earth the slider sets one threshold friction velocity⟦0⟧for all hours (default ⟦#0⟧ m/s); on Mars it sets the median grain diameter d (default ⟦#1⟧ µm), and the threshold is computed for every hour from d and that hour's air density and temperature.
-ZH: <strong>控制量</strong>：在地球图集中，滑块设定的是适用于所有小时的单一临界摩阻风速⟦0⟧（默认值 ⟦#0⟧ m/s）；在火星图集中，滑块设定的是中值粒径 d（默认值 ⟦#1⟧ µm），临界值则根据 d 及该小时的空气密度和温度逐小时计算。
-
-## c.182e7ab0 (About)
-EN: <strong>Transport law and wind profile</strong>: Earth uses the transport law of⟦0⟧, with⟦1⟧from the ⟦#0⟧ m wind and a roughness length of ⟦#1⟧ mm; Mars uses the transport law of⟦2⟧, with⟦3⟧from the lowest-level wind (≈ ⟦#2⟧–⟦#3⟧ m) and a smooth-wall profile without a roughness length.
-ZH: <strong>输沙定律与风廓线</strong>：地球图集采用⟦0⟧的输沙定律，⟦1⟧由 ⟦#0⟧ m 高度的风速及 ⟦#1⟧ mm 的空气动力学粗糙度求得；火星图集采用⟦2⟧的输沙定律，⟦3⟧由最低层风速（约 ⟦#2⟧–⟦#3⟧ m）求得，并采用不含粗糙度的光滑壁面风廓线。
-
-## c.3b78ea48 (About)
-EN: <strong>Winds and grid</strong>: Earth uses a period of hourly reanalysis winds (e.g.,⟦0⟧, ⟦#0⟧° grid for ⟦#1⟧ years ⟦#2⟧–⟦#3⟧); Mars uses a representative year (⟦#4⟧ sols, about ⟦#5⟧ Earth years) of hourly simulated winds (e.g.,⟦1⟧, ⟦#6⟧° grid), so one Mars cell can span several dune fields and year-to-year variability is not sampled.
-ZH: <strong>风场与网格</strong>：地球图集使用一段逐小时再分析数据集（例如⟦0⟧，⟦#0⟧° 网格，时段为 ⟦#1⟧ 年，⟦#2⟧–⟦#3⟧）；火星图集使用代表性一年（⟦#4⟧ 个火星日，约合 ⟦#5⟧ 个地球年）的逐小时模拟风场（例如⟦1⟧，⟦#6⟧° 网格），因此一个火星网格单元可能跨越多个沙丘区，且未能采样年际变化。
-
-## c.6251885f (About)
-EN: <strong>Downloads</strong>: Earth cells provide a wind histogram and the fields against threshold (⟦0⟧,⟦1⟧); Mars cells provide the hourly wind and air series and the fields against grain diameter (⟦2⟧,⟦3⟧).
-ZH: <strong>下载内容</strong>：地球网格单元提供风况直方图及随临界值变化的各物理量（⟦0⟧、⟦1⟧）；火星网格单元提供逐小时风速与大气序列，以及随粒径变化的各物理量（⟦2⟧、⟦3⟧）。
-
 ## c.ebb9f8a1 (About)
 EN: ⟦0⟧values on the two planets can therefore be compared in order of magnitude, not as precise numbers.⟦1⟧,⟦2⟧and the mode directions compare more directly, but each depends on the threshold or grain-diameter setting.
 ZH: 因此，两颗行星上的⟦0⟧值只能在数量级上进行比较，而非精确数值。⟦1⟧、⟦2⟧及各模式方向之间的比较更为直接，但三者均依赖于所设定的临界值或粒径。
@@ -2325,17 +2309,9 @@ ZH: 网格单元 ⟦#0⟧，⟦#1⟧
 EN: Outside the⟦0⟧land mask
 ZH: ⟦0⟧陆地掩膜之外
 
-## c.d0a79f04 (Other interface)
-EN: The atlas computes wind roses and sand-flux statistics only for land cells (⟦0⟧land–sea mask fraction &gt; ⟦#0⟧). This cell is mainly water, so the atlas has no statistics for it. Choose a nearby land cell, or switch to⟦1⟧(coastal cells can differ between the two land masks).
-ZH: 本图集仅针对陆地网格单元（⟦0⟧陆海掩膜比例 &gt; ⟦#0⟧）计算风玫瑰图与输沙统计量。该网格单元以水体为主，因此图集没有其统计数据。请选择附近的陆地网格单元，或切换到⟦1⟧（两种陆海掩膜在沿海网格单元上可能存在差异）。
-
 ## c.3d5c01ad (Other interface)
 EN: ⟦#0⟧° cell: row ⟦#1⟧, column ⟦#2⟧; centre ⟦#3⟧°S, ⟦#4⟧°E.
 ZH: ⟦#0⟧°网格单元：第 ⟦#1⟧ 行，第 ⟦#2⟧ 列；中心位于南纬 ⟦#3⟧°、东经 ⟦#4⟧°。
-
-## c.0f4659f8 (Other interface)
-EN: The atlas computes wind roses and sand-flux statistics only for land cells (⟦0⟧land–sea mask fraction &gt; ⟦#0⟧). This cell has no land (land–sea mask fraction ⟦#1⟧), so the atlas has no statistics for it. Choose a nearby land cell, or switch to⟦1⟧(coastal cells can differ between the two land masks).
-ZH: 本图集仅针对陆地网格单元（⟦0⟧陆海掩膜比例 &gt; ⟦#0⟧）计算风玫瑰图与输沙统计量。该网格单元没有陆地（陆海掩膜比例为 ⟦#1⟧），因此图集没有其统计数据。请选择附近的陆地网格单元，或切换到⟦1⟧（两种陆海掩膜在沿海网格单元上可能存在差异）。
 
 # Other
 
@@ -2485,33 +2461,9 @@ ZH: ⟦0⟧⟦#0⟧°，一个火星年（模拟第 6 年，共 ⟦#1⟧ 个火�
 EN: Updates with the grain-diameter ⟦0⟧ control.
 ZH: 随粒径⟦0⟧控件更新。
 
-## c.55593e77 (Layer popovers)
-EN: Fraction of time flat-bed friction velocity is above threshold⟦0⟧. The threshold is that hour's cessation threshold⟦1⟧of⟦2⟧.
-ZH: 平坦床面摩阻风速超过临界值⟦0⟧的时间比例。该临界值为当小时的⟦1⟧终止临界值，取自⟦2⟧。
-
-## c.f1591313 (Layer popovers)
-EN: Average above-threshold flat-bed friction velocity, normalised by threshold⟦0⟧. The threshold is that hour's cessation threshold⟦1⟧of⟦2⟧.
-ZH: 超过临界值的平坦床面摩阻风速均值，按临界值⟦0⟧归一化。该临界值为当小时的⟦1⟧终止临界值，取自⟦2⟧。
-
-## c.8ab3c2ce (Layer popovers)
-EN: Fraction of bed-instability-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold⟦2⟧of⟦3⟧.
-ZH: 床面失稳模式（⟦0⟧）脊线输沙通量中、发生在平坦床面摩阻风速超过临界值⟦1⟧期间的比例。⟦#0⟧ 表示脊线输沙仅发生在平坦床面低于临界值时；若无脊线输沙则无定义。该临界值为当小时的⟦2⟧终止临界值，取自⟦3⟧。
-
-## c.8843ab2c (Layer popovers)
-EN: Fraction of elongation-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold⟦2⟧of⟦3⟧.
-ZH: 伸长模式（⟦0⟧）脊线输沙通量中、发生在平坦床面摩阻风速超过临界值⟦1⟧期间的比例。⟦#0⟧ 表示脊线输沙仅发生在平坦床面低于临界值时；若无脊线输沙则无定义。该临界值为当小时的⟦2⟧终止临界值，取自⟦3⟧。
-
-## c.5dd4040a (Layer popovers)
-EN: Time-averaged flat-bed saturated sand flux,⟦0⟧over all N hours of the Mars year: the volume of packed sand per metre width that the wind could move per Earth year over a flat bed fully covered by loose sand (⟦1⟧). Like the drift potential of⟦2⟧it measures the wind's capacity to transport sand, but it is a different quantity: Fryberger's⟦3⟧is in vector units, computed from ⟦#0⟧ m wind speeds in knots as⟦4⟧with a ⟦#1⟧-knot threshold, whereas this⟦5⟧is a physical flux computed from the friction velocity with a threshold computed from the grain diameter. The two cannot be converted into each other, and Fryberger's energy classes do not apply to these values.
-ZH: 整个火星年共 N 小时内平坦床面饱和输沙率的时间平均值⟦0⟧：在完全被松散沙覆盖的平坦床面上，风每地球年可搬运的单位宽度堆积沙体积（⟦1⟧）。与⟦2⟧的输沙势类似，它衡量的也是风的输沙能力，但二者并非同一物理量：Fryberger 的⟦3⟧以矢量单位给出，由 ⟦#0⟧ m 处以节为单位的风速按⟦4⟧计算，临界值取 ⟦#1⟧ 节；而此处的⟦5⟧是由摩阻风速计算得到的物理通量，其临界值由粒径计算得出。二者不可相互换算，Fryberger 的能量等级也不适用于这些数值。
-
 ## c.a2cd8175 (Layer popovers)
 EN: Divergence of the time-averaged saturated sand-flux vector (magnitude⟦0⟧, direction⟦1⟧) on the Mars sphere, following⟦2⟧, Methods⟦3⟧:⟦4⟧with⟦5⟧,⟦6⟧. By conservation of sand mass, negative values (flux convergence) imply deposition and positive values (flux divergence) erosion. The values assume a saturated flux and an unlimited supply of loose sand, so on rock, crusted or vegetated surfaces actual erosion is limited by the sand available.
 ZH: 火星球面上时间平均饱和输沙通量矢量（大小⟦0⟧，方向⟦1⟧）的散度，依据⟦2⟧方法⟦3⟧计算：⟦4⟧，其中⟦5⟧，⟦6⟧。根据沙质量守恒，负值（输沙通量汇）意味着堆积，正值（输沙通量源）意味着侵蚀。这些数值假设输沙通量已饱和且松散沙供应不受限，因此在裸岩、结皮或有植被覆盖的地表上，实际侵蚀会受限于可用沙源。
-
-## c.75d2f7e2 (Layer popovers)
-EN: Mean over the Mars year of the hourly lowest-layer air density⟦0⟧of the wind dataset's climate model (⟦1⟧= mid pressure of the lowest layer,⟦2⟧= lowest-level temperature).
-ZH: 风场数据集所用气候模型逐小时最底层空气密度⟦0⟧在整个火星年内的平均值（⟦1⟧= 最底层的中间气压，⟦2⟧= 最底层温度）。
 
 ## c.2a037b62 (Layer popovers)
 EN: Independent of the grain diameter: not affected by the ⟦0⟧ control.
@@ -2638,10 +2590,6 @@ ZH: 公有领域（⟦0⟧）；引用⟦1⟧（Fergason，⟦2⟧）；⟦3⟧�
 ## c.63c884fd (About)
 EN: Click any cell to see its wind rose over the Mars year of the wind dataset, the sand-flux rose at the selected grain diameter, dune-orientation modes and all wind-regime parameters.
 ZH: 点击任意网格单元，即可查看其在该风场数据集所对应火星年内的风玫瑰图、所选粒径下的输沙玫瑰图、沙丘朝向模式及全部风况参数。
-
-## c.c238d4e5 (About)
-EN: <strong>Sand-flux fields</strong>: for every hour, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.
-ZH: <strong>输沙通量场</strong>：对每个小时，按所选中值粒径 d（颗粒密度 ⟦#0⟧ kg/m³，g = ⟦#1⟧ m/s²）计算⟦0⟧的临界值与饱和输沙率，并取年平均；输沙势、脊线输沙通量与沙丘朝向模式按⟦1⟧所述方法计算。输沙通量为单位宽度、单位地球年（⟦#3⟧ 天）内堆积沙的体积（堆积体积分数 ⟦#2⟧，含孔隙空间），单位为 m²/yr，与地球上相同。
 
 ## c.5d754cff (About)
 EN: <strong>Elevation and shaded relief</strong>:⟦0⟧–⟦1⟧blended⟦2⟧, ⟦#0⟧ m, v2 (Fergason,⟦3⟧,⟦4⟧); licence:⟦5⟧(⟦6⟧) and⟦7⟧(⟦8⟧). Derived elevation and relief tiles:⟦9⟧.
@@ -2780,14 +2728,6 @@ ZH: <span class="cap-lead">当前粒径下：⟦0⟧</span> 该网格单元在�
 ## c.2b98c4b5 (Cell panel)
 EN: ⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> <span class="unit">ratio</span>
 ZH: ⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> <span class="unit">比值</span>
-
-# Screen-reader labels and tooltips
-
-## c.a6ed5186 (Screen-reader labels and tooltips)
-EN: Threshold friction velocity at this d, median over the hours
-ZH: 该粒径下的临界摩阻风速，各小时的中值
-
-# Cell panel
 
 ## c.e89e84ed (Cell panel)
 EN: Median threshold friction velocity
@@ -3013,10 +2953,6 @@ ZH: 无法加载风场数据集的网格。
 EN: Wind histogram (hours per speed and direction bin)
 ZH: 风况直方图（按风速与风向区间统计的小时数）
 
-## c.b92a021d (Search and messages)
-EN: Hourly wind and air series (u, v, T, ρ, z)
-ZH: 逐小时风场与大气序列（u、v、T、ρ、z）
-
 ## c.cc7fcd2b (Search and messages)
 EN: Also called
 ZH: 又称
@@ -3123,10 +3059,6 @@ ZH: 无法加载示例网格单元。请点击地图上任意网格单元以打�
 
 # Layer popovers
 
-## c.f17421a6 (Layer popovers)
-EN: The Wind dataset selector switches between reanalysis wind statistics (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧°; ⟦#2⟧–⟦#3⟧).⟦2⟧, used by⟦3⟧, is a land-surface rerun driven by⟦4⟧atmospheric fields interpolated to its grid (Muñoz-Sabater et al. ⟦#4⟧), so its winds are not an independent estimate, and the datasets can still differ: e.g.,⟦5⟧reports⟦6⟧⟦#5⟧ m wind speeds ⟦#6⟧–⟦#7⟧ % below those of⟦7⟧. Where the datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
-ZH: “风场数据集”选择器用于在再分析风况统计数据之间切换（⟦0⟧，⟦#0⟧°；⟦1⟧，⟦#1⟧°；⟦#2⟧–⟦#3⟧）。⟦2⟧（⟦3⟧所采用）是由插值到其网格上的⟦4⟧大气场驱动的陆面重算产品（Muñoz-Sabater et al. ⟦#4⟧），因此其风场并非独立估计，但两个数据集之间仍可能存在差异：例如，⟦5⟧报告⟦6⟧的 ⟦#5⟧ m 风速比⟦7⟧低 ⟦#6⟧–⟦#7⟧%。若两个数据集给出不同结果，应视其为不确定。风场与输沙通量图层以及网格单元面板随所选数据集变化；沙丘区掩膜、干旱度和植被图层对所有数据集均相同。
-
 ## c.cb7f6eba (Layer popovers)
 EN: ⟦0⟧polygons: public domain (U.S. Geological Survey);⟦1⟧dune fields:⟦2⟧
 ZH: ⟦0⟧多边形：公有领域（美国地质调查局）；⟦1⟧沙丘区：⟦2⟧
@@ -3156,12 +3088,6 @@ ZH: αT（横向迁移方向）：⟦#0⟧°（⟦#1⟧）
 ## c.7c7e35d8 (Cell panel)
 EN: RDD (resultant drift direction): ⟦#0⟧° (⟦#1⟧)
 ZH: RDD（合成输沙方向）：⟦#0⟧°（⟦#1⟧）
-
-# Layer popovers
-
-## c.c27adfd9 (Layer popovers)
-EN: The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°), each one Mars year of lowest-level winds on its own grid:⟦3⟧is a free-running climate-model simulation;⟦4⟧and⟦5⟧are reanalyses of Mars Year ⟦#4⟧, which assimilate spacecraft observations of the atmosphere into a climate model. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain. No⟦6⟧data poleward of ⟦#5⟧° N: the northernmost cells of its grid are centred at ⟦#6⟧° N.
-ZH: “风场数据集”选择器可在不同的火星风场数据集之间切换（⟦0⟧，⟦#0⟧°；⟦1⟧，⟦#1⟧°×⟦#2⟧°；⟦2⟧，⟦#3⟧°），每个数据集均为各自网格上一个火星年的最低层风：⟦3⟧是自由运行的气候模型模拟；⟦4⟧和⟦5⟧是第 ⟦#4⟧ 个火星年的再分析数据集，将航天器对大气的观测同化到气候模型中。风场与输沙通量图层以及网格单元面板随所选数据集而变；沙丘图和高程对所有数据集都相同。若各数据集给出的结果不同，应将其视为不确定。⟦#5⟧° N 以北无⟦6⟧数据：其网格最北一行单元的中心位于 ⟦#6⟧° N。
 
 # About
 
@@ -3205,7 +3131,157 @@ ZH: ⟦0⟧v2.0 再分析数据集（第 ⟦#0⟧ 个火星年）
 EN: Contains public sector information licensed under the Open Government Licence v3.0 (⟦0⟧v2.0,⟦1⟧Centre for Environmental Data Analysis).
 ZH: Contains public sector information licensed under the Open Government Licence v3.0 (⟦0⟧v2.0,⟦1⟧Centre for Environmental Data Analysis).
 
+# Layer popovers
+
+## c.3ae7fe48 (Layer popovers)
+EN: The Wind dataset selector switches between wind datasets (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧).⟦2⟧, used by⟦3⟧, is a land-surface rerun driven by⟦4⟧atmospheric fields interpolated to its grid (Muñoz-Sabater et al. ⟦#6⟧), so its winds are not an independent estimate, and the datasets can still differ: e.g.,⟦5⟧reports⟦6⟧⟦#7⟧ m wind speeds ⟦#8⟧–⟦#9⟧ % below those of⟦7⟧. Where the datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
+ZH: “风场数据集”选择器用于在不同风场数据集之间切换（⟦0⟧，⟦#0⟧°，⟦#1⟧–⟦#2⟧；⟦1⟧，⟦#3⟧°，⟦#4⟧–⟦#5⟧）。⟦2⟧（⟦3⟧所采用）是由插值到其网格上的⟦4⟧大气场驱动的陆面重算产品（Muñoz-Sabater et al. ⟦#6⟧），因此其风场并非独立估计，但两个数据集之间仍可能存在差异：例如，⟦5⟧报告⟦6⟧的 ⟦#7⟧ m 风速比⟦7⟧低 ⟦#8⟧–⟦#9⟧%。若各数据集给出不同结果，应视其为不确定。风场与输沙通量图层以及网格单元面板随所选数据集变化；沙丘区掩膜、干旱度和植被图层对所有数据集均相同。
+
+# About
+
+## c.005fdc07 (About)
+EN: <strong>Control</strong>: on Earth the slider sets one threshold friction velocity⟦0⟧for the whole record (default ⟦#0⟧ m/s); on Mars it sets the median grain diameter d (default ⟦#1⟧ µm), and the threshold is computed for every time step of the wind record from d and that step's air density and temperature.
+ZH: <strong>控制量</strong>：在地球图集中，滑块设定的是适用于整个记录的单一临界摩阻风速⟦0⟧（默认值 ⟦#0⟧ m/s）；在火星图集中，滑块设定的是中值粒径 d（默认值 ⟦#1⟧ µm），临界值则根据 d 及每个时间步的空气密度和温度，对风场记录逐时间步计算。
+
+## c.b5eabe06 (About)
+EN: <strong>Transport law and wind profile</strong>: Earth uses the transport law of⟦0⟧, with⟦1⟧from the ⟦#0⟧ m wind and a roughness length of ⟦#1⟧ mm; Mars uses the transport law of⟦2⟧, with⟦3⟧from the wind at the lowest level of the wind dataset (its height above the surface differs between datasets) and a smooth-wall profile without a roughness length.
+ZH: <strong>输沙定律与风廓线</strong>：地球图集采用⟦0⟧的输沙定律，⟦1⟧由 ⟦#0⟧ m 高度的风速及 ⟦#1⟧ mm 的空气动力学粗糙度求得；火星图集采用⟦2⟧的输沙定律，⟦3⟧由风场数据集最低层的风速求得（该层离地高度因数据集而异），并采用不含粗糙度的光滑壁面风廓线。
+
+## c.5cedc7f4 (About)
+EN: <strong>Winds and grid</strong>: Earth uses decades of hourly reanalysis winds (e.g.,⟦0⟧, ⟦#0⟧° grid, ⟦#1⟧–⟦#2⟧); Mars uses one Mars year (⟦#3⟧ sols, about ⟦#4⟧ Earth years) of winds from a climate-model simulation or a reanalysis (e.g.,⟦1⟧, ⟦#5⟧° grid), so one Mars cell can span several dune fields and year-to-year variability is not sampled.
+ZH: <strong>风场与网格</strong>：地球图集使用数十年的逐小时再分析风场（例如⟦0⟧，⟦#0⟧° 网格，⟦#1⟧–⟦#2⟧）；火星图集使用一个火星年（⟦#3⟧ 个火星日，约合 ⟦#4⟧ 个地球年）的风场，来自气候模型模拟或再分析数据集（例如⟦1⟧，⟦#5⟧° 网格），因此一个火星网格单元可能跨越多个沙丘区，且未能采样年际变化。
+
+## c.c9e11e84 (About)
+EN: <strong>Downloads</strong>: Earth cells provide a wind histogram and the fields against threshold (⟦0⟧,⟦1⟧); Mars cells provide the wind and air series and the fields against grain diameter (⟦2⟧,⟦3⟧).
+ZH: <strong>下载内容</strong>：地球网格单元提供风况直方图及随临界值变化的各物理量（⟦0⟧、⟦1⟧）；火星网格单元提供风速与大气序列，以及随粒径变化的各物理量（⟦2⟧、⟦3⟧）。
+
+# Other interface
+
+## c.2d038d14 (Other interface)
+EN: The atlas computes wind roses and sand-flux statistics only for land cells (land–sea mask fraction above ⟦#0⟧). This cell is mainly water, so the atlas has no statistics for it. Choose a nearby land cell, or switch to⟦0⟧(coastal cells can differ between the land masks of the datasets).
+ZH: 本图集仅针对陆地网格单元（陆海掩膜比例大于 ⟦#0⟧）计算风玫瑰图与输沙统计量。该网格单元以水体为主，因此图集没有其统计数据。请选择附近的陆地网格单元，或切换到⟦0⟧（各数据集的陆海掩膜在沿海网格单元上可能存在差异）。
+
+## c.e5b72715 (Other interface)
+EN: The atlas computes wind roses and sand-flux statistics only for land cells (land–sea mask fraction above ⟦#0⟧, i.e. any land in the cell). This cell has no land (land–sea mask fraction ⟦#1⟧), so the atlas has no statistics for it. Choose a nearby land cell, or switch to⟦0⟧(coastal cells can differ between the land masks of the datasets).
+ZH: 本图集仅针对陆地网格单元（陆海掩膜比例大于 ⟦#0⟧，即网格单元内有任何陆地）计算风玫瑰图与输沙统计量。该网格单元没有陆地（陆海掩膜比例为 ⟦#1⟧），因此图集没有其统计数据。请选择附近的陆地网格单元，或切换到⟦0⟧（各数据集的陆海掩膜在沿海网格单元上可能存在差异）。
+
+# Search and messages
+
+## c.3cfbf3ce (Search and messages)
+EN: Wind and air series (u, v, T, ρ, z)
+ZH: 风场与大气序列（u、v、T、ρ、z）
+
+# Layer popovers
+
+## c.8f6fed46 (Layer popovers)
+EN: The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°), each one Mars year of lowest-level winds on its own grid (⟦3⟧: free-running climate-model simulation;⟦4⟧and⟦5⟧: reanalysis of Mars Year ⟦#4⟧, with spacecraft observations of the atmosphere assimilated into a climate model). The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain. No⟦6⟧data poleward of ⟦#5⟧° N: the northernmost cells of its grid are centred at ⟦#6⟧° N.
+ZH: “风场数据集”选择器可在不同的火星风场数据集之间切换（⟦0⟧，⟦#0⟧°；⟦1⟧，⟦#1⟧°×⟦#2⟧°；⟦2⟧，⟦#3⟧°），每个数据集均为各自网格上一个火星年的最低层风（⟦3⟧：自由运行的气候模型模拟；⟦4⟧和⟦5⟧：第 ⟦#4⟧ 个火星年的再分析数据集，将航天器对大气的观测同化到气候模型中）。风场与输沙通量图层以及网格单元面板随所选数据集而变；沙丘图和高程对所有数据集都相同。若各数据集给出的结果不同，应将其视为不确定。⟦#5⟧° N 以北无⟦6⟧数据：其网格最北一行单元的中心位于 ⟦#6⟧° N。
+
+## c.1e0c1012 (Layer popovers)
+EN: Fraction of time flat-bed friction velocity is above threshold⟦0⟧. The threshold is the cessation threshold⟦1⟧of each sample, from⟦2⟧.
+ZH: 平坦床面摩阻风速超过临界值⟦0⟧的时间比例。该临界值为每个样本的⟦1⟧终止临界值，取自⟦2⟧。
+
+## c.fb4c6ed6 (Layer popovers)
+EN: Average above-threshold flat-bed friction velocity, normalised by threshold⟦0⟧. The threshold is the cessation threshold⟦1⟧of each sample, from⟦2⟧.
+ZH: 超过临界值的平坦床面摩阻风速均值，按临界值⟦0⟧归一化。该临界值为每个样本的⟦1⟧终止临界值，取自⟦2⟧。
+
+## c.b451b9c7 (Layer popovers)
+EN: Fraction of bed-instability-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is the cessation threshold⟦2⟧of each sample, from⟦3⟧.
+ZH: 床面失稳模式（⟦0⟧）脊线输沙通量中、发生在平坦床面摩阻风速超过临界值⟦1⟧期间的比例。⟦#0⟧ 表示脊线输沙仅发生在平坦床面低于临界值时；若无脊线输沙则无定义。该临界值为每个样本的⟦2⟧终止临界值，取自⟦3⟧。
+
+## c.3c46d0c1 (Layer popovers)
+EN: Fraction of elongation-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is the cessation threshold⟦2⟧of each sample, from⟦3⟧.
+ZH: 伸长模式（⟦0⟧）脊线输沙通量中、发生在平坦床面摩阻风速超过临界值⟦1⟧期间的比例。⟦#0⟧ 表示脊线输沙仅发生在平坦床面低于临界值时；若无脊线输沙则无定义。该临界值为每个样本的⟦2⟧终止临界值，取自⟦3⟧。
+
+## c.350b19fe (Layer popovers)
+EN: Time-averaged flat-bed saturated sand flux,⟦0⟧over all N samples of the Mars year: the volume of packed sand per metre width that the wind could move per Earth year over a flat bed fully covered by loose sand (⟦1⟧). Like the drift potential of⟦2⟧it measures the wind's capacity to transport sand, but it is a different quantity: Fryberger's⟦3⟧is in vector units, computed from ⟦#0⟧ m wind speeds in knots as⟦4⟧with a ⟦#1⟧-knot threshold, whereas this⟦5⟧is a physical flux computed from the friction velocity with a threshold computed from the grain diameter. The two cannot be converted into each other, and Fryberger's energy classes do not apply to these values.
+ZH: 整个火星年全部 N 个样本的平坦床面饱和输沙率的时间平均值⟦0⟧：在完全被松散沙覆盖的平坦床面上，风每地球年可搬运的单位宽度堆积沙体积（⟦1⟧）。与⟦2⟧的输沙势类似，它衡量的也是风的输沙能力，但二者并非同一物理量：Fryberger 的⟦3⟧以矢量单位给出，由 ⟦#0⟧ m 处以节为单位的风速按⟦4⟧计算，临界值取 ⟦#1⟧ 节；而此处的⟦5⟧是由摩阻风速计算得到的物理通量，其临界值由粒径计算得出。二者不可相互换算，Fryberger 的能量等级也不适用于这些数值。
+
+## c.bbd07d73 (Layer popovers)
+EN: Mean over the samples of the Mars year of the lowest-layer air density⟦0⟧of the wind dataset (one sample per Mars hour;⟦1⟧= mid pressure of the lowest layer,⟦2⟧= lowest-level temperature).
+ZH: 风场数据集最底层空气密度⟦0⟧在火星年全部样本上的平均值（每个火星小时一个样本；⟦1⟧= 最底层的中间气压，⟦2⟧= 最底层温度）。
+
+# About
+
+## c.b8bd4f5a (About)
+EN: <strong>Sand-flux fields</strong>: for every time step of the wind dataset, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.
+ZH: <strong>输沙通量场</strong>：对风场数据集的每个时间步，按所选中值粒径 d（颗粒密度 ⟦#0⟧ kg/m³，g = ⟦#1⟧ m/s²）计算⟦0⟧的临界值与饱和输沙率，并取年平均；输沙势、脊线输沙通量与沙丘朝向模式按⟦1⟧所述方法计算。输沙通量为单位宽度、单位地球年（⟦#3⟧ 天）内堆积沙的体积（堆积体积分数 ⟦#2⟧，含孔隙空间），单位为 m²/yr，与地球上相同。
+
+# Screen-reader labels and tooltips
+
+## c.1803468a (Screen-reader labels and tooltips)
+EN: Threshold friction velocity at this d, median over the samples of the Mars year
+ZH: 该粒径下的临界摩阻风速，火星年全部样本的中值
+
 # Unused (English changed or removed)
+
+## c.8cfd1c5c (Unused (English changed or removed))
+EN: <strong>Control</strong>: on Earth the slider sets one threshold friction velocity⟦0⟧for all hours (default ⟦#0⟧ m/s); on Mars it sets the median grain diameter d (default ⟦#1⟧ µm), and the threshold is computed for every hour from d and that hour's air density and temperature.
+ZH: <strong>控制量</strong>：在地球图集中，滑块设定的是适用于所有小时的单一临界摩阻风速⟦0⟧（默认值 ⟦#0⟧ m/s）；在火星图集中，滑块设定的是中值粒径 d（默认值 ⟦#1⟧ µm），临界值则根据 d 及该小时的空气密度和温度逐小时计算。
+
+## c.182e7ab0 (Unused (English changed or removed))
+EN: <strong>Transport law and wind profile</strong>: Earth uses the transport law of⟦0⟧, with⟦1⟧from the ⟦#0⟧ m wind and a roughness length of ⟦#1⟧ mm; Mars uses the transport law of⟦2⟧, with⟦3⟧from the lowest-level wind (≈ ⟦#2⟧–⟦#3⟧ m) and a smooth-wall profile without a roughness length.
+ZH: <strong>输沙定律与风廓线</strong>：地球图集采用⟦0⟧的输沙定律，⟦1⟧由 ⟦#0⟧ m 高度的风速及 ⟦#1⟧ mm 的空气动力学粗糙度求得；火星图集采用⟦2⟧的输沙定律，⟦3⟧由最低层风速（约 ⟦#2⟧–⟦#3⟧ m）求得，并采用不含粗糙度的光滑壁面风廓线。
+
+## c.3b78ea48 (Unused (English changed or removed))
+EN: <strong>Winds and grid</strong>: Earth uses a period of hourly reanalysis winds (e.g.,⟦0⟧, ⟦#0⟧° grid for ⟦#1⟧ years ⟦#2⟧–⟦#3⟧); Mars uses a representative year (⟦#4⟧ sols, about ⟦#5⟧ Earth years) of hourly simulated winds (e.g.,⟦1⟧, ⟦#6⟧° grid), so one Mars cell can span several dune fields and year-to-year variability is not sampled.
+ZH: <strong>风场与网格</strong>：地球图集使用一段逐小时再分析数据集（例如⟦0⟧，⟦#0⟧° 网格，时段为 ⟦#1⟧ 年，⟦#2⟧–⟦#3⟧）；火星图集使用代表性一年（⟦#4⟧ 个火星日，约合 ⟦#5⟧ 个地球年）的逐小时模拟风场（例如⟦1⟧，⟦#6⟧° 网格），因此一个火星网格单元可能跨越多个沙丘区，且未能采样年际变化。
+
+## c.6251885f (Unused (English changed or removed))
+EN: <strong>Downloads</strong>: Earth cells provide a wind histogram and the fields against threshold (⟦0⟧,⟦1⟧); Mars cells provide the hourly wind and air series and the fields against grain diameter (⟦2⟧,⟦3⟧).
+ZH: <strong>下载内容</strong>：地球网格单元提供风况直方图及随临界值变化的各物理量（⟦0⟧、⟦1⟧）；火星网格单元提供逐小时风速与大气序列，以及随粒径变化的各物理量（⟦2⟧、⟦3⟧）。
+
+## c.d0a79f04 (Unused (English changed or removed))
+EN: The atlas computes wind roses and sand-flux statistics only for land cells (⟦0⟧land–sea mask fraction &gt; ⟦#0⟧). This cell is mainly water, so the atlas has no statistics for it. Choose a nearby land cell, or switch to⟦1⟧(coastal cells can differ between the two land masks).
+ZH: 本图集仅针对陆地网格单元（⟦0⟧陆海掩膜比例 &gt; ⟦#0⟧）计算风玫瑰图与输沙统计量。该网格单元以水体为主，因此图集没有其统计数据。请选择附近的陆地网格单元，或切换到⟦1⟧（两种陆海掩膜在沿海网格单元上可能存在差异）。
+
+## c.0f4659f8 (Unused (English changed or removed))
+EN: The atlas computes wind roses and sand-flux statistics only for land cells (⟦0⟧land–sea mask fraction &gt; ⟦#0⟧). This cell has no land (land–sea mask fraction ⟦#1⟧), so the atlas has no statistics for it. Choose a nearby land cell, or switch to⟦1⟧(coastal cells can differ between the two land masks).
+ZH: 本图集仅针对陆地网格单元（⟦0⟧陆海掩膜比例 &gt; ⟦#0⟧）计算风玫瑰图与输沙统计量。该网格单元没有陆地（陆海掩膜比例为 ⟦#1⟧），因此图集没有其统计数据。请选择附近的陆地网格单元，或切换到⟦1⟧（两种陆海掩膜在沿海网格单元上可能存在差异）。
+
+## c.55593e77 (Unused (English changed or removed))
+EN: Fraction of time flat-bed friction velocity is above threshold⟦0⟧. The threshold is that hour's cessation threshold⟦1⟧of⟦2⟧.
+ZH: 平坦床面摩阻风速超过临界值⟦0⟧的时间比例。该临界值为当小时的⟦1⟧终止临界值，取自⟦2⟧。
+
+## c.f1591313 (Unused (English changed or removed))
+EN: Average above-threshold flat-bed friction velocity, normalised by threshold⟦0⟧. The threshold is that hour's cessation threshold⟦1⟧of⟦2⟧.
+ZH: 超过临界值的平坦床面摩阻风速均值，按临界值⟦0⟧归一化。该临界值为当小时的⟦1⟧终止临界值，取自⟦2⟧。
+
+## c.8ab3c2ce (Unused (English changed or removed))
+EN: Fraction of bed-instability-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold⟦2⟧of⟦3⟧.
+ZH: 床面失稳模式（⟦0⟧）脊线输沙通量中、发生在平坦床面摩阻风速超过临界值⟦1⟧期间的比例。⟦#0⟧ 表示脊线输沙仅发生在平坦床面低于临界值时；若无脊线输沙则无定义。该临界值为当小时的⟦2⟧终止临界值，取自⟦3⟧。
+
+## c.8843ab2c (Unused (English changed or removed))
+EN: Fraction of elongation-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold⟦2⟧of⟦3⟧.
+ZH: 伸长模式（⟦0⟧）脊线输沙通量中、发生在平坦床面摩阻风速超过临界值⟦1⟧期间的比例。⟦#0⟧ 表示脊线输沙仅发生在平坦床面低于临界值时；若无脊线输沙则无定义。该临界值为当小时的⟦2⟧终止临界值，取自⟦3⟧。
+
+## c.5dd4040a (Unused (English changed or removed))
+EN: Time-averaged flat-bed saturated sand flux,⟦0⟧over all N hours of the Mars year: the volume of packed sand per metre width that the wind could move per Earth year over a flat bed fully covered by loose sand (⟦1⟧). Like the drift potential of⟦2⟧it measures the wind's capacity to transport sand, but it is a different quantity: Fryberger's⟦3⟧is in vector units, computed from ⟦#0⟧ m wind speeds in knots as⟦4⟧with a ⟦#1⟧-knot threshold, whereas this⟦5⟧is a physical flux computed from the friction velocity with a threshold computed from the grain diameter. The two cannot be converted into each other, and Fryberger's energy classes do not apply to these values.
+ZH: 整个火星年共 N 小时内平坦床面饱和输沙率的时间平均值⟦0⟧：在完全被松散沙覆盖的平坦床面上，风每地球年可搬运的单位宽度堆积沙体积（⟦1⟧）。与⟦2⟧的输沙势类似，它衡量的也是风的输沙能力，但二者并非同一物理量：Fryberger 的⟦3⟧以矢量单位给出，由 ⟦#0⟧ m 处以节为单位的风速按⟦4⟧计算，临界值取 ⟦#1⟧ 节；而此处的⟦5⟧是由摩阻风速计算得到的物理通量，其临界值由粒径计算得出。二者不可相互换算，Fryberger 的能量等级也不适用于这些数值。
+
+## c.75d2f7e2 (Unused (English changed or removed))
+EN: Mean over the Mars year of the hourly lowest-layer air density⟦0⟧of the wind dataset's climate model (⟦1⟧= mid pressure of the lowest layer,⟦2⟧= lowest-level temperature).
+ZH: 风场数据集所用气候模型逐小时最底层空气密度⟦0⟧在整个火星年内的平均值（⟦1⟧= 最底层的中间气压，⟦2⟧= 最底层温度）。
+
+## c.c238d4e5 (Unused (English changed or removed))
+EN: <strong>Sand-flux fields</strong>: for every hour, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.
+ZH: <strong>输沙通量场</strong>：对每个小时，按所选中值粒径 d（颗粒密度 ⟦#0⟧ kg/m³，g = ⟦#1⟧ m/s²）计算⟦0⟧的临界值与饱和输沙率，并取年平均；输沙势、脊线输沙通量与沙丘朝向模式按⟦1⟧所述方法计算。输沙通量为单位宽度、单位地球年（⟦#3⟧ 天）内堆积沙的体积（堆积体积分数 ⟦#2⟧，含孔隙空间），单位为 m²/yr，与地球上相同。
+
+## c.a6ed5186 (Unused (English changed or removed))
+EN: Threshold friction velocity at this d, median over the hours
+ZH: 该粒径下的临界摩阻风速，各小时的中值
+
+## c.b92a021d (Unused (English changed or removed))
+EN: Hourly wind and air series (u, v, T, ρ, z)
+ZH: 逐小时风场与大气序列（u、v、T、ρ、z）
+
+## c.f17421a6 (Unused (English changed or removed))
+EN: The Wind dataset selector switches between reanalysis wind statistics (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧°; ⟦#2⟧–⟦#3⟧).⟦2⟧, used by⟦3⟧, is a land-surface rerun driven by⟦4⟧atmospheric fields interpolated to its grid (Muñoz-Sabater et al. ⟦#4⟧), so its winds are not an independent estimate, and the datasets can still differ: e.g.,⟦5⟧reports⟦6⟧⟦#5⟧ m wind speeds ⟦#6⟧–⟦#7⟧ % below those of⟦7⟧. Where the datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
+ZH: “风场数据集”选择器用于在再分析风况统计数据之间切换（⟦0⟧，⟦#0⟧°；⟦1⟧，⟦#1⟧°；⟦#2⟧–⟦#3⟧）。⟦2⟧（⟦3⟧所采用）是由插值到其网格上的⟦4⟧大气场驱动的陆面重算产品（Muñoz-Sabater et al. ⟦#4⟧），因此其风场并非独立估计，但两个数据集之间仍可能存在差异：例如，⟦5⟧报告⟦6⟧的 ⟦#5⟧ m 风速比⟦7⟧低 ⟦#6⟧–⟦#7⟧%。若两个数据集给出不同结果，应视其为不确定。风场与输沙通量图层以及网格单元面板随所选数据集变化；沙丘区掩膜、干旱度和植被图层对所有数据集均相同。
+
+## c.c27adfd9 (Unused (English changed or removed))
+EN: The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°), each one Mars year of lowest-level winds on its own grid:⟦3⟧is a free-running climate-model simulation;⟦4⟧and⟦5⟧are reanalyses of Mars Year ⟦#4⟧, which assimilate spacecraft observations of the atmosphere into a climate model. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain. No⟦6⟧data poleward of ⟦#5⟧° N: the northernmost cells of its grid are centred at ⟦#6⟧° N.
+ZH: “风场数据集”选择器可在不同的火星风场数据集之间切换（⟦0⟧，⟦#0⟧°；⟦1⟧，⟦#1⟧°×⟦#2⟧°；⟦2⟧，⟦#3⟧°），每个数据集均为各自网格上一个火星年的最低层风：⟦3⟧是自由运行的气候模型模拟；⟦4⟧和⟦5⟧是第 ⟦#4⟧ 个火星年的再分析数据集，将航天器对大气的观测同化到气候模型中。风场与输沙通量图层以及网格单元面板随所选数据集而变；沙丘图和高程对所有数据集都相同。若各数据集给出的结果不同，应将其视为不确定。⟦#5⟧° N 以北无⟦6⟧数据：其网格最北一行单元的中心位于 ⟦#6⟧° N。
 
 ## c.692b1efa (Unused (English changed or removed))
 EN: <strong>Winds (⟦0⟧Mars⟦1⟧, beta release ⟦#0⟧)</strong>: hourly lowest-level winds, temperature and surface pressure of the⟦2⟧Ames⟦3⟧FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to ⟦#1⟧° × ⟦#2⟧° (a cell is about ⟦#3⟧ km across at the equator, larger than most dune fields): ⟦#4⟧ hourly samples, one Mars year. The map draws each cell as one square, so a field that changes strongly from cell to cell, as⟦4⟧often does at low latitudes, looks blocky. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature (⟦#5⟧–⟦#6⟧ m over all cells and hours; ⟦#7⟧–⟦#8⟧ m in ⟦#9⟧ % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#10⟧, eq. ⟦#11⟧) under constant stress at that height (no roughness length).

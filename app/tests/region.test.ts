@@ -135,9 +135,11 @@ describe("NetCDF content (CF-1.8)", () => {
     expect(String(r.gatts.title)).toBe("Dune Atlas region export: ERA5 0.25° cells in 0.00° N to 0.50° N, 179.50° E to 179.50° W");
     expect(String(r.gatts.references)).toContain("Hersbach");
     expect(String(r.gatts.fields_license)).toBe("CC BY 4.0");
-    expect(String(r.gatts.copernicus_notice)).toMatch(/^Contains modified Copernicus Climate Change Service information \(ERA5, /);
+    expect(String(r.gatts.data_notice)).toMatch(/^Contains modified Copernicus Climate Change Service information \(ERA5, /);
     expect(String(r.gatts.history)).toContain("https://map.geomorphlab.org/?x=1");
-    expect(Number(([] as unknown[]).concat(r.gatts.geospatial_lon_max)[0])).toBe(180.5);
+    // the extent of the cells in the file (centres in the box, edges beyond it); the box itself in selection_box
+    expect(Number(([] as unknown[]).concat(r.gatts.geospatial_lon_max)[0])).toBe(180.375);
+    expect(String(r.gatts.selection_box)).toMatch(/^179\.5 0 180\.5 0\.5 /);
   });
   it("current threshold only: no threshold dimension, a scalar ut coordinate", () => {
     const sel: RegionSelection = { fields: ["dpm"], wind: false, aux: ["qsdiv"], dune: false, allThresholds: false, current: 14 };

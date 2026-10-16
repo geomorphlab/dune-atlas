@@ -155,10 +155,6 @@
   "text": "Jeux de données de vent",
   "en": "87c1b770"
  },
- "earth.help.datasets.body": {
-  "text": "Le sélecteur Jeu de données de vent permet de basculer entre des statistiques de vent issues de réanalyses (ERA5-Land, 0,1° ; ERA5, 0,25° ; 1950–2024). ERA5-Land, utilisé par Gunn (2026), est une réexécution de surface terrestre forcée par les champs atmosphériques d’ERA5 interpolés sur sa grille (Muñoz-Sabater et al. 2021). Ses vents ne constituent donc pas une estimation indépendante, et les jeux de données peuvent malgré tout différer : par exemple, Baas (2026) signale des vitesses du vent à 10 m d’ERA5-Land inférieures de 20 à 30 % à celles d’ERA5. Là où les jeux de données donnent des résultats différents, considérez ces résultats comme incertains. Les calques de vent et de flux de sable ainsi que le panneau de cellule suivent la sélection. Le masque des champs de dunes et les calques d’aridité et de végétation sont les mêmes pour tous les jeux de données.",
-  "en": "145a5429"
- },
  "earth.help.downloads.title": {
   "text": "Téléchargements et citation",
   "en": "2a54e5c0"
@@ -779,10 +775,6 @@
   "text": "Diamètre médian des grains $d$",
   "en": "37e94b33"
  },
- "mars.help.threshold.body": {
-  "text": "Le sable se met en mouvement lorsque la vitesse de frottement du vent dépasse un seuil qui dépend de la taille des grains et de l’air martien raréfié. Le curseur en haut du panneau des calques fixe le diamètre médian des grains d (50–1000 µm, 200 µm par défaut) pour tous les calques cartographiques dépendant de la taille des grains et pour le panneau de cellule. Pour chaque heure de l’année martienne, le seuil $u_{*,th}$ est calculé à partir de d ainsi que de la masse volumique et de la température de l’air à cette heure (Pähtz & Durán 2023).",
-  "en": "c1d5202e"
- },
  "mars.help.layers.title": {
   "text": "Calques et calques actifs",
   "en": "02065ff6"
@@ -819,10 +811,6 @@
   "text": "Jeu de données de vent",
   "en": "9f43d0a3"
  },
- "mars.help.datasets.body": {
-  "text": "Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (MCMC FV3, 2° ; EMARS, 6° × 5,14° ; MACDA, 5°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille : MCMC FV3 est une simulation libre d’un modèle climatique ; EMARS et MACDA sont des réanalyses de l’année martienne 30, qui assimilent dans un modèle climatique des observations de l’atmosphère faites par des sondes spatiales. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Lorsque les jeux de données donnent des résultats différents, considérez ces résultats comme incertains. Pas de données EMARS au-delà de 87,43° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur 84,86° N.",
-  "en": "39486870"
- },
  "mars.help.basemaps.title": {
   "text": "Fonds de carte",
   "en": "f3e85667"
@@ -834,10 +822,6 @@
  "mars.help.downloads.title": {
   "text": "Téléchargements et citation",
   "en": "2a54e5c0"
- },
- "mars.help.downloads.body": {
-  "text": "Télécharger et citer, dans le panneau de cellule, enregistre les séries horaires du vent et de l’air ainsi que tous les paramètres de la cellule au format NetCDF ou sous forme d’archive CSV, avec la citation de chaque source de données. Veuillez citer le jeu de données de vent, Pähtz & Durán (2023) pour la loi de transport et Gunn (2026), qui présente les méthodes.",
-  "en": "3d1dc7bd"
  },
  "mars.help.region.title": {
   "text": "Télécharger une région",
@@ -890,10 +874,6 @@
  "mars.tour.threshold.title": {
   "text": "Diamètre médian des grains $d$",
   "en": "37e94b33"
- },
- "mars.tour.threshold.body": {
-  "text": "Ce curseur règle le diamètre des grains. La vitesse de frottement seuil est calculée pour chaque heure à partir de d ainsi que de la masse volumique et de la température de l’air à cette heure ; tous les calques dépendant de la taille des grains et le panneau de la cellule se mettent à jour lorsque vous le déplacez.",
-  "en": "b97fd2ff"
  },
  "mars.tour.layers.title": {
   "text": "Les calques et leur affichage",
@@ -1783,22 +1763,6 @@
   "text": "Les deux atlas calculent les mêmes grandeurs selon les méthodes décrites dans⟦0⟧ : le flux de sable saturé moyenné dans le temps sur un lit plat entièrement recouvert de sable meuble (⟦1⟧), sa résultante (⟦2⟧,⟦3⟧,⟦4⟧), les flux de crête, les modes d’orientation des dunes et la divergence du flux. Tous deux expriment les flux en volumes de sable compacté (compacité ⟦#0⟧, espace poreux inclus) par mètre de largeur et par année terrestre de ⟦#1⟧ jours (m²/yr), et tous deux représentent les roses des vents selon la direction d’où souffle le vent et les roses des flux de sable selon la direction vers laquelle se déplace le sable. Ils diffèrent sur quatre points.",
   "en": "e1abc281"
  },
- "c.8cfd1c5c": {
-  "text": "<strong>Contrôle</strong> : sur Terre, le curseur fixe une vitesse de frottement seuil⟦0⟧unique pour toutes les heures (valeur par défaut ⟦#0⟧ m/s) ; sur Mars, il fixe le diamètre médian des grains d (valeur par défaut ⟦#1⟧ µm), et le seuil est calculé pour chaque heure à partir de d ainsi que de la masse volumique et de la température de l’air à cette heure.",
-  "en": "8cfd1c5c"
- },
- "c.182e7ab0": {
-  "text": "<strong>Loi de transport et profil de vent</strong> : sur Terre, on utilise la loi de transport de⟦0⟧, avec⟦1⟧à partir du vent à ⟦#0⟧ m et une longueur de rugosité de ⟦#1⟧ mm ; sur Mars, on utilise la loi de transport de⟦2⟧, avec⟦3⟧à partir du vent au niveau le plus bas (≈ ⟦#2⟧–⟦#3⟧ m) et un profil de paroi lisse sans longueur de rugosité.",
-  "en": "182e7ab0"
- },
- "c.3b78ea48": {
-  "text": "<strong>Vents et grille</strong> : sur Terre, on utilise une période de vents horaires issus de réanalyses (p. ex.⟦0⟧, grille à ⟦#0⟧° sur ⟦#1⟧ ans, ⟦#2⟧–⟦#3⟧) ; sur Mars, on utilise une année représentative (⟦#4⟧ sols, soit environ ⟦#5⟧ années terrestres) de vents horaires simulés (p. ex.⟦1⟧, grille à ⟦#6⟧°), de sorte qu’une cellule martienne peut couvrir plusieurs champs de dunes et que la variabilité interannuelle n’est pas échantillonnée.",
-  "en": "3b78ea48"
- },
- "c.6251885f": {
-  "text": "<strong>Téléchargements</strong> : les cellules terrestres fournissent un histogramme des vents et les champs en fonction du seuil (⟦0⟧,⟦1⟧) ; les cellules martiennes fournissent les séries horaires de vent et d’air ainsi que les champs en fonction du diamètre des grains (⟦2⟧,⟦3⟧).",
-  "en": "6251885f"
- },
  "c.ebb9f8a1": {
   "text": "Les valeurs de⟦0⟧sur les deux planètes peuvent donc être comparées en ordre de grandeur, et non comme des valeurs précises.⟦1⟧,⟦2⟧et les directions des modes se comparent plus directement, mais chacun dépend du réglage du seuil ou du diamètre des grains.",
   "en": "ebb9f8a1"
@@ -2135,17 +2099,9 @@
   "text": "En dehors du masque des terres⟦0⟧",
   "en": "b316e3ad"
  },
- "c.d0a79f04": {
-  "text": "L’atlas calcule les roses des vents et les statistiques de flux de sable uniquement pour les cellules terrestres (fraction du masque terre–mer⟦0⟧&gt; ⟦#0⟧). Cette cellule est principalement constituée d’eau ; l’atlas ne dispose donc d’aucune statistique pour elle. Choisissez une cellule terrestre voisine, ou passez à⟦1⟧(les cellules côtières peuvent différer entre les deux masques des terres).",
-  "en": "d0a79f04"
- },
  "c.3d5c01ad": {
   "text": "Cellule de ⟦#0⟧° : ligne ⟦#1⟧, colonne ⟦#2⟧ ; centre ⟦#3⟧°S, ⟦#4⟧°E.",
   "en": "3d5c01ad"
- },
- "c.0f4659f8": {
-  "text": "L’atlas calcule les roses des vents et les statistiques de flux de sable uniquement pour les cellules terrestres (fraction du masque terre–mer⟦0⟧&gt; ⟦#0⟧). Cette cellule ne comporte aucune terre (fraction du masque terre–mer ⟦#1⟧) ; l’atlas ne dispose donc d’aucune statistique pour elle. Choisissez une cellule terrestre voisine, ou passez à⟦1⟧(les cellules côtières peuvent différer entre les deux masques des terres).",
-  "en": "0f4659f8"
  },
  "c.4f6e56eb": {
   "text": "Passer à Mars",
@@ -2263,33 +2219,9 @@
   "text": "Se met à jour avec la commande du diamètre des grains ⟦0⟧.",
   "en": "7fc88287"
  },
- "c.55593e77": {
-  "text": "Fraction du temps pendant laquelle la vitesse de frottement sur lit plat dépasse le seuil⟦0⟧. Le seuil est, pour chaque heure, le seuil d’arrêt⟦1⟧de⟦2⟧.",
-  "en": "55593e77"
- },
- "c.f1591313": {
-  "text": "Vitesse de frottement moyenne sur lit plat au-dessus du seuil, normalisée par le seuil⟦0⟧. Le seuil est, pour chaque heure, le seuil d’arrêt⟦1⟧de⟦2⟧.",
-  "en": "f1591313"
- },
- "c.8ab3c2ce": {
-  "text": "Fraction du flux de crête en mode d’instabilité du lit (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. Vaut ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête. Le seuil est, pour chaque heure, le seuil d’arrêt⟦2⟧de⟦3⟧.",
-  "en": "8ab3c2ce"
- },
- "c.8843ab2c": {
-  "text": "Fraction du flux de crête en mode d’allongement (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. Vaut ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête. Le seuil est, pour chaque heure, le seuil d’arrêt⟦2⟧de⟦3⟧.",
-  "en": "8843ab2c"
- },
- "c.5dd4040a": {
-  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des N heures de l’année martienne : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par année terrestre sur un lit plat entièrement couvert de sable meuble (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement avec un seuil déterminé à partir du diamètre des grains. Les deux ne peuvent pas être convertis l’un en l’autre, et les classes d’énergie de Fryberger ne s’appliquent pas à ces valeurs.",
-  "en": "5dd4040a"
- },
  "c.a2cd8175": {
   "text": "Divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦0⟧, direction⟦1⟧) sur la sphère martienne, d’après⟦2⟧, Méthodes⟦3⟧:⟦4⟧avec⟦5⟧,⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence du flux) impliquent un dépôt et les valeurs positives (divergence du flux) une érosion. Ces valeurs supposent un flux saturé et un apport illimité de sable meuble ; ainsi, sur les surfaces rocheuses, encroûtées ou végétalisées, l’érosion réelle est limitée par le sable disponible.",
   "en": "a2cd8175"
- },
- "c.75d2f7e2": {
-  "text": "Moyenne sur l’année martienne de la masse volumique horaire de l’air de la couche la plus basse⟦0⟧du modèle climatique du jeu de données de vent (⟦1⟧= pression au milieu de la couche la plus basse,⟦2⟧= température du niveau le plus bas).",
-  "en": "75d2f7e2"
  },
  "c.2a037b62": {
   "text": "Indépendant du diamètre des grains : non affecté par la commande ⟦0⟧.",
@@ -2415,10 +2347,6 @@
   "text": "Cliquez sur n’importe quelle cellule pour afficher sa rose des vents sur l’année martienne du jeu de données de vent, la rose des flux de sable au diamètre de grain sélectionné, les modes d’orientation des dunes et tous les paramètres du régime des vents.",
   "en": "63c884fd"
  },
- "c.c238d4e5": {
-  "text": "<strong>Champs de flux de sable</strong> : pour chaque heure, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/yr, comme sur Terre.",
-  "en": "c238d4e5"
- },
  "c.5d754cff": {
   "text": "<strong>Altitude et relief ombré</strong> :⟦0⟧–⟦1⟧fusionné⟦2⟧, ⟦#0⟧ m, v2 (Fergason,⟦3⟧,⟦4⟧) ; licence :⟦5⟧(⟦6⟧) et⟦7⟧(⟦8⟧). Tuiles d’altitude et de relief dérivées :⟦9⟧.",
   "en": "5d754cff"
@@ -2542,10 +2470,6 @@
  "c.2b98c4b5": {
   "text": "⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> <span class=\"unit\">rapport</span>",
   "en": "2b98c4b5"
- },
- "c.a6ed5186": {
-  "text": "Vitesse de frottement seuil pour ce d, médiane sur les heures",
-  "en": "a6ed5186"
  },
  "c.e89e84ed": {
   "text": "Vitesse de frottement seuil médiane",
@@ -2739,10 +2663,6 @@
   "text": "Histogramme du vent (heures par classe de vitesse et de direction)",
   "en": "bb7426bc"
  },
- "c.b92a021d": {
-  "text": "Séries horaires du vent et de l’air (u, v, T, ρ, z)",
-  "en": "b92a021d"
- },
  "c.cc7fcd2b": {
   "text": "Également appelé",
   "en": "cc7fcd2b"
@@ -2839,10 +2759,6 @@
   "text": "La cellule d’exemple n’a pas pu être chargée. Cliquez sur n’importe quelle cellule de la carte pour ouvrir son panneau.",
   "en": "b72a8db3"
  },
- "c.f17421a6": {
-  "text": "Le sélecteur Jeu de données de vent permet de choisir entre des statistiques de vent issues de réanalyses (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° ; ⟦#2⟧–⟦#3⟧).⟦2⟧, utilisé par⟦3⟧, est une réexécution de la surface continentale pilotée par les champs atmosphériques de⟦4⟧interpolés sur sa grille (Muñoz-Sabater et al. ⟦#4⟧) : ses vents ne constituent donc pas une estimation indépendante, et les jeux de données peuvent malgré tout différer : par exemple,⟦5⟧indique des vitesses du vent à ⟦#5⟧ m de⟦6⟧inférieures de ⟦#6⟧–⟦#7⟧ % à celles de⟦7⟧. Là où les jeux de données donnent des résultats différents, considérez-les comme incertains. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; le masque des champs de dunes et les calques d’aridité et de végétation sont les mêmes pour tous les jeux de données.",
-  "en": "f17421a6"
- },
  "c.cb7f6eba": {
   "text": "Polygones⟦0⟧: domaine public (U.S. Geological Survey) ; champs de dunes de⟦1⟧:⟦2⟧",
   "en": "cb7f6eba"
@@ -2866,10 +2782,6 @@
  "c.7c7e35d8": {
   "text": "RDD (direction de dérive résultante) : ⟦#0⟧° (⟦#1⟧)",
   "en": "7c7e35d8"
- },
- "c.c27adfd9": {
-  "text": "Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° × ⟦#2⟧° ;⟦2⟧, ⟦#3⟧°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille :⟦3⟧est une simulation libre d’un modèle climatique ;⟦4⟧et⟦5⟧sont des réanalyses de l’année martienne ⟦#4⟧, qui assimilent dans un modèle climatique des observations de l’atmosphère faites par des sondes spatiales. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Lorsque les jeux de données donnent des résultats différents, considérez ces résultats comme incertains. Pas de données⟦6⟧au-delà de ⟦#5⟧° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur ⟦#6⟧° N.",
-  "en": "c27adfd9"
  },
  "c.6cd16937": {
   "text": "<strong>Vents (⟦0⟧Mars⟦1⟧, version bêta ⟦#0⟧)</strong> : vents horaires du niveau le plus bas, température et pression de surface du modèle climatique global martien⟦2⟧Ames⟦3⟧fondé sur FV3 (simulation de référence c48, 6e année simulée), rééchantillonnés sur une grille de ⟦#1⟧° × ⟦#2⟧° (une cellule mesure environ ⟦#3⟧ km de côté à l’équateur, soit plus grande que la plupart des champs de dunes) : ⟦#4⟧ échantillons horaires, une année martienne. La carte représente chaque cellule par un carré ; un champ qui varie fortement d’une cellule à l’autre, comme le fait souvent⟦4⟧aux basses latitudes, paraît donc pixellisé. Masse volumique de l’air de la couche la plus basse ρ = p/(R T) ; la hauteur z du vent du niveau le plus bas découle de la pression et de la température horaires (⟦#5⟧–⟦#6⟧ m sur l’ensemble des cellules et des heures ; ⟦#7⟧–⟦#8⟧ m pendant ⟦#9⟧ % des heures des cellules dunaires ; le panneau de la cellule indique la plage de la cellule sélectionnée), et la vitesse de frottement⟦5⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#10⟧, éq. ⟦#11⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité). Explorez et téléchargez l’ensemble des sorties du modèle dans l’interface web <a href=\"https://data.nas.nasa.gov/mcmc/portals/web-interface/\" target=\"_blank\" rel=\"noopener noreferrer\">⟦6⟧Ames⟦7⟧Data Portal</a>.",
@@ -2910,6 +2822,142 @@
  "c.db5eb4dc": {
   "text": "Contains public sector information licensed under the Open Government Licence v3.0 (⟦0⟧v2.0,⟦1⟧Centre for Environmental Data Analysis).",
   "en": "db5eb4dc"
+ },
+ "c.3ae7fe48": {
+  "text": "Le sélecteur Jeu de données de vent permet de choisir entre des jeux de données de vent (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧ ;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧).⟦2⟧, utilisé par⟦3⟧, est une réexécution de la surface continentale pilotée par les champs atmosphériques de⟦4⟧interpolés sur sa grille (Muñoz-Sabater et al. ⟦#6⟧) : ses vents ne constituent donc pas une estimation indépendante, et les jeux de données peuvent malgré tout différer : par exemple,⟦5⟧indique des vitesses du vent à ⟦#7⟧ m de⟦6⟧inférieures de ⟦#8⟧–⟦#9⟧ % à celles de⟦7⟧. Là où les jeux de données donnent des résultats différents, considérez-les comme incertains. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; le masque des champs de dunes et les calques d’aridité et de végétation sont les mêmes pour tous les jeux de données.",
+  "en": "3ae7fe48"
+ },
+ "c.005fdc07": {
+  "text": "<strong>Contrôle</strong> : sur Terre, le curseur fixe une vitesse de frottement seuil⟦0⟧unique pour l’ensemble de l’enregistrement (valeur par défaut ⟦#0⟧ m/s) ; sur Mars, il fixe le diamètre médian des grains d (valeur par défaut ⟦#1⟧ µm), et le seuil est calculé pour chaque pas de temps de l’enregistrement de vent à partir de d ainsi que de la masse volumique et de la température de l’air à ce pas de temps.",
+  "en": "005fdc07"
+ },
+ "c.b5eabe06": {
+  "text": "<strong>Loi de transport et profil de vent</strong> : sur Terre, on utilise la loi de transport de⟦0⟧, avec⟦1⟧à partir du vent à ⟦#0⟧ m et une longueur de rugosité de ⟦#1⟧ mm ; sur Mars, on utilise la loi de transport de⟦2⟧, avec⟦3⟧à partir du vent au niveau le plus bas du jeu de données de vent (sa hauteur au-dessus de la surface diffère d’un jeu de données à l’autre) et un profil de paroi lisse sans longueur de rugosité.",
+  "en": "b5eabe06"
+ },
+ "c.5cedc7f4": {
+  "text": "<strong>Vents et grille</strong> : sur Terre, on utilise des décennies de vents horaires issus de réanalyses (p. ex.⟦0⟧, grille à ⟦#0⟧°, ⟦#1⟧–⟦#2⟧) ; sur Mars, on utilise une année martienne (⟦#3⟧ sols, soit environ ⟦#4⟧ années terrestres) de vents issus d’une simulation de modèle climatique ou d’une réanalyse (p. ex.⟦1⟧, grille à ⟦#5⟧°), de sorte qu’une cellule martienne peut couvrir plusieurs champs de dunes et que la variabilité interannuelle n’est pas échantillonnée.",
+  "en": "5cedc7f4"
+ },
+ "c.c9e11e84": {
+  "text": "<strong>Téléchargements</strong> : les cellules terrestres fournissent un histogramme des vents et les champs en fonction du seuil (⟦0⟧,⟦1⟧) ; les cellules martiennes fournissent les séries de vent et d’air ainsi que les champs en fonction du diamètre des grains (⟦2⟧,⟦3⟧).",
+  "en": "c9e11e84"
+ },
+ "c.2d038d14": {
+  "text": "L’atlas calcule les roses des vents et les statistiques de flux de sable uniquement pour les cellules terrestres (fraction du masque terre–mer supérieure à ⟦#0⟧). Cette cellule est principalement constituée d’eau ; l’atlas ne dispose donc d’aucune statistique pour elle. Choisissez une cellule terrestre voisine, ou passez à⟦0⟧(les cellules côtières peuvent différer entre les masques des terres des jeux de données).",
+  "en": "2d038d14"
+ },
+ "c.e5b72715": {
+  "text": "L’atlas calcule les roses des vents et les statistiques de flux de sable uniquement pour les cellules terrestres (fraction du masque terre–mer supérieure à ⟦#0⟧, c’est-à-dire toute cellule contenant des terres). Cette cellule ne comporte aucune terre (fraction du masque terre–mer ⟦#1⟧) ; l’atlas ne dispose donc d’aucune statistique pour elle. Choisissez une cellule terrestre voisine, ou passez à⟦0⟧(les cellules côtières peuvent différer entre les masques des terres des jeux de données).",
+  "en": "e5b72715"
+ },
+ "c.3cfbf3ce": {
+  "text": "Séries du vent et de l’air (u, v, T, ρ, z)",
+  "en": "3cfbf3ce"
+ },
+ "c.8f6fed46": {
+  "text": "Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° × ⟦#2⟧° ;⟦2⟧, ⟦#3⟧°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille (⟦3⟧ : simulation libre d’un modèle climatique ;⟦4⟧et⟦5⟧: réanalyse de l’année martienne ⟦#4⟧, avec des observations de l’atmosphère faites par des sondes spatiales assimilées dans un modèle climatique). Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Lorsque les jeux de données donnent des résultats différents, considérez ces résultats comme incertains. Pas de données⟦6⟧au-delà de ⟦#5⟧° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur ⟦#6⟧° N.",
+  "en": "8f6fed46"
+ },
+ "c.1e0c1012": {
+  "text": "Fraction du temps pendant laquelle la vitesse de frottement sur lit plat dépasse le seuil⟦0⟧. Le seuil est le seuil d’arrêt⟦1⟧de chaque échantillon, selon⟦2⟧.",
+  "en": "1e0c1012"
+ },
+ "c.fb4c6ed6": {
+  "text": "Vitesse de frottement moyenne sur lit plat au-dessus du seuil, normalisée par le seuil⟦0⟧. Le seuil est le seuil d’arrêt⟦1⟧de chaque échantillon, selon⟦2⟧.",
+  "en": "fb4c6ed6"
+ },
+ "c.b451b9c7": {
+  "text": "Fraction du flux de crête en mode d’instabilité du lit (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. Vaut ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête. Le seuil est le seuil d’arrêt⟦2⟧de chaque échantillon, selon⟦3⟧.",
+  "en": "b451b9c7"
+ },
+ "c.3c46d0c1": {
+  "text": "Fraction du flux de crête en mode d’allongement (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. Vaut ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête. Le seuil est le seuil d’arrêt⟦2⟧de chaque échantillon, selon⟦3⟧.",
+  "en": "3c46d0c1"
+ },
+ "c.350b19fe": {
+  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des N échantillons de l’année martienne : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par année terrestre sur un lit plat entièrement couvert de sable meuble (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement avec un seuil déterminé à partir du diamètre des grains. Les deux ne peuvent pas être convertis l’un en l’autre, et les classes d’énergie de Fryberger ne s’appliquent pas à ces valeurs.",
+  "en": "350b19fe"
+ },
+ "c.bbd07d73": {
+  "text": "Moyenne, sur les échantillons de l’année martienne, de la masse volumique de l’air de la couche la plus basse⟦0⟧du jeu de données de vent (un échantillon par heure martienne ;⟦1⟧= pression au milieu de la couche la plus basse,⟦2⟧= température du niveau le plus bas).",
+  "en": "bbd07d73"
+ },
+ "c.b8bd4f5a": {
+  "text": "<strong>Champs de flux de sable</strong> : pour chaque pas de temps du jeu de données de vent, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/yr, comme sur Terre.",
+  "en": "b8bd4f5a"
+ },
+ "c.1803468a": {
+  "text": "Vitesse de frottement seuil pour ce d, médiane sur les échantillons de l’année martienne",
+  "en": "1803468a"
+ },
+ "c.8cfd1c5c": {
+  "text": "<strong>Contrôle</strong> : sur Terre, le curseur fixe une vitesse de frottement seuil⟦0⟧unique pour toutes les heures (valeur par défaut ⟦#0⟧ m/s) ; sur Mars, il fixe le diamètre médian des grains d (valeur par défaut ⟦#1⟧ µm), et le seuil est calculé pour chaque heure à partir de d ainsi que de la masse volumique et de la température de l’air à cette heure.",
+  "en": "8cfd1c5c"
+ },
+ "c.182e7ab0": {
+  "text": "<strong>Loi de transport et profil de vent</strong> : sur Terre, on utilise la loi de transport de⟦0⟧, avec⟦1⟧à partir du vent à ⟦#0⟧ m et une longueur de rugosité de ⟦#1⟧ mm ; sur Mars, on utilise la loi de transport de⟦2⟧, avec⟦3⟧à partir du vent au niveau le plus bas (≈ ⟦#2⟧–⟦#3⟧ m) et un profil de paroi lisse sans longueur de rugosité.",
+  "en": "182e7ab0"
+ },
+ "c.3b78ea48": {
+  "text": "<strong>Vents et grille</strong> : sur Terre, on utilise une période de vents horaires issus de réanalyses (p. ex.⟦0⟧, grille à ⟦#0⟧° sur ⟦#1⟧ ans, ⟦#2⟧–⟦#3⟧) ; sur Mars, on utilise une année représentative (⟦#4⟧ sols, soit environ ⟦#5⟧ années terrestres) de vents horaires simulés (p. ex.⟦1⟧, grille à ⟦#6⟧°), de sorte qu’une cellule martienne peut couvrir plusieurs champs de dunes et que la variabilité interannuelle n’est pas échantillonnée.",
+  "en": "3b78ea48"
+ },
+ "c.6251885f": {
+  "text": "<strong>Téléchargements</strong> : les cellules terrestres fournissent un histogramme des vents et les champs en fonction du seuil (⟦0⟧,⟦1⟧) ; les cellules martiennes fournissent les séries horaires de vent et d’air ainsi que les champs en fonction du diamètre des grains (⟦2⟧,⟦3⟧).",
+  "en": "6251885f"
+ },
+ "c.d0a79f04": {
+  "text": "L’atlas calcule les roses des vents et les statistiques de flux de sable uniquement pour les cellules terrestres (fraction du masque terre–mer⟦0⟧&gt; ⟦#0⟧). Cette cellule est principalement constituée d’eau ; l’atlas ne dispose donc d’aucune statistique pour elle. Choisissez une cellule terrestre voisine, ou passez à⟦1⟧(les cellules côtières peuvent différer entre les deux masques des terres).",
+  "en": "d0a79f04"
+ },
+ "c.0f4659f8": {
+  "text": "L’atlas calcule les roses des vents et les statistiques de flux de sable uniquement pour les cellules terrestres (fraction du masque terre–mer⟦0⟧&gt; ⟦#0⟧). Cette cellule ne comporte aucune terre (fraction du masque terre–mer ⟦#1⟧) ; l’atlas ne dispose donc d’aucune statistique pour elle. Choisissez une cellule terrestre voisine, ou passez à⟦1⟧(les cellules côtières peuvent différer entre les deux masques des terres).",
+  "en": "0f4659f8"
+ },
+ "c.55593e77": {
+  "text": "Fraction du temps pendant laquelle la vitesse de frottement sur lit plat dépasse le seuil⟦0⟧. Le seuil est, pour chaque heure, le seuil d’arrêt⟦1⟧de⟦2⟧.",
+  "en": "55593e77"
+ },
+ "c.f1591313": {
+  "text": "Vitesse de frottement moyenne sur lit plat au-dessus du seuil, normalisée par le seuil⟦0⟧. Le seuil est, pour chaque heure, le seuil d’arrêt⟦1⟧de⟦2⟧.",
+  "en": "f1591313"
+ },
+ "c.8ab3c2ce": {
+  "text": "Fraction du flux de crête en mode d’instabilité du lit (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. Vaut ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête. Le seuil est, pour chaque heure, le seuil d’arrêt⟦2⟧de⟦3⟧.",
+  "en": "8ab3c2ce"
+ },
+ "c.8843ab2c": {
+  "text": "Fraction du flux de crête en mode d’allongement (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. Vaut ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête. Le seuil est, pour chaque heure, le seuil d’arrêt⟦2⟧de⟦3⟧.",
+  "en": "8843ab2c"
+ },
+ "c.5dd4040a": {
+  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des N heures de l’année martienne : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par année terrestre sur un lit plat entièrement couvert de sable meuble (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement avec un seuil déterminé à partir du diamètre des grains. Les deux ne peuvent pas être convertis l’un en l’autre, et les classes d’énergie de Fryberger ne s’appliquent pas à ces valeurs.",
+  "en": "5dd4040a"
+ },
+ "c.75d2f7e2": {
+  "text": "Moyenne sur l’année martienne de la masse volumique horaire de l’air de la couche la plus basse⟦0⟧du modèle climatique du jeu de données de vent (⟦1⟧= pression au milieu de la couche la plus basse,⟦2⟧= température du niveau le plus bas).",
+  "en": "75d2f7e2"
+ },
+ "c.c238d4e5": {
+  "text": "<strong>Champs de flux de sable</strong> : pour chaque heure, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/yr, comme sur Terre.",
+  "en": "c238d4e5"
+ },
+ "c.a6ed5186": {
+  "text": "Vitesse de frottement seuil pour ce d, médiane sur les heures",
+  "en": "a6ed5186"
+ },
+ "c.b92a021d": {
+  "text": "Séries horaires du vent et de l’air (u, v, T, ρ, z)",
+  "en": "b92a021d"
+ },
+ "c.f17421a6": {
+  "text": "Le sélecteur Jeu de données de vent permet de choisir entre des statistiques de vent issues de réanalyses (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° ; ⟦#2⟧–⟦#3⟧).⟦2⟧, utilisé par⟦3⟧, est une réexécution de la surface continentale pilotée par les champs atmosphériques de⟦4⟧interpolés sur sa grille (Muñoz-Sabater et al. ⟦#4⟧) : ses vents ne constituent donc pas une estimation indépendante, et les jeux de données peuvent malgré tout différer : par exemple,⟦5⟧indique des vitesses du vent à ⟦#5⟧ m de⟦6⟧inférieures de ⟦#6⟧–⟦#7⟧ % à celles de⟦7⟧. Là où les jeux de données donnent des résultats différents, considérez-les comme incertains. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; le masque des champs de dunes et les calques d’aridité et de végétation sont les mêmes pour tous les jeux de données.",
+  "en": "f17421a6"
+ },
+ "c.c27adfd9": {
+  "text": "Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° × ⟦#2⟧° ;⟦2⟧, ⟦#3⟧°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille :⟦3⟧est une simulation libre d’un modèle climatique ;⟦4⟧et⟦5⟧sont des réanalyses de l’année martienne ⟦#4⟧, qui assimilent dans un modèle climatique des observations de l’atmosphère faites par des sondes spatiales. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Lorsque les jeux de données donnent des résultats différents, considérez ces résultats comme incertains. Pas de données⟦6⟧au-delà de ⟦#5⟧° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur ⟦#6⟧° N.",
+  "en": "c27adfd9"
  },
  "c.692b1efa": {
   "text": "<strong>Vents (⟦0⟧Mars⟦1⟧, version bêta ⟦#0⟧)</strong> : vents horaires du niveau le plus bas, température et pression de surface du modèle climatique global martien⟦2⟧Ames⟦3⟧fondé sur FV3 (simulation de référence c48, 6e année simulée), rééchantillonnés sur une grille de ⟦#1⟧° × ⟦#2⟧° (une cellule mesure environ ⟦#3⟧ km de côté à l’équateur, soit plus grande que la plupart des champs de dunes) : ⟦#4⟧ échantillons horaires, une année martienne. La carte représente chaque cellule par un carré ; un champ qui varie fortement d’une cellule à l’autre, comme le fait souvent⟦4⟧aux basses latitudes, paraît donc pixellisé. Masse volumique de l’air de la couche la plus basse ρ = p/(R T) ; la hauteur z du vent du niveau le plus bas découle de la pression et de la température horaires (⟦#5⟧–⟦#6⟧ m sur l’ensemble des cellules et des heures ; ⟦#7⟧–⟦#8⟧ m pendant ⟦#9⟧ % des heures des cellules dunaires ; le panneau de la cellule indique la plage de la cellule sélectionnée), et la vitesse de frottement⟦5⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#10⟧, éq. ⟦#11⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité).",

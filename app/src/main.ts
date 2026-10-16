@@ -50,7 +50,7 @@ import { BoxDrawer } from "./core/map/boxdraw";
 import { boxCells, fetchRegion, normaliseBox, regionNetcdf, regionReadme, type Box, type RegionMeta, type RegionSelection } from "./core/export/region";
 import { REGION_TEXT, type RegionContext } from "./core/ui/regionExport";
 import { AUX_META } from "./core/cell/auxinfo";
-import { cfUnits } from "./core/cell/export";
+import { cfUnits, ut2 } from "./core/cell/export";
 import { isPublishedField } from "./core/util/constants";
 import { writeZip } from "./core/cell/zip";
 import { triggerDownload } from "./core/cell/downloads";
@@ -299,7 +299,12 @@ async function runRegion(box: Box, sel: RegionSelection, o: { onProgress: (d: nu
   const t = reg.threshold;
   const meta: RegionMeta = {
     datasetId: ds?.id ?? "", datasetTitle: ds?.title ?? "", dataVersion: versionFromPrefix(ds?.prefix), permalink: fullScreenUrl(), box, body: BODY,
-    axis: { name: t.dim ?? "ut", units: t.units === "µm" ? "um" : cfUnits(t.units), longName: PROFILE.control.exportName, values: cs.utValues },
+    axis: (() => {
+      // Earth thresholds are exactly 2 decimals (as in the cell downloads); Mars grain diameters are whole micrometres
+      const units = t.units === "µm" ? "um" : cfUnits(t.units), values = cs.utValues.map((v) => (BODY === "mars" ? v : ut2(v)));
+      return { name: t.dim ?? "ut", units, longName: PROFILE.control.exportName, values, symbolTex: PROFILE.control.symbolTex,
+        comment: `${values.length} values from ${values[0]} to ${values[values.length - 1]} ${units}` };
+    })(),
     storeAttrs: cs.attrs as RegionMeta["storeAttrs"], generated: new Date(),
   };
   const nc = regionNetcdf(data, cells, g, sel, meta);

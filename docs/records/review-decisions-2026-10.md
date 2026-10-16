@@ -255,6 +255,13 @@ min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 
 | Panel layout | Same rule in both panels and both atlases: layer groups as in the registry (Dune Fields, Bedform orientation, Drift potential, Related data open; Crest-normal/parallel fluxes, Ratios & morphology indices, Wind statistics folded), Active layers open, Display and About folded; cell panel: every section open, table groups folded as the layer groups. The layer panel's groups are now kept for the visit like the cell panel's (before: never remembered); layout keys shared by both atlases |
 | Planet button | carries the language (`lang=`), so a page opened from a `?lang=` link stays in that language on the other planet |
 
+## Downloads and dataset-agnostic wording (16 October 2026)
+
+| item | done |
+|---|---|
+| Download audit | every download of the five wind datasets checked against the live stores: values exact; licence, notice, bounds, coverage, MACDA sampling and consistency fixes (docs/records/download-and-wording-audit-2026-10.md) |
+| Dataset wording | generic text names no dataset: registry `info.kind`, `info.note`, `info.landShort`, `credits.mapNotice`; Mars texts by time step / sample; French and Chinese for the 17 changed strings (to be reviewed with the student reviews) |
+
 ## Open items (16 October 2026)
 
 | item | who | status |

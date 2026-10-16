@@ -59,8 +59,8 @@ layers:
   variable: rho_mean
   thresholdAware: false
   units: kg/m³
-  description: Mean over the Mars year of the hourly lowest-layer air density $\rho_f = p/(R T)$ of the wind dataset's
-    climate model ($p$ = mid pressure of the lowest layer, $T$ = lowest-level temperature).
+  description: Mean over the samples of the Mars year of the lowest-layer air density $\rho_f = p/(R T)$ of the
+    wind dataset (one sample every two Mars hours; $p$ = mid pressure of the lowest layer, $T$ = lowest-level temperature).
   citation: 'Valeanu, A., Rajendran, K., Montabone, L. & Read, P. L. (2026). Mars Analysis Correction Data Assimilation
     (MACDA): Atmospheric and surface fields produced from assimilated MGS/TES, ODY/THEMIS, and MRO/MCS observations,
     v2.0. NERC EDS Centre for Environmental Data Analysis. doi:10.5285/cd037a9ea387438fabf4d674dbe53088; read from

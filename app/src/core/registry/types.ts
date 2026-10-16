@@ -145,12 +145,20 @@ export interface DatasetInfoDef {
   fieldsFrom: "paper" | "atlas"; sourceTitle?: string; sourceHtml: string;
   /** cell-centre grid of the cell store (non-square cells, rows that stop short of the poles) */
   grid?: { lat0: number; dlat: number; lon0: number; dlon: number; ny: number; nx: number };
+  /** what the dataset is, read after "Name: " in the Wind dataset ⓘ (e.g. "free-running climate-model simulation") */
+  kind?: string;
+  /** a sentence about this dataset for the Wind dataset ⓘ */
+  note?: string;
+  /** land rule of the selector tooltip (datasets with a land mask), e.g. "land cells: land–sea mask fraction > 0" */
+  landShort?: string;
   /** per-sample series (Mars): samples per sol and the long names of the downloads' time columns */
   series?: { samplesPerSol: number; indexText?: string; solText?: string };
 }
 /** registry `datasets[].credits` */
 export interface DatasetCredits {
   sources: string[]; dataSource: string; fieldsCitation: string; fieldsLicence: string; windSourceText: string; notice?: string;
+  /** short attribution line on the map and in About while the dataset is selected */
+  mapNotice?: string;
 }
 /** a citation source (registry `datasets[].citationSources`, or a body's in @body/citation) */
 export interface CitationSourceDef {

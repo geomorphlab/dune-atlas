@@ -38,7 +38,7 @@ export function devPhraseHits(t: Record<string, string>): string[] {
   const out: string[] = [];
   for (const [k, v0] of Object.entries(t)) {
     if (MACHINE.test(k)) continue;
-    let v = v0;
+    let v = v0.replace(/https?:\/\/\S+/g, "<link>");   // a link to a file (e.g. DATA_LICENSE.md) is not prose about files
     for (const p of [...PENDING_OTHER_TRACK, ...VERBATIM_NOTES]) v = v.split(p).join("");
     for (const [what, re] of DEV_PHRASES) if (!(DATA_GUIDE.test(k) && DATA_GUIDE_ALLOWED.has(what)) && re.test(v)) out.push(`${k} [${what}]: ${v.slice(Math.max(0, v.search(re) - 60), v.search(re) + 80)}`);
   }

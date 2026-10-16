@@ -41,8 +41,8 @@ K = M.D_DEFAULT_INDEX
 D_TEXT = f" Shown at the selected median grain diameter d (default {int(M.D_VALUES_UM[K])} µm)."
 EARTH_UT_TEXT = (f" Shown at the selected threshold friction velocity u*,th "
                  f"(default {EF.C.UT_VALUES[EF.C.UT_DEFAULT_INDEX]:.2f} m/s).")
-THRESHOLD_NOTE = (r" The threshold is that hour's cessation threshold $u_{\ast,th}(d, \rho_f, T)$ of Pähtz & Durán "
-                  r"(2023).")
+THRESHOLD_NOTE = (r" The threshold is the cessation threshold $u_{\ast,th}(d, \rho_f, T)$ of each sample, from Pähtz & "
+                  r"Durán (2023).")
 # Citation of the atlas-derived fields, one format with Earth (fields.fields_citation; app mars/cell/citation.ts
 # fieldsCitation): "Gunn, A. (2026). ... doi:...; transport law: ...; winds: ...".
 GCM_WINDS = CE.DS.winds_phrase
@@ -53,6 +53,8 @@ GCM_CITATION = CE.DS.gcm_citation
 # Licence row of everything derived from the dataset's winds
 LICENCE = CE.DS.licence
 ATTRIBUTION = {"citation": CITATION, "licence": LICENCE}
+# how often the wind dataset samples the Mars year, in the descriptions (no dataset name in the shared texts)
+SAMPLING = "one sample per Mars hour" if CE.DS.samples_per_sol == 24 else f"one sample every {({2: 'two', 3: 'three', 4: 'four', 6: 'six'}).get(24 // CE.DS.samples_per_sol, 24 // CE.DS.samples_per_sol)} Mars hours"
 
 
 def load_export(path) -> dict:
@@ -70,10 +72,18 @@ def var_index(v):
 
 # ---------------------------------------------------------------------------------------------- metadata
 def mars_text(var: str, desc: str) -> str:
-    desc = desc.replace(" over all speed and direction bins", " over all hours of the Mars year (n = 1 per hour)")
+    desc = desc.replace(" over all speed and direction bins", " over all samples of the Mars year (n = 1 per sample)")
     if var in ("uft", "ufm", "qhbf", "qhef"):
         desc += THRESHOLD_NOTE
     return desc
+
+
+def refresh_texts(meta: dict) -> dict:
+    """The descriptions of an existing qsat_field_metadata.json rewritten from the canonical Earth text (mars_text), the
+    statistics kept: a wording change needs no new export from Gadi."""
+    canon = json.loads((REPO / "registry" / "earth" / "qsat_field_metadata.json").read_text())
+    return {v: ({**m, "description": mars_text(v, canon[v]["description"])} if v in canon and v in QSAT_VARS else m)
+            for v, m in meta.items()}
 
 
 def field_metadata(fields: np.ndarray, k: int = K) -> dict:
@@ -210,8 +220,8 @@ def extra_fragment(qsdiv_clim, rho_clim) -> dict:
         {"id": "rho_mean", "title": "Near-surface air density", "titleTex": r"Near-surface air density $\overline{\rho_f}$",
          "group": "environment", "type": "zarr-field", "source": "{dataset}/fields/rho_mean.zarr",
          "variable": "rho_mean", "thresholdAware": False, "units": "kg/m³",
-         "description": (r"Mean over the Mars year of the hourly lowest-layer air density $\rho_f = p/(R T)$ of the wind "
-                         "dataset's climate model ($p$ = mid pressure of the lowest layer, $T$ = lowest-level temperature)."),
+         "description": (r"Mean over the samples of the Mars year of the lowest-layer air density $\rho_f = p/(R T)$ of the "
+                         f"wind dataset ({SAMPLING}; $p$ = mid pressure of the lowest layer, $T$ = lowest-level temperature)."),
          "citation": GCM_CITATION, "attribution": {"citation": GCM_CITATION, "licence": LICENCE}, "visible": False, "opacity": 0.85, "queryable": True,
          "display": {"transform": "none", "colormap": "viridis", "clim": list(rho_clim)}},
     ]}
@@ -279,7 +289,7 @@ def build_all(export, devroot, gen=GEN, meta_json=META_JSON, vars_=None, log=pri
                              clim=rho_clim, colormap="viridis",
                              var_attrs={"long_name": "Near-surface air density, mean over the Mars year",
                                         "long_name_latex": r"\overline{\rho_f}", "units": "kg m-3",
-                                        "description": "Mean over the Mars year of the hourly lowest-layer air density."})
+                                        "description": f"Mean over the samples of the Mars year ({SAMPLING}) of the lowest-layer air density."})
     stats["pyramids"].append({"var": "rho_mean", "bytes": st["bytes"], "objects": st["objects"]}); log(json.dumps(st))
     em, esrc = load_elev_mean(elev_npz) if elev_npz else (None, "")
     stats["cells_aux"] = write_cells_aux(str(base / "cells-aux.zarr"), q, rho, em, esrc)
@@ -295,7 +305,8 @@ def rewrite_registry(gen=GEN, meta_json=META_JSON) -> list[Path]:
     """Rewrite only the two registry fragments from registry/mars/qsat_field_metadata.json, keeping the colour limits
     of the current x_extra_fields.yaml (they come from the Gadi export; texts and citations change, data do not)."""
     import yaml
-    meta = json.loads(Path(meta_json).read_text())
+    meta = refresh_texts(json.loads(Path(meta_json).read_text()))
+    Path(meta_json).write_text(json.dumps(meta, ensure_ascii=False, indent=1) + "\n")
     cur = {l["id"]: l for l in (yaml.safe_load((Path(gen) / "x_extra_fields.yaml").read_text()) or {})["layers"]}
     return write_fragments(meta, cur["qsdiv"]["display"]["clim"], cur["rho_mean"]["display"]["clim"], gen=gen)
 

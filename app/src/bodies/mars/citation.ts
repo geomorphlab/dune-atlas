@@ -49,6 +49,11 @@ export const BODY_CITATION_SOURCES: Record<string, CitationSource> = {
 };
 /** sources of a cell download besides the dataset ones (elevation: the DEM) */
 export const CELL_SOURCE_IDS = ["dem"];
+/** the per-cell dune flag of the downloads: its name and the licence of the dune polygons it comes from (DATA_LICENSE.md) */
+export const DUNE_FLAG_LONG_NAME = "cell overlaps mapped dunes";
+/** global attribute transport_law of the downloads (cell and region) */
+export const TRANSPORT_LAW_ATTR = `${PD23_TEXT} doi:${PAHTZ_DURAN_DOI} (threshold eq. 5.1 with eq. 3.20; transport eq. 3.2)`;
+export const DUNE_FLAG_LICENCE = "MGD3 polygons: public domain (U.S. Geological Survey); Fenton (2020) dune fields: CC BY 4.0";
 
 
 /** image exports: the data line of a plot (the wind line appended) */

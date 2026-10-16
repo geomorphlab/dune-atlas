@@ -154,14 +154,22 @@ within ±90°, texture coordinates in [0, 1]; the unpatched code fails these che
   tot_cov_valid_frac: the 0.1° valid fraction is 1 where the 0.1° mean is valid (else 0); the
   ERA5 `lsm` and the 0.1° `tot_cov_n_months` stay in the stores but are not published per cell.
   Shared texts: dune presence = "the cell overlaps at least one 0.1° dune cell" (the 0.1° cell
-  itself for ERA5-Land). Land definitions are app constants (`cell/datasetinfo.ts`, never the
+  itself for ERA5-Land). Land definitions are registry values of each dataset (`datasets[].info`
+  `landRule`, `landThreshold`, `nonLandReason`, `landShort`; shown by `cell/datasetinfo.ts`, never the
   store attrs): ERA5-Land land–sea mask fraction > 0.5 ("mainly water" otherwise), ERA5 > 0 (any
   land; the stores under `dune-atlas/v2/datasets/era5`, rebuilt with this mask); the no-data
-  message names the dataset's rule. `tests/publictext.test.ts` passes the real ERA5 v2 root attrs
+  message names the dataset's rule and offers every other dataset. `tests/publictext.test.ts` passes the real ERA5 v2 root attrs
   (`tests/fixtures/era5-v2-cells-attrs.json`) through the panels and downloads and checks, with a
   sentinel mark on every free-text attr, that none of it reaches the site or the files. The Wind
-  dataset selector tooltips are app text too (`datasetTooltip`: "ERA5 0.25°, 1950–2024; land cells:
-  land–sea mask fraction > 0"), not the generated registry `description` (also marked in that test).
+  dataset selector tooltips are app text too (`datasetTooltip`: name, grid, period and the registry
+  `landShort`, e.g. "ERA5 0.25°, 1950–2024; land cells: land–sea mask fraction > 0"), not the generated
+  registry `description` (also marked in that test).
+* **Dataset texts come from the registry**: generic text names no dataset. The Wind dataset ⓘ lists the
+  datasets with their grids and periods and adds `info.kind` (what each dataset is, grouped by kind) and
+  `info.note`; the map attribution and the About note show `credits.mapNotice`; every download states the
+  licence of the dataset's products (`credits.fieldsLicence`, `core/cell/exportmeta.ts` `licenceStatement`),
+  its data notice (`credits.notice`, attribute `data_notice`) and the licence of the dune flag; time coverage
+  (Earth) comes from `info.period`.
 * **Panel re-renders keep the view**: the scrolling element persists while the panel is open;
   threshold changes and re-renders keep its scroll position, and `show()` of the same location
   (`sameLocation`: either cell centre inside the other cell - a dataset switch re-snap or the same

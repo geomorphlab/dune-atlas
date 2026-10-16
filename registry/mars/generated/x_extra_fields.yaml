@@ -55,8 +55,8 @@ layers:
   variable: rho_mean
   thresholdAware: false
   units: kg/m³
-  description: Mean over the Mars year of the hourly lowest-layer air density $\rho_f = p/(R T)$ of the wind dataset's
-    climate model ($p$ = mid pressure of the lowest layer, $T$ = lowest-level temperature).
+  description: Mean over the samples of the Mars year of the lowest-layer air density $\rho_f = p/(R T)$ of the
+    wind dataset (one sample per Mars hour; $p$ = mid pressure of the lowest layer, $T$ = lowest-level temperature).
   citation: 'NASA Ames Mars Climate Modeling Center (2023). MCMC FV3-based Mars GCM Beta Output Release 1. doi:10.25966/rjgg-r639,
     https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics: Haberle, R. M. et al. (2019). Icarus
     333, 130–164. doi:10.1016/j.icarus.2019.03.026'

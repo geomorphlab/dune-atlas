@@ -58,10 +58,10 @@ type CellStoreAttrs = MarsCellStoreAttrs;
 const logD = (d: ArrayLike<number>) => Array.from(d, (x) => Math.log10(x));
 const fmtUt = (v: number) => `${v.toFixed(2)} m/s`;
 /** citation file of a cell download (TXT, clipboard) */
-function citationFile(cell: { lat: number; lon: number }, datasetId?: string, setting?: string): string {
+function citationFile(cell: { lat: number; lon: number; iy?: number; ix?: number }, datasetId?: string, setting?: string): string {
   const ds = datasetInfo(datasetId);
   // centre with hemisphere letters, the wind dataset and the grain size the values are taken at
-  return citationText([`Mars Dune Atlas (map.geomorphlab.org/mars), ${ds.name} ${ds.resolution} cell, centre ${latLonText(cell.lat, cell.lon)}`,
+  return citationText([`Mars Dune Atlas (map.geomorphlab.org/mars), ${ds.name} ${ds.resolution} cell${cell.iy !== undefined && cell.ix !== undefined ? ` ${cell.iy},${cell.ix}` : ""}, centre ${latLonText(cell.lat, cell.lon)}`,
     `Wind dataset: ${ds.name} ${ds.resolution}, ${ds.period}`, ...(setting ? [`Values at ${setting}`] : [])].join("\n"), citationSources(CELL_SOURCE_IDS, datasetId));
 }
 
@@ -721,7 +721,7 @@ export class CellPanel {
     const extra = `${auxRows}
       <tr data-field="dunes"><td class="sym">${MISSING}</td><th scope="row" title="${escapeHtml(`Yes: ${ds.dunesRule}; value in brackets: dune area fraction of the cell`)}">Dunes present</th><td class="num">${cell.dune ? "yes" : "no"}${cell.dune ? ` <span class="unit">(${(100 * cell.duneFrac).toPrecision(2)} %)</span>` : ""}</td></tr>
       <tr data-field="rho_median"><td class="sym">${mathHtml("$\\rho_f$")}</td><th scope="row" title="Lowest-layer air density, median over the ${marsSampling(cell.samplesPerSol).units}">Median air density</th><td class="num">${Number.isFinite(v.stats.rhoMedian) ? `${v.stats.rhoMedian.toPrecision(3)} <span class="unit">kg/m³</span>` : MISSING}</td></tr>
-      <tr data-field="ut_median"><td class="sym">${mathHtml("$u_{*,th}$")}</td><th scope="row" title="Threshold friction velocity at this d, median over the hours">Median threshold friction velocity</th><td class="num">${live(Number.isFinite(v.stats.utMedian) ? `${v.stats.utMedian.toFixed(3)}&nbsp;<span class="unit">m/s</span>` : MISSING, W)}</td></tr>
+      <tr data-field="ut_median"><td class="sym">${mathHtml("$u_{*,th}$")}</td><th scope="row" title="Threshold friction velocity at this d, median over the samples of the Mars year">Median threshold friction velocity</th><td class="num">${live(Number.isFinite(v.stats.utMedian) ? `${v.stats.utMedian.toFixed(3)}&nbsp;<span class="unit">m/s</span>` : MISSING, W)}</td></tr>
       <tr data-field="centre"><td class="sym">${MISSING}</td><th scope="row" title="Latitude, longitude of the cell centre">Cell centre</th><td class="num">${coord(cell.lat)}°, ${coord(cell.lon)}°</td></tr>`;
     return `<table><thead><tr><th scope="col">Symbol</th><th scope="col">Quantity</th><th scope="col">Value</th></tr></thead>${groupedBody(rows + extra)}</table>`;
   }

@@ -10,10 +10,11 @@
 import type { CellData } from "../cell/cellstore";
 import type { Grid } from "../cell/snap";
 import { writeNetcdf3, type NcAttrs, type NcVariable } from "../cell/netcdf3";
-import { fieldMeta, INSTITUTION, LICENSE, type ExportMeta } from "../cell/export";
+import { ATLAS_NAME, fieldMeta, INSTITUTION, sourceText, type ExportMeta } from "../cell/export";
+import { cellEdges, colLon, exactCoord, latBounds, licenceStatement, noticeAttrs, rowLat, timeCoverage } from "../cell/exportmeta";
 import { AUX_META, auxDescription, auxSourceAttrs } from "../cell/auxinfo";
 import { AI_NOTICE, citationSources, citationText, datasetNotice, fieldsCitation, fieldsLicence, referencesLine } from "../cell/citation";
-import { CELL_SOURCE_IDS } from "@body/citation";
+import { CELL_SOURCE_IDS, DUNE_FLAG_LICENCE, DUNE_FLAG_LONG_NAME, TRANSPORT_LAW_ATTR } from "@body/citation";
 import { datasetInfo, resolutionText } from "../cell/datasetinfo";
 import { texToPlain } from "../util/plaintext";
 import { isPublishedField } from "../util/constants";
@@ -46,7 +47,7 @@ export function boxCells(b0: Box, g: Grid): { iys: number[]; ixs: number[]; lats
   const eps = 1e-9;
   const inLat = (lat: number) => lat >= b.south - eps && (lat < b.north - eps || (b.north >= 90 && lat <= 90 + eps));
   const iys: number[] = [];
-  for (let iy = 0; iy < g.ny; iy++) if (inLat(g.lat0 + g.dlat * iy)) iys.push(iy);
+  for (let iy = 0; iy < g.ny; iy++) if (inLat(rowLat(g, iy))) iys.push(iy);
   const full = b.width >= 360 - eps;
   const ixs: number[] = [], lons: number[] = [];
   const global = Math.abs(Math.abs(g.dlon) * g.nx - 360) < 1e-6;
@@ -56,10 +57,10 @@ export function boxCells(b0: Box, g: Grid): { iys: number[]; ixs: number[]; lats
     return { ix, d: global || full ? (((lon - b.west) % 360) + 360 + eps) % 360 - eps : lon - b.west };
   }).filter((c) => c.d >= -eps && (full ? c.d < 360 - eps : c.d < b.width - eps)).sort((p, q) => p.d - q.d);
   for (const c of cols) {
-    const lon = g.lon0 + g.dlon * c.ix;   // exact grid value, shifted by whole turns to increase eastward
-    ixs.push(c.ix); lons.push(lon + 360 * Math.round((b.west + Math.max(0, c.d) - lon) / 360));
+    const lon = colLon(g, c.ix);   // exact grid value, shifted by whole turns to increase eastward
+    ixs.push(c.ix); lons.push(exactCoord(lon + 360 * Math.round((b.west + Math.max(0, c.d) - lon) / 360)));
   }
-  return { iys, ixs, lats: iys.map((iy) => g.lat0 + g.dlat * iy), lons };
+  return { iys, ixs, lats: iys.map((iy) => rowLat(g, iy)), lons };
 }
 
 /** what a region export contains */
@@ -124,7 +125,7 @@ export async function fetchRegion<T extends CellData>(store: { query(iy: number,
 export interface RegionMeta extends Omit<ExportMeta, "storeAttrs" | "generated"> {
   box: Box;
   /** body texts: thresholds axis name, units and long name; e.g. Earth ut / m s-1, Mars d / um */
-  axis: { name: string; units: string; longName: string; values: number[] };
+  axis: { name: string; units: string; longName: string; values: number[]; symbolTex?: string; comment?: string };
   storeAttrs?: ExportMeta["storeAttrs"];
   generated?: Date;
   body: "earth" | "mars";
@@ -159,12 +160,12 @@ export function regionNetcdf(cells: (CellData | null)[], grid: { iys: number[]; 
   const coords = mars ? "planetocentric latitude, east longitude (unwrapped across 180°), Mars 2000 sphere" : "WGS 84 latitude and longitude (unwrapped across 180°)";
   const vars: NcVariable[] = [
     { name: "lat", type: "double", dims: ["lat"], data: grid.lats, attrs: { standard_name: "latitude", long_name: mars ? "planetocentric latitude of the cell centre" : "latitude of the cell centre", units: "degrees_north", bounds: "lat_bnds" } },
-    { name: "lat_bnds", type: "double", dims: ["lat", "nv"], data: grid.lats.flatMap((y) => [y + dlat / 2, y - dlat / 2]), attrs: { long_name: "latitude of the cell edges", units: "degrees_north" } },
+    { name: "lat_bnds", type: "double", dims: ["lat", "nv"], data: grid.lats.flatMap((y) => latBounds(y, dlat)), attrs: { comment: "north and south edge of each row, clipped at ±90° (a row centred on a pole is a half cell)" } },
     { name: "lon", type: "double", dims: ["lon"], data: grid.lons, attrs: { standard_name: "longitude", long_name: mars ? "east longitude of the cell centre" : "longitude of the cell centre", units: "degrees_east", bounds: "lon_bnds", comment: "increasing eastward; values above 180 continue across the antimeridian (subtract 360 for -180..180)" } },
-    { name: "lon_bnds", type: "double", dims: ["lon", "nv"], data: grid.lons.flatMap((x) => [x - dlon / 2, x + dlon / 2]), attrs: { long_name: "longitude of the cell edges", units: "degrees_east" } },
+    { name: "lon_bnds", type: "double", dims: ["lon", "nv"], data: grid.lons.flatMap((x) => [exactCoord(x - dlon / 2), exactCoord(x + dlon / 2)]), attrs: {} },
     { name: "cell_y", type: "int", dims: ["lat"], data: grid.iys, attrs: { long_name: "grid row index of the wind dataset (0 = northernmost row)", units: "1", grid_lat0: g.lat0, grid_dlat: g.dlat, grid_ny: I(g.ny) } },
     { name: "cell_x", type: "int", dims: ["lon"], data: grid.ixs, attrs: { long_name: "grid column index of the wind dataset (0 = westernmost column)", units: "1", grid_lon0: g.lon0, grid_dlon: g.dlon, grid_nx: I(g.nx) } },
-    { name: ax, type: "double", dims: sel.allThresholds ? [ax] : [], data: ks.map((k) => meta.axis.values[k]), attrs: { long_name: meta.axis.longName, units: meta.axis.units } },
+    { name: ax, type: "double", dims: sel.allThresholds ? [ax] : [], data: ks.map((k) => meta.axis.values[k]), attrs: { long_name: meta.axis.longName, units: meta.axis.units, ...(meta.axis.symbolTex ? { long_name_latex: meta.axis.symbolTex } : {}), ...(meta.axis.comment ? { comment: meta.axis.comment } : {}) } },
     { name: "has_data", type: "int", dims: ["lat", "lon"], data: Int32Array.from(cells, (c) => (c ? 1 : 0)), attrs: { long_name: "cell has wind and sand-flux data", flag_values: I([0, 1]), flag_meanings: "no_data data", units: "1", comment: ds.nonLandReason ? `0 = outside the land mask of ${ds.name} (${ds.landRule})` : "0 = no data" } },
   ];
   const thrDims = (base: string[]) => (sel.allThresholds ? [ax, ...base] : base);
@@ -178,7 +179,7 @@ export function regionNetcdf(cells: (CellData | null)[], grid: { iys: number[]; 
       if (i < 0) return;
       ks.forEach((k, j) => { data[j * n + p] = c.fields[i * nu + k]; });
     });
-    vars.push({ name: v, type: "float", dims: thrDims(["lat", "lon"]), data, attrs: { long_name: m.longName, long_name_latex: m.longNameLatex, units: m.units, description: m.description, _FillValue: F(NaN), coordinates: coordAttr } });
+    vars.push({ name: v, type: "float", dims: thrDims(["lat", "lon"]), data, attrs: { long_name: m.longName, long_name_latex: m.longNameLatex, units: m.units, description: m.description, description_latex: m.descriptionLatex, _FillValue: F(NaN), coordinates: coordAttr } });
   }
   for (const v of sel.aux) {
     const am = AUX_META[v];
@@ -198,56 +199,68 @@ export function regionNetcdf(cells: (CellData | null)[], grid: { iys: number[]; 
     vars.push({ name: v, type: "float", dims: series ? thrDims(["lat", "lon"]) : ["lat", "lon"], data, attrs });
   }
   if (sel.dune) {
-    vars.push({ name: "dune_present", type: "int", dims: ["lat", "lon"], data: Int32Array.from(cells, (c) => (c ? (c.dune ? 1 : 0) : NO_INT)), attrs: { long_name: "cell mapped as containing wind-blown sand dunes", comment: `1 = ${ds.dunesRule}`, flag_values: I([0, 1]), flag_meanings: "no_dunes dunes", units: "1", _FillValue: I(NO_INT) } });
-    if (mars) vars.push({ name: "dune_fraction", type: "float", dims: ["lat", "lon"], data: Float32Array.from(cells, (c) => (c ? Number((c as CellData & { duneFrac?: number }).duneFrac ?? NaN) : NaN)), attrs: { long_name: "fraction of the cell area covered by mapped dune polygons", units: "1", _FillValue: F(NaN) } });
+    vars.push({ name: "dune_present", type: "int", dims: ["lat", "lon"], data: Int32Array.from(cells, (c) => (c ? (c.dune ? 1 : 0) : NO_INT)), attrs: { long_name: DUNE_FLAG_LONG_NAME, comment: `1 = ${ds.dunesRule}`, flag_values: I([0, 1]), flag_meanings: "no_dunes dunes", units: "1", _FillValue: I(NO_INT), license: DUNE_FLAG_LICENCE } });
+    if (mars) vars.push({ name: "dune_fraction", type: "float", dims: ["lat", "lon"], data: Float32Array.from(cells, (c) => (c ? Number((c as CellData & { duneFrac?: number }).duneFrac ?? NaN) : NaN)), attrs: { long_name: "fraction of the cell area covered by mapped dune polygons (spherical areas)", units: "1", _FillValue: F(NaN), license: DUNE_FLAG_LICENCE } });
   }
   const dims = [{ name: "lat", size: ny }, { name: "lon", size: nx }, { name: "nv", size: 2 }, ...(sel.allThresholds ? [{ name: ax, size: nThr }] : [])];
   if (sel.wind && sample) {
     const s = sample as CellData & { series?: Record<string, Float32Array>; ls?: Float32Array; sol?: Float32Array };
     if (s.series) {
       const nh = s.series.u.length;
+      const rounding = typeof (meta.storeAttrs as { series_note?: unknown } | undefined)?.series_note === "string" ? (meta.storeAttrs as { series_note: string }).series_note : "";
       dims.push({ name: "hour", size: nh });
-      vars.push({ name: "hour", type: "int", dims: ["hour"], data: Int32Array.from({ length: nh }, (_, k) => k), attrs: { long_name: ds.series?.indexText ?? "hour index of the record", units: "1" } });
-      if (s.sol) vars.push({ name: "sol", type: "float", dims: ["hour"], data: s.sol, attrs: { long_name: ds.series?.solText ?? "sol of the simulation", units: "1" } });
+      vars.push({ name: "hour", type: "int", dims: ["hour"], data: Int32Array.from({ length: nh }, (_, k) => k), attrs: { long_name: ds.series?.indexText ?? "sample index of the record", units: "1" } });
+      if (s.sol) vars.push({ name: "sol", type: "float", dims: ["hour"], data: s.sol, attrs: { long_name: ds.series?.solText ?? "sol of the record", units: "1" } });
       if (s.ls) vars.push({ name: "ls", type: "float", dims: ["hour"], data: s.ls, attrs: { long_name: "areocentric solar longitude Ls (0-360)", units: "degree" } });
       const SER: [string, string, string][] = [["u", "m s-1", "lowest-level eastward wind (toward east)"], ["v", "m s-1", "lowest-level northward wind (toward north)"], ["T", "K", "lowest-level air temperature"], ["rho", "kg m-3", "lowest-layer air density"], ["z", "m", "height of the lowest-level wind above the surface"]];
       for (const [nm, units, ln] of SER) {
         const data = new Float32Array(n * nh).fill(NaN);
         cells.forEach((c, p) => { const ser = (c as typeof s | null)?.series?.[nm]; if (ser) data.set(ser, p * nh); });
-        vars.push({ name: nm, type: "float", dims: ["lat", "lon", "hour"], data, attrs: { long_name: ln, units, _FillValue: F(NaN), coordinates: "lat lon" } });
+        vars.push({ name: nm, type: "float", dims: ["lat", "lon", "hour"], data, attrs: { long_name: ln, units, _FillValue: F(NaN), coordinates: "lat lon", ...(rounding ? { comment: rounding } : {}) } });
       }
     } else if (sample.hist.length) {
       const b = sample.bins, nUm = b.umCentres.length, nUa = b.uaCentres.length;
       dims.push({ name: "um_bin", size: nUm }, { name: "ua_bin", size: nUa });
-      vars.push({ name: "um_bin", type: "double", dims: ["um_bin"], data: Array.from(b.umCentres), attrs: { long_name: "10 m wind speed bin centre", units: "m s-1" } });
-      vars.push({ name: "ua_bin", type: "double", dims: ["ua_bin"], data: Array.from(b.uaCentres), attrs: { long_name: "wind direction bin centre: direction the wind blows TOWARD, counter-clockwise from east", units: "radian", comment: "compass bearing toward = (90 - degrees(ua_bin)) mod 360; from = toward + 180" } });
+      const ue = b.umEdges as ArrayLike<number>, ae = b.uaEdges as ArrayLike<number>;
+      vars.push({ name: "um_bin", type: "double", dims: ["um_bin"], data: Array.from(b.umCentres), attrs: { long_name: "10 m wind speed bin centre", units: "m s-1", bounds: "um_bin_bnds" } });
+      vars.push({ name: "um_bin_bnds", type: "double", dims: ["um_bin", "nv"], data: Array.from({ length: nUm * 2 }, (_, k) => ue[(k >> 1) + (k & 1)]), attrs: {} });
+      vars.push({ name: "ua_bin", type: "double", dims: ["ua_bin"], data: Array.from(b.uaCentres), attrs: { long_name: "wind direction bin centre: direction the wind blows TOWARD, counter-clockwise from east", units: "radian", bounds: "ua_bin_bnds", comment: "arctan2(v10, u10) (source convention); compass bearing toward = (90 - degrees(ua_bin)) mod 360; from = toward + 180" } });
+      vars.push({ name: "ua_bin_bnds", type: "double", dims: ["ua_bin", "nv"], data: Array.from({ length: nUa * 2 }, (_, k) => ae[(k >> 1) + (k & 1)]), attrs: {} });
       const data = new Int32Array(n * nUm * nUa).fill(NO_INT);
       cells.forEach((c, p) => { if (c) data.set(c.hist, p * nUm * nUa); });
-      vars.push({ name: "wind_hist", type: "int", dims: ["lat", "lon", "um_bin", "ua_bin"], data, attrs: { long_name: `hours per 10 m wind speed and direction bin, ${ds.name} ${ds.period.replace("–", "-")}`, units: "h", _FillValue: I(NO_INT), coordinates: "lat lon", comment: `Hourly ${ds.name} 10 m wind (${ds.resolution} grid); direction = direction the wind blows TOWARD (ua_bin).` } });
+      vars.push({ name: "wind_hist", type: "int", dims: ["lat", "lon", "um_bin", "ua_bin"], data, attrs: { long_name: `hours per 10 m wind speed and direction bin, ${ds.name} ${ds.period.replace("–", "-")}`, units: "h", _FillValue: I(NO_INT), coordinates: "lat lon", comment: `Hourly ${ds.name} 10 m wind (${ds.resolution} grid); hours with U10 > 20 m/s are not binned. Direction = direction the wind blows TOWARD (ua_bin).` } });
     }
   }
   const b = normaliseBox(meta.box);
   const when = (meta.generated ?? new Date()).toISOString();
+  // extent of the cells in the file (the box selects cell centres, so the cells can reach beyond it)
+  const ext = ny && nx ? { south: cellEdges(grid.lats[ny - 1], 0, g).south, north: cellEdges(grid.lats[0], 0, g).north, west: exactCoord(grid.lons[0] - dlon / 2), east: exactCoord(grid.lons[nx - 1] + dlon / 2) } : { south: b.south, north: b.north, west: b.west, east: b.east };
   return writeNetcdf3({
     dims,
     attrs: {
-      title: `Dune Atlas region export: ${ds.name} ${ds.resolution} cells in ${boxText(meta.box)}`,
+      title: `${ATLAS_NAME} region export: ${ds.name} ${ds.resolution} cells in ${boxText(meta.box)}`,
       institution: INSTITUTION,
-      source: meta.datasetTitle,
+      source: sourceText(ds),
       dataset_id: meta.datasetId,
+      dataset_title: meta.datasetTitle,
+      ...(mars ? { planet: "Mars" } : {}),
+      ...(TRANSPORT_LAW_ATTR ? { transport_law: TRANSPORT_LAW_ATTR } : {}),
       data_version: meta.dataVersion,
       ...(ds.series ? { samples_per_sol: I(ds.series.samplesPerSol) } : {}),
       references: referencesLine(citationSources(CELL_SOURCE_IDS, ds.id)),
       fields_citation: fieldsCitation(ds.id),
       fields_license: fieldsLicence(ds.id),
-      ...(datasetNotice(ds.id) ? { copernicus_notice: datasetNotice(ds.id) } : {}),
-      license: LICENSE,
-      geospatial_lat_min: b.south, geospatial_lat_max: b.north, geospatial_lon_min: b.west, geospatial_lon_max: b.east,
+      license: licenceStatement(ds.id),
+      ...noticeAttrs(ds.id),
+      geospatial_lat_min: ext.south, geospatial_lat_max: ext.north, geospatial_lon_min: ext.west, geospatial_lon_max: ext.east,
+      selection_box: `${b.west} ${b.south} ${b.east} ${b.north} (west south east north, degrees; cells whose centres lie in it)`,
+      ...timeCoverage(ds),
       geospatial_lat_resolution: resolutionText(dlat).replace("°", " degree"),
       geospatial_lon_resolution: resolutionText(dlon).replace("°", " degree"),
       coordinates_note: coords,
       selection: selectionText(sel, meta),
       Conventions: "CF-1.8",
+      date_created: when,
       history: `${when}: downloaded from ${meta.permalink}`,
       comment: AI_NOTICE,
     },
@@ -274,10 +287,11 @@ function selectionText(sel: RegionSelection, meta: RegionMeta): string {
 /** README of the zip */
 export function regionReadme(sel: RegionSelection, meta: RegionMeta, est: { rows: number; cols: number; withData: number }, fileName: string, licenceUrl: string): string {
   const ds = datasetInfo(meta.datasetId);
-  return `Dune Atlas region export
-========================
+  const head = `${ATLAS_NAME} region export`;
+  return `${head}
+${"=".repeat(head.length)}
 
-${fileName}: the cells of the wind dataset ${ds.name} ${ds.resolution} (${ds.period}) whose centres lie in
+${fileName}: the cells of the wind dataset ${ds.name} ${ds.resolution}, ${ds.period}, whose centres lie in
 ${boxText(meta.box)}: ${est.rows} rows x ${est.cols} columns, ${est.withData} cells with data.
 NetCDF-3 (64-bit offset), CF-1.8 conventions; open e.g. with xarray: xarray.open_dataset("${fileName}").
 
@@ -289,7 +303,9 @@ Downloaded ${(meta.generated ?? new Date()).toISOString()} from ${meta.permalink
 
 Licences
 --------
-Map fields of ${ds.name}: ${fieldsLicence(ds.id)}. Licences of every source: ${licenceUrl}
+Sand-flux fields and wind data of ${ds.name}: ${fieldsLicence(ds.id)}.${datasetNotice(ds.id) ? ` ${datasetNotice(ds.id)}` : ""}
+Dune flag: ${DUNE_FLAG_LICENCE}. Other variables: see their license attribute.
+Licences of every source: ${licenceUrl}
 
 ${citationText("", citationSources(CELL_SOURCE_IDS, ds.id)).trim()}
 

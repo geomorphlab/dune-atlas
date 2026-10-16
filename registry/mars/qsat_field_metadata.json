@@ -42,7 +42,7 @@
  "dpm": {
   "long_name": "Drift potential $DP$",
   "units": "m$^2$/s",
-  "description": "Time-averaged flat-bed saturated flux magnitude, $DP = \\sum n q / \\sum n$ over all hours of the Mars year (n = 1 per hour), in m$^2$/s.",
+  "description": "Time-averaged flat-bed saturated flux magnitude, $DP = \\sum n q / \\sum n$ over all samples of the Mars year (n = 1 per sample), in m$^2$/s.",
   "p2": 1.12102886085097e-08,
   "p98": 7.159474307627536e-07,
   "frac_finite": 1.0
@@ -154,7 +154,7 @@
  "ufm": {
   "long_name": "$\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$",
   "units": "-",
-  "description": "Average above-threshold flat-bed friction velocity, normalised by threshold $\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023).",
+  "description": "Average above-threshold flat-bed friction velocity, normalised by threshold $\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$. The threshold is the cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of each sample, from Pähtz & Durán (2023).",
   "p2": 1.1707452464103698,
   "p98": 1.7301824021339418,
   "frac_finite": 1.0
@@ -162,7 +162,7 @@
  "uft": {
   "long_name": "$T|u_{\\ast,f}>u_{\\ast,th}/T$",
   "units": "-",
-  "description": "Fraction of time flat-bed friction velocity is above threshold $T|u_{\\ast,f}>u_{\\ast,th}/T$. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023).",
+  "description": "Fraction of time flat-bed friction velocity is above threshold $T|u_{\\ast,f}>u_{\\ast,th}/T$. The threshold is the cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of each sample, from Pähtz & Durán (2023).",
   "p2": 0.03992015868425369,
   "p98": 0.5446644294261933,
   "frac_finite": 1.0
@@ -170,7 +170,7 @@
  "qhbf": {
   "long_name": "Fraction of bed-mode flux while flat-bed $u_{\\ast,f}>u_{\\ast,th}$",
   "units": "-",
-  "description": "Fraction of bed-mode (migration-mode, $\\alpha_H$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_H)| / \\sum n|Q(\\alpha_H)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023).",
+  "description": "Fraction of bed-mode (migration-mode, $\\alpha_H$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_H)| / \\sum n|Q(\\alpha_H)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is the cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of each sample, from Pähtz & Durán (2023).",
   "p2": 0.49559506952762605,
   "p98": 0.9740049397945404,
   "frac_finite": 1.0
@@ -178,7 +178,7 @@
  "qhef": {
   "long_name": "Fraction of elongation-mode flux while flat-bed $u_{\\ast,f}>u_{\\ast,th}$",
   "units": "-",
-  "description": "Fraction of elongation-mode ($\\alpha_E$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_E)| / \\sum n|Q(\\alpha_E)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023).",
+  "description": "Fraction of elongation-mode ($\\alpha_E$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_E)| / \\sum n|Q(\\alpha_E)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is the cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of each sample, from Pähtz & Durán (2023).",
   "p2": 0.5170351338386536,
   "p98": 0.9701680934429169,
   "frac_finite": 1.0

@@ -465,9 +465,10 @@ export class CellPanel {
     const body = this.#frame(cell);
     if (!cell.hasData) {
       const ds = this.#ds(cell);
-      const other = Object.values(DATASET_INFO).find((x) => x.id !== ds.id);
+      const others = Object.values(DATASET_INFO).filter((x) => x.id !== ds.id).map((x) => escapeHtml(x.name));
+      const otherText = others.length ? `, or switch to ${others.length > 1 ? `${others.slice(0, -1).join(", ")} or ${others[others.length - 1]}` : others[0]} (coastal cells can differ between the land masks of the datasets)` : "";
       body.innerHTML = `<div class="empty-state"><p><strong>Outside the ${escapeHtml(ds.name)} land mask</strong></p>
-        <p>The atlas computes wind roses and sand-flux statistics only for land cells (${escapeHtml(ds.name)} land–sea mask fraction &gt; ${ds.landThreshold}). ${escapeHtml(ds.nonLandReason)}, so the atlas has no statistics for it. Choose a nearby land cell${other ? `, or switch to ${escapeHtml(other.name)} (coastal cells can differ between the two land masks)` : ""}.</p>
+        <p>The atlas computes wind roses and sand-flux statistics only for ${escapeHtml(ds.landRule.split(";")[0])}. ${escapeHtml(ds.nonLandReason)}, so the atlas has no statistics for it. Choose a nearby land cell${otherText}.</p>
         <p class="help">${ds.resolution} cell: row ${cell.iy}, column ${cell.ix}; centre ${fmtLat(cell.lat)}, ${fmtLon(cell.lon)}.</p></div>`;
       return;
     }

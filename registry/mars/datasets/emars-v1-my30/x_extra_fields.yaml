@@ -58,8 +58,8 @@ layers:
   variable: rho_mean
   thresholdAware: false
   units: kg/m³
-  description: Mean over the Mars year of the hourly lowest-layer air density $\rho_f = p/(R T)$ of the wind dataset's
-    climate model ($p$ = mid pressure of the lowest layer, $T$ = lowest-level temperature).
+  description: Mean over the samples of the Mars year of the lowest-layer air density $\rho_f = p/(R T)$ of the
+    wind dataset (one sample per Mars hour; $p$ = mid pressure of the lowest layer, $T$ = lowest-level temperature).
   citation: 'Greybush, S. J., Kalnay, E., Wilson, R. J., Hoffman, R. N., Nehrkorn, T., Leidner, M., et al. (2018).
     The Ensemble Mars Atmosphere Reanalysis System (EMARS) Version 1.0 Dataset. Penn State Data Commons. doi:10.18113/D3W375;
     read from Bhattacharya, A. (2026). ARCO-EMARS: Analysis-Ready Cloud-Optimized EMARS Reanalysis. Hugging Face.

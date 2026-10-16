@@ -38,6 +38,7 @@ datasets:
       landRule: 'every cell (Mars has no land mask: all 16,200 cells carry wind data)'
       landThreshold: 0
       nonLandReason: ''
+      kind: free-running climate-model simulation
       dunesRule: the cell overlaps at least one dune polygon of the merged dune map (USGS Mars Global Digital Dune Database
         and Fenton 2020)
       fieldsFrom: atlas

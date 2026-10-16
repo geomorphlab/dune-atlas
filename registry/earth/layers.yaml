@@ -29,6 +29,8 @@ datasets:
       landRule: land cells (land–sea mask fraction above 0.5); ocean cells have no wind data
       landThreshold: 0.5
       nonLandReason: This cell is mainly water
+      landShort: 'land cells: land–sea mask fraction > 0.5'
+      note: 'ERA5-Land, used by Gunn (2026), is a land-surface rerun driven by ERA5 atmospheric fields interpolated to its grid (Muñoz-Sabater et al. 2021), so its winds are not an independent estimate, and the datasets can still differ: e.g., Baas (2026) reports ERA5-Land 10 m wind speeds 20–30 % below those of ERA5.'
       dunesRule: the cell overlaps at least one 0.1° dune cell of the dune map (Gunn 2026)
       fieldsFrom: paper
       sourceHtml: ERA5-Land 1950–2024 hourly 10 m winds (0.1°; Copernicus Climate Change Service, CC BY 4.0) and the qsat parameters of Gunn (2026), Supplementary
@@ -39,6 +41,7 @@ datasets:
       - dune-atlas
       - era5-land
       dataSource: era5-land
+      mapNotice: Contains modified Copernicus Climate Change Service information
       fieldsCitation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
         data: Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes - Supplementary Data. Zenodo. doi:10.5281/zenodo.20046812;
         winds: ERA5-Land hourly 10 m winds 1950–2024 (Muñoz-Sabater, J. et al. (2021). ERA5-Land: a state-of-the-art

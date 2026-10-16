@@ -57,10 +57,17 @@ Mars: hourly series) needs no app code:
    about the dataset (schema: `registry/layers.schema.json`, `datasets.items`):
    * `info`: name, grid (`resolution`, `resDeg`), `period`, `nHours`, land-cell rule and threshold, the
      message for cells without data (`nonLandReason`; empty when every cell has data), dune rule,
-     `fieldsFrom` (`paper` or `atlas`) and the About item (`sourceHtml`, optional `sourceTitle`);
+     `fieldsFrom` (`paper` or `atlas`) and the About item (`sourceHtml`, optional `sourceTitle`); optional
+     `kind` (what the dataset is, read after "Name: " in the Wind dataset ⓘ, e.g. `free-running climate-model
+     simulation`; datasets of the same kind are named together), `note` (a sentence for that ⓘ) and `landShort`
+     (the land rule of the selector tooltip, for datasets with a land mask). Generic text names no dataset: say
+     what is specific to a dataset in these fields;
    * `credits`: the citation sources cited for it (`sources`, in order), its wind-data source
      (`dataSource`, also listed in About), the citation and licence of its map fields, the wind line of
-     image exports (`windSourceText`) and an optional data notice written into downloads (`notice`);
+     image exports (`windSourceText`), an optional data notice written into downloads (`notice`, attribute
+     `data_notice`) and an optional short attribution line on the map and in About (`mapNotice`). The licence
+     in `fieldsLicence` is the one every download states for the sand-flux fields and wind data, so a dataset
+     with a restrictive licence (e.g. non-commercial) must say so there;
    * `citationSources`: the sources the dataset defines (e.g. the reanalysis paper and data record),
      each with entries `{label, text, doi | url, license?}`;
    * Mars (hourly-series cells): `info.grid` (the cell-store grid `{lat0, dlat, lon0, dlon, ny, nx}`; cells may be

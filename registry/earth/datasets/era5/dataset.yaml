@@ -22,6 +22,7 @@
       wind data
     landThreshold: 0
     nonLandReason: This cell has no land (land–sea mask fraction 0)
+    landShort: 'land cells: land–sea mask fraction > 0'
     dunesRule: the cell overlaps at least one 0.1° dune cell of the dune map (Gunn 2026)
     fieldsFrom: atlas
     sourceHtml: ERA5 1950–2024 hourly 10 m winds on the 0.25° grid (Hersbach et al. 2020; Copernicus Climate Change
@@ -34,6 +35,7 @@
     - dune-atlas-era5
     - era5
     dataSource: era5
+    mapNotice: Contains modified Copernicus Climate Change Service information
     fieldsCitation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications.
       doi:10.1038/s41467-026-75466-y; winds: ERA5 hourly 10 m winds 1950–2024 (Hersbach, H. et al. (2020). The ERA5
       global reanalysis. Quarterly Journal of the Royal Meteorological Society 146, 1999–2049. doi:10.1002/qj.3803;

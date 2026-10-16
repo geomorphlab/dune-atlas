@@ -169,9 +169,10 @@ FIELD_DEFINITIONS = {
                    r"(Courrech du Pont et al. 2024). The ratio goes to infinity where its denominator (a net flux) goes "
                    r"to zero (shown clipped to ±60,000)."),
 }
-# Mars wording: DP is averaged over the hours of the Mars year with a grain-size threshold.
+# Mars wording: DP is averaged over the samples of the Mars year (one per Mars hour or every two Mars hours, depending on
+# the wind dataset) with a grain-size threshold.
 MARS_FIELD_DEFINITIONS = {
-    "dpm": (r"Time-averaged flat-bed saturated sand flux, $DP = \sum q / N$ over all N hours of the Mars year: the "
+    "dpm": (r"Time-averaged flat-bed saturated sand flux, $DP = \sum q / N$ over all N samples of the Mars year: the "
             r"volume of packed sand per metre width that the wind could move per Earth year over a flat bed fully "
             r"covered by loose sand (Gunn 2026). Like the drift potential of Fryberger & Dean (1979) it measures the "
             r"wind's capacity to transport sand, but it is a different quantity: Fryberger's DP is in vector units, "
