@@ -8,8 +8,8 @@ import { storedNote } from "../src/core/cell/export";
 
 describe("dataset-selector text (§4 item 1)", () => {
   it("names every dataset with its grid and the period from the dataset table", () => {
-    for (const d of Object.values(DATASET_INFO)) expect(DATASET_INFO_TEXT).toContain(`${d.name}, ${d.resolution}`);
-    expect(DATASET_INFO_TEXT).toContain(datasetFacts("period"));
+    for (const d of Object.values(DATASET_INFO)) expect(DATASET_INFO_TEXT).toContain(`${d.name}, ${d.resolution}, ${d.period}`);
+    for (const p of datasetFacts("period").split(" or ")) expect(DATASET_INFO_TEXT).toContain(p);
   });
   it("gives the Baas (2026) comparison as an example in the dataset text only", () => {
     expect(DATASET_INFO_TEXT).toMatch(/Baas \(2026\) reports its 10 m wind speeds 20–30 % below those of ERA5/);

@@ -110,11 +110,11 @@ def subset_hist(src_dir, out_dir, land):
     return n
 
 
-def subset_qsat(src_dir, out_dir, land, note="cells with ERA5 land-sea mask lsm > 0.5; no data elsewhere"):
+def subset_qsat(src_dir, out_dir, land, note="cells with ERA5 land-sea mask lsm > 0.5; no data elsewhere", qsat=QSAT):
     import numcodecs
     import zarr
-    s = zarr.open_group(f"{src_dir}/{QSAT}", mode="r")
-    g = zarr.open_group(f"{out_dir}/{QSAT}", mode="w", zarr_format=2)
+    s = zarr.open_group(f"{src_dir}/{qsat}", mode="r")
+    g = zarr.open_group(f"{out_dir}/{qsat}", mode="w", zarr_format=2)
     g.attrs.update({**dict(s.attrs), "subset": note})
     names = sorted(s.array_keys())
     copy_coords(s, g, ["ut", "latitude", "longitude"])
@@ -147,11 +147,11 @@ def check(src_dir, out_dir, land, n=300, seed=0):
             "other_checked": int(len(oi)), "other_empty": o_ok}
 
 
-def check_qsat(src_dir, out_dir, land, n=300, seed=0):
+def check_qsat(src_dir, out_dir, land, n=300, seed=0, qsat=QSAT):
     """Read-back check of a land-cell qsat copy alone (random land cells identical, other cells no data)."""
     import zarr
     rng = np.random.default_rng(seed)
-    qs, qo = zarr.open_group(f"{src_dir}/{QSAT}", mode="r"), zarr.open_group(f"{out_dir}/{QSAT}", mode="r")
+    qs, qo = zarr.open_group(f"{src_dir}/{qsat}", mode="r"), zarr.open_group(f"{out_dir}/{qsat}", mode="r")
     L, O = np.argwhere(land), np.argwhere(~land)
     li, oi = L[rng.choice(len(L), n, replace=False)], O[rng.choice(len(O), n // 3, replace=False)]
     vars_ = [v for v in qo.array_keys() if v not in ("ut", "latitude", "longitude")]

@@ -35,6 +35,13 @@ def exact_coords(ny=NY, nx=NX, lat0=90.0, dlat=-0.1, lon0=-180.0, dlon=0.1):
     return lat0 + dlat * np.arange(ny), lon0 + dlon * np.arange(nx)
 
 
+def grid_coords(g):
+    """float64 row / column centres of a dataset grid: the exact (Gaussian) rows where the grid has them (JRA-3Q),
+    else the regular rows exactly as exact_coords (ERA5-Land, ERA5, MERRA-2)."""
+    lat, lon = exact_coords(g.ny, g.nx, g.lat0, g.dlat, g.lon0, g.dlon)
+    return (g.lat_exact() if g.lat_values is not None else lat), lon
+
+
 def _ddlon_periodic(a: np.ndarray, lam: np.ndarray) -> np.ndarray:
     """d a / d lambda along the last axis, periodic (same stencil as the notebook's differentiate_periodic)."""
     ext = np.concatenate([a[..., -1:], a, a[..., :1]], axis=-1)
@@ -62,10 +69,9 @@ def divergence(q: np.ndarray, theta: np.ndarray, lat_deg, lon_deg, R: float = R_
 def compute(data_dir, log=print, dataset=None) -> np.ndarray:
     """(64, ny, nx) float32 m/yr from qsat_view.open_qsat rdpm/rdpa, exact coordinates, pole rows NaN."""
     from .qsat_view import open_qsat
-    from .grid import grid_of
     ds = get_dataset(dataset)
     dq = open_qsat(data_dir, dataset=ds)
-    assert grid_of(dq) == ds.grid
+    ds.check_grid(dq)
     t0 = time.time()
     q = dq["rdpm"].values          # float64 (64, ny, nx), m^2/s
     a = dq["rdpa"].values
@@ -76,7 +82,7 @@ def compute(data_dir, log=print, dataset=None) -> np.ndarray:
         q[:, ~land] = np.nan
         a[:, ~land] = np.nan
     g = ds.grid
-    lat, lon = exact_coords(g.ny, g.nx, g.lat0, g.dlat, g.lon0, g.dlon)
+    lat, lon = grid_coords(g)
     out = np.empty(q.shape, "f4")
     for k in range(q.shape[0]):
         out[k] = (divergence(q[k], a[k], lat, lon) * C.S2Y).astype("f4")
@@ -106,7 +112,7 @@ def as_dataset(arr: np.ndarray, grid=ERA5_LAND_GRID):
     import xarray as xr
     g = grid
     assert arr.shape[1:] == g.shape, (arr.shape, g)
-    lat, lon = exact_coords(g.ny, g.nx, g.lat0, g.dlat, g.lon0, g.dlon)
+    lat, lon = grid_coords(g)
     va = var_attrs(g)
     # fields.display_array: long_name -> long_name_tex, description -> plain text via tex_to_plain
     attrs = {"long_name": "Saturated flux divergence $" + va["long_name_latex"] + "$",
@@ -205,12 +211,12 @@ def main(argv=None):
     c = sub.add_parser("compute", help="qsdiv, all 64 ut -> staging zarr (float32 m/yr)")
     c.add_argument("--data", default=dd)
     c.add_argument("--out", required=True)
-    c.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
+    c.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5", "merra2", "jra3q"])
     b = sub.add_parser("pyramid", help="fields/qsdiv.zarr from the staging zarr (fields.build_field_pyramid)")
     b.add_argument("--native", required=True)
     b.add_argument("--out", required=True)
     b.add_argument("--keepbits", type=int, default=12)
-    b.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
+    b.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5", "merra2", "jra3q"])
     a = p.parse_args(argv)
     if a.cmd == "compute":
         ds = get_dataset(a.dataset)

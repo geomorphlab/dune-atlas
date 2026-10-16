@@ -59,7 +59,8 @@ SOURCE_PREFIX = "dune-atlas/v1/fields"
 # registry sources of the per-dataset field stores: '{dataset}' expands to the selected dataset's
 # prefix (ERA5-Land: dune-atlas/v1 -> dune-atlas/v1/fields/<var>.zarr, the existing keys;
 # ERA5: dune-atlas/v1/datasets/era5/fields/<var>.zarr)
-DATASET_SOURCE_PREFIX = {"era5-land": "{dataset}/fields", "era5": "{dataset}/fields"}
+DATASET_SOURCE_PREFIX = {"era5-land": "{dataset}/fields", "era5": "{dataset}/fields", "merra2": "{dataset}/fields",
+                         "jra3q": "{dataset}/fields"}
 
 
 def dataset_citation(dataset=None) -> str:
@@ -89,9 +90,12 @@ def fields_citation(dataset=None) -> str:
 
 def fields_licence(dataset=None) -> str:
     """Licence row of the atlas-derived fields: ERA5-Land fields = the Zenodo Supplementary Data
-    licence; fields computed from ERA5 = the ERA5 licence (CC BY 4.0)."""
+    licence; fields computed from ERA5 = the ERA5 licence (CC BY 4.0); other datasets: info fields_licence_text
+    (MERRA-2 CC BY 4.0, JRA-3Q CC BY-NC-SA 4.0)."""
     ds = get_dataset(dataset)
-    return "CC BY 4.0 (Zenodo Supplementary Data)" if ds.id == "era5-land" else ds.info["licence"]
+    if ds.id == "era5-land":
+        return "CC BY 4.0 (Zenodo Supplementary Data)"
+    return ds.info.get("fields_licence_text", ds.info["licence"])
 
 
 def fields_attribution(dataset=None) -> dict:
@@ -407,7 +411,7 @@ def load_metadata(path=METADATA_JSON) -> dict:
 
 
 # ----------------------------------------------------------------------------- arrays
-def display_array(dq: xr.Dataset, var: str, meta: dict | None = None) -> xr.DataArray:
+def display_array(dq: xr.Dataset, var: str, meta: dict | None = None, grid=None) -> xr.DataArray:
     meta = meta or load_metadata()
     da = dq[var]
     src = dict(da.attrs)
@@ -439,8 +443,13 @@ def display_array(dq: xr.Dataset, var: str, meta: dict | None = None) -> xr.Data
         attrs["angle_convention"] = "direction toward, radians CCW from east (-pi..pi); bearing = (90 - deg(a)) mod 360"
     da = da.astype("float32")  # topozarr kernel and browsers lack reliable float16
     da.attrs = attrs
-    # float32 source coords are not exactly uniform; rebuild the exact grid values (grid read from the source).
-    g = grid_of(dq)
+    # float32 source coords are not exactly uniform; rebuild the exact grid values (the dataset's grid, checked
+    # against the source; else read from the source). Grids with Gaussian rows use their regular fitted rows.
+    if grid is not None:
+        grid.check_coords(dq["latitude"].values, dq["longitude"].values)
+        g = grid
+    else:
+        g = grid_of(dq)
     da = da.assign_coords(latitude=np.round(g.lat0 + g.dlat * np.arange(g.ny), 6),
                           longitude=np.round(g.lon0 + g.dlon * np.arange(g.nx), 6),
                           ut=np.asarray(C.UT_VALUES[: dq.sizes["ut"]], dtype="float64"))
@@ -527,7 +536,7 @@ def build_field_pyramid(dq: xr.Dataset, var: str, out: str, *, levels: int | Non
     meta = meta or load_metadata()
     t0 = time.time()
     dset = get_dataset(dataset)
-    da = display_array(dq, var, meta)
+    da = display_array(dq, var, meta, grid=dset.grid)
     if land is not None:
         attrs = dict(da.attrs)
         da = da.where(xr.DataArray(np.asarray(land, bool), dims=("latitude", "longitude")))
@@ -550,7 +559,7 @@ def build_field_pyramid(dq: xr.Dataset, var: str, out: str, *, levels: int | Non
     ds["ut"].attrs.update(units="m/s", long_name="threshold friction velocity u*,th")
     ds.attrs.update({
         "title": f"dune-atlas field: {FIELD_META[var]['title']}",
-        "source": dataset_citation(dset), "license": "CC-BY-4.0",
+        "source": dataset_citation(dset), "license": (dset.info or {}).get("fields_license", "CC-BY-4.0"),
         "ut_default_index": C.UT_DEFAULT_INDEX,
         "dune_atlas:resampling": ("nearest-finite (first finite native cell of each window, row-major)"
                                   if var in ANGLE_VARS else
@@ -561,7 +570,10 @@ def build_field_pyramid(dq: xr.Dataset, var: str, out: str, *, levels: int | Non
         ds_attrs = {"dune_atlas:dataset": dset.id, "dataset_name": dset.name, "dataset_resolution": dset.resolution,
                     "dataset_period": dset.period, "dataset_n_hours": dset.n_hours,
                     "dataset_citation": dset.info["citation"], "dataset_data_citation": dset.info["data_citation"],
-                    "dataset_land_cells": dset.info["land_cells"], "license_notice": dset.info["copernicus_notice"]}
+                    "dataset_land_cells": dset.info["land_cells"]}
+        notice = dset.info.get("copernicus_notice") or dset.info.get("notice")
+        if notice:
+            ds_attrs["license_notice"] = notice
         ds.attrs.update(ds_attrs)
     ds = ds.proj.assign_crs(spatial_ref="EPSG:4326")
     hints = {var: topozarr.ZarrLayerVarConfig(clim=stored_clim(var, meta), colormap=FIELD_META[var]["colormap"])}
@@ -702,7 +714,7 @@ def main(argv=None):
     b.add_argument("--keepbits", type=int, default=DEFAULT_KEEPBITS, help="23 = lossless")
     b.add_argument("--codec", default=DEFAULT_CODEC, choices=["blosc-zstd-shuffle", "zstd"])
     b.add_argument("--force", action="store_true")
-    b.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
+    b.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5", "merra2", "jra3q"])
     b.add_argument("--meta", help="qsat field metadata json (colour limits); default per dataset")
     a = p.parse_args(argv)
     if a.cmd == "registry":

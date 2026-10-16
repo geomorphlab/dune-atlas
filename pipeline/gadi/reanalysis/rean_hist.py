@@ -50,7 +50,7 @@ DATASETS = {
               "480 x 960 cells: Gaussian latitudes 89.71 N to 89.71 S, longitude -180 + 0.375 j (source longitude "
               "0..359.625 rolled to start at -180, as the ERA5 stores)"),
         citation=("Kosaka, Y. et al. (2024). The JRA-3Q Reanalysis. Journal of the Meteorological Society of Japan "
-                  "102, 49-109, doi:10.2151/jmsj.2024-004; Japan Meteorological Agency, Japan (2022): Japanese "
+                  "102, 49-109, doi:10.2151/jmsj.2024-004; Japan Meteorological Agency, Japan (2023): Japanese "
                   "Reanalysis for Three Quarters of a Century (JRA-3Q). NSF NCAR GDEX, doi:10.5065/AVTZ-1H78"),
         licence=("JRA-3Q via NCAR GDEX: non-commercial use, per JMA's conditions for collaborative organisations; "
                  "products derived from it are treated as CC BY-NC-SA 4.0 (the licence stated by JMA's DIAS copy)"),

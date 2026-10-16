@@ -63,3 +63,62 @@ Spatial pattern:
 - RDP/DP and RDD agree closely with ERA5 in most boxes.
 - No grid offset: shifting either dataset by up to 3 boxes in latitude or longitude does not raise the correlation
   with ERA5.
+
+## Atlas stores (16 October 2026)
+
+Code: `pipeline/gadi/reanalysis/atlas_cells.pbs` (cell stores next to the data on Gadi, the ERA5 script
+`pipeline/gadi/era5/era5_atlas_cells.py --dataset DS --qsat-subset --split-mb 200`), then locally
+`scripts/build_reanalysis_atlas.sh DS` (parts checked against `parts.md5` and streamed into tar; aridity means; field
+pyramids, colour limits and flux divergence with `scripts/build_era5_fields_pervar.py --dataset DS`; sidecars;
+registry files). Dataset descriptions: `grid.py` `MERRA2_INFO`, `JRA3Q_INFO`, `DATASETS`.
+
+**Land cells and dune cells** (`cellmasks.py build --dataset DS`; land = the dataset's own land fraction > 0):
+
+| | MERRA-2 | JRA-3Q |
+|---|---|---|
+| land fraction | FRLAND + FRLANDICE (M2C0NXASM) | TL479 land field (steps of 1/60) |
+| land cells | 83,945 of 207,936 | 158,338 of 460,800 |
+| dune cells (footprint overlaps a 0.1° dune cell) | 6,984 | 13,871 |
+| dune cells that are not land | 2 (153 km² of 0.1° dune area) | 455 (70,633 km²) |
+| 0.1° dune cells touching no land cell | 1 (112 km²) | 337 (36,827 km²) |
+
+The JRA-3Q land field is close to binary at coasts, so more coastal dune area falls in cells without wind data than
+with ERA5 (1 cell, 7 km²) or MERRA-2. The 106,540 0.1° dune cells (11,614,510 km²) are counted exactly once in
+each dataset (exact spherical overlap areas).
+
+**JRA-3Q rows.** The 480 Gaussian latitudes (89.713° N … 89.713° S) are kept exactly in `cells.zarr` `grid.lat_values`
+(`pipeline/src/dune_atlas_pipeline/data/jra3q_gaussian_latitudes.json`). For drawing, snapping and footprints the
+atlas uses the regular rows fitted through the first and last row (`lat0` 89.71324385, `dlat` −0.374585569311);
+every Gaussian row centre lies within 0.0051° of its fitted row. Flux divergence is computed on the exact latitudes
+(`qsdiv.grid_coords`). Downloads give the Gaussian latitude as the cell latitude and the fitted footprint as its
+bounds (checked: region export latitudes equal `lat_values` to 4 × 10⁻¹⁰°).
+
+**Cell stores** (PBS 181416680 MERRA-2, 181416681 JRA-3Q; both exit 0, ~4 min, no anomalies):
+
+| | MERRA-2 | JRA-3Q |
+|---|---|---|
+| land shards per array (all present; non-land shards and inner chunks absent) | 562 | 909 |
+| random land cells vs the source stores: histograms identical / fields = float32 of the source | 500 / 500 | 500 / 500 |
+| random non-land cells empty | 200 / 200 | 200 / 200 |
+| histogram sum = 403,248 h (others short by the hours above 20 m/s) | 274 of 500 (max deficit 73,298 h) | 334 of 500 (max 22,841 h) |
+| land-cell qsat copy vs source (300 land cells identical, 100 others empty) | yes | yes |
+
+**Local build** (`build_reanalysis_atlas.sh`, 91 s and 113 s): 23 field pyramids and `fields/qsdiv.zarr`, 3 levels
+each (MERRA-2 576 / 288 / 144 px, JRA-3Q 960 / 480 / 240 px). Flux divergence at u*,th = 0.15 m/s: finite in
+76,370 (MERRA-2) and 147,350 (JRA-3Q) cells; dune-cell median −0.011 and −0.016 m/kyr, 59 % and 58 % negative.
+12-bit rounding of qsdiv: maximum relative error 1.2 × 10⁻⁴ (MERRA-2); JRA-3Q has one subnormal value
+(2.6 × 10⁻⁴¹ m/yr) with relative error 0.008, all others ≤ 1.2 × 10⁻⁴. Vegetation cover defined in 50,857 and
+101,083 land cells; aridity in 56,488 and 121,562 cells (Global-AI covers no Antarctica).
+
+**Corrections before upload.** The JRA-3Q data citation year is 2023 (GDEX record publication date), not 2022 as
+first written: corrected in `grid.py`, `rean_hist.py` and the registry; `cells.zarr` (built on Gadi with 2022) was
+corrected in its root `zarr.json` (2 occurrences; `history_note` added). The source stores on Gadi keep 2022.
+
+**Upload** (`dune-atlas upload-new`, create-only after a live listing of `dune-atlas/`; data objects first, zarr
+metadata last): `dune-atlas/v2/datasets/merra2/` 2,855 objects, 1.268 GB (listing before: 59,735 objects);
+`dune-atlas/v2/datasets/jra3q/` 4,396 objects, 2.217 GB (listing before: 62,590 = 59,735 + 2,855, so nothing else
+changed). **Public checks** (`scripts/verify_era5_r2.py --dataset DS`): every object's size and ETag equal the local
+MD5 and the ledger; 20 land cells (incl. ≥ 10 with land fraction ≤ 0.5 and dune cells) read with the app's
+`CellStore` over `data.geomorphlab.org` bit-identical to the Gadi reference sample, sidecars identical, 5 non-land
+cells empty, 10 / 10 pyramid windows identical; suffix range 206, CORS for map.geomorphlab.org. Results:
+`staging/reanalysis/DS/public_verification.json`.

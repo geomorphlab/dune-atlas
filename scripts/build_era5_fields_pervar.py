@@ -1,4 +1,4 @@
-"""ERA5 field pyramids, flux divergence and colour-limit statistics one variable at a time (small local footprint).
+"""ERA5 / MERRA-2 / JRA-3Q (--dataset) field pyramids, flux divergence and colour-limit statistics one variable at a time (small local footprint).
 
 The land-cell qsat copy arrives from Gadi as one tar per variable (pipeline/gadi/era5/era5_atlas_cells.py
 --qsat-subset, repacked per variable) in --vars-dir (qsat_meta.tar first, then qsat_<var>.tar as they arrive).
@@ -8,6 +8,7 @@ rdpm and rdpa are kept until the flux divergence (qsdiv.divergence per threshold
 fields/qsdiv.zarr follows. One process; blosc/OMP threads and topozarr workers limited by --threads.
 
     python scripts/build_era5_fields_pervar.py --vars-dir W/e5vars --work W/e5data --st staging/era5/atlas_v2
+    python scripts/build_era5_fields_pervar.py --dataset merra2 --vars-dir ... --work ... --st staging/reanalysis/merra2
 """
 import argparse
 import json
@@ -20,7 +21,6 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "pipeline" / "src"))
-Z = "era5_1950_2024_qsat_params.zarr"
 
 
 def wait_for(p: Path, timeout=3600):  # noqa: D103
@@ -41,6 +41,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--vars-dir", required=True); ap.add_argument("--work", required=True)
     ap.add_argument("--st", required=True); ap.add_argument("--threads", type=int, default=2)
+    ap.add_argument("--dataset", default="era5", choices=["era5", "merra2", "jra3q"])
     a = ap.parse_args()
     os.environ.setdefault("OMP_NUM_THREADS", "1")
     from numcodecs import blosc
@@ -52,7 +53,9 @@ def main():
     from dune_atlas_pipeline import constants as C, fields as F, qsdiv as QS
     from dune_atlas_pipeline.cellstore import FIELD_VARS, load_masks
     from dune_atlas_pipeline.grid import DATASETS
-    ds = DATASETS["era5"]
+    ds = DATASETS[a.dataset]
+    Z = ds.qsat_store
+    NAT = f"qsdiv_native_{ds.id}.zarr"
     vd, work, st = Path(a.vars_dir), Path(a.work), Path(a.st)
     out = st / "stores" / "fields"; out.mkdir(parents=True, exist_ok=True)
     work.mkdir(parents=True, exist_ok=True)
@@ -103,16 +106,16 @@ def main():
         (out / f".{v}.done").write_text(json.dumps(st_))
         log(f"{v}: {st_['bytes'] / 1e6:.1f} MB, {st_['total_s']} s, rss {st_['peak_rss_gb']} GB")
         del dq, a14
-        if v == "rdpa" and not (st / "qsdiv_native_era5.zarr").exists():
+        if v == "rdpa" and not (st / NAT).exists():
             g = ds.grid
-            lat, lon = QS.exact_coords(g.ny, g.nx, g.lat0, g.dlat, g.lon0, g.dlon)
+            lat, lon = QS.grid_coords(g)
             src = xr.open_zarr(str(work / Z), consolidated=False, chunks=None)
             q = np.empty((64, g.ny, g.nx), "f4")
             for k in range(64):                   # one threshold at a time (float64 2-D fields only)
                 qk = np.where(land, src["rdpm"].isel(ut=k).values, np.nan)
                 ak = np.where(land, src["rdpa"].isel(ut=k).values, np.nan)
                 q[k] = (QS.divergence(qk, ak, lat, lon) * C.S2Y).astype("f4")
-            QS.write_native(q, str(st / "qsdiv_native_era5.zarr"), g)
+            QS.write_native(q, str(st / NAT), g)
             (st / "logs" / "qsdiv_compute.json").write_text(json.dumps(
                 {"shape": list(q.shape), "finite_ut14": int(np.isfinite(q[C.UT_DEFAULT_INDEX]).sum()),
                  "dune_stats_ut14": QS.dune_stats(str(work), q[C.UT_DEFAULT_INDEX], dataset=ds)}))
@@ -123,7 +126,7 @@ def main():
             if v == "rdpa" and (work / Z / "rdpm").exists():
                 shutil.rmtree(work / Z / "rdpm")
     if not (out / ".qsdiv.done").exists():
-        st_ = QS.build_pyramid(str(st / "qsdiv_native_era5.zarr"), str(out / "qsdiv.zarr"), dataset=ds)
+        st_ = QS.build_pyramid(str(st / NAT), str(out / "qsdiv.zarr"), dataset=ds)
         (out / ".qsdiv.done").write_text(json.dumps(st_))
         log(f"qsdiv pyramid: {json.dumps(st_)}")
     print(json.dumps({"vars": len(meta), "stores": sorted(p.name for p in out.glob("*.zarr"))}))

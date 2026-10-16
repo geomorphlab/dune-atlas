@@ -93,7 +93,24 @@ export function outsideGridText(lat: number, g: Grid, name: string): string {
     : `No ${name} data poleward of ${latText(s)}: the southernmost cells of its grid are centred at ${latText(centre)}.`;
 }
 
-/** nominal number of 30-arc-second pixels in one cell (0.1°: 144, 0.25°: 900) */
-export function pixelsPerCell(deg: number): number {
-  return Math.round((deg * 120) ** 2);
+/** nominal number of 30-arc-second pixels in one cell (0.1°: 144, 0.25°: 900; `degLon`: the longitude spacing
+ *  of non-square cells, MERRA-2 0.5° × 0.625°: 4500) */
+export function pixelsPerCell(deg: number, degLon = deg): number {
+  return Math.round(deg * 120 * degLon * 120);
+}
+
+/** the dataset whose registry grid (info.grid) has this latitude / longitude spacing */
+export function datasetOfSpacing(deg: number, degLon = deg): DatasetInfo | undefined {
+  return Object.values(DATASET_INFO).find((d) => d.grid && Math.abs(Math.abs(d.grid.dlat) - deg) < 1e-9 && Math.abs(Math.abs(d.grid.dlon) - degLon) < 1e-9);
+}
+/** cell size in text: the dataset's own wording where a dataset has this spacing ("0.25°", "0.5° × 0.625°",
+ *  "0.375°" for the Gaussian JRA-3Q rows), else "0.1°" (square) or "a° × b°" (latitude × longitude) */
+export function cellSizeText(deg: number, degLon = deg): string {
+  const d = datasetOfSpacing(deg, degLon);
+  if (d) return d.resolution;
+  return Math.abs(deg - degLon) < 1e-9 ? resolutionText(deg) : `${resolutionText(deg)} × ${resolutionText(degLon)}`;
+}
+/** half the cell size in text, for "centre ± {half}": "0.125°", or "0.25° in latitude and ± 0.3125° in longitude" */
+export function halfCellText(deg: number, degLon = deg): string {
+  return Math.abs(deg - degLon) < 1e-9 ? resolutionText(deg / 2) : `${resolutionText(deg / 2)} in latitude and ± ${resolutionText(degLon / 2)} in longitude`;
 }

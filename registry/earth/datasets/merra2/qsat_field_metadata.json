@@ -1,0 +1,186 @@
+{
+ "rdpm": {
+  "long_name": "Resultant drift potential $RDP$",
+  "units": "m$^2$/s",
+  "description": "Magnitude of the time-averaged flat-bed flux vector, $RDP = |\\sum n q e^{i\\theta}| / \\sum n$, in m$^2$/s.",
+  "p2": 0.0,
+  "p98": 1.3639487279423232e-05,
+  "frac_finite": 0.4037
+ },
+ "rdpa": {
+  "long_name": "Resultant drift direction $RDD$",
+  "units": "rad",
+  "description": "Direction of the time-averaged flat-bed flux vector, $\\arg \\sum n q e^{i\\theta}$, radians CCW from east, direction of transport.",
+  "p2": -3.036966286234679,
+  "p98": 3.034831563420838,
+  "frac_finite": 0.4037
+ },
+ "ab": {
+  "long_name": "Migration mode unsigned direction $\\alpha_H$",
+  "units": "rad",
+  "description": "Migration mode unsigned direction $\\alpha_H$ in radians.",
+  "p2": 0.07522236347315056,
+  "p98": 3.0688466911344565,
+  "frac_finite": 0.4031
+ },
+ "ae": {
+  "long_name": "Elongation mode signed direction $\\alpha_E$",
+  "units": "rad",
+  "description": "Elongation mode signed direction $\\alpha_E$ in radians. The direction longitudinal crests elongate.",
+  "p2": -3.048364065511252,
+  "p98": 3.0406086801172196,
+  "frac_finite": 0.4031
+ },
+ "at": {
+  "long_name": "Migration signed direction $\\alpha_T$",
+  "units": "rad",
+  "description": "Migration signed direction $\\alpha_T$ in radians. The direction transverse crests migrate.",
+  "p2": -3.036657312484435,
+  "p98": 3.0434438157590997,
+  "frac_finite": 0.4031
+ },
+ "ao": {
+  "long_name": "Oblique signed direction $\\alpha_O$",
+  "units": "rad",
+  "description": "Oblique signed signed direction $\\alpha_O$ in radians. The direction oblique dune crests elongate.",
+  "p2": -2.9728756231268707,
+  "p98": 2.995977982060744,
+  "frac_finite": 0.4031
+ },
+ "dpm": {
+  "long_name": "Drift potential $DP$",
+  "units": "m$^2$/s",
+  "description": "Time-averaged flat-bed saturated flux magnitude, $DP = \\sum n q / \\sum n$ over all speed and direction bins, in m$^2$/s.",
+  "p2": 0.0,
+  "p98": 1.4232251529806629e-05,
+  "frac_finite": 0.4037
+ },
+ "qnlb": {
+  "long_name": "Net along-crest migration-mode flux $\\langle Q_{\\parallel}(\\alpha_H)\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Net along-crest migration-mode flux $\\langle Q_{\\parallel}(\\alpha_H)\\rangle$ in m$^2$/s.",
+  "p2": -1.5394902279769897e-06,
+  "p98": 1.6788622033035352e-06,
+  "frac_finite": 0.4031
+ },
+ "qncb": {
+  "long_name": "Net across-crest migration-mode flux $\\langle Q_{\\bot}(\\alpha_H)\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Net across-crest migration-mode flux $\\langle Q_{\\bot}(\\alpha_H)\\rangle$ in m$^2$/s.",
+  "p2": -2.8851142525539065e-05,
+  "p98": 4.252507477458729e-05,
+  "frac_finite": 0.4031
+ },
+ "qalb": {
+  "long_name": "Absolute along-crest migration-mode flux $\\langle |Q_{\\parallel}(\\alpha_H)|\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Absolute along-crest migration-mode flux $\\langle |Q_{\\parallel}(\\alpha_H)|\\rangle$ in m$^2$/s.",
+  "p2": 1.7132493261704627e-10,
+  "p98": 1.0249435835222665e-05,
+  "frac_finite": 0.4031
+ },
+ "qacb": {
+  "long_name": "Absolute across-crest migration-mode flux $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Absolute across-crest migration-mode flux $\\langle |Q_{\\bot}(\\alpha_H)|\\rangle$ in m$^2$/s.",
+  "p2": 1.0400362920023508e-09,
+  "p98": 4.543885230030553e-05,
+  "frac_finite": 0.4031
+ },
+ "qnle": {
+  "long_name": "Net along-crest elongation-mode flux $\\langle Q_{\\parallel}(\\alpha_E)\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Net along-crest elongation-mode flux $\\langle Q_{\\parallel}(\\alpha_E)\\rangle$ in m$^2$/s.",
+  "p2": 3.270995305504718e-11,
+  "p98": 1.9097563848219864e-05,
+  "frac_finite": 0.4031
+ },
+ "qale": {
+  "long_name": "Absolute along-crest elongation-mode flux $\\langle |Q_{\\parallel}(\\alpha_E)|\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Absolute along-crest elongation-mode flux $\\langle |Q_{\\parallel}(\\alpha_E)|\\rangle$ in m$^2$/s.",
+  "p2": 5.0277890541773397e-11,
+  "p98": 1.920288974419567e-05,
+  "frac_finite": 0.4031
+ },
+ "qace": {
+  "long_name": "Absolute across-crest elongation-mode flux $\\langle |Q_{\\bot}(\\alpha_E)|\\rangle$",
+  "units": "m$^2$/s",
+  "description": "Absolute across-crest elongation-mode flux $\\langle |Q_{\\bot}(\\alpha_E)|\\rangle$ in m$^2$/s.",
+  "p2": 1.0447175174041888e-10,
+  "p98": 1.0186415537136029e-05,
+  "frac_finite": 0.4031
+ },
+ "qha_rdp_dp": {
+  "long_name": "$RDP/DP$",
+  "units": "-",
+  "description": "Directional variability of sand flux: ratio of resultant to total drift potential, $RDP/DP$ (0 = multidirectional, 1 = unidirectional). Undefined where there is no sand flux ($DP = 0$).",
+  "p2": 0.09950114533566522,
+  "p98": 0.9734805516813194,
+  "frac_finite": 0.3929
+ },
+ "sige_sigh": {
+  "long_name": "$\\sigma_E/\\sigma_H$",
+  "units": "-",
+  "description": "Stability of elongating dunes on starved beds $\\langle|Q_{\\bot}(\\alpha_E)|\\rangle/\\langle|Q_{\\bot}(\\alpha_H)|\\rangle$.",
+  "p2": 0.055872221024867136,
+  "p98": 0.9947360553593276,
+  "frac_finite": 0.4031
+ },
+ "qhab_nl_nc": {
+  "long_name": "$\\hat{Q}_{\\parallel/\\bot,H}$",
+  "units": "-",
+  "description": "Straightness vs. sinuosity of periodic long-crested dunes on covered bed (bed instability mode, growth in height dominates), asymmetry of migrating dunes $|\\langle Q_{\\parallel}(\\alpha_H)\\rangle/\\langle Q_{\\bot}(\\alpha_H)\\rangle|$.",
+  "p2": 0.000249524620043365,
+  "p98": 4.158223253366245,
+  "frac_finite": 0.4031
+ },
+ "qhab_ac_nc": {
+  "long_name": "$\\hat{Q}_{|\\bot|/\\bot,H}$",
+  "units": "-",
+  "description": "Relative balance between growth in height and migration dynamics $|\\langle |Q_{\\bot}(\\alpha_H)|\\rangle/\\langle Q_{\\bot}(\\alpha_H)\\rangle|$.",
+  "p2": 1.0000569214228934,
+  "p98": 28.99530784061273,
+  "frac_finite": 0.4031
+ },
+ "qhne_ac_nl": {
+  "long_name": "$\\hat{Q}_{|\\bot|/\\parallel,E}$",
+  "units": "-",
+  "description": "Morphology of elongating dunes $\\langle |Q_{\\bot}(\\alpha_E)|\\rangle/\\langle Q_{\\parallel}(\\alpha_E)\\rangle$.",
+  "p2": 0.2263160877726541,
+  "p98": 10.331011894331134,
+  "frac_finite": 0.4007
+ },
+ "ufm": {
+  "long_name": "$\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$",
+  "units": "-",
+  "description": "Average above-threshold flat-bed friction velocity, normalised by threshold $\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$.",
+  "p2": 1.1836308500643045,
+  "p98": 3.357946063278279,
+  "frac_finite": 0.3929
+ },
+ "uft": {
+  "long_name": "$T|u_{\\ast,f}>u_{\\ast,th}/T$",
+  "units": "-",
+  "description": "Fraction of time flat-bed friction velocity is above threshold $T|u_{\\ast,f}>u_{\\ast,th}/T$.",
+  "p2": 0.0,
+  "p98": 0.9809767026502867,
+  "frac_finite": 0.4037
+ },
+ "qhbf": {
+  "long_name": "Fraction of bed-mode flux while flat-bed $u_{\\ast,f}>u_{\\ast,th}$",
+  "units": "-",
+  "description": "Fraction of bed-mode (migration-mode, $\\alpha_H$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_H)| / \\sum n|Q(\\alpha_H)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux.",
+  "p2": 0.0,
+  "p98": 0.9996199474346597,
+  "frac_finite": 0.4031
+ },
+ "qhef": {
+  "long_name": "Fraction of elongation-mode flux while flat-bed $u_{\\ast,f}>u_{\\ast,th}$",
+  "units": "-",
+  "description": "Fraction of elongation-mode ($\\alpha_E$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_E)| / \\sum n|Q(\\alpha_E)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux.",
+  "p2": 0.00462117571987993,
+  "p98": 0.9993918578042699,
+  "frac_finite": 0.4007
+ }
+}

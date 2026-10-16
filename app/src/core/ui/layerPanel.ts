@@ -434,7 +434,7 @@ export const layerPanelOpen = (root: HTMLElement) => !root.classList.contains("c
 /** Wind dataset option text: reanalysis / model name and grid ("ERA5-Land 0.1°", "MCMC FV3 2°") */
 export function datasetOptionLabel(id: string, fallback: string): string {
   const d = DATASET_INFO[id];
-  return d ? `${d.name} ${d.resolution}` : fallback;
+  return d ? d.optionLabel ?? `${d.name} ${d.resolution}` : fallback;
 }
 
 /** the header subtitle, identical in both atlases (the Gunn (2026) citation is in About) */

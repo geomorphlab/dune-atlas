@@ -68,7 +68,7 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
-  "en": "The Wind dataset selector switches between wind datasets (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧).⟦2⟧, used by⟦3⟧, re-runs⟦4⟧'s land-surface model driven by⟦5⟧atmospheric fields interpolated to its ⟦#6⟧° grid (Muñoz-Sabater et al. ⟦#7⟧);⟦6⟧reports its ⟦#8⟧ m wind speeds ⟦#9⟧–⟦#10⟧ % below those of⟦7⟧. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.",
+  "en": "The Wind dataset selector switches between wind datasets (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧;⟦2⟧, ⟦#6⟧°, ⟦#7⟧–⟦#8⟧;⟦3⟧, ⟦#9⟧° × ⟦#10⟧°, ⟦#11⟧–⟦#12⟧).⟦4⟧, used by⟦5⟧, re-runs⟦6⟧'s land-surface model driven by⟦7⟧atmospheric fields interpolated to its ⟦#13⟧° grid (Muñoz-Sabater et al. ⟦#14⟧);⟦8⟧reports its ⟦#15⟧ m wind speeds ⟦#16⟧–⟦#17⟧ % below those of⟦9⟧.⟦10⟧data are for non-commercial use only (⟦11⟧), and so are the⟦12⟧wind histograms and sand-flux fields of the atlas. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.",
   "area": "Layer popovers"
  },
  {
@@ -456,7 +456,15 @@
   "area": "About"
  },
  {
-  "en": "<strong>Sand-flux fields</strong>: for every hour, the friction velocity⟦0⟧= κ U₁₀ / ln(z/z₀) from the ⟦#0⟧ m wind speed U₁₀ (logarithmic wind profile; κ = ⟦#1⟧, z = ⟦#2⟧ m, roughness length z₀ = ⟦#3⟧ mm) and the saturated transport rate of⟦1⟧, q = C ρ<sub>f</sub>⟦2⟧(u*² − u*,th²) / (g ρ<sub>s</sub> φ) for⟦3⟧&gt;⟦4⟧, with C = ⟦#4⟧, air density ρ<sub>f</sub> = ⟦#5⟧ kg/m³, grain density ρ<sub>s</sub> = ⟦#6⟧ kg/m³, packing fraction φ = ⟦#7⟧ and g = ⟦#8⟧ m/s², at the selected threshold⟦5⟧, averaged over ⟦#9⟧–⟦#10⟧ (⟦6⟧, Methods⟦7⟧). Fluxes are volumes of packed sand (pore space included) per metre width per year of ⟦#11⟧ days (m²/yr). Drift potentials, crest fluxes and dune-orientation modes follow the methods reviewed in⟦8⟧.",
+  "en": "<strong>Wind histograms and sand-flux fields (⟦0⟧⟦#0⟧°)</strong>:⟦1⟧⟦#1⟧–⟦#2⟧ hourly instantaneous ⟦#3⟧ m winds (⟦#4⟧-hour forecasts) on the⟦2⟧Gaussian grid of about ⟦#5⟧° (⟦3⟧; Japan Meteorological Agency, distributed by⟦4⟧;⟦5⟧, non-commercial use); the histograms and the ⟦#6⟧ sand-flux fields are computed for the atlas with the methods outlined in⟦6⟧. Cells with a⟦7⟧land fraction above ⟦#7⟧ (any land in the cell) carry wind data; a cell counts as a dune cell where it overlaps a mapped ⟦#8⟧° dune cell. The grid rows lie on Gaussian latitudes; the atlas draws them on the regular rows fitted through the first and last row (at most ⟦#9⟧° away), and downloads give the exact latitude.",
+  "area": "About"
+ },
+ {
+  "en": "<strong>Wind histograms and sand-flux fields (⟦0⟧⟦#0⟧° × ⟦#1⟧°)</strong>:⟦1⟧⟦#2⟧–⟦#3⟧ hourly instantaneous ⟦#4⟧ m winds on the ⟦#5⟧° × ⟦#6⟧° grid (⟦2⟧;⟦3⟧⟦4⟧, distributed by the⟦5⟧); the histograms and the ⟦#7⟧ sand-flux fields are computed for the atlas with the methods outlined in⟦6⟧. Cells with a⟦7⟧land fraction (land plus land ice) above ⟦#8⟧ (any land in the cell) carry wind data; a cell counts as a dune cell where it overlaps a mapped ⟦#9⟧° dune cell.",
+  "area": "About"
+ },
+ {
+  "en": "<strong>Sand-flux fields</strong>: for every hour, the friction velocity⟦0⟧= κ U₁₀ / ln(z/z₀) from the ⟦#0⟧ m wind speed U₁₀ (logarithmic wind profile; κ = ⟦#1⟧, z = ⟦#2⟧ m, roughness length z₀ = ⟦#3⟧ mm) and the saturated transport rate of⟦1⟧, q = C ρ<sub>f</sub>⟦2⟧(u*² − u*,th²) / (g ρ<sub>s</sub> φ) for⟦3⟧&gt;⟦4⟧, with C = ⟦#4⟧, air density ρ<sub>f</sub> = ⟦#5⟧ kg/m³, grain density ρ<sub>s</sub> = ⟦#6⟧ kg/m³, packing fraction φ = ⟦#7⟧ and g = ⟦#8⟧ m/s², at the selected threshold⟦5⟧, averaged over ⟦#9⟧–⟦#10⟧ or ⟦#11⟧–⟦#12⟧ (⟦6⟧, Methods⟦7⟧). Fluxes are volumes of packed sand (pore space included) per metre width per year of ⟦#13⟧ days (m²/yr). Drift potentials, crest fluxes and dune-orientation modes follow the methods reviewed in⟦8⟧.",
   "area": "About"
  },
  {
@@ -464,7 +472,7 @@
   "area": "About"
  },
  {
-  "en": "<strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the time-averaged saturated sand-flux vector (magnitude⟦1⟧, direction⟦2⟧) on the sphere, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) with q =⟦3⟧, θ =⟦4⟧, latitude φ, longitude λ and R = ⟦#0⟧ km, computed with central differences on the grid of the selected wind dataset (⟦#1⟧° or ⟦#2⟧°), following⟦5⟧, Methods⟦6⟧. By conservation of sand mass, negative values (convergence) imply deposition and positive values erosion, in metres of bed level per thousand years. The values assume a saturated flux and an unlimited supply of loose sand.",
+  "en": "<strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the time-averaged saturated sand-flux vector (magnitude⟦1⟧, direction⟦2⟧) on the sphere, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) with q =⟦3⟧, θ =⟦4⟧, latitude φ, longitude λ and R = ⟦#0⟧ km, computed with central differences on the grid of the selected wind dataset (⟦#1⟧° or ⟦#2⟧° or ⟦#3⟧° or ⟦#4⟧° × ⟦#5⟧°), following⟦5⟧, Methods⟦6⟧. By conservation of sand mass, negative values (convergence) imply deposition and positive values erosion, in metres of bed level per thousand years. The values assume a saturated flux and an unlimited supply of loose sand.",
   "area": "About"
  },
  {
@@ -516,6 +524,10 @@
   "area": "About"
  },
  {
+  "en": "<strong>⟦0⟧⟦#0⟧° × ⟦#1⟧°</strong>: ⟦1⟧. Licence: ⟦2⟧.",
+  "area": "About"
+ },
+ {
   "en": "⟦0⟧/ dune map",
   "area": "About"
  },
@@ -540,6 +552,10 @@
   "area": "About"
  },
  {
+  "en": "Contains⟦0⟧data of the Japan Meteorological Agency (⟦#0⟧–⟦#1⟧), for non-commercial use.",
+  "area": "About"
+ },
+ {
   "en": "Global Aridity Index (⟦0⟧)",
   "area": "About"
  },
@@ -552,7 +568,7 @@
   "area": "About"
  },
  {
-  "en": "Contains modified⟦0⟧information. Basemap credits are shown in the map attribution.",
+  "en": "Contains modified⟦0⟧information. Contains⟦1⟧data of the Japan Meteorological Agency (non-commercial use). Basemap credits are shown in the map attribution.",
   "area": "About"
  },
  {

@@ -16,9 +16,11 @@ root attributes, and every per-cell download lists its sources and licences.
 | Wind histograms and the 23 sand-flux fields, ERA5-Land 0.1° (cell store and map fields) | `v1/cells.zarr` (`hist`, `fields`), `v1/fields/<field>.zarr` | Gunn, A. (2026) *The distribution of Earth's wind-blown sand dunes – Supplementary Data*, Zenodo, doi:10.5281/zenodo.20046812 (CC BY 4.0), computed from ERA5-Land hourly winds (C3S, doi:10.24381/cds.e2161bac; CC BY 4.0) | **CC BY 4.0**. Notice: "Contains modified Copernicus Climate Change Service information." |
 | Flux divergence, ERA5-Land | `v1/fields/qsdiv.zarr`, `v1/cells-aux.zarr` (`qsdiv`) | the ERA5-Land fields above, following Gunn (2026), Methods | **CC BY 4.0** |
 | Wind histograms, sand-flux fields and flux divergence, ERA5 0.25° | `v2/datasets/era5/` (`cells.zarr`, `fields/`, `cells-aux.zarr` `qsdiv`, `lsm`) | ERA5 hourly 10 m winds and land–sea mask (C3S, doi:10.24381/cds.adbb2d47; Hersbach et al. 2020), computed by the atlas with the methods of Gunn (2026) | **CC BY 4.0** (the ERA5 licence since 2 July 2025), with the notice "Contains modified Copernicus Climate Change Service information (ERA5, 1950–2024). Neither the European Commission nor ECMWF is responsible for any use that may be made of the Copernicus information or data it contains." See note 1. |
-| Dune map (vector tiles and per-cell dune flags) | `v1/dunes/*.pmtiles`, `cells.zarr` `dunes` (both datasets) | dune map `dune-mask-rev1.tif` in Gunn, A. (2026) *geomorphlab/dune-world – Supplementary Code* v1.0.0, Zenodo, doi:10.5281/zenodo.20054674 (MIT) | **MIT** (as the source record). See note 2. |
-| Aridity index | `v1/fields/aridity.zarr`, `cells-aux.zarr` `ai_*` (both datasets) | Global Aridity Index and Potential Evapotranspiration Database v3.1, Zomer & Trabucco, Figshare, doi:10.6084/m9.figshare.7504448.v7; Zomer, Xu & Trabucco (2022) *Sci. Data* 9, 409 | **CC BY 4.0** (licence of the Figshare record). See note 3. |
-| Vegetation cover | `v1/fields/vegetation.zarr`, `v1/cells-aux-veg.zarr`, `v2/datasets/era5/cells-aux-veg.zarr` | Fractional cover – MODIS, CSIRO Land and Water algorithm, v3.1.0, Guerschman (2014), CSIRO, doi:10.4225/08/5848a3f19a7b3, distributed by NCI | **CC BY 4.0**, © 2008–2019 CSIRO |
+| Wind histograms, sand-flux fields and flux divergence, MERRA-2 0.5° × 0.625° | `v2/datasets/merra2/` (`cells.zarr`, `fields/`, `cells-aux.zarr` `qsdiv`, `lsm`) | MERRA-2 hourly 10 m winds (GMAO 2015, inst1_2d_asm_Nx, doi:10.5067/3Z173KIE2TPD; Gelaro et al. 2017) and land fraction (const_2d_asm_Nx, doi:10.5067/ME5QX6Q5IGGU), NASA GES DISC, computed by the atlas with the methods of Gunn (2026) | **CC BY 4.0**. The source data are NASA Earth science data without restrictions on use. See note 8. |
+| Wind histograms, sand-flux fields and flux divergence, JRA-3Q 0.375° | `v2/datasets/jra3q/` (`cells.zarr`, `fields/`, `cells-aux.zarr` `qsdiv`, `lsm`) | JRA-3Q hourly 10 m winds and land fraction (Japan Meteorological Agency 2023, NSF NCAR GDEX d640000, doi:10.5065/AVTZ-1H78; Kosaka et al. 2024), computed by the atlas with the methods of Gunn (2026) | **CC BY-NC-SA 4.0** (non-commercial, share-alike, as the source), with the notice "Contains JRA-3Q data of the Japan Meteorological Agency (1980–2025), for non-commercial use." See note 9. |
+| Dune map (vector tiles and per-cell dune flags) | `v1/dunes/*.pmtiles`, `cells.zarr` `dunes` (every Earth wind dataset) | dune map `dune-mask-rev1.tif` in Gunn, A. (2026) *geomorphlab/dune-world – Supplementary Code* v1.0.0, Zenodo, doi:10.5281/zenodo.20054674 (MIT) | **MIT** (as the source record). See note 2. |
+| Aridity index | `v1/fields/aridity.zarr`, `cells-aux.zarr` `ai_*` (every Earth wind dataset) | Global Aridity Index and Potential Evapotranspiration Database v3.1, Zomer & Trabucco, Figshare, doi:10.6084/m9.figshare.7504448.v7; Zomer, Xu & Trabucco (2022) *Sci. Data* 9, 409 | **CC BY 4.0** (licence of the Figshare record). See note 3. |
+| Vegetation cover | `v1/fields/vegetation.zarr`, `v1/cells-aux-veg.zarr`, `v2/datasets/{era5,merra2,jra3q}/cells-aux-veg.zarr` | Fractional cover – MODIS, CSIRO Land and Water algorithm, v3.1.0, Guerschman (2014), CSIRO, doi:10.4225/08/5848a3f19a7b3, distributed by NCI | **CC BY 4.0**, © 2008–2019 CSIRO |
 
 ## Mars atlas
 
@@ -77,3 +79,13 @@ The decisions below were taken by the author in October 2026.
 7. **MACDA.** The CEDA record of MACDA v2.0 is licensed under the UK Open Government Licence v3.0 (permitted use: any),
    with the condition that the data are cited as the record states; ARCO-MACDA is labelled CC BY 4.0. The atlas states
    the OGL with its notice, cites the record (Valeanu et al. 2026) and the copy, and links the CEDA record.
+8. **MERRA-2.** NASA Earth science data carry no restrictions on use; GMAO asks that the collection DOIs and
+   Gelaro et al. (2017) be cited. The wind histograms, sand-flux fields and flux divergence computed by the atlas
+   from MERRA-2 are **CC BY 4.0**, like the ERA5 products. The land fraction `lsm` is FRLAND + FRLANDICE of the
+   constants collection M2C0NXASM (doi:10.5067/ME5QX6Q5IGGU).
+9. **JRA-3Q.** JRA-3Q is distributed by its cooperative organisations (here NSF NCAR GDEX, d640000) for
+   non-commercial use under CC BY-NC-SA 4.0. The atlas products computed from it are therefore **CC BY-NC-SA 4.0**
+   (non-commercial, share-alike), and every JRA-3Q store, layer, download and citation entry states this licence and
+   the notice "Contains JRA-3Q data of the Japan Meteorological Agency (1980–2025), for non-commercial use." The data
+   citation year is 2023 (the publication date of the GDEX record, doi:10.5065/AVTZ-1H78); `cells.zarr` was built on
+   Gadi with 2022 and corrected in its root attributes before upload.

@@ -271,15 +271,21 @@ class CollisionError(RuntimeError):
     """A planned new key already exists remotely (published objects are immutable)."""
 
 
+ZARR_META = {"zarr.json", ".zarray", ".zattrs", ".zgroup", ".zmetadata"}
+
+
 def plan_new_stores(stores, prefix: str):
-    """[(local_dir, key_rel)] -> [(key, path)] for every file (AppleDouble/.DS_Store skipped)."""
-    files = []
+    """[(local_dir, key_rel)] -> [(key, path)] for every file (AppleDouble/.DS_Store skipped). Zarr metadata objects
+    (zarr.json, .zarray, .zattrs, .zgroup, .zmetadata) come after every data object, deepest first and each store's
+    root zarr.json last, so a store becomes readable only once its data are in place."""
+    data, meta = [], []
     for local, rel in stores:
         local = Path(local)
         for p in sorted(local.rglob("*")):
             if p.is_file() and not p.name.startswith("._") and p.name not in JUNK:
-                files.append((f"{prefix}/{rel.strip('/')}/{p.relative_to(local).as_posix()}", p))
-    return files
+                (meta if p.name in ZARR_META else data).append((f"{prefix}/{rel.strip('/')}/{p.relative_to(local).as_posix()}", p))
+    meta.sort(key=lambda kp: (-kp[0].count("/"), kp[0]))
+    return data + meta
 
 
 def assert_no_collision(planned_keys, existing: dict, new_prefixes) -> None:

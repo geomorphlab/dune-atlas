@@ -24,11 +24,18 @@ export const noticeAttrs = (datasetId: string): Record<string, string> => {
 /** how cell indices map to coordinates (both atlases, every download) */
 export const GRID_REGISTRATION = "centre: lat0/lon0 are the centre of cell (0, 0); cell (y, x) spans centre ± |dlat|/2 in latitude and ± |dlon|/2 in longitude, clipped at ±90° (a row centred on a pole is a half cell)";
 export const GRID_INDEX_COMMENT = "latitude = grid_lat0 + grid_dlat * cell_y; longitude = grid_lon0 + grid_dlon * cell_x";
+/** GRID_INDEX_COMMENT of a grid with exact (Gaussian) row latitudes (Grid.latValues) */
+export const GAUSSIAN_INDEX_COMMENT = "latitude = the Gaussian latitude of row cell_y (the file's latitude); the cell footprint "
+  + "(lat_bnds) is centred on grid_lat0 + grid_dlat * cell_y, the regular grid fitted through the end rows, which also places "
+  + "the cell on the map; longitude = grid_lon0 + grid_dlon * cell_x";
+export const gridIndexComment = (g: Pick<Grid, "latValues">) => (g.latValues ? GAUSSIAN_INDEX_COMMENT : GRID_INDEX_COMMENT);
 
 /** a grid coordinate without the floating-point tail of lat0 + dlat * i (23.299999999999997 -> 23.3; 12 significant digits) */
 export const exactCoord = (v: number): number => Number(v.toPrecision(12));
-/** exact centre of row iy / column ix */
-export const rowLat = (g: Pick<Grid, "lat0" | "dlat">, iy: number) => exactCoord(g.lat0 + g.dlat * iy);
+/** exact centre of row iy (the Gaussian latitude where the grid has them) / column ix */
+export const rowLat = (g: Pick<Grid, "lat0" | "dlat" | "latValues">, iy: number) => exactCoord(g.latValues?.[iy] ?? g.lat0 + g.dlat * iy);
+/** centre of the footprint of row iy (lat0 + dlat * iy; equals rowLat except on Gaussian grids): cell edges and selection */
+export const footprintLat = (g: Pick<Grid, "lat0" | "dlat">, iy: number) => exactCoord(g.lat0 + g.dlat * iy);
 export const colLon = (g: Pick<Grid, "lon0" | "dlon">, ix: number) => exactCoord(g.lon0 + g.dlon * ix);
 
 /** edges of the cell centred on (lat, lon), latitude clipped at ±90° */

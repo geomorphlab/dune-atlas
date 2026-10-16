@@ -170,8 +170,8 @@ EN: Wind datasets
 ZH: 风场数据集
 
 ## earth.help.datasets.body (Help panel)
-EN: The Wind dataset selector switches between wind datasets (ERA5-Land, 0.1°, 1950–2024; ERA5, 0.25°, 1950–2024). ERA5-Land, used by Gunn (2026), re-runs ECMWF's land-surface model driven by ERA5 atmospheric fields interpolated to its 0.1° grid (Muñoz-Sabater et al. 2021); Baas (2026) reports its 10 m wind speeds 20–30 % below those of ERA5. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
-ZH: “风场数据集”选择器可在不同的风场数据集之间切换（ERA5-Land，0.1°，1950–2024 年；ERA5，0.25°，1950–2024 年）。Gunn (2026) 所用的 ERA5-Land 是由插值到其 0.1° 网格上的 ERA5 大气场驱动的 ECMWF 陆面模型重运行产品（Muñoz-Sabater et al. 2021）；Baas (2026) 报告其 10 m 风速比 ERA5 低 20–30 %。风场与输沙通量图层以及网格单元面板随所选数据集变化；沙丘区掩膜、干旱指数与植被图层对所有数据集均相同。
+EN: The Wind dataset selector switches between wind datasets (ERA5-Land, 0.1°, 1950–2024; ERA5, 0.25°, 1950–2024; JRA-3Q, 0.375°, 1980–2025; MERRA-2, 0.5° × 0.625°, 1980–2025). ERA5-Land, used by Gunn (2026), re-runs ECMWF's land-surface model driven by ERA5 atmospheric fields interpolated to its 0.1° grid (Muñoz-Sabater et al. 2021); Baas (2026) reports its 10 m wind speeds 20–30 % below those of ERA5. JRA-3Q data are for non-commercial use only (CC BY-NC-SA 4.0), and so are the JRA-3Q wind histograms and sand-flux fields of the atlas. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
+ZH: “风场数据集”选择器可在不同的风场数据集之间切换（ERA5-Land，0.1°，1950–2024 年；ERA5，0.25°，1950–2024 年；JRA-3Q，0.375°，1980–2025 年；MERRA-2，0.5° × 0.625°，1980–2025 年）。Gunn (2026) 所用的 ERA5-Land 是由插值到其 0.1° 网格上的 ERA5 大气场驱动的 ECMWF 陆面模型重运行产品（Muñoz-Sabater et al. 2021）；Baas (2026) 报告其 10 m 风速比 ERA5 低 20–30 %。JRA-3Q 数据仅限非商业用途（CC BY-NC-SA 4.0），本图集中基于 JRA-3Q 的风况直方图与输沙通量场同样仅限非商业用途。风场与输沙通量图层以及网格单元面板随所选数据集变化；沙丘区掩膜、干旱指数与植被图层对所有数据集均相同。
 
 ## earth.help.downloads.title (Help panel)
 EN: Downloads and citation
@@ -1847,17 +1847,9 @@ ZH: 数据来源
 EN: <strong>Wind histograms and sand-flux fields (⟦0⟧⟦#0⟧°)</strong>:⟦1⟧⟦#1⟧–⟦#2⟧ hourly ⟦#3⟧ m winds on the ⟦#4⟧° grid (⟦2⟧;⟦3⟧,⟦4⟧, accessed via the⟦5⟧Australia replica); the histograms and the ⟦#5⟧ sand-flux fields are computed for the atlas with the methods outlined in⟦6⟧. Cells with an⟦7⟧land–sea mask fraction above ⟦#6⟧ (any land in the cell) carry wind data; a ⟦#7⟧° cell counts as a dune cell where it overlaps a mapped ⟦#8⟧° dune cell.
 ZH: <strong>风况直方图与输沙通量场（⟦0⟧⟦#0⟧°）</strong>：⟦1⟧⟦#1⟧–⟦#2⟧ 逐小时 ⟦#3⟧ m 风速，基于 ⟦#4⟧° 网格（⟦2⟧；⟦3⟧、⟦4⟧，经⟦5⟧澳大利亚镜像访问）；直方图与 ⟦#5⟧ 输沙通量场按⟦6⟧所述方法为图集计算。⟦7⟧陆海掩膜比例高于 ⟦#6⟧（网格单元内含任意陆地）的单元载有风场数据；⟦#7⟧° 网格单元在与已制图的 ⟦#8⟧° 沙丘网格单元重叠时计为沙丘单元。
 
-## c.a7651e74 (About)
-EN: <strong>Sand-flux fields</strong>: for every hour, the friction velocity⟦0⟧= κ U₁₀ / ln(z/z₀) from the ⟦#0⟧ m wind speed U₁₀ (logarithmic wind profile; κ = ⟦#1⟧, z = ⟦#2⟧ m, roughness length z₀ = ⟦#3⟧ mm) and the saturated transport rate of⟦1⟧, q = C ρ<sub>f</sub>⟦2⟧(u*² − u*,th²) / (g ρ<sub>s</sub> φ) for⟦3⟧&gt;⟦4⟧, with C = ⟦#4⟧, air density ρ<sub>f</sub> = ⟦#5⟧ kg/m³, grain density ρ<sub>s</sub> = ⟦#6⟧ kg/m³, packing fraction φ = ⟦#7⟧ and g = ⟦#8⟧ m/s², at the selected threshold⟦5⟧, averaged over ⟦#9⟧–⟦#10⟧ (⟦6⟧, Methods⟦7⟧). Fluxes are volumes of packed sand (pore space included) per metre width per year of ⟦#11⟧ days (m²/yr). Drift potentials, crest fluxes and dune-orientation modes follow the methods reviewed in⟦8⟧.
-ZH: <strong>输沙通量场</strong>：对每一小时，根据 ⟦#0⟧ m 风速 U₁₀（对数风速廓线；κ = ⟦#1⟧，z = ⟦#2⟧ m，空气动力学粗糙度 z₀ = ⟦#3⟧ mm）计算摩阻风速⟦0⟧= κ U₁₀ / ln(z/z₀)，并按⟦1⟧的饱和输沙率公式 q = C ρ<sub>f</sub>⟦2⟧(u*² − u*,th²) / (g ρ<sub>s</sub> φ)（当⟦3⟧&gt;⟦4⟧时成立，其中 C = ⟦#4⟧，空气密度 ρ<sub>f</sub> = ⟦#5⟧ kg/m³，颗粒密度 ρ<sub>s</sub> = ⟦#6⟧ kg/m³，堆积体积分数 φ = ⟦#7⟧，g = ⟦#8⟧ m/s²）在所选临界值⟦5⟧下计算，并在 ⟦#9⟧–⟦#10⟧ 期间取平均（⟦6⟧，方法⟦7⟧）。输沙通量为每米宽度每年（以 ⟦#11⟧ 天计）堆积沙体（含孔隙）的体积（m²/yr）。输沙势、脊线输沙通量与沙丘朝向模式均遵循⟦8⟧所综述的方法。
-
 ## c.38fc33d0 (About)
 EN: <strong>Dune map</strong>:⟦0⟧from the⟦1⟧record (⟦2⟧,⟦3⟧), vectorised into dune fields.
 ZH: <strong>沙丘分布图</strong>：⟦0⟧源自⟦1⟧记录（⟦2⟧、⟦3⟧），经矢量化得到沙丘区。
-
-## c.2bc3ff20 (About)
-EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the time-averaged saturated sand-flux vector (magnitude⟦1⟧, direction⟦2⟧) on the sphere, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) with q =⟦3⟧, θ =⟦4⟧, latitude φ, longitude λ and R = ⟦#0⟧ km, computed with central differences on the grid of the selected wind dataset (⟦#1⟧° or ⟦#2⟧°), following⟦5⟧, Methods⟦6⟧. By conservation of sand mass, negative values (convergence) imply deposition and positive values erosion, in metres of bed level per thousand years. The values assume a saturated flux and an unlimited supply of loose sand.
-ZH: <strong>饱和输沙通量散度</strong> ⟦0⟧：球面上时间平均饱和输沙通量矢量（大小⟦1⟧，方向⟦2⟧）的散度，∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ)，其中 q =⟦3⟧，θ =⟦4⟧，纬度为 φ，经度为 λ，R = ⟦#0⟧ km，在所选风场数据集的网格（⟦#1⟧° 或 ⟦#2⟧°）上以中心差分计算，方法依据⟦5⟧，方法⟦6⟧。根据沙量守恒，负值（汇）表示堆积，正值（源）表示侵蚀，单位为床面高程变化（米）每千年。该数值假定输沙通量已饱和且松散沙源供应不受限。
 
 ## c.c117cfda (About)
 EN: <strong>Dune-field names</strong>: Displayed dune field names are derived from previously published academic research and data, regional knowledge, and internet searches. Naming conventions (language, jurisdiction, spelling, merging, etc.) were chosen for clarity but may be wrong or offend certain peoples. Please contact Andrew Gunn at <a href="mailto:a.gunn@monash.edu">a.gunn@monash.edu</a> if you have any suggestions for changes, removals, or additions.
@@ -1910,10 +1902,6 @@ ZH: 植被覆盖度（⟦0⟧Fractional Cover v3.1）
 ## c.6aa0a68b (About)
 EN: Full monthly time series:⟦0⟧Map, <a href="https://map.geo-rapp.org/" target="_blank" rel="noopener noreferrer">⟦1⟧</a>
 ZH: 完整逐月时间序列：⟦0⟧Map，<a href="https://map.geo-rapp.org/" target="_blank" rel="noopener noreferrer">⟦1⟧</a>
-
-## c.1a6f67b1 (About)
-EN: Contains modified⟦0⟧information. Basemap credits are shown in the map attribution.
-ZH: 含经修改的⟦0⟧信息。底图版权信息见地图署名处。
 
 ## c.3884b372 (About)
 EN: To understand how the atlas is used, we count page visits and downloads by country, with Cloudflare Web Analytics and a small counter of our own. No cookies are set and no⟦0⟧addresses are kept.
@@ -3123,10 +3111,6 @@ ZH: <strong>输沙通量场</strong>：对风场数据集的每个时间步，�
 
 # Layer popovers
 
-## c.2c67fa30 (Layer popovers)
-EN: The Wind dataset selector switches between wind datasets (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧).⟦2⟧, used by⟦3⟧, re-runs⟦4⟧'s land-surface model driven by⟦5⟧atmospheric fields interpolated to its ⟦#6⟧° grid (Muñoz-Sabater et al. ⟦#7⟧);⟦6⟧reports its ⟦#8⟧ m wind speeds ⟦#9⟧–⟦#10⟧ % below those of⟦7⟧. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
-ZH: 风速数据集选择器用于在不同风速数据集之间切换（⟦0⟧，⟦#0⟧°，⟦#1⟧–⟦#2⟧；⟦1⟧，⟦#3⟧°，⟦#4⟧–⟦#5⟧）。⟦2⟧由⟦3⟧使用，依据⟦5⟧插值到其⟦#6⟧°网格的大气场（Muñoz-Sabater et al. ⟦#7⟧），重新运行⟦4⟧的陆面模型；⟦6⟧报告其⟦#8⟧米风速比⟦7⟧低⟦#9⟧–⟦#10⟧%。风速和输沙通量图层以及单元格面板会随所选数据集变化；沙丘区掩膜、干旱指数和植被图层对所有数据集均相同。
-
 ## c.e5c7b256 (Layer popovers)
 EN: The default, ⟦#0⟧ m/s, is the value used for the global analysis of⟦0⟧, one value for the whole globe, not calibrated for any site. Values between ⟦#1⟧ and ⟦#2⟧ m/s are typical; for loose, dry sand the threshold depends mainly on grain size and density.
 ZH: 默认值 ⟦#0⟧ m/s 是⟦0⟧全球分析所采用的值，即全球统一使用的一个值，并未针对任何地点进行率定。介于 ⟦#1⟧ 与 ⟦#2⟧ m/s 之间的值较为典型；对于松散、干燥的沙，临界值主要取决于粒径和密度。
@@ -3237,7 +3221,59 @@ ZH: ⟦0⟧ = ⟦#0⟧ µm（中心）至 ⟦#1⟧ µm（边缘）的模式方�
 EN: Go to
 ZH: 前往
 
+# Layer popovers
+
+## c.a7435465 (Layer popovers)
+EN: The Wind dataset selector switches between wind datasets (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧;⟦2⟧, ⟦#6⟧°, ⟦#7⟧–⟦#8⟧;⟦3⟧, ⟦#9⟧° × ⟦#10⟧°, ⟦#11⟧–⟦#12⟧).⟦4⟧, used by⟦5⟧, re-runs⟦6⟧'s land-surface model driven by⟦7⟧atmospheric fields interpolated to its ⟦#13⟧° grid (Muñoz-Sabater et al. ⟦#14⟧);⟦8⟧reports its ⟦#15⟧ m wind speeds ⟦#16⟧–⟦#17⟧ % below those of⟦9⟧.⟦10⟧data are for non-commercial use only (⟦11⟧), and so are the⟦12⟧wind histograms and sand-flux fields of the atlas. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
+ZH: “风场数据集”选择器可在不同的风场数据集之间切换（⟦0⟧，⟦#0⟧°，⟦#1⟧–⟦#2⟧年；⟦1⟧，⟦#3⟧°，⟦#4⟧–⟦#5⟧年；⟦2⟧，⟦#6⟧°，⟦#7⟧–⟦#8⟧年；⟦3⟧，⟦#9⟧° × ⟦#10⟧°，⟦#11⟧–⟦#12⟧年）。⟦5⟧所用的⟦4⟧是由插值到其⟦#13⟧°网格上的⟦7⟧大气场驱动的⟦6⟧陆面模型重运行产品（Muñoz-Sabater et al. ⟦#14⟧）；⟦8⟧报告其 ⟦#15⟧ m 风速比⟦9⟧低⟦#16⟧–⟦#17⟧ %。⟦10⟧数据仅限非商业用途（⟦11⟧），本图集中基于⟦12⟧的风况直方图与输沙通量场同样仅限非商业用途。风场与输沙通量图层以及网格单元面板随所选数据集变化；沙丘区掩膜、干旱指数与植被图层对所有数据集均相同。
+
+# About
+
+## c.ece4ef12 (About)
+EN: <strong>Wind histograms and sand-flux fields (⟦0⟧⟦#0⟧°)</strong>:⟦1⟧⟦#1⟧–⟦#2⟧ hourly instantaneous ⟦#3⟧ m winds (⟦#4⟧-hour forecasts) on the⟦2⟧Gaussian grid of about ⟦#5⟧° (⟦3⟧; Japan Meteorological Agency, distributed by⟦4⟧;⟦5⟧, non-commercial use); the histograms and the ⟦#6⟧ sand-flux fields are computed for the atlas with the methods outlined in⟦6⟧. Cells with a⟦7⟧land fraction above ⟦#7⟧ (any land in the cell) carry wind data; a cell counts as a dune cell where it overlaps a mapped ⟦#8⟧° dune cell. The grid rows lie on Gaussian latitudes; the atlas draws them on the regular rows fitted through the first and last row (at most ⟦#9⟧° away), and downloads give the exact latitude.
+ZH: <strong>风况直方图与输沙通量场（⟦0⟧⟦#0⟧°）</strong>：⟦1⟧⟦#1⟧–⟦#2⟧ 逐小时瞬时 ⟦#3⟧ m 风速（⟦#4⟧小时预报），基于⟦2⟧约 ⟦#5⟧° 的高斯网格（⟦3⟧；日本气象厅，由⟦4⟧分发；⟦5⟧，非商业用途）；直方图与 ⟦#6⟧ 输沙通量场按⟦6⟧所述方法为图集计算。⟦7⟧陆地比例高于 ⟦#7⟧（网格单元内含任意陆地）的单元载有风场数据；网格单元在与已制图的 ⟦#8⟧° 沙丘网格单元重叠时计为沙丘单元。网格行位于高斯纬度上；图集将其绘制在经首末行拟合的规则纬线上（偏差最多 ⟦#9⟧°），下载数据则给出精确纬度。
+
+## c.b7a93df1 (About)
+EN: <strong>Sand-flux fields</strong>: for every hour, the friction velocity⟦0⟧= κ U₁₀ / ln(z/z₀) from the ⟦#0⟧ m wind speed U₁₀ (logarithmic wind profile; κ = ⟦#1⟧, z = ⟦#2⟧ m, roughness length z₀ = ⟦#3⟧ mm) and the saturated transport rate of⟦1⟧, q = C ρ<sub>f</sub>⟦2⟧(u*² − u*,th²) / (g ρ<sub>s</sub> φ) for⟦3⟧&gt;⟦4⟧, with C = ⟦#4⟧, air density ρ<sub>f</sub> = ⟦#5⟧ kg/m³, grain density ρ<sub>s</sub> = ⟦#6⟧ kg/m³, packing fraction φ = ⟦#7⟧ and g = ⟦#8⟧ m/s², at the selected threshold⟦5⟧, averaged over ⟦#9⟧–⟦#10⟧ or ⟦#11⟧–⟦#12⟧ (⟦6⟧, Methods⟦7⟧). Fluxes are volumes of packed sand (pore space included) per metre width per year of ⟦#13⟧ days (m²/yr). Drift potentials, crest fluxes and dune-orientation modes follow the methods reviewed in⟦8⟧.
+ZH: <strong>输沙通量场</strong>：对每一小时，根据 ⟦#0⟧ m 风速 U₁₀（对数风速廓线；κ = ⟦#1⟧，z = ⟦#2⟧ m，空气动力学粗糙度 z₀ = ⟦#3⟧ mm）计算摩阻风速⟦0⟧= κ U₁₀ / ln(z/z₀)，并按⟦1⟧的饱和输沙率公式 q = C ρ<sub>f</sub>⟦2⟧(u*² − u*,th²) / (g ρ<sub>s</sub> φ)（当⟦3⟧&gt;⟦4⟧时成立，其中 C = ⟦#4⟧，空气密度 ρ<sub>f</sub> = ⟦#5⟧ kg/m³，颗粒密度 ρ<sub>s</sub> = ⟦#6⟧ kg/m³，堆积体积分数 φ = ⟦#7⟧，g = ⟦#8⟧ m/s²）在所选临界值⟦5⟧下计算，并在 ⟦#9⟧–⟦#10⟧ 或 ⟦#11⟧–⟦#12⟧ 期间取平均（⟦6⟧，方法⟦7⟧）。输沙通量为每米宽度每年（以 ⟦#13⟧ 天计）堆积沙体（含孔隙）的体积（m²/yr）。输沙势、脊线输沙通量与沙丘朝向模式均遵循⟦8⟧所综述的方法。
+
+## c.37ce9ecb (About)
+EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the time-averaged saturated sand-flux vector (magnitude⟦1⟧, direction⟦2⟧) on the sphere, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) with q =⟦3⟧, θ =⟦4⟧, latitude φ, longitude λ and R = ⟦#0⟧ km, computed with central differences on the grid of the selected wind dataset (⟦#1⟧° or ⟦#2⟧° or ⟦#3⟧° or ⟦#4⟧° × ⟦#5⟧°), following⟦5⟧, Methods⟦6⟧. By conservation of sand mass, negative values (convergence) imply deposition and positive values erosion, in metres of bed level per thousand years. The values assume a saturated flux and an unlimited supply of loose sand.
+ZH: <strong>饱和输沙通量散度</strong> ⟦0⟧：球面上时间平均饱和输沙通量矢量（大小⟦1⟧，方向⟦2⟧）的散度，∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ)，其中 q =⟦3⟧，θ =⟦4⟧，纬度为 φ，经度为 λ，R = ⟦#0⟧ km，在所选风场数据集的网格（⟦#1⟧° 或 ⟦#2⟧° 或 ⟦#3⟧° 或 ⟦#4⟧° × ⟦#5⟧°）上以中心差分计算，方法依据⟦5⟧，方法⟦6⟧。根据沙量守恒，负值（汇）表示堆积，正值（源）表示侵蚀，单位为床面高程变化（米）每千年。该数值假定输沙通量已饱和且松散沙源供应不受限。
+
+## c.05b1cf35 (About)
+EN: Contains⟦0⟧data of the Japan Meteorological Agency (⟦#0⟧–⟦#1⟧), for non-commercial use.
+ZH: 含⟦0⟧日本气象厅（JMA）数据（⟦#0⟧–⟦#1⟧），仅限非商业用途。
+
+## c.b4d4fe23 (About)
+EN: Contains modified⟦0⟧information. Contains⟦1⟧data of the Japan Meteorological Agency (non-commercial use). Basemap credits are shown in the map attribution.
+ZH: 含经修改的⟦0⟧信息。含日本气象厅（JMA）的⟦1⟧数据（非商业用途）。底图版权信息见地图署名处。
+
+## c.073ef702 (About)
+EN: <strong>Wind histograms and sand-flux fields (⟦0⟧⟦#0⟧° × ⟦#1⟧°)</strong>:⟦1⟧⟦#2⟧–⟦#3⟧ hourly instantaneous ⟦#4⟧ m winds on the ⟦#5⟧° × ⟦#6⟧° grid (⟦2⟧;⟦3⟧⟦4⟧, distributed by the⟦5⟧); the histograms and the ⟦#7⟧ sand-flux fields are computed for the atlas with the methods outlined in⟦6⟧. Cells with a⟦7⟧land fraction (land plus land ice) above ⟦#8⟧ (any land in the cell) carry wind data; a cell counts as a dune cell where it overlaps a mapped ⟦#9⟧° dune cell.
+ZH: <strong>风况直方图与输沙通量场（⟦0⟧⟦#0⟧°×⟦#1⟧°）</strong>：⟦1⟧⟦#2⟧–⟦#3⟧年逐小时瞬时⟦#4⟧ m风场，格网分辨率为⟦#5⟧°×⟦#6⟧°（⟦2⟧；⟦3⟧⟦4⟧，由⟦5⟧发布）；直方图与⟦#7⟧个输沙通量场按照⟦6⟧所述方法为本图集计算得出。⟦7⟧陆地比例（陆地加陆冰）高于⟦#8⟧（栅格内含有任何陆地）的格网单元含有风场数据；当某格网单元与已绘制的⟦#9⟧°沙丘格网单元重叠时，即计为沙丘格网单元。
+
 # Unused (English changed or removed)
+
+## c.e20362fc (Unused (English changed or removed))
+EN: <strong>Wind histograms and sand-flux fields (⟦0⟧⟦#0⟧° × ⟦#1⟧°)</strong>:⟦1⟧⟦#2⟧–⟦#3⟧ hourly instantaneous ⟦#4⟧ m winds on the ⟦#5⟧° × ⟦#6⟧° grid (⟦2⟧;⟦3⟧Global Modeling and Assimilation Office, distributed by the⟦4⟧); the histograms and the ⟦#7⟧ sand-flux fields are computed for the atlas with the methods outlined in⟦5⟧. Cells with a⟦6⟧land fraction (land plus land ice) above ⟦#8⟧ (any land in the cell) carry wind data; a cell counts as a dune cell where it overlaps a mapped ⟦#9⟧° dune cell.
+ZH: <strong>风况直方图与输沙通量场（⟦0⟧⟦#0⟧°×⟦#1⟧°）</strong>：⟦1⟧⟦#2⟧–⟦#3⟧年逐小时瞬时⟦#4⟧ m风场，格网分辨率为⟦#5⟧°×⟦#6⟧°（⟦2⟧；⟦3⟧Global Modeling and Assimilation Office，由⟦4⟧发布）；直方图与⟦#7⟧个输沙通量场按照⟦5⟧所述方法为本图集计算得出。⟦6⟧陆地比例（陆地加陆冰）高于⟦#8⟧（栅格内含有任何陆地）的格网单元含有风场数据；当某格网单元与已绘制的⟦#9⟧°沙丘格网单元重叠时，即计为沙丘格网单元。
+
+## c.a7651e74 (Unused (English changed or removed))
+EN: <strong>Sand-flux fields</strong>: for every hour, the friction velocity⟦0⟧= κ U₁₀ / ln(z/z₀) from the ⟦#0⟧ m wind speed U₁₀ (logarithmic wind profile; κ = ⟦#1⟧, z = ⟦#2⟧ m, roughness length z₀ = ⟦#3⟧ mm) and the saturated transport rate of⟦1⟧, q = C ρ<sub>f</sub>⟦2⟧(u*² − u*,th²) / (g ρ<sub>s</sub> φ) for⟦3⟧&gt;⟦4⟧, with C = ⟦#4⟧, air density ρ<sub>f</sub> = ⟦#5⟧ kg/m³, grain density ρ<sub>s</sub> = ⟦#6⟧ kg/m³, packing fraction φ = ⟦#7⟧ and g = ⟦#8⟧ m/s², at the selected threshold⟦5⟧, averaged over ⟦#9⟧–⟦#10⟧ (⟦6⟧, Methods⟦7⟧). Fluxes are volumes of packed sand (pore space included) per metre width per year of ⟦#11⟧ days (m²/yr). Drift potentials, crest fluxes and dune-orientation modes follow the methods reviewed in⟦8⟧.
+ZH: <strong>输沙通量场</strong>：对每一小时，根据 ⟦#0⟧ m 风速 U₁₀（对数风速廓线；κ = ⟦#1⟧，z = ⟦#2⟧ m，空气动力学粗糙度 z₀ = ⟦#3⟧ mm）计算摩阻风速⟦0⟧= κ U₁₀ / ln(z/z₀)，并按⟦1⟧的饱和输沙率公式 q = C ρ<sub>f</sub>⟦2⟧(u*² − u*,th²) / (g ρ<sub>s</sub> φ)（当⟦3⟧&gt;⟦4⟧时成立，其中 C = ⟦#4⟧，空气密度 ρ<sub>f</sub> = ⟦#5⟧ kg/m³，颗粒密度 ρ<sub>s</sub> = ⟦#6⟧ kg/m³，堆积体积分数 φ = ⟦#7⟧，g = ⟦#8⟧ m/s²）在所选临界值⟦5⟧下计算，并在 ⟦#9⟧–⟦#10⟧ 期间取平均（⟦6⟧，方法⟦7⟧）。输沙通量为每米宽度每年（以 ⟦#11⟧ 天计）堆积沙体（含孔隙）的体积（m²/yr）。输沙势、脊线输沙通量与沙丘朝向模式均遵循⟦8⟧所综述的方法。
+
+## c.2bc3ff20 (Unused (English changed or removed))
+EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the time-averaged saturated sand-flux vector (magnitude⟦1⟧, direction⟦2⟧) on the sphere, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) with q =⟦3⟧, θ =⟦4⟧, latitude φ, longitude λ and R = ⟦#0⟧ km, computed with central differences on the grid of the selected wind dataset (⟦#1⟧° or ⟦#2⟧°), following⟦5⟧, Methods⟦6⟧. By conservation of sand mass, negative values (convergence) imply deposition and positive values erosion, in metres of bed level per thousand years. The values assume a saturated flux and an unlimited supply of loose sand.
+ZH: <strong>饱和输沙通量散度</strong> ⟦0⟧：球面上时间平均饱和输沙通量矢量（大小⟦1⟧，方向⟦2⟧）的散度，∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ)，其中 q =⟦3⟧，θ =⟦4⟧，纬度为 φ，经度为 λ，R = ⟦#0⟧ km，在所选风场数据集的网格（⟦#1⟧° 或 ⟦#2⟧°）上以中心差分计算，方法依据⟦5⟧，方法⟦6⟧。根据沙量守恒，负值（汇）表示堆积，正值（源）表示侵蚀，单位为床面高程变化（米）每千年。该数值假定输沙通量已饱和且松散沙源供应不受限。
+
+## c.1a6f67b1 (Unused (English changed or removed))
+EN: Contains modified⟦0⟧information. Basemap credits are shown in the map attribution.
+ZH: 含经修改的⟦0⟧信息。底图版权信息见地图署名处。
+
+## c.2c67fa30 (Unused (English changed or removed))
+EN: The Wind dataset selector switches between wind datasets (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧).⟦2⟧, used by⟦3⟧, re-runs⟦4⟧'s land-surface model driven by⟦5⟧atmospheric fields interpolated to its ⟦#6⟧° grid (Muñoz-Sabater et al. ⟦#7⟧);⟦6⟧reports its ⟦#8⟧ m wind speeds ⟦#9⟧–⟦#10⟧ % below those of⟦7⟧. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
+ZH: 风速数据集选择器用于在不同风速数据集之间切换（⟦0⟧，⟦#0⟧°，⟦#1⟧–⟦#2⟧；⟦1⟧，⟦#3⟧°，⟦#4⟧–⟦#5⟧）。⟦2⟧由⟦3⟧使用，依据⟦5⟧插值到其⟦#6⟧°网格的大气场（Muñoz-Sabater et al. ⟦#7⟧），重新运行⟦4⟧的陆面模型；⟦6⟧报告其⟦#8⟧米风速比⟦7⟧低⟦#9⟧–⟦#10⟧%。风速和输沙通量图层以及单元格面板会随所选数据集变化；沙丘区掩膜、干旱指数和植被图层对所有数据集均相同。
 
 ## c.037dc143 (Unused (English changed or removed))
 EN: The default, ⟦#0⟧ m/s, is the value used for the global analysis of⟦0⟧: a common global approximation used in place of more accurate local values, not calibrated for any site. Values between ⟦#1⟧ and ⟦#2⟧ m/s are typical; for loose, dry sand the threshold depends mainly on grain size and density.

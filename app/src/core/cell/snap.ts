@@ -4,7 +4,13 @@
 // ERA5 0.25 deg 721 x 1440, ...); ERA5_LAND_GRID is only the fallback before the store opens.
 // Rows 0 and ny-1 may be polar cells (centres at +/-90, half-height in latitude).
 
-export interface Grid { lat0: number; dlat: number; lon0: number; dlon: number; ny: number; nx: number }
+export interface Grid {
+  lat0: number; dlat: number; lon0: number; dlon: number; ny: number; nx: number;
+  /** exact row-centre latitudes where they are not regular (JRA-3Q: Gaussian latitudes; cell-store attrs
+   *  grid.lat_values). lat0 + dlat * iy is then the regular grid fitted through the end rows: it places the cells on
+   *  the map and defines their footprints; downloads give the exact latitude (exportmeta.rowLat). */
+  latValues?: readonly number[];
+}
 export const ERA5_LAND_GRID: Grid = { lat0: 90, dlat: -0.1, lon0: -180, dlon: 0.1, ny: 1801, nx: 3600 };
 /** @deprecated use ERA5_LAND_GRID or the store grid */
 export const GRID = ERA5_LAND_GRID;

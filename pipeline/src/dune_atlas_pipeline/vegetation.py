@@ -263,7 +263,7 @@ def build_cells_aux_regridded(out, nc_path, data_dir, dataset="era5") -> dict:
         "sidecar_of": "cells.zarr", "sidecar_convention": AUX_CONVENTION,
         "license": "CC-BY-4.0", "attribution": ATTRIBUTION, "data_access": THREDDS_URL, "time_series": MAP_URL,
         "regridding": (f"area-weighted mean of the 0.1° atlas vegetation cells over each {g.label} cell footprint "
-                       f"(centre ± {g.res / 2:g}°), exact spherical overlap areas"),
+                       f"({g.footprint_text()}), exact spherical overlap areas"),
     })
     a = ATTRIBUTION
     changes = a["changes"].replace("zoomed-out map views show means of the valid 0.1° cells; ",
@@ -323,7 +323,7 @@ def main(argv=None):
     b.add_argument("--keepbits", type=int, default=12)
     c = sub.add_parser("cellsaux"); c.add_argument("--nc", required=True); c.add_argument("--out", required=True)
     c.add_argument("--data", default=os.environ.get("DUNE_WORLD_DATA", ""))
-    c.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
+    c.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5", "merra2", "jra3q"])
     sub.add_parser("registry")
     a = p.parse_args(argv)
     if a.cmd == "pyramid":

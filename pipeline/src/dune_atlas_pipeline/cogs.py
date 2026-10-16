@@ -150,7 +150,7 @@ def main(argv=None):
                                                    ""))
     p.add_argument("--out", required=True)
     p.add_argument("--ut", nargs="*", type=int, default=list(UT_PRESETS))
-    p.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
+    p.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5", "merra2", "jra3q"])
     a = p.parse_args(argv)
     rows = build_dp_cogs(a.data, a.out, a.ut, dataset=a.dataset)
     (Path(a.out) / "cog_build_stats.json").write_text(json.dumps(rows, indent=1))

@@ -212,7 +212,7 @@ def test_cellmasks_build(tmp_path):
     np.save(d / "lsm.npy", lsm)
     st = CM.build(str(d / "lsm.npy"), str(d), str(d / "m.nc"))
     assert st["land_cells"] == 0 and st["dune_cells"] >= 2 and st["dune_cells_land"] == 0
-    assert st["dune_cells_0p1_without_era5_land"] == 4
+    assert st["dune_cells_0p1_without_land"] == 4
     assert abs(st["dune_area_in_not_land_cells_km2"] - st["dune_area_0p1_km2"]) < 1e-6 * st["dune_area_0p1_km2"]
     # land = lsm > 0 (strict): the smallest positive packed value counts, exact zero does not
     lsm[100, 100] = 1.5259487586405385e-05; lsm[101, 100] = 0.5

@@ -41,7 +41,7 @@ def main(argv=None):
         s.add_argument("--data", default=DEFAULT_DATA)
         s.add_argument("--out", required=True)
         if name in ("cells", "fields"):
-            s.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
+            s.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5", "merra2", "jra3q"])
         if name == "cells":
             s.add_argument("--region", nargs=4, type=int, default=None, help="y0 y1 x0 x1 (default: whole grid)")
         if name == "fields":
@@ -50,15 +50,15 @@ def main(argv=None):
     s = sub.add_parser("aridity"); s.add_argument("--data", default=DEFAULT_DATA); s.add_argument("--out", required=True)
     s.add_argument("--keepbits", type=int, default=12)
     s = sub.add_parser("aridity-cells"); s.add_argument("--data", default=DEFAULT_DATA); s.add_argument("--out", required=True)
-    s.add_argument("--grid", default="era5-land", choices=["era5-land", "era5"])
+    s.add_argument("--grid", default="era5-land", choices=["era5-land", "era5", "merra2", "jra3q"])
     s = sub.add_parser("qsdiv"); s.add_argument("--data", default=DEFAULT_DATA); s.add_argument("--out", required=True)
-    s.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
+    s.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5", "merra2", "jra3q"])
     s = sub.add_parser("qsdiv-pyramid"); s.add_argument("--native", required=True); s.add_argument("--out", required=True)
     s.add_argument("--keepbits", type=int, default=12)
-    s.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
+    s.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5", "merra2", "jra3q"])
     s = sub.add_parser("cells-aux"); s.add_argument("--data", default=DEFAULT_DATA); s.add_argument("--out", required=True)
     s.add_argument("--qsdiv", required=True); s.add_argument("--ai", required=True)
-    s.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
+    s.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5", "merra2", "jra3q"])
     s = sub.add_parser("era5-masks"); s.add_argument("--data", default=DEFAULT_DATA); s.add_argument("--out", required=True)
     s.add_argument("--lsm", required=True)
     sub.add_parser("extra-registry")
