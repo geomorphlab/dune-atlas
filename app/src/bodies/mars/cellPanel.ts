@@ -82,8 +82,6 @@ export interface CellPanelOptions {
   onCentre?: (c: { lon: number; lat: number }) => void;
   /** quantity of the "<quantity> vs grain diameter" plot (app state plotY: share links; cell/qplot.ts) */
   plot?: { get(): string | undefined; set(id: string): void };
-  /** the other wind datasets (Earth panel: the other-dataset line; the Mars panel does not show it) */
-  otherDatasets?: () => { id: string; open: () => Promise<MarsCellStore> }[];
 }
 
 const deg = (v: number) => (Number.isFinite(v) ? `${v.toFixed(0)}° (${compassPoint(v)})` : MISSING);

@@ -269,11 +269,22 @@ min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 
 |---|---|---|
 | Licence of the Fenton (2020) Mars dune polygons | PI asked Lori Fenton | done: CC BY 4.0 (PR #23) |
 | Persian names of the six new Iran fields | PI's Iranian colleague | pending; names not shown until confirmed |
-| Student review of the French text (incl. "potentiel de dérive" vs "potentiel de transport", "barkhane" vs "barchane") | Tia via the PI | pending |
+| Student review of the French text (incl. "potentiel de dérive" vs "potentiel de transport", "barkhane" vs "barchane") | Tia via the PI | not planned for new text (PI, 16 October): text added since is machine-drafted only |
 | Student review of the Chinese text | Chinese PhD student via the PI | first corrections applied (PR #24); compass names chosen by the PI (PR #24) |
 | Second check from mainland China (language switch, Chinese text, a cell download, a map image export) | PI's colleague | after release |
 | Weak aggregator sources for a few dune-field names | agent | done: 25 names re-sourced (PR #23); five weaker matches listed above |
 | Weekly backup of usage.csv to GitHub | PI | done (PR #23 records it) |
+| Dataset comparison tab in the Earth cell panel (DP, RDD, RDP/DP of the other wind datasets at the same place; replaces the lines removed from above the wind rose on 17 October) | PI, agent | open |
+
+## PI preview of 17 October (branch features/reanalysis: MERRA-2, JRA-3Q, icon, Dunes only)
+
+| Report | Finding | Change |
+|---|---|---|
+| Wind dataset selector, MERRA-2 rectangular cells | As intended. | None. |
+| Dunes only capped the dune map's opacity slider at 50 % | The cap kept the top of the slider below full opacity while Dunes only was on. | No cap: switching Dunes only on sets the dune map's slider to 50 % once; the slider then works as usual, its top fully opaque (Earth and Mars alike). Dunes only ⓘ and Help say so. |
+| Text above the wind rose (threshold, wind at 10 m, the other datasets' DP/RDD/RDP/DP) | Repeated the threshold shown in the bar above and wrapped badly. | Removed from the Earth cell panel (the dune badge stays); a dataset comparison tab is an open item. The Mars panel keeps its lines (its bar shows the grain size, not u*,th). |
+| Tab icon not shown in the preview | Browsers keep tab icons by address; the preview tab had cached the old one. | Icon links carry `?v=2` (raise it with every new icon; `docs/guide/icon.md`). |
+| Polar modes plot: red line not smooth near the rim | A mode that turns fast between two thresholds was drawn with 8 straight pieces per step (here αT turns 77° between u*,th = 0.60 and 0.61 m/s). | Each step is sampled so that no straight piece turns by more than 1.5°. |
 
 ## PI preview of 16 October (branch features/visit-defaults)
 

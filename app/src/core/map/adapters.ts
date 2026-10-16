@@ -33,9 +33,6 @@ export interface AdapterContext {
   /** 'Dunes only' (map/dunemask.ts): set for wind-derived layers while the toggle is on; cells without
    *  dunes are NaN (transparent) in colour maps and carry no arrows / streamlines */
   duneMask?: DuneMaskProvider;
-  /** 'Dunes only' with the dune map shown: the dune map is drawn at most at this opacity
-   *  (DUNES_ONLY_MAX_OPACITY), so the wind-derived colours, now only in the dune cells, show through its fill */
-  opacityCap?: number;
   /** report a runtime data error (marks the layer 'not available' in the panel) */
   onDataError?: (err: unknown) => void;
   /** false once the style this layer was requested for has been replaced (basemap switch):
@@ -403,8 +400,6 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
 const DEFAULT_VECTOR_STYLE: Record<string, Record<string, unknown>> = {
   fill: { "fill-color": DEFAULT_VECTOR_FILL, "fill-opacity": 0.55 },
 };
-/** the dune map's opacity at most, while Dunes only is on (the opacity set by the user is kept for when it is off) */
-export const DUNES_ONLY_MAX_OPACITY = 0.5;
 const OPACITY_PROP: Record<string, string> = { fill: "fill-opacity", circle: "circle-opacity", raster: "raster-opacity" };
 const GEOM_FILTER: Record<string, unknown> = {
   fill: ["==", ["geometry-type"], "Polygon"],
@@ -422,8 +417,6 @@ function addStyledLayers(layer: LayerDef, ctx: AdapterContext, opacity: number, 
   const style = layer.style ?? DEFAULT_VECTOR_STYLE;
   const ids: string[] = [];
   const base: Record<string, number> = {};
-  const cap = (o: number) => Math.min(o, ctx.opacityCap ?? 1);
-  opacity = cap(opacity);
   let op = opacity;
   let col = vectorColors(layer, ctx.cfg);
   const invId = `ov-${layer.id}-invert`, invSrc = `ovsrc-${layer.id}-invert`;
@@ -456,7 +449,6 @@ function addStyledLayers(layer: LayerDef, ctx: AdapterContext, opacity: number, 
   return {
     get layerIds() { return own.live([invId, ...ids]); },
     setOpacity: (o: number) => {
-      o = cap(o);
       op = o;
       for (const kind of Object.keys(base)) if (own.has(`ov-${layer.id}-${kind}`)) map.setPaintProperty(`ov-${layer.id}-${kind}`, OPACITY_PROP[kind], base[kind] * o);
       if (own.has(invId)) map.setPaintProperty(invId, "fill-opacity", fillBase * o);

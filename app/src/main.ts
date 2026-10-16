@@ -243,22 +243,9 @@ const getCellStore = (): Promise<BodyCellStore> => (cellStore ??= (() => {
   p.then((s) => { if (cellStore === p) { grid = s.grid; updateSelectedCell(); } }).catch((e) => console.warn("[dune-atlas] cell store could not be opened", e));
   return p;
 })());
-const otherStores = new Map<string, Promise<BodyCellStore>>();
-function openOtherStore(id: string): Promise<BodyCellStore> {
-  let p = otherStores.get(id);
-  if (!p) {
-    const ds = selectDataset(reg, id);
-    p = HOOKS.openCellStore(resolveSource(ds?.cellStore ?? CONFIG.cellStorePath, dataBase, ds?.prefix), { useSuffixRequest: CONFIG.useSuffixRequest, aux: [] });
-    p.catch(() => otherStores.delete(id));   // retried on the next cell
-    otherStores.set(id, p);
-  }
-  return p;
-}
 const panel = new CellPanel(document.getElementById("cell-panel")!, init.utIndex, {
   windSectors: CONFIG.windRoseSectors, fluxSectors: CONFIG.fluxRoseSectors,
   onClose: () => { if (store.state.cell) store.set({ cell: null }); else panel.close(); }, plot: { get: () => store.state.plotY, set: (id) => store.set({ plotY: id }) }, onCentre: (c) => { centreOnCell(map, c, Math.abs(grid.dlat)); }, fieldLabel, threshold: { def: reg.threshold, store }, shareLink: () => shareLinkNow(),
-  // the other wind datasets at the same location (Earth cell panel line), their stores opened on first use
-  otherDatasets: () => (reg.datasets ?? []).filter((d) => d.id !== store.state.dataset).map((d) => ({ id: d.id, open: () => openOtherStore(d.id) })),
   exportMeta: () => {
     const ds = selectDataset(reg, store.state.dataset);
     return { datasetId: ds?.id ?? "", datasetTitle: ds?.title ?? "", dataVersion: versionFromPrefix(ds?.prefix), permalink: fullScreenUrl() };

@@ -23,3 +23,6 @@ It writes four files:
 
 `index.html` links the ICO, the SVG, the 32 px PNG and the Apple icon, relative to the build base, so `/mars/`
 gets the same files.
+The links end in `?v=2`. Browsers keep a tab icon by its address, often for weeks, so after changing the icon raise
+this number in `index.html` (and in `app/tests/headlib.ts`); otherwise returning visitors, and a local preview that
+was opened before, keep showing the old icon or a blank one.

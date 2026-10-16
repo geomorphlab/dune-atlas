@@ -158,11 +158,21 @@ export const DUNES_ONLY_HELP = "Draw the wind-derived layers (sand-flux fields, 
 /** ⓘ of Dunes only: what the switch does and how the dune map is drawn while it is on */
 export const DUNES_ONLY_INFO_HTML = `<p class="info-def">Dunes only draws the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in the cells of the selected wind dataset that contain mapped dunes.</p>
 <p>The other layers, the cell panel and the downloads are unchanged.</p>
-<p>While it is on, the dune map is drawn at no more than 50 % opacity, so the colours of the dune cells show through it. Its own opacity setting applies again when Dunes only is off.</p>`;
-export function dunesOnlyToggle(store: Store): HTMLElement {
+<p>Switching it on sets the dune map's opacity slider to 50 %, so the colours of the dune cells show through it; the slider can be moved as usual.</p>`;
+/** opacity the dune map is set to when Dunes only is switched on (the user can change it afterwards) */
+export const DUNES_ONLY_OPACITY = 0.5;
+/** the dune map: vector polygons (or points) of the dunes group (= map/overlays.ts isDuneMap) */
+const isDuneMapDef = (l: LayerDef) => l.group === "dunes" && (l.type === "pmtiles-vector" || l.type === "geojson-points");
+export function dunesOnlyToggle(store: Store, reg?: Registry): HTMLElement {
   const cb = h("input", { type: "checkbox", id: "dunes-only", "aria-describedby": "dunes-only-help" }) as HTMLInputElement;
   cb.checked = !!store.state.dunesOnly;
-  cb.addEventListener("change", () => store.set({ dunesOnly: cb.checked }));
+  cb.addEventListener("change", () => {
+    if (!cb.checked || !reg) { store.set({ dunesOnly: cb.checked }); return; }
+    // switching on: the dune map's opacity slider goes to 50 % (one state change with the switch)
+    const layers = { ...store.state.layers };
+    for (const l of reg.layers.filter(isDuneMapDef)) layers[l.id] = { ...(layers[l.id] ?? { visible: false, opacity: 1 }), opacity: DUNES_ONLY_OPACITY };
+    store.set({ dunesOnly: true, layers });
+  });
   store.subscribe((st, ch) => { if (ch.has("dunesOnly")) cb.checked = !!st.dunesOnly; });
   const label = h("label", { class: "inline dunes-only-row", for: "dunes-only", title: DUNES_ONLY_HELP }, cb, ui("panel.dunesOnly"),
     h("span", { id: "dunes-only-help", class: "visually-hidden" }, DUNES_ONLY_HELP));
@@ -482,7 +492,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     }
     header.append(line);
   }
-  header.append(dunesOnlyToggle(store));
+  header.append(dunesOnlyToggle(store, reg));
   // pinned: never scrolls away, stays visible even when the layer list is collapsed
   const pinned = h("div", { class: "pinned" }, thresholdControl(reg.threshold, store));
   body.append(orderList(reg, store));

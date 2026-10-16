@@ -319,7 +319,7 @@ describe("cell panel", () => {
     mini.value = "40"; fire(mini, "input");
     expect(store.state.utIndex).toBe(40);
     expect(root.querySelector("#cell-ut-value")!.textContent).toBe("0.41 m/s");
-    expect(root.querySelector(".cell-meta")!.textContent).toContain("0.41 m/s");
+    expect(root.querySelector(".cell-meta")!.textContent).toMatch(/^(Dunes present|No dunes mapped)$/);   // badge only
     expect(root.querySelector("#cell-ut-slider")).toBe(mini); // not rebuilt while dragging
   });
   it("modes plot: a collapse is remembered for the visit for new panels", async () => {

@@ -84,7 +84,7 @@
   "area": "Layer popovers"
  },
  {
-  "en": "While it is on, the dune map is drawn at no more than ⟦#0⟧ % opacity, so the colours of the dune cells show through it. Its own opacity setting applies again when Dunes only is off.",
+  "en": "Switching it on sets the dune map's opacity slider to ⟦#0⟧ %, so the colours of the dune cells show through it; the slider can be moved as usual.",
   "area": "Layer popovers"
  },
  {
@@ -601,14 +601,6 @@
  },
  {
   "en": "Dunes present",
-  "area": "Cell panel"
- },
- {
-  "en": "Threshold ⟦0⟧: <strong>⟦1⟧</strong>",
-  "area": "Cell panel"
- },
- {
-  "en": "Wind at ⟦#0⟧ m at the threshold: ≈ ⟦0⟧",
   "area": "Cell panel"
  },
  {

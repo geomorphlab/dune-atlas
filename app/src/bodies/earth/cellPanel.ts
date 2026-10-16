@@ -63,16 +63,7 @@ export interface CellPanelOptions {
   onCentre?: (c: { lon: number; lat: number }) => void;
   /** quantity of the "<quantity> vs threshold" plot (app state plotY: share links; cell/qplot.ts) */
   plot?: { get(): string | undefined; set(id: string): void };
-  /** the other wind datasets (registry order): their cell stores, opened on first use, for the line giving
-   *  their DP, RDD and RDP/DP at the same location */
-  otherDatasets?: () => OtherDataset[];
 }
-export interface OtherDataset { id: string; open: () => Promise<CellStore> }
-/** state of one other dataset's line */
-type OtherState = { state: "loading" | "nodata" | "error" } | { state: "ok"; cell: CellData };
-
-/** the other-dataset line (#renderOthers) */
-export const OTHER_TEXT = { loading: "loading…", error: "could not be loaded", noLand: "no data for this cell (outside its land mask)", noData: "no data for this cell" };
 
 const deg = (v: number) => (Number.isFinite(v) ? `${v.toFixed(0)}° (${compassPoint(v)})` : MISSING);
 /** a mode's readout: bearings with their compass point; the αH axis (0–180°) without one */
@@ -206,8 +197,6 @@ export class CellPanel {
   #ro: ResizeObserver | null = null;
   #roTimer: ReturnType<typeof setTimeout> | undefined;
 
-  /** the other wind datasets at the shown location (otherDatasets), by id */
-  #others = new Map<string, OtherState>();
   constructor(root: HTMLElement, utIndex: number, opts: CellPanelOptions) {
     wireBulkGuide(root);   // copy buttons of the "Get the whole grid" guide (Download & cite)
     this.#root = root;
@@ -344,7 +333,6 @@ export class CellPanel {
       this.#cell = cell;
       this.#storeAttrs = s.attrs;
       this.render(same ? prev!.scrollTop : 0);
-      if (cell.hasData) void this.#loadOthers(cell, req);
       this.#root.dataset.loadMs = String(Math.round(performance.now() - t0));
     } catch (e) {
       if (req !== this.#req) return;
@@ -352,50 +340,6 @@ export class CellPanel {
       this.#frame({ iy, ix }).innerHTML = `<p class="status error" role="alert" title="${escapeHtml(String((e as Error)?.message ?? e))}">The data for this cell could not be loaded. Click the cell again to retry.</p>`;
       protectDom(this.#root);
     }
-  }
-
-  /** Open the other datasets' cells at this cell's centre (lazily: after the panel has drawn) */
-  async #loadOthers(cell: CellData, req: number) {
-    const list = this.#opts.otherDatasets?.() ?? [];
-    this.#others = new Map(list.map((o) => [o.id, { state: "loading" } as OtherState]));
-    this.#renderOthers();
-    await Promise.all(list.map(async (o) => {
-      let st: OtherState;
-      try {
-        const s = await o.open();
-        const c = snapToCell(cell.lon, cell.lat, s.grid);
-        const oc = c ? await s.query(c.iy, c.ix) : null;
-        st = oc?.hasData ? { state: "ok", cell: oc } : { state: "nodata" };
-      } catch (e) {
-        console.warn(`[dune-atlas] ${o.id} cell could not be loaded`, e);
-        st = { state: "error" };
-      }
-      if (req !== this.#req) return;
-      this.#others.set(o.id, st);
-      this.#renderOthers();
-    }));
-  }
-
-  /** "ERA5 0.25° here: DP …, RDD …, RDP/DP …" per other dataset, at the current threshold (live slots sized from
-   *  that cell's 64 values, so the line keeps its length while the slider moves; ui/livenum.ts) */
-  #renderOthers() {
-    const el = this.#dyn.others;
-    if (!el) return;
-    const ut = this.#cell?.utValues[this.#utIndex];
-    el.innerHTML = [...this.#others].map(([id, st]) => {
-      const ds = datasetInfo(id), name = `${escapeHtml(ds.name)} ${escapeHtml(ds.resolution)}`;
-      if (st.state !== "ok") {
-        const why = st.state === "loading" ? OTHER_TEXT.loading : st.state === "error" ? OTHER_TEXT.error : ds.nonLandReason ? OTHER_TEXT.noLand : OTHER_TEXT.noData;
-        return `<span class="meta-line other-line" data-dataset="${escapeHtml(id)}">${name}: ${why}</span>`;
-      }
-      const oc = st.cell, uv = oc.utValues;
-      const k = ut === undefined ? this.#utIndex : uv.reduce((b, x, i) => (Math.abs(x - ut) < Math.abs(uv[b] - ut) ? i : b), 0);
-      const v = driftAt(oc, k), R = reserves(oc, uv);
-      const dp = Number.isFinite(v.dp) ? `${fmtNum(v.dp)}&nbsp;m²/yr` : MISSING;
-      const ratio = Number.isFinite(v.ratio) ? fmtNum(v.ratio) : MISSING;
-      return `<span class="meta-line other-line" data-dataset="${escapeHtml(id)}">${name} here: DP ${live(dp, R.dp, "left")}, RDD ${live(deg(v.rddBearing), BEARING_W(), "left")}, RDP/DP ${live(ratio, R.ratio, "left")}</span>`;
-    }).join("");
-    protectDom(el);
   }
 
   setThreshold(i: number) {
@@ -472,8 +416,9 @@ export class CellPanel {
     }
     const d = (k: string, tag: keyof HTMLElementTagNameMap = "div", cls = "") => (this.#dyn[k] = h(tag, { class: cls }));
     this.#dyn = {};
-    // meta: dune badge and the threshold line (the summary table follows the plots)
-    body.append(h("p", { class: "cell-meta", html: cell.dune ? '<span class="badge dune">Dunes present</span>' : '<span class="badge">No dunes mapped</span>' }, d("meta", "span", "meta-lines"), d("others", "span", "meta-lines other-ds")));
+    // meta: the dune badge only (the threshold is in the bar above; a dataset comparison tab is an open item,
+    // docs/records/review-decisions-2026-10.md "Open items")
+    body.append(h("p", { class: "cell-meta", html: cell.dune ? '<span class="badge dune">Dunes present</span>' : '<span class="badge">No dunes mapped</span>' }));
     // wind rose
     const edges = [0, 2.5, 5, 7.5, 10, 12.5, 20];
     const choices = roseBinChoices(cell.bins.uaCentres.length);
@@ -551,12 +496,6 @@ export class CellPanel {
     const D = this.#dyn;
     const R = reserves(cell, v.utValues);
     const dsk = this.#ds(cell);
-    // one value per row, each slot at the end of its row (no hole beside a shorter value; ui/livenum.ts)
-    // the threshold line (no box), one statement per line with its value at the end (no
-    // hole; ui/livenum.ts)
-    D.meta.innerHTML = `<span class="meta-line">Threshold ${mathHtml("$u_{*,th}$")}: <strong>${live(formatUt(v.ut), R.ut, "left")}</strong></span>`
-      + `<span class="meta-line">Wind at 10 m at the threshold: ≈ ${live(`${v.thresholdWind10m.toFixed(1)}&nbsp;m/s`, R.wind, "left")}</span>`;
-    this.#renderOthers();
     const windOpts: RoseSvgOptions = {
       id: "wind-rose", values: v.windRose.freq, colors: SPEED_COLORS, title: "Wind rose",
       desc: `Frequency of hourly 10 m winds by the direction they blow from, ${v.windRose.sectors} sectors, stacked by speed class; ${dsk.period}; sums to 100 %.`,
