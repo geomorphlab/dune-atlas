@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -q copyq
+#PBS -l ncpus=1
+#PBS -l mem=32GB
+#PBS -l walltime=05:00:00
+#PBS -l storage=gdata/k10+gdata/xp65+gdata/rt52+scratch/k10
+#PBS -l wd
+#PBS -N rean_pilot
+# Pilot: January 2000 of MERRA-2 and JRA-3Q 10 m winds, then pilot.py checks. Variables from qsub -v:
+#   PY (interpreter), CODE (this folder on Gadi), WORK (reanalysis work root)
+set -u
+test -x "$PY" || { echo "no interpreter $PY"; exit 127; }
+cd "$WORK"
+echo "start $(date -u +%FT%TZ) host $(hostname)"
+"$PY" -u "$CODE/download.py" merra2 "$WORK/raw/merra2" 2000 2000 --months 1-1 > logs/pilot_merra2.log 2>&1; echo "merra2 rc $?"
+"$PY" -u "$CODE/download.py" jra3q  "$WORK/raw/jra3q"  2000 2000 --months 1-1 > logs/pilot_jra3q.log 2>&1; echo "jra3q rc $?"
+NUMBA_NUM_THREADS=1 "$PY" -u "$CODE/pilot.py" "$WORK/raw" "$WORK/logs/pilot.json" > logs/pilot_checks.log 2>&1; echo "pilot rc $?"
+echo "end $(date -u +%FT%TZ)"

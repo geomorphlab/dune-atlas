@@ -1,0 +1,22 @@
+#!/bin/bash
+#PBS -q normal
+#PBS -l walltime=10:00:00
+#PBS -l storage=gdata/k10+gdata/xp65+scratch/k10
+#PBS -l wd
+#PBS -r y
+# STEP=sum:    sum the per-year stores into OUTDIR/<ds>_1980_2025_uam10_hist.zarr and write the qsat ATTRS.json
+# STEP=fields: the 23 qsat fields x 64 thresholds into OUTDIR/<ds>_1980_2025_qsat_params.zarr (era5_fields.py)
+# qsub -v: PY, CODE (reanalysis code), SRC (pipeline src), WORK, DS, OUTDIR, ERA5Q (ERA5 qsat store), STEP
+set -u
+test -x "$PY" || { echo "no interpreter $PY"; exit 127; }
+export OMP_NUM_THREADS=1 PYTHONPATH="$SRC"
+H="$OUTDIR/${DS}_1980_2025_uam10_hist.zarr"; Q="$OUTDIR/${DS}_1980_2025_qsat_params.zarr"
+mkdir -p "$OUTDIR"
+if [ "$STEP" = sum ]; then
+  test -f "$H.done.json" || "$PY" -u -W ignore "$CODE/rean_hist.py" sum "$DS" "$WORK/hist_year/$DS" 1980 2025 "$H" || exit 1
+  "$PY" -u "$CODE/make_attrs.py" "$DS" "$H" "$ERA5Q" "$WORK/work/${DS}_qsat_attrs.json" || exit 2
+else
+  test -d "$Q" || "$PY" -u "$CODE/../era5/era5_fields.py" init "$H" "$Q" "$WORK/work/${DS}_qsat_attrs.json" || exit 3
+  "$PY" -u "$CODE/../era5/era5_fields.py" run "$H" "$Q" "$WORK/work/fields_$DS" "${PBS_NCPUS:-1}" || exit 4
+fi
+echo "done $STEP $DS $(date -u +%FT%TZ)"

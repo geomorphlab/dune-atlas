@@ -1,0 +1,17 @@
+#!/bin/bash
+#PBS -q copyq
+#PBS -l ncpus=1
+#PBS -l mem=4GB
+#PBS -l walltime=10:00:00
+#PBS -l storage=gdata/k10+gdata/xp65+scratch/k10
+#PBS -l wd
+#PBS -r y
+# Download years Y0..Y1 of dataset DS (merra2 | jra3q) to WORK/raw/DS; resumable, so a stopped job is resubmitted
+# unchanged. Variables from qsub -v: PY, CODE, WORK, DS, Y0, Y1, NW (MERRA-2 parallel connections).
+set -u
+test -x "$PY" || { echo "no interpreter $PY"; exit 127; }
+echo "start $(date -u +%FT%TZ) $DS $Y0-$Y1 host $(hostname)"
+"$PY" -u -W ignore "$CODE/download.py" "$DS" "$WORK/raw/$DS" "$Y0" "$Y1" --workers "${NW:-3}" > "$WORK/logs/dl_${DS}_${Y0}_${Y1}.log" 2>&1
+rc=$?
+echo "rc $rc end $(date -u +%FT%TZ)"
+exit $rc
