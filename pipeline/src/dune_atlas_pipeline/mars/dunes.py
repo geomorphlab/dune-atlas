@@ -297,9 +297,9 @@ def overlap_fraction(geoms, grid: dict = GRID) -> np.ndarray:
         pieces.append((I[lo], J[lo], w[lo] + 360, np.full(lo.sum(), 180.0)))
     if hi.any():
         pieces.append((I[hi], J[hi], np.full(hi.sum(), -180.0), e[hi] - 360))
-    PI = np.concatenate([p[0] for p in pieces]); PJ = np.concatenate([p[1] for p in pieces])
-    boxes = box(np.concatenate([p[2] for p in pieces]), lat[PI] - hl, np.concatenate([p[3] for p in pieces]),
-                lat[PI] + hl)
+    rows_p = np.concatenate([p[0] for p in pieces]); cols_p = np.concatenate([p[1] for p in pieces])
+    boxes = box(np.concatenate([p[2] for p in pieces]), lat[rows_p] - hl, np.concatenate([p[3] for p in pieces]),
+                lat[rows_p] + hl)
     geoms = np.asarray(list(geoms), dtype=object)
     tree = STRtree(boxes)
     gi, bi = tree.query(geoms, predicate="intersects")
@@ -307,7 +307,7 @@ def overlap_fraction(geoms, grid: dict = GRID) -> np.ndarray:
     a = np.array([cea(g).area for g in inter])
     cell_area = np.radians(grid["dlon"]) * (np.sin(np.radians(lat + hl)) - np.sin(np.radians(lat - hl)))
     frac = np.zeros((len(lat), len(lon)))
-    np.add.at(frac, (PI[bi], PJ[bi]), a)
+    np.add.at(frac, (rows_p[bi], cols_p[bi]), a)
     frac /= cell_area[:, None]
     return frac
 
