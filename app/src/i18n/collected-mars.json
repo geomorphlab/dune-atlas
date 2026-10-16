@@ -1,5 +1,9 @@
 [
  {
+  "en": "About {title}",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
   "en": "Move {title} up",
   "area": "Screen-reader labels and tooltips"
  },
@@ -17,10 +21,6 @@
  },
  {
   "en": "Show {title}",
-  "area": "Screen-reader labels and tooltips"
- },
- {
-  "en": "About {title}",
   "area": "Screen-reader labels and tooltips"
  },
  {
@@ -78,6 +78,10 @@
  {
   "en": "MCMC FV3 ⟦#0⟧°, one Mars year (6th simulated year, ⟦#1⟧ sols)",
   "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°), each one Mars year of lowest-level winds on its own grid:⟦3⟧is a free-running climate-model simulation;⟦4⟧and⟦5⟧are reanalyses of Mars Year ⟦#4⟧, which assimilate spacecraft observations of the atmosphere into a climate model. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain. No⟦6⟧data poleward of ⟦#5⟧° N: the northernmost cells of its grid are centred at ⟦#6⟧° N.",
+  "area": "Layer popovers"
  },
  {
   "en": "Draw the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in cells with dunes; the other layers and the cell panel are unchanged.",
@@ -492,7 +496,15 @@
   "area": "About"
  },
  {
-  "en": "<strong>Winds (⟦0⟧Mars⟦1⟧, beta release ⟦#0⟧)</strong>: hourly lowest-level winds, temperature and surface pressure of the⟦2⟧Ames⟦3⟧FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to ⟦#1⟧° × ⟦#2⟧° (a cell is about ⟦#3⟧ km across at the equator, larger than most dune fields): ⟦#4⟧ hourly samples, one Mars year. The map draws each cell as one square, so a field that changes strongly from cell to cell, as⟦4⟧often does at low latitudes, looks blocky. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature (⟦#5⟧–⟦#6⟧ m over all cells and hours; ⟦#7⟧–⟦#8⟧ m in ⟦#9⟧ % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#10⟧, eq. ⟦#11⟧) under constant stress at that height (no roughness length).",
+  "en": "<strong>Winds (⟦0⟧Mars⟦1⟧, beta release ⟦#0⟧)</strong>: hourly lowest-level winds, temperature and surface pressure of the⟦2⟧Ames⟦3⟧FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to ⟦#1⟧° × ⟦#2⟧° (a cell is about ⟦#3⟧ km across at the equator, larger than most dune fields): ⟦#4⟧ hourly samples, one Mars year. The map draws each cell as one square, so a field that changes strongly from cell to cell, as⟦4⟧often does at low latitudes, looks blocky. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature (⟦#5⟧–⟦#6⟧ m over all cells and hours; ⟦#7⟧–⟦#8⟧ m in ⟦#9⟧ % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#10⟧, eq. ⟦#11⟧) under constant stress at that height (no roughness length). Explore and download the full model output in the <a href=\"https://data.nas.nasa.gov/mcmc/portals/web-interface/\" target=\"_blank\" rel=\"noopener noreferrer\">⟦6⟧Ames⟦7⟧Data Portal web interface</a>.",
+  "area": "About"
+ },
+ {
+  "en": "<strong>Winds (⟦0⟧v1.0 reanalysis, Mars Year ⟦#0⟧)</strong>: hourly analysis ensemble mean of the lowest-level winds, temperature and surface pressure of the Ensemble Mars Atmosphere Reanalysis System (⟦1⟧) v1.0 (⟦2⟧; read from the analysis-ready⟦3⟧copy), Mars Year ⟦#1⟧, on its native grid of ⟦#2⟧° in longitude × ⟦#3⟧° in latitude (⟦#4⟧ × ⟦#5⟧ cells, about ⟦#6⟧ km × ⟦#7⟧ km at the equator). The two half-width polar rows of⟦4⟧are not used, so the grid ends at ±⟦#8⟧°: there is no⟦5⟧cell poleward of it. The winds are averaged from the staggered⟦6⟧grid onto the cell centres. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature, and the friction velocity⟦7⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#9⟧, eq. ⟦#10⟧) under constant stress at that height (no roughness length). The lowest⟦8⟧layer is thick, so that height is ⟦#11⟧–⟦#12⟧ m above the surface (median ⟦#13⟧ m;⟦9⟧⟦#14⟧–⟦#15⟧ m,⟦10⟧⟦#16⟧–⟦#17⟧ m): the wind and⟦11⟧refer to a much higher level than in the other Mars datasets. Data and documentation: <a href=\"https://doi.org/10.18113/D3W375\" target=\"_blank\" rel=\"noopener noreferrer\">⟦12⟧v1.0 at the Penn State Data Commons</a>; the analysis-ready copy read by the atlas, <a href=\"https://huggingface.co/datasets/ananyo01/ARCO-EMARS\" target=\"_blank\" rel=\"noopener noreferrer\">⟦13⟧</a>, with <a href=\"https://github.com/GalacticBobster/ARCO-Mars-Examples\" target=\"_blank\" rel=\"noopener noreferrer\">Python examples for reading and plotting it</a>.",
+  "area": "About"
+ },
+ {
+  "en": "<strong>Winds (⟦0⟧v2.0 reanalysis, Mars Year ⟦#0⟧)</strong>: lowest-level winds, temperature and surface pressure, one sample every two Mars hours, of the Mars Analysis Correction Data Assimilation (⟦1⟧) v2.0 reanalysis (⟦2⟧,⟦3⟧Centre for Environmental Data Analysis; read from the analysis-ready⟦4⟧copy), Mars Year ⟦#1⟧, on its native ⟦#2⟧° grid (⟦#3⟧ × ⟦#4⟧ cells, about ⟦#5⟧ km across at the equator; the first column is centred on ⟦#6⟧°). The winds are those of the lowest model level (σ = ⟦#7⟧); air density ρ = p/(R T) with p = σ p<sub>s</sub>, the height of that level z = (R T/g) ln(⟦#8⟧/σ), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#9⟧, eq. ⟦#10⟧) under constant stress at that height (no roughness length); that level is ⟦#11⟧–⟦#12⟧ m above the surface (⟦6⟧⟦#13⟧–⟦#14⟧ m). In Mars Year ⟦#15⟧ the first ⟦#16⟧ samples (Ls ⟦#17⟧–⟦#18⟧°) assimilate Mars Odyssey⟦7⟧column dust, the others⟦8⟧⟦9⟧temperature and dust profiles. Data, documentation and file browser: <a href=\"https://catalogue.ceda.ac.uk/uuid/cd037a9ea387438fabf4d674dbe53088/\" target=\"_blank\" rel=\"noopener noreferrer\">⟦10⟧v2.0 in the⟦11⟧Archive</a>; the analysis-ready copy read by the atlas: <a href=\"https://huggingface.co/datasets/ananyo01/ARCO-MACDA\" target=\"_blank\" rel=\"noopener noreferrer\">⟦12⟧</a>. Contains public sector information licensed under the Open Government Licence v3.0 (⟦13⟧v2.0,⟦14⟧Centre for Environmental Data Analysis).",
   "area": "About"
  },
  {
@@ -504,7 +516,7 @@
   "area": "About"
  },
  {
-  "en": "<strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧°). Negative values (convergence) imply deposition.",
+  "en": "<strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧° or ⟦#2⟧° × ⟦#3⟧° or ⟦#4⟧°). Negative values (convergence) imply deposition.",
   "area": "About"
  },
  {
@@ -552,6 +564,10 @@
   "area": "About"
  },
  {
+  "en": "<strong>⟦0⟧⟦#0⟧° × ⟦#1⟧°</strong>: ⟦1⟧. Licence: ⟦2⟧.",
+  "area": "About"
+ },
+ {
   "en": "Mars⟦0⟧(method)",
   "area": "About"
  },
@@ -572,6 +588,10 @@
   "area": "About"
  },
  {
+  "en": "Web interface (explore the model output): ⟦0⟧",
+  "area": "About"
+ },
+ {
   "en": "Model physics: ⟦0⟧",
   "area": "About"
  },
@@ -585,6 +605,22 @@
  },
  {
   "en": "Mars dune map (⟦0⟧⟦1⟧and⟦2⟧, merged)",
+  "area": "About"
+ },
+ {
+  "en": "⟦0⟧v1.0 reanalysis (Mars Year ⟦#0⟧)",
+  "area": "About"
+ },
+ {
+  "en": "Data (analysis-ready copy read by the atlas): ⟦0⟧",
+  "area": "About"
+ },
+ {
+  "en": "⟦0⟧v2.0 reanalysis (Mars Year ⟦#0⟧)",
+  "area": "About"
+ },
+ {
+  "en": "Contains public sector information licensed under the Open Government Licence v3.0 (⟦0⟧v2.0,⟦1⟧Centre for Environmental Data Analysis).",
   "area": "About"
  },
  {

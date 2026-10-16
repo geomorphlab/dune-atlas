@@ -223,7 +223,7 @@ describe("Mars wind datasets: panel and downloads", () => {
     const nc = readNc(cellNetcdf(mc, metaOf("macda-v2-my30")));
     expect(mc.lon).toBe(-180);
     expect((nc.vars.hour.attrs as Record<string, unknown>).long_name).toBe("sample index of the record (one sample every two Mars hours; 0 = first sample of Mars Year 30)");
-    expect((nc.vars.sol.attrs as Record<string, unknown>).long_name).toBe("sols since the start of Mars Year 30 (one sample every two Mars hours)");
+    expect((nc.vars.sol.attrs as Record<string, unknown>).long_name).toBe("MACDA time: sols since the start of Mars Year 24 (the fraction of a sol is the mean solar time at the prime meridian; one sample every two Mars hours)");
     const sol = nc.vars.sol.data as number[];
     expect(sol[1] - sol[0]).toBeCloseTo(1 / 12, 6);
     expect(nc.gatts.samples_per_sol).toEqual([12]);

@@ -48,7 +48,8 @@
       samplesPerSol: 12
       indexText: 'sample index of the record (one sample every two Mars hours; 0 = first sample of Mars Year
         30)'
-      solText: 'sols since the start of Mars Year 30 (one sample every two Mars hours)'
+      solText: 'MACDA time: sols since the start of Mars Year 24 (the fraction of a sol is the mean solar time at
+        the prime meridian; one sample every two Mars hours)'
   credits:
     sources:
     - dune-atlas-mars-macda
