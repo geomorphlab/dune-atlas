@@ -1,11 +1,13 @@
 // Read one Mars cell from the web cell store (cells.zarr, zarr v3, sharded 16x16 cells, inner
-// chunk = 1 cell; data contract in docs/guide/mars.md):
-//   series [90, 180, 5, 16032] float32  u, v (m/s, toward east/north), T (K), rho (kg m^-3), z (m, lowest-level height) per hour
-//   fields [90, 180, 23, 64]   float32  (order: root attrs field_vars; last axis = grain-size index)
-//   dunes  [90, 180] float32 overlap fraction; dune [90, 180] uint8 (fraction > 0)
-//   ls, sol [16032] float32
+// chunk = 1 cell; data contract in docs/guide/mars.md), on the dataset's grid of ny x nx cells (root attrs
+// `grid`; MCMC FV3 90 x 180, EMARS 34 x 60, MACDA 36 x 72) with nt samples (FV3 16,032 hourly):
+//   series [ny, nx, 5, nt] float32  u, v (m/s, toward east/north), T (K), rho (kg m^-3), z (m, lowest-level height) per sample
+//   fields [ny, nx, 23, 64] float32  (order: root attrs field_vars; last axis = grain-size index)
+//   dunes  [ny, nx] float32 overlap fraction; dune [ny, nx] uint8 (fraction > 0)
+//   ls, sol [nt] float32
+// Samples per sol: root attrs dataset.samples_per_sol (EMARS 24, MACDA 12), else the registry entry (FV3 24).
 // The returned cell is a CellData (so fieldValue / nUt / modeDefined work unchanged) plus the
-// hourly series; `hist` is empty and `utValues` holds the grain diameters d (µm).
+// series; `hist` is empty and `utValues` holds the grain diameters d (µm).
 import * as zarr from "zarrita";
 import { CachingStore, CellAuxStore, type CellAux, type CellData } from "../../../core/cell/cellstore";
 import { harmonizeAux } from "../../../core/cell/auxinfo";
@@ -13,13 +15,16 @@ import { cellFromIndex, type Grid } from "../../../core/cell/snap";
 import { DEFAULT_BINS, type Bins } from "../../../core/cell/flux";
 import { M } from "../marsphysics";
 import { MARS_GRID } from "../body";
+import { datasetGrid, datasetInfo } from "../../../core/cell/datasetinfo";
 
 type Readable = zarr.AsyncReadable | zarr.Readable;
 
 export interface MarsCellStoreAttrs {
   grid: Grid & { cell_registration?: string };
   body?: string;
-  dataset?: { id: string; name: string; resolution_deg: number; n_hours: number; source?: string; citation?: string };
+  /** n_hours = samples in the series; samples_per_sol (datasets after FV3; FV3: 24); resolution_deg a number or
+   *  {lon, lat} for non-square cells */
+  dataset?: { id: string; name: string; resolution_deg: number | string | { lon: number; lat: number }; n_hours: number; samples_per_sol?: number; source?: string; citation?: string };
   field_vars: string[];
   field_units?: Record<string, string>;
   field_long_names?: Record<string, string>;
@@ -36,9 +41,13 @@ export interface MarsSeries { u: Float32Array; v: Float32Array; T: Float32Array;
 export interface MarsCellData extends CellData {
   body: "mars";
   series: MarsSeries;
-  /** areocentric solar longitude (deg, 0-360) and sol of every hour */
+  /** areocentric solar longitude (deg, 0-360) and sol of every sample */
   ls: Float32Array;
   sol: Float32Array;
+  /** samples per sol of the series (24: hourly) */
+  samplesPerSol: number;
+  /** wind dataset of the store (root attrs dataset.id) */
+  datasetId?: string;
   /** dune overlap fraction of the cell (0-1) */
   duneFrac: number;
   /** grain diameters of the fields' last axis (µm) */
@@ -101,12 +110,20 @@ export class MarsCellStore {
 
   auxStores(): Promise<CellAuxStore[]> { return this.#aux; }
   get fieldVars(): string[] { return this.attrs.field_vars; }
+  /** samples in the series (FV3: 16,032 hours) */
   get nHours(): number { return this.#series.shape[3]; }
+  /** wind dataset of the store (root attrs dataset.id) */
+  get datasetId(): string | undefined { return this.attrs.dataset?.id; }
+  /** samples per sol: root attrs dataset.samples_per_sol, else the registry entry's, else 24 */
+  get samplesPerSol(): number {
+    const n = this.attrs.dataset?.samples_per_sol;
+    return Number.isInteger(n) && n! > 0 ? n! : datasetInfo(this.datasetId).series?.samplesPerSol ?? 24;
+  }
 
-  /** grid from root attrs `grid` (fallback: the data-contract Mars grid) */
+  /** grid from root attrs `grid` (fallback: the registry grid of the store's dataset, else the FV3 grid) */
   get grid(): Grid {
     const g = this.attrs.grid;
-    return g && [g.lat0, g.dlat, g.lon0, g.dlon, g.ny, g.nx].every(Number.isFinite) ? { lat0: g.lat0, dlat: g.dlat, lon0: g.lon0, dlon: g.dlon, ny: g.ny, nx: g.nx } : MARS_GRID;
+    return g && [g.lat0, g.dlat, g.lon0, g.dlon, g.ny, g.nx].every(Number.isFinite) ? { lat0: g.lat0, dlat: g.dlat, lon0: g.lon0, dlon: g.dlon, ny: g.ny, nx: g.nx } : datasetGrid(this.datasetId) ?? MARS_GRID;
   }
   get bins(): Bins { return MARS_BINS; }
   /** grain diameters (µm) of the fields' last axis */
@@ -144,6 +161,7 @@ export class MarsCellStore {
     return {
       ...ref, body: "mars", hist: new Uint32Array(0), fields, fieldVars: this.attrs.field_vars, bins: MARS_BINS, utValues: this.utValues, grid: this.grid,
       dune, duneFrac: Number.isFinite(frac) ? frac : 0, hasData: noSeries ? (f.data as Float32Array).some((x) => Number.isFinite(x)) : valid > 0, totalHours: valid, series, ls: time.ls, sol: time.sol, dValuesUm: this.utValues,
+      samplesPerSol: this.samplesPerSol, ...(this.datasetId ? { datasetId: this.datasetId } : {}),
       ...(aux ? { aux } : {}),
     };
   }

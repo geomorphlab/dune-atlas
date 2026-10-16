@@ -13,21 +13,32 @@ import { AI_NOTICE, citationJson, citationSources, citationText, referencesLine 
 import { CELL_SOURCE_IDS } from "../citation";
 import { fieldsCitation, fieldsLicence } from "../../../core/cell/citation";
 import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "../../../core/cell/auxinfo";
-import { datasetInfo, resolutionText, type DatasetInfo } from "../../../core/cell/datasetinfo";
+import { datasetInfo, gridResolutionText, resolutionText, type DatasetInfo } from "../../../core/cell/datasetinfo";
 import { writeNetcdf3, type NcAttrs, type NcVariable } from "../../../core/cell/netcdf3";
 import { writeZip, type DeflateRaw } from "../../../core/cell/zip";
 import type { MarsCellData } from "./cellstore";
 import { analyseMarsCell, marsModeRoses } from "./analysis";
 import { PD23_TEXT, PAHTZ_DURAN_DOI } from "../citation";
+import { marsSampling, type MarsSampling } from "../datasets";
 
 export { exportBaseName, versionFromPrefix, type ExportMeta };
 
-export function cellDataset(_cell: unknown, datasetId?: string): DatasetInfo { void _cell; return datasetInfo(datasetId); }
+/** the wind dataset of a cell: its store's (cell.datasetId), else `datasetId` (the app's selection) */
+export function cellDataset(cell: unknown, datasetId?: string): DatasetInfo {
+  return datasetInfo((cell as { datasetId?: string } | null | undefined)?.datasetId ?? datasetId);
+}
 
 const D_COLUMN: CsvColumn = { name: "d", units: "um", longName: "median grain diameter d" };
+/** columns of wind_series.csv (and the NetCDF series variables): the time columns hour (the sample index) and sol
+ *  are described by the dataset's registry entry (`info.series`), else from its sampling */
+export function seriesColumns(ds: DatasetInfo, sm: MarsSampling): CsvColumn[] {
+  return [
+    { name: "hour", units: "1", longName: ds.series?.indexText ?? `sample index of the record (${sm.every}; 0 = first sample)` },
+    { name: "sol", units: "1", longName: ds.series?.solText ?? `sol of the record (${sm.every})` },
+    ...SERIES_COLUMNS,
+  ];
+}
 const SERIES_COLUMNS: CsvColumn[] = [
-  { name: "hour", units: "1", longName: "hour index of the record (0 = first hour of the 6th simulated year)" },
-  { name: "sol", units: "1", longName: "sol of the simulation (FV3 time / 1 sol)" },
   { name: "ls", units: "degree", longName: "areocentric solar longitude Ls (0-360)" },
   { name: "u", units: "m s-1", longName: "lowest-level eastward wind (toward east) at height z" },
   { name: "v", units: "m s-1", longName: "lowest-level northward wind (toward north) at height z" },
@@ -35,10 +46,10 @@ const SERIES_COLUMNS: CsvColumn[] = [
   { name: "rho", units: "kg m-3", longName: "lowest-layer air density p/(R T)" },
   { name: "z", units: "m", longName: "height of the lowest-level wind above the surface, (R T / g) ln(p_surface / p_mid) (hydrostatic)" },
 ];
-const CONVENTIONS = {
+const conventions = (sm: MarsSampling) => ({
   wind_direction: "u, v toward east/north; direction toward = arctan2(v, u), radians counter-clockwise from east; compass bearing toward = (90 - degrees) mod 360; from = toward + 180",
-  friction_velocity: `u* from the smooth-wall mixing-length profile of Pähtz & Durán (2023) eq. 2.2, dl/dz = kappa [1 - exp(-sqrt(u l / (7 nu)))], under constant stress (no roughness length), evaluated at each hour's lowest-level height z with nu = mu(T)/rho; kappa = ${M.KAPPA}, damping constant ${M.MIX_DAMP}; tabulated universal profile u+ (X = z u*/nu), u* by bisection`,
-  threshold: `per hour: u*,th(d, rho, T), Pähtz & Durán (2023) eq. 5.1 with the rarefaction correction of eq. 3.20 (rho_p = ${M.RHO_P} kg m-3, g = ${M.G} m s-2, R = ${M.R_AIR} J kg-1 K-1, Sutherland viscosity of CO2)`,
+  friction_velocity: `u* from the smooth-wall mixing-length profile of Pähtz & Durán (2023) eq. 2.2, dl/dz = kappa [1 - exp(-sqrt(u l / (7 nu)))], under constant stress (no roughness length), evaluated at each ${sm.unit}'s lowest-level height z with nu = mu(T)/rho; kappa = ${M.KAPPA}, damping constant ${M.MIX_DAMP}; tabulated universal profile u+ (X = z u*/nu), u* by bisection`,
+  threshold: `per ${sm.unit}: u*,th(d, rho, T), Pähtz & Durán (2023) eq. 5.1 with the rarefaction correction of eq. 3.20 (rho_p = ${M.RHO_P} kg m-3, g = ${M.G} m s-2, R = ${M.R_AIR} J kg-1 K-1, Sutherland viscosity of CO2)`,
   transport: "q = Q/(rho_p phi), the volume of packed sand (packing fraction phi = 0.6, pore space included), with the mass flux Q from Pähtz & Durán (2023) eq. 3.2 for u* > u*,th, else 0 (m2 s-1; x 31557600 = m2 yr-1)",
   crest_flux: `u_c = u* (1 + beta A |sin(ua - alpha)|), beta = ${M.BETA}, A = 0.8/6; q_c = q(u_c) with the same hour's u*,th`,
   field_angles: "radians counter-clockwise from east, direction of transport (toward); compass bearing = (90 - degrees(value)) mod 360; alpha_h (NetCDF ab) is an axis",
@@ -46,7 +57,7 @@ const CONVENTIONS = {
   missing: "empty CSV cell (NetCDF: _FillValue) = undefined (e.g. no crest flux)",
   csv_headers: "UTF-8 with BOM; one header row of ASCII snake_case names; per column: name (CSV header), netcdf_name, units (UDUNITS), long_name in files.<csv>.columns",
   coordinates: "planetocentric latitude (degrees north) and east longitude (-180..180), Mars 2000 sphere",
-};
+});
 
 const ua = DEFAULT_BINS.uaCentres, ae = DEFAULT_BINS.uaEdges as ArrayLike<number>;
 const dirCells = () => Array.from(ua, (a, j) => [fmtF64(a), fmtF64(ae[j]), fmtF64(ae[j + 1]), fmtF64(mathToBearingDeg(a)), fmtF64((mathToBearingDeg(a) + 180) % 360)]);
@@ -62,7 +73,7 @@ export function marsFluxRoseTable(cell: MarsCellData): Float64Array[][] {
 }
 
 export function cellNetcdf(cell: MarsCellData, meta: ExportMeta): Uint8Array {
-  const ds = datasetInfo(meta.datasetId), deg = Math.abs(cell.grid.dlat);
+  const ds = cellDataset(cell, meta.datasetId), deg = Math.abs(cell.grid.dlat), sm = marsSampling(cell.samplesPerSol);
   const n = nUt(cell), nh = cell.series.u.length, nUa = ua.length;
   const g = cell.grid;
   const when = (meta.generated ?? new Date()).toISOString();
@@ -70,7 +81,7 @@ export function cellNetcdf(cell: MarsCellData, meta: ExportMeta): Uint8Array {
   const rose = marsFluxRoseTable(cell);
   const F = (v: number) => ({ type: "float" as const, values: v });
   const ser = (name: keyof MarsCellData["series"], c: CsvColumn): NcVariable => ({ name, type: "float", dims: ["hour"], data: cell.series[name], attrs: { long_name: c.longName, units: c.units, _FillValue: F(NaN), coordinates: "latitude longitude" } });
-  const col = (k: string) => SERIES_COLUMNS.find((c) => c.name === k)!;
+  const cols = seriesColumns(ds, sm), col = (k: string) => cols.find((c) => c.name === k)!;
   const vars: NcVariable[] = [
     { name: "hour", type: "int", dims: ["hour"], data: Int32Array.from({ length: nh }, (_, k) => k), attrs: { long_name: col("hour").longName, units: "1" } },
     { name: "sol", type: "float", dims: ["hour"], data: cell.sol, attrs: { long_name: col("sol").longName, units: "1" } },
@@ -96,8 +107,8 @@ export function cellNetcdf(cell: MarsCellData, meta: ExportMeta): Uint8Array {
     { name: "dune_fraction", type: "float", dims: [], data: Float32Array.of(cell.duneFrac), attrs: { long_name: "fraction of the cell area covered by mapped dune polygons (spherical areas)", units: "1" } },
     ...auxVars(cell.aux).map((v): NcVariable => {
       const m = AUX_META[v], aux = cell.aux!;
-      const src = auxSourceAttrs(aux, v, deg);
-      const attrs: NcAttrs = { long_name: m.longName, long_name_latex: `${m.longName} $${m.symbolTex}$`, units: m.units, description: texToPlain(auxDescription(v, deg)), _FillValue: F(NaN), coordinates: "latitude longitude" };
+      const src = auxSourceAttrs(aux, v, deg, Math.abs(g.dlon), ds.id);
+      const attrs: NcAttrs = { long_name: m.longName, long_name_latex: `${m.longName} $${m.symbolTex}$`, units: m.units, description: texToPlain(auxDescription(v, deg, Math.abs(g.dlon))), _FillValue: F(NaN), coordinates: "latitude longitude" };
       for (const k of ["source", "references", "license", "url", "comment", "method"]) if (src[k]) attrs[k] = texToPlain(src[k]);
       return m.kind === "series" ? { name: v, type: "float", dims: ["d"], data: Float32Array.from(aux.series[v]), attrs } : { name: v, type: "float", dims: [], data: Float32Array.of(aux.scalars[v]), attrs };
     }),
@@ -105,17 +116,18 @@ export function cellNetcdf(cell: MarsCellData, meta: ExportMeta): Uint8Array {
     { name: "rose_mode_name", type: "char", dims: ["rose_mode", "name_strlen"], data: [...ROSE_MODES], attrs: { long_name: "flux rose mode name" } },
     { name: "flux_rose", type: "float", dims: ["rose_mode", "d", "ua_bin"], data: Float32Array.from(rose.flatMap((m) => m.flatMap((r) => Array.from(r)))), attrs: {
       long_name: "time-averaged sand flux per direction bin (toward)", units: "m2 yr-1", _FillValue: F(NaN),
-      comment: "sum over the hours whose wind direction is in the bin of q / number of hours; per-hour threshold u*,th(d, rho, T). flat_bed: q(u*); elongation / transverse: crest flux q(u_c) about the mode direction ae / ab at each d. Crest-mode rows are _FillValue where the mode direction is undefined.",
+      comment: `sum over the ${sm.units} whose wind direction is in the bin of q / number of ${sm.units}; per-${sm.unit} threshold u*,th(d, rho, T). flat_bed: q(u*); elongation / transverse: crest flux q(u_c) about the mode direction ae / ab at each d. Crest-mode rows are _FillValue where the mode direction is undefined.`,
       coordinates: "latitude longitude" } },
   ];
   return writeNetcdf3({
     dims: [{ name: "hour", size: nh }, { name: "d", size: n }, { name: "ua_bin", size: nUa }, { name: "nv", size: 2 }, { name: "rose_mode", size: 3 }, { name: "name_strlen", size: 16 }],
     attrs: {
-      title: `Mars Dune Atlas cell export: ${ds.name} hourly lowest-level wind, air state and sand-flux parameters at ${cell.lat}° N, ${cell.lon}° E (${ds.resolution} cell)`,
+      title: `Mars Dune Atlas cell export: ${ds.name} ${sm.adjective} lowest-level wind, air state and sand-flux parameters at ${cell.lat}° N, ${cell.lon}° E (${ds.resolution} cell)`,
       institution: INSTITUTION,
       source: meta.datasetTitle,
       dataset_id: meta.datasetId,
       data_version: meta.dataVersion,
+      samples_per_sol: { type: "int", values: sm.samplesPerSol },
       planet: "Mars",
       references: referencesLine(citationSources(CELL_SOURCE_IDS, ds.id)),
       fields_citation: fieldsCitation(ds.id),
@@ -132,10 +144,10 @@ export function cellNetcdf(cell: MarsCellData, meta: ExportMeta): Uint8Array {
   });
 }
 
-export function csvColumns(cell: MarsCellData, attrs?: ExportMeta["storeAttrs"]): Record<string, CsvColumn[]> {
+export function csvColumns(cell: MarsCellData, attrs?: ExportMeta["storeAttrs"], datasetId?: string): Record<string, CsvColumn[]> {
   const pub = cell.fieldVars.filter(isPublishedField);
   return {
-    "wind_series.csv": SERIES_COLUMNS,
+    "wind_series.csv": seriesColumns(cellDataset(cell, datasetId), marsSampling(cell.samplesPerSol)),
     "fields_by_grain_size.csv": [D_COLUMN, ...pub.map((v) => { const m = fieldMeta(v, attrs); return { name: v, units: m.units, longName: m.longName }; }),
       ...auxVars(cell.aux).filter((v) => AUX_META[v].kind === "series").map((v) => ({ name: v, units: AUX_META[v].units, longName: AUX_META[v].longName }))],
     "flux_rose.csv": [
@@ -148,10 +160,10 @@ export function csvColumns(cell: MarsCellData, attrs?: ExportMeta["storeAttrs"])
   };
 }
 
-export function windSeriesCsv(cell: MarsCellData): string {
+export function windSeriesCsv(cell: MarsCellData, datasetId?: string): string {
   const s = cell.series, rows: string[][] = [];
   for (let k = 0; k < s.u.length; k++) rows.push([String(k), fmtF32(cell.sol[k]), fmtF32(cell.ls[k]), fmtF32(s.u[k]), fmtF32(s.v[k]), fmtF32(s.T[k]), fmtF32(s.rho[k]), fmtF32(s.z[k])]);
-  return csvTable(SERIES_COLUMNS, rows);
+  return csvTable(seriesColumns(cellDataset(cell, datasetId), marsSampling(cell.samplesPerSol)), rows);
 }
 
 export function fieldsByGrainSizeCsv(cell: MarsCellData, attrs?: ExportMeta["storeAttrs"]): string {
@@ -172,24 +184,24 @@ export function fluxRoseCsv(cell: MarsCellData): string {
 }
 
 export function metadataJson(cell: MarsCellData, meta: ExportMeta): string {
-  const ds = datasetInfo(meta.datasetId), deg = Math.abs(cell.grid.dlat);
+  const ds = cellDataset(cell, meta.datasetId), deg = Math.abs(cell.grid.dlat), degLon = Math.abs(cell.grid.dlon), sm = marsSampling(cell.samplesPerSol);
   const pub = cell.fieldVars.filter(isPublishedField);
-  const cols = csvColumns(cell, meta.storeAttrs);
+  const cols = csvColumns(cell, meta.storeAttrs, meta.datasetId);
   return JSON.stringify({
     planet: "Mars",
     cell: { latitude: cell.lat, longitude: cell.lon, cell_y: cell.iy, cell_x: cell.ix, grid_index: cell.id, dune_present: cell.dune, dune_fraction: cell.duneFrac, hours: cell.totalHours },
-    grid: { ...cell.grid, resolution: resolutionText(deg), registration: "centre: lat0/lon0 are the centre of cell (0, 0); cell (y, x) spans centre ± d/2" },
-    dataset: { id: meta.datasetId, title: meta.datasetTitle, version: meta.dataVersion },
-    conventions: { ...CONVENTIONS, dune_present: `1 = ${ds.dunesRule}`, cells: ds.landRule },
+    grid: { ...cell.grid, resolution: gridResolutionText(cell.grid), registration: "centre: lat0/lon0 are the centre of cell (0, 0); cell (y, x) spans centre ± d/2" },
+    dataset: { id: meta.datasetId, title: meta.datasetTitle, version: meta.dataVersion, samples_per_sol: sm.samplesPerSol },
+    conventions: { ...conventions(sm), dune_present: `1 = ${ds.dunesRule}`, cells: ds.landRule },
     constants: { rho_p: M.RHO_P, g: M.G, R_air: M.R_AIR, mu0: M.MU0, T0: M.T0_MU, S: M.S_MU, k: M.K_ADIABATIC, kappa: M.KAPPA, mixing_length_damping: M.MIX_DAMP, Dstar_min: M.DSTAR_MIN, uplus_min: M.UPLUS_MIN, C1: M.C1, C2: M.C2, beta: M.BETA, A: M.DASPECT, R_Mars: M.R_MARS, year_s: M.S2Y },
     d_um: cell.dValuesUm.slice(0, nUt(cell)),
     files: Object.fromEntries(Object.entries(cols).map(([f, c]) => [f, { columns: c.map(csvColumnJson) }])),
     fields: Object.fromEntries(pub.map((v) => { const m = fieldMeta(v, meta.storeAttrs); return [v, { long_name: m.longName, long_name_latex: m.longNameLatex, units: m.units, description: m.description, description_latex: m.descriptionLatex }]; })),
     aux: Object.fromEntries(auxVars(cell.aux).map((v) => {
-      const m = AUX_META[v], src = auxSourceAttrs(cell.aux!, v, deg);
+      const m = AUX_META[v], src = auxSourceAttrs(cell.aux!, v, deg, degLon, ds.id);
       const value = m.kind === "series" ? undefined : (Number.isFinite(cell.aux!.scalars[v]) ? cell.aux!.scalars[v] : null);
       return [v, { long_name: m.longName, long_name_latex: `${m.longName} $${m.symbolTex}$`, units: m.units, ...(m.kind === "scalar" ? { value } : { in_file: "fields_by_grain_size.csv" }),
-        description: texToPlain(auxDescription(v, deg)), ...Object.fromEntries(["source", "references", "license", "url", "comment", "method"].filter((k) => src[k]).map((k) => [k, texToPlain(src[k])])) }];
+        description: texToPlain(auxDescription(v, deg, degLon)), ...Object.fromEntries(["source", "references", "license", "url", "comment", "method"].filter((k) => src[k]).map((k) => [k, texToPlain(src[k])])) }];
     })),
     citation: citationJson(citationSources(CELL_SOURCE_IDS, ds.id)),
     fields_citation: fieldsCitation(ds.id), fields_license: fieldsLicence(ds.id),
@@ -199,8 +211,8 @@ export function metadataJson(cell: MarsCellData, meta: ExportMeta): string {
 }
 
 export function readmeText(cell: MarsCellData, meta: ExportMeta): string {
-  const ds = datasetInfo(meta.datasetId);
-  const cols = csvColumns(cell, meta.storeAttrs);
+  const ds = cellDataset(cell, meta.datasetId), sm = marsSampling(cell.samplesPerSol);
+  const cols = csvColumns(cell, meta.storeAttrs, meta.datasetId);
   const colDoc = (f: string) => cols[f].map(csvColumnDoc).join("\n");
   return `Mars Dune Atlas cell export
 ===========================
@@ -209,8 +221,8 @@ Generated ${(meta.generated ?? new Date()).toISOString()} from ${meta.permalink}
 
 ${CSV_LAYOUT_TEXT}
 
-wind_series.csv  ${ds.name} hourly lowest-level wind, temperature, air density and height, ${cell.series.u.length.toLocaleString("en")} hours
-  (one Mars year; ${ds.resolution} cell); one row per hour.
+wind_series.csv  ${ds.name} ${sm.adjective} lowest-level wind, temperature, air density and height, ${cell.series.u.length.toLocaleString("en")} ${sm.units}
+  (one Mars year; ${ds.resolution} cell); one row per ${sm.unit}.
 ${colDoc("wind_series.csv")}
 
 fields_by_grain_size.csv  Sand-flux parameters vs median grain diameter d; one row per d (64 values,
@@ -220,22 +232,22 @@ fields_by_grain_size.csv  Sand-flux parameters vs median grain diameter d; one r
 ${colDoc("fields_by_grain_size.csv")}
 
 flux_rose.csv  Flux rose vs d: one row per (rose_mode, grain_diameter, direction bin) = 3 x 64 x 128 rows.
-  flux = time-averaged sand flux per direction bin (sum over the hours in the bin of q / number
-  of hours), m2 yr-1, transport TOWARD direction_bin_centre. Per hour the threshold u*,th depends on d and on that
-  hour's air density and temperature. flat_bed: q(u*); elongation / transverse: crest flux with
+  flux = time-averaged sand flux per direction bin (sum over the ${sm.units} in the bin of q / number
+  of ${sm.units}), m2 yr-1, transport TOWARD direction_bin_centre. Per ${sm.unit} the threshold u*,th depends on d and on that
+  ${sm.unit}'s air density and temperature. flat_bed: q(u*); elongation / transverse: crest flux with
   speed-up about the mode direction alpha_E / alpha_H at that d.
 ${colDoc("flux_rose.csv")}
 
 ${ROSE16_FILE}  The panel's wind rose and flat-bed sand flux rose in 16 compass sectors (degrees), at
-  d = ${cell.dValuesUm[rose16Index(cell, meta)]} um: one row per sector. Wind: % of the hours blowing FROM the sector (lowest-level
+  d = ${cell.dValuesUm[rose16Index(cell, meta)]} um: one row per sector. Wind: % of the ${sm.units} blowing FROM the sector (lowest-level
   wind); sand flux: m2 yr-1 moving TOWARD the sector. For other grain sizes or sectors use flux_rose.csv.
 ${colDoc(ROSE16_FILE)}
 
 Physics, all from Pähtz & Durán (2023) J. Fluid Mech. 963:A20: u* from the smooth-wall
 mixing-length profile of eq. 2.2 (kappa = ${M.KAPPA}, damping constant ${M.MIX_DAMP}) under constant stress, no roughness
-length, at each hour's lowest-level height z (column wind_height) with nu = mu(T)/rho; threshold eq. 5.1 with the
+length, at each ${sm.unit}'s lowest-level height z (column wind_height) with nu = mu(T)/rho; threshold eq. 5.1 with the
 rarefaction correction of eq. 3.20; transport eq. 3.2; grain density ${M.RHO_P} kg m-3, g = ${M.G} m s-2.
-Transport: ${CONVENTIONS.transport}. Fluxes per Earth year (365.25 d).
+Transport: ${conventions(sm).transport}. Fluxes per Earth year (365.25 d).
 
 flux_divergence (qsdiv; fields_by_grain_size.csv, m yr-1) is the saturated flux divergence of the time-averaged
 flat-bed flux vector (magnitude rdp, direction rdd) on the Mars sphere (R = 3389.5 km).
@@ -253,7 +265,7 @@ ${AI_NOTICE}
 export function csvBundle(cell: MarsCellData, meta: ExportMeta, deflate?: DeflateRaw | null): Promise<Uint8Array> {
   return writeZip([
     { name: "README.txt", data: readmeText(cell, meta) },
-    { name: "wind_series.csv", data: windSeriesCsv(cell) },
+    { name: "wind_series.csv", data: windSeriesCsv(cell, meta.datasetId) },
     { name: "fields_by_grain_size.csv", data: fieldsByGrainSizeCsv(cell, meta.storeAttrs) },
     { name: "flux_rose.csv", data: fluxRoseCsv(cell) },
     { name: ROSE16_FILE, data: rose16CsvMars(cell, rose16Index(cell, meta)) },

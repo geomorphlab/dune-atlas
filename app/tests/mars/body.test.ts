@@ -42,9 +42,13 @@ describe("Mars build: planet toggle, header, storage", () => {
     const sub = root.querySelector(".subtitle")!;
     expect(sub.innerHTML.split("<br>").map((x) => x.replace(/<[^>]+>/g, ""))).toEqual(["Interactive explorer for aeolian geomorphology", "Developed by the Monash Geomorphology Lab"]);
     expect(sub.querySelector("a")!.getAttribute("target")).toBe("_blank");
-    // the Wind dataset selector is shown with the single Mars dataset
+    // the Wind dataset selector: MCMC FV3 (default), EMARS and MACDA (name and grid; tooltip with the period)
     const sel = root.querySelector("#dataset-select") as HTMLSelectElement;
-    expect([...sel.options].map((o) => [o.value, o.textContent, o.title])).toEqual([["fv3-beta1", "MCMC FV3 2°", "MCMC FV3 2°, one Mars year (6th simulated year, 668 sols)"]]);
+    expect([...sel.options].map((o) => [o.value, o.textContent, o.title])).toEqual([
+      ["fv3-beta1", "MCMC FV3 2°", "MCMC FV3 2°, one Mars year (6th simulated year, 668 sols)"],
+      ["emars-v1-my30", "EMARS 6° × 5.14°", "EMARS 6° × 5.14°, one Mars year (Mars Year 30)"],
+      ["macda-v2-my30", "MACDA 5°", "MACDA 5°, one Mars year (Mars Year 30)"],
+    ]);
     expect(sel.title).toBe("MCMC FV3 2°, one Mars year (6th simulated year, 668 sols)");
     expect(root.querySelector(".dataset-row")!.textContent).toMatch(/^Wind dataset/);
     // dune invert toggle (Terrain's invert tiles; key is the default until reported)

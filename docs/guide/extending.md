@@ -62,13 +62,20 @@ Mars: hourly series) needs no app code:
      (`dataSource`, also listed in About), the citation and licence of its map fields, the wind line of
      image exports (`windSourceText`) and an optional data notice written into downloads (`notice`);
    * `citationSources`: the sources the dataset defines (e.g. the reanalysis paper and data record),
-     each with entries `{label, text, doi | url, license?}`.
+     each with entries `{label, text, doi | url, license?}`;
+   * Mars (hourly-series cells): `info.grid` (the cell-store grid `{lat0, dlat, lon0, dlon, ny, nx}`; cells may be
+     non-square and the rows need not reach the poles) and `info.series` (`samplesPerSol`, and `indexText` /
+     `solText`, the long names of the `hour` and `sol` columns of the downloads). The app uses them until the cell
+     store is open, then the store's root attrs (`grid`, `dataset.samples_per_sol`, series length); the panel and
+     downloads word the samples by the sampling ("hourly", "two-hourly"). EMARS and MACDA
+     (`registry/mars/datasets/<id>/dataset.yaml`) are examples.
 3. Add the dataset's layer fragments in `registry/<body>/datasets/<id>/`: a file with the same name as a
    `generated/` fragment replaces it for this dataset (e.g. `qsat_fields.yaml` with sources
    `'{dataset}/fields/<var>.zarr'` and the dataset's colour limits). For Earth reanalysis datasets the
    pipeline writes the entry and the fragments (`python -m dune_atlas_pipeline.dataset_registry write
    --dataset <id>`) and keeps the hand-written `info`, `credits` and `citationSources`.
-4. Validate: `npm run validate-registry` (or `:mars`) and, for a dataset folder,
+4. Validate: `npm run validate-registry` (or `:mars`, which also merges `registry/mars/datasets/<id>/`) and, for an
+   Earth dataset folder,
    `npx vite-node ../scripts/validate_dataset_registry.ts <id>` (in `app/`). The validator rejects a
    dataset without `info` or `credits`, and a `dataSource` that no `citationSources` defines.
 

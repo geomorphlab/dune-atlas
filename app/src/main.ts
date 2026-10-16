@@ -19,7 +19,7 @@ import { OverlayManager, ensureSelectedCellLayers, restoreOverlays } from "./cor
 import { setLayerPanelOpen, renderLayerPanel } from "./core/ui/layerPanel";
 import { versionFromPrefix } from "./core/cell/export";
 import { CellPanel, readPlotChoice, defaultFieldLabel, type FieldLabel } from "./core/ui/cellPanel";
-import { cellFeature, cellFromIndex, snapToCell, type Grid } from "./core/cell/snap";
+import { cellFeature, cellFromIndex, coversLat, snapToCell, wrapLon, type Grid } from "./core/cell/snap";
 import { APP_HOOKS as HOOKS, type BodyCellStore } from "@body/app";
 import { centreOnCell } from "./core/map/centre";
 import { NoTranslateAttribution } from "./core/map/attribution";
@@ -44,7 +44,7 @@ import { ensureRtlPlugin, LOCAL_IDEOGRAPH_FONTS, PlaceLabels, placesNeedRtl, typ
 // the RTL text plugin as an asset of the build (self-hosted; the package exports only its source entry)
 import rtlPluginUrl from "../node_modules/@mapbox/mapbox-gl-rtl-text/dist/mapbox-gl-rtl-text.js?url";
 import { formatCoord } from "./core/search/coords";
-import { datasetInfo } from "./core/cell/datasetinfo";
+import { datasetGrid, datasetInfo, outsideGridText } from "./core/cell/datasetinfo";
 import { PROFILE } from "@body/profile";
 import { BoxDrawer } from "./core/map/boxdraw";
 import { boxCells, fetchRegion, normaliseBox, regionNetcdf, regionReadme, type Box, type RegionMeta, type RegionSelection } from "./core/export/region";
@@ -166,8 +166,9 @@ function applyBasemap() {
   setBasemap(map, b, store.state.projection);
 }
 
-/** grid of the current dataset's cell store (from its root attrs); the body's default grid until opened */
-let grid: Grid = HOOKS.defaultGrid;
+/** grid of the current dataset's cell store (from its root attrs); until opened, the registry entry's
+ *  (`info.grid`), else the body's default grid */
+let grid: Grid = datasetGrid(store.state.dataset) ?? HOOKS.defaultGrid;
 
 function selectedCellFeature(): GeoJSON.FeatureCollection | null {
   const c = store.state.cell;
@@ -253,7 +254,7 @@ function openOtherStore(id: string): Promise<BodyCellStore> {
 }
 const panel = new CellPanel(document.getElementById("cell-panel")!, init.utIndex, {
   windSectors: CONFIG.windRoseSectors, fluxSectors: CONFIG.fluxRoseSectors,
-  onClose: () => store.set({ cell: null }), plot: { get: () => store.state.plotY, set: (id) => store.set({ plotY: id }) }, onCentre: (c) => { centreOnCell(map, c, Math.abs(grid.dlat)); }, fieldLabel, threshold: { def: reg.threshold, store }, shareLink: () => shareLinkNow(),
+  onClose: () => { if (store.state.cell) store.set({ cell: null }); else panel.close(); }, plot: { get: () => store.state.plotY, set: (id) => store.set({ plotY: id }) }, onCentre: (c) => { centreOnCell(map, c, Math.abs(grid.dlat)); }, fieldLabel, threshold: { def: reg.threshold, store }, shareLink: () => shareLinkNow(),
   // the other wind datasets at the same location (Earth cell panel line), their stores opened on first use
   otherDatasets: () => (reg.datasets ?? []).filter((d) => d.id !== store.state.dataset).map((d) => ({ id: d.id, open: () => openOtherStore(d.id) })),
   exportMeta: () => {
@@ -328,7 +329,7 @@ async function goToPoint(lat: number, lon: number): Promise<string> {
   map.flyTo({ center: [lng, lat], zoom: Math.max(map.getZoom(), searchZoom(g.dlat)), essential: true });
   if (!cs) return `${where}: the cell data could not be loaded.`;
   const c = snapToCell(lng, lat, g);
-  if (!c) return `${where}: outside the grid of the wind dataset.`;
+  if (!c) return coversLat(g, lat) ? `${where}: outside the grid of the wind dataset.` : `${where}: ${outsideGridText(lat, g, datasetInfo(store.state.dataset).name)}`;
   const d = await cs.query(c.iy, c.ix);
   if (!d.hasData) {
     const why = datasetInfo(store.state.dataset).nonLandReason;
@@ -351,10 +352,17 @@ map.on("click", async (e) => {
   try { grid = (await getCellStore()).grid; } catch { /* keep the fallback grid */ }
   const c = snapToCell(e.lngLat.lng, e.lngLat.lat, grid);
   if (c) store.set({ cell: [c.iy, c.ix] });
+  else showOutside(e.lngLat.lat, e.lngLat.lng, grid);
 });
+/** a point poleward of a grid that stops short of the pole (EMARS): the cell panel says why there is no cell */
+function showOutside(lat: number, lon: number, g: Grid) {
+  if (Math.abs(lat) > 90 || coversLat(g, lat)) return;
+  store.set({ cell: null });
+  panel.showOutside(lat, wrapLon(lon), outsideGridText(lat, g, datasetInfo(store.state.dataset).name));
+}
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && placeLabels.popupOpen) { placeLabels.closePopup(); return; }   // Esc: the name popup first
-  if (escapeClosesCell(e) && store.state.cell && !tour.active && !tools.open && !tourStart.bubble.shown) store.set({ cell: null }); });
+  if (escapeClosesCell(e) && (store.state.cell || panel.outsideShown) && !tour.active && !tools.open && !tourStart.bubble.shown) { if (store.state.cell) store.set({ cell: null }); else panel.close(); } });
 
 // ---- state -> map/panels/URL ----
 function currentUrlState(): UrlState {
@@ -409,6 +417,7 @@ store.subscribe((s, ch) => {
       const cur = store.state.cell;
       if (c && cur && cur[0] === c.iy && cur[1] === c.ix) void panel.show(cs, c.iy, c.ix); // same indices: reload data
       else store.set({ cell: c ? [c.iy, c.ix] : null });
+      if (prev && !c) showOutside(prev.lat, prev.lon, cs.grid); // e.g. a polar FV3 cell, EMARS selected
     });
   }
   if (ch.has("dunesOnly")) overlays.setDunesOnly(!!s.dunesOnly);   // 'Dunes only' (map/dunemask.ts)

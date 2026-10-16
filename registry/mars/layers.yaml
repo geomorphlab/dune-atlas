@@ -4,7 +4,8 @@
 # (pipeline/src/dune_atlas_pipeline/mars/); a generated layer with the same id REPLACES the placeholder here
 # (app/src/core/registry/merge.ts). Validate: cd app && npm run validate-registry:mars
 #
-# Differences from Earth: one wind dataset (MCMC FV3 beta release 1), the slider is the median
+# Differences from Earth: the wind datasets are MCMC FV3 beta release 1 (here, the default) and the reanalyses in
+# registry/mars/datasets/<id>/dataset.yaml (EMARS v1.0, MACDA v2.0, Mars Year 30), the slider is the median
 # grain diameter d (64 log-spaced values, 50-1000 µm, default 200 µm) and every d-dependent
 # array has the d axis where Earth has ut; no aridity, vegetation, land mask or ERA5 datasets;
 # added: near-surface air density (rho_mean) and elevation (both 2-D).
@@ -28,6 +29,12 @@ datasets:
       resDeg: 2
       period: one Mars year (6th simulated year, 668 sols)
       nHours: 16032
+      # cell-store grid and sampling (schema datasets[].info.grid, info.series; the app takes the store's once it is open)
+      grid: { lat0: 89, dlat: -2, lon0: -179, dlon: 2, ny: 90, nx: 180 }
+      series:
+        samplesPerSol: 24
+        indexText: hour index of the record (0 = first hour of the 6th simulated year)
+        solText: sol of the simulation (FV3 time / 1 sol)
       landRule: 'every cell (Mars has no land mask: all 16,200 cells carry wind data)'
       landThreshold: 0
       nonLandReason: ''
