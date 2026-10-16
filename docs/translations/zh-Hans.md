@@ -870,8 +870,8 @@ EN: Wind dataset
 ZH: 风场数据集
 
 ## mars.help.datasets.body (Help panel)
-EN: The winds are the hourly lowest-level winds of a Mars climate model over one Mars year (e.g., the MCMC FV3-based Mars Global Climate Model, beta release 1: 2° grid, 16,032 hourly samples). The wind and sand-flux layers and the cell panel use the dataset shown in the Wind dataset selector.
-ZH: 风场为某一火星气候模型在一个火星年内的逐小时最低层风（例如基于 MCMC FV3 的火星全球气候模型 beta 1 版：2° 网格，16,032 个逐小时样本）。风场与输沙通量图层以及网格单元面板均使用“风场数据集”选择器中显示的数据集。
+EN: The Wind dataset selector switches between Mars wind datasets (MCMC FV3, 2°; EMARS, 6° × 5.14°; MACDA, 5°), each one Mars year of lowest-level winds on its own grid: MCMC FV3 is a free-running climate-model simulation; EMARS and MACDA are reanalyses of Mars Year 30, which assimilate spacecraft observations of the atmosphere into a climate model. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain. No EMARS data poleward of 87.43° N: the northernmost cells of its grid are centred at 84.86° N.
+ZH: “风场数据集”选择器可在不同的火星风场数据集之间切换（MCMC FV3，2°；EMARS，6°×5.14°；MACDA，5°），每个数据集均为各自网格上一个火星年的最低层风：MCMC FV3 是自由运行的气候模型模拟；EMARS 和 MACDA 是第 30 个火星年的再分析数据集，将航天器对大气的观测同化到气候模型中。风场与输沙通量图层以及网格单元面板随所选数据集而变；沙丘图和高程对所有数据集都相同。若各数据集给出的结果不同，应将其视为不确定。87.43° N 以北无 EMARS 数据：其网格最北一行单元的中心位于 84.86° N。
 
 ## mars.help.basemaps.title (Help panel)
 EN: Basemaps
@@ -2639,17 +2639,9 @@ ZH: 公有领域（⟦0⟧）；引用⟦1⟧（Fergason，⟦2⟧）；⟦3⟧�
 EN: Click any cell to see its wind rose over the Mars year of the wind dataset, the sand-flux rose at the selected grain diameter, dune-orientation modes and all wind-regime parameters.
 ZH: 点击任意网格单元，即可查看其在该风场数据集所对应火星年内的风玫瑰图、所选粒径下的输沙玫瑰图、沙丘朝向模式及全部风况参数。
 
-## c.692b1efa (About)
-EN: <strong>Winds (⟦0⟧Mars⟦1⟧, beta release ⟦#0⟧)</strong>: hourly lowest-level winds, temperature and surface pressure of the⟦2⟧Ames⟦3⟧FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to ⟦#1⟧° × ⟦#2⟧° (a cell is about ⟦#3⟧ km across at the equator, larger than most dune fields): ⟦#4⟧ hourly samples, one Mars year. The map draws each cell as one square, so a field that changes strongly from cell to cell, as⟦4⟧often does at low latitudes, looks blocky. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature (⟦#5⟧–⟦#6⟧ m over all cells and hours; ⟦#7⟧–⟦#8⟧ m in ⟦#9⟧ % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#10⟧, eq. ⟦#11⟧) under constant stress at that height (no roughness length).
-ZH: <strong>风场（⟦0⟧Mars⟦1⟧，测试版 ⟦#0⟧）</strong>：⟦2⟧Ames⟦3⟧基于 FV3 的火星全球气候模型（c48 参考模拟，第 6 个模拟年）逐小时最低模型层风速、温度与地面气压，重新网格化至 ⟦#1⟧°×⟦#2⟧°（一个网格单元在赤道处约 ⟦#3⟧ km 宽，大于大多数沙丘区）：共 ⟦#4⟧ 个逐小时样本，为期一个火星年。地图将每个网格单元绘制为一个方块，因此在低纬度地区⟦4⟧常出现网格间剧烈变化的量，看起来呈块状。最低层的空气密度 ρ = p/(R T)；最低层风速所在高度 z 由逐小时气压和温度求得（全部网格单元和时间段范围为 ⟦#5⟧–⟦#6⟧ m；在沙丘区网格单元 ⟦#9⟧ % 的时间段中为 ⟦#7⟧–⟦#8⟧ m；网格单元面板给出所选单元的范围），摩阻风速⟦5⟧由 Pähtz 与 Durán（⟦#10⟧，式 ⟦#11⟧）在该高度恒定应力条件下的光滑壁面混合长廓线求得（不含空气动力学粗糙度）。
-
 ## c.c238d4e5 (About)
 EN: <strong>Sand-flux fields</strong>: for every hour, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.
 ZH: <strong>输沙通量场</strong>：对每个小时，按所选中值粒径 d（颗粒密度 ⟦#0⟧ kg/m³，g = ⟦#1⟧ m/s²）计算⟦0⟧的临界值与饱和输沙率，并取年平均；输沙势、脊线输沙通量与沙丘朝向模式按⟦1⟧所述方法计算。输沙通量为单位宽度、单位地球年（⟦#3⟧ 天）内堆积沙的体积（堆积体积分数 ⟦#2⟧，含孔隙空间），单位为 m²/yr，与地球上相同。
-
-## c.c4698157 (About)
-EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧°). Negative values (convergence) imply deposition.
-ZH: <strong>饱和输沙通量散度</strong> ⟦0⟧：合成输沙势矢量（大小⟦1⟧，方向⟦2⟧）在火星球面（R = ⟦#0⟧ km）上的散度，按⟦3⟧方法编号⟦4⟧，在风场数据集网格（⟦#1⟧°）上以中心差分计算。负值（汇）意味着堆积。
 
 ## c.5d754cff (About)
 EN: <strong>Elevation and shaded relief</strong>:⟦0⟧–⟦1⟧blended⟦2⟧, ⟦#0⟧ m, v2 (Fergason,⟦3⟧,⟦4⟧); licence:⟦5⟧(⟦6⟧) and⟦7⟧(⟦8⟧). Derived elevation and relief tiles:⟦9⟧.
@@ -3165,7 +3157,63 @@ ZH: αT（横向迁移方向）：⟦#0⟧°（⟦#1⟧）
 EN: RDD (resultant drift direction): ⟦#0⟧° (⟦#1⟧)
 ZH: RDD（合成输沙方向）：⟦#0⟧°（⟦#1⟧）
 
+# Layer popovers
+
+## c.c27adfd9 (Layer popovers)
+EN: The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°), each one Mars year of lowest-level winds on its own grid:⟦3⟧is a free-running climate-model simulation;⟦4⟧and⟦5⟧are reanalyses of Mars Year ⟦#4⟧, which assimilate spacecraft observations of the atmosphere into a climate model. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain. No⟦6⟧data poleward of ⟦#5⟧° N: the northernmost cells of its grid are centred at ⟦#6⟧° N.
+ZH: “风场数据集”选择器可在不同的火星风场数据集之间切换（⟦0⟧，⟦#0⟧°；⟦1⟧，⟦#1⟧°×⟦#2⟧°；⟦2⟧，⟦#3⟧°），每个数据集均为各自网格上一个火星年的最低层风：⟦3⟧是自由运行的气候模型模拟；⟦4⟧和⟦5⟧是第 ⟦#4⟧ 个火星年的再分析数据集，将航天器对大气的观测同化到气候模型中。风场与输沙通量图层以及网格单元面板随所选数据集而变；沙丘图和高程对所有数据集都相同。若各数据集给出的结果不同，应将其视为不确定。⟦#5⟧° N 以北无⟦6⟧数据：其网格最北一行单元的中心位于 ⟦#6⟧° N。
+
+# About
+
+## c.6cd16937 (About)
+EN: <strong>Winds (⟦0⟧Mars⟦1⟧, beta release ⟦#0⟧)</strong>: hourly lowest-level winds, temperature and surface pressure of the⟦2⟧Ames⟦3⟧FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to ⟦#1⟧° × ⟦#2⟧° (a cell is about ⟦#3⟧ km across at the equator, larger than most dune fields): ⟦#4⟧ hourly samples, one Mars year. The map draws each cell as one square, so a field that changes strongly from cell to cell, as⟦4⟧often does at low latitudes, looks blocky. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature (⟦#5⟧–⟦#6⟧ m over all cells and hours; ⟦#7⟧–⟦#8⟧ m in ⟦#9⟧ % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#10⟧, eq. ⟦#11⟧) under constant stress at that height (no roughness length). Explore and download the full model output in the <a href="https://data.nas.nasa.gov/mcmc/portals/web-interface/" target="_blank" rel="noopener noreferrer">⟦6⟧Ames⟦7⟧Data Portal web interface</a>.
+ZH: <strong>风场（⟦0⟧Mars⟦1⟧，测试版 ⟦#0⟧）</strong>：⟦2⟧Ames⟦3⟧基于 FV3 的火星全球气候模型（c48 参考模拟，第 6 个模拟年）逐小时最低模型层风速、温度与地面气压，重新网格化至 ⟦#1⟧°×⟦#2⟧°（一个网格单元在赤道处约 ⟦#3⟧ km 宽，大于大多数沙丘区）：共 ⟦#4⟧ 个逐小时样本，为期一个火星年。地图将每个网格单元绘制为一个方块，因此在低纬度地区⟦4⟧常出现网格间剧烈变化的量，看起来呈块状。最低层的空气密度 ρ = p/(R T)；最低层风速所在高度 z 由逐小时气压和温度求得（全部网格单元和时间段范围为 ⟦#5⟧–⟦#6⟧ m；在沙丘区网格单元 ⟦#9⟧ % 的时间段中为 ⟦#7⟧–⟦#8⟧ m；网格单元面板给出所选单元的范围），摩阻风速⟦5⟧由 Pähtz 与 Durán（⟦#10⟧，式 ⟦#11⟧）在该高度恒定应力条件下的光滑壁面混合长廓线求得（不含空气动力学粗糙度）。可在<a href="https://data.nas.nasa.gov/mcmc/portals/web-interface/" target="_blank" rel="noopener noreferrer">⟦6⟧Ames⟦7⟧Data Portal 网页界面</a>中浏览并下载完整的模型输出。
+
+## c.5228f7bf (About)
+EN: <strong>Winds (⟦0⟧v1.0 reanalysis, Mars Year ⟦#0⟧)</strong>: hourly analysis ensemble mean of the lowest-level winds, temperature and surface pressure of the Ensemble Mars Atmosphere Reanalysis System (⟦1⟧) v1.0 (⟦2⟧; read from the analysis-ready⟦3⟧copy), Mars Year ⟦#1⟧, on its native grid of ⟦#2⟧° in longitude × ⟦#3⟧° in latitude (⟦#4⟧ × ⟦#5⟧ cells, about ⟦#6⟧ km × ⟦#7⟧ km at the equator). The two half-width polar rows of⟦4⟧are not used, so the grid ends at ±⟦#8⟧°: there is no⟦5⟧cell poleward of it. The winds are averaged from the staggered⟦6⟧grid onto the cell centres. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature, and the friction velocity⟦7⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#9⟧, eq. ⟦#10⟧) under constant stress at that height (no roughness length). The lowest⟦8⟧layer is thick, so that height is ⟦#11⟧–⟦#12⟧ m above the surface (median ⟦#13⟧ m;⟦9⟧⟦#14⟧–⟦#15⟧ m,⟦10⟧⟦#16⟧–⟦#17⟧ m): the wind and⟦11⟧refer to a much higher level than in the other Mars datasets. Data and documentation: <a href="https://doi.org/10.18113/D3W375" target="_blank" rel="noopener noreferrer">⟦12⟧v1.0 at the Penn State Data Commons</a>; the analysis-ready copy read by the atlas, <a href="https://huggingface.co/datasets/ananyo01/ARCO-EMARS" target="_blank" rel="noopener noreferrer">⟦13⟧</a>, with <a href="https://github.com/GalacticBobster/ARCO-Mars-Examples" target="_blank" rel="noopener noreferrer">Python examples for reading and plotting it</a>.
+ZH: <strong>风场（⟦0⟧v1.0 再分析数据集，第 ⟦#0⟧ 个火星年）</strong>：火星大气集合再分析系统（Ensemble Mars Atmosphere Reanalysis System，⟦1⟧）v1.0（⟦2⟧；读取自可直接分析的⟦3⟧副本）第 ⟦#1⟧ 个火星年最低层风、温度与地面气压的逐小时分析集合平均值，位于其原生网格上：经度 ⟦#2⟧° × 纬度 ⟦#3⟧°（⟦#4⟧ × ⟦#5⟧ 个网格单元，在赤道处约 ⟦#6⟧ km × ⟦#7⟧ km）。未使用⟦4⟧的两行半宽极区网格，因此网格止于 ±⟦#8⟧°：在此以外的极区没有⟦5⟧网格单元。风速由⟦6⟧交错网格平均到网格单元中心。最低层的空气密度 ρ = p/(R T)；最低层风速所在高度 z 由逐小时气压和温度求得，摩阻风速⟦7⟧由 Pähtz 与 Durán（⟦#9⟧，式 ⟦#10⟧）在该高度恒定应力条件下的光滑壁面混合长廓线求得（不含空气动力学粗糙度）。⟦8⟧最低层较厚，因此该高度为地表以上 ⟦#11⟧–⟦#12⟧ m（中位数 ⟦#13⟧ m；⟦9⟧⟦#14⟧–⟦#15⟧ m，⟦10⟧⟦#16⟧–⟦#17⟧ m）：风速和⟦11⟧所对应的高度远高于其他火星数据集。数据与文档：<a href="https://doi.org/10.18113/D3W375" target="_blank" rel="noopener noreferrer">Penn State Data Commons 上的⟦12⟧v1.0</a>；本图集读取的可直接分析副本：<a href="https://huggingface.co/datasets/ananyo01/ARCO-EMARS" target="_blank" rel="noopener noreferrer">⟦13⟧</a>，并附有<a href="https://github.com/GalacticBobster/ARCO-Mars-Examples" target="_blank" rel="noopener noreferrer">读取和绘图的 Python 示例</a>。
+
+## c.9192f9b0 (About)
+EN: <strong>Winds (⟦0⟧v2.0 reanalysis, Mars Year ⟦#0⟧)</strong>: lowest-level winds, temperature and surface pressure, one sample every two Mars hours, of the Mars Analysis Correction Data Assimilation (⟦1⟧) v2.0 reanalysis (⟦2⟧,⟦3⟧Centre for Environmental Data Analysis; read from the analysis-ready⟦4⟧copy), Mars Year ⟦#1⟧, on its native ⟦#2⟧° grid (⟦#3⟧ × ⟦#4⟧ cells, about ⟦#5⟧ km across at the equator; the first column is centred on ⟦#6⟧°). The winds are those of the lowest model level (σ = ⟦#7⟧); air density ρ = p/(R T) with p = σ p<sub>s</sub>, the height of that level z = (R T/g) ln(⟦#8⟧/σ), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#9⟧, eq. ⟦#10⟧) under constant stress at that height (no roughness length); that level is ⟦#11⟧–⟦#12⟧ m above the surface (⟦6⟧⟦#13⟧–⟦#14⟧ m). In Mars Year ⟦#15⟧ the first ⟦#16⟧ samples (Ls ⟦#17⟧–⟦#18⟧°) assimilate Mars Odyssey⟦7⟧column dust, the others⟦8⟧⟦9⟧temperature and dust profiles. Data, documentation and file browser: <a href="https://catalogue.ceda.ac.uk/uuid/cd037a9ea387438fabf4d674dbe53088/" target="_blank" rel="noopener noreferrer">⟦10⟧v2.0 in the⟦11⟧Archive</a>; the analysis-ready copy read by the atlas: <a href="https://huggingface.co/datasets/ananyo01/ARCO-MACDA" target="_blank" rel="noopener noreferrer">⟦12⟧</a>. Contains public sector information licensed under the Open Government Licence v3.0 (⟦13⟧v2.0,⟦14⟧Centre for Environmental Data Analysis).
+ZH: <strong>风场（⟦0⟧v2.0 再分析数据集，第 ⟦#0⟧ 个火星年）</strong>：Mars Analysis Correction Data Assimilation（⟦1⟧）v2.0 再分析数据集（⟦2⟧，⟦3⟧Centre for Environmental Data Analysis；读取自可直接分析的⟦4⟧副本）第 ⟦#1⟧ 个火星年的最低层风、温度与地面气压，每两个火星小时一个样本，位于其原生 ⟦#2⟧° 网格上（⟦#3⟧ × ⟦#4⟧ 个网格单元，在赤道处约 ⟦#5⟧ km 宽；第一列的中心位于 ⟦#6⟧°）。风速取模型最低层（σ = ⟦#7⟧）；空气密度 ρ = p/(R T)，其中 p = σ p<sub>s</sub>，该层高度 z = (R T/g) ln(⟦#8⟧/σ)，摩阻风速⟦5⟧由 Pähtz 与 Durán（⟦#9⟧，式 ⟦#10⟧）在该高度恒定应力条件下的光滑壁面混合长廓线求得（不含空气动力学粗糙度）；该层位于地表以上 ⟦#11⟧–⟦#12⟧ m（⟦6⟧⟦#13⟧–⟦#14⟧ m）。第 ⟦#15⟧ 个火星年的前 ⟦#16⟧ 个样本（Ls ⟦#17⟧–⟦#18⟧°）同化 Mars Odyssey⟦7⟧柱尘量，其余样本同化⟦8⟧⟦9⟧温度和尘埃廓线。数据、文档与文件浏览：<a href="https://catalogue.ceda.ac.uk/uuid/cd037a9ea387438fabf4d674dbe53088/" target="_blank" rel="noopener noreferrer">⟦10⟧v2.0（⟦11⟧Archive）</a>；本图集读取的可直接分析副本：<a href="https://huggingface.co/datasets/ananyo01/ARCO-MACDA" target="_blank" rel="noopener noreferrer">⟦12⟧</a>。Contains public sector information licensed under the Open Government Licence v3.0 (⟦13⟧v2.0,⟦14⟧Centre for Environmental Data Analysis).
+
+## c.912ef7dd (About)
+EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧° or ⟦#2⟧° × ⟦#3⟧° or ⟦#4⟧°). Negative values (convergence) imply deposition.
+ZH: <strong>饱和输沙通量散度</strong> ⟦0⟧：合成输沙势矢量（大小⟦1⟧，方向⟦2⟧）在火星球面（R = ⟦#0⟧ km）上的散度，按⟦3⟧方法编号⟦4⟧，在风场数据集网格（⟦#1⟧° 或 ⟦#2⟧°×⟦#3⟧° 或 ⟦#4⟧°）上以中心差分计算。负值（汇）意味着堆积。
+
+## c.c682ba25 (About)
+EN: <strong>⟦0⟧⟦#0⟧° × ⟦#1⟧°</strong>: ⟦1⟧. Licence: ⟦2⟧.
+ZH: <strong>⟦0⟧⟦#0⟧°×⟦#1⟧°</strong>：⟦1⟧。许可协议：⟦2⟧。
+
+## c.48251db8 (About)
+EN: Web interface (explore the model output): ⟦0⟧
+ZH: 网页界面（浏览模型输出）：⟦0⟧
+
+## c.251cd18d (About)
+EN: ⟦0⟧v1.0 reanalysis (Mars Year ⟦#0⟧)
+ZH: ⟦0⟧v1.0 再分析数据集（第 ⟦#0⟧ 个火星年）
+
+## c.19395603 (About)
+EN: Data (analysis-ready copy read by the atlas): ⟦0⟧
+ZH: 数据（本图集读取的可直接分析副本）：⟦0⟧
+
+## c.8227d6a0 (About)
+EN: ⟦0⟧v2.0 reanalysis (Mars Year ⟦#0⟧)
+ZH: ⟦0⟧v2.0 再分析数据集（第 ⟦#0⟧ 个火星年）
+
+## c.db5eb4dc (About)
+EN: Contains public sector information licensed under the Open Government Licence v3.0 (⟦0⟧v2.0,⟦1⟧Centre for Environmental Data Analysis).
+ZH: Contains public sector information licensed under the Open Government Licence v3.0 (⟦0⟧v2.0,⟦1⟧Centre for Environmental Data Analysis).
+
 # Unused (English changed or removed)
+
+## c.692b1efa (Unused (English changed or removed))
+EN: <strong>Winds (⟦0⟧Mars⟦1⟧, beta release ⟦#0⟧)</strong>: hourly lowest-level winds, temperature and surface pressure of the⟦2⟧Ames⟦3⟧FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to ⟦#1⟧° × ⟦#2⟧° (a cell is about ⟦#3⟧ km across at the equator, larger than most dune fields): ⟦#4⟧ hourly samples, one Mars year. The map draws each cell as one square, so a field that changes strongly from cell to cell, as⟦4⟧often does at low latitudes, looks blocky. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature (⟦#5⟧–⟦#6⟧ m over all cells and hours; ⟦#7⟧–⟦#8⟧ m in ⟦#9⟧ % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#10⟧, eq. ⟦#11⟧) under constant stress at that height (no roughness length).
+ZH: <strong>风场（⟦0⟧Mars⟦1⟧，测试版 ⟦#0⟧）</strong>：⟦2⟧Ames⟦3⟧基于 FV3 的火星全球气候模型（c48 参考模拟，第 6 个模拟年）逐小时最低模型层风速、温度与地面气压，重新网格化至 ⟦#1⟧°×⟦#2⟧°（一个网格单元在赤道处约 ⟦#3⟧ km 宽，大于大多数沙丘区）：共 ⟦#4⟧ 个逐小时样本，为期一个火星年。地图将每个网格单元绘制为一个方块，因此在低纬度地区⟦4⟧常出现网格间剧烈变化的量，看起来呈块状。最低层的空气密度 ρ = p/(R T)；最低层风速所在高度 z 由逐小时气压和温度求得（全部网格单元和时间段范围为 ⟦#5⟧–⟦#6⟧ m；在沙丘区网格单元 ⟦#9⟧ % 的时间段中为 ⟦#7⟧–⟦#8⟧ m；网格单元面板给出所选单元的范围），摩阻风速⟦5⟧由 Pähtz 与 Durán（⟦#10⟧，式 ⟦#11⟧）在该高度恒定应力条件下的光滑壁面混合长廓线求得（不含空气动力学粗糙度）。
+
+## c.c4698157 (Unused (English changed or removed))
+EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧°). Negative values (convergence) imply deposition.
+ZH: <strong>饱和输沙通量散度</strong> ⟦0⟧：合成输沙势矢量（大小⟦1⟧，方向⟦2⟧）在火星球面（R = ⟦#0⟧ km）上的散度，按⟦3⟧方法编号⟦4⟧，在风场数据集网格（⟦#1⟧°）上以中心差分计算。负值（汇）意味着堆积。
 
 ## c.1ef8a9c4 (Unused (English changed or removed))
 EN: αE (elongation direction): ⟦#0⟧° (ENE)
