@@ -115,11 +115,11 @@ FV3 = MarsDataset(
     licence="NASA Ames MCMC output; no licence stated (NASA open data)",
     license_spdx="CC-BY-4.0",
     winds_phrase=("MCMC FV3-based Mars GCM Beta Output Release 1, one Mars year of hourly lowest-level winds (NASA "
-                  "Ames Mars Climate Modeling Center (2023), https://data.nas.nasa.gov/legacygcm/fv3betaout1/"
-                  "fv3betaout1/; model physics: Haberle, R. M. et al. (2019). Icarus 333, 130–164. "
+                  "Ames Mars Climate Modeling Center (2023), doi:10.25966/rjgg-r639, "
+                  "https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics: Haberle, R. M. et al. (2019). Icarus 333, 130–164. "
                   "doi:10.1016/j.icarus.2019.03.026)"),
     gcm_citation=("NASA Ames Mars Climate Modeling Center (2023). MCMC FV3-based Mars GCM Beta Output Release 1. "
-                  "https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics: Haberle, R. M. et al. "
+                  "doi:10.25966/rjgg-r639, https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/; model physics: Haberle, R. M. et al. "
                   "(2019). Icarus 333, 130–164. doi:10.1016/j.icarus.2019.03.026"),
     store_title=("dune-atlas Mars cell store: MCMC FV3 GCM beta release 1 hourly lowest-level winds, air state "
                  "and sand-flux fields at 64 grain sizes"),

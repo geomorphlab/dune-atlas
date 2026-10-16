@@ -19,7 +19,7 @@
     resolution: 5°
     resDeg: 5.0
     period: 'one Mars year (Mars Year 30)'
-    nHours: 8023   # nominal (668.6 sols); the app takes the exact length from the cell store (series, dataset.n_hours)
+    nHours: 8023   # samples of the built store (the app takes the length from the cell store's series)
     landRule: 'every cell (Mars has no land mask: all 2,592 cells carry wind data)'
     landThreshold: 0
     nonLandReason: ''
@@ -34,7 +34,13 @@
       column is centred on 180°). The winds are those of the lowest model level (σ = 0.9995); air
       density ρ = p/(R T) with p = σ p<sub>s</sub>, the height of that level z = (R T/g) ln(1/σ), and
       the friction velocity u* comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán
-      (2023, eq. 2.2) under constant stress at that height (no roughness length). Contains public
+      (2023, eq. 2.2) under constant stress at that height (no roughness length); that level is 3.6–7.3 m
+      above the surface (FV3 1.5–3.2 m). In Mars Year 30 the first 461 samples (Ls 0–19°) assimilate Mars
+      Odyssey THEMIS column dust, the others Mars Reconnaissance Orbiter MCS temperature and dust profiles.
+      Data, documentation and file browser: <a
+      href="https://catalogue.ceda.ac.uk/uuid/cd037a9ea387438fabf4d674dbe53088/" target="_blank" rel="noopener noreferrer">MACDA v2.0 in the
+      CEDA Archive</a>; the analysis-ready copy read by the atlas: <a
+      href="https://huggingface.co/datasets/ananyo01/ARCO-MACDA" target="_blank" rel="noopener noreferrer">ARCO-MACDA</a>. Contains public
       sector information licensed under the Open Government Licence v3.0 (MACDA v2.0, NERC EDS Centre
       for Environmental Data Analysis).'
     grid: { lat0: 87.5, dlat: -5.0, lon0: -180.0, dlon: 5.0, ny: 36, nx: 72 }
