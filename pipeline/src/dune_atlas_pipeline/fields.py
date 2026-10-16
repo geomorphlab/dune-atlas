@@ -444,8 +444,9 @@ def display_array(dq: xr.Dataset, var: str, meta: dict | None = None, grid=None)
     da = da.astype("float32")  # topozarr kernel and browsers lack reliable float16
     da.attrs = attrs
     # float32 source coords are not exactly uniform; rebuild the exact grid values (the dataset's grid, checked
-    # against the source; else read from the source). Grids with Gaussian rows use their regular fitted rows.
-    if grid is not None:
+    # against a global source; else, e.g. a regional subset such as the synthetic test fixture, read from the
+    # source). Grids with Gaussian rows use their regular fitted rows.
+    if grid is not None and (dq.sizes["latitude"], dq.sizes["longitude"]) == grid.shape:
         grid.check_coords(dq["latitude"].values, dq["longitude"].values)
         g = grid
     else:
