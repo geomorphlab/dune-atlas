@@ -14,7 +14,7 @@ import { citationFile } from "../src/core/cell/downloads";
 import { fluxRose, crestFluxRose } from "../src/core/cell/flux";
 import { fieldValue } from "../src/core/cell/cellstore";
 import { C } from "../src/core/util/constants";
-import { AI_NOTICE } from "../src/core/cell/citation";
+import { FILE_AI_NOTICE as AI_NOTICE } from "../src/core/cell/export";
 import { makeCell, FIELD_VARS } from "./helpers";
 import fixture from "./fixtures/flux-parity.json";
 
@@ -145,7 +145,11 @@ describe("cell exports", () => {
     }
     // field attributes and global attributes are exactly these (no other annotations)
     for (const v of FIELD_VARS) expect(Object.keys(r.vars[v].attrs).sort()).toEqual(["_FillValue", "coordinates", "description", "description_latex", "long_name", "long_name_latex", "units"]);
-    expect(Object.keys(r.gatts).sort()).toEqual(["Conventions", "comment", "data_version", "dataset_id", "fields_citation", "fields_license", "geospatial_lat_resolution", "geospatial_lon_resolution", "history", "institution", "license", "references", "source", "title"]);
+    expect(Object.keys(r.gatts).sort()).toEqual(["Conventions", "comment", "data_notice", "data_version", "dataset_id", "dataset_title", "date_created", "fields_citation", "fields_license", "geospatial_lat_max", "geospatial_lat_min", "geospatial_lat_resolution", "geospatial_lon_max", "geospatial_lon_min", "geospatial_lon_resolution", "history", "institution", "license", "references", "source", "time_coverage_end", "time_coverage_resolution", "time_coverage_start", "title"]);
+    expect(r.gatts.time_coverage_start).toBe("1950-01-01T00:00:00Z");
+    expect(String(r.gatts.license)).toMatch(/^Sand-flux fields and wind data: CC BY 4\.0.*DATA_LICENSE\.md$/);
+    expect(r.vars.dune_present.attrs.license).toMatch(/^MIT/);
+    expect(r.vars.lat_bnds.dims).toEqual(["nv"]);
     expect(r.gatts.fields_citation).toMatch(/^Gunn, A\. \(2026\)\. The distribution of Earth's wind-blown sand dunes\. Nature Communications\. doi:10\.1038\/s41467-026-75466-y; .*winds: /);
     expect(String(r.vars.qha_rdp_dp.attrs.description)).toMatch(/^Directional variability of sand flux: ratio of resultant to total drift potential/);
     expect(r.vars.dpm.attrs.units).toBe("m2 s-1");
@@ -153,14 +157,14 @@ describe("cell exports", () => {
     expect(r.vars.flux_rose.attrs.units).toBe("m2 yr-1");
     expect(r.vars.rose_mode.attrs.flag_meanings).toBe("flat_bed elongation transverse");
     expect(r.gatts.Conventions).toBe("CF-1.8");
-    expect(r.gatts.license).toBe("CC BY 4.0");
+    expect(String(r.gatts.license)).toMatch(/^Sand-flux fields and wind data: CC BY 4\.0 /);
     expect(r.gatts.institution).toBe("Geomorphology Lab, Monash University");
     expect(r.gatts.comment).toBe(AI_NOTICE);
     expect(r.gatts.references).toMatch(/10\.1038\/s41467-026-75466-y.*10\.5281\/zenodo\.20046812.*10\.24381\/cds\.e2161bac.*Copernicus/);
     expect(r.gatts.history).toBe("2026-01-01T00:00:00.000Z: downloaded from https://map.geomorphlab.org/?cell=1145,1952");
     expect(r.gatts.data_version).toBe("v1");
     expect(r.vars.ua_bin_bearing_from.attrs.units).toBe("degree");
-    expect(r.vars.cell_y.attrs.grid_registration).toMatch(/^pixel/);
+    expect(r.vars.cell_y.attrs.grid_registration).toMatch(/^centre: /);
   });
   it("flux_rose table = the panel's functions; crest rows NaN where the defining flux is 0", () => {
     const c = cell();
@@ -216,7 +220,7 @@ describe("cell exports", () => {
     expect(csvName("ufm")).toBe("ustar_mean_above_threshold_over_ustar_th");
     const md = JSON.parse(metadataJson(c, META));
     expect(Object.keys(md.fields.dpm).sort()).toEqual(["description", "description_latex", "long_name", "long_name_latex", "units"]);
-    expect(Object.keys(md).sort()).toEqual(["ai_notice", "aux", "cell", "citation", "conventions", "copernicus_notice", "dataset", "fields", "fields_citation", "fields_license", "files", "generated", "grid", "institution", "license", "permalink", "ut"]);
+    expect(Object.keys(md).sort()).toEqual(["ai_notice", "aux", "cell", "citation", "conventions", "data_notice", "dataset", "dune_present_license", "fields", "fields_citation", "fields_license", "files", "generated", "grid", "institution", "license", "permalink", "ut"]);
     expect(md.ut[14]).toBe(0.15);
     expect(md.files["flux_rose.csv"].columns.map((x: { name: string }) => x.name)).toEqual(csvColumns(c)["flux_rose.csv"].map((x) => csvName(x.name)));
     expect(md.files["fields_by_threshold.csv"].columns.find((x: { netcdf_name: string }) => x.netcdf_name === "sige_sigh")).toEqual({ name: "sigma_e_over_sigma_h", netcdf_name: "sige_sigh", units: "1", long_name: "Stability of elongating dunes on starved beds σ_E/σ_H" });

@@ -5,8 +5,8 @@
 // (map.geomorphlab.org) until the user changes something.
 //
 // Precedence for the initial state: #v= share link > ?query permalink > default view; the wind
-// dataset additionally honours a returning user's explicit choice (localStorage) when the URL has
-// no view state. Pure (tested).
+// dataset additionally honours the visitor's choice earlier in the same visit (core/visit.ts) when the URL
+// has no view state; a new visit opens with the default view's dataset. Pure (tested).
 import type { ShareState } from "./share/shortlink";
 import { shareToUrlState } from "./share/shortlink";
 import { parseUrlState, type UrlState } from "./urlstate";
@@ -43,7 +43,7 @@ export interface InitialState {
  * @param query   parsed ?query
  * @param legacyDataset dataset of query permalinks without `dataset` (written before it was always
  *                included: the registry defaultDataset, ERA5-Land)
- * @param stored  the user's last explicit dataset choice (localStorage), if any
+ * @param stored  the dataset chosen earlier in this visit (core/visit.ts), if any
  */
 export function resolveInitialState(shared: ShareState | null, query: UrlState, legacyDataset: string | undefined, stored: string | undefined, def: ShareState = DEFAULT_VIEW): InitialState {
   const extras: UrlState = { ...(query.embed ? { embed: true } : {}), ...(query.tour ? { tour: true } : {}), ...(query.plot ? { plot: query.plot } : {}) };
@@ -59,10 +59,10 @@ export function resolveInitialState(shared: ShareState | null, query: UrlState, 
   return { url: { ...defUrl, ...extras }, dataset: stored ?? def.dataset, source: "default", bearing: def.bearing ?? 0, pitch: def.pitch ?? 0 };
 }
 
-/** localStorage name (per body, body.ts storageKey) of the last view: the address query of the current view. */
+/** visit-storage name (per body, body.ts storageKey; core/visit.ts) of the last view: the address query of the current view. */
 export const LAST_VIEW = "lastView";
 /** Planet button: the other atlas is opened with `?resume=1`; a link with that flag and no view
- *  state of its own opens the last view stored by this atlas (camera, basemap, projection, layers with their
+ *  state of its own opens the last view of this atlas in this visit (camera, basemap, projection, layers with their
  *  opacity and display, threshold, cell, dataset, Dunes only), keeping the link's embed / tour flags. */
 export function resumeQuery(query: UrlState, stored: string | null | undefined): UrlState {
   if (!query.resume || hasViewState(query) || !stored) return query;

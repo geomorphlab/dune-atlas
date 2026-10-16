@@ -267,7 +267,7 @@
               },
               "landThreshold": {
                 "type": "number",
-                "description": "land–sea mask fraction above which a cell carries wind data"
+                "description": "land fraction (the dataset's land–sea mask or land-fraction field) above which a cell carries wind data"
               },
               "nonLandReason": {
                 "type": "string",
@@ -306,6 +306,9 @@
                   "nx": { "type": "integer", "minimum": 1 }
                 }
               },
+              "kind": { "type": "string", "description": "what the dataset is, without its name, read after 'Name: ' in the Wind dataset ⓘ (e.g. 'free-running climate-model simulation')" },
+              "note": { "type": "string", "description": "a sentence about this dataset for the Wind dataset ⓘ (e.g. how it relates to another dataset)" },
+              "landShort": { "type": "string", "description": "land rule of the selector tooltip, e.g. 'land cells: land–sea mask fraction > 0' (datasets with a land mask)" },
               "series": {
                 "type": "object",
                 "additionalProperties": false,
@@ -354,6 +357,7 @@
                 "type": "string",
                 "description": "wind line of image exports"
               },
+              "mapNotice": { "type": "string", "description": "short attribution line on the map and in About while the dataset is selected (e.g. the Copernicus statement)" },
               "notice": {
                 "type": "string",
                 "description": "data notice written into downloads (e.g. the Copernicus notice)"

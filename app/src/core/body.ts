@@ -22,18 +22,19 @@ export const LIVE_SITE = "https://map.geomorphlab.org/";
 export const isLocalHost = (h: string | undefined) => !!h && /^(localhost|127(?:\.\d+){3}|\[?::1\]?|0\.0\.0\.0)$/i.test(h);
 
 /** URL of the other atlas (no position carried; `?embed=1` carried when active; `resume=1`: the other atlas
- *  reopens its own last view if it has one, else its default view - defaultview.ts resumeQuery).
+ *  reopens its own last view if it has one, else its default view - defaultview.ts resumeQuery; `lang`: the
+ *  language when it is not English, so a page opened from a ?lang= link keeps it).
  *  Production (same origin): Earth -> `<base>mars/`; Mars -> its base without the trailing `mars/` (the
  *  site root). On localhost / 127.0.0.1 (vite dev or preview) the other atlas is the LIVE site: Earth ->
  *  https://map.geomorphlab.org/mars/, Mars -> https://map.geomorphlab.org/. `override`
  *  (VITE_OTHER_BODY_URL, e.g. http://localhost:5174/ for two dev servers) replaces the derived URL. */
-export function otherBodyUrl(o: { body?: Body; base?: string; override?: string; embed?: boolean; host?: string; resume?: boolean } = {}): string {
+export function otherBodyUrl(o: { body?: Body; base?: string; override?: string; embed?: boolean; host?: string; resume?: boolean; lang?: string } = {}): string {
   const body = o.body ?? BODY;
   const base = (o.base ?? env.BASE_URL ?? "/").replace(/\/*$/, "/");
   let url = o.override || env.VITE_OTHER_BODY_URL || "";
   if (!url && isLocalHost(o.host ?? globalThis.location?.hostname)) url = body === "mars" ? LIVE_SITE : `${LIVE_SITE}mars/`;
   if (!url) url = body === "mars" ? base.replace(/mars\/$/, "") || "/" : `${base}mars/`;
-  const q = [o.embed ? "embed=1" : "", o.resume ? "resume=1" : ""].filter(Boolean).join("&");
+  const q = [o.embed ? "embed=1" : "", o.resume ? "resume=1" : "", o.lang ? `lang=${o.lang}` : ""].filter(Boolean).join("&");
   return q ? `${url}${url.includes("?") ? "&" : "?"}${q}` : url;
 }
 

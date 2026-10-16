@@ -58,6 +58,11 @@ export const BODY_CITATION_SOURCES: Record<string, CitationSource> = {
 };
 /** sources of a cell download (the cells-aux sidecars carry the aridity and vegetation cell means) */
 export const CELL_SOURCE_IDS = ["aridity", "vegetation"];
+/** the per-cell dune flag of the downloads: its name and the licence of the dune map it comes from (DATA_LICENSE.md) */
+export const DUNE_FLAG_LONG_NAME = "cell mapped as containing wind-blown sand dunes";
+/** global attribute transport_law of the region downloads (Earth: none; the method is in fields_citation) */
+export const TRANSPORT_LAW_ATTR: string = "";
+export const DUNE_FLAG_LICENCE = "MIT (dune map of Gunn 2026, in the Supplementary Code record doi:10.5281/zenodo.20054674)";
 
 
 /** image exports: the data line of a plot (the wind line appended) */

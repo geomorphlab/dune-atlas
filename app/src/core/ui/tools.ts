@@ -2,7 +2,7 @@
 // Share / copy link, Export map image. Each opens a small popover (one at a time; Esc, × or a
 // click outside closes it and returns focus to its button). Below them the planet toggle, a plain
 // button that opens the other atlas (Earth <-> Mars; body.ts) at its default view.
-import { t, tr } from "../../i18n";
+import { LANG, t, tr } from "../../i18n";
 import { helpKey } from "../../i18n/keys";
 import { h, nextId } from "./dom";
 import { BODY, bodyName, isEmbedded, otherBody, otherBodyUrl } from "../body";
@@ -65,13 +65,13 @@ export class Tools {
     globalThis.document?.addEventListener(DOWNLOAD_EVENT, (e) => { const n = (e as CustomEvent<{ name: string }>).detail?.name; if (n) toast(`${EXPORT_TEXT.downloaded} ${n}`, 4000); });
   }
 
-  /** the planet toggle: "Switch to Mars" on Earth, "Switch to Earth" on Mars; carries ?embed=1 */
+  /** the planet toggle: "Switch to Mars" on Earth, "Switch to Earth" on Mars; carries ?embed=1 and the language */
   #planetButton(): HTMLButtonElement {
     const label = `Switch to ${bodyName(otherBody(BODY))}`;
     const b = h("button", { type: "button", class: "tool-btn planet-btn", "aria-label": label, title: label, html: ICONS.planet }) as HTMLButtonElement;
     b.addEventListener("click", () => {
       this.close();
-      const url = otherBodyUrl({ embed: isEmbedded(), resume: true }); // the other atlas reopens its last view
+      const url = otherBodyUrl({ embed: isEmbedded(), resume: true, lang: LANG === "en" ? undefined : LANG }); // the other atlas reopens its last view
       (this.#opts.navigate ?? ((u: string) => globalThis.location.assign(u)))(url);
     });
     return b;

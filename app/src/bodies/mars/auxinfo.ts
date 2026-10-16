@@ -14,7 +14,7 @@ export const AUX_META: Record<string, AuxMeta> = {
   },
   rho_mean: {
     longName: "Near-surface air density, mean over the year", symbolTex: "\\overline{\\rho_f}", units: "kg m-3", kind: "scalar",
-    description: "Mean of the hourly lowest-layer air density ρ_f = p/(R T) of the {res} cell over the Mars year.",
+    description: "Mean of the lowest-layer air density ρ_f = p/(R T) of the {res} cell over the samples of the Mars year.",
   },
   elev_mean: {
     longName: "Elevation, mean over the cell", symbolTex: "\\overline{z}", units: "m", kind: "scalar",
@@ -59,7 +59,7 @@ export function auxSourceAttrs(aux: CellAux, v: string, deg = 2, degLon = deg, d
   const str = (k: string) => (typeof a[k] === "string" ? (a[k] as string) : undefined);
   if (AUX_META[v]) out.description = auxDescription(v, deg, degLon);
   if (v === "qsdiv") { out.source = QSDIV_SOURCE; out.method = QSDIV_METHOD(deg, degLon); }
-  else if (v === "elev_mean") { out.source = str("source") ?? "Mars MGS MOLA - MEX HRSC Blended DEM Global 200m v2 (USGS Astrogeology Science Center)"; out.license = `${DEM_LICENCE}. ${DERIVED_DEM_LICENCE}`; out.references = DEM_CITATION; }
+  else if (v === "elev_mean") { out.source = (str("source") ?? "Mars MGS MOLA – MEX HRSC Blended DEM Global 200m v2 (USGS Astrogeology Science Center)").replace("MOLA - MEX", "MOLA – MEX") /* one spelling in every dataset */; out.license = `${DEM_LICENCE}. ${DERIVED_DEM_LICENCE}`; out.references = DEM_CITATION; }
   else if (v === "rho_mean") {
     const ds = datasetInfo(datasetId);
     out.source = str("source") ?? (ds.id === "fv3-beta1" ? "MCMC FV3 Mars GCM beta release 1: lowest-layer p/(R T)" : `${ds.name}: lowest-layer p/(R T)`);

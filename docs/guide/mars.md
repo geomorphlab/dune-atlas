@@ -37,10 +37,13 @@ nothing else in the app re-implements the physics.
   both (e.g. `http://localhost:5174/` when the two dev servers run side by side).
 * Tour: both tours end with the step `planet` ("Switch planet") on that button, after `tools`;
   `docs/reference/help-text.md` is regenerated from the Earth texts (`npm run help-doc`).
-* Same-origin storage: every localStorage key goes through `storageKey`: Earth keys are unchanged
-  (`duneAtlas.tourSeen`, `duneAtlas.dataset`, `duneAtlas.cellPanel.*`); Mars keys are `duneAtlasMars.*`, so
-  the Mars first-visit tour still shows after visiting Earth (`tests/mars/body.test.ts` also checks that no
-  source writes an un-namespaced key). No sessionStorage, no service worker; assets are emitted under the
+* Same-origin storage (`core/visit.ts`): between visits only the language (`duneAtlas.lang`, both atlases) and
+  the tour flag (`duneAtlas.tourSeen` / `duneAtlasMars.tourSeen`, so the Mars first-visit tour still shows after
+  visiting Earth) stay in localStorage. Everything else is kept for the visit in sessionStorage: per atlas the
+  dataset, names, plotted quantity and last view (`duneAtlas.*` / `duneAtlasMars.*`); for both atlases the panel
+  layout (`duneAtlas.cellPanel.*`, `duneAtlas.layerPanel.groups`, `duneAtlas.fluxRosePetals`). Settings earlier
+  versions kept in localStorage are removed on load (`dropRetiredLocal`). `tests/mars/body.test.ts` checks that no
+  source writes a literal key. No service worker; assets are emitted under the
   Vite base and data URLs are absolute (`VITE_DATA_BASE`), so nothing breaks under `/mars/`.
 * Deployment (`.github/workflows/ci.yml`, job `app`): `validate-registry:mars`, `test:mars`, `build:mars` with
   `VITE_BODY=mars VITE_BASE=/mars/ VITE_DATA_BASE=https://data.geomorphlab.org
@@ -76,7 +79,7 @@ selects the `d` index of its `(d, y, x)` pyramid. Layers: dunes (vector), the 23
 near-surface air density `rho_mean` and elevation (2-D, group "Related data" (id `environment`), the counterpart of Earth's "Related data" group (id `climate`)). No aridity, vegetation, land mask or ERA5 datasets.
 
 Cell panel (`src/bodies/mars/cell/analysis.ts`, `marsflux.ts`): reads `cells.zarr/series` (u, v, T, rho, z per
-hour; z = the hour's lowest-level height, ≈ 1.6–3 m) and computes, at the selected d, everything the Earth
+sample; z = the sample's lowest-level height, ≈ 1.5–3 m in MCMC FV3, 3.6–7.3 m in MACDA, 22–50 m in EMARS; registry sourceHtml of each dataset) and computes, at the selected d, everything the Earth
 panel computes from the histogram: per hour u* from |U| at height z through the smooth-wall mixing-length
 profile of Pähtz & Durán (2023) eq. 2.2 under constant stress (`frictionVelocity(u, v, z, ν)`, ν = μ(T)/ρ;
 no roughness length), direction, u*,th(d, ρ, T), q(u*) and the crest flux q(u_c) with the same hour's
@@ -85,7 +88,7 @@ u*,th; roses per Earth direction bin (128 bins, edges −π…π), sector sums, 
 fields (the map layers). Extra: median and 5–95 % range of u*,th over the hours, the wind speed at the
 median threshold (median over hours of u*,th · u⁺(z u*,th/ν), i.e. at each hour's height), the median
 height z, % of hours above threshold and the fraction of hours outside the validity of eq. 3.2
-(Ga√s ≤ 81). Wind rose: lowest-level wind (z ≈ 2 m), classes 0–2.5–5–7.5–10–15 and > 15 m/s. One slider
+(Ga√s ≤ 81). Wind rose: lowest-level wind (FV3: z ≈ 2 m), classes 0–2.5–5–7.5–10–15 and > 15 m/s. One slider
 step costs ~10 ms on a full year (16,032 hours) in node.
 
 Wind datasets (selector, `registry/mars/layers.yaml` and `registry/mars/datasets/<id>/dataset.yaml`): MCMC FV3

@@ -80,7 +80,7 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
-  "en": "The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°), each one Mars year of lowest-level winds on its own grid:⟦3⟧is a free-running climate-model simulation;⟦4⟧and⟦5⟧are reanalyses of Mars Year ⟦#4⟧, which assimilate spacecraft observations of the atmosphere into a climate model. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain. No⟦6⟧data poleward of ⟦#5⟧° N: the northernmost cells of its grid are centred at ⟦#6⟧° N.",
+  "en": "The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°), each one Mars year of lowest-level winds on its own grid (⟦3⟧: free-running climate-model simulation;⟦4⟧and⟦5⟧: reanalysis of Mars Year ⟦#4⟧, with spacecraft observations of the atmosphere assimilated into a climate model). The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. No⟦6⟧data poleward of ⟦#5⟧° N: the northernmost cells of its grid are centred at ⟦#6⟧° N.",
   "area": "Layer popovers"
  },
  {
@@ -100,7 +100,7 @@
   "area": "Layer panel"
  },
  {
-  "en": "The median diameter ⟦0⟧ of the sand grains. Every grain-size-dependent map layer (its ⓘ says so) and the cell panel use the value set here. The threshold friction velocity ⟦1⟧ is computed for every hour from ⟦2⟧ and that hour's air density and temperature (⟦3⟧).",
+  "en": "The median diameter ⟦0⟧ of the sand grains. Every grain-size-dependent map layer (its ⓘ says so) and the cell panel use the value set here. The threshold friction velocity ⟦1⟧ is computed for each time step from ⟦2⟧ and that step's air density and temperature (⟦3⟧).",
   "area": "Layer popovers"
  },
  {
@@ -292,7 +292,7 @@
   "area": "Layer popovers"
  },
  {
-  "en": "Net along-crest over net across-crest sand flux for crests of the bed-instability orientation,⟦0⟧. Along-crest transport tends to keep crests straight, while across-crest transport, which drives migration, tends to make them sinuous (⟦1⟧), so higher values suggest straighter long-crested dunes on sand-covered beds. For dunes migrating on starved beds, the ratio measures the asymmetry of sand fluxes that makes dunes such as barchans asymmetric (⟦2⟧). In the sand-covered-bed examples of⟦3⟧it is about ⟦#0⟧ for transverse, ⟦#1⟧ for oblique and ⟦#2⟧ for longitudinal dunes. The ratio goes to infinity where its denominator (a net flux) goes to zero (shown clipped to ±⟦#3⟧).",
+  "en": "Net along-crest over net across-crest sand flux for crests of the bed-instability orientation,⟦0⟧. Along-crest transport tends to keep crests straight, while across-crest transport, which drives migration, tends to make them sinuous (⟦1⟧), so higher values suggest straighter long-crested dunes on sand-covered beds. For dunes migrating on starved beds, the ratio measures how far the migration direction departs from the direction of the sand flux on the dune, which makes dunes such as barchans asymmetric (⟦2⟧). In the sand-covered-bed examples of⟦3⟧it is about ⟦#0⟧ for transverse, ⟦#1⟧ for oblique and ⟦#2⟧ for longitudinal dunes. The ratio goes to infinity where its denominator (a net flux) goes to zero (shown clipped to ±⟦#3⟧).",
   "area": "Layer popovers"
  },
  {
@@ -304,7 +304,7 @@
   "area": "Layer popovers"
  },
  {
-  "en": "Fraction of time flat-bed friction velocity is above threshold⟦0⟧. The threshold is that hour's cessation threshold⟦1⟧of⟦2⟧.",
+  "en": "Fraction of time flat-bed friction velocity is above threshold⟦0⟧. The threshold is the cessation threshold⟦1⟧of each sample, from⟦2⟧.",
   "area": "Layer popovers"
  },
  {
@@ -312,19 +312,19 @@
   "area": "Layer popovers"
  },
  {
-  "en": "Average above-threshold flat-bed friction velocity, normalised by threshold⟦0⟧. The threshold is that hour's cessation threshold⟦1⟧of⟦2⟧.",
+  "en": "Average above-threshold flat-bed friction velocity, normalised by threshold⟦0⟧. The threshold is the cessation threshold⟦1⟧of each sample, from⟦2⟧.",
   "area": "Layer popovers"
  },
  {
-  "en": "Fraction of bed-instability-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold⟦2⟧of⟦3⟧.",
+  "en": "Fraction of bed-instability-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is the cessation threshold⟦2⟧of each sample, from⟦3⟧.",
   "area": "Layer popovers"
  },
  {
-  "en": "Fraction of elongation-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold⟦2⟧of⟦3⟧.",
+  "en": "Fraction of elongation-mode (⟦0⟧) crest flux that occurs while the flat-bed friction velocity exceeds threshold,⟦1⟧. ⟦#0⟧ where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is the cessation threshold⟦2⟧of each sample, from⟦3⟧.",
   "area": "Layer popovers"
  },
  {
-  "en": "Time-averaged flat-bed saturated sand flux,⟦0⟧over all N hours of the Mars year: the volume of packed sand per metre width that the wind could move per Earth year over a flat bed fully covered by loose sand (⟦1⟧). Like the drift potential of⟦2⟧it measures the wind's capacity to transport sand, but it is a different quantity: Fryberger's⟦3⟧is in vector units, computed from ⟦#0⟧ m wind speeds in knots as⟦4⟧with a ⟦#1⟧-knot threshold, whereas this⟦5⟧is a physical flux computed from the friction velocity with a threshold computed from the grain diameter. The two cannot be converted into each other, and Fryberger's energy classes do not apply to these values.",
+  "en": "Time-averaged flat-bed saturated sand flux,⟦0⟧over all N samples of the Mars year: the volume of packed sand per metre width that the wind could move per Earth year over a flat bed fully covered by loose sand (⟦1⟧). Like the drift potential of⟦2⟧it measures the wind's capacity to transport sand, but it is a different quantity: Fryberger's⟦3⟧is in vector units, computed from ⟦#0⟧ m wind speeds in knots as⟦4⟧with a ⟦#1⟧-knot threshold, whereas this⟦5⟧is a physical flux computed from the friction velocity with a threshold computed from the grain diameter. There is no fixed ratio between the two, and Fryberger's energy classes (below ⟦#2⟧, ⟦#3⟧–⟦#4⟧ and above ⟦#5⟧ vector units) are in vector units.",
   "area": "Layer popovers"
  },
  {
@@ -332,19 +332,19 @@
   "area": "Layer popovers"
  },
  {
-  "en": "Direction of the time-averaged flat-bed flux vector,⟦0⟧, the direction sand moves, as a compass bearing (clockwise from north). Poorly defined where⟦1⟧is low, because transport in opposing directions nearly cancels.",
+  "en": "Direction of the time-averaged flat-bed flux vector,⟦0⟧, the direction sand moves, as a compass bearing (clockwise from north). Where⟦1⟧is low, transport in opposing directions nearly cancels, and a small change of the threshold or the winds can turn this direction by up to ⟦#0⟧°.",
   "area": "Layer popovers"
  },
  {
-  "en": "Directional variability of sand flux: ratio of resultant to total drift potential,⟦0⟧(⟦#0⟧ = multidirectional, ⟦#1⟧ = unidirectional). Undefined where there is no sand flux (⟦1⟧).⟦2⟧classes: below ⟦#2⟧ low (complex or obtuse bimodal winds), ⟦#3⟧–⟦#4⟧ intermediate (obtuse to acute bimodal winds), above ⟦#5⟧ high (unimodal winds). Only transport above the threshold counts here, and the flux law differs from Fryberger's, so use the classes as a guide.",
+  "en": "Directional variability of sand flux: ratio of resultant to total drift potential,⟦0⟧(⟦#0⟧ = multidirectional, ⟦#1⟧ = unidirectional). Undefined where there is no sand flux (⟦1⟧).⟦2⟧classes: below ⟦#2⟧ low (complex or obtuse bimodal winds), ⟦#3⟧–⟦#4⟧ intermediate (obtuse to acute bimodal winds), above ⟦#5⟧ high (unimodal winds). Here only transport above the threshold counts, and the flux law differs from Fryberger's.",
   "area": "Layer popovers"
  },
  {
-  "en": "Divergence of the time-averaged saturated sand-flux vector (magnitude⟦0⟧, direction⟦1⟧) on the Mars sphere, following⟦2⟧, Methods⟦3⟧:⟦4⟧with⟦5⟧,⟦6⟧. By conservation of sand mass, negative values (flux convergence) imply deposition and positive values (flux divergence) erosion. The values assume a saturated flux and an unlimited supply of loose sand, so on rock, crusted or vegetated surfaces actual erosion is limited by the sand available.",
+  "en": "Divergence of the time-averaged saturated sand-flux vector (magnitude⟦0⟧, direction⟦1⟧) on the Mars sphere, following⟦2⟧, Methods⟦3⟧:⟦4⟧with⟦5⟧,⟦6⟧. By conservation of sand mass, negative values (flux convergence) imply deposition and positive values (flux divergence) erosion. The values assume a saturated flux and an unlimited supply of loose sand, so on rock or crusted surfaces actual erosion is limited by the sand available.",
   "area": "Layer popovers"
  },
  {
-  "en": "Mean over the Mars year of the hourly lowest-layer air density⟦0⟧of the wind dataset's climate model (⟦1⟧= mid pressure of the lowest layer,⟦2⟧= lowest-level temperature).",
+  "en": "Mean over the samples of the Mars year of the lowest-layer air density⟦0⟧of the wind dataset (one sample per Mars hour;⟦1⟧= mid pressure of the lowest layer,⟦2⟧= lowest-level temperature).",
   "area": "Layer popovers"
  },
  {
@@ -496,11 +496,11 @@
   "area": "About"
  },
  {
-  "en": "<strong>Winds (⟦0⟧Mars⟦1⟧, beta release ⟦#0⟧)</strong>: hourly lowest-level winds, temperature and surface pressure of the⟦2⟧Ames⟦3⟧FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to ⟦#1⟧° × ⟦#2⟧° (a cell is about ⟦#3⟧ km across at the equator, larger than most dune fields): ⟦#4⟧ hourly samples, one Mars year. The map draws each cell as one square, so a field that changes strongly from cell to cell, as⟦4⟧often does at low latitudes, looks blocky. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature (⟦#5⟧–⟦#6⟧ m over all cells and hours; ⟦#7⟧–⟦#8⟧ m in ⟦#9⟧ % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#10⟧, eq. ⟦#11⟧) under constant stress at that height (no roughness length). Explore and download the full model output in the <a href=\"https://data.nas.nasa.gov/mcmc/portals/web-interface/\" target=\"_blank\" rel=\"noopener noreferrer\">⟦6⟧Ames⟦7⟧Data Portal web interface</a>.",
+  "en": "<strong>Winds (⟦0⟧Mars⟦1⟧, beta release ⟦#0⟧)</strong>: hourly lowest-level winds, temperature and surface pressure of the⟦2⟧Ames⟦3⟧FV3-based Mars Global Climate Model (c48 reference simulation, 6th simulated year), regridded to ⟦#1⟧° × ⟦#2⟧° (a cell is about ⟦#3⟧ km across at the equator): ⟦#4⟧ hourly samples, one Mars year. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature (⟦#5⟧–⟦#6⟧ m over all cells and hours; ⟦#7⟧–⟦#8⟧ m in ⟦#9⟧ % of the hours of dune cells; the cell panel gives the range of the selected cell), and the friction velocity⟦4⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#10⟧, eq. ⟦#11⟧) under constant stress at that height (no roughness length). Explore and download the full model output in the <a href=\"https://data.nas.nasa.gov/mcmc/portals/web-interface/\" target=\"_blank\" rel=\"noopener noreferrer\">⟦5⟧Ames⟦6⟧Data Portal web interface</a>.",
   "area": "About"
  },
  {
-  "en": "<strong>Winds (⟦0⟧v1.0 reanalysis, Mars Year ⟦#0⟧)</strong>: hourly analysis ensemble mean of the lowest-level winds, temperature and surface pressure of the Ensemble Mars Atmosphere Reanalysis System (⟦1⟧) v1.0 (⟦2⟧; read from the analysis-ready⟦3⟧copy), Mars Year ⟦#1⟧, on its native grid of ⟦#2⟧° in longitude × ⟦#3⟧° in latitude (⟦#4⟧ × ⟦#5⟧ cells, about ⟦#6⟧ km × ⟦#7⟧ km at the equator). The two half-width polar rows of⟦4⟧are not used, so the grid ends at ±⟦#8⟧°: there is no⟦5⟧cell poleward of it. The winds are averaged from the staggered⟦6⟧grid onto the cell centres. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature, and the friction velocity⟦7⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#9⟧, eq. ⟦#10⟧) under constant stress at that height (no roughness length). The lowest⟦8⟧layer is thick, so that height is ⟦#11⟧–⟦#12⟧ m above the surface (median ⟦#13⟧ m;⟦9⟧⟦#14⟧–⟦#15⟧ m,⟦10⟧⟦#16⟧–⟦#17⟧ m): the wind and⟦11⟧refer to a much higher level than in the other Mars datasets. Data and documentation: <a href=\"https://doi.org/10.18113/D3W375\" target=\"_blank\" rel=\"noopener noreferrer\">⟦12⟧v1.0 at the Penn State Data Commons</a>; the analysis-ready copy read by the atlas, <a href=\"https://huggingface.co/datasets/ananyo01/ARCO-EMARS\" target=\"_blank\" rel=\"noopener noreferrer\">⟦13⟧</a>, with <a href=\"https://github.com/GalacticBobster/ARCO-Mars-Examples\" target=\"_blank\" rel=\"noopener noreferrer\">Python examples for reading and plotting it</a>.",
+  "en": "<strong>Winds (⟦0⟧v1.0 reanalysis, Mars Year ⟦#0⟧)</strong>: hourly analysis ensemble mean of the lowest-level winds, temperature and surface pressure of the Ensemble Mars Atmosphere Reanalysis System (⟦1⟧) v1.0 (⟦2⟧; read from the analysis-ready⟦3⟧copy), Mars Year ⟦#1⟧, on its native grid of ⟦#2⟧° in longitude × ⟦#3⟧° in latitude (⟦#4⟧ × ⟦#5⟧ cells, about ⟦#6⟧ km × ⟦#7⟧ km at the equator). The two half-width polar rows of⟦4⟧are not used, so the grid ends at ±⟦#8⟧°. The winds are averaged from the staggered⟦5⟧grid onto the cell centres. Air density of the lowest layer ρ = p/(R T); the height z of the lowest-level wind follows from the hourly pressure and temperature, and the friction velocity⟦6⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#9⟧, eq. ⟦#10⟧) under constant stress at that height (no roughness length). The lowest⟦7⟧layer is thick, so that height is ⟦#11⟧–⟦#12⟧ m above the surface (median ⟦#13⟧ m;⟦8⟧⟦#14⟧–⟦#15⟧ m,⟦9⟧⟦#16⟧–⟦#17⟧ m). Data and documentation: <a href=\"https://doi.org/10.18113/D3W375\" target=\"_blank\" rel=\"noopener noreferrer\">⟦10⟧v1.0 at the Penn State Data Commons</a>; the analysis-ready copy read by the atlas, <a href=\"https://huggingface.co/datasets/ananyo01/ARCO-EMARS\" target=\"_blank\" rel=\"noopener noreferrer\">⟦11⟧</a>, with <a href=\"https://github.com/GalacticBobster/ARCO-Mars-Examples\" target=\"_blank\" rel=\"noopener noreferrer\">Python examples for reading and plotting it</a>.",
   "area": "About"
  },
  {
@@ -508,7 +508,7 @@
   "area": "About"
  },
  {
-  "en": "<strong>Sand-flux fields</strong>: for every hour, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.",
+  "en": "<strong>Sand-flux fields</strong>: for each time step of the wind dataset, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.",
   "area": "About"
  },
  {
@@ -528,7 +528,7 @@
   "area": "About"
  },
  {
-  "en": "Earth and Mars: what can be compared",
+  "en": "Earth and Mars: methods and data",
   "area": "About"
  },
  {
@@ -536,23 +536,23 @@
   "area": "About"
  },
  {
-  "en": "<strong>Control</strong>: on Earth the slider sets one threshold friction velocity⟦0⟧for all hours (default ⟦#0⟧ m/s); on Mars it sets the median grain diameter d (default ⟦#1⟧ µm), and the threshold is computed for every hour from d and that hour's air density and temperature.",
+  "en": "<strong>Control</strong>: on Earth the slider sets one threshold friction velocity⟦0⟧for the whole record (default ⟦#0⟧ m/s); on Mars it sets the median grain diameter d (default ⟦#1⟧ µm), and the threshold is computed for each time step of the wind record from d and that step's air density and temperature.",
   "area": "About"
  },
  {
-  "en": "<strong>Transport law and wind profile</strong>: Earth uses the transport law of⟦0⟧, with⟦1⟧from the ⟦#0⟧ m wind and a roughness length of ⟦#1⟧ mm; Mars uses the transport law of⟦2⟧, with⟦3⟧from the lowest-level wind (≈ ⟦#2⟧–⟦#3⟧ m) and a smooth-wall profile without a roughness length.",
+  "en": "<strong>Transport law and wind profile</strong>: Earth uses the transport law of⟦0⟧, with⟦1⟧from the ⟦#0⟧ m wind and a roughness length of ⟦#1⟧ mm; Mars uses the transport law of⟦2⟧, with⟦3⟧from the wind at the lowest level of the wind dataset (its height above the surface differs between datasets) and a smooth-wall profile without a roughness length.",
   "area": "About"
  },
  {
-  "en": "<strong>Winds and grid</strong>: Earth uses a period of hourly reanalysis winds (e.g.,⟦0⟧, ⟦#0⟧° grid for ⟦#1⟧ years ⟦#2⟧–⟦#3⟧); Mars uses a representative year (⟦#4⟧ sols, about ⟦#5⟧ Earth years) of hourly simulated winds (e.g.,⟦1⟧, ⟦#6⟧° grid), so one Mars cell can span several dune fields and year-to-year variability is not sampled.",
+  "en": "<strong>Winds and grid</strong>: Earth uses decades of hourly reanalysis winds (e.g.,⟦0⟧, ⟦#0⟧° grid, ⟦#1⟧–⟦#2⟧); Mars uses one Mars year (⟦#3⟧ sols, about ⟦#4⟧ Earth years) of winds from a climate-model simulation or a reanalysis (e.g.,⟦1⟧, ⟦#5⟧° grid, about ⟦#6⟧ km at the equator), with no year-to-year variation.",
   "area": "About"
  },
  {
-  "en": "<strong>Downloads</strong>: Earth cells provide a wind histogram and the fields against threshold (⟦0⟧,⟦1⟧); Mars cells provide the hourly wind and air series and the fields against grain diameter (⟦2⟧,⟦3⟧).",
+  "en": "<strong>Downloads</strong>: Earth cells provide a wind histogram and the fields against threshold (⟦0⟧,⟦1⟧); Mars cells provide the wind and air series and the fields against grain diameter (⟦2⟧,⟦3⟧).",
   "area": "About"
  },
  {
-  "en": "⟦0⟧values on the two planets can therefore be compared in order of magnitude, not as precise numbers.⟦1⟧,⟦2⟧and the mode directions compare more directly, but each depends on the threshold or grain-diameter setting.",
+  "en": "On both planets,⟦0⟧,⟦1⟧,⟦2⟧and the mode directions depend on the threshold or grain-diameter setting.",
   "area": "About"
  },
  {
@@ -792,7 +792,7 @@
   "area": "Cell panel"
  },
  {
-  "en": "Mode bearings (toward) for ⟦0⟧ = ⟦#0⟧ µm (centre) to ⟦#1⟧ µm (rim), radius logarithmic in ⟦1⟧; ⟦2⟧ is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current grain diameter. Where⟦3⟧is low (below about ⟦#2⟧), transport in opposing directions nearly cancels, so⟦4⟧is poorly defined and can swing by up to ⟦#3⟧° with a small change of grain diameter. The modes depend on the whole flux rose rather than on its resultant: ⟦5⟧ follows the crest orientation ⟦6⟧ that maximises gross transport across crests, so it can stay steady and differ from⟦7⟧.",
+  "en": "Mode bearings (toward) for ⟦0⟧ = ⟦#0⟧ µm (centre) to ⟦#1⟧ µm (rim), radius logarithmic in ⟦1⟧; ⟦2⟧ is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current grain diameter. Where⟦3⟧is low (below about ⟦#2⟧), transport in opposing directions nearly cancels, and⟦4⟧can turn by up to ⟦#3⟧° with a small change of grain diameter. The modes depend on the whole flux rose rather than on its resultant: ⟦5⟧ follows the crest orientation ⟦6⟧ that maximises gross transport across crests, so it can stay steady and differ from⟦7⟧.",
   "area": "Cell panel"
  },
  {
@@ -860,7 +860,7 @@
   "area": "Cell panel"
  },
  {
-  "en": "Threshold friction velocity at this d, median over the hours",
+  "en": "Threshold friction velocity at this d, median over the samples of the Mars year",
   "area": "Screen-reader labels and tooltips"
  },
  {
@@ -1148,7 +1148,7 @@
   "area": "Search and messages"
  },
  {
-  "en": "Hourly wind and air series (u, v, T, ρ, z)",
+  "en": "Wind and air series (u, v, T, ρ, z)",
   "area": "Search and messages"
  },
  {

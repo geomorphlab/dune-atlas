@@ -9,6 +9,7 @@ import { groupedBody, wireTableGroups } from "../../core/ui/tablegroups";
 import { utTex } from "../../core/export/labels"; // plot-export legend: the slider value
 import { terseQuantity } from "../../core/ui/terse";
 import { storageKey } from "../../core/body";
+import { sharedKey, visitGet, visitSet } from "../../core/visit";
 import type { CellData } from "../../core/cell/cellstore";
 import { cellFromIndex, type Grid } from "../../core/cell/snap";
 import { fieldValue } from "../../core/cell/cellstore";
@@ -57,10 +58,10 @@ type CellStoreAttrs = MarsCellStoreAttrs;
 const logD = (d: ArrayLike<number>) => Array.from(d, (x) => Math.log10(x));
 const fmtUt = (v: number) => `${v.toFixed(2)} m/s`;
 /** citation file of a cell download (TXT, clipboard) */
-function citationFile(cell: { lat: number; lon: number }, datasetId?: string, setting?: string): string {
+function citationFile(cell: { lat: number; lon: number; iy?: number; ix?: number }, datasetId?: string, setting?: string): string {
   const ds = datasetInfo(datasetId);
   // centre with hemisphere letters, the wind dataset and the grain size the values are taken at
-  return citationText([`Mars Dune Atlas (map.geomorphlab.org/mars), ${ds.name} ${ds.resolution} cell, centre ${latLonText(cell.lat, cell.lon)}`,
+  return citationText([`Mars Dune Atlas (map.geomorphlab.org/mars), ${ds.name} ${ds.resolution} cell${cell.iy !== undefined && cell.ix !== undefined ? ` ${cell.iy},${cell.ix}` : ""}, centre ${latLonText(cell.lat, cell.lon)}`,
     `Wind dataset: ${ds.name} ${ds.resolution}, ${ds.period}`, ...(setting ? [`Values at ${setting}`] : [])].join("\n"), citationSources(CELL_SOURCE_IDS, datasetId));
 }
 
@@ -157,11 +158,11 @@ const SECTION_DEFAULT_OPEN: Record<PanelSection, boolean> = { windRose: true, fl
 function readSectionOpen(): Record<PanelSection, boolean> {
   const out = { ...SECTION_DEFAULT_OPEN };
   for (const k of PANEL_SECTIONS) {
-    try { const v = localStorage.getItem(sectionOpenKey(k)); if (v === "0" || v === "1") out[k] = v === "1"; } catch { /* private mode */ }
+    const v = visitGet(sectionOpenKey(k)); if (v === "0" || v === "1") out[k] = v === "1";
   }
   return out;
 }
-const WIDTH_KEY = storageKey("cellPanel.width"), HEIGHT_KEY = storageKey("cellPanel.height");
+const WIDTH_KEY = sharedKey("cellPanel.width"), HEIGHT_KEY = sharedKey("cellPanel.height");
 const isNarrow = () => !!globalThis.matchMedia?.("(max-width: 720px)").matches;
 
 function binSlider(label: string, value: number, choices: number[], onChange: (n: number) => void): HTMLElement {
@@ -193,14 +194,14 @@ export class CellPanel {
   #fluxAxis: "pct" | "abs" = "pct";
   /** convention of the flux rose petals (remembered in the browser; core/cell/petals.ts) */
   #petals: PetalConvention = loadPetals();
-  /** open state of the collapsible sections (localStorage) */
+  /** open state of the collapsible sections (kept for the visit: core/visit.ts) */
   #open = readSectionOpen();
   /** a collapsible section: <details> whose <summary> holds the section's <h3> heading */
   #section(key: PanelSection, cls: string, title: HTMLElement, ...children: (Node | null | undefined)[]) {
     const det = h("details", { class: `section ${cls}`, "data-section": key, open: this.#open[key] }, h("summary", {}, title), ...children);
     det.addEventListener("toggle", () => {
       this.#open[key] = det.open;
-      try { localStorage.setItem(sectionOpenKey(key), det.open ? "1" : "0"); } catch { /* ignore */ }
+      visitSet(sectionOpenKey(key), det.open ? "1" : "0");
     });
     return det;
   }
@@ -227,7 +228,7 @@ export class CellPanel {
   }
   #setPlot(id: string) {
     this.#plotY = id;
-    try { localStorage.setItem(storageKey(PLOT_STORAGE), id); } catch { /* private mode */ }
+    visitSet(storageKey(PLOT_STORAGE), id);
     this.#opts.plot?.set(id);
     this.update();
   }
@@ -269,12 +270,12 @@ export class CellPanel {
   }
 
   #restoreSize() {
-    try {
-      const w = Number(localStorage.getItem(WIDTH_KEY));
+    {
+      const w = Number(visitGet(WIDTH_KEY));
       if (w >= PANEL_MIN_W) document.documentElement.style.setProperty("--cell-w", `${w}px`);
-      const hh = Number(localStorage.getItem(HEIGHT_KEY));
+      const hh = Number(visitGet(HEIGHT_KEY));
       if (hh > 0) document.documentElement.style.setProperty("--cell-h", `${hh}vh`);
-    } catch { /* no storage */ }
+    }
   }
 
   /** Drag handle: left edge (desktop, width) or top edge (bottom sheet, height). Keyboard:
@@ -285,12 +286,12 @@ export class CellPanel {
       const max = Math.max(PANEL_MIN_W, 0.7 * window.innerWidth);
       const v = Math.round(Math.max(PANEL_MIN_W, Math.min(max, w)));
       document.documentElement.style.setProperty("--cell-w", `${v}px`);
-      try { localStorage.setItem(WIDTH_KEY, String(v)); } catch { /* ignore */ }
+      visitSet(WIDTH_KEY, String(v));
     };
     const setH = (vh: number) => {
       const v = Math.round(Math.max(25, Math.min(90, vh)));
       document.documentElement.style.setProperty("--cell-h", `${v}vh`);
-      try { localStorage.setItem(HEIGHT_KEY, String(v)); } catch { /* ignore */ }
+      visitSet(HEIGHT_KEY, String(v));
     };
     let start: { x: number; y: number; w: number; h: number } | null = null;
     hd.addEventListener("pointerdown", (e) => {
@@ -589,7 +590,7 @@ export class CellPanel {
     // the total ends the caption's first line (a block), so the room kept for longer values is not a hole
     const totalTxt = live(`${Number.isFinite(v.fluxTotal) ? `${fmtNum(v.fluxTotal)}&nbsp;m²/yr` : MISSING}.`, v.fluxMode === "flat" ? R.dpTotal : R.total, "left");
     D.fluxCap.innerHTML = `<span class="cap-lead"><strong>${escapeHtml(fm.label)}</strong>${v.fluxMode === "flat" ? "" : ` (${MISSING} = mode direction undefined at this grain diameter)`}: ${mathHtml(fm.totalTex)} = ${totalTxt}</span> ${petalCaptionHtml(this.#petals)}; ${v.fluxSectors.length} sectors of ${w}°. Radius = ${pct ? "% of the total flux in each sector (sums to 100 %)" : `time-averaged flux in each sector, m²/yr (sums to ${escapeHtml(fm.totalText)})`}. Time-averaged ${what}, Σ<sub>${sm.units}</sub> q / N over the ${v.windRose.totalHours.toLocaleString("en")} ${sm.adjective} samples, with ${mathHtml("$u_*$")} of each ${sm.unit} from the lowest-level wind at its height z (smooth-wall mixing-length profile, Pähtz &amp; Durán 2023 eq. 2.2) and the threshold ${mathHtml("$u_{*,th}$")} of each ${sm.unit} from ${mathHtml("$d$")} and that ${sm.unit}'s air density and temperature. Colours split each sector by the excess shear ${mathHtml(ratioTex)} of the ${sm.units} carrying the flux (only ${mathHtml(v.fluxMode === "flat" ? "$u_{*} > u_{*,th}$" : "$u_c > u_{*,th}$")} transports sand). DP, RDP, RDP/DP, RDD and the arrows are the map fields at this grain diameter; a direction is hidden where the flux defining it is zero.`;
-    D.modesCap.innerHTML = `Mode bearings (toward) for ${mathHtml("$d$")} = ${formatUt(v.utValues[0])} (centre) to ${formatUt(v.utValues[v.utValues.length - 1])} (rim), radius logarithmic in ${mathHtml("$d$")}; ${mathHtml("$\\alpha_H$")} is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current grain diameter. Where RDP/DP is low (below about 0.3), transport in opposing directions nearly cancels, so RDD is poorly defined and can swing by up to 180° with a small change of grain diameter. The modes depend on the whole flux rose rather than on its resultant: ${mathHtml("$\\alpha_T$")} follows the crest orientation ${mathHtml("$\\alpha_H$")} that maximises gross transport across crests, so it can stay steady and differ from RDD.`;
+    D.modesCap.innerHTML = `Mode bearings (toward) for ${mathHtml("$d$")} = ${formatUt(v.utValues[0])} (centre) to ${formatUt(v.utValues[v.utValues.length - 1])} (rim), radius logarithmic in ${mathHtml("$d$")}; ${mathHtml("$\\alpha_H$")} is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current grain diameter. Where RDP/DP is low (below about 0.3), transport in opposing directions nearly cancels, and RDD can turn by up to 180° with a small change of grain diameter. The modes depend on the whole flux rose rather than on its resultant: ${mathHtml("$\\alpha_T$")} follows the crest orientation ${mathHtml("$\\alpha_H$")} that maximises gross transport across crests, so it can stay steady and differ from RDD.`;
     const modesOpts = (t: PlotTheme) => ({ x: logD(v.utValues), currentIndex: v.utIndex, size: Math.min(size, 420), theme: t, series: MODE_KEYS.map((k) => ({ label: s[k].label, color: seriesColor(s[k].color, t), dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined, values: v.modeSeries[k], axis: k === "ab", width: k === "ao" ? 2.8 : undefined })) });
     D.modesSvg.innerHTML = modesPlotSvg(modesOpts(DARK_THEME));
     // "<quantity> vs grain diameter": title, plot, live value (a slot ending the caption's first line) and notes
@@ -720,7 +721,7 @@ export class CellPanel {
     const extra = `${auxRows}
       <tr data-field="dunes"><td class="sym">${MISSING}</td><th scope="row" title="${escapeHtml(`Yes: ${ds.dunesRule}; value in brackets: dune area fraction of the cell`)}">Dunes present</th><td class="num">${cell.dune ? "yes" : "no"}${cell.dune ? ` <span class="unit">(${(100 * cell.duneFrac).toPrecision(2)} %)</span>` : ""}</td></tr>
       <tr data-field="rho_median"><td class="sym">${mathHtml("$\\rho_f$")}</td><th scope="row" title="Lowest-layer air density, median over the ${marsSampling(cell.samplesPerSol).units}">Median air density</th><td class="num">${Number.isFinite(v.stats.rhoMedian) ? `${v.stats.rhoMedian.toPrecision(3)} <span class="unit">kg/m³</span>` : MISSING}</td></tr>
-      <tr data-field="ut_median"><td class="sym">${mathHtml("$u_{*,th}$")}</td><th scope="row" title="Threshold friction velocity at this d, median over the hours">Median threshold friction velocity</th><td class="num">${live(Number.isFinite(v.stats.utMedian) ? `${v.stats.utMedian.toFixed(3)}&nbsp;<span class="unit">m/s</span>` : MISSING, W)}</td></tr>
+      <tr data-field="ut_median"><td class="sym">${mathHtml("$u_{*,th}$")}</td><th scope="row" title="Threshold friction velocity at this d, median over the samples of the Mars year">Median threshold friction velocity</th><td class="num">${live(Number.isFinite(v.stats.utMedian) ? `${v.stats.utMedian.toFixed(3)}&nbsp;<span class="unit">m/s</span>` : MISSING, W)}</td></tr>
       <tr data-field="centre"><td class="sym">${MISSING}</td><th scope="row" title="Latitude, longitude of the cell centre">Cell centre</th><td class="num">${coord(cell.lat)}°, ${coord(cell.lon)}°</td></tr>`;
     return `<table><thead><tr><th scope="col">Symbol</th><th scope="col">Quantity</th><th scope="col">Value</th></tr></thead>${groupedBody(rows + extra)}</table>`;
   }

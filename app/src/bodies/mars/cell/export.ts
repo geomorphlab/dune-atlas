@@ -7,10 +7,12 @@ import { texToPlain } from "../../../core/util/plaintext";
 import { mathToBearingDeg } from "../../../core/util/angles";
 import { nUt } from "../../../core/cell/cellstore";
 import { DEFAULT_BINS } from "../../../core/cell/flux";
-import { csvColumnDoc, csvColumnJson, csvTable, fieldMeta, fmtF32, fmtF64, exportBaseName, versionFromPrefix, rose16Columns, rose16Csv, CSV_LAYOUT_TEXT, DIR_COLUMNS, INSTITUTION, LICENSE, ROSE16_FILE, ROSE_MODES, type CsvColumn, type ExportMeta } from "../../../core/cell/export";
+import { csvColumnDoc, csvColumnJson, csvTable, fieldMeta, fmtF32, fmtF64, exportBaseName, versionFromPrefix, rose16Columns, rose16Csv, sourceText, CSV_LAYOUT_TEXT, DIR_COLUMNS, FILE_AI_NOTICE, INSTITUTION, ROSE16_FILE, ROSE_MODES, type CsvColumn, type ExportMeta } from "../../../core/cell/export";
+import { cellEdges, colLon, GRID_INDEX_COMMENT, GRID_REGISTRATION, latBounds, licenceStatement, noticeAttrs, rowLat } from "../../../core/cell/exportmeta";
+import { datasetNotice } from "../../../core/cell/citation";
 import { latLonText } from "../../../core/cell/downloads";
-import { AI_NOTICE, citationJson, citationSources, citationText, referencesLine } from "../../../core/cell/citation";
-import { CELL_SOURCE_IDS } from "../citation";
+import { citationJson, citationSources, citationText, referencesLine } from "../../../core/cell/citation";
+import { CELL_SOURCE_IDS, DUNE_FLAG_LICENCE, DUNE_FLAG_LONG_NAME, TRANSPORT_LAW_ATTR } from "../citation";
 import { fieldsCitation, fieldsLicence } from "../../../core/cell/citation";
 import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "../../../core/cell/auxinfo";
 import { datasetInfo, gridResolutionText, resolutionText, type DatasetInfo } from "../../../core/cell/datasetinfo";
@@ -29,6 +31,19 @@ export function cellDataset(cell: unknown, datasetId?: string): DatasetInfo {
 }
 
 const D_COLUMN: CsvColumn = { name: "d", units: "um", longName: "median grain diameter d" };
+/** the time dimension and column "hour" is the sample index of the record, whatever the dataset's sampling */
+export const hourNote = (sm: MarsSampling) => `hour = sample index of the record (${sm.every})`;
+export const DUNE_FRACTION_LONG_NAME = "fraction of the cell area covered by mapped dune polygons (spherical areas)";
+/** the rounding of the stored series (cell-store root attribute series_note), "" if the store does not say */
+export function seriesRounding(meta: Pick<ExportMeta, "storeAttrs">): string {
+  const n = (meta.storeAttrs as { series_note?: unknown } | undefined)?.series_note;
+  return typeof n === "string" ? n : "";
+}
+/** the d axis rule: round(50 * 20^(k/63)) um, with the nodes that differ from it listed (k = 29 is 200 um, the default) */
+export function dAxisComment(d: ArrayLike<number>): string {
+  const off = Array.from(d, (v, k) => [k, v] as const).filter(([k, v]) => v !== Math.round(50 * 20 ** (k / 63)));
+  return `log-spaced 50-1000 um: round(50 * 20^(k/63)) um for k = 0..${d.length - 1}${off.length ? `, except ${off.map(([k, v]) => `k = ${k}: ${v} um`).join(", ")}` : ""}`;
+}
 /** columns of wind_series.csv (and the NetCDF series variables): the time columns hour (the sample index) and sol
  *  are described by the dataset's registry entry (`info.series`), else from its sampling */
 export function seriesColumns(ds: DatasetInfo, sm: MarsSampling): CsvColumn[] {
@@ -51,7 +66,7 @@ const conventions = (sm: MarsSampling) => ({
   friction_velocity: `u* from the smooth-wall mixing-length profile of Pähtz & Durán (2023) eq. 2.2, dl/dz = kappa [1 - exp(-sqrt(u l / (7 nu)))], under constant stress (no roughness length), evaluated at each ${sm.unit}'s lowest-level height z with nu = mu(T)/rho; kappa = ${M.KAPPA}, damping constant ${M.MIX_DAMP}; tabulated universal profile u+ (X = z u*/nu), u* by bisection`,
   threshold: `per ${sm.unit}: u*,th(d, rho, T), Pähtz & Durán (2023) eq. 5.1 with the rarefaction correction of eq. 3.20 (rho_p = ${M.RHO_P} kg m-3, g = ${M.G} m s-2, R = ${M.R_AIR} J kg-1 K-1, Sutherland viscosity of CO2)`,
   transport: "q = Q/(rho_p phi), the volume of packed sand (packing fraction phi = 0.6, pore space included), with the mass flux Q from Pähtz & Durán (2023) eq. 3.2 for u* > u*,th, else 0 (m2 s-1; x 31557600 = m2 yr-1)",
-  crest_flux: `u_c = u* (1 + beta A |sin(ua - alpha)|), beta = ${M.BETA}, A = 0.8/6; q_c = q(u_c) with the same hour's u*,th`,
+  crest_flux: `u_c = u* (1 + beta A |sin(ua - alpha)|), beta = ${M.BETA}, A = 0.8/6; q_c = q(u_c) with the same ${sm.unit}'s u*,th`,
   field_angles: "radians counter-clockwise from east, direction of transport (toward); compass bearing = (90 - degrees(value)) mod 360; alpha_h (NetCDF ab) is an axis",
   fluxes: "fields: m2 s-1 (multiply by 31557600 for m2 yr-1); flux_rose: m2 yr-1",
   missing: "empty CSV cell (NetCDF: _FillValue) = undefined (e.g. no crest flux)",
@@ -77,34 +92,39 @@ export function cellNetcdf(cell: MarsCellData, meta: ExportMeta): Uint8Array {
   const n = nUt(cell), nh = cell.series.u.length, nUa = ua.length;
   const g = cell.grid;
   const when = (meta.generated ?? new Date()).toISOString();
+  const lat = rowLat(g, cell.iy), lon = colLon(g, cell.ix), edges = cellEdges(lat, lon, g);
   const pubVars = cell.fieldVars.map((v, i) => ({ v, i })).filter(({ v }) => isPublishedField(v));
   const rose = marsFluxRoseTable(cell);
   const F = (v: number) => ({ type: "float" as const, values: v });
-  const ser = (name: keyof MarsCellData["series"], c: CsvColumn): NcVariable => ({ name, type: "float", dims: ["hour"], data: cell.series[name], attrs: { long_name: c.longName, units: c.units, _FillValue: F(NaN), coordinates: "latitude longitude" } });
+  const rounding = seriesRounding(meta);
+  const ser = (name: keyof MarsCellData["series"], c: CsvColumn): NcVariable => ({ name, type: "float", dims: ["hour"], data: cell.series[name], attrs: { long_name: c.longName, units: c.units, _FillValue: F(NaN), coordinates: "latitude longitude", ...(rounding ? { comment: rounding } : {}) } });
   const cols = seriesColumns(ds, sm), col = (k: string) => cols.find((c) => c.name === k)!;
   const vars: NcVariable[] = [
-    { name: "hour", type: "int", dims: ["hour"], data: Int32Array.from({ length: nh }, (_, k) => k), attrs: { long_name: col("hour").longName, units: "1" } },
+    { name: "hour", type: "int", dims: ["hour"], data: Int32Array.from({ length: nh }, (_, k) => k), attrs: { long_name: col("hour").longName, units: "1", comment: hourNote(sm) } },
     { name: "sol", type: "float", dims: ["hour"], data: cell.sol, attrs: { long_name: col("sol").longName, units: "1" } },
     { name: "ls", type: "float", dims: ["hour"], data: cell.ls, attrs: { long_name: col("ls").longName, units: "degree" } },
-    { name: "d", type: "double", dims: ["d"], data: cell.dValuesUm.slice(0, n), attrs: { long_name: "median grain diameter d", long_name_latex: "$d$", units: "um", comment: "round(50 * 20^(k/63)) um, k = 0..63 (log-spaced 50-1000 um)" } },
-    { name: "ua_bin", type: "double", dims: ["ua_bin"], data: Array.from(ua), attrs: { long_name: "direction bin centre: direction the wind blows (and sand moves) TOWARD, counter-clockwise from east", units: "radian", bounds: "ua_bin_bnds" } },
-    { name: "ua_bin_bnds", type: "double", dims: ["ua_bin", "nv"], data: Array.from({ length: nUa * 2 }, (_, k) => ae[(k >> 1) + (k & 1)]), attrs: { long_name: "direction bin edges (toward, counter-clockwise from east)", units: "radian" } },
+    { name: "d", type: "double", dims: ["d"], data: cell.dValuesUm.slice(0, n), attrs: { long_name: "median grain diameter d", long_name_latex: "$d$", units: "um", comment: dAxisComment(cell.dValuesUm.slice(0, n)) } },
+    { name: "ua_bin", type: "double", dims: ["ua_bin"], data: Array.from(ua), attrs: { long_name: "direction bin centre: direction the wind blows (and sand moves) TOWARD, counter-clockwise from east", units: "radian", bounds: "ua_bin_bnds",
+      comment: "arctan2(v, u). Compass bearing toward = (90 - degrees(ua_bin)) mod 360 (ua_bin_bearing_toward); from = toward + 180 (ua_bin_bearing_from)." } },
+    { name: "ua_bin_bnds", type: "double", dims: ["ua_bin", "nv"], data: Array.from({ length: nUa * 2 }, (_, k) => ae[(k >> 1) + (k & 1)]), attrs: {} },
+    { name: "ua_bin_bearing_from", type: "double", dims: ["ua_bin"], data: Array.from(ua, (a) => (mathToBearingDeg(a) + 180) % 360), attrs: { long_name: "compass bearing the wind blows FROM at the direction-bin centre (meteorological convention)", units: "degree" } },
     { name: "ua_bin_bearing_toward", type: "double", dims: ["ua_bin"], data: Array.from(ua, mathToBearingDeg), attrs: { long_name: "compass bearing TOWARD at the direction-bin centre (clockwise from north)", units: "degree" } },
-    { name: "latitude", type: "double", dims: [], data: [cell.lat], attrs: { standard_name: "latitude", long_name: "planetocentric latitude of the cell centre", units: "degrees_north" } },
-    { name: "longitude", type: "double", dims: [], data: [cell.lon], attrs: { standard_name: "longitude", long_name: "east longitude of the cell centre (-180..180)", units: "degrees_east" } },
+    { name: "latitude", type: "double", dims: [], data: [lat], attrs: { standard_name: "latitude", long_name: "planetocentric latitude of the cell centre", units: "degrees_north", bounds: "lat_bnds" } },
+    { name: "lat_bnds", type: "double", dims: ["nv"], data: latBounds(lat, g.dlat), attrs: {} },
+    { name: "longitude", type: "double", dims: [], data: [lon], attrs: { standard_name: "longitude", long_name: "east longitude of the cell centre (-180..180)", units: "degrees_east", bounds: "lon_bnds" } },
+    { name: "lon_bnds", type: "double", dims: ["nv"], data: [edges.west, edges.east], attrs: {} },
     ...(["cell_y", "cell_x"] as const).map((nm): NcVariable => ({ name: nm, type: "int", dims: [], data: [nm === "cell_y" ? cell.iy : cell.ix], attrs: {
       long_name: nm === "cell_y" ? "grid row index (0 = northernmost row)" : "grid column index (0 = westernmost column)",
       units: "1", grid_lat0: g.lat0, grid_dlat: g.dlat, grid_lon0: g.lon0, grid_dlon: g.dlon, grid_ny: { type: "int", values: g.ny }, grid_nx: { type: "int", values: g.nx },
-      grid_registration: "centre: lat0/lon0 are the centre of cell (0, 0); cell (y, x) spans centre ± d/2",
-      comment: "latitude = grid_lat0 + grid_dlat * cell_y; longitude = grid_lon0 + grid_dlon * cell_x" } })),
+      grid_registration: GRID_REGISTRATION, comment: GRID_INDEX_COMMENT } })),
     ser("u", col("u")), ser("v", col("v")), ser("T", col("T")), ser("rho", col("rho")), ser("z", col("z")),
     ...pubVars.map(({ v, i }): NcVariable => {
       const m = fieldMeta(v, meta.storeAttrs);
       const attrs: NcAttrs = { long_name: m.longName, long_name_latex: m.longNameLatex, units: m.units, description: m.description, description_latex: m.descriptionLatex, _FillValue: F(NaN), coordinates: "latitude longitude" };
       return { name: v, type: "float", dims: ["d"], data: cell.fields.subarray(i * n, i * n + n), attrs };
     }),
-    { name: "dune_present", type: "int", dims: [], data: [cell.dune ? 1 : 0], attrs: { long_name: "cell overlaps mapped dunes", comment: `1 = ${ds.dunesRule}`, flag_values: { type: "int", values: [0, 1] }, flag_meanings: "no_dunes dunes", units: "1" } },
-    { name: "dune_fraction", type: "float", dims: [], data: Float32Array.of(cell.duneFrac), attrs: { long_name: "fraction of the cell area covered by mapped dune polygons (spherical areas)", units: "1" } },
+    { name: "dune_present", type: "int", dims: [], data: [cell.dune ? 1 : 0], attrs: { long_name: DUNE_FLAG_LONG_NAME, comment: `1 = ${ds.dunesRule}`, flag_values: { type: "int", values: [0, 1] }, flag_meanings: "no_dunes dunes", units: "1", license: DUNE_FLAG_LICENCE } },
+    { name: "dune_fraction", type: "float", dims: [], data: Float32Array.of(cell.duneFrac), attrs: { long_name: DUNE_FRACTION_LONG_NAME, units: "1", license: DUNE_FLAG_LICENCE } },
     ...auxVars(cell.aux).map((v): NcVariable => {
       const m = AUX_META[v], aux = cell.aux!;
       const src = auxSourceAttrs(aux, v, deg, Math.abs(g.dlon), ds.id);
@@ -112,33 +132,37 @@ export function cellNetcdf(cell: MarsCellData, meta: ExportMeta): Uint8Array {
       for (const k of ["source", "references", "license", "url", "comment", "method"]) if (src[k]) attrs[k] = texToPlain(src[k]);
       return m.kind === "series" ? { name: v, type: "float", dims: ["d"], data: Float32Array.from(aux.series[v]), attrs } : { name: v, type: "float", dims: [], data: Float32Array.of(aux.scalars[v]), attrs };
     }),
-    { name: "rose_mode", type: "int", dims: ["rose_mode"], data: [0, 1, 2], attrs: { long_name: "flux rose mode", flag_values: { type: "int", values: [0, 1, 2] }, flag_meanings: ROSE_MODES.join(" ") } },
+    { name: "rose_mode", type: "int", dims: ["rose_mode"], data: [0, 1, 2], attrs: { long_name: "flux rose mode", units: "1", flag_values: { type: "int", values: [0, 1, 2] }, flag_meanings: ROSE_MODES.join(" ") } },
     { name: "rose_mode_name", type: "char", dims: ["rose_mode", "name_strlen"], data: [...ROSE_MODES], attrs: { long_name: "flux rose mode name" } },
     { name: "flux_rose", type: "float", dims: ["rose_mode", "d", "ua_bin"], data: Float32Array.from(rose.flatMap((m) => m.flatMap((r) => Array.from(r)))), attrs: {
       long_name: "time-averaged sand flux per direction bin (toward)", units: "m2 yr-1", _FillValue: F(NaN),
-      comment: `sum over the ${sm.units} whose wind direction is in the bin of q / number of ${sm.units}; per-${sm.unit} threshold u*,th(d, rho, T). flat_bed: q(u*); elongation / transverse: crest flux q(u_c) about the mode direction ae / ab at each d. Crest-mode rows are _FillValue where the mode direction is undefined.`,
+      comment: `sum over the ${sm.units} whose wind direction is in the bin of q / number of ${sm.units}; per-${sm.unit} threshold u*,th(d, rho, T). flat_bed: q(u*); elongation / transverse: crest flux q(u_c) about the mode direction ae / ab at each d. Crest-mode rows are _FillValue where the mode direction is undefined. Computed by the atlas from the series in this file; the sand-flux fields were computed from the unrounded series (see the comment of u), so values recomputed from this rose can differ slightly from the fields, most where few ${sm.units} exceed the threshold.`,
       coordinates: "latitude longitude" } },
   ];
   return writeNetcdf3({
     dims: [{ name: "hour", size: nh }, { name: "d", size: n }, { name: "ua_bin", size: nUa }, { name: "nv", size: 2 }, { name: "rose_mode", size: 3 }, { name: "name_strlen", size: 16 }],
     attrs: {
-      title: `Mars Dune Atlas cell export: ${ds.name} ${sm.adjective} lowest-level wind, air state and sand-flux parameters at ${cell.lat}° N, ${cell.lon}° E (${ds.resolution} cell)`,
+      title: `Mars Dune Atlas cell export: ${ds.name} ${sm.adjective} lowest-level wind, air state and sand-flux parameters at ${latLonText(lat, lon)} (${ds.resolution} cell)`,
       institution: INSTITUTION,
-      source: meta.datasetTitle,
+      source: sourceText(ds),
       dataset_id: meta.datasetId,
+      dataset_title: meta.datasetTitle,
       data_version: meta.dataVersion,
       samples_per_sol: { type: "int", values: sm.samplesPerSol },
       planet: "Mars",
       references: referencesLine(citationSources(CELL_SOURCE_IDS, ds.id)),
       fields_citation: fieldsCitation(ds.id),
       fields_license: fieldsLicence(ds.id),
-      transport_law: `${PD23_TEXT} doi:${PAHTZ_DURAN_DOI} (threshold eq. 5.1 with eq. 3.20; transport eq. 3.2)`,
+      transport_law: TRANSPORT_LAW_ATTR,
       geospatial_lat_resolution: resolutionText(deg).replace("°", " degree"),
       geospatial_lon_resolution: resolutionText(Math.abs(g.dlon)).replace("°", " degree"),
-      license: LICENSE,
+      geospatial_lat_min: edges.south, geospatial_lat_max: edges.north, geospatial_lon_min: edges.west, geospatial_lon_max: edges.east,
+      license: licenceStatement(ds.id),
+      ...noticeAttrs(ds.id),
       Conventions: "CF-1.8",
+      date_created: when,
       history: `${when}: downloaded from ${meta.permalink}`,
-      comment: AI_NOTICE,
+      comment: FILE_AI_NOTICE,
     },
     vars,
   });
@@ -156,7 +180,7 @@ export function csvColumns(cell: MarsCellData, attrs?: ExportMeta["storeAttrs"],
       ...DIR_COLUMNS,
       { name: "flux_rose", units: "m2 yr-1", longName: "time-averaged sand flux per direction bin (toward)" },
     ],
-    [ROSE16_FILE]: rose16Columns(D_COLUMN),
+    [ROSE16_FILE]: rose16Columns(D_COLUMN, marsSampling(cell.samplesPerSol).units),
   };
 }
 
@@ -187,12 +211,13 @@ export function metadataJson(cell: MarsCellData, meta: ExportMeta): string {
   const ds = cellDataset(cell, meta.datasetId), deg = Math.abs(cell.grid.dlat), degLon = Math.abs(cell.grid.dlon), sm = marsSampling(cell.samplesPerSol);
   const pub = cell.fieldVars.filter(isPublishedField);
   const cols = csvColumns(cell, meta.storeAttrs, meta.datasetId);
+  const lat = rowLat(cell.grid, cell.iy), lon = colLon(cell.grid, cell.ix);
   return JSON.stringify({
     planet: "Mars",
-    cell: { latitude: cell.lat, longitude: cell.lon, cell_y: cell.iy, cell_x: cell.ix, grid_index: cell.id, dune_present: cell.dune, dune_fraction: cell.duneFrac, hours: cell.totalHours },
-    grid: { ...cell.grid, resolution: gridResolutionText(cell.grid), registration: "centre: lat0/lon0 are the centre of cell (0, 0); cell (y, x) spans centre ± d/2" },
+    cell: { latitude: lat, longitude: lon, bounds: cellEdges(lat, lon, cell.grid), cell_y: cell.iy, cell_x: cell.ix, grid_index: cell.id, dune_present: cell.dune, dune_fraction: cell.duneFrac, n_samples: cell.totalHours },
+    grid: { ...cell.grid, resolution: gridResolutionText(cell.grid), registration: GRID_REGISTRATION },
     dataset: { id: meta.datasetId, title: meta.datasetTitle, version: meta.dataVersion, samples_per_sol: sm.samplesPerSol },
-    conventions: { ...conventions(sm), dune_present: `1 = ${ds.dunesRule}`, cells: ds.landRule },
+    conventions: { ...conventions(sm), dune_present: `1 = ${ds.dunesRule}`, cells_with_data: ds.landRule, hour: hourNote(sm), ...(seriesRounding(meta) ? { series_rounding: seriesRounding(meta) } : {}) },
     constants: { rho_p: M.RHO_P, g: M.G, R_air: M.R_AIR, mu0: M.MU0, T0: M.T0_MU, S: M.S_MU, k: M.K_ADIABATIC, kappa: M.KAPPA, mixing_length_damping: M.MIX_DAMP, Dstar_min: M.DSTAR_MIN, uplus_min: M.UPLUS_MIN, C1: M.C1, C2: M.C2, beta: M.BETA, A: M.DASPECT, R_Mars: M.R_MARS, year_s: M.S2Y },
     d_um: cell.dValuesUm.slice(0, nUt(cell)),
     files: Object.fromEntries(Object.entries(cols).map(([f, c]) => [f, { columns: c.map(csvColumnJson) }])),
@@ -205,8 +230,8 @@ export function metadataJson(cell: MarsCellData, meta: ExportMeta): string {
     })),
     citation: citationJson(citationSources(CELL_SOURCE_IDS, ds.id)),
     fields_citation: fieldsCitation(ds.id), fields_license: fieldsLicence(ds.id),
-    license: LICENSE, institution: INSTITUTION,
-    generated: (meta.generated ?? new Date()).toISOString(), permalink: meta.permalink, ai_notice: AI_NOTICE,
+    license: licenceStatement(ds.id), dune_present_license: DUNE_FLAG_LICENCE, ...noticeAttrs(ds.id), institution: INSTITUTION,
+    generated: (meta.generated ?? new Date()).toISOString(), permalink: meta.permalink, ai_notice: FILE_AI_NOTICE,
   }, null, 1) + "\n";
 }
 
@@ -222,7 +247,8 @@ Generated ${(meta.generated ?? new Date()).toISOString()} from ${meta.permalink}
 ${CSV_LAYOUT_TEXT}
 
 wind_series.csv  ${ds.name} ${sm.adjective} lowest-level wind, temperature, air density and height, ${cell.series.u.length.toLocaleString("en")} ${sm.units}
-  (one Mars year; ${ds.resolution} cell); one row per ${sm.unit}.
+  (one Mars year; ${ds.resolution} cell); one row per ${sm.unit}. ${hourNote(sm)}.${seriesRounding(meta) ? `
+  Rounding: ${seriesRounding(meta)}` : ""}
 ${colDoc("wind_series.csv")}
 
 fields_by_grain_size.csv  Sand-flux parameters vs median grain diameter d; one row per d (64 values,
@@ -240,7 +266,7 @@ ${colDoc("flux_rose.csv")}
 
 ${ROSE16_FILE}  The panel's wind rose and flat-bed sand flux rose in 16 compass sectors (degrees), at
   d = ${cell.dValuesUm[rose16Index(cell, meta)]} um: one row per sector. Wind: % of the ${sm.units} blowing FROM the sector (lowest-level
-  wind); sand flux: m2 yr-1 moving TOWARD the sector. For other grain sizes or sectors use flux_rose.csv.
+  wind); sand flux: m2 yr-1 moving TOWARD the sector. flux_rose.csv has every grain diameter and all 128 direction bins.
 ${colDoc(ROSE16_FILE)}
 
 Physics, all from Pähtz & Durán (2023) J. Fluid Mech. 963:A20: u* from the smooth-wall
@@ -256,9 +282,10 @@ ${citationText("", citationSources(CELL_SOURCE_IDS, ds.id)).trim()}
 
 Cite the sand-flux fields as: ${fieldsCitation(ds.id)}. Licence of the fields: ${fieldsLicence(ds.id)}.
 
-Licence: ${LICENSE}.
+Licence: ${licenceStatement(ds.id)}${datasetNotice(ds.id) ? `\n${datasetNotice(ds.id)}` : ""}
+Dune flag and fraction (dune_present, dune_fraction): ${DUNE_FLAG_LICENCE}.
 
-${AI_NOTICE}
+${FILE_AI_NOTICE}
 `;
 }
 
@@ -277,5 +304,5 @@ const rose16Index = (cell: MarsCellData, meta: ExportMeta) => Math.max(0, Math.m
 /** rose_16_sectors.csv of a Mars cell at grain-size index `k` */
 export function rose16CsvMars(cell: MarsCellData, k: number): string {
   const v = analyseMarsCell(cell, k, { windSectors: 16, fluxSectors: 16, fluxMode: "flat" });
-  return rose16Csv(D_COLUMN, String(cell.dValuesUm[k]), v.windRose.freq.map((r) => r.reduce((a, x) => a + x, 0)), v.fluxSectors, v.fluxSectorsPct);
+  return rose16Csv(D_COLUMN, String(cell.dValuesUm[k]), v.windRose.freq.map((r) => r.reduce((a, x) => a + x, 0)), v.fluxSectors, v.fluxSectorsPct, marsSampling(cell.samplesPerSol).units);
 }

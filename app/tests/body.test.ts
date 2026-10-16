@@ -47,7 +47,9 @@ describe("Earth build: planet toggle and header", () => {
     const sub = root.querySelector(".subtitle")!;
     expect(sub.innerHTML.split("<br>").map((x) => x.replace(/<[^>]+>/g, ""))).toEqual(["Interactive explorer for aeolian geomorphology", "Developed by the Monash Geomorphology Lab"]);
     const sel = root.querySelector("#dataset-select") as HTMLSelectElement;
-    expect([...sel.options].map((o) => o.value)).toEqual(["era5-land", "era5"]);
+    // one option per registry dataset, in registry order (a new dataset needs no change here)
+    expect([...sel.options].map((o) => o.value)).toEqual(loadRegistry().registry.datasets!.map((d) => d.id));
+    expect([...sel.options].map((o) => o.value).slice(0, 2)).toEqual(["era5-land", "era5"]);
     const a = sub.querySelector("a")!;
     expect([a.getAttribute("href"), a.getAttribute("target"), a.getAttribute("rel"), a.textContent]).toEqual(["https://www.geomorphlab.org/", "_blank", "noopener", "Monash Geomorphology Lab"]);
   });
@@ -132,13 +134,13 @@ describe("info texts at the source, one field citation, licences, basemap info",
     expect(L("rdpa").description).not.toMatch(/radians|CCW/);
     const veg = L("vegetation").description!;
     expect(veg.length).toBeLessThan(700); // was 707; + the non-photosynthetic-cover sentence
-    expect(veg).toMatch(/Total cover includes non-photosynthetic vegetation \(dry and dead plant material\) as well as green vegetation, so it can be substantial where little green vegetation is visible; compare it with the aridity index\./);
+    expect(veg).toMatch(/Total cover includes non-photosynthetic vegetation \(dry and dead plant material\) as well as green vegetation, so it can be substantial where little green vegetation is visible\./);
     expect(veg).toMatch(/\[Explore the full monthly time series at GEOGLAM RAPP\]\(https:\/\/map\.geo-rapp\.org\/\)/);
   });
   it("every atlas-derived field: one citation format (= fieldsCitation) and the dataset licence row", async () => {
     const { fieldsCitation, fieldsLicence } = await import("../src/core/cell/citation");
     const { applyDatasetLayers } = await import("../src/core/registry/merge");
-    for (const ds of ["era5-land", "era5"]) {
+    for (const ds of loadRegistry().registry.datasets!.map((d) => d.id)) {
       const reg = loadRegistry().registry;
       if (ds !== reg.defaultDataset) applyDatasetLayers(reg, ds);
       const derived = reg.layers.filter((l) => l.type === "zarr-field" && l.source.includes("{dataset}"));

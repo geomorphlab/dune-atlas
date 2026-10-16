@@ -43,7 +43,7 @@ function readZip(z: Uint8Array): Map<string, string> {
 
 /** Differences that are allowed: dataset-specific values only (path regex). Everything else -
  *  names, order, dims, types, units, attribute keys and texts - must be identical. */
-const RES_TEXT = "(ai_mean|ai_valid_frac|tot_cov_mean|tot_cov_valid_frac)\\.(attrs\\.)?description|(tot_cov_mean|tot_cov_valid_frac)\\.(attrs\\.)?comment|qsdiv\\.(attrs\\.)?method";
+const RES_TEXT = "(ai_mean|ai_valid_frac|tot_cov_mean|tot_cov_valid_frac)\\.(attrs\\.)?description|(tot_cov_mean|tot_cov_valid_frac)\\.(attrs\\.)?comment|qsdiv\\.(attrs\\.)?(method|source)";
 const ALLOW: RegExp[] = [
   // grid and resolution
   /^var\.cell_[yx]\.attrs\.grid_(dlat|dlon|ny|nx)\[0\]:/,
@@ -53,22 +53,25 @@ const ALLOW: RegExp[] = [
   new RegExp(`^var\\.(${RES_TEXT}):`), new RegExp(`^metadata\\.json\\.aux\\.(${RES_TEXT}):`),
   // dataset name / title / id, hours
   /^var\.wind_hist\.attrs\.(long_name|comment|total_hours_binned(\[0\])?):/,
-  /^global\.(title|source|dataset_id):/,
+  /^global\.(title|source|dataset_id|dataset_title):/,
   /^metadata\.json\.dataset\.(id|title):/,
   /^metadata\.json\.files\.wind_histogram\.csv\.columns\[\d+\]\.long_name: "hours in the speed x direction bin, ERA5-Land 1950-2024/,
   /^README\.txt:(3|19|28): /,
   // references, citations, Copernicus notice
   /^global\.references:/,
-  /^metadata\.json\.(citation\[[01]\]|copernicus_notice)/,
+  /^(global|metadata\.json)\.(citation\[[01]\]|data_notice)/,
+  /^metadata\.json\.citation\[[01]\]/,
   /^README\.txt:\d+: "(ERA5-Land|  (Paper|Data|Contains modified Copernicus)[^"]*)" != /,
   // the cell itself: position and values
-  /^metadata\.json\.cell\.(latitude|longitude|cell_y|cell_x|grid_index|total_hours_binned):/,
+  /^metadata\.json\.cell\.(latitude|longitude|cell_y|cell_x|grid_index|total_hours_binned|bounds\.\w+):/,
+  /^global\.geospatial_(lat|lon)_(min|max)\[0\]:/,
   /^metadata\.json\.aux\.\w+\.value:/,
   // the land definition (ERA5-Land: land–sea mask fraction > 0.5; ERA5: > 0)
-  /^metadata\.json\.conventions\.land_cells:/,
+  /^metadata\.json\.conventions\.cells_with_data:/,
   // citation and licence of the sand-flux fields: the paper's data record (ERA5-Land) or computed for the
   // atlas from the dataset's winds (ERA5), cell/citation.ts fieldsCitation / fieldsLicence
-  /^(global|metadata\.json)\.fields_(citation|license):/,
+  /^(global|metadata\.json)\.(fields_citation|fields_license|license):/,
+  /^README\.txt:\d+: "(Licence: Sand-flux fields and wind data: |Contains modified Copernicus)/,
   /^README\.txt:\d+: "Cite the sand-flux fields as: /,
 ];
 

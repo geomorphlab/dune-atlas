@@ -1,6 +1,7 @@
 // Cell-panel helpers shared by the two bodies' panels (src/bodies/<body>/cellPanel.ts): table labels, the
 // stored plot choice, section keys and number formats.
 import { storageKey } from "../body";
+import { sharedKey, visitGet } from "../visit";
 import type { Grid } from "../cell/snap";
 import { PLOT_STORAGE } from "../cell/qplot";
 import { fieldInfo } from "../cell/fieldinfo";
@@ -17,8 +18,8 @@ export interface FieldLabel {
   quantity: string;
 }
 
-/** the stored choice of the plotted quantity (per body) */
-export const readPlotChoice = (): string | undefined => { try { return localStorage.getItem(storageKey(PLOT_STORAGE)) ?? undefined; } catch { return undefined; } };
+/** the plotted quantity chosen earlier in this visit (per body; core/visit.ts) */
+export const readPlotChoice = (): string | undefined => visitGet(storageKey(PLOT_STORAGE)) ?? undefined;
 
 /** Default table labels from the source metadata: symbol = math part, quantity = text part. */
 export function defaultFieldLabel(v: string): FieldLabel {
@@ -28,13 +29,13 @@ export function defaultFieldLabel(v: string): FieldLabel {
 }
 
 /** Collapsible panel sections in panel order (every section heading is a disclosure, open by default; a
- *  collapse / expand is remembered in localStorage under the body's storage key, e.g. duneAtlas.cellPanel.<key>Open). The summary table is
+ *  collapse / expand is kept for the visit, for both atlases: core/visit.ts, duneAtlas.cellPanel.<key>Open). The summary table is
  *  back after the plots, without the key-numbers box; its rows fold in groups (ui/tablegroups.ts). */
 export const PANEL_SECTIONS = ["windRose", "fluxRose", "modes", "qsdiv", "summary", "downloads"] as const;
 
 export type PanelSection = (typeof PANEL_SECTIONS)[number];
 
-export const sectionOpenKey = (k: PanelSection) => storageKey(`cellPanel.${k}Open`); // per body (body.ts)
+export const sectionOpenKey = (k: PanelSection) => sharedKey(`cellPanel.${k}Open`); // both atlases (core/visit.ts)
 
 /** number as plain text (exports): 3 significant digits, ×10ⁿ outside 0.01 .. 10⁴ */
 export function fmtPlain(v: number): string {

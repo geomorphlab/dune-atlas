@@ -22,13 +22,13 @@
  "rdpa": {
   "title": "Resultant drift direction (RDD)",
   "titleTex": "Resultant drift direction $RDD$",
-  "description": "Direction of the time-averaged flat-bed flux vector, $\\arg \\sum n q e^{i\\theta}$, the direction sand moves, as a compass bearing (clockwise from north). Poorly defined where RDP/DP is low, because transport in opposing directions nearly cancels."
+  "description": "Direction of the time-averaged flat-bed flux vector, $\\arg \\sum n q e^{i\\theta}$, the direction sand moves, as a compass bearing (clockwise from north). Where RDP/DP is low, transport in opposing directions nearly cancels, and a small change of the threshold or the winds can turn this direction by up to 180°."
  },
  "dpm": {
   "title": "Drift potential (DP)",
   "titleTex": "Drift potential $DP$",
-  "description": "Time-averaged flat-bed saturated sand flux, $DP = \\sum n q / \\sum n$ over all speed and direction bins: the volume of packed sand per metre width that the wind could move per year over a flat bed fully covered by loose sand (Gunn 2026). Like the drift potential of Fryberger & Dean (1979) it measures the wind's capacity to transport sand, but it is a different quantity: Fryberger's DP is in vector units, computed from 10 m wind speeds in knots as $V^2(V - V_t)$ with a 12-knot threshold, whereas this DP is a physical flux computed from the friction velocity with the threshold set by the slider. The two cannot be converted into each other without the wind-speed distribution, and Fryberger's energy classes (below 200, 200–400 and above 400 vector units) do not apply to these values.",
-  "descriptionMars": "Time-averaged flat-bed saturated sand flux, $DP = \\sum q / N$ over all N hours of the Mars year: the volume of packed sand per metre width that the wind could move per Earth year over a flat bed fully covered by loose sand (Gunn 2026). Like the drift potential of Fryberger & Dean (1979) it measures the wind's capacity to transport sand, but it is a different quantity: Fryberger's DP is in vector units, computed from 10 m wind speeds in knots as $V^2(V - V_t)$ with a 12-knot threshold, whereas this DP is a physical flux computed from the friction velocity with a threshold computed from the grain diameter. The two cannot be converted into each other, and Fryberger's energy classes do not apply to these values."
+  "description": "Time-averaged flat-bed saturated sand flux, $DP = \\sum n q / \\sum n$ over all speed and direction bins: the volume of packed sand per metre width that the wind could move per year over a flat bed fully covered by loose sand (Gunn 2026). Like the drift potential of Fryberger & Dean (1979) it measures the wind's capacity to transport sand, but it is a different quantity: Fryberger's DP is in vector units, computed from 10 m wind speeds in knots as $V^2(V - V_t)$ with a 12-knot threshold, whereas this DP is a physical flux computed from the friction velocity with the threshold set by the slider. The ratio of the two depends on the wind-speed distribution, and Fryberger's energy classes (below 200, 200–400 and above 400 vector units) are in vector units.",
+  "descriptionMars": "Time-averaged flat-bed saturated sand flux, $DP = \\sum q / N$ over all N samples of the Mars year: the volume of packed sand per metre width that the wind could move per Earth year over a flat bed fully covered by loose sand (Gunn 2026). Like the drift potential of Fryberger & Dean (1979) it measures the wind's capacity to transport sand, but it is a different quantity: Fryberger's DP is in vector units, computed from 10 m wind speeds in knots as $V^2(V - V_t)$ with a 12-knot threshold, whereas this DP is a physical flux computed from the friction velocity with a threshold computed from the grain diameter. There is no fixed ratio between the two, and Fryberger's energy classes (below 200, 200–400 and above 400 vector units) are in vector units."
  },
  "rdpm": {
   "title": "Resultant drift potential (RDP)",
@@ -70,7 +70,7 @@
  "qha_rdp_dp": {
   "title": "Flux directionality (RDP/DP)",
   "titleTex": "Flux directionality $RDP/DP$",
-  "description": "Directional variability of sand flux: ratio of resultant to total drift potential, $RDP/DP$ (0 = multidirectional, 1 = unidirectional). Undefined where there is no sand flux ($DP = 0$). Fryberger & Dean (1979) classes: below 0.3 low (complex or obtuse bimodal winds), 0.3–0.8 intermediate (obtuse to acute bimodal winds), above 0.8 high (unimodal winds). Only transport above the threshold counts here, and the flux law differs from Fryberger's, so use the classes as a guide."
+  "description": "Directional variability of sand flux: ratio of resultant to total drift potential, $RDP/DP$ (0 = multidirectional, 1 = unidirectional). Undefined where there is no sand flux ($DP = 0$). Fryberger & Dean (1979) classes: below 0.3 low (complex or obtuse bimodal winds), 0.3–0.8 intermediate (obtuse to acute bimodal winds), above 0.8 high (unimodal winds). Here only transport above the threshold counts, and the flux law differs from Fryberger's."
  },
  "sige_sigh": {
   "title": "Stability of elongating dunes on starved beds (σE/σH)",
@@ -80,7 +80,7 @@
  "qhab_nl_nc": {
   "title": "Crest straightness vs sinuosity, bed-instability mode (Q̂∥/⊥,H)",
   "titleTex": "Crest straightness vs sinuosity, bed-instability mode $\\hat{Q}_{\\parallel/\\bot,H}$",
-  "description": "Net along-crest over net across-crest sand flux for crests of the bed-instability orientation, $|\\langle Q_{\\parallel}(\\alpha_H)\\rangle/\\langle Q_{\\bot}(\\alpha_H)\\rangle|$. Along-crest transport tends to keep crests straight, while across-crest transport, which drives migration, tends to make them sinuous (Rubin 2012), so higher values suggest straighter long-crested dunes on sand-covered beds. For dunes migrating on starved beds, the ratio measures the asymmetry of sand fluxes that makes dunes such as barchans asymmetric (Courrech du Pont et al. 2024). In the sand-covered-bed examples of Courrech du Pont et al. (2024) it is about 0.03 for transverse, 0.4 for oblique and 22 for longitudinal dunes. The ratio goes to infinity where its denominator (a net flux) goes to zero (shown clipped to ±60,000)."
+  "description": "Net along-crest over net across-crest sand flux for crests of the bed-instability orientation, $|\\langle Q_{\\parallel}(\\alpha_H)\\rangle/\\langle Q_{\\bot}(\\alpha_H)\\rangle|$. Along-crest transport tends to keep crests straight, while across-crest transport, which drives migration, tends to make them sinuous (Rubin 2012), so higher values suggest straighter long-crested dunes on sand-covered beds. For dunes migrating on starved beds, the ratio measures how far the migration direction departs from the direction of the sand flux on the dune, which makes dunes such as barchans asymmetric (Courrech du Pont et al. 2024). In the sand-covered-bed examples of Courrech du Pont et al. (2024) it is about 0.03 for transverse, 0.4 for oblique and 22 for longitudinal dunes. The ratio goes to infinity where its denominator (a net flux) goes to zero (shown clipped to ±60,000)."
  },
  "qhab_ac_nc": {
   "title": "Growth-in-height vs migration balance (Q̂|⊥|/⊥,H)",
@@ -95,22 +95,22 @@
  "ufm": {
   "title": "Mean above-threshold friction velocity / threshold (⟨u*f | u*f > u*th⟩ / u*th)",
   "titleTex": "Mean above-threshold friction velocity / threshold $\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$",
-  "descriptionMars": "Average above-threshold flat-bed friction velocity, normalised by threshold $\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023)."
+  "descriptionMars": "Average above-threshold flat-bed friction velocity, normalised by threshold $\\langle u_{\\ast,f}|u_{\\ast,f}>u_{\\ast,th}\\rangle/u_{\\ast,th}$. The threshold is the cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of each sample, from Pähtz & Durán (2023)."
  },
  "uft": {
   "title": "Fraction of time above threshold (T | u*f > u*th / T)",
   "titleTex": "Fraction of time above threshold $T|u_{\\ast,f}>u_{\\ast,th}/T$",
-  "descriptionMars": "Fraction of time flat-bed friction velocity is above threshold $T|u_{\\ast,f}>u_{\\ast,th}/T$. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023)."
+  "descriptionMars": "Fraction of time flat-bed friction velocity is above threshold $T|u_{\\ast,f}>u_{\\ast,th}/T$. The threshold is the cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of each sample, from Pähtz & Durán (2023)."
  },
  "qhbf": {
   "title": "Fraction of bed-instability-mode flux while flat bed above threshold",
   "titleTex": "Fraction of bed-instability-mode flux while flat bed above threshold",
   "description": "Fraction of bed-instability-mode ($\\alpha_H$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_H)| / \\sum n|Q(\\alpha_H)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux.",
-  "descriptionMars": "Fraction of bed-instability-mode ($\\alpha_H$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_H)| / \\sum n|Q(\\alpha_H)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023)."
+  "descriptionMars": "Fraction of bed-instability-mode ($\\alpha_H$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_H)| / \\sum n|Q(\\alpha_H)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is the cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of each sample, from Pähtz & Durán (2023)."
  },
  "qhef": {
   "title": "Fraction of elongation-mode flux while flat bed above threshold",
   "titleTex": "Fraction of elongation-mode flux while flat bed above threshold",
-  "descriptionMars": "Fraction of elongation-mode ($\\alpha_E$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_E)| / \\sum n|Q(\\alpha_E)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is that hour's cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of Pähtz & Durán (2023)."
+  "descriptionMars": "Fraction of elongation-mode ($\\alpha_E$) crest flux that occurs while the flat-bed friction velocity exceeds threshold, $\\sum_{u_{\\ast,f}>u_{\\ast,th}} n|Q(\\alpha_E)| / \\sum n|Q(\\alpha_E)|$. 0 where crest flux occurs only while the flat bed is below threshold; undefined where there is no crest flux. The threshold is the cessation threshold $u_{\\ast,th}(d, \\rho_f, T)$ of each sample, from Pähtz & Durán (2023)."
  }
 }

@@ -227,7 +227,7 @@ describe("Mars wind datasets: panel and downloads", () => {
     const sol = nc.vars.sol.data as number[];
     expect(sol[1] - sol[0]).toBeCloseTo(1 / 12, 6);
     expect(nc.gatts.samples_per_sol).toEqual([12]);
-    expect(String(nc.gatts.title)).toMatch(/^Mars Dune Atlas cell export: MACDA two-hourly lowest-level wind, .* at 7\.5° N, -180° E \(5° cell\)$/);
+    expect(String(nc.gatts.title)).toMatch(/^Mars Dune Atlas cell export: MACDA two-hourly lowest-level wind, .* at 7\.50° N, 180\.00° W \(5° cell\)$/);
     expect(String(nc.gatts.fields_citation)).toBe(fieldsCitation("macda-v2-my30"));
     expect(String(nc.gatts.references)).toMatch(/Open Government Licence v3\.0/);
     expect(String(nc.gatts.references)).not.toMatch(/FV3/);

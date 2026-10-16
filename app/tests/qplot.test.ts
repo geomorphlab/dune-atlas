@@ -19,6 +19,7 @@ import { checkLinePlotOptions, xTickFit } from "./qplotlib";
 const reg = loadRegistry().registry;
 const mem = new Map<string, string>();
 vi.stubGlobal("localStorage", { getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => { mem.set(k, v); }, removeItem: (k: string) => { mem.delete(k); }, clear: () => mem.clear() });
+vi.stubGlobal("sessionStorage", { getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => { mem.set(k, v); }, removeItem: (k: string) => { mem.delete(k); }, clear: () => mem.clear() });  // visit settings (core/visit.ts)
 beforeEach(() => mem.clear());
 
 async function open(plot?: { get(): string | undefined; set(id: string): void }) {

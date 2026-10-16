@@ -10,7 +10,7 @@ export const WEB_MERCATOR_R = 6378137;
 export const WEB_MERCATOR_EQUATOR_M = 40075016.686;
 
 /** the slider's ⓘ, middle paragraphs: the default and its equivalents */
-export const THRESHOLD_INFO_DEFAULT = `<p>The default, 0.15 m/s, is the value used for the global analysis of Gunn (2026): a common global approximation used in place of more accurate local values, not calibrated for any site. Values between 0.1 and 0.4 m/s are typical; for loose, dry sand the threshold depends mainly on grain size and density.</p>`
+export const THRESHOLD_INFO_DEFAULT = `<p>The default, 0.15 m/s, is the value used for the global analysis of Gunn (2026), one value for the whole globe, not calibrated for any site. Values between 0.1 and 0.4 m/s are typical; for loose, dry sand the threshold depends mainly on grain size and density.</p>`
   + `<p>With the roughness length of 1 mm used here, 0.15 m/s corresponds to a 10 m wind of 3.4 m/s (6.6 knots); the 12-knot threshold of Fryberger &amp; Dean (1979) corresponds to about 0.27 m/s.</p>`;   // the Baas (2026) point is in the Wind dataset ⓘ
 
 export const PROFILE: BodyProfile = {

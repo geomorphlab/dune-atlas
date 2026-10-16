@@ -2,19 +2,19 @@
 // and ui/tourHooks.ts serve both). Shared labels and types: ui/helpText.ts. Inline maths as $...$
 // (KaTeX); everything else plain text.
 import type { HelpSection, TourStep } from "../../core/ui/helpText";
-import { DATASET_INFO, datasetFacts, outsideGridText } from "../../core/cell/datasetinfo";
+import { DATASET_INFO, datasetFacts, datasetKindsText, datasetNotes, outsideGridText } from "../../core/cell/datasetinfo";
 import { gridLatRange } from "../../core/cell/snap";
 import { mathHtml } from "../../core/util/math";
 
 /** datasets whose rows stop short of the poles: where their cells end (registry info.grid) */
 const coverageNotes = () => Object.values(DATASET_INFO).filter((d) => d.grid && gridLatRange(d.grid)[1] < 90 - 1e-6).map((d) => outsideGridText(1, d.grid!, d.name));
 /** the Wind dataset selector's ⓘ (with more than one dataset; the facts from the registry entries) */
-export const DATASET_INFO_TEXT = Object.keys(DATASET_INFO).length < 2 ? "" : `The Wind dataset selector switches between Mars wind datasets (${Object.values(DATASET_INFO).map((d) => `${d.name}, ${d.resolution}`).join("; ")}), each one Mars year of lowest-level winds on its own grid: MCMC FV3 is a free-running climate-model simulation; EMARS and MACDA are reanalyses of Mars Year 30, which assimilate spacecraft observations of the atmosphere into a climate model. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain.${coverageNotes().map((t) => ` ${t}`).join("")}`;
+export const DATASET_INFO_TEXT = Object.keys(DATASET_INFO).length < 2 ? "" : `The Wind dataset selector switches between Mars wind datasets (${Object.values(DATASET_INFO).map((d) => `${d.name}, ${d.resolution}`).join("; ")}), each one Mars year of lowest-level winds on its own grid${datasetKindsText() ? ` (${datasetKindsText()})` : ""}.${datasetNotes().map((t) => ` ${t}`).join("")} The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset.${coverageNotes().map((t) => ` ${t}`).join("")}`;
 
 export const HELP_SECTIONS: HelpSection[] = [
   {
     id: "threshold", title: "Median grain diameter $d$",
-    body: "Sand moves when the friction velocity of the wind exceeds a threshold that depends on the grain size and on the thin Martian air. The slider at the top of the layer panel sets the median grain diameter d (50–1000 µm, default 200 µm) for every grain-size-dependent map layer and for the cell panel. For every hour of the Mars year the threshold $u_{*,th}$ is computed from d and that hour's air density and temperature (Pähtz & Durán 2023).",
+    body: "Sand moves when the friction velocity of the wind exceeds a threshold that depends on the grain size and on the thin Martian air. The slider at the top of the layer panel sets the median grain diameter d (50–1000 µm, default 200 µm) for every grain-size-dependent map layer and for the cell panel. For each time step of the wind dataset, the threshold $u_{*,th}$ is computed from d and that step's air density and temperature (Pähtz & Durán 2023).",
   },
   {
     id: "layers", title: "Layers and Active layers",
@@ -26,11 +26,11 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "search", title: "Search",
-    body: "Type a feature name (e.g. Gale crater or Olympia Undae) or a latitude and a longitude in the box at the top of the layer panel. Names are IAU-approved feature names from the Gazetteer of Planetary Nomenclature, with a few informal aliases (e.g. Bagnold Dunes); the list under the box shows each match with its feature type and the best matches first. Coordinates can be in decimal degrees or in degrees, minutes and seconds, signed or with N, S, E or W (e.g. 4.5, 137.4 or 4°30′N 137°24′E). Latitude comes first unless the letters say otherwise. Longitudes are planetocentric and east-positive, from −180° to 180°; a longitude typed as 0–360° E (e.g. 354.8) is converted (to −5.2). The line under the box shows how the text was read; Enter moves the map there and opens the cell panel when the cell has data.",
+    body: "Type a feature name (e.g. Gale crater or Olympia Undae) or a latitude and a longitude in the box at the top of the layer panel. Names are IAU-approved feature names from the Gazetteer of Planetary Nomenclature, with a few informal aliases (e.g. Bagnold Dunes); the list under the box shows each match with its feature type and the best matches first. Coordinates can be in decimal degrees or in degrees, minutes and seconds, signed or with N, S, E or W (e.g. 4.5, 137.4 or 4°30′N 137°24′E). Latitude comes first unless the letters say otherwise. Longitudes are planetocentric and east-positive, from −180° to 180°; a longitude typed as 0–360° E (e.g. 354.8) is converted (to −5.2). While you type coordinates, the line under the box shows the position they were read as (“Go to …”); Enter moves the map there and opens the cell panel when the cell has data.",
   },
   {
     id: "cell", title: "Clicking a cell",
-    body: "Click any cell to open the cell panel: the wind rose, the sand-flux rose at the current grain diameter, dune-orientation modes against the grain diameter, the flux divergence and a table of all parameters. Sand-flux rose petals point toward where sand moves; the Petals switch above the rose turns them to show where the wind comes from instead (the arrows always point toward). Section headings fold and unfold. Close the panel with × or Esc. The planetocentric latitude and east longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The button {icon_centre} next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).",
+    body: "Click any cell to open the cell panel: the wind rose, the sand-flux rose at the current grain diameter, dune-orientation modes against the grain diameter, the flux divergence and a table of all parameters. Sand-flux rose petals point toward where sand moves; the “Petals: toward / from” choice above the rose turns them to show where the wind comes from instead (the arrows always point toward). Section headings fold and unfold. Close the panel with × or Esc. The planetocentric latitude and east longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The button {icon_centre} next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).",
   },
   {
     id: "datasets", title: "Wind dataset",
@@ -42,7 +42,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "downloads", title: "Downloads and citation",
-    body: "Download & cite in the cell panel saves the hourly wind and air series and all parameters of the cell as NetCDF or as a CSV bundle, with the citation of every data source. Please cite the wind dataset, Pähtz & Durán (2023) for the transport law and Gunn (2026), which outlines the methods.",
+    body: "Download & cite in the cell panel saves the wind and air series and all parameters of the cell as NetCDF or as a CSV bundle, with the citation of every data source. Please cite the wind dataset, Pähtz & Durán (2023) for the transport law and Gunn (2026), which outlines the methods.",
   },
   {
     id: "region", title: "Downloading a region",
@@ -73,7 +73,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "threshold", targets: ["#layer-panel .pinned"], title: "Median grain diameter $d$",
-    body: "This slider sets the grain diameter. The threshold friction velocity is computed for every hour from d and the hour's air density and temperature; every grain-size-dependent layer and the cell panel update as you move it.",
+    body: "This slider sets the grain diameter. The threshold friction velocity is computed for each time step from d and that step's air density and temperature; every grain-size-dependent layer and the cell panel update as you move it.",
   },
   {
     id: "layers", targets: ['#layer-panel .layer-item[data-layer="rdpa"]', "#layer-panel-body .layer-group", "#layer-panel .panel-toggle"], title: "Layers and their display",
@@ -85,7 +85,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "cell", targets: ["#cell-panel:not([hidden])", "#map"], title: "Click a cell",
-    body: "Clicking a cell opens the cell panel, shown here for the dune field of Nili Patera (9° N, 67° E): wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own grain-diameter slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The button {icon_centre} next to its title centres the map on the cell.",
+    body: "Clicking a cell opens the cell panel, shown here for the dune field of Nili Patera (9° N, 67° E): wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own grain-diameter slider at the top (outlined), linked to the main one. At the bottom, Download & cite saves these data as NetCDF or CSV, with the citations. The button {icon_centre} next to its title centres the map on the cell.",
   },
   {
     id: "tools", targets: [".atlas-tools .share-btn", ".atlas-tools"], span: [".atlas-tools .share-btn", ".atlas-tools .export-btn", ".atlas-tools .region-btn"], title: "Share and export",
@@ -105,7 +105,7 @@ export const SHARE_TEXT = { button: "Share / copy link", title: "Share this view
 /** About: the paragraph under the AI notice (HTML) */
 export const ABOUT_INTRO_HTML = "<p>Click any cell to see its wind rose over the Mars year of the wind dataset, the sand-flux rose at the selected grain diameter, dune-orientation modes and all wind-regime parameters.</p>";
 /** About, Data sources: the items after the wind datasets' (HTML) */
-export const DATA_SOURCES_ITEMS_HTML = `<li><strong>Sand-flux fields</strong>: for every hour, the threshold and the saturated transport rate of Pähtz &amp; Durán (2023) at the selected median grain diameter d (grain density 3000 kg/m³, g = 3.71 m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in Gunn (2026). Fluxes are volumes of packed sand (packing fraction 0.6, pore space included) per metre width per Earth year (365.25 days), in m²/yr, as on Earth.</li>
+export const DATA_SOURCES_ITEMS_HTML = `<li><strong>Sand-flux fields</strong>: for each time step of the wind dataset, the threshold and the saturated transport rate of Pähtz &amp; Durán (2023) at the selected median grain diameter d (grain density 3000 kg/m³, g = 3.71 m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in Gunn (2026). Fluxes are volumes of packed sand (packing fraction 0.6, pore space included) per metre width per Earth year (365.25 days), in m²/yr, as on Earth.</li>
   <li><strong>Dune map</strong>: USGS Mars Global Digital Dune Database (MGD3; Hayward et al. 2007, 2010, 2012, 2014) plus the small dune fields of Fenton (2020, Icarus 352, 114018), merged into 3,514 dune-field polygons (Mars 2000 sphere); MGD3 polygons: public domain (U.S. Geological Survey); Fenton (2020) dune fields: CC BY 4.0.</li>
   <li><strong>Saturated flux divergence</strong> ${mathHtml("$\\nabla\\cdot\\vec{q}_s$")}: divergence of the resultant drift potential vector (magnitude RDP, direction RDD) on the Mars sphere (R = 3389.5 km), following Gunn (2026), Methods M6, with central differences on the grid of the wind dataset (${datasetFacts("resolution")}). Negative values (convergence) imply deposition.</li>
   <li><strong>Elevation and shaded relief</strong>: MGS MOLA – MEX HRSC blended DEM, 200 m, v2 (Fergason, Hare &amp; Laura 2018, USGS Astrogeology); licence: MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO). Derived elevation and relief tiles: CC BY-SA 3.0 IGO.</li>`;

@@ -117,7 +117,7 @@ export const CONCEPT_OF_LAYER: Record<string, string[]> = {
   // wind statistics and the slider: the threshold (Earth) or grain size (Mars)
   uft: ["threshold-friction-velocity", "grain-size-and-threshold"], ufm: ["threshold-friction-velocity", "grain-size-and-threshold"],
   "@threshold": ["threshold-friction-velocity", "grain-size-and-threshold"],
-  "@dataset": ["the-two-era5-wind-datasets"],
+  "@dataset": ["the-wind-datasets"],
 };
 
 /** the entry linked from a layer (or "@threshold" / "@dataset"), if this atlas has it */

@@ -21,7 +21,7 @@ layers:
     (q\cos\theta)}{\partial\lambda} + \frac{\partial (q\sin\theta\cos\phi)}{\partial\phi}\right]$ with $q = RDP$,
     $\theta = RDD$. By conservation of sand mass, negative values (flux convergence) imply deposition and positive
     values (flux divergence) erosion. The values assume a saturated flux and an unlimited supply of loose sand,
-    so on rock, crusted or vegetated surfaces actual erosion is limited by the sand available.'
+    so on rock or crusted surfaces actual erosion is limited by the sand available.'
   citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
     transport law: Pähtz, T. & Durán, O. (2023). Scaling laws for planetary sediment transport from DEM-RANS numerical
     simulations. Journal of Fluid Mechanics 963, A20. doi:10.1017/jfm.2023.343; winds: EMARS v1.0 reanalysis, Mars
@@ -58,8 +58,8 @@ layers:
   variable: rho_mean
   thresholdAware: false
   units: kg/m³
-  description: Mean over the Mars year of the hourly lowest-layer air density $\rho_f = p/(R T)$ of the wind dataset's
-    climate model ($p$ = mid pressure of the lowest layer, $T$ = lowest-level temperature).
+  description: Mean over the samples of the Mars year of the lowest-layer air density $\rho_f = p/(R T)$ of the
+    wind dataset (one sample per Mars hour; $p$ = mid pressure of the lowest layer, $T$ = lowest-level temperature).
   citation: 'Greybush, S. J., Kalnay, E., Wilson, R. J., Hoffman, R. N., Nehrkorn, T., Leidner, M., et al. (2018).
     The Ensemble Mars Atmosphere Reanalysis System (EMARS) Version 1.0 Dataset. Penn State Data Commons. doi:10.18113/D3W375;
     read from Bhattacharya, A. (2026). ARCO-EMARS: Analysis-Ready Cloud-Optimized EMARS Reanalysis. Hugging Face.

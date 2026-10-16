@@ -68,7 +68,7 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
-  "en": "The Wind dataset selector switches between reanalysis wind statistics (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧°; ⟦#2⟧–⟦#3⟧).⟦2⟧, used by⟦3⟧, is a land-surface rerun driven by⟦4⟧atmospheric fields interpolated to its grid (Muñoz-Sabater et al. ⟦#4⟧), so its winds are not an independent estimate, and the datasets can still differ: e.g.,⟦5⟧reports⟦6⟧⟦#5⟧ m wind speeds ⟦#6⟧–⟦#7⟧ % below those of⟦7⟧. Where the datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.",
+  "en": "The Wind dataset selector switches between wind datasets (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧).⟦2⟧, used by⟦3⟧, re-runs⟦4⟧'s land-surface model driven by⟦5⟧atmospheric fields interpolated to its ⟦#6⟧° grid (Muñoz-Sabater et al. ⟦#7⟧);⟦6⟧reports its ⟦#8⟧ m wind speeds ⟦#9⟧–⟦#10⟧ % below those of⟦7⟧. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.",
   "area": "Layer popovers"
  },
  {
@@ -92,7 +92,7 @@
   "area": "Layer popovers"
  },
  {
-  "en": "The default, ⟦#0⟧ m/s, is the value used for the global analysis of⟦0⟧: a common global approximation used in place of more accurate local values, not calibrated for any site. Values between ⟦#1⟧ and ⟦#2⟧ m/s are typical; for loose, dry sand the threshold depends mainly on grain size and density.",
+  "en": "The default, ⟦#0⟧ m/s, is the value used for the global analysis of⟦0⟧, one value for the whole globe, not calibrated for any site. Values between ⟦#1⟧ and ⟦#2⟧ m/s are typical; for loose, dry sand the threshold depends mainly on grain size and density.",
   "area": "Layer popovers"
  },
  {
@@ -128,7 +128,7 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
-  "en": "The ⟦#0⟧° dune cells of the dune map grouped into ⟦#1⟧ dune fields of ⟦#2⟧-connected cells; polygon edges follow the grid-cell boundaries exactly. Area is the sum of spherical cell areas.",
+  "en": "The ⟦#0⟧° dune cells of the dune map grouped into ⟦#1⟧ dune fields of touching cells (sharing an edge or a corner); polygon edges follow the grid-cell boundaries. Area is the sum of spherical cell areas.",
   "area": "Layer popovers"
  },
  {
@@ -252,7 +252,7 @@
   "area": "Layer popovers"
  },
  {
-  "en": "Net along-crest over net across-crest sand flux for crests of the bed-instability orientation,⟦0⟧. Along-crest transport tends to keep crests straight, while across-crest transport, which drives migration, tends to make them sinuous (⟦1⟧), so higher values suggest straighter long-crested dunes on sand-covered beds. For dunes migrating on starved beds, the ratio measures the asymmetry of sand fluxes that makes dunes such as barchans asymmetric (⟦2⟧). In the sand-covered-bed examples of⟦3⟧it is about ⟦#0⟧ for transverse, ⟦#1⟧ for oblique and ⟦#2⟧ for longitudinal dunes. The ratio goes to infinity where its denominator (a net flux) goes to zero (shown clipped to ±⟦#3⟧).",
+  "en": "Net along-crest over net across-crest sand flux for crests of the bed-instability orientation,⟦0⟧. Along-crest transport tends to keep crests straight, while across-crest transport, which drives migration, tends to make them sinuous (⟦1⟧), so higher values suggest straighter long-crested dunes on sand-covered beds. For dunes migrating on starved beds, the ratio measures how far the migration direction departs from the direction of the sand flux on the dune, which makes dunes such as barchans asymmetric (⟦2⟧). In the sand-covered-bed examples of⟦3⟧it is about ⟦#0⟧ for transverse, ⟦#1⟧ for oblique and ⟦#2⟧ for longitudinal dunes. The ratio goes to infinity where its denominator (a net flux) goes to zero (shown clipped to ±⟦#3⟧).",
   "area": "Layer popovers"
  },
  {
@@ -284,7 +284,7 @@
   "area": "Layer popovers"
  },
  {
-  "en": "Time-averaged flat-bed saturated sand flux,⟦0⟧over all speed and direction bins: the volume of packed sand per metre width that the wind could move per year over a flat bed fully covered by loose sand (⟦1⟧). Like the drift potential of⟦2⟧it measures the wind's capacity to transport sand, but it is a different quantity: Fryberger's⟦3⟧is in vector units, computed from ⟦#0⟧ m wind speeds in knots as⟦4⟧with a ⟦#1⟧-knot threshold, whereas this⟦5⟧is a physical flux computed from the friction velocity with the threshold set by the slider. The two cannot be converted into each other without the wind-speed distribution, and Fryberger's energy classes (below ⟦#2⟧, ⟦#3⟧–⟦#4⟧ and above ⟦#5⟧ vector units) do not apply to these values.",
+  "en": "Time-averaged flat-bed saturated sand flux,⟦0⟧over all speed and direction bins: the volume of packed sand per metre width that the wind could move per year over a flat bed fully covered by loose sand (⟦1⟧). Like the drift potential of⟦2⟧it measures the wind's capacity to transport sand, but it is a different quantity: Fryberger's⟦3⟧is in vector units, computed from ⟦#0⟧ m wind speeds in knots as⟦4⟧with a ⟦#1⟧-knot threshold, whereas this⟦5⟧is a physical flux computed from the friction velocity with the threshold set by the slider. The ratio of the two depends on the wind-speed distribution, and Fryberger's energy classes (below ⟦#2⟧, ⟦#3⟧–⟦#4⟧ and above ⟦#5⟧ vector units) are in vector units.",
   "area": "Layer popovers"
  },
  {
@@ -292,11 +292,11 @@
   "area": "Layer popovers"
  },
  {
-  "en": "Direction of the time-averaged flat-bed flux vector,⟦0⟧, the direction sand moves, as a compass bearing (clockwise from north). Poorly defined where⟦1⟧is low, because transport in opposing directions nearly cancels.",
+  "en": "Direction of the time-averaged flat-bed flux vector,⟦0⟧, the direction sand moves, as a compass bearing (clockwise from north). Where⟦1⟧is low, transport in opposing directions nearly cancels, and a small change of the threshold or the winds can turn this direction by up to ⟦#0⟧°.",
   "area": "Layer popovers"
  },
  {
-  "en": "Directional variability of sand flux: ratio of resultant to total drift potential,⟦0⟧(⟦#0⟧ = multidirectional, ⟦#1⟧ = unidirectional). Undefined where there is no sand flux (⟦1⟧).⟦2⟧classes: below ⟦#2⟧ low (complex or obtuse bimodal winds), ⟦#3⟧–⟦#4⟧ intermediate (obtuse to acute bimodal winds), above ⟦#5⟧ high (unimodal winds). Only transport above the threshold counts here, and the flux law differs from Fryberger's, so use the classes as a guide.",
+  "en": "Directional variability of sand flux: ratio of resultant to total drift potential,⟦0⟧(⟦#0⟧ = multidirectional, ⟦#1⟧ = unidirectional). Undefined where there is no sand flux (⟦1⟧).⟦2⟧classes: below ⟦#2⟧ low (complex or obtuse bimodal winds), ⟦#3⟧–⟦#4⟧ intermediate (obtuse to acute bimodal winds), above ⟦#5⟧ high (unimodal winds). Here only transport above the threshold counts, and the flux law differs from Fryberger's.",
   "area": "Layer popovers"
  },
  {
@@ -344,7 +344,7 @@
   "area": "Layer popovers"
  },
  {
-  "en": "Mean total vegetation cover (green plus dry vegetation, including trees; % of the ground), ⟦#0⟧–⟦#1⟧, from the⟦0⟧Fractional Cover v3.1 (⟦#2⟧ m, monthly) averaged onto the ⟦#3⟧° cells over the months with valid data. Calibrated against Australian field sites; saturates under closed canopies. Total cover includes non-photosynthetic vegetation (dry and dead plant material) as well as green vegetation, so it can be substantial where little green vegetation is visible; compare it with the aridity index. No data over ocean, Antarctica, land north of ⟦#4⟧° N and the ⟦#5⟧° meridian cells. <a href=\"https://map.geo-rapp.org/\" target=\"_blank\" rel=\"noopener noreferrer\">Explore the full monthly time series at⟦1⟧</a>.",
+  "en": "Mean total vegetation cover (green plus dry vegetation, including trees; % of the ground), ⟦#0⟧–⟦#1⟧, from the⟦0⟧Fractional Cover v3.1 (⟦#2⟧ m, monthly) averaged onto the ⟦#3⟧° cells over the months with valid data. Calibrated against Australian field sites; saturates under closed canopies. Total cover includes non-photosynthetic vegetation (dry and dead plant material) as well as green vegetation, so it can be substantial where little green vegetation is visible. No data over ocean, Antarctica, land north of ⟦#4⟧° N and the ⟦#5⟧° meridian cells. <a href=\"https://map.geo-rapp.org/\" target=\"_blank\" rel=\"noopener noreferrer\">Explore the full monthly time series at⟦1⟧</a>.",
   "area": "Layer popovers"
  },
  {
@@ -448,7 +448,7 @@
   "area": "About"
  },
  {
-  "en": "<strong>Wind histograms and sand-flux fields (⟦0⟧⟦#0⟧°)</strong>:⟦1⟧⟦#1⟧–⟦#2⟧ hourly ⟦#3⟧ m winds (⟦#4⟧°;⟦2⟧,⟦3⟧) and the qsat parameters of⟦4⟧, Supplementary Data (⟦5⟧,⟦6⟧). Drift potentials (⟦7⟧,⟦8⟧,⟦9⟧,⟦10⟧) and crest fluxes are averages over the hourly record.",
+  "en": "<strong>Wind histograms and sand-flux fields (⟦0⟧⟦#0⟧°)</strong>:⟦1⟧⟦#1⟧–⟦#2⟧ hourly ⟦#3⟧ m winds (⟦#4⟧°;⟦2⟧,⟦3⟧) and the saturated sand-flux (qsat) parameters of⟦4⟧, Supplementary Data (⟦5⟧,⟦6⟧). Drift potentials (⟦7⟧,⟦8⟧,⟦9⟧,⟦10⟧) and crest fluxes are averages over the hourly record.",
   "area": "About"
  },
  {
@@ -468,11 +468,11 @@
   "area": "About"
  },
  {
-  "en": "<strong>Aridity index</strong>: Global Aridity Index v3.1 (⟦0⟧; Zomer,⟦1⟧), ⟦#0⟧–⟦#1⟧, native ⟦#2⟧″ grid,⟦2⟧; ocean and Antarctica (south of ⟦#3⟧° S) have no data, values ≥ ⟦#4⟧ are at the top of the source range. The click panel shows the mean over the cell of the selected wind dataset.",
+  "en": "<strong>Aridity index</strong>: Global Aridity Index v3.1 (⟦0⟧; Zomer,⟦1⟧), ⟦#0⟧–⟦#1⟧, native ⟦#2⟧″ grid,⟦2⟧; ocean and Antarctica (south of ⟦#3⟧° S) have no data, values ≥ ⟦#4⟧ are at the top of the source range. The cell panel shows the mean over the cell of the selected wind dataset.",
   "area": "About"
  },
  {
-  "en": "<strong>Vegetation cover</strong>:⟦0⟧Fractional Cover v3.1 (⟦1⟧;⟦2⟧), total vegetation cover (photosynthetic + non-photosynthetic vegetation), mean of the monthly ⟦#0⟧ m values ⟦#1⟧–⟦#2⟧ on the ⟦#3⟧° grid,⟦3⟧© ⟦#4⟧–⟦#5⟧⟦4⟧, hosted by⟦5⟧; the vegetation product of⟦6⟧. <a href=\"https://map.geo-rapp.org/\" target=\"_blank\" rel=\"noopener noreferrer\">Explore the full time series at⟦7⟧</a>. The click panel shows the cell mean and the number of valid months.",
+  "en": "<strong>Vegetation cover</strong>:⟦0⟧Fractional Cover v3.1 (⟦1⟧;⟦2⟧), total vegetation cover (photosynthetic + non-photosynthetic vegetation), mean of the monthly ⟦#0⟧ m values ⟦#1⟧–⟦#2⟧ on the ⟦#3⟧° grid,⟦3⟧© ⟦#4⟧–⟦#5⟧⟦4⟧, hosted by⟦5⟧; the vegetation product of⟦6⟧. <a href=\"https://map.geo-rapp.org/\" target=\"_blank\" rel=\"noopener noreferrer\">Explore the full time series at⟦7⟧</a>. The cell panel shows the cell mean and the number of valid months.",
   "area": "About"
  },
  {
@@ -480,7 +480,7 @@
   "area": "About"
  },
  {
-  "en": "Earth and Mars: what can be compared",
+  "en": "Earth and Mars: methods and data",
   "area": "About"
  },
  {
@@ -488,23 +488,23 @@
   "area": "About"
  },
  {
-  "en": "<strong>Control</strong>: on Earth the slider sets one threshold friction velocity⟦0⟧for all hours (default ⟦#0⟧ m/s); on Mars it sets the median grain diameter d (default ⟦#1⟧ µm), and the threshold is computed for every hour from d and that hour's air density and temperature.",
+  "en": "<strong>Control</strong>: on Earth the slider sets one threshold friction velocity⟦0⟧for the whole record (default ⟦#0⟧ m/s); on Mars it sets the median grain diameter d (default ⟦#1⟧ µm), and the threshold is computed for each time step of the wind record from d and that step's air density and temperature.",
   "area": "About"
  },
  {
-  "en": "<strong>Transport law and wind profile</strong>: Earth uses the transport law of⟦0⟧, with⟦1⟧from the ⟦#0⟧ m wind and a roughness length of ⟦#1⟧ mm; Mars uses the transport law of⟦2⟧, with⟦3⟧from the lowest-level wind (≈ ⟦#2⟧–⟦#3⟧ m) and a smooth-wall profile without a roughness length.",
+  "en": "<strong>Transport law and wind profile</strong>: Earth uses the transport law of⟦0⟧, with⟦1⟧from the ⟦#0⟧ m wind and a roughness length of ⟦#1⟧ mm; Mars uses the transport law of⟦2⟧, with⟦3⟧from the wind at the lowest level of the wind dataset (its height above the surface differs between datasets) and a smooth-wall profile without a roughness length.",
   "area": "About"
  },
  {
-  "en": "<strong>Winds and grid</strong>: Earth uses a period of hourly reanalysis winds (e.g.,⟦0⟧, ⟦#0⟧° grid for ⟦#1⟧ years ⟦#2⟧–⟦#3⟧); Mars uses a representative year (⟦#4⟧ sols, about ⟦#5⟧ Earth years) of hourly simulated winds (e.g.,⟦1⟧, ⟦#6⟧° grid), so one Mars cell can span several dune fields and year-to-year variability is not sampled.",
+  "en": "<strong>Winds and grid</strong>: Earth uses decades of hourly reanalysis winds (e.g.,⟦0⟧, ⟦#0⟧° grid, ⟦#1⟧–⟦#2⟧); Mars uses one Mars year (⟦#3⟧ sols, about ⟦#4⟧ Earth years) of winds from a climate-model simulation or a reanalysis (e.g.,⟦1⟧, ⟦#5⟧° grid, about ⟦#6⟧ km at the equator), with no year-to-year variation.",
   "area": "About"
  },
  {
-  "en": "<strong>Downloads</strong>: Earth cells provide a wind histogram and the fields against threshold (⟦0⟧,⟦1⟧); Mars cells provide the hourly wind and air series and the fields against grain diameter (⟦2⟧,⟦3⟧).",
+  "en": "<strong>Downloads</strong>: Earth cells provide a wind histogram and the fields against threshold (⟦0⟧,⟦1⟧); Mars cells provide the wind and air series and the fields against grain diameter (⟦2⟧,⟦3⟧).",
   "area": "About"
  },
  {
-  "en": "⟦0⟧values on the two planets can therefore be compared in order of magnitude, not as precise numbers.⟦1⟧,⟦2⟧and the mode directions compare more directly, but each depends on the threshold or grain-diameter setting.",
+  "en": "On both planets,⟦0⟧,⟦1⟧,⟦2⟧and the mode directions depend on the threshold or grain-diameter setting.",
   "area": "About"
  },
  {
@@ -696,7 +696,7 @@
   "area": "Cell panel"
  },
  {
-  "en": "Mode bearings (toward) for ⟦0⟧ = ⟦#0⟧ m/s (centre) to ⟦#1⟧ m/s (rim); ⟦1⟧ is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current threshold. Where⟦2⟧is low (below about ⟦#2⟧), transport in opposing directions nearly cancels, so⟦3⟧is poorly defined and can swing by up to ⟦#3⟧° with a small change of threshold or wind dataset. The modes depend on the whole flux rose rather than on its resultant: ⟦4⟧ follows the crest orientation ⟦5⟧ that maximises gross transport across crests, so it can stay steady and differ from⟦6⟧.",
+  "en": "Mode bearings (toward) for ⟦0⟧ = ⟦#0⟧ m/s (centre) to ⟦#1⟧ m/s (rim); ⟦1⟧ is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current threshold. Where⟦2⟧is low (below about ⟦#2⟧), transport in opposing directions nearly cancels, and⟦3⟧can turn by up to ⟦#3⟧° with a small change of threshold or wind dataset. The modes depend on the whole flux rose rather than on its resultant: ⟦4⟧ follows the crest orientation ⟦5⟧ that maximises gross transport across crests, so it can stay steady and differ from⟦6⟧.",
   "area": "Cell panel"
  },
  {
@@ -852,7 +852,7 @@
   "area": "Other interface"
  },
  {
-  "en": "The atlas computes wind roses and sand-flux statistics only for land cells (⟦0⟧land–sea mask fraction &gt; ⟦#0⟧). This cell is mainly water, so the atlas has no statistics for it. Choose a nearby land cell, or switch to⟦1⟧(coastal cells can differ between the two land masks).",
+  "en": "Wind roses and sand-flux statistics are computed for land cells (land–sea mask fraction above ⟦#0⟧). This cell is mainly water. Choose a nearby land cell.",
   "area": "Other interface"
  },
  {
@@ -860,7 +860,7 @@
   "area": "Other interface"
  },
  {
-  "en": "The atlas computes wind roses and sand-flux statistics only for land cells (⟦0⟧land–sea mask fraction &gt; ⟦#0⟧). This cell has no land (land–sea mask fraction ⟦#1⟧), so the atlas has no statistics for it. Choose a nearby land cell, or switch to⟦1⟧(coastal cells can differ between the two land masks).",
+  "en": "Wind roses and sand-flux statistics are computed for land cells (land–sea mask fraction above ⟦#0⟧, i.e. any land in the cell). This cell has no land (land–sea mask fraction ⟦#1⟧). Choose a nearby land cell.",
   "area": "Other interface"
  },
  {
@@ -1044,7 +1044,7 @@
   "area": "Search and messages"
  },
  {
-  "en": "Hourly wind and air series (u, v, T, ρ, z)",
+  "en": "Wind and air series (u, v, T, ρ, z)",
   "area": "Search and messages"
  },
  {

@@ -32,7 +32,7 @@ export const PROFILE: BodyProfile = {
     valueTex: (v) => `$d$ = ${Math.round(v)} $\\mathrm{\\mu m}$`,
     exportName: "median grain diameter",
     fileSuffix: (v) => `_d${Math.round(v)}um`,
-    infoIntroHtml: () => `<p>The median diameter ${mathHtml("$d$")} of the sand grains. Every grain-size-dependent map layer (its ⓘ says so) and the cell panel use the value set here. The threshold friction velocity ${mathHtml("$u_{*,th}$")} is computed for every hour from ${mathHtml("$d$")} and that hour's air density and temperature (Pähtz & Durán 2023).</p>`,
+    infoIntroHtml: () => `<p>The median diameter ${mathHtml("$d$")} of the sand grains. Every grain-size-dependent map layer (its ⓘ says so) and the cell panel use the value set here. The threshold friction velocity ${mathHtml("$u_{*,th}$")} is computed for each time step from ${mathHtml("$d$")} and that step's air density and temperature (Pähtz & Durán 2023).</p>`,
     rangeAdjective: "log-spaced ",
     dependentNoteHtml: () => `<p class="help">Updates with the grain-diameter ${mathHtml("$d$")} control.</p>`,
     independentNoteHtml: () => `<p class="help">Independent of the grain diameter: not affected by the ${mathHtml("$d$")} control.</p>`,

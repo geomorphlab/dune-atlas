@@ -35,12 +35,13 @@ const ERA5_GRID: Grid = { lat0: 90, dlat: -0.25, lon0: -180, dlon: 0.25, ny: 721
 
 describe("registry: ERA5 dataset", () => {
   const reg = loadRegistry().registry;
-  it("two datasets; ERA5 entry from registry/earth/datasets/era5; merged registry validates", () => {
-    expect(reg.datasets!.map((d) => [d.id, d.title, d.prefix])).toEqual([
+  it("ERA5-Land and ERA5 entries (ERA5 from registry/earth/datasets/era5); merged registry validates", () => {
+    // the two ERA5 datasets by id; other datasets may follow
+    expect(reg.datasets!.slice(0, 2).map((d) => [d.id, d.title, d.prefix])).toEqual([
       ["era5-land", "ERA5-Land 0.1°, 1950–2024", "dune-atlas/v1"],
       ["era5", "ERA5 0.25°, 1950–2024", "dune-atlas/v2/datasets/era5"], // rebuilt: land = lsm > 0
     ]);
-    expect(reg.datasets![1].cellAuxStores).toEqual(["{dataset}/cells-aux.zarr", "{dataset}/cells-aux-veg.zarr"]);
+    expect(reg.datasets!.find((d) => d.id === "era5")!.cellAuxStores).toEqual(["{dataset}/cells-aux.zarr", "{dataset}/cells-aux-veg.zarr"]);
     expect(loadRegistry().errors).toEqual([]);
     expect(validateRegistry(reg, schema)).toEqual([]);
   });
@@ -239,13 +240,13 @@ describe.skipIf(!haveFix)("ERA5 fixture: panel and downloads", () => {
     const root = await panel(await cs.query(458, 770), "era5");
     const es = root.querySelector(".empty-state")!;
     expect(es.querySelector("strong")!.textContent).toBe("Outside the ERA5 land mask");
-    expect(es.querySelectorAll("p")[1].textContent).toBe("The atlas computes wind roses and sand-flux statistics only for land cells (ERA5 land–sea mask fraction > 0). This cell has no land (land–sea mask fraction 0), so the atlas has no statistics for it. Choose a nearby land cell, or switch to ERA5-Land (coastal cells can differ between the two land masks).");
+    expect(es.querySelectorAll("p")[1].textContent).toBe("Wind roses and sand-flux statistics are computed for land cells (land–sea mask fraction above 0, i.e. any land in the cell). This cell has no land (land–sea mask fraction 0). Choose a nearby land cell.");
     expect(es.querySelector(".help")!.textContent).toBe("0.25° cell: row 458, column 770; centre 24.5°S, 12.5°E.");
     // ERA5-Land: its own land definition, otherwise the same text with the names swapped
     const land = { ...(await cs.query(458, 770)), grid: { lat0: 90, dlat: -0.1, lon0: -180, dlon: 0.1, ny: 1801, nx: 3600 } };
     const r2 = await panel(land as CellData, "era5-land");
     const p2 = r2.querySelectorAll(".empty-state p")[1].textContent!;
-    expect(p2).toBe("The atlas computes wind roses and sand-flux statistics only for land cells (ERA5-Land land–sea mask fraction > 0.5). This cell is mainly water, so the atlas has no statistics for it. Choose a nearby land cell, or switch to ERA5 (coastal cells can differ between the two land masks).");
+    expect(p2).toBe("Wind roses and sand-flux statistics are computed for land cells (land–sea mask fraction above 0.5). This cell is mainly water. Choose a nearby land cell.");
     expect(r2.querySelector(".empty-state strong")!.textContent).toBe("Outside the ERA5-Land land mask");
     for (const t of [es.textContent!, r2.querySelector(".empty-state")!.textContent!]) expect(t).not.toMatch(/\bstored\b|lsm/);
   });
@@ -276,7 +277,7 @@ describe.skipIf(!haveFix)("ERA5 fixture: panel and downloads", () => {
     const c = await cs.query(458, 781);
     expect(exportBaseName(c, "era5")).toBe("dune-atlas_era5_-24.5_15.25");
     const r = readNc(cellNetcdf(c, META("era5")));
-    expect(r.gatts.title).toBe("Dune Atlas cell export: ERA5 10 m wind histogram and sand-flux parameters at -24.5° N, 15.25° E (0.25° cell)");
+    expect(r.gatts.title).toBe("Dune Atlas cell export: ERA5 10 m wind histogram and sand-flux parameters at 24.50° S, 15.25° E (0.25° cell)");
     expect(r.gatts.geospatial_lat_resolution).toBe("0.25 degree");
     expect(r.gatts.dataset_id).toBe("era5");
     expect(Number(([] as unknown[]).concat(r.vars.cell_y.attrs.grid_dlat)[0])).toBe(-0.25);
@@ -291,7 +292,7 @@ describe.skipIf(!haveFix)("ERA5 fixture: panel and downloads", () => {
     expect(r.vars.lsm).toBeUndefined();
     const md = JSON.parse(metadataJson(c, META("era5")));
     expect(md.grid.resolution).toBe("0.25°");
-    expect(md.copernicus_notice).toContain("(ERA5, 1950–2024)");
+    expect(md.data_notice).toContain("(ERA5, 1950–2024)");
     expect(md.citation.map((x: { id: string }) => x.id)).toEqual(["dune-atlas-era5", "era5", "aridity", "vegetation"]);
     expect(readmeText(c, META("era5"))).toContain("wind_histogram.csv  Hourly ERA5 10 m wind 1950-2024 (0.25° cell)");
     expect(citationFile(c, "era5")).toMatch(/^Dune Atlas \(map\.geomorphlab\.org\), ERA5 0\.25° cell 458,781, centre 24\.50° S, 15\.25° E\nWind dataset: ERA5 0\.25°, 1950–2024/);

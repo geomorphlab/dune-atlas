@@ -23,6 +23,7 @@
     landRule: 'every cell (Mars has no land mask: all 2,592 cells carry wind data)'
     landThreshold: 0
     nonLandReason: ''
+    kind: reanalysis of Mars Year 30, with spacecraft observations of the atmosphere assimilated into a climate model
     dunesRule: 'the cell overlaps at least one dune polygon of the merged dune map (USGS Mars Global Digital
       Dune Database and Fenton 2020)'
     fieldsFrom: atlas

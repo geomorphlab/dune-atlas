@@ -50,7 +50,7 @@ describe("text shown or exported comes from the app, not from cell-store root at
     const attrs = Object.fromEntries(Object.entries(ERA5_V2_STORE_ATTRS).map(([k, v]) => [k, KEEP.has(k) ? v : mark(v)]));
     const t = await collectPublicText({}, attrs, { markDatasetDescriptions: MARK });
     expect(Object.keys(t).some((k) => k.startsWith("metadata.era5."))).toBe(true);
-    expect(t["cell.nonland.era5"]).toMatch(/fraction > 0\)\. This cell has no land/);
+    expect(t["cell.nonland.era5"]).toMatch(/fraction above 0, i\.e\. any land in the cell\)\. This cell has no land/);
     // the Wind dataset selector tooltips: app text, not the generated registry descriptions
     expect(t["panel.dataset-option.era5"]).toBe("ERA5 0.25°, 1950–2024; land cells: land–sea mask fraction > 0");
     expect(t["panel.dataset-option.era5-land"]).toBe("ERA5-Land 0.1°, 1950–2024; land cells: land–sea mask fraction > 0.5");
