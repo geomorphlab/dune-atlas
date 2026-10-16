@@ -45,13 +45,23 @@ panel from `info.landRule` and lists every other dataset; the Mars help, tour, A
 simulation or a reanalysis"; README, CITATION.cff keywords and the guides list EMARS and MACDA. Dataset
 names stay where the text is about that dataset (registry entries, citations, examples marked "e.g.").
 
-## Open (PI)
+## Decisions of the PI (16 October 2026)
 
-* Concepts (`docs/concepts/concepts-earth-mars.md`, approved text): "The two ERA5 wind datasets" (Earth)
-  will need a new title when a third Earth dataset is added; "for every hour" in the Mars entries is not
-  right for MACDA.
-* GitHub repository description and topics.
-* Before MERRA-2 / JRA-3Q: the licence of JRA-3Q-derived products (source CC BY-NC-SA 4.0); how the app
-  handles JRA-3Q's Gaussian latitudes (draw with a fitted regular grid, max offset 0.005°, exact latitudes
-  in the files; or full Gaussian support); non-square MERRA-2 cells (0.5° × 0.625°) in the texts that use one
-  cell size; the pipeline's dataset registry (provider, sampling, notice) and CLI choices.
+* Concepts: the Earth entry is titled "The wind datasets"; "for every hour" becomes "for each time step"
+  (Mars entries and the DP / RDP entries), "share of hours above threshold" "share of time steps above
+  threshold"; the Mars help and tour use "for each time step" too.
+* GitHub: description "Interactive atlas of wind-blown sand dunes, wind regimes and sand-flux fields for
+  Earth and Mars, computed from reanalysis and climate-model winds"; topics aeolian, sand-dunes,
+  geomorphology, planetary-science, mars, sediment-transport, wind, reanalysis, zarr, maplibre, web-map,
+  earth-science.
+* JRA-3Q-derived products will carry **CC BY-NC-SA 4.0**, the licence of the source (its registry
+  `credits.fieldsLicence`, so every download states it).
+* JRA-3Q's Gaussian latitudes: the app draws and snaps cells with a regular grid fitted through the end
+  rows (largest offset of a row centre about 0.005°); the downloads and the stores keep the exact
+  latitudes, and the pipeline physics (flux divergence, area weights) uses them.
+
+## Still to do before MERRA-2 / JRA-3Q
+
+Non-square MERRA-2 cells (0.5° × 0.625°) in the texts and pixel counts that use one cell size; the fitted
+grid and exact-latitude attributes for JRA-3Q; the pipeline's dataset registry (provider, sampling,
+notice) and its CLI choices; the JRA-3Q and MERRA-2 rows of DATA_LICENSE.md.

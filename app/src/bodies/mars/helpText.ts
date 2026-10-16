@@ -14,7 +14,7 @@ export const DATASET_INFO_TEXT = Object.keys(DATASET_INFO).length < 2 ? "" : `Th
 export const HELP_SECTIONS: HelpSection[] = [
   {
     id: "threshold", title: "Median grain diameter $d$",
-    body: "Sand moves when the friction velocity of the wind exceeds a threshold that depends on the grain size and on the thin Martian air. The slider at the top of the layer panel sets the median grain diameter d (50–1000 µm, default 200 µm) for every grain-size-dependent map layer and for the cell panel. For every time step of the wind dataset (each of its samples of the Mars year) the threshold $u_{*,th}$ is computed from d and that step's air density and temperature (Pähtz & Durán 2023).",
+    body: "Sand moves when the friction velocity of the wind exceeds a threshold that depends on the grain size and on the thin Martian air. The slider at the top of the layer panel sets the median grain diameter d (50–1000 µm, default 200 µm) for every grain-size-dependent map layer and for the cell panel. For each time step of the wind dataset (each of its samples of the Mars year) the threshold $u_{*,th}$ is computed from d and that step's air density and temperature (Pähtz & Durán 2023).",
   },
   {
     id: "layers", title: "Layers and Active layers",
@@ -73,7 +73,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "threshold", targets: ["#layer-panel .pinned"], title: "Median grain diameter $d$",
-    body: "This slider sets the grain diameter. The threshold friction velocity is computed for every time step from d and that step's air density and temperature; every grain-size-dependent layer and the cell panel update as you move it.",
+    body: "This slider sets the grain diameter. The threshold friction velocity is computed for each time step from d and that step's air density and temperature; every grain-size-dependent layer and the cell panel update as you move it.",
   },
   {
     id: "layers", targets: ['#layer-panel .layer-item[data-layer="rdpa"]', "#layer-panel-body .layer-group", "#layer-panel .panel-toggle"], title: "Layers and their display",
@@ -105,7 +105,7 @@ export const SHARE_TEXT = { button: "Share / copy link", title: "Share this view
 /** About: the paragraph under the AI notice (HTML) */
 export const ABOUT_INTRO_HTML = "<p>Click any cell to see its wind rose over the Mars year of the wind dataset, the sand-flux rose at the selected grain diameter, dune-orientation modes and all wind-regime parameters.</p>";
 /** About, Data sources: the items after the wind datasets' (HTML) */
-export const DATA_SOURCES_ITEMS_HTML = `<li><strong>Sand-flux fields</strong>: for every time step of the wind dataset, the threshold and the saturated transport rate of Pähtz &amp; Durán (2023) at the selected median grain diameter d (grain density 3000 kg/m³, g = 3.71 m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in Gunn (2026). Fluxes are volumes of packed sand (packing fraction 0.6, pore space included) per metre width per Earth year (365.25 days), in m²/yr, as on Earth.</li>
+export const DATA_SOURCES_ITEMS_HTML = `<li><strong>Sand-flux fields</strong>: for each time step of the wind dataset, the threshold and the saturated transport rate of Pähtz &amp; Durán (2023) at the selected median grain diameter d (grain density 3000 kg/m³, g = 3.71 m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in Gunn (2026). Fluxes are volumes of packed sand (packing fraction 0.6, pore space included) per metre width per Earth year (365.25 days), in m²/yr, as on Earth.</li>
   <li><strong>Dune map</strong>: USGS Mars Global Digital Dune Database (MGD3; Hayward et al. 2007, 2010, 2012, 2014) plus the small dune fields of Fenton (2020, Icarus 352, 114018), merged into 3,514 dune-field polygons (Mars 2000 sphere); MGD3 polygons: public domain (U.S. Geological Survey); Fenton (2020) dune fields: CC BY 4.0.</li>
   <li><strong>Saturated flux divergence</strong> ${mathHtml("$\\nabla\\cdot\\vec{q}_s$")}: divergence of the resultant drift potential vector (magnitude RDP, direction RDD) on the Mars sphere (R = 3389.5 km), following Gunn (2026), Methods M6, with central differences on the grid of the wind dataset (${datasetFacts("resolution")}). Negative values (convergence) imply deposition.</li>
   <li><strong>Elevation and shaded relief</strong>: MGS MOLA – MEX HRSC blended DEM, 200 m, v2 (Fergason, Hare &amp; Laura 2018, USGS Astrogeology); licence: MOLA (CC0) and HRSC (CC BY-SA 3.0 IGO). Derived elevation and relief tiles: CC BY-SA 3.0 IGO.</li>`;

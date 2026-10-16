@@ -169,9 +169,9 @@ ZH: 点击任意陆地网格单元即可打开网格单元面板：风玫瑰图�
 EN: Wind datasets
 ZH: 风场数据集
 
-## earth.help.datasets.body STALE (Help panel)
+## earth.help.datasets.body (Help panel)
 EN: The Wind dataset selector switches between wind datasets (ERA5-Land, 0.1°, 1950–2024; ERA5, 0.25°, 1950–2024). ERA5-Land, used by Gunn (2026), is a land-surface rerun driven by ERA5 atmospheric fields interpolated to its grid (Muñoz-Sabater et al. 2021), so its winds are not an independent estimate, and the datasets can still differ: e.g., Baas (2026) reports ERA5-Land 10 m wind speeds 20–30 % below those of ERA5. Where the datasets give different results, treat them as uncertain. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.
-ZH: “风场数据集”选择器可在不同的再分析数据集风况统计之间切换（ERA5-Land，0.1°；ERA5，0.25°；1950–2024 年）。Gunn (2026) 所用的 ERA5-Land 是由插值到其网格上的 ERA5 大气场驱动的陆面重运行产品（Muñoz-Sabater et al. 2021），因此其风场并非独立估计，但各数据集之间仍可能存在差异：例如，Baas (2026) 报告 ERA5-Land 的 10 m 风速比 ERA5 低 20–30 %。在各数据集结果不一致之处，应将结果视为不确定。风场与输沙通量图层以及网格单元面板随所选数据集变化；沙丘区掩膜、干旱指数与植被图层对所有数据集均相同。
+ZH: “风场数据集”选择器可在不同的风场数据集之间切换（ERA5-Land，0.1°，1950–2024 年；ERA5，0.25°，1950–2024 年）。Gunn (2026) 所用的 ERA5-Land 是由插值到其网格上的 ERA5 大气场驱动的陆面重运行产品（Muñoz-Sabater et al. 2021），因此其风场并非独立估计，但各数据集之间仍可能存在差异：例如，Baas (2026) 报告 ERA5-Land 的 10 m 风速比 ERA5 低 20–30 %。在各数据集结果不一致之处，应将结果视为不确定。风场与输沙通量图层以及网格单元面板随所选数据集变化；沙丘区掩膜、干旱指数与植被图层对所有数据集均相同。
 
 ## earth.help.downloads.title (Help panel)
 EN: Downloads and citation
@@ -692,16 +692,16 @@ EN: Drift potential (DP)
 ZH: 输沙势（DP）
 
 ## concept.drift-potential-dp.p1 (Concepts)
-EN: DP is the saturated sand flux averaged over every hour of the record, whatever its direction: how much sand the wind could move in a year over a flat sandy bed, in m²/yr. Higher DP means a windier, more energetic sand-transport environment. The name follows Fryberger & Dean (1979), whose drift potential also measures transport capacity, but the two are different quantities. Fryberger's DP is in vector units, computed from 10 m wind speeds in knots as V²(V − Vt) with a 12-knot threshold. The atlas DP is a physical flux computed from the friction velocity. Because the two formulas grow differently with wind speed, there is no fixed conversion factor, and Fryberger's low, intermediate and high-energy classes (below 200, 200–400 and above 400 vector units) do not apply to atlas values.
-ZH: DP 是记录中每一小时饱和输沙率（无论其方向）的平均值，即风在一年内可在平坦沙质床面上搬运的沙量，单位为 m²/yr。DP 越高，表示风力越强、风沙输运环境能量越高。该名称沿用 Fryberger & Dean (1979)，其输沙势同样衡量输沙能力，但两者是不同的物理量。Fryberger 的 DP 以矢量单位表示，由以节为单位的 10 m 风速按 V²(V − Vt) 计算，临界风速为 12 节。图集 DP 则是由摩阻风速计算得到的物理通量。由于两个公式随风速增长的方式不同，不存在固定的换算系数，Fryberger 的低、中、高能量等级（低于 200、200–400 和高于 400 矢量单位）不适用于图集数值。
+EN: DP is the saturated sand flux averaged over each time step of the record, whatever its direction: how much sand the wind could move in a year over a flat sandy bed, in m²/yr. Higher DP means a windier, more energetic sand-transport environment. The name follows Fryberger & Dean (1979), whose drift potential also measures transport capacity, but the two are different quantities. Fryberger's DP is in vector units, computed from 10 m wind speeds in knots as V²(V − Vt) with a 12-knot threshold. The atlas DP is a physical flux computed from the friction velocity. Because the two formulas grow differently with wind speed, there is no fixed conversion factor, and Fryberger's low, intermediate and high-energy classes (below 200, 200–400 and above 400 vector units) do not apply to atlas values.
+ZH: DP 是记录中每个时间步饱和输沙率（无论其方向）的平均值，即风在一年内可在平坦沙质床面上搬运的沙量，单位为 m²/yr。DP 越高，表示风力越强、风沙输运环境能量越高。该名称沿用 Fryberger & Dean (1979)，其输沙势同样衡量输沙能力，但两者是不同的物理量。Fryberger 的 DP 以矢量单位表示，由以节为单位的 10 m 风速按 V²(V − Vt) 计算，临界风速为 12 节。图集 DP 则是由摩阻风速计算得到的物理通量。由于两个公式随风速增长的方式不同，不存在固定的换算系数，Fryberger 的低、中、高能量等级（低于 200、200–400 和高于 400 矢量单位）不适用于图集数值。
 
 ## concept.resultant-drift-potential-rdp.title (Concepts)
 EN: Resultant drift potential (RDP)
 ZH: 合成输沙势（RDP）
 
 ## concept.resultant-drift-potential-rdp.p1 (Concepts)
-EN: RDP is the net sand flux: the hourly fluxes added as vectors, so that transport in opposite directions cancels, then averaged over the record (m²/yr). It equals DP only if all transport goes the same way. A cell with high DP but low RDP has strong winds that move sand back and forth with little net displacement; a cell with RDP close to DP moves sand steadily in one direction. RDP is the magnitude of the vector whose direction is the resultant drift direction (RDD), and the divergence of this vector gives the flux divergence layer.
-ZH: RDP 为合成输沙势：将逐小时输沙通量按矢量相加，使相反方向的输沙相互抵消，再对整个序列求平均（m²/yr）。只有当所有输沙方向一致时，RDP 才等于 DP。DP 高而 RDP 低的网格单元，强风使沙物质来回搬运而净位移很小；RDP 接近 DP 的网格单元，沙物质持续向同一方向移动。RDP 是一个矢量的模，该矢量的方向即合成输沙方向（RDD），该矢量的散度即为输沙通量散度图层。
+EN: RDP is the net sand flux: the fluxes of each time step added as vectors, so that transport in opposite directions cancels, then averaged over the record (m²/yr). It equals DP only if all transport goes the same way. A cell with high DP but low RDP has strong winds that move sand back and forth with little net displacement; a cell with RDP close to DP moves sand steadily in one direction. RDP is the magnitude of the vector whose direction is the resultant drift direction (RDD), and the divergence of this vector gives the flux divergence layer.
+ZH: RDP 为合成输沙势：将各时间步的输沙通量按矢量相加，使相反方向的输沙相互抵消，再对整个序列求平均（m²/yr）。只有当所有输沙方向一致时，RDP 才等于 DP。DP 高而 RDP 低的网格单元，强风使沙物质来回搬运而净位移很小；RDP 接近 DP 的网格单元，沙物质持续向同一方向移动。RDP 是一个矢量的模，该矢量的方向即合成输沙方向（RDD），该矢量的散度即为输沙通量散度图层。
 
 ## concept.resultant-drift-direction-rdd.title (Concepts)
 EN: Resultant drift direction (RDD)
@@ -829,9 +829,9 @@ ZH: 地球图集提供 1950–2024 年两套逐小时 10 m 风速序列。ERA5 �
 EN: Median grain diameter $d$
 ZH: 沙粒中值粒径 $d$
 
-## mars.help.threshold.body STALE (Help panel)
-EN: Sand moves when the friction velocity of the wind exceeds a threshold that depends on the grain size and on the thin Martian air. The slider at the top of the layer panel sets the median grain diameter d (50–1000 µm, default 200 µm) for every grain-size-dependent map layer and for the cell panel. For every time step of the wind dataset (each of its samples of the Mars year) the threshold $u_{*,th}$ is computed from d and that step's air density and temperature (Pähtz & Durán 2023).
-ZH: 当摩阻风速超过某一临界值时，沙粒开始运动，该临界风速取决于粒径以及稀薄的火星大气。图层面板顶部的滑块用于设定中值粒径 d（50–1000 µm，默认 200 µm），该值适用于所有依赖粒径的地图图层以及网格单元面板。对于火星年的每一小时，临界值 $u_{*,th}$ 均由 d 以及该小时的空气密度和温度计算得出（Pähtz & Durán 2023）。
+## mars.help.threshold.body (Help panel)
+EN: Sand moves when the friction velocity of the wind exceeds a threshold that depends on the grain size and on the thin Martian air. The slider at the top of the layer panel sets the median grain diameter d (50–1000 µm, default 200 µm) for every grain-size-dependent map layer and for the cell panel. For each time step of the wind dataset (each of its samples of the Mars year) the threshold $u_{*,th}$ is computed from d and that step's air density and temperature (Pähtz & Durán 2023).
+ZH: 当摩阻风速超过某一临界值时，沙粒开始运动，该临界风速取决于粒径以及稀薄的火星大气。图层面板顶部的滑块用于设定中值粒径 d（50–1000 µm，默认 200 µm），该值适用于所有依赖粒径的地图图层以及网格单元面板。对于风场数据集的每个时间步（即其在火星年中的每个样本），临界值 $u_{*,th}$ 均由 d 以及该时间步的空气密度和温度计算得出（Pähtz & Durán 2023）。
 
 ## mars.help.layers.title (Help panel)
 EN: Layers and Active layers
@@ -869,9 +869,9 @@ ZH: 点击任意网格单元即可打开网格单元面板：其中包括风玫�
 EN: Wind dataset
 ZH: 风场数据集
 
-## mars.help.datasets.body STALE (Help panel)
+## mars.help.datasets.body (Help panel)
 EN: The Wind dataset selector switches between Mars wind datasets (MCMC FV3, 2°; EMARS, 6° × 5.14°; MACDA, 5°), each one Mars year of lowest-level winds on its own grid (MCMC FV3: free-running climate-model simulation; EMARS and MACDA: reanalysis of Mars Year 30, with spacecraft observations of the atmosphere assimilated into a climate model). The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain. No EMARS data poleward of 87.43° N: the northernmost cells of its grid are centred at 84.86° N.
-ZH: “风场数据集”选择器可在不同的火星风场数据集之间切换（MCMC FV3，2°；EMARS，6°×5.14°；MACDA，5°），每个数据集均为各自网格上一个火星年的最低层风：MCMC FV3 是自由运行的气候模型模拟；EMARS 和 MACDA 是第 30 个火星年的再分析数据集，将航天器对大气的观测同化到气候模型中。风场与输沙通量图层以及网格单元面板随所选数据集而变；沙丘图和高程对所有数据集都相同。若各数据集给出的结果不同，应将其视为不确定。87.43° N 以北无 EMARS 数据：其网格最北一行单元的中心位于 84.86° N。
+ZH: “风场数据集”选择器可在不同的火星风场数据集之间切换（MCMC FV3，2°；EMARS，6°×5.14°；MACDA，5°），每个数据集均为各自网格上一个火星年的最低层风（MCMC FV3：自由运行的气候模型模拟；EMARS 和 MACDA：第 30 个火星年的再分析数据集，将航天器对大气的观测同化到气候模型中）。风场与输沙通量图层以及网格单元面板随所选数据集而变；沙丘图和高程对所有数据集都相同。若各数据集给出的结果不同，应将其视为不确定。87.43° N 以北无 EMARS 数据：其网格最北一行单元的中心位于 84.86° N。
 
 ## mars.help.basemaps.title (Help panel)
 EN: Basemaps
@@ -885,9 +885,9 @@ ZH: 初始底图为 MOLA–HRSC 融合高程模型的阴影地形（Fergason, Ha
 EN: Downloads and citation
 ZH: 下载与引用
 
-## mars.help.downloads.body STALE (Help panel)
+## mars.help.downloads.body (Help panel)
 EN: Download & cite in the cell panel saves the wind and air series and all parameters of the cell as NetCDF or as a CSV bundle, with the citation of every data source. Please cite the wind dataset, Pähtz & Durán (2023) for the transport law and Gunn (2026), which outlines the methods.
-ZH: 网格单元面板中的“下载与引用”可将该网格单元的逐小时风与大气序列及全部参数保存为 NetCDF 文件或 CSV 文件包，并附每个数据来源的引用信息。请引用所用风场数据集、输沙定律的出处 Pähtz & Durán (2023)，以及概述方法的 Gunn (2026)。
+ZH: 网格单元面板中的“下载与引用”可将该网格单元的风与大气序列及全部参数保存为 NetCDF 文件或 CSV 文件包，并附每个数据来源的引用信息。请引用所用风场数据集、输沙定律的出处 Pähtz & Durán (2023)，以及概述方法的 Gunn (2026)。
 
 ## mars.help.region.title (Help panel)
 EN: Downloading a region
@@ -943,9 +943,9 @@ ZH: 拖动以平移地图；滚动鼠标滚轮、双指捏合或使用 + 和 −
 EN: Median grain diameter $d$
 ZH: 中值粒径 $d$
 
-## mars.tour.threshold.body STALE (Guided tour)
-EN: This slider sets the grain diameter. The threshold friction velocity is computed for every time step from d and that step's air density and temperature; every grain-size-dependent layer and the cell panel update as you move it.
-ZH: 此滑块用于设置粒径。临界摩阻风速根据 d 以及该小时的空气密度和温度逐小时计算；移动滑块时，所有依赖粒径的图层及网格单元面板都会随之更新。
+## mars.tour.threshold.body (Guided tour)
+EN: This slider sets the grain diameter. The threshold friction velocity is computed for each time step from d and that step's air density and temperature; every grain-size-dependent layer and the cell panel update as you move it.
+ZH: 此滑块用于设置粒径。临界摩阻风速根据 d 以及该时间步的空气密度和温度逐时间步计算；移动滑块时，所有依赖粒径的图层及网格单元面板都会随之更新。
 
 ## mars.tour.layers.title (Guided tour)
 EN: Layers and their display
@@ -1324,16 +1324,16 @@ EN: Saturated sand flux and the transport law
 ZH: 饱和输沙率与输沙定律
 
 ## concept.mars.saturated-sand-flux-and-the-transport-law.p1 (Concepts)
-EN: Saturated sand flux is the rate at which wind would move sand over a flat bed fully covered by loose, dry sand: the transport capacity of the wind, not necessarily the transport actually taking place. On Mars the atlas uses the transport law of Pähtz & Durán (2023), derived from numerical simulations for planetary conditions. For every hour, the friction velocity u* comes from the lowest-level wind of the climate model through a smooth-wall profile, and the threshold from the grain diameter and that hour's air density and temperature. Fluxes are volumes of packed sand (packing fraction 0.6, pore space included) per metre width per Earth year (m²/yr), as on Earth. Real transport is lower wherever sand is scarce or indurated.
-ZH: 饱和输沙率是指风在完全覆盖松散干沙的平坦床面上搬运沙粒的速率：即风的输沙能力，而不一定是实际发生的输沙。在火星上，本图集采用 Pähtz & Durán (2023) 的输沙定律，该定律由针对行星条件的数值模拟推导得出。对于每一小时，摩阻风速 u* 由气候模型最低层的风速通过光滑壁面廓线求得，临界值则由颗粒粒径以及该小时的空气密度和温度求得。输沙率以每米宽度每地球年搬运的密实沙体积表示（堆积体积分数 0.6，含孔隙空间），单位为 m²/yr，与地球相同。在沙源稀少或沙面固结的地方，实际输沙量较低。
+EN: Saturated sand flux is the rate at which wind would move sand over a flat bed fully covered by loose, dry sand: the transport capacity of the wind, not necessarily the transport actually taking place. On Mars the atlas uses the transport law of Pähtz & Durán (2023), derived from numerical simulations for planetary conditions. For each time step, the friction velocity u* comes from the lowest-level wind of the wind dataset through a smooth-wall profile, and the threshold from the grain diameter and that step's air density and temperature. Fluxes are volumes of packed sand (packing fraction 0.6, pore space included) per metre width per Earth year (m²/yr), as on Earth. Real transport is lower wherever sand is scarce or indurated.
+ZH: 饱和输沙率是指风在完全覆盖松散干沙的平坦床面上搬运沙粒的速率：即风的输沙能力，而不一定是实际发生的输沙。在火星上，本图集采用 Pähtz & Durán (2023) 的输沙定律，该定律由针对行星条件的数值模拟推导得出。对于每个时间步，摩阻风速 u* 由风场数据集最低层的风速通过光滑壁面廓线求得，临界值则由颗粒粒径以及该时间步的空气密度和温度求得。输沙率以每米宽度每地球年搬运的密实沙体积表示（堆积体积分数 0.6，含孔隙空间），单位为 m²/yr，与地球相同。在沙源稀少或沙面固结的地方，实际输沙量较低。
 
 ## concept.mars.grain-size-and-threshold.title (Concepts)
 EN: Grain size and threshold
 ZH: 粒径与临界值
 
 ## concept.mars.grain-size-and-threshold.p1 (Concepts)
-EN: On Mars the slider sets the median grain diameter d rather than the threshold. The threshold friction velocity is computed for every hour from d and that hour's air density and temperature with the law of Pähtz & Durán (2023), because the thin, cold Martian air changes from hour to hour and season to season. Martian air near the surface is only about 1–2 % as dense as Earth's, so a much higher friction velocity is needed to move the same grains. The cell panel shows the median threshold over the year, its 5–95 % range, the equivalent wind at the lowest model level and the share of hours above threshold.
-ZH: 在火星上，滑块设定的是中值粒径 d，而非临界值。临界摩阻风速根据 d 以及该小时的空气密度和温度，采用 Pähtz & Durán (2023) 的定律逐小时计算，因为稀薄、寒冷的火星大气随小时和季节不断变化。火星近地表大气密度仅约为地球的 1–2 %，因此需要高得多的摩阻风速才能搬运同样的颗粒。网格单元面板显示全年临界值的中位数、其 5–95 % 范围、模型最低层的等效风速以及超过临界值的小时占比。
+EN: On Mars the slider sets the median grain diameter d rather than the threshold. The threshold friction velocity is computed for each time step from d and that step's air density and temperature with the law of Pähtz & Durán (2023), because the thin, cold Martian air changes from hour to hour and season to season. Martian air near the surface is only about 1–2 % as dense as Earth's, so a much higher friction velocity is needed to move the same grains. The cell panel shows the median threshold over the year, its 5–95 % range, the equivalent wind at the lowest model level and the share of time steps above threshold.
+ZH: 在火星上，滑块设定的是中值粒径 d，而非临界值。临界摩阻风速根据 d 以及该时间步的空气密度和温度，采用 Pähtz & Durán (2023) 的定律逐时间步计算，因为稀薄、寒冷的火星大气随小时和季节不断变化。火星近地表大气密度仅约为地球的 1–2 %，因此需要高得多的摩阻风速才能搬运同样的颗粒。网格单元面板显示全年临界值的中位数、其 5–95 % 范围、模型最低层的等效风速以及超过临界值的时间步占比。
 
 # Interface
 
@@ -3139,10 +3139,6 @@ ZH: “风场数据集”选择器用于在不同风场数据集之间切换（�
 
 # About
 
-## c.005fdc07 (About)
-EN: <strong>Control</strong>: on Earth the slider sets one threshold friction velocity⟦0⟧for the whole record (default ⟦#0⟧ m/s); on Mars it sets the median grain diameter d (default ⟦#1⟧ µm), and the threshold is computed for every time step of the wind record from d and that step's air density and temperature.
-ZH: <strong>控制量</strong>：在地球图集中，滑块设定的是适用于整个记录的单一临界摩阻风速⟦0⟧（默认值 ⟦#0⟧ m/s）；在火星图集中，滑块设定的是中值粒径 d（默认值 ⟦#1⟧ µm），临界值则根据 d 及每个时间步的空气密度和温度，对风场记录逐时间步计算。
-
 ## c.b5eabe06 (About)
 EN: <strong>Transport law and wind profile</strong>: Earth uses the transport law of⟦0⟧, with⟦1⟧from the ⟦#0⟧ m wind and a roughness length of ⟦#1⟧ mm; Mars uses the transport law of⟦2⟧, with⟦3⟧from the wind at the lowest level of the wind dataset (its height above the surface differs between datasets) and a smooth-wall profile without a roughness length.
 ZH: <strong>输沙定律与风廓线</strong>：地球图集采用⟦0⟧的输沙定律，⟦1⟧由 ⟦#0⟧ m 高度的风速及 ⟦#1⟧ mm 的空气动力学粗糙度求得；火星图集采用⟦2⟧的输沙定律，⟦3⟧由风场数据集最低层的风速求得（该层离地高度因数据集而异），并采用不含粗糙度的光滑壁面风廓线。
@@ -3201,19 +3197,41 @@ ZH: 整个火星年全部 N 个样本的平坦床面饱和输沙率的时间平�
 EN: Mean over the samples of the Mars year of the lowest-layer air density⟦0⟧of the wind dataset (one sample per Mars hour;⟦1⟧= mid pressure of the lowest layer,⟦2⟧= lowest-level temperature).
 ZH: 风场数据集最底层空气密度⟦0⟧在火星年全部样本上的平均值（每个火星小时一个样本；⟦1⟧= 最底层的中间气压，⟦2⟧= 最底层温度）。
 
-# About
-
-## c.b8bd4f5a (About)
-EN: <strong>Sand-flux fields</strong>: for every time step of the wind dataset, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.
-ZH: <strong>输沙通量场</strong>：对风场数据集的每个时间步，按所选中值粒径 d（颗粒密度 ⟦#0⟧ kg/m³，g = ⟦#1⟧ m/s²）计算⟦0⟧的临界值与饱和输沙率，并取年平均；输沙势、脊线输沙通量与沙丘朝向模式按⟦1⟧所述方法计算。输沙通量为单位宽度、单位地球年（⟦#3⟧ 天）内堆积沙的体积（堆积体积分数 ⟦#2⟧，含孔隙空间），单位为 m²/yr，与地球上相同。
-
 # Screen-reader labels and tooltips
 
 ## c.1803468a (Screen-reader labels and tooltips)
 EN: Threshold friction velocity at this d, median over the samples of the Mars year
 ZH: 该粒径下的临界摩阻风速，火星年全部样本的中值
 
+# Concepts
+
+## concept.earth.the-wind-datasets.title (Concepts)
+EN: The wind datasets
+ZH: 风场数据集
+
+## concept.earth.the-wind-datasets.p1 (Concepts)
+EN: The Earth atlas offers two hourly 10 m wind records for 1950–2024. ERA5 is ECMWF's global atmospheric reanalysis on a 0.25° grid (about 28 km). ERA5-Land re-runs ECMWF's land-surface model at 0.1° (about 9–11 km), driven by ERA5 atmospheric fields interpolated to the finer grid, so its winds are not an independent estimate. Baas (2026) reports that ERA5-Land 10 m wind speeds are systematically 20–30 % lower than those of ERA5. Gunn (2026) used ERA5-Land, and the dune map is on its grid. Neither dataset resolves winds around individual dunes or small hills. Where the two datasets give different directions, ratios or fluxes, treat the result as uncertain.
+ZH: 地球图集提供 1950–2024 年两套逐小时 10 m 风速序列。ERA5 是 ECMWF 的全球大气再分析数据集，网格分辨率为 0.25°（约 28 km）。ERA5-Land 以 0.1°（约 9–11 km）的分辨率重新运行 ECMWF 的陆面模型，其驱动场为插值到更细网格上的 ERA5 大气场，因此其风场并非独立的估计。Baas (2026) 指出，ERA5-Land 的 10 m 风速系统性地比 ERA5 低 20–30 %。Gunn (2026) 使用的是 ERA5-Land，沙丘分布图也基于其网格。两套数据集均无法分辨单个沙丘或小山丘周围的风场。若两套数据集给出的方向、比值或通量不同，应将结果视为不确定。
+
+# About
+
+## c.d62ef04b (About)
+EN: <strong>Control</strong>: on Earth the slider sets one threshold friction velocity⟦0⟧for the whole record (default ⟦#0⟧ m/s); on Mars it sets the median grain diameter d (default ⟦#1⟧ µm), and the threshold is computed for each time step of the wind record from d and that step's air density and temperature.
+ZH: <strong>控制量</strong>：在地球图集中，滑块设定的是适用于整个记录的单一临界摩阻风速⟦0⟧（默认值 ⟦#0⟧ m/s）；在火星图集中，滑块设定的是中值粒径 d（默认值 ⟦#1⟧ µm），临界值则根据 d 及每个时间步的空气密度和温度，对风场记录逐时间步计算。
+
+## c.238c1534 (About)
+EN: <strong>Sand-flux fields</strong>: for each time step of the wind dataset, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.
+ZH: <strong>输沙通量场</strong>：对风场数据集的每个时间步，按所选中值粒径 d（颗粒密度 ⟦#0⟧ kg/m³，g = ⟦#1⟧ m/s²）计算⟦0⟧的临界值与饱和输沙率，并取年平均；输沙势、脊线输沙通量与沙丘朝向模式按⟦1⟧所述方法计算。输沙通量为单位宽度、单位地球年（⟦#3⟧ 天）内堆积沙的体积（堆积体积分数 ⟦#2⟧，含孔隙空间），单位为 m²/yr，与地球上相同。
+
 # Unused (English changed or removed)
+
+## c.005fdc07 (Unused (English changed or removed))
+EN: <strong>Control</strong>: on Earth the slider sets one threshold friction velocity⟦0⟧for the whole record (default ⟦#0⟧ m/s); on Mars it sets the median grain diameter d (default ⟦#1⟧ µm), and the threshold is computed for every time step of the wind record from d and that step's air density and temperature.
+ZH: <strong>控制量</strong>：在地球图集中，滑块设定的是适用于整个记录的单一临界摩阻风速⟦0⟧（默认值 ⟦#0⟧ m/s）；在火星图集中，滑块设定的是中值粒径 d（默认值 ⟦#1⟧ µm），临界值则根据 d 及每个时间步的空气密度和温度，对风场记录逐时间步计算。
+
+## c.b8bd4f5a (Unused (English changed or removed))
+EN: <strong>Sand-flux fields</strong>: for every time step of the wind dataset, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.
+ZH: <strong>输沙通量场</strong>：对风场数据集的每个时间步，按所选中值粒径 d（颗粒密度 ⟦#0⟧ kg/m³，g = ⟦#1⟧ m/s²）计算⟦0⟧的临界值与饱和输沙率，并取年平均；输沙势、脊线输沙通量与沙丘朝向模式按⟦1⟧所述方法计算。输沙通量为单位宽度、单位地球年（⟦#3⟧ 天）内堆积沙的体积（堆积体积分数 ⟦#2⟧，含孔隙空间），单位为 m²/yr，与地球上相同。
 
 ## c.8cfd1c5c (Unused (English changed or removed))
 EN: <strong>Control</strong>: on Earth the slider sets one threshold friction velocity⟦0⟧for all hours (default ⟦#0⟧ m/s); on Mars it sets the median grain diameter d (default ⟦#1⟧ µm), and the threshold is computed for every hour from d and that hour's air density and temperature.

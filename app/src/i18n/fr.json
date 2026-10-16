@@ -155,6 +155,10 @@
   "text": "Jeux de données de vent",
   "en": "87c1b770"
  },
+ "earth.help.datasets.body": {
+  "text": "Le sélecteur Jeu de données de vent permet de basculer entre des jeux de données de vent (ERA5-Land, 0,1°, 1950–2024 ; ERA5, 0,25°, 1950–2024). ERA5-Land, utilisé par Gunn (2026), est une réexécution de surface terrestre forcée par les champs atmosphériques d’ERA5 interpolés sur sa grille (Muñoz-Sabater et al. 2021). Ses vents ne constituent donc pas une estimation indépendante, et les jeux de données peuvent malgré tout différer : par exemple, Baas (2026) signale des vitesses du vent à 10 m d’ERA5-Land inférieures de 20 à 30 % à celles d’ERA5. Là où les jeux de données donnent des résultats différents, considérez ces résultats comme incertains. Les calques de vent et de flux de sable ainsi que le panneau de cellule suivent la sélection. Le masque des champs de dunes et les calques d’aridité et de végétation sont les mêmes pour tous les jeux de données.",
+  "en": "819a6971"
+ },
  "earth.help.downloads.title": {
   "text": "Téléchargements et citation",
   "en": "2a54e5c0"
@@ -640,16 +644,16 @@
   "en": "8edeaba5"
  },
  "concept.drift-potential-dp.p1": {
-  "text": "Le DP est le flux de sable saturé moyenné sur toutes les heures de la série, quelle que soit sa direction. Il exprime la quantité de sable que le vent pourrait déplacer en un an sur un lit sableux plat, en m²/yr. Un DP plus élevé traduit un environnement de transport sableux plus venteux et plus énergétique. Le nom reprend celui de Fryberger & Dean (1979), dont le potentiel de dérive mesure lui aussi une capacité de transport, mais il s’agit de deux grandeurs différentes. Le DP de Fryberger s’exprime en unités vectorielles (VU) et se calcule à partir des vitesses du vent à 10 m en nœuds, selon V²(V − Vt), avec un seuil de 12 nœuds. Le DP de l’atlas est un flux physique calculé à partir de la vitesse de frottement. Comme les deux formules croissent différemment avec la vitesse du vent, il n’existe pas de facteur de conversion fixe. Les classes de faible, moyenne et forte énergie de Fryberger (inférieur à 200, de 200 à 400 et supérieur à 400 unités vectorielles) ne s’appliquent donc pas aux valeurs de l’atlas.",
-  "en": "02c7459e"
+  "text": "Le DP est le flux de sable saturé moyenné sur chaque pas de temps de la série, quelle que soit sa direction. Il exprime la quantité de sable que le vent pourrait déplacer en un an sur un lit sableux plat, en m²/yr. Un DP plus élevé traduit un environnement de transport sableux plus venteux et plus énergétique. Le nom reprend celui de Fryberger & Dean (1979), dont le potentiel de dérive mesure lui aussi une capacité de transport, mais il s’agit de deux grandeurs différentes. Le DP de Fryberger s’exprime en unités vectorielles (VU) et se calcule à partir des vitesses du vent à 10 m en nœuds, selon V²(V − Vt), avec un seuil de 12 nœuds. Le DP de l’atlas est un flux physique calculé à partir de la vitesse de frottement. Comme les deux formules croissent différemment avec la vitesse du vent, il n’existe pas de facteur de conversion fixe. Les classes de faible, moyenne et forte énergie de Fryberger (inférieur à 200, de 200 à 400 et supérieur à 400 unités vectorielles) ne s’appliquent donc pas aux valeurs de l’atlas.",
+  "en": "30d3f25d"
  },
  "concept.resultant-drift-potential-rdp.title": {
   "text": "Potentiel de dérive résultant (RDP)",
   "en": "a7c0ad69"
  },
  "concept.resultant-drift-potential-rdp.p1": {
-  "text": "Le RDP est le flux de sable net : les flux horaires sont additionnés comme des vecteurs, de sorte que les transports de sens opposés s’annulent, puis moyennés sur la série (m²/yr). Il n’est égal au DP que si tout le transport s’effectue dans la même direction. Une cellule à DP élevé mais à RDP faible connaît des vents forts qui déplacent le sable dans un sens puis dans l’autre, avec un faible déplacement net ; une cellule dont le RDP est proche du DP déplace le sable de façon régulière dans une seule direction. Le RDP est la norme du vecteur dont la direction est la direction de dérive résultante (RDD), et la divergence de ce vecteur fournit le calque de divergence du flux.",
-  "en": "b899b874"
+  "text": "Le RDP est le flux de sable net : les flux de chaque pas de temps sont additionnés comme des vecteurs, de sorte que les transports de sens opposés s’annulent, puis moyennés sur la série (m²/yr). Il n’est égal au DP que si tout le transport s’effectue dans la même direction. Une cellule à DP élevé mais à RDP faible connaît des vents forts qui déplacent le sable dans un sens puis dans l’autre, avec un faible déplacement net ; une cellule dont le RDP est proche du DP déplace le sable de façon régulière dans une seule direction. Le RDP est la norme du vecteur dont la direction est la direction de dérive résultante (RDD), et la divergence de ce vecteur fournit le calque de divergence du flux.",
+  "en": "0b7ff426"
  },
  "concept.resultant-drift-direction-rdd.title": {
   "text": "Direction de dérive résultante (RDD)",
@@ -775,6 +779,10 @@
   "text": "Diamètre médian des grains $d$",
   "en": "37e94b33"
  },
+ "mars.help.threshold.body": {
+  "text": "Le sable se met en mouvement lorsque la vitesse de frottement du vent dépasse un seuil qui dépend de la taille des grains et de l’air martien raréfié. Le curseur en haut du panneau des calques fixe le diamètre médian des grains d (50–1000 µm, 200 µm par défaut) pour tous les calques cartographiques dépendant de la taille des grains et pour le panneau de cellule. Pour chaque pas de temps du jeu de données de vent (chacun de ses échantillons de l’année martienne), le seuil $u_{*,th}$ est calculé à partir de d ainsi que de la masse volumique et de la température de l’air à ce pas de temps (Pähtz & Durán 2023).",
+  "en": "d84f9bfb"
+ },
  "mars.help.layers.title": {
   "text": "Calques et calques actifs",
   "en": "02065ff6"
@@ -811,6 +819,10 @@
   "text": "Jeu de données de vent",
   "en": "9f43d0a3"
  },
+ "mars.help.datasets.body": {
+  "text": "Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (MCMC FV3, 2° ; EMARS, 6° × 5,14° ; MACDA, 5°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille (MCMC FV3 : simulation libre d’un modèle climatique ; EMARS et MACDA : réanalyse de l’année martienne 30, avec des observations de l’atmosphère faites par des sondes spatiales assimilées dans un modèle climatique). Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Lorsque les jeux de données donnent des résultats différents, considérez ces résultats comme incertains. Pas de données EMARS au-delà de 87,43° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur 84,86° N.",
+  "en": "e6e4de03"
+ },
  "mars.help.basemaps.title": {
   "text": "Fonds de carte",
   "en": "f3e85667"
@@ -822,6 +834,10 @@
  "mars.help.downloads.title": {
   "text": "Téléchargements et citation",
   "en": "2a54e5c0"
+ },
+ "mars.help.downloads.body": {
+  "text": "Télécharger et citer, dans le panneau de cellule, enregistre les séries du vent et de l’air ainsi que tous les paramètres de la cellule au format NetCDF ou sous forme d’archive CSV, avec la citation de chaque source de données. Veuillez citer le jeu de données de vent, Pähtz & Durán (2023) pour la loi de transport et Gunn (2026), qui présente les méthodes.",
+  "en": "8fd07a8c"
  },
  "mars.help.region.title": {
   "text": "Télécharger une région",
@@ -874,6 +890,10 @@
  "mars.tour.threshold.title": {
   "text": "Diamètre médian des grains $d$",
   "en": "37e94b33"
+ },
+ "mars.tour.threshold.body": {
+  "text": "Ce curseur règle le diamètre des grains. La vitesse de frottement seuil est calculée pour chaque pas de temps à partir de d ainsi que de la masse volumique et de la température de l’air à ce pas de temps ; tous les calques dépendant de la taille des grains et le panneau de la cellule se mettent à jour lorsque vous le déplacez.",
+  "en": "5d70237e"
  },
  "mars.tour.layers.title": {
   "text": "Les calques et leur affichage",
@@ -1220,16 +1240,16 @@
   "en": "ebaf7f16"
  },
  "concept.mars.saturated-sand-flux-and-the-transport-law.p1": {
-  "text": "Le flux de sable saturé est le débit auquel le vent déplacerait le sable sur un lit plat entièrement recouvert de sable meuble et sec : c’est la capacité de transport du vent, et pas nécessairement le transport qui a effectivement lieu. Sur Mars, l’atlas utilise la loi de transport de Pähtz & Durán (2023), établie à partir de simulations numériques pour des conditions planétaires. Pour chaque heure, la vitesse de frottement u* est obtenue à partir du vent au niveau le plus bas du modèle climatique au moyen d’un profil de paroi lisse. Le seuil est obtenu à partir du diamètre des grains ainsi que de la masse volumique et de la température de l’air à cette heure. Les flux sont exprimés en volumes de sable compacté (compacité 0,6, espace poreux inclus) par mètre de largeur et par année terrestre (m²/yr), comme sur Terre. Le transport réel est plus faible partout où le sable est rare ou induré.",
-  "en": "edb4d5ac"
+  "text": "Le flux de sable saturé est le débit auquel le vent déplacerait le sable sur un lit plat entièrement recouvert de sable meuble et sec : c’est la capacité de transport du vent, et pas nécessairement le transport qui a effectivement lieu. Sur Mars, l’atlas utilise la loi de transport de Pähtz & Durán (2023), établie à partir de simulations numériques pour des conditions planétaires. Pour chaque pas de temps, la vitesse de frottement u* est obtenue à partir du vent au niveau le plus bas du modèle climatique au moyen d’un profil de paroi lisse. Le seuil est obtenu à partir du diamètre des grains ainsi que de la masse volumique et de la température de l’air à ce pas de temps. Les flux sont exprimés en volumes de sable compacté (compacité 0,6, espace poreux inclus) par mètre de largeur et par année terrestre (m²/yr), comme sur Terre. Le transport réel est plus faible partout où le sable est rare ou induré.",
+  "en": "306e7e7d"
  },
  "concept.mars.grain-size-and-threshold.title": {
   "text": "Taille des grains et seuil",
   "en": "efa451a3"
  },
  "concept.mars.grain-size-and-threshold.p1": {
-  "text": "Sur Mars, le curseur règle le diamètre médian des grains d plutôt que le seuil. La vitesse de frottement seuil est calculée pour chaque heure à partir de d ainsi que de la masse volumique et de la température de l’air à cette heure, selon la loi de Pähtz & Durán (2023). Ce calcul horaire est nécessaire car l’air martien, ténu et froid, varie d’heure en heure et de saison en saison. Près de la surface, l’air martien n’a qu’environ 1–2 % de la masse volumique de l’air terrestre, si bien qu’une vitesse de frottement bien plus élevée est nécessaire pour mettre en mouvement les mêmes grains. Le panneau de la cellule indique le seuil médian sur l’année, son intervalle 5–95 %, le vent équivalent au niveau le plus bas du modèle et la proportion d’heures au-dessus du seuil.",
-  "en": "0d024cba"
+  "text": "Sur Mars, le curseur règle le diamètre médian des grains d plutôt que le seuil. La vitesse de frottement seuil est calculée pour chaque pas de temps à partir de d ainsi que de la masse volumique et de la température de l’air à ce pas de temps, selon la loi de Pähtz & Durán (2023). Ce calcul pas à pas est nécessaire car l’air martien, ténu et froid, varie d’heure en heure et de saison en saison. Près de la surface, l’air martien n’a qu’environ 1–2 % de la masse volumique de l’air terrestre, si bien qu’une vitesse de frottement bien plus élevée est nécessaire pour mettre en mouvement les mêmes grains. Le panneau de la cellule indique le seuil médian sur l’année, son intervalle 5–95 %, le vent équivalent au niveau le plus bas du modèle et la proportion des pas de temps au-dessus du seuil.",
+  "en": "e10c78a0"
  },
  "panel.dunesOnly": {
   "text": "Dunes seulement",
@@ -2827,10 +2847,6 @@
   "text": "Le sélecteur Jeu de données de vent permet de choisir entre des jeux de données de vent (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧ ;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧).⟦2⟧, utilisé par⟦3⟧, est une réexécution de la surface continentale pilotée par les champs atmosphériques de⟦4⟧interpolés sur sa grille (Muñoz-Sabater et al. ⟦#6⟧) : ses vents ne constituent donc pas une estimation indépendante, et les jeux de données peuvent malgré tout différer : par exemple,⟦5⟧indique des vitesses du vent à ⟦#7⟧ m de⟦6⟧inférieures de ⟦#8⟧–⟦#9⟧ % à celles de⟦7⟧. Là où les jeux de données donnent des résultats différents, considérez-les comme incertains. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; le masque des champs de dunes et les calques d’aridité et de végétation sont les mêmes pour tous les jeux de données.",
   "en": "3ae7fe48"
  },
- "c.005fdc07": {
-  "text": "<strong>Contrôle</strong> : sur Terre, le curseur fixe une vitesse de frottement seuil⟦0⟧unique pour l’ensemble de l’enregistrement (valeur par défaut ⟦#0⟧ m/s) ; sur Mars, il fixe le diamètre médian des grains d (valeur par défaut ⟦#1⟧ µm), et le seuil est calculé pour chaque pas de temps de l’enregistrement de vent à partir de d ainsi que de la masse volumique et de la température de l’air à ce pas de temps.",
-  "en": "005fdc07"
- },
  "c.b5eabe06": {
   "text": "<strong>Loi de transport et profil de vent</strong> : sur Terre, on utilise la loi de transport de⟦0⟧, avec⟦1⟧à partir du vent à ⟦#0⟧ m et une longueur de rugosité de ⟦#1⟧ mm ; sur Mars, on utilise la loi de transport de⟦2⟧, avec⟦3⟧à partir du vent au niveau le plus bas du jeu de données de vent (sa hauteur au-dessus de la surface diffère d’un jeu de données à l’autre) et un profil de paroi lisse sans longueur de rugosité.",
   "en": "b5eabe06"
@@ -2883,13 +2899,33 @@
   "text": "Moyenne, sur les échantillons de l’année martienne, de la masse volumique de l’air de la couche la plus basse⟦0⟧du jeu de données de vent (un échantillon par heure martienne ;⟦1⟧= pression au milieu de la couche la plus basse,⟦2⟧= température du niveau le plus bas).",
   "en": "bbd07d73"
  },
- "c.b8bd4f5a": {
-  "text": "<strong>Champs de flux de sable</strong> : pour chaque pas de temps du jeu de données de vent, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/yr, comme sur Terre.",
-  "en": "b8bd4f5a"
- },
  "c.1803468a": {
   "text": "Vitesse de frottement seuil pour ce d, médiane sur les échantillons de l’année martienne",
   "en": "1803468a"
+ },
+ "concept.earth.the-wind-datasets.title": {
+  "text": "Les jeux de données de vent",
+  "en": "d1fa6c9f"
+ },
+ "concept.earth.the-wind-datasets.p1": {
+  "text": "L’atlas terrestre propose deux séries horaires du vent à 10 m couvrant 1950–2024. ERA5 est la réanalyse atmosphérique globale de l’ECMWF, sur une grille de 0,25° (environ 28 km). ERA5-Land correspond à une nouvelle exécution du modèle de surface continentale de l’ECMWF à 0,1° (environ 9–11 km), forcée par les champs atmosphériques d’ERA5 interpolés sur la grille plus fine ; ses vents ne constituent donc pas une estimation indépendante. Baas (2026) indique que les vitesses du vent à 10 m d’ERA5-Land sont systématiquement inférieures de 20–30 % à celles d’ERA5. Gunn (2026) a utilisé ERA5-Land, et la carte des dunes est établie sur sa grille. Aucun des deux jeux de données ne résout les vents autour de dunes individuelles ou de petites collines. Là où les deux jeux de données donnent des directions, des rapports ou des flux différents, le résultat doit être considéré comme incertain.",
+  "en": "228c1b47"
+ },
+ "c.d62ef04b": {
+  "text": "<strong>Contrôle</strong> : sur Terre, le curseur fixe une vitesse de frottement seuil⟦0⟧unique pour l’ensemble de l’enregistrement (valeur par défaut ⟦#0⟧ m/s) ; sur Mars, il fixe le diamètre médian des grains d (valeur par défaut ⟦#1⟧ µm), et le seuil est calculé pour chaque pas de temps de l’enregistrement de vent à partir de d ainsi que de la masse volumique et de la température de l’air à ce pas de temps.",
+  "en": "d62ef04b"
+ },
+ "c.238c1534": {
+  "text": "<strong>Champs de flux de sable</strong> : pour chaque pas de temps du jeu de données de vent, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/yr, comme sur Terre.",
+  "en": "238c1534"
+ },
+ "c.005fdc07": {
+  "text": "<strong>Contrôle</strong> : sur Terre, le curseur fixe une vitesse de frottement seuil⟦0⟧unique pour l’ensemble de l’enregistrement (valeur par défaut ⟦#0⟧ m/s) ; sur Mars, il fixe le diamètre médian des grains d (valeur par défaut ⟦#1⟧ µm), et le seuil est calculé pour chaque pas de temps de l’enregistrement de vent à partir de d ainsi que de la masse volumique et de la température de l’air à ce pas de temps.",
+  "en": "005fdc07"
+ },
+ "c.b8bd4f5a": {
+  "text": "<strong>Champs de flux de sable</strong> : pour chaque pas de temps du jeu de données de vent, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/yr, comme sur Terre.",
+  "en": "b8bd4f5a"
  },
  "c.8cfd1c5c": {
   "text": "<strong>Contrôle</strong> : sur Terre, le curseur fixe une vitesse de frottement seuil⟦0⟧unique pour toutes les heures (valeur par défaut ⟦#0⟧ m/s) ; sur Mars, il fixe le diamètre médian des grains d (valeur par défaut ⟦#1⟧ µm), et le seuil est calculé pour chaque heure à partir de d ainsi que de la masse volumique et de la température de l’air à cette heure.",

@@ -260,6 +260,7 @@ min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 
 | item | done |
 |---|---|
 | Download audit | every download of the five wind datasets checked against the live stores: values exact; licence, notice, bounds, coverage, MACDA sampling and consistency fixes (docs/records/download-and-wording-audit-2026-10.md) |
+| PI decisions | Concepts "The wind datasets" and "for each time step"; GitHub description and topics updated; JRA-3Q-derived products CC BY-NC-SA 4.0; JRA-3Q drawn on a fitted regular grid with exact latitudes in the files |
 | Dataset wording | generic text names no dataset: registry `info.kind`, `info.note`, `info.landShort`, `credits.mapNotice`; Mars texts by time step / sample; French and Chinese for the 17 changed strings (to be reviewed with the student reviews) |
 
 ## Open items (16 October 2026)

@@ -62,7 +62,7 @@ describe("Concept links of the ⓘ popovers", () => {
     for (const [layer, cs] of Object.entries(CONCEPT_OF_LAYER)) expect(cs.some((c) => ids.has(c)), layer).toBe(true);
     expect(conceptFor("dpm")!.title).toBe("Drift potential (DP)");
     expect(conceptFor("@threshold")!.title).toBe("Threshold friction velocity");
-    expect(conceptFor("@dataset")!.title).toBe("The two ERA5 wind datasets");
+    expect(conceptFor("@dataset")!.title).toBe("The wind datasets");
     expect(conceptFor("aridity")).toBeUndefined();
     // every wind-derived map field has an entry (aridity and vegetation are external data)
     for (const l of reg.layers.filter((x) => x.type === "zarr-field" && !["aridity", "vegetation"].includes(x.id))) expect(conceptFor(l.id), l.id).toBeDefined();
