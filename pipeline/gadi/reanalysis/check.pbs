@@ -1,0 +1,17 @@
+#!/bin/bash
+#PBS -q normal
+#PBS -l ncpus=4,mem=64GB,walltime=06:00:00
+#PBS -l wd
+# JOB=check: check_stores.py for DS (layout, hours, raw re-histogram, fields; exports the first-look .npz)
+# JOB=era5:  export_era5.py (ERA5 mean speed, DP, RDP, RDD and land-sea mask for the comparison)
+# qsub -l storage=<DUNE_ATLAS_STORAGE>+gdata/rt52 -v PY,CODE (reanalysis code),SRC (pipeline src),WORK,OUTDIR
+#      (store root: OUTDIR/<ds>/<ds>_1980_2025_*.zarr),ERA5H,ERA5Q (ERA5 hist and qsat stores),JOB,DS
+set -u
+export OMP_NUM_THREADS=4 PYTHONPATH="$SRC"
+if [ "$JOB" = era5 ]; then
+  "$PY" -u -W ignore "$CODE/export_era5.py" "$ERA5H" "$ERA5Q" "$WORK/work/era5_firstlook.npz" || exit 1
+else
+  "$PY" -u -W ignore "$CODE/check_stores.py" "$DS" "$WORK/raw/$DS" "$WORK/hist_year/$DS" "$OUTDIR/$DS/${DS}_1980_2025_uam10_hist.zarr" \
+    "$OUTDIR/$DS/${DS}_1980_2025_qsat_params.zarr" "$ERA5H" "$ERA5Q" "$WORK/work/check_$DS.json" "$WORK/work/firstlook_$DS.npz" || exit 1
+fi
+echo "done $JOB ${DS:-} $(date -u +%FT%TZ)"
