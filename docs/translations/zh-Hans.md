@@ -2103,18 +2103,6 @@ ZH: 按沙去往的方向划分的时间平均平坦床面输沙率，共 ⟦#0�
 EN: αH (crest orientation, bed-instability mode): ⟦#0⟧° (axis)
 ZH: αH（脊线走向，床面失稳模式）：⟦#0⟧°（轴）
 
-## c.1ef8a9c4 (Cell panel)
-EN: αE (elongation direction): ⟦#0⟧° (ENE)
-ZH: αE（伸长方向）：⟦#0⟧°（东北偏东）
-
-## c.e9a52542 (Cell panel)
-EN: αT (transverse migration direction): ⟦#0⟧° (ENE)
-ZH: αT（横向迁移方向）：⟦#0⟧°（东北偏东）
-
-## c.77cf5f77 (Cell panel)
-EN: RDD (resultant drift direction): ⟦#0⟧° (ENE)
-ZH: RDD（合成输沙方向）：⟦#0⟧°（东北偏东）
-
 ## c.58e2a84e (Cell panel)
 EN: % of total flux
 ZH: 占总输沙量的百分比
@@ -2122,10 +2110,6 @@ ZH: 占总输沙量的百分比
 ## c.8656e567 (Cell panel)
 EN: ⟦#0⟧° (axis)
 ZH: ⟦#0⟧°（轴）
-
-## c.4a8617dc (Cell panel)
-EN: ⟦#0⟧° (ENE)
-ZH: ⟦#0⟧°（东北偏东）
 
 ## c.531a7c8d (Cell panel)
 EN: <span class="cap-lead"><strong>Flat bed</strong>: ⟦0⟧ = ⟦1⟧</span> Direction sand moves TOWARD; ⟦#0⟧ sectors of ⟦#1⟧°. Radius = % of the total flux in each sector (sums to ⟦#2⟧ %). Time-averaged saturated flat-bed flux (q from ⟦2⟧), Σ<sub>speed</sub> n·q / Σ<sub>all</sub> n from the wind histogram. Colours split each sector by the excess shear ⟦3⟧ of the winds carrying the flux (only ⟦4⟧ transports sand).⟦5⟧,⟦6⟧,⟦7⟧,⟦8⟧and the arrows are the map fields at this threshold; a direction is hidden where the flux defining it is zero.
@@ -2749,22 +2733,6 @@ ZH: 风的来向（气象学定义），共 ⟦#0⟧ 个扇区，每个 ⟦#1⟧
 EN: Time-averaged flat-bed sand flux by the direction sand moves toward, ⟦#0⟧ sectors of ⟦#1⟧ degrees, stacked by excess shear u*/u*,th of each hour, percent of total flux, at grain diameter d = ⟦#2⟧ µm.
 ZH: 按沙的去向统计的时间平均平坦床面输沙通量，共 ⟦#0⟧ 个扇区，每个 ⟦#1⟧ 度，按各小时超临界剪切量 u*/u*,th 叠加，为总输沙通量的百分比，粒径 d = ⟦#2⟧ µm。
 
-## c.4d7bcf52 (Cell panel)
-EN: αT (transverse migration direction): ⟦#0⟧° (WNW)
-ZH: αT（横向迁移方向）：⟦#0⟧°（西西北）
-
-## c.7752b77c (Cell panel)
-EN: RDD (resultant drift direction): ⟦#0⟧° (ESE)
-ZH: RDD（合成输沙方向）：⟦#0⟧°（东东南）
-
-## c.33a5156c (Cell panel)
-EN: ⟦#0⟧° (WNW)
-ZH: ⟦#0⟧°（西西北）
-
-## c.4c3ff457 (Cell panel)
-EN: ⟦#0⟧° (ESE)
-ZH: ⟦#0⟧°（东东南）
-
 ## c.94bd0d74 (Cell panel)
 EN: <span class="cap-lead"><strong>Flat bed</strong>: ⟦0⟧ = ⟦1⟧</span> Direction sand moves TOWARD; ⟦#0⟧ sectors of ⟦#1⟧°. Radius = % of the total flux in each sector (sums to ⟦#2⟧ %). Time-averaged saturated flat-bed flux (q from ⟦2⟧), Σ<sub>hours</sub> q / N over the ⟦#3⟧ hourly samples, with ⟦3⟧ of each hour from the lowest-level wind at its height z (smooth-wall mixing-length profile,⟦4⟧eq. ⟦#4⟧) and the threshold ⟦5⟧ of each hour from ⟦6⟧ and that hour's air density and temperature. Colours split each sector by the excess shear ⟦7⟧ of the hours carrying the flux (only ⟦8⟧ transports sand).⟦9⟧,⟦10⟧,⟦11⟧,⟦12⟧and the arrows are the map fields at this grain diameter; a direction is hidden where the flux defining it is zero.
 ZH: <span class="cap-lead"><strong>平坦床面</strong>：⟦0⟧ = ⟦1⟧</span> 沙去往的方向；⟦#0⟧ 个扇区，每个 ⟦#1⟧°。半径为该扇区输沙量占总输沙量的百分比（总和为 ⟦#2⟧ %）。时间平均饱和平坦床面输沙通量（q 来自⟦2⟧），即 ⟦#3⟧ 个逐小时样本上的 Σ<sub>hours</sub> q / N，其中每小时的⟦3⟧取自其高度 z 处的最底层风（光滑壁面混合长度廓线，⟦4⟧式 ⟦#4⟧），每小时的临界值⟦5⟧取自⟦6⟧及该小时的空气密度和温度。颜色按搬运该输沙通量的各小时的超额剪切⟦7⟧对每个扇区进行划分（仅⟦8⟧搬运沙粒）。⟦9⟧、⟦10⟧、⟦11⟧、⟦12⟧与箭头均为该粒径下的地图字段；若定义某方向的输沙通量为零，则不显示该方向。
@@ -3183,7 +3151,53 @@ ZH: <strong>沙丘分布图</strong>：⟦0⟧⟦1⟧（⟦2⟧；⟦3⟧）加�
 EN: Centre map on this cell
 ZH: 将地图居中到该网格单元
 
+# Cell panel
+
+## c.3f2cdfbd (Cell panel)
+EN: αE (elongation direction): ⟦#0⟧° (⟦#1⟧)
+ZH: αE（伸长方向）：⟦#0⟧°（⟦#1⟧）
+
+## c.b36b7be7 (Cell panel)
+EN: αT (transverse migration direction): ⟦#0⟧° (⟦#1⟧)
+ZH: αT（横向迁移方向）：⟦#0⟧°（⟦#1⟧）
+
+## c.7c7e35d8 (Cell panel)
+EN: RDD (resultant drift direction): ⟦#0⟧° (⟦#1⟧)
+ZH: RDD（合成输沙方向）：⟦#0⟧°（⟦#1⟧）
+
 # Unused (English changed or removed)
+
+## c.1ef8a9c4 (Unused (English changed or removed))
+EN: αE (elongation direction): ⟦#0⟧° (ENE)
+ZH: αE（伸长方向）：⟦#0⟧°（东北偏东）
+
+## c.e9a52542 (Unused (English changed or removed))
+EN: αT (transverse migration direction): ⟦#0⟧° (ENE)
+ZH: αT（横向迁移方向）：⟦#0⟧°（东北偏东）
+
+## c.77cf5f77 (Unused (English changed or removed))
+EN: RDD (resultant drift direction): ⟦#0⟧° (ENE)
+ZH: RDD（合成输沙方向）：⟦#0⟧°（东北偏东）
+
+## c.4a8617dc (Unused (English changed or removed))
+EN: ⟦#0⟧° (ENE)
+ZH: ⟦#0⟧°（东北偏东）
+
+## c.4d7bcf52 (Unused (English changed or removed))
+EN: αT (transverse migration direction): ⟦#0⟧° (WNW)
+ZH: αT（横向迁移方向）：⟦#0⟧°（西西北）
+
+## c.7752b77c (Unused (English changed or removed))
+EN: RDD (resultant drift direction): ⟦#0⟧° (ESE)
+ZH: RDD（合成输沙方向）：⟦#0⟧°（东东南）
+
+## c.33a5156c (Unused (English changed or removed))
+EN: ⟦#0⟧° (WNW)
+ZH: ⟦#0⟧°（西西北）
+
+## c.4c3ff457 (Unused (English changed or removed))
+EN: ⟦#0⟧° (ESE)
+ZH: ⟦#0⟧°（东东南）
 
 ## c.762593af (Unused (English changed or removed))
 EN: ⟦0⟧polygons: public domain (U.S. Geological Survey)

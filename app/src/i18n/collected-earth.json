@@ -660,15 +660,15 @@
   "area": "Cell panel"
  },
  {
-  "en": "αE (elongation direction): ⟦#0⟧° (ENE)",
+  "en": "αE (elongation direction): ⟦#0⟧° (⟦#1⟧)",
   "area": "Cell panel"
  },
  {
-  "en": "αT (transverse migration direction): ⟦#0⟧° (ENE)",
+  "en": "αT (transverse migration direction): ⟦#0⟧° (⟦#1⟧)",
   "area": "Cell panel"
  },
  {
-  "en": "RDD (resultant drift direction): ⟦#0⟧° (ENE)",
+  "en": "RDD (resultant drift direction): ⟦#0⟧° (⟦#1⟧)",
   "area": "Cell panel"
  },
  {
@@ -677,10 +677,6 @@
  },
  {
   "en": "⟦#0⟧° (axis)",
-  "area": "Cell panel"
- },
- {
-  "en": "⟦#0⟧° (ENE)",
   "area": "Cell panel"
  },
  {

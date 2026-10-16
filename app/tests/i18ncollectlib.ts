@@ -52,5 +52,7 @@ export async function collectRendered(body: "earth" | "mars"): Promise<{ en: str
   const words = (s: string) => new Set(s.replace(/\$[^$]*\$|⟦#?\d+⟧|<[^>]+>|&\w+;/g, " ").toLowerCase().match(/\p{L}{3,}/gu) ?? []);
   const keyed = catalogue().map((c) => words(c.en));
   const near = (w: Set<string>) => keyed.some((k) => { if (!w.size) return true; let n = 0; for (const x of w) if (k.has(x)) n++; return n === w.size && n === k.size; });
-  return [...i18n.COLLECTED].filter(([en]) => !near(words(en))).map(([en, area]) => ({ en, area }));
+  // a unit with a compass placeholder ("αE (elongation direction): ⟦#0⟧° (⟦#1⟧)") is more than the keyed label
+  const compass = (en: string) => /°\s?\(⟦#\d+⟧\)/.test(en);
+  return [...i18n.COLLECTED].filter(([en]) => compass(en) || !near(words(en))).map(([en, area]) => ({ en, area }));
 }

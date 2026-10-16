@@ -1955,18 +1955,6 @@
   "text": "αH (orientation de la crête, mode d’instabilité du lit) : ⟦#0⟧° (axe)",
   "en": "04e86ff9"
  },
- "c.1ef8a9c4": {
-  "text": "αE (direction d’allongement) : ⟦#0⟧° (ENE)",
-  "en": "1ef8a9c4"
- },
- "c.e9a52542": {
-  "text": "αT (direction de migration transverse) : ⟦#0⟧° (ENE)",
-  "en": "e9a52542"
- },
- "c.77cf5f77": {
-  "text": "RDD (direction de dérive résultante) : ⟦#0⟧° (ENE)",
-  "en": "77cf5f77"
- },
  "c.58e2a84e": {
   "text": "% du flux total",
   "en": "58e2a84e"
@@ -1974,10 +1962,6 @@
  "c.8656e567": {
   "text": "⟦#0⟧° (axe)",
   "en": "8656e567"
- },
- "c.4a8617dc": {
-  "text": "⟦#0⟧° (ENE)",
-  "en": "4a8617dc"
  },
  "c.531a7c8d": {
   "text": "<span class=\"cap-lead\"><strong>Lit plat</strong> : ⟦0⟧ = ⟦1⟧</span> Direction VERS laquelle se déplace le sable ; ⟦#0⟧ secteurs de ⟦#1⟧°. Rayon = % du flux total dans chaque secteur (somme : ⟦#2⟧ %). Flux saturé sur lit plat moyenné dans le temps (q d’après ⟦2⟧), Σ<sub>vitesse</sub> n·q / Σ<sub>total</sub> n à partir de l’histogramme des vents. Les couleurs subdivisent chaque secteur selon l’excès de cisaillement ⟦3⟧ des vents qui portent le flux (seul ⟦4⟧ transporte du sable).⟦5⟧,⟦6⟧,⟦7⟧,⟦8⟧et les flèches correspondent aux champs de la carte à ce seuil ; une direction est masquée là où le flux qui la définit est nul.",
@@ -2523,22 +2507,6 @@
   "text": "Flux de sable sur lit plat moyenné dans le temps, selon la direction vers laquelle se déplace le sable, ⟦#0⟧ secteurs de ⟦#1⟧ degrés, empilés par excès de cisaillement u*/u*,th de chaque heure, en pourcentage du flux total, pour un diamètre des grains d = ⟦#2⟧ µm.",
   "en": "705e31ee"
  },
- "c.4d7bcf52": {
-  "text": "αT (direction de migration transverse) : ⟦#0⟧° (ONO)",
-  "en": "4d7bcf52"
- },
- "c.7752b77c": {
-  "text": "RDD (direction de dérive résultante) : ⟦#0⟧° (ESE)",
-  "en": "7752b77c"
- },
- "c.33a5156c": {
-  "text": "⟦#0⟧° (ONO)",
-  "en": "33a5156c"
- },
- "c.4c3ff457": {
-  "text": "⟦#0⟧° (ESE)",
-  "en": "4c3ff457"
- },
  "c.94bd0d74": {
   "text": "<span class=\"cap-lead\"><strong>Lit plat</strong> : ⟦0⟧ = ⟦1⟧</span> Direction VERS laquelle se déplace le sable ; ⟦#0⟧ secteurs de ⟦#1⟧°. Rayon = % du flux total dans chaque secteur (total de ⟦#2⟧ %). Flux saturé sur lit plat moyenné dans le temps (q d’après ⟦2⟧), Σ<sub>heures</sub> q / N sur les ⟦#3⟧ échantillons horaires, avec ⟦3⟧ de chaque heure déduite du vent au niveau le plus bas à sa hauteur z (profil de longueur de mélange pour paroi lisse,⟦4⟧éq. ⟦#4⟧) et le seuil ⟦5⟧ de chaque heure déduit de ⟦6⟧ ainsi que de la masse volumique et de la température de l’air à cette heure. Les couleurs divisent chaque secteur selon l’excès de cisaillement ⟦7⟧ des heures qui portent le flux (seul ⟦8⟧ transporte du sable).⟦9⟧,⟦10⟧,⟦11⟧,⟦12⟧et les flèches correspondent aux champs de la carte pour ce diamètre des grains ; une direction est masquée là où le flux qui la définit est nul.",
   "en": "94bd0d74"
@@ -2894,6 +2862,50 @@
  "c.15ee00d5": {
   "text": "Centrer la carte sur cette cellule",
   "en": "15ee00d5"
+ },
+ "c.3f2cdfbd": {
+  "text": "αE (direction d’allongement) : ⟦#0⟧° (⟦#1⟧)",
+  "en": "3f2cdfbd"
+ },
+ "c.b36b7be7": {
+  "text": "αT (direction de migration transverse) : ⟦#0⟧° (⟦#1⟧)",
+  "en": "b36b7be7"
+ },
+ "c.7c7e35d8": {
+  "text": "RDD (direction de dérive résultante) : ⟦#0⟧° (⟦#1⟧)",
+  "en": "7c7e35d8"
+ },
+ "c.1ef8a9c4": {
+  "text": "αE (direction d’allongement) : ⟦#0⟧° (ENE)",
+  "en": "1ef8a9c4"
+ },
+ "c.e9a52542": {
+  "text": "αT (direction de migration transverse) : ⟦#0⟧° (ENE)",
+  "en": "e9a52542"
+ },
+ "c.77cf5f77": {
+  "text": "RDD (direction de dérive résultante) : ⟦#0⟧° (ENE)",
+  "en": "77cf5f77"
+ },
+ "c.4a8617dc": {
+  "text": "⟦#0⟧° (ENE)",
+  "en": "4a8617dc"
+ },
+ "c.4d7bcf52": {
+  "text": "αT (direction de migration transverse) : ⟦#0⟧° (ONO)",
+  "en": "4d7bcf52"
+ },
+ "c.7752b77c": {
+  "text": "RDD (direction de dérive résultante) : ⟦#0⟧° (ESE)",
+  "en": "7752b77c"
+ },
+ "c.33a5156c": {
+  "text": "⟦#0⟧° (ONO)",
+  "en": "33a5156c"
+ },
+ "c.4c3ff457": {
+  "text": "⟦#0⟧° (ESE)",
+  "en": "4c3ff457"
  },
  "c.762593af": {
   "text": "Polygones⟦0⟧: domaine public (U.S. Geological Survey)",

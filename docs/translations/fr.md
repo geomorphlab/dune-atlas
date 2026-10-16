@@ -2103,18 +2103,6 @@ FR: Flux de sable sur lit plat moyenné dans le temps, selon la direction vers l
 EN: αH (crest orientation, bed-instability mode): ⟦#0⟧° (axis)
 FR: αH (orientation de la crête, mode d’instabilité du lit) : ⟦#0⟧° (axe)
 
-## c.1ef8a9c4 (Cell panel)
-EN: αE (elongation direction): ⟦#0⟧° (ENE)
-FR: αE (direction d’allongement) : ⟦#0⟧° (ENE)
-
-## c.e9a52542 (Cell panel)
-EN: αT (transverse migration direction): ⟦#0⟧° (ENE)
-FR: αT (direction de migration transverse) : ⟦#0⟧° (ENE)
-
-## c.77cf5f77 (Cell panel)
-EN: RDD (resultant drift direction): ⟦#0⟧° (ENE)
-FR: RDD (direction de dérive résultante) : ⟦#0⟧° (ENE)
-
 ## c.58e2a84e (Cell panel)
 EN: % of total flux
 FR: % du flux total
@@ -2122,10 +2110,6 @@ FR: % du flux total
 ## c.8656e567 (Cell panel)
 EN: ⟦#0⟧° (axis)
 FR: ⟦#0⟧° (axe)
-
-## c.4a8617dc (Cell panel)
-EN: ⟦#0⟧° (ENE)
-FR: ⟦#0⟧° (ENE)
 
 ## c.531a7c8d (Cell panel)
 EN: <span class="cap-lead"><strong>Flat bed</strong>: ⟦0⟧ = ⟦1⟧</span> Direction sand moves TOWARD; ⟦#0⟧ sectors of ⟦#1⟧°. Radius = % of the total flux in each sector (sums to ⟦#2⟧ %). Time-averaged saturated flat-bed flux (q from ⟦2⟧), Σ<sub>speed</sub> n·q / Σ<sub>all</sub> n from the wind histogram. Colours split each sector by the excess shear ⟦3⟧ of the winds carrying the flux (only ⟦4⟧ transports sand).⟦5⟧,⟦6⟧,⟦7⟧,⟦8⟧and the arrows are the map fields at this threshold; a direction is hidden where the flux defining it is zero.
@@ -2749,22 +2733,6 @@ FR: Direction D’OÙ souffle le vent (convention météorologique), ⟦#0⟧ se
 EN: Time-averaged flat-bed sand flux by the direction sand moves toward, ⟦#0⟧ sectors of ⟦#1⟧ degrees, stacked by excess shear u*/u*,th of each hour, percent of total flux, at grain diameter d = ⟦#2⟧ µm.
 FR: Flux de sable sur lit plat moyenné dans le temps, selon la direction vers laquelle se déplace le sable, ⟦#0⟧ secteurs de ⟦#1⟧ degrés, empilés par excès de cisaillement u*/u*,th de chaque heure, en pourcentage du flux total, pour un diamètre des grains d = ⟦#2⟧ µm.
 
-## c.4d7bcf52 (Cell panel)
-EN: αT (transverse migration direction): ⟦#0⟧° (WNW)
-FR: αT (direction de migration transverse) : ⟦#0⟧° (ONO)
-
-## c.7752b77c (Cell panel)
-EN: RDD (resultant drift direction): ⟦#0⟧° (ESE)
-FR: RDD (direction de dérive résultante) : ⟦#0⟧° (ESE)
-
-## c.33a5156c (Cell panel)
-EN: ⟦#0⟧° (WNW)
-FR: ⟦#0⟧° (ONO)
-
-## c.4c3ff457 (Cell panel)
-EN: ⟦#0⟧° (ESE)
-FR: ⟦#0⟧° (ESE)
-
 ## c.94bd0d74 (Cell panel)
 EN: <span class="cap-lead"><strong>Flat bed</strong>: ⟦0⟧ = ⟦1⟧</span> Direction sand moves TOWARD; ⟦#0⟧ sectors of ⟦#1⟧°. Radius = % of the total flux in each sector (sums to ⟦#2⟧ %). Time-averaged saturated flat-bed flux (q from ⟦2⟧), Σ<sub>hours</sub> q / N over the ⟦#3⟧ hourly samples, with ⟦3⟧ of each hour from the lowest-level wind at its height z (smooth-wall mixing-length profile,⟦4⟧eq. ⟦#4⟧) and the threshold ⟦5⟧ of each hour from ⟦6⟧ and that hour's air density and temperature. Colours split each sector by the excess shear ⟦7⟧ of the hours carrying the flux (only ⟦8⟧ transports sand).⟦9⟧,⟦10⟧,⟦11⟧,⟦12⟧and the arrows are the map fields at this grain diameter; a direction is hidden where the flux defining it is zero.
 FR: <span class="cap-lead"><strong>Lit plat</strong> : ⟦0⟧ = ⟦1⟧</span> Direction VERS laquelle se déplace le sable ; ⟦#0⟧ secteurs de ⟦#1⟧°. Rayon = % du flux total dans chaque secteur (total de ⟦#2⟧ %). Flux saturé sur lit plat moyenné dans le temps (q d’après ⟦2⟧), Σ<sub>heures</sub> q / N sur les ⟦#3⟧ échantillons horaires, avec ⟦3⟧ de chaque heure déduite du vent au niveau le plus bas à sa hauteur z (profil de longueur de mélange pour paroi lisse,⟦4⟧éq. ⟦#4⟧) et le seuil ⟦5⟧ de chaque heure déduit de ⟦6⟧ ainsi que de la masse volumique et de la température de l’air à cette heure. Les couleurs divisent chaque secteur selon l’excès de cisaillement ⟦7⟧ des heures qui portent le flux (seul ⟦8⟧ transporte du sable).⟦9⟧,⟦10⟧,⟦11⟧,⟦12⟧et les flèches correspondent aux champs de la carte pour ce diamètre des grains ; une direction est masquée là où le flux qui la définit est nul.
@@ -3183,7 +3151,53 @@ FR: <strong>Carte des dunes</strong> :⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧), complét�
 EN: Centre map on this cell
 FR: Centrer la carte sur cette cellule
 
+# Cell panel
+
+## c.3f2cdfbd (Cell panel)
+EN: αE (elongation direction): ⟦#0⟧° (⟦#1⟧)
+FR: αE (direction d’allongement) : ⟦#0⟧° (⟦#1⟧)
+
+## c.b36b7be7 (Cell panel)
+EN: αT (transverse migration direction): ⟦#0⟧° (⟦#1⟧)
+FR: αT (direction de migration transverse) : ⟦#0⟧° (⟦#1⟧)
+
+## c.7c7e35d8 (Cell panel)
+EN: RDD (resultant drift direction): ⟦#0⟧° (⟦#1⟧)
+FR: RDD (direction de dérive résultante) : ⟦#0⟧° (⟦#1⟧)
+
 # Unused (English changed or removed)
+
+## c.1ef8a9c4 (Unused (English changed or removed))
+EN: αE (elongation direction): ⟦#0⟧° (ENE)
+FR: αE (direction d’allongement) : ⟦#0⟧° (ENE)
+
+## c.e9a52542 (Unused (English changed or removed))
+EN: αT (transverse migration direction): ⟦#0⟧° (ENE)
+FR: αT (direction de migration transverse) : ⟦#0⟧° (ENE)
+
+## c.77cf5f77 (Unused (English changed or removed))
+EN: RDD (resultant drift direction): ⟦#0⟧° (ENE)
+FR: RDD (direction de dérive résultante) : ⟦#0⟧° (ENE)
+
+## c.4a8617dc (Unused (English changed or removed))
+EN: ⟦#0⟧° (ENE)
+FR: ⟦#0⟧° (ENE)
+
+## c.4d7bcf52 (Unused (English changed or removed))
+EN: αT (transverse migration direction): ⟦#0⟧° (WNW)
+FR: αT (direction de migration transverse) : ⟦#0⟧° (ONO)
+
+## c.7752b77c (Unused (English changed or removed))
+EN: RDD (resultant drift direction): ⟦#0⟧° (ESE)
+FR: RDD (direction de dérive résultante) : ⟦#0⟧° (ESE)
+
+## c.33a5156c (Unused (English changed or removed))
+EN: ⟦#0⟧° (WNW)
+FR: ⟦#0⟧° (ONO)
+
+## c.4c3ff457 (Unused (English changed or removed))
+EN: ⟦#0⟧° (ESE)
+FR: ⟦#0⟧° (ESE)
 
 ## c.762593af (Unused (English changed or removed))
 EN: ⟦0⟧polygons: public domain (U.S. Geological Survey)
