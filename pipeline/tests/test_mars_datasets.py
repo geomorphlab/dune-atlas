@@ -95,7 +95,8 @@ def test_contract_dataset_build(tmp_path):
     arrs = _contract_source(str(tmp_path / "source.zarr"), ds, nt)
     frac = np.zeros((ds.ny, ds.nx), "f4"); frac[3, 5] = 0.4
     NG.save(str(tmp_path / "dunefrac.npz"), ds, frac=frac, dune=(frac > 0).astype("u1"))
-    code = ("import json; from dune_atlas_pipeline.mars import cells as CE; "
+    # the synthetic series is 24 samples long, not the dataset's n_samples: lift the length check of read_contract
+    code = ("import json; from dune_atlas_pipeline.mars import cells as CE; CE.NT = None; "
             f"s = CE.build({str(tmp_path / 'source.zarr')!r}, {str(tmp_path / 'dunefrac.npz')!r}, "
             f"{str(tmp_path / 'cells.zarr')!r}, {str(tmp_path / 'w')!r}, nproc=1, shards=[(0, 0)], "
             "log=lambda *_: None); print(json.dumps({'cells': s['cells'], 'nan': s['fields_nan']}))")
