@@ -88,6 +88,18 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
+  "en": "Dunes only draws the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in the cells of the selected wind dataset that contain mapped dunes.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "The other layers, the cell panel and the downloads are unchanged.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "While it is on, the dune map is drawn at no more than ⟦#0⟧ % opacity, so the colours of the dune cells show through it. Its own opacity setting applies again when Dunes only is off.",
+  "area": "Layer popovers"
+ },
+ {
   "en": "Reset to the default ⟦#0⟧ µm",
   "area": "Screen-reader labels and tooltips"
  },

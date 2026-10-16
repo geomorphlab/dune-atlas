@@ -124,8 +124,8 @@
   "en": "02065ff6"
  },
  "earth.help.layers.body": {
-  "text": "Cochez un calque pour l’afficher. Le bouton ⓘ donne sa définition, ses unités et sa source de données ; Affichage modifie ses couleurs, ses bornes de couleur et son échelle, ou représente les champs de direction par des flèches ou des lignes de courant, avec un curseur d’espacement allant de Plus fin (lignes plus denses) à Plus grossier. Calques actifs liste ce qui est affiché sur la carte, de haut en bas : faites glisser une ligne ou utilisez les flèches pour changer l’ordre de dessin, réglez l’opacité avec son curseur et retirez un calque avec ×. Dunes seulement (sous le sélecteur Jeu de données de vent) ne dessine tous les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) que dans les cellules contenant des dunes selon le jeu de données ; les dunes, l’aridité, la végétation et les fonds de carte restent inchangés, et le panneau de cellule fonctionne toujours pour n’importe quelle cellule. Ce réglage fait partie du lien. Noms, dans le groupe Champs de dunes, étiquette sur la carte les champs de dunes nommés (là où les noms se chevaucheraient, certains n’apparaissent qu’en zoomant) et masque, tant qu’il est activé, les noms de lieux du fond de carte autres que ceux des pays et des États ; cliquez sur un nom pour zoomer sur le champ et voir ses autres noms, ses pays et ses sources.",
-  "en": "381540df"
+  "text": "Cochez un calque pour l’afficher. Le bouton ⓘ donne sa définition, ses unités et sa source de données ; Affichage modifie ses couleurs, ses bornes de couleur et son échelle, ou représente les champs de direction par des flèches ou des lignes de courant, avec un curseur d’espacement allant de Plus fin (lignes plus denses) à Plus grossier. Calques actifs liste ce qui est affiché sur la carte, de haut en bas : faites glisser une ligne ou utilisez les flèches pour changer l’ordre de dessin, réglez l’opacité avec son curseur et retirez un calque avec ×. Dunes seulement (sous le sélecteur Jeu de données de vent) dessine tous les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) uniquement dans les cellules contenant des dunes selon le jeu de données, et affiche la carte des dunes à une opacité d’au plus 50 % afin que ces cellules soient visibles par transparence ; l’aridité, la végétation et les fonds de carte restent inchangés, et le panneau de cellule fonctionne toujours pour n’importe quelle cellule. Ce réglage fait partie du lien. Noms, dans le groupe Champs de dunes, étiquette sur la carte les champs de dunes nommés (là où les noms se chevaucheraient, certains n’apparaissent qu’en zoomant) et masque, tant qu’il est activé, les noms de lieux du fond de carte autres que ceux des pays et des États ; cliquez sur un nom pour zoomer sur le champ et voir ses autres noms, ses pays et ses sources.",
+  "en": "53d64e2e"
  },
  "earth.help.concepts.title": {
   "text": "Concepts",
@@ -788,8 +788,8 @@
   "en": "02065ff6"
  },
  "mars.help.layers.body": {
-  "text": "Cochez un calque pour l’afficher. Le bouton ⓘ en donne la définition, les unités et la source des données ; Affichage modifie ses couleurs, les bornes de couleur et l’échelle, ou représente les champs de direction par des flèches ou des lignes de courant, avec un curseur d’espacement allant de Plus fin (lignes plus denses) à Plus grossier. Calques actifs liste ce qui figure sur la carte, de haut en bas : faites glisser une ligne ou utilisez les flèches pour modifier l’ordre d’affichage, réglez l’opacité avec son curseur et retirez un calque avec ×. Dunes seulement (sous le sélecteur Jeu de données de vent) n’affiche tous les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) que dans les cellules contenant des dunes du jeu de données ; les dunes, l’altitude, la masse volumique de l’air et les fonds de carte restent inchangés, et le panneau de cellule fonctionne toujours pour n’importe quelle cellule. Ce réglage fait partie du lien. Noms, dans le groupe Champs de dunes, affiche sur la carte les noms des champs de dunes et des entités nommés (là où les noms se chevaucheraient, certains n’apparaissent qu’en zoomant) ; cliquez sur un nom pour zoomer sur l’entité et voir son type, ses autres noms et ses sources.",
-  "en": "bb3845f4"
+  "text": "Cochez un calque pour l’afficher. Le bouton ⓘ en donne la définition, les unités et la source des données ; Affichage modifie ses couleurs, les bornes de couleur et l’échelle, ou représente les champs de direction par des flèches ou des lignes de courant, avec un curseur d’espacement allant de Plus fin (lignes plus denses) à Plus grossier. Calques actifs liste ce qui figure sur la carte, de haut en bas : faites glisser une ligne ou utilisez les flèches pour modifier l’ordre d’affichage, réglez l’opacité avec son curseur et retirez un calque avec ×. Dunes seulement (sous le sélecteur Jeu de données de vent) n’affiche tous les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) que dans les cellules contenant des dunes du jeu de données, et affiche la carte des dunes à une opacité d’au plus 50 % afin que ces cellules soient visibles par transparence ; l’altitude, la masse volumique de l’air et les fonds de carte restent inchangés, et le panneau de cellule fonctionne toujours pour n’importe quelle cellule. Ce réglage fait partie du lien. Noms, dans le groupe Champs de dunes, affiche sur la carte les noms des champs de dunes et des entités nommées (là où les noms se chevaucheraient, certains n’apparaissent qu’en zoomant) ; cliquez sur un nom pour zoomer sur l’entité et voir son type, ses autres noms et ses sources.",
+  "en": "204c9871"
  },
  "mars.help.concepts.title": {
   "text": "Concepts",
@@ -2935,6 +2935,18 @@
   "text": "<strong>Histogrammes de vent et champs de flux de sable (⟦0⟧⟦#0⟧° × ⟦#1⟧°)</strong> :⟦1⟧⟦#2⟧–⟦#3⟧, vents instantanés horaires à ⟦#4⟧ m sur la grille de ⟦#5⟧° × ⟦#6⟧° (⟦2⟧ ;⟦3⟧⟦4⟧, distribué par le⟦5⟧) ; les histogrammes et les ⟦#7⟧ champs de flux de sable sont calculés pour l’atlas selon les méthodes décrites dans⟦6⟧. Les cellules dont la fraction de terre⟦7⟧(terre plus glace terrestre) est supérieure à ⟦#8⟧ (présence de terre dans la cellule) comportent des données de vent ; une cellule est comptée comme cellule de dunes lorsqu’elle recouvre une cellule de dunes cartographiée à ⟦#9⟧°.",
   "en": "073ef702"
  },
+ "c.97317967": {
+  "text": "Les autres calques, le panneau des cellules et les téléchargements restent inchangés.",
+  "en": "97317967"
+ },
+ "c.33496956": {
+  "text": "Tant qu’elle est activée, la carte des dunes est tracée à une opacité d’au plus ⟦#0⟧ %, afin que les couleurs des cellules de dunes transparaissent à travers elle. Son propre réglage d’opacité s’applique de nouveau lorsque Dunes seulement est désactivé.",
+  "en": "33496956"
+ },
+ "c.0b5ec76e": {
+  "text": "Dunes seulement n’affiche les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) que dans les cellules du jeu de données de vent sélectionné qui contiennent des dunes cartographiées.",
+  "en": "0b5ec76e"
+ },
  "c.e20362fc": {
   "text": "<strong>Histogrammes de vent et champs de flux de sable (⟦0⟧⟦#0⟧° × ⟦#1⟧°)</strong> :⟦1⟧⟦#2⟧–⟦#3⟧, vents instantanés horaires à ⟦#4⟧ m sur la grille de ⟦#5⟧° × ⟦#6⟧° (⟦2⟧ ;⟦3⟧Global Modeling and Assimilation Office, distribué par le⟦4⟧) ; les histogrammes et les ⟦#7⟧ champs de flux de sable sont calculés pour l’atlas selon les méthodes décrites dans⟦5⟧. Les cellules dont la fraction de terre⟦6⟧(terre plus glace terrestre) est supérieure à ⟦#8⟧ (présence de terre dans la cellule) comportent des données de vent ; une cellule est comptée comme cellule de dunes lorsqu’elle recouvre une cellule de dunes cartographiée à ⟦#9⟧°.",
   "en": "e20362fc"
@@ -2954,6 +2966,10 @@
  "c.2c67fa30": {
   "text": "Le sélecteur de dataset de vent permet de basculer entre jeux de données de vent (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧).⟦2⟧, utilisé par⟦3⟧, fait tourner à nouveau le modèle de surface continentale de⟦4⟧ piloté par les champs atmosphériques de⟦5⟧interpolés sur sa grille de ⟦#6⟧° (Muñoz-Sabater et al. ⟦#7⟧);⟦6⟧indique des vitesses de vent à ⟦#8⟧ m inférieures de ⟦#9⟧–⟦#10⟧ % à celles de⟦7⟧. Les calques de vent et de flux de sable ainsi que le panneau de cellule suivent la sélection; le masque du champ de dunes, l'aridité et les calques de végétation restent identiques pour chaque jeu de données.",
   "en": "2c67fa30"
+ },
+ "c.30170ce5": {
+  "text": "Dunes seulement n’affiche les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) que dans les cellules du jeu de données de vent sélectionné qui contiennent des dunes cartographiées ; les autres cellules de ces calques restent vides.",
+  "en": "30170ce5"
  },
  "c.037dc143": {
   "text": "La valeur par défaut, ⟦#0⟧ m/s, est celle utilisée pour l’analyse globale de⟦0⟧: une approximation globale courante, utilisée à la place de valeurs locales plus précises, et non calibrée pour un site particulier. Des valeurs comprises entre ⟦#1⟧ et ⟦#2⟧ m/s sont typiques ; pour un sable sec et meuble, le seuil dépend principalement de la taille et de la masse volumique des grains.",

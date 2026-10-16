@@ -155,13 +155,20 @@ export const PRIVACY_NOTE = "To understand how the atlas is used, we count page 
 /** 'Dunes only': one UI-wide switch, in the URL / share link; restricts every wind-derived map
  *  layer to the dataset's dune cells (map/dunemask.ts). Non-wind layers and the cell panel are unchanged. */
 export const DUNES_ONLY_HELP = "Draw the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in cells with dunes; the other layers and the cell panel are unchanged.";
+/** ⓘ of Dunes only: what the switch does and how the dune map is drawn while it is on */
+export const DUNES_ONLY_INFO_HTML = `<p class="info-def">Dunes only draws the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in the cells of the selected wind dataset that contain mapped dunes.</p>
+<p>The other layers, the cell panel and the downloads are unchanged.</p>
+<p>While it is on, the dune map is drawn at no more than 50 % opacity, so the colours of the dune cells show through it. Its own opacity setting applies again when Dunes only is off.</p>`;
 export function dunesOnlyToggle(store: Store): HTMLElement {
   const cb = h("input", { type: "checkbox", id: "dunes-only", "aria-describedby": "dunes-only-help" }) as HTMLInputElement;
   cb.checked = !!store.state.dunesOnly;
   cb.addEventListener("change", () => store.set({ dunesOnly: cb.checked }));
   store.subscribe((st, ch) => { if (ch.has("dunesOnly")) cb.checked = !!st.dunesOnly; });
-  return h("label", { class: "inline dunes-only-row", for: "dunes-only", title: DUNES_ONLY_HELP }, cb, ui("panel.dunesOnly"),
+  const label = h("label", { class: "inline dunes-only-row", for: "dunes-only", title: DUNES_ONLY_HELP }, cb, ui("panel.dunesOnly"),
     h("span", { id: "dunes-only-help", class: "visually-hidden" }, DUNES_ONLY_HELP));
+  // one line with its ⓘ, the popover wrapping below (as the Wind dataset line)
+  const t = infoToggle("Dunes only", DUNES_ONLY_INFO_HTML, "dunes-only");
+  return h("div", { class: "dunes-only-line" }, label, t.button, t.pop);
 }
 
 /** 'Names' (Dune Fields group): the dune-field name labels (map/placelabels.ts), a row laid out as the layer
