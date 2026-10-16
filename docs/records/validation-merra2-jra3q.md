@@ -122,3 +122,10 @@ MD5 and the ledger; 20 land cells (incl. ≥ 10 with land fraction ≤ 0.5 and d
 `CellStore` over `data.geomorphlab.org` bit-identical to the Gadi reference sample, sidecars identical, 5 non-land
 cells empty, 10 / 10 pyramid windows identical; suffix range 206, CORS for map.geomorphlab.org. Results:
 `staging/reanalysis/DS/public_verification.json`.
+
+**ERA5-Land and ERA5 unchanged.** With the pipeline of `main` and of this branch, the generated registry pieces
+(the 23 field layers, flux divergence and extra-layer fragments, vegetation fragment, qsdiv attributes), the ERA5
+dataset description, the field licences of ERA5-Land and ERA5, and the float64 row/column coordinates of both
+grids are identical; `dataset_registry write --dataset era5` and `extra-registry` leave the repository unchanged;
+`pipeline/tests` pass (133). The byte-level store regression (`scripts/check_era5land_regression.py`) was not run:
+its ERA5-Land staging inputs (`staging/drift`, `staging/new-layers/qsdiv_native.zarr`) are not in this checkout.
