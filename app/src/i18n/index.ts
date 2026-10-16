@@ -75,12 +75,35 @@ export function trc(en: string, area = "Other"): string {
   if ((globalThis as { __I18N_COLLECT__?: boolean }).__I18N_COLLECT__ && !COLLECTED.has(en)) COLLECTED.set(en, area);
   return trIn(LANG, contentKey(en), en);
 }
+/** the 16 compass points (core/util/angles.ts compassPoint) and their names in each language; Chinese in the
+ *  西北西 form for the points between, French with O for ouest */
+export const COMPASS_POINTS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+export const COMPASS_NAMES: Record<Exclude<Lang, "en">, string[]> = {
+  fr: ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO"],
+  "zh-Hans": ["北", "北东北", "东北", "东北东", "东", "东南东", "东南", "南东南", "南", "南西南", "西南", "西南西", "西", "西北西", "西北", "北西北"],
+};
+/** variable parts of a text: plain numbers, and a compass point written after a bearing ("292° (WNW)") */
+const VAR = /(?<=°\s?\()(?:NNE|NE|ENE|ESE|SE|SSE|SSW|SW|WSW|WNW|NW|NNW|N|E|S|W)(?=\))|(?<![\p{L}\p{N}_.,])[-−]?\d+(?:[.,]\d+)*(?![\p{L}\p{N}_])/gu;
+/** text -> template with its variable parts as ⟦#0⟧ …, and their values in `lang` (a compass point is given its
+ *  name in that language, so one translation serves every direction); `local` = a value was localised */
+export function varTemplate(text: string, lang: Lang = LANG): { tpl: string; nums: string[]; local: boolean } {
+  const nums: string[] = [];
+  let local = false;
+  const tpl = text.replace(VAR, (m) => {
+    const k = /^[A-Z]+$/.test(m) ? COMPASS_POINTS.indexOf(m) : -1;
+    const v = k >= 0 && lang !== "en" ? COMPASS_NAMES[lang][k] : m;
+    if (v !== m) local = true;
+    nums.push(v);
+    return `⟦#${nums.length - 1}⟧`;
+  });
+  return { tpl, nums, local };
+}
+export const fillVars = (s: string, nums: string[]) => s.replace(/⟦#(\d+)⟧/g, (_m, i) => nums[Number(i)] ?? "");
 /** trc on text whose plain numbers vary (export captions, labels): the numbers become ⟦#0⟧ … in the key */
 export function trNum(text: string, area = "Exported images"): string {
   if (LANG === "en" && !(globalThis as { __I18N_COLLECT__?: boolean }).__I18N_COLLECT__) return text;
-  const nums: string[] = [];
-  const tpl = text.replace(/(?<![\p{L}\p{N}_.,])[-−]?\d+(?:[.,]\d+)*(?![\p{L}\p{N}_])/gu, (m) => { nums.push(m); return `⟦#${nums.length - 1}⟧`; });
-  return trc(tpl, area).replace(/⟦#(\d+)⟧/g, (_m, i) => nums[Number(i)] ?? "");
+  const { tpl, nums } = varTemplate(text);
+  return fillVars(trc(tpl, area), nums);
 }
 /** trc on a template with {placeholders}, then filled */
 export const trcf = (en: string, vars: Record<string, string | number>, area = "Other") => fill(trc(en, area), vars);

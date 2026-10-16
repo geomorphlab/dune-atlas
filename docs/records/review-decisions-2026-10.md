@@ -239,13 +239,22 @@ min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 
 | Fenton (2020) licence | L. K. Fenton agreed by email (October 2026) to CC BY 4.0, with a citation of Fenton (2020). Shown as "MGD3 polygons: public domain (U.S. Geological Survey); Fenton (2020) dune fields: CC BY 4.0" in the layer info and About, and as the licence of the Fenton entry in the cell citations (DATA_LICENSE.md note 5) |
 | Usage backup | Private repository geomorphlab/dune-atlas-usage, weekly (Mondays 04:41 UTC); first run 15 October 2026 succeeded (docs/guide/usage-counter.md §5) |
 
+## Chinese review and icons in help text (PR #24, 16 October 2026)
+
+| item | done |
+|---|---|
+| Chinese review | 36 rows from the PI's Chinese PhD student (spreadsheet DuneAtlas-CN-YL.xlsx), trusted as given: 25 strings replaced, and the corrected terms carried into 86 more strings: 阴影地形 (shaded relief), 拼接图 (mosaic), 扇区 (rose petals), 摩阻风速 (friction velocity), 风成沙丘 (aeolian dune), 床面失稳 (bed instability, incl. 床面失稳模式), 输沙通量汇／源 (flux convergence / divergence), 稳态风 (steady wind), 再分析数据集 (reanalysis), 模型 for a climate or land-surface model (模式 kept for dune-orientation modes), 轨道卫星 (orbiter), 沙丘朝向 (how dunes orient), 时间段 (hours), 合成输沙势 for RDP. Two readings kept the English content: "Petals:" as 扇区： (label colon) and "Shaded relief (Mapterhorn, 2D)" as 阴影地形（Mapterhorn，2D）. Glossary updated (docs/translations/translation-glossary.csv) |
+| Icons in text | Tia's accessibility comment: the help panel and tour show the buttons' own icons instead of naming them ("mortarboard", "crosshair", "(?)", "a dashed box"), written {icon_concepts}, {icon_help}, {icon_share}, {icon_camera}, {icon_region}, {icon_planet}, {icon_centre} in the English and the translations (ui/texticons.ts); each icon is an image labelled with the button's name for screen readers; the help document writes them as [Concepts icon] etc. French and Chinese updated to match |
+| Compass points in the cell panel | Directions such as "RDD …: 112° (ESE)" were translated only when that exact direction had been collected as an example. The compass point is now a variable like the number (one translation per line, i18n COMPASS_NAMES), shown in the reader's language. Names chosen by the PI: Chinese 北, 北东北, 东北, 东北东, 东, 东南东, 东南, 南东南, 南, 南西南, 西南, 西南西, 西, 西北西, 西北, 北西北; French N, NNE, NE, ENE, E, ESE, SE, SSE, S, SSO, SO, OSO, O, ONO, NO, NNO. Exported files keep the English points |
+
 ## Open items (16 October 2026)
 
 | item | who | status |
 |---|---|---|
 | Licence of the Fenton (2020) Mars dune polygons | PI asked Lori Fenton | done: CC BY 4.0 (PR #23) |
 | Persian names of the six new Iran fields | PI's Iranian colleague | pending; names not shown until confirmed |
-| Student review of the French and Chinese text (incl. "potentiel de dérive" vs "potentiel de transport", "barkhane" vs "barchane", Chinese 16-point compass names) | PhD students via the PI | pending |
+| Student review of the French text (incl. "potentiel de dérive" vs "potentiel de transport", "barkhane" vs "barchane") | Tia via the PI | pending |
+| Student review of the Chinese text | Chinese PhD student via the PI | first corrections applied (PR #24); compass names chosen by the PI (PR #24) |
 | Second check from mainland China (language switch, Chinese text, a cell download, a map image export) | PI's colleague | after release |
 | Weak aggregator sources for a few dune-field names | agent | done: 25 names re-sourced (PR #23); five weaker matches listed above |
 | Weekly backup of usage.csv to GitHub | PI | done (PR #23 records it) |
