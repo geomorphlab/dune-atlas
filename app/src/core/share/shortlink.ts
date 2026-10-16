@@ -12,7 +12,7 @@ export const SHARE_IDS = {
   layers: ["dunes", "at", "ae", "qacb", "sige_sigh", "uft", "dpm", "rdpm", "rdpa", "qha_rdp_dp", "ab", "ao", "qncb", "qnlb", "qalb", "qnle", "qale", "qace",
     "qhab_nl_nc", "qhab_ac_nc", "qhne_ac_nl", "ufm", "qhbf", "qhef", "aridity", "qsdiv", "vegetation"],
   basemaps: ["openfreemap-dark", "esri-imagery", "hillshade", "opentopomap", "openfreemap-light"],
-  datasets: ["era5-land", "era5"],
+  datasets: ["era5-land", "era5", "merra2", "jra3q"],
   /** quantities of the cell panel's plot (flag 32; cell/qplot.ts) */
   plots: ["dpm", "rdpm", "rdpa", "qha_rdp_dp", "qsdiv", "at", "ab", "ae", "ao", "qncb", "qacb", "qnlb", "qalb", "qnle", "qale", "qace",
     "sige_sigh", "qhab_nl_nc", "qhab_ac_nc", "qhne_ac_nl", "uft", "ufm", "qhbf", "qhef", "ut_median"],

@@ -308,6 +308,7 @@
               },
               "kind": { "type": "string", "description": "what the dataset is, without its name, read after 'Name: ' in the Wind dataset ⓘ (e.g. 'free-running climate-model simulation')" },
               "note": { "type": "string", "description": "a sentence about this dataset for the Wind dataset ⓘ (e.g. how it relates to another dataset)" },
+              "optionLabel": { "type": "string", "description": "entry text in the Wind dataset selector when 'name resolution' is too wide for the 360 px embed, e.g. 'MERRA-2 ½° × ⅝°'" },
               "landShort": { "type": "string", "description": "land rule of the selector tooltip, e.g. 'land cells: land–sea mask fraction > 0' (datasets with a land mask)" },
               "series": {
                 "type": "object",

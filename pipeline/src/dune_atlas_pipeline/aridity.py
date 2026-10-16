@@ -269,15 +269,25 @@ def main(argv=None):
     c = sub.add_parser("cellmeans", help="per-cell AI mean / valid fraction on a wind grid -> .npz")
     c.add_argument("--data", default=b.get_default("data"))
     c.add_argument("--out", required=True)
-    c.add_argument("--grid", default="era5-land", choices=["era5-land", "era5"])
+    c.add_argument("--grid", default="era5-land", choices=["era5-land", "era5", "merra2", "jra3q"])
     a = p.parse_args(argv)
     if a.cmd == "pyramid":
         print(json.dumps(build_pyramid(a.data, a.out, keepbits=a.keepbits)))
     else:
         ai, sat, counts = load(a.data)
-        g = dict(dlat=0.1, dlon=0.1, ny=1801, nx=3600) if a.grid == "era5-land" else dict(dlat=0.25, dlon=0.25, ny=721, nx=1440)
+        if a.grid == "era5-land":
+            g = dict(dlat=0.1, dlon=0.1, ny=1801, nx=3600)
+            gj = {"lat0": 90.0, "lon0": -180.0, **g}
+        elif a.grid == "era5":
+            g = dict(dlat=0.25, dlon=0.25, ny=721, nx=1440)
+            gj = {"lat0": 90.0, "lon0": -180.0, **g}
+        else:   # the dataset's grid (rows: the regular fitted rows for Gaussian grids)
+            from .grid import DATASETS
+            w = DATASETS[a.grid].grid
+            g = dict(lat0=w.lat0, dlat=abs(w.dlat), ny=w.ny, lon0=w.lon0, dlon=w.dlon, nx=w.nx)
+            gj = dict(g)
         r = wind_grid_means(ai, sat, **g)
-        np.savez_compressed(a.out, **r, grid=json.dumps({"lat0": 90.0, "lon0": -180.0, **g}))
+        np.savez_compressed(a.out, **r, grid=json.dumps(gj))
         print(json.dumps({k: int(np.isfinite(v).sum()) for k, v in r.items()}))
 
 

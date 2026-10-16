@@ -3,7 +3,7 @@
 // (UDUNITS) and source statements are defined here; the store attrs give citation, DOI, licence and link.
 import type { CellAux } from "../../core/cell/cellstore";
 import type { AuxMeta } from "../../core/cell/auxinfo";
-import { datasetInfo, pixelsPerCell, resolutionText } from "../../core/cell/datasetinfo";
+import { cellSizeText, datasetInfo, halfCellText, pixelsPerCell } from "../../core/cell/datasetinfo";
 
 export const AUX_META: Record<string, AuxMeta> = {
   qsdiv: {
@@ -57,11 +57,10 @@ export function harmonizeAux(aux: CellAux): CellAux {
 }
 
 /** Description of an aux variable for a grid of `deg` degree cells (`degLon`: the longitude spacing of
- *  non-square cells; the Earth grids are square, so the text uses `deg`). */
+ *  non-square cells, MERRA-2 0.5° × 0.625°; cell sizes in the dataset's own wording, datasetinfo.cellSizeText). */
 export function auxDescription(v: string, deg = 0.1, degLon = deg): string {
-  void degLon;
   const d = AUX_META[v]?.description ?? "";
-  return d.replace(/\{res\}/g, resolutionText(deg)).replace(/\{half\}/g, resolutionText(deg / 2)).replace(/\{npx\}/g, String(pixelsPerCell(deg)))
+  return d.replace(/\{res\}/g, cellSizeText(deg, degLon)).replace(/\{half\}/g, halfCellText(deg, degLon)).replace(/\{npx\}/g, String(pixelsPerCell(deg, degLon)))
     .replace(/\{regrid\}/g, deg > 0.1 + 1e-9 ? " (area-weighted mean of the 0.1° cell means over the cell footprint)" : "");
 }
 
@@ -97,16 +96,16 @@ export function restateLicence(licence: string): string {
 
 /** Attributes of an aux variable for the NetCDF / metadata.json: description, source and processing
  *  defined here; citation, DOI, licence and link from the store attrs. */
-/** source statement of a per-cell variable (`degLon`, `datasetId`: as Mars; the Earth texts need neither) */
+/** source statement of a per-cell variable (`degLon`: longitude spacing of non-square cells; `datasetId`: the
+ *  wind dataset of the cell) */
 export function auxSourceAttrs(aux: CellAux, v: string, deg = 0.1, degLon = deg, datasetId?: string): Record<string, string> {
-  void degLon;
   const a = aux.attrs[v] ?? {};
   const out: Record<string, string> = {};
   const str = (k: string) => (typeof a[k] === "string" ? (a[k] as string) : undefined);
-  if (AUX_META[v]) out.description = auxDescription(v, deg);
+  if (AUX_META[v]) out.description = auxDescription(v, deg, degLon);
   if (v === "qsdiv") {
     out.source = qsdivSource(datasetId);
-    out.method = `Gunn (2026) Methods M6: central differences on the ${resolutionText(deg)} grid, periodic in longitude, R = 6371 km`;
+    out.method = `Gunn (2026) Methods M6: central differences on the ${cellSizeText(deg, degLon)} grid, periodic in longitude, R = 6371 km`;
   } else if (str("source")) out.source = str("source")!;
   const cite = [str("citation"), str("doi") ? `data doi:${str("doi")}` : undefined].filter(Boolean).join("; ");
   if (cite) out.references = cite;
@@ -117,7 +116,7 @@ export function auxSourceAttrs(aux: CellAux, v: string, deg = 0.1, degLon = deg,
     out.source = VEGETATION_SOURCE;
     out.license = VEGETATION_LICENCE;
     out.url = VEGETATION_URL;
-    out.comment = deg > 0.1 + 1e-9 ? VEGETATION_CHANGES.replace("averaged to the 0.1° cell", `averaged to 0.1° cells, then area-weighted to the ${resolutionText(deg)} cell,`) : VEGETATION_CHANGES;
+    out.comment = deg > 0.1 + 1e-9 ? VEGETATION_CHANGES.replace("averaged to the 0.1° cell", `averaged to 0.1° cells, then area-weighted to the ${cellSizeText(deg, degLon)} cell,`) : VEGETATION_CHANGES;
   }
   return out;
 }

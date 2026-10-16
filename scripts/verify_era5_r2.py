@@ -1,4 +1,4 @@
-"""Public checks of the ERA5 dataset stores after upload.
+"""Public checks of a dataset's stores after upload (ERA5; MERRA-2 and JRA-3Q with --dataset).
 
 Default (light, ~1-2 min): (1) integrity of 100 % of the objects without downloading data - listing sizes and ETags
 (MD5 of single-part puts) vs the local MD5s and the upload ledger; (2) the delivery path over the custom domain
@@ -187,7 +187,8 @@ def integrity(st: Path, prefix: str, cells_md5: Path) -> dict:
             remote[o["Key"]] = (o["Size"], o["ETag"].strip('"'))
     led = json.load(open(st / "r2" / f"uploaded-new-{prefix.replace('/', '_')}.json"))["objects"]
     local = {}
-    for line in cells_md5.read_text().splitlines():
+    # ERA5: cells.zarr was streamed from Gadi in parts (MD5 list from Gadi); MERRA-2 / JRA-3Q: local copy in stores/
+    for line in (cells_md5.read_text().splitlines() if cells_md5 and cells_md5.exists() else []):
         h, rel = line.split(maxsplit=1)
         local[f"{prefix}/cells.zarr/{rel}"] = h
     files = []
@@ -208,7 +209,7 @@ def integrity(st: Path, prefix: str, cells_md5: Path) -> dict:
             "examples_bad": (size_bad + etag_bad)[:5]}
 
 
-def delivery(st: Path, base: str, n_land=20, n_low=6, n_other=5, n_windows=10, seed=11) -> dict:
+def delivery(st: Path, base: str, n_land=20, n_low=6, n_other=5, n_windows=10, seed=11, masks="era5_cellmasks.nc") -> dict:
     """~20 land cells (>= n_low with 0 < lsm <= 0.5, >= 1 dune cell) and 5 non-land cells through the app's
     CellStore (scripts/check_era5_delivery.ts), ~10 pyramid windows through zarrita; compared bit for bit."""
     import subprocess
@@ -218,7 +219,7 @@ def delivery(st: Path, base: str, n_land=20, n_low=6, n_other=5, n_windows=10, s
     import zarr
     rng = np.random.default_rng(seed)
     ref = np.load(st / "cells" / "reference_sample.npz")
-    M = xr.open_dataset(st / "era5_cellmasks.nc"); dunes = M.dunes.values.astype(bool); lsm = M.lsm.values
+    M = xr.open_dataset(st / masks); dunes = M.dunes.values.astype(bool); lsm = M.lsm.values
     li, lr = ref["land_cells"], ref["lsm"]
     low = np.nonzero(lr <= 0.5)[0]; dn = np.nonzero(dunes[li[:, 0], li[:, 1]])[0]
     pick = list(rng.choice(low, n_low, replace=False)) + list(rng.choice(dn, 2, replace=False))
@@ -229,11 +230,11 @@ def delivery(st: Path, base: str, n_land=20, n_low=6, n_other=5, n_windows=10, s
     wins = []
     for _ in range(n_windows):
         p = stores[int(rng.integers(len(stores)))]; g = zarr.open_group(str(p), mode="r")
-        lv = sorted(g.group_keys(), key=int)[int(rng.integers(0, 4))]
+        lvs = sorted(g.group_keys(), key=int); lv = lvs[int(rng.integers(0, len(lvs)))]
         a = g[lv][p.name[:-5]]
-        y0 = int(rng.integers(0, a.shape[1] - 64)); x0 = int(rng.integers(0, a.shape[2] - 64))
+        y0 = int(rng.integers(0, max(1, a.shape[1] - 64))); x0 = int(rng.integers(0, max(1, a.shape[2] - 64)))
         wins.append({"store": f"fields/{p.name}", "level": lv, "var": p.name[:-5], "ut": int(rng.integers(64)),
-                     "y0": y0, "y1": y0 + 64, "x0": x0, "x1": x0 + 64})
+                     "y0": y0, "y1": min(a.shape[1], y0 + 64), "x0": x0, "x1": min(a.shape[2], x0 + 64)})
     cells_req = [list(map(int, li[i])) for i in pick] + [list(map(int, c)) for c in other]
     with tempfile.TemporaryDirectory() as td:
         rq, out = Path(td) / "req.json", Path(td) / "out.json"
@@ -293,6 +294,7 @@ def main():
     ap.add_argument("--prefix", default=PREFIX)
     ap.add_argument("--cells-md5", help="per-object MD5 list of cells.zarr (md5sum output, paths relative to the store)")
     ap.add_argument("--full", action="store_true", help="the 300-cell / all-sidecar / 216-window mode (slow)")
+    ap.add_argument("--dataset", default="era5", help="era5 | merra2 | jra3q (masks file <dataset>_cellmasks.nc in --st)")
     a, rest = ap.parse_known_args()
     if a.full:
         return main_full(["--st", a.st, "--out", a.out, "--prefix", a.prefix] + rest)
@@ -301,7 +303,7 @@ def main():
     res = {"base": f"https://data.geomorphlab.org/{prefix}", "date": time.strftime("%Y-%m-%d %H:%M"),
            "integrity": integrity(st, prefix, Path(a.cells_md5 or st / "cells" / "cells_md5.txt"))}
     print(json.dumps(res["integrity"]), flush=True)
-    res["delivery"] = delivery(st, res["base"])
+    res["delivery"] = delivery(st, res["base"], masks=f"{a.dataset}_cellmasks.nc")
     res["seconds"] = round(time.time() - t0, 1)
     print(json.dumps(res["delivery"]), flush=True)
     json.dump(res, open(a.out, "w"), indent=1)

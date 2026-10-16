@@ -41,6 +41,9 @@ def _sharding(inner, typesize=4):
                                                                              typesize=typesize)], index_location="end")
 
 
+# licence text of the atlas-derived per-cell values, by the SPDX id of the dataset's fields (grid.DATASETS info)
+FIELDS_LICENCE_TEXT = {"CC-BY-4.0": "CC BY 4.0", "CC-BY-NC-SA-4.0": "CC BY-NC-SA 4.0"}
+
 def open_store(out, land: np.ndarray, root_attrs: dict | None = None, dataset=None):
     import zarr
     ds = get_dataset(dataset)
@@ -123,7 +126,7 @@ def build(out, data_dir, qsdiv_native: str, ai_npz: str | None = None, ai_means:
         "long_name": qa["long_name"], "long_name_latex": qa["long_name_latex"], "units": "m/yr",
         "description": qa["description"], "derived_from": qa["derived_from"], "method": qa["method"],
         "display_units": "m/kyr", "display_scale": 1000.0,
-        "source": q_source, "licence": "CC BY 4.0"})
+        "source": q_source, "licence": FIELDS_LICENCE_TEXT.get((ds.info or {}).get("fields_license", "CC-BY-4.0"), "CC BY 4.0")})
     del q
     if ai_means is None:
         z = np.load(ai_npz)
@@ -135,13 +138,13 @@ def build(out, data_dir, qsdiv_native: str, ai_npz: str | None = None, ai_means:
         "long_name": "Aridity index, mean over the cell", "long_name_latex": r"\overline{\mathrm{AI}}",
         "units": "dimensionless",
         "description": (f"Mean of the valid 30-arc-second Global-AI v3.1 pixels inside the {g.label} cell footprint "
-                        f"(centre ± {g.res / 2:g}°), equal weight per pixel (no cos-latitude weighting); undefined where "
+                        f"({g.footprint_text()}), equal weight per pixel (no cos-latitude weighting); undefined where "
                         "none is valid. Includes saturated pixels at 6.5535 (AI ≥ 6.5535), so it is a lower bound where "
                         "ai_sat_frac > 0."), **common})
     write_variable(root, "ai_valid_frac", ai_means["ai_valid_frac"], land, {
         "long_name": "Fraction of the cell footprint with valid aridity data", "long_name_latex": r"f_\mathrm{valid}",
         "units": "1",
-        "description": (f"Valid 30″ pixels / {round((g.res * 120) ** 2)} (nominal pixels per {g.label} cell). Pixels outside the source extent "
+        "description": (f"Valid 30″ pixels / {round(abs(g.dlat) * 120 * abs(g.dlon) * 120)} (nominal pixels per {g.label} cell). Pixels outside the source extent "
                         "(south of 60° S) or with no data (ocean, ET0 = 0) count as not valid."), **common})
     write_variable(root, "ai_sat_frac", ai_means["ai_sat_frac"], land, {
         "long_name": "Fraction of valid aridity pixels at saturation (AI ≥ 6.5535)", "long_name_latex": r"f_\mathrm{sat}",
@@ -150,10 +153,12 @@ def build(out, data_dir, qsdiv_native: str, ai_npz: str | None = None, ai_means:
     if not ds.land_only_source:
         with xr.open_dataset(f"{data_dir}/{ds.masks_file}") as M:
             lsm = M["lsm"].values.astype("f4")
+        i = ds.info   # lsm_* keys: the land field of a dataset whose mask is not a land-sea mask field (MERRA-2, JRA-3Q)
         write_variable(root, "lsm", lsm, land, {
-            "long_name": f"{ds.name} land-sea mask (fraction of land)", "long_name_latex": r"\mathrm{lsm}", "units": "1",
-            "description": (f"{ds.name} land-sea mask, the invariant fraction of the cell covered by land (0–1). Atlas "
-                            f"land cells are those with lsm > {ds.lsm_land_above:g}; other cells have no data."),
-            "source": ds.info["data_citation"], "citation": ds.info["citation"], "doi": ds.info["doi"],
-            "licence": ds.info["licence"], "notice": ds.info["copernicus_notice"]})
+            "long_name": i.get("lsm_long_name", f"{ds.name} land-sea mask (fraction of land)"), "long_name_latex": r"\mathrm{lsm}",
+            "units": "1",
+            "description": (i.get("lsm_description", f"{ds.name} land-sea mask, the invariant fraction of the cell covered by land (0–1).")
+                            + f" Atlas land cells are those with lsm > {ds.lsm_land_above:g}; other cells have no data."),
+            "source": i.get("lsm_source", i["data_citation"]), "citation": i["citation"], "doi": i.get("lsm_doi", i["doi"]),
+            "licence": ds.info["licence"], "notice": ds.info.get("copernicus_notice") or ds.info.get("notice", "")})
     return {"objects": count_objects(out), "variables": list(root.attrs["variables"])}

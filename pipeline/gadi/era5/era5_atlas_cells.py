@@ -1,7 +1,7 @@
 """Build the ERA5 atlas cell store (cells.zarr) next to the data (PBS job on Gadi), validate it against the source
 stores, write a reference sample for the public check after upload, and pack it into transfer tars.
 
-    python era5_atlas_cells.py DATA_DIR OUT_DIR [--workers 8] [--qsat-subset] [--split-mb 200]
+    python era5_atlas_cells.py DATA_DIR OUT_DIR [--dataset era5|merra2|jra3q] [--workers 8] [--qsat-subset] [--split-mb 200]
 
 DATA_DIR holds the two ERA5 source stores (or links to them) and era5_cellmasks.nc (cellmasks.py). OUT_DIR gets
 cells.zarr (+ manifest), validate.json, reference_sample.npz (300 random land cells: histogram + 23 x 64 fields
@@ -28,12 +28,13 @@ def main(argv=None):
     p.add_argument("--rows-per-tar", type=int, default=8)
     p.add_argument("--qsat-subset", action="store_true")
     p.add_argument("--split-mb", type=int, default=0)
+    p.add_argument("--dataset", default="era5")
     a = p.parse_args(argv)
     import xarray as xr
     import zarr
     from dune_atlas_pipeline import cellstore as CS
     from dune_atlas_pipeline.grid import DATASETS
-    ds = DATASETS["era5"]
+    ds = DATASETS[a.dataset]
     out = os.path.join(a.out, "cells.zarr")
     lg = lambda m: print(time.strftime("%H:%M:%S"), m, flush=True)  # noqa: E731
     t0 = time.time()
@@ -95,10 +96,10 @@ def main(argv=None):
         lg("qsat land-cell copy")
         os.makedirs(os.path.join(a.out, "subset"), exist_ok=True)
         P.subset_qsat(a.data, os.path.join(a.out, "subset"), land,
-                      note=f"atlas land cells ({ds.info['land_cells']}); no data elsewhere")
-        summ["qsat_subset_check"] = P.check_qsat(a.data, os.path.join(a.out, "subset"), land)
-        path = os.path.join(a.out, f"{P.QSAT}.tar")
-        subprocess.run(["tar", "-cf", path, "-C", os.path.join(a.out, "subset"), P.QSAT], check=True)
+                      note=f"atlas land cells ({ds.info['land_cells']}); no data elsewhere", qsat=ds.qsat_store)
+        summ["qsat_subset_check"] = P.check_qsat(a.data, os.path.join(a.out, "subset"), land, qsat=ds.qsat_store)
+        path = os.path.join(a.out, f"{ds.qsat_store}.tar")
+        subprocess.run(["tar", "-cf", path, "-C", os.path.join(a.out, "subset"), ds.qsat_store], check=True)
         md5 = subprocess.run(["md5sum", path], check=True, capture_output=True, text=True).stdout.split()[0]
         tars[os.path.basename(path)] = {"bytes": os.path.getsize(path), "md5": md5}
         lg(json.dumps(summ["qsat_subset_check"]))

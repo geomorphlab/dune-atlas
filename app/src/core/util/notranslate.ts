@@ -18,7 +18,8 @@ export const NO_TRANSLATE_NAMES: readonly string[] = [
   "Dune Atlas Earth", "Dune Atlas Mars", "Dune Atlas", "Monash Geomorphology Lab", "Monash University", "Monash",
   // wind datasets and models
   "ERA5-Land", "ERA5", "Copernicus Climate Change Service", "Copernicus DEM GLO-30", "Copernicus DEM", "Copernicus",
-  "Mars Climate Modeling Center", "MCMC FV3",
+  "Mars Climate Modeling Center", "MCMC FV3", "MERRA-2", "JRA-3Q", "Global Modeling and Assimilation Office",
+  "Goddard Earth Sciences Data and Information Services Center",
   // basemap and data providers, products
   "OpenFreeMap", "OpenMapTiles", "OpenStreetMap", "OpenTopoMap", "OpenPlanetaryMap", "Positron", "Mapterhorn",
   "Esri World Imagery", "Esri Master License Agreement", "Esri OnMars", "Esri", "Maxar", "Earthstar Geographics", "GIS User Community", "CARTO",

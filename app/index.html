@@ -4,10 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MGL - Dune Atlas</title>
-    <!-- lab icon (www.geomorphlab.org); %BASE_URL% = the build's base (/ for Earth, /mars/ for Mars) -->
-    <link rel="icon" href="%BASE_URL%favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" sizes="32x32" href="%BASE_URL%favicon-32.png" />
-    <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png" />
+    <!-- atlas icon (random-point Voronoi in the map colours with the lab's barchan; public/favicon.svg, docs/guide/icon.md);
+         %BASE_URL% = the build's base (/ for Earth, /mars/ for Mars); ?v=2: browsers cache tab icons by address, so a
+         changed icon needs a new one (raise it with every new icon) -->
+    <link rel="icon" href="%BASE_URL%favicon.ico?v=2" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg?v=2" />
+    <link rel="icon" type="image/png" sizes="32x32" href="%BASE_URL%favicon-32.png?v=2" />
+    <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png?v=2" />
     <meta name="description" content="Interactive explorer for aeolian geomorphology on Earth and Mars. Developed by the Monash Geomorphology Lab." />
     <!-- link preview -->
     <meta property="og:type" content="website" />

@@ -155,13 +155,30 @@ export const PRIVACY_NOTE = "To understand how the atlas is used, we count page 
 /** 'Dunes only': one UI-wide switch, in the URL / share link; restricts every wind-derived map
  *  layer to the dataset's dune cells (map/dunemask.ts). Non-wind layers and the cell panel are unchanged. */
 export const DUNES_ONLY_HELP = "Draw the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in cells with dunes; the other layers and the cell panel are unchanged.";
-export function dunesOnlyToggle(store: Store): HTMLElement {
+/** ⓘ of Dunes only: what the switch does and how the dune map is drawn while it is on */
+export const DUNES_ONLY_INFO_HTML = `<p class="info-def">Dunes only draws the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in the cells of the selected wind dataset that contain mapped dunes.</p>
+<p>The other layers, the cell panel and the downloads are unchanged.</p>
+<p>Switching it on sets the dune map's opacity slider to 50 %, so the colours of the dune cells show through it; the slider can be moved as usual.</p>`;
+/** opacity the dune map is set to when Dunes only is switched on (the user can change it afterwards) */
+export const DUNES_ONLY_OPACITY = 0.5;
+/** the dune map: vector polygons (or points) of the dunes group (= map/overlays.ts isDuneMap) */
+const isDuneMapDef = (l: LayerDef) => l.group === "dunes" && (l.type === "pmtiles-vector" || l.type === "geojson-points");
+export function dunesOnlyToggle(store: Store, reg?: Registry): HTMLElement {
   const cb = h("input", { type: "checkbox", id: "dunes-only", "aria-describedby": "dunes-only-help" }) as HTMLInputElement;
   cb.checked = !!store.state.dunesOnly;
-  cb.addEventListener("change", () => store.set({ dunesOnly: cb.checked }));
+  cb.addEventListener("change", () => {
+    if (!cb.checked || !reg) { store.set({ dunesOnly: cb.checked }); return; }
+    // switching on: the dune map's opacity slider goes to 50 % (one state change with the switch)
+    const layers = { ...store.state.layers };
+    for (const l of reg.layers.filter(isDuneMapDef)) layers[l.id] = { ...(layers[l.id] ?? { visible: false, opacity: 1 }), opacity: DUNES_ONLY_OPACITY };
+    store.set({ dunesOnly: true, layers });
+  });
   store.subscribe((st, ch) => { if (ch.has("dunesOnly")) cb.checked = !!st.dunesOnly; });
-  return h("label", { class: "inline dunes-only-row", for: "dunes-only", title: DUNES_ONLY_HELP }, cb, ui("panel.dunesOnly"),
+  const label = h("label", { class: "inline dunes-only-row", for: "dunes-only", title: DUNES_ONLY_HELP }, cb, ui("panel.dunesOnly"),
     h("span", { id: "dunes-only-help", class: "visually-hidden" }, DUNES_ONLY_HELP));
+  // one line with its ⓘ, the popover wrapping below (as the Wind dataset line)
+  const t = infoToggle("Dunes only", DUNES_ONLY_INFO_HTML, "dunes-only");
+  return h("div", { class: "dunes-only-line" }, label, t.button, t.pop);
 }
 
 /** 'Names' (Dune Fields group): the dune-field name labels (map/placelabels.ts), a row laid out as the layer
@@ -434,7 +451,7 @@ export const layerPanelOpen = (root: HTMLElement) => !root.classList.contains("c
 /** Wind dataset option text: reanalysis / model name and grid ("ERA5-Land 0.1°", "MCMC FV3 2°") */
 export function datasetOptionLabel(id: string, fallback: string): string {
   const d = DATASET_INFO[id];
-  return d ? `${d.name} ${d.resolution}` : fallback;
+  return d ? d.optionLabel ?? `${d.name} ${d.resolution}` : fallback;
 }
 
 /** the header subtitle, identical in both atlases (the Gunn (2026) citation is in About) */
@@ -475,7 +492,7 @@ export function renderLayerPanel(root: HTMLElement, reg: Registry, store: Store,
     }
     header.append(line);
   }
-  header.append(dunesOnlyToggle(store));
+  header.append(dunesOnlyToggle(store, reg));
   // pinned: never scrolls away, stays visible even when the layer list is collapsed
   const pinned = h("div", { class: "pinned" }, thresholdControl(reg.threshold, store));
   body.append(orderList(reg, store));

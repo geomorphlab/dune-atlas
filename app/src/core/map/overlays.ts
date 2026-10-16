@@ -15,7 +15,7 @@ import { isWindDerived, loadDuneMask, type DuneMaskProvider } from "./dunemask";
 import { ADAPTERS, StaleLayerError, type LayerHandle } from "./adapters";
 import { PLACE_LABELS } from "./layerids";
 
-/** the dune map (vector polygons of the dunes group): drawn as outlines while Dunes only is on */
+/** the dune map (vector polygons of the dunes group): set to DUNES_ONLY_OPACITY when Dunes only is switched on (ui/layerPanel.ts) */
 export const isDuneMap = (l: LayerDef) => l.group === "dunes" && (l.type === "pmtiles-vector" || l.type === "geojson-points");
 
 /** Bottom-most map layer of the selected-cell outline (overlays go below it). */
@@ -118,7 +118,7 @@ export class OverlayManager {
       const h = await ADAPTERS[layer.type](layer, {
         map: this.map, dataBase: this.dataBase, resolve: this.#resolve, threshold: this.reg.threshold, utIndex: this.#utIndex,
         beforeId: this.#beforeId(layer.id), cfg: st.cfg, sourceOfVariable: this.#sourceOfVariable,
-        duneMask: this.duneMaskFor(layer), outlineOnly: this.#dunesOnly && isDuneMap(layer),
+        duneMask: this.duneMaskFor(layer),
         onDataError: (e) => this.onError(layer, e),
         alive: () => gen === this.#generation,
       }, st.opacity);

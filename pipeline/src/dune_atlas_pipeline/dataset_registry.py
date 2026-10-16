@@ -34,8 +34,11 @@ from .grid import get_dataset
 
 REPO = Path(__file__).resolve().parents[3]
 # ERA5 stores with land = lsm > 0 (2026-10-13); the first build (lsm > 0.5) is at dune-atlas/v1/datasets/era5
-PREFIX = {"era5": "dune-atlas/v2/datasets/era5"}
-TITLE = {"era5": "ERA5 0.25°, 1950–2024"}
+PREFIX = {"era5": "dune-atlas/v2/datasets/era5", "merra2": "dune-atlas/v2/datasets/merra2",
+          "jra3q": "dune-atlas/v2/datasets/jra3q"}
+TITLE = {"era5": "ERA5 0.25°, 1950–2024", "merra2": "MERRA-2 0.5° × 0.625°, 1980–2025", "jra3q": "JRA-3Q 0.375°, 1980–2025"}
+# who produces the dataset (first words of the entry's description)
+PROVIDER = {"era5": "ECMWF", "merra2": "NASA GMAO", "jra3q": "JMA"}
 # keys of a dataset entry written by hand (what the app says about the dataset: layers.schema.json $defs/dataset)
 CURATED_KEYS = ("info", "credits", "citationSources")
 
@@ -68,7 +71,7 @@ def dataset_entry(dataset) -> dict:
     ds = get_dataset(dataset)
     i = ds.info
     return {"id": ds.id, "title": TITLE[ds.id], "prefix": PREFIX[ds.id],
-            "description": (f"ECMWF {ds.name} hourly 10 m winds, {ds.period}, on the {ds.resolution} grid "
+            "description": (f"{PROVIDER[ds.id]} {ds.name} hourly 10 m winds, {ds.period}, on the {ds.resolution} grid "
                             f"({ds.n_hours:,} hours); land cells: {i['land_cells']}."),
             "citation": f"{i['data_citation']}",
             "cellAuxStores": ["{dataset}/cells-aux.zarr", "{dataset}/cells-aux-veg.zarr"]}

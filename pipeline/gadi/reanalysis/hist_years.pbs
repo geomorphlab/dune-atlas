@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -q normal
+#PBS -l walltime=06:00:00
+#PBS -l storage=gdata/k10+gdata/xp65+scratch/k10
+#PBS -l wd
+#PBS -r y
+# Per-year histogram stores for the years in YEARS (colon-separated) of dataset DS; a finished year is skipped,
+# so a stopped job is resubmitted unchanged. qsub -v: PY, CODE, WORK, DS, YEARS. Resources set at qsub (-l).
+set -u
+test -x "$PY" || { echo "no interpreter $PY"; exit 127; }
+export NUMBA_NUM_THREADS=${PBS_NCPUS:-1} OMP_NUM_THREADS=1
+mkdir -p "$WORK/hist_year/$DS"
+for y in ${YEARS//:/ }; do
+  "$PY" -u -W ignore "$CODE/rean_hist.py" year "$DS" "$WORK/raw/$DS" "$y" "$WORK/hist_year/$DS" >> "$WORK/logs/hist_${DS}_${YEARS%%:*}.log" 2>&1 || { echo "year $y failed"; exit 1; }
+done
+echo "done $DS $YEARS $(date -u +%FT%TZ)"

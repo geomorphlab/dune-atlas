@@ -11,7 +11,7 @@ import type { CellData } from "../cell/cellstore";
 import type { Grid } from "../cell/snap";
 import { writeNetcdf3, type NcAttrs, type NcVariable } from "../cell/netcdf3";
 import { ATLAS_NAME, FILE_AI_NOTICE, fieldMeta, INSTITUTION, sourceText, type ExportMeta } from "../cell/export";
-import { cellEdges, colLon, exactCoord, latBounds, licenceStatement, noticeAttrs, rowLat, timeCoverage } from "../cell/exportmeta";
+import { cellEdges, colLon, exactCoord, footprintLat, GAUSSIAN_INDEX_COMMENT, latBounds, licenceStatement, noticeAttrs, rowLat, timeCoverage } from "../cell/exportmeta";
 import { AUX_META, auxDescription, auxSourceAttrs } from "../cell/auxinfo";
 import { citationSources, citationText, datasetNotice, fieldsCitation, fieldsLicence, referencesLine } from "../cell/citation";
 import { CELL_SOURCE_IDS, DUNE_FLAG_LICENCE, DUNE_FLAG_LONG_NAME, TRANSPORT_LAW_ATTR } from "@body/citation";
@@ -47,7 +47,7 @@ export function boxCells(b0: Box, g: Grid): { iys: number[]; ixs: number[]; lats
   const eps = 1e-9;
   const inLat = (lat: number) => lat >= b.south - eps && (lat < b.north - eps || (b.north >= 90 && lat <= 90 + eps));
   const iys: number[] = [];
-  for (let iy = 0; iy < g.ny; iy++) if (inLat(rowLat(g, iy))) iys.push(iy);
+  for (let iy = 0; iy < g.ny; iy++) if (inLat(footprintLat(g, iy))) iys.push(iy);   // the cell as drawn on the map
   const full = b.width >= 360 - eps;
   const ixs: number[] = [], lons: number[] = [];
   const global = Math.abs(Math.abs(g.dlon) * g.nx - 360) < 1e-6;
@@ -192,10 +192,10 @@ export function regionNetcdf(cells: (CellData | null)[], grid: { iys: number[]; 
   const coords = mars ? "planetocentric latitude, east longitude (unwrapped across 180°), Mars 2000 sphere" : "WGS 84 latitude and longitude (unwrapped across 180°)";
   const vars: NcVariable[] = [
     { name: "lat", type: "double", dims: ["lat"], data: grid.lats, attrs: { standard_name: "latitude", long_name: mars ? "planetocentric latitude of the cell centre" : "latitude of the cell centre", units: "degrees_north", bounds: "lat_bnds" } },
-    { name: "lat_bnds", type: "double", dims: ["lat", "nv"], data: grid.lats.flatMap((y) => latBounds(y, dlat)), attrs: { comment: "north and south edge of each row, clipped at ±90° (a row centred on a pole is a half cell)" } },
+    { name: "lat_bnds", type: "double", dims: ["lat", "nv"], data: grid.iys.flatMap((iy) => latBounds(footprintLat(g, iy), dlat)), attrs: { comment: g.latValues ? "north and south edge of the footprint of each row (centred on grid_lat0 + grid_dlat * cell_y, the regular grid fitted through the end rows; lat = the Gaussian latitude of the row)" : "north and south edge of each row, clipped at ±90° (a row centred on a pole is a half cell)" } },
     { name: "lon", type: "double", dims: ["lon"], data: grid.lons, attrs: { standard_name: "longitude", long_name: mars ? "east longitude of the cell centre" : "longitude of the cell centre", units: "degrees_east", bounds: "lon_bnds", comment: "increasing eastward; values above 180 continue across the antimeridian (subtract 360 for -180..180)" } },
     { name: "lon_bnds", type: "double", dims: ["lon", "nv"], data: grid.lons.flatMap((x) => [exactCoord(x - dlon / 2), exactCoord(x + dlon / 2)]), attrs: {} },
-    { name: "cell_y", type: "int", dims: ["lat"], data: grid.iys, attrs: { long_name: "grid row index of the wind dataset (0 = northernmost row)", units: "1", grid_lat0: g.lat0, grid_dlat: g.dlat, grid_ny: I(g.ny) } },
+    { name: "cell_y", type: "int", dims: ["lat"], data: grid.iys, attrs: { long_name: "grid row index of the wind dataset (0 = northernmost row)", units: "1", grid_lat0: g.lat0, grid_dlat: g.dlat, grid_ny: I(g.ny), ...(g.latValues ? { comment: GAUSSIAN_INDEX_COMMENT } : {}) } },
     { name: "cell_x", type: "int", dims: ["lon"], data: grid.ixs, attrs: { long_name: "grid column index of the wind dataset (0 = westernmost column)", units: "1", grid_lon0: g.lon0, grid_dlon: g.dlon, grid_nx: I(g.nx) } },
     { name: ax, type: "double", dims: sel.allThresholds ? [ax] : [], data: ks.map((k) => meta.axis.values[k]), attrs: { long_name: meta.axis.longName, units: meta.axis.units, ...(meta.axis.symbolTex ? { long_name_latex: meta.axis.symbolTex } : {}), ...(meta.axis.comment ? { comment: meta.axis.comment } : {}) } },
     { name: "has_data", type: "int", dims: ["lat", "lon"], data: Int32Array.from(cells, (c) => (c ? 1 : 0)), attrs: { long_name: "cell has wind and sand-flux data", flag_values: I([0, 1]), flag_meanings: "no_data data", units: "1", comment: ds.nonLandReason ? `0 = outside the land mask of ${ds.name} (${ds.landRule})` : "0 = no data" } },
@@ -266,7 +266,7 @@ export function regionNetcdf(cells: (CellData | null)[], grid: { iys: number[]; 
   const b = normaliseBox(meta.box);
   const when = (meta.generated ?? new Date()).toISOString();
   // extent of the cells in the file (the box selects cell centres, so the cells can reach beyond it)
-  const ext = ny && nx ? { south: cellEdges(grid.lats[ny - 1], 0, g).south, north: cellEdges(grid.lats[0], 0, g).north, west: exactCoord(grid.lons[0] - dlon / 2), east: exactCoord(grid.lons[nx - 1] + dlon / 2) } : { south: b.south, north: b.north, west: b.west, east: b.east };
+  const ext = ny && nx ? { south: cellEdges(footprintLat(g, grid.iys[ny - 1]), 0, g).south, north: cellEdges(footprintLat(g, grid.iys[0]), 0, g).north, west: exactCoord(grid.lons[0] - dlon / 2), east: exactCoord(grid.lons[nx - 1] + dlon / 2) } : { south: b.south, north: b.north, west: b.west, east: b.east };
   return writeNetcdf3({
     dims,
     attrs: {

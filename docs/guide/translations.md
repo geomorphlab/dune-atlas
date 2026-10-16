@@ -83,7 +83,8 @@ Either way a translation is shown only for the exact English it was made from; o
 ## Status (October 2026)
 
 All on-screen text of both atlases is in French and Simplified Chinese (first version machine-drafted with the
-glossary and a review pass; live since 16 October 2026). Review by native-speaker PhD students is under way, in
-Word documents generated from the `.md` files. Mainland-China test (Oct 2026): the site, the data and the
+glossary and a review pass; live since 16 October 2026). No further native-speaker review is planned: text added
+from 16 October 2026 on (for example the MERRA-2 and JRA-3Q dataset texts) is machine-drafted with the glossary
+only, and the Word workflow above stays available should a reviewer join later. Mainland-China test (Oct 2026): the site, the data and the
 default basemaps load without a VPN; OpenTopoMap and OpenPlanetaryMap do not (the atlas shows a notice). A
 second check from China (language switch, Chinese text, a cell download and an image export) is planned.

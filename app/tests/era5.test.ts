@@ -184,10 +184,11 @@ describe.skipIf(!haveFix)("ERA5 fixture: panel and downloads", () => {
       modesUt: q("svg.modes-plot circle.current-ut").getAttribute("r"), modesDots: [...root.querySelectorAll("svg.modes-plot circle.current-mode")].map((x) => x.getAttribute("cx")).join(),
       qsdiv: q('[data-section="qsdiv"] svg.line-plot').innerHTML, qsdivCap: q('[data-section="qsdiv"] .caption').textContent!,
       head: q('[data-section="summary"] > summary > h3').textContent!, table: q('[data-section="summary"] table').innerHTML,
-      meta: q(".cell-meta").textContent!,
     });
     const windOf = () => ({ svg: q('[data-section="windRose"] .fig-svg').innerHTML, cap: q('[data-section="windRose"] .caption').textContent!, legend: q('[data-section="windRose"] .fig-legend').innerHTML });
     const a0 = snapOf(), w0 = windOf();
+    // above the wind rose only the dune badge (the threshold is in the panel's bar; no dataset comparison lines)
+    expect(q(".cell-meta").textContent).toBe("Dunes present");
     const svgs = [...root.querySelectorAll(".fig-svg")];
     expect(w0.cap).toMatch(/ ERA5 10 m wind 1950–2024\.$/); // caption names the selected dataset
     expect(w0.svg).not.toContain("rose-dim");

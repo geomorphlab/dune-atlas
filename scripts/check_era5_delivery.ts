@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const app = path.resolve(here, "..", "app");
-const { CellStore } = await import(path.join(app, "src", "cell", "cellstore.ts"));
+const { CellStore } = await import(path.join(app, "src", "core", "cell", "cellstore.ts"));
 const zarr = await import(path.join(app, "node_modules", "zarrita", "dist", "src", "index.js"));
 
 const [base, reqPath, outPath] = process.argv.slice(2).filter((a) => a !== "--");

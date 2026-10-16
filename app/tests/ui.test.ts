@@ -183,11 +183,12 @@ describe("layer panel", () => {
     expect(items()[0]).toBe(victim);
     expect(store.state.order[0]).toBe(victim);
   });
-  it("dataset selector is shown for the two wind datasets (ERA5-Land, ERA5)", () => {
+  it("dataset selector is shown for the wind datasets (ERA5-Land, ERA5, JRA-3Q, MERRA-2)", () => {
     const sel = root.querySelector("#dataset-select") as HTMLSelectElement;
     // short option text (fits the embed panel); the period and land rule are in the tooltips
-    expect([...sel.options].map((o) => o.textContent)).toEqual(["ERA5-Land 0.1°", "ERA5 0.25°"]);
-    expect([...sel.options].map((o) => o.title)).toEqual(["ERA5-Land 0.1°, 1950–2024; land cells: land–sea mask fraction > 0.5", "ERA5 0.25°, 1950–2024; land cells: land–sea mask fraction > 0"]);
+    expect([...sel.options].map((o) => o.textContent)).toEqual(["ERA5-Land 0.1°", "ERA5 0.25°", "JRA-3Q 0.375°", "MERRA-2 ½° × ⅝°"]);
+    expect([...sel.options].map((o) => o.title)).toEqual(["ERA5-Land 0.1°, 1950–2024; land cells: land–sea mask fraction > 0.5", "ERA5 0.25°, 1950–2024; land cells: land–sea mask fraction > 0",
+      "JRA-3Q 0.375°, 1980–2025; land cells: land fraction > 0", "MERRA-2 0.5° × 0.625°, 1980–2025; land cells: land fraction > 0"]);
     expect(sel.title).toBe(sel.options[sel.selectedIndex].title);
   });
   it("dunes: fill colour picker and invert only (no outline controls, no colour swatch)", () => {
@@ -280,7 +281,7 @@ describe("dataset selector", () => {
     const store = new Store(initState());
     renderLayerPanel(root, reg2, store);
     const sel = root.querySelector("#dataset-select") as HTMLSelectElement;
-    expect([...sel.options].map((o) => o.value)).toEqual(["era5-land", "era5"]);
+    expect([...sel.options].map((o) => o.value)).toEqual(["era5-land", "era5", "jra3q", "merra2"]);
     sel.value = "era5"; fire(sel, "change");
     expect(store.state.dataset).toBe("era5");
   });
@@ -318,7 +319,7 @@ describe("cell panel", () => {
     mini.value = "40"; fire(mini, "input");
     expect(store.state.utIndex).toBe(40);
     expect(root.querySelector("#cell-ut-value")!.textContent).toBe("0.41 m/s");
-    expect(root.querySelector(".cell-meta")!.textContent).toContain("0.41 m/s");
+    expect(root.querySelector(".cell-meta")!.textContent).toMatch(/^(Dunes present|No dunes mapped)$/);   // badge only
     expect(root.querySelector("#cell-ut-slider")).toBe(mini); // not rebuilt while dragging
   });
   it("modes plot: a collapse is remembered for the visit for new panels", async () => {

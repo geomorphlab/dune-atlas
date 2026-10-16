@@ -303,6 +303,9 @@ body.embed #layer-panel { top: 44px; max-height: calc(100% - 94px); }
 .tour-outline { outline: 2px solid var(--accent); outline-offset: -2px; }
 /* 'Dunes only' switch under the Wind dataset selector (ui/layerPanel.ts dunesOnlyToggle) */
 label.inline.dunes-only-row { display: flex; width: max-content; max-width: 100%; }
+.dunes-only-line { display: flex; flex-wrap: wrap; align-items: center; column-gap: 6px; }
+.dunes-only-line > .info-button { flex: 0 0 auto; margin-bottom: 6px; }
+.dunes-only-line > .info-popover { flex: 1 1 100%; min-width: 0; box-sizing: border-box; margin-top: 0; margin-bottom: 6px; }
 .dunes-only-row { margin: 0 0 6px; color: var(--text, inherit); cursor: pointer; }
 .dunes-only-row input { margin: 0 4px 0 0; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

@@ -72,7 +72,8 @@ describe("short share link (#v=…)", () => {
     for (const c of Object.keys(COLORMAPS)) expect(SHARE_IDS.colormaps as readonly string[], c).toContain(c);
     // v1 order is frozen: the first entries never move
     expect(SHARE_IDS.layers.slice(0, 3)).toEqual(["dunes", "at", "ae"]);
-    expect(SHARE_IDS.datasets).toEqual(["era5-land", "era5"]);
+    expect(SHARE_IDS.datasets.slice(0, 2)).toEqual(["era5-land", "era5"]);
+    expect(SHARE_IDS.datasets).toEqual(["era5-land", "era5", "merra2", "jra3q"]);
   });
   it("typical links are short (≤ 80 characters with the site address)", () => {
     const base = "https://map.geomorphlab.org/";

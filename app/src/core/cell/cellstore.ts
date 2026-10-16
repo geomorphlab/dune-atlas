@@ -14,7 +14,7 @@ export interface CellStoreAttrs {
   title?: string;
   source?: string;
   license?: string;
-  grid: { lat0: number; dlat: number; lon0: number; dlon: number; ny: number; nx: number };
+  grid: { lat0: number; dlat: number; lon0: number; dlon: number; ny: number; nx: number; lat_values?: number[] };
   um_edges: number[];
   ua_edges: number[];
   ua_convention?: string;
@@ -177,7 +177,9 @@ export class CellStore {
   /** Grid from root attrs `grid` (fallback: ERA5-Land 0.1 deg). */
   get grid(): Grid {
     const g = this.attrs.grid;
-    return g && [g.lat0, g.dlat, g.lon0, g.dlon, g.ny, g.nx].every(Number.isFinite) ? { lat0: g.lat0, dlat: g.dlat, lon0: g.lon0, dlon: g.dlon, ny: g.ny, nx: g.nx } : ERA5_LAND_GRID;
+    if (!g || ![g.lat0, g.dlat, g.lon0, g.dlon, g.ny, g.nx].every(Number.isFinite)) return ERA5_LAND_GRID;
+    const lv = Array.isArray(g.lat_values) && g.lat_values.length === g.ny && g.lat_values.every(Number.isFinite) ? { latValues: g.lat_values } : {};
+    return { lat0: g.lat0, dlat: g.dlat, lon0: g.lon0, dlon: g.dlon, ny: g.ny, nx: g.nx, ...lv };
   }
 
   /** Bin centres from root attrs um_edges / ua_edges (fallback: pipeline constants). */

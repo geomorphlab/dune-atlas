@@ -149,6 +149,9 @@ export interface DatasetInfoDef {
   kind?: string;
   /** a sentence about this dataset for the Wind dataset ⓘ */
   note?: string;
+  /** text of the dataset's entry in the Wind dataset selector when "name resolution" is too wide for the 360 px
+   *  embed (MERRA-2: "MERRA-2 ½° × ⅝°"); the tooltip still gives the full resolution */
+  optionLabel?: string;
   /** land rule of the selector tooltip (datasets with a land mask), e.g. "land cells: land–sea mask fraction > 0" */
   landShort?: string;
   /** per-sample series (Mars): samples per sol and the long names of the downloads' time columns */

@@ -35,7 +35,7 @@ import zarr
 from zarr.codecs import BloscCodec, BytesCodec, ShardingCodec
 
 from . import constants as C
-from .grid import get_dataset, grid_of
+from .grid import get_dataset
 
 SHARD = 16
 BLOCK = 64  # source chunk edge (uam10_hist and qsat_params are both chunked 64 in lat/lon)
@@ -60,8 +60,8 @@ def open_sources(data_dir, dataset=None):
     dh = xr.open_zarr(f"{data_dir}/{ds.hist_store}", consolidated=False)
     from .qsat_view import open_qsat
     dq = open_qsat(data_dir, chunks={}, dataset=ds)  # qsat_view.py
-    g = grid_of(dh)
-    assert g == ds.grid and grid_of(dq) == ds.grid, (g, ds.grid)
+    ds.check_grid(dh)
+    ds.check_grid(dq)
     return dh, dq
 
 
@@ -85,7 +85,7 @@ def _root_attrs(ds, dq, land, dunes):
         source = f"{ds.info['citation']}; {ds.info['data_citation']}"
         dtype_note = "float32 cast of the float64 source fields"
     a = {
-        "title": title, "source": source, "license": "CC-BY-4.0", "grid": ds.grid.attrs(),
+        "title": title, "source": source, "license": (ds.info or {}).get("fields_license", "CC-BY-4.0"), "grid": ds.grid.attrs(),
         "um_edges": C.UM_EDGES.tolist(), "ua_edges": C.UA_EDGES.tolist(),
         "ua_convention": "arctan2(v10,u10): direction wind blows toward, radians CCW from east",
         "ut_values": C.UT_VALUES.tolist(), "ut_default_index": C.UT_DEFAULT_INDEX,
@@ -101,7 +101,9 @@ def _root_attrs(ds, dq, land, dunes):
         a["dataset"] = ds.info
         a["dunes_definition"] = ("cells whose footprint overlaps at least one 0.1° dune cell of the dune map "
                                  "(Gunn 2026, dune-mask-rev1)")
-        a["license_notice"] = ds.info["copernicus_notice"]
+        notice = ds.info.get("copernicus_notice") or ds.info.get("notice")
+        if notice:
+            a["license_notice"] = notice
     return a
 
 
@@ -516,7 +518,7 @@ def write_parity_fixture(store, out_json, cells, ut_idx=(0, 5, 14, 30, 63)):
     from . import flux
     g = zarr.open_group(store, mode="r")
     gr = g.attrs.get("grid", {"lat0": 90.0, "dlat": -0.1, "lon0": -180.0, "dlon": 0.1})
-    nd = 1 if gr["dlon"] == 0.1 else 2
+    nd = 1 if gr["dlon"] == 0.1 else 2 if gr["dlon"] == 0.25 else 6
     recs = []
     for i, j in cells:
         h = g["hist"][i, j].astype(np.float64)
@@ -546,7 +548,7 @@ def main(argv=None):
     w = sub.add_parser("write"); v = sub.add_parser("validate"); s = sub.add_parser("stats")
     for q in (w, v):
         q.add_argument("--data", default=DEFAULT_DATA)
-        q.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5"])
+        q.add_argument("--dataset", default="era5-land", choices=["era5-land", "era5", "merra2", "jra3q"])
     for q in (w, v, s):
         q.add_argument("--out", required=True)
     w.add_argument("--region", nargs=4, type=int, default=None, help="y0 y1 x0 x1 (default: whole grid)")

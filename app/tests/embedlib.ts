@@ -47,7 +47,7 @@ export function panelSignature(root: HTMLElement) {
   };
 }
 export const SIGNATURE = {
-  header: ["div.title-row", "p.subtitle", "div.dataset-line", "label.dunes-only-row.inline"],
+  header: ["div.title-row", "p.subtitle", "div.dataset-line", "div.dunes-only-line"],
   titleRow: ["h1.notranslate", "button.panel-toggle"],
   slider: ["div.threshold-head", "div.threshold-readout", "div.ut-track", "p.help", "div.info-popover"],
   sliderHead: ["label.ut-label", "button.info-button.notranslate"],

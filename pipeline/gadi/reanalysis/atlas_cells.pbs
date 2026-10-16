@@ -1,0 +1,13 @@
+#!/bin/bash
+#PBS -q normal
+#PBS -l ncpus=8,mem=96GB,walltime=04:00:00
+#PBS -l wd
+# Atlas cell store of DS (cells.zarr, validation, reference sample, land-cell qsat copy, 200 MB transfer parts) with
+# pipeline/gadi/era5/era5_atlas_cells.py. qsub -l storage=<DUNE_ATLAS_STORAGE> -v PY,CODE (code root: src/, era5/),
+#   DS, DATA (hist + qsat stores and <DS>_cellmasks.nc, or links to them), OUT
+set -u
+export OMP_NUM_THREADS=1 PYTHONPATH="$CODE/src"
+mkdir -p "$OUT"
+"$PY" -u -W ignore "$CODE/era5/era5_atlas_cells.py" "$DATA" "$OUT" --dataset "$DS" --workers "${PBS_NCPUS:-8}" \
+  --qsat-subset --split-mb 200 > "$OUT/build.log" 2>&1
+e=$?; echo "exit $e $DS $(date -u +%FT%TZ)"; exit $e

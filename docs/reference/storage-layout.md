@@ -96,3 +96,23 @@ Build: `cells.zarr` in PBS on Gadi (`pipeline/gadi/era5/era5_atlas_cells.py`), s
 tars (`scripts/build_era5_fields_pervar.py`), sidecars locally, then `dune-atlas upload-new --prefix
 dune-atlas/v2/datasets/era5`. Create-only puts after a live listing of all of `dune-atlas/` (57,566 objects before,
 67,105 after; nothing outside the new prefix changed). Checks: `docs/records/validation-era5.md` §5.
+
+## 7. MERRA-2 and JRA-3Q (new keys only, 16 October 2026)
+
+`dune-atlas/v2/datasets/merra2/` and `dune-atlas/v2/datasets/jra3q/`, same layout as §6 (registry
+`registry/earth/datasets/{merra2,jra3q}/`). Grids: MERRA-2 361 × 576, `{lat0: 90, dlat: -0.5, lon0: -180, dlon: 0.625}`
+(edges ± 0.25° × ± 0.3125°); JRA-3Q 480 × 960, `{lat0: 89.71324385, dlat: -0.374585569311, lon0: -180, dlon: 0.375}`
+with the Gaussian row latitudes in `grid.lat_values` (see `docs/records/validation-merra2-jra3q.md`). Field pyramids
+have 3 levels (coarsest ≤ 256 px rows). `cells.zarr` `n_hours` = 403,248 (1980–2025).
+
+| store | MERRA-2 objects | MERRA-2 size | JRA-3Q objects | JRA-3Q size |
+|---|---|---|---|---|
+| `cells.zarr` | 1,140 | 898.9 MB | 1,838 | 1,572.7 MB |
+| `fields/<var>.zarr` × 23 + `fields/qsdiv.zarr` | 912 | 346.0 MB | 1,176 | 602.5 MB |
+| `cells-aux.zarr` (`qsdiv`, `ai_*`, `lsm`) | 704 | 22.5 MB | 1,206 | 41.7 MB |
+| `cells-aux-veg.zarr` | 99 | 0.3 MB | 176 | 0.5 MB |
+| **total** | **2,855** | **1.268 GB** | **4,396** | **2.217 GB** |
+
+Build: `pipeline/gadi/reanalysis/atlas_cells.pbs` on Gadi, then `scripts/build_reanalysis_atlas.sh DS` locally;
+upload with `dune-atlas upload-new --version v2 --prefix dune-atlas/v2/datasets/DS` (zarr metadata objects last).
+JRA-3Q stores carry the licence CC BY-NC-SA 4.0 and the JMA non-commercial notice.

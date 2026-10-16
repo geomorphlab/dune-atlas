@@ -14,8 +14,8 @@ import { fieldInfo } from "./fieldinfo";
 import { citationJson, fileAiNotice, citationSources, citationText, datasetNotice, fieldsCitation, fieldsLicence, referencesLine } from "./citation";
 import { CELL_SOURCE_IDS, DUNE_FLAG_LICENCE, DUNE_FLAG_LONG_NAME } from "@body/citation";
 import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "./auxinfo";
-import { DATASET_INFO, datasetInfo, resolutionText, type DatasetInfo } from "./datasetinfo";
-import { cellEdges, colLon, GRID_INDEX_COMMENT, GRID_REGISTRATION, latBounds, licenceStatement, noticeAttrs, rowLat, timeCoverage } from "./exportmeta";
+import { cellSizeText, DATASET_INFO, datasetInfo, datasetOfSpacing, resolutionText, type DatasetInfo } from "./datasetinfo";
+import { cellEdges, colLon, footprintLat, GRID_REGISTRATION, gridIndexComment, latBounds, licenceStatement, noticeAttrs, rowLat, timeCoverage } from "./exportmeta";
 import { PROFILE } from "@body/profile";
 import { BODY } from "../body";
 /** the atlas in titles and README headings: "Dune Atlas" (Earth) / "Mars Dune Atlas" */
@@ -29,8 +29,13 @@ export const FILE_AI_NOTICE = fileAiNotice(ATLAS_NAME, ATLAS_SITE);
 export function cellDataset(cell: Pick<CellData, "grid">, datasetId?: string): DatasetInfo {
   if (datasetId && DATASET_INFO[datasetId]) return DATASET_INFO[datasetId];
   const d = Math.abs(cell.grid?.dlat ?? 0.1);
-  return Object.values(DATASET_INFO).find((x) => Math.abs(x.resDeg - d) < 1e-9) ?? datasetInfo();
+  return (cell.grid && datasetOfSpacing(d, Math.abs(cell.grid.dlon))) ?? Object.values(DATASET_INFO).find((x) => Math.abs(x.resDeg - d) < 1e-9) ?? datasetInfo();
 }
+/** the cell grid as written to metadata.json (Gaussian latitudes: the cell's own is its latitude, the list is left out) */
+const gridJson = (g: CellData["grid"]) => {
+  const { latValues, ...rest } = g;
+  return latValues ? { ...rest, rows: "Gaussian latitudes; lat0 + dlat * cell_y is the regular grid fitted through the end rows (cell footprint)" } : rest;
+};
 const cellDeg = (cell: Pick<CellData, "grid">, ds: DatasetInfo) => Math.abs(cell.grid?.dlat ?? ds.resDeg);
 /** global \`source\` of a download: how the data were produced (the dataset title is in dataset_title) */
 export const sourceText = (ds: Pick<DatasetInfo, "name" | "resolution" | "period">) =>
@@ -213,7 +218,7 @@ export function cellNetcdf(cell: CellData, meta: ExportMeta): Uint8Array {
   const ut = cell.utValues ?? C.UT_VALUES;
   const g = cell.grid;
   const when = (meta.generated ?? new Date()).toISOString();
-  const lat = rowLat(g, cell.iy), lon = colLon(g, cell.ix), edges = cellEdges(lat, lon, g);
+  const lat = rowLat(g, cell.iy), lon = colLon(g, cell.ix), flat = footprintLat(g, cell.iy), edges = cellEdges(flat, lon, g);
   const pubVars = cell.fieldVars.map((v, i) => ({ v, i })).filter(({ v }) => isPublishedField(v));
   const rose = fluxRoseTable(cell);
   const NAME_LEN = 16;
@@ -229,13 +234,13 @@ export function cellNetcdf(cell: CellData, meta: ExportMeta): Uint8Array {
     { name: "ua_bin_bearing_toward", type: "double", dims: ["ua_bin"], data: Array.from(ac, bearingToward), attrs: { long_name: "compass bearing TOWARD at the direction-bin centre (clockwise from north)", units: "degree" } },
     { name: "ut", type: "double", dims: ["ut"], data: ut.slice(0, n).map(ut2), attrs: { long_name: "threshold friction velocity u*,th", long_name_latex: "$u_{\\ast,th}$", units: "m s-1", comment: "64 values from 0.01 to 0.64 m s-1 in steps of 0.01 m s-1" } },
     { name: "latitude", type: "double", dims: [], data: [lat], attrs: { standard_name: "latitude", long_name: "latitude of the cell centre", units: "degrees_north", bounds: "lat_bnds" } },
-    { name: "lat_bnds", type: "double", dims: ["nv"], data: latBounds(lat, g.dlat), attrs: {} },
+    { name: "lat_bnds", type: "double", dims: ["nv"], data: latBounds(flat, g.dlat), attrs: {} },
     { name: "longitude", type: "double", dims: [], data: [lon], attrs: { standard_name: "longitude", long_name: "longitude of the cell centre", units: "degrees_east", bounds: "lon_bnds" } },
     { name: "lon_bnds", type: "double", dims: ["nv"], data: [edges.west, edges.east], attrs: {} },
     ...(["cell_y", "cell_x"] as const).map((nm): NcVariable => ({ name: nm, type: "int", dims: [], data: [nm === "cell_y" ? cell.iy : cell.ix], attrs: {
       long_name: nm === "cell_y" ? "grid row index (0 = northernmost row)" : "grid column index (0 = westernmost column)",
       units: "1", grid_lat0: g.lat0, grid_dlat: g.dlat, grid_lon0: g.lon0, grid_dlon: g.dlon, grid_ny: { type: "int", values: g.ny }, grid_nx: { type: "int", values: g.nx },
-      grid_registration: GRID_REGISTRATION, comment: GRID_INDEX_COMMENT } })),
+      grid_registration: GRID_REGISTRATION, comment: gridIndexComment(g) } })),
     { name: "wind_hist", type: "int", dims: ["um_bin", "ua_bin"], data: cell.hist, attrs: {
       long_name: `hours per 10 m wind speed and direction bin, ${ds.name} ${ds.period.replace("–", "-")}`, units: "h",
       total_hours_binned: { type: "int", values: cell.totalHours },
@@ -251,7 +256,7 @@ export function cellNetcdf(cell: CellData, meta: ExportMeta): Uint8Array {
       const m = AUX_META[v], aux = cell.aux!;
       const src = auxSourceAttrs(aux, v, deg, Math.abs(g.dlon), ds.id);
       const attrs: NcAttrs = { long_name: m.longName, long_name_latex: `${m.longName} $${m.symbolTex}$`, units: m.units,
-        description: texToPlain(auxDescription(v, deg)), _FillValue: F(NaN), coordinates: "latitude longitude" };
+        description: texToPlain(auxDescription(v, deg, Math.abs(g.dlon))), _FillValue: F(NaN), coordinates: "latitude longitude" };
       for (const k of ["source", "references", "license", "url", "comment", "method"]) if (src[k]) attrs[k] = texToPlain(src[k]);
       return m.kind === "series"
         ? { name: v, type: "float", dims: ["ut"], data: Float32Array.from(aux.series[v]), attrs }
@@ -357,10 +362,10 @@ export function metadataJson(cell: CellData, meta: ExportMeta): string {
   const ds = cellDataset(cell, meta.datasetId), deg = cellDeg(cell, ds);
   const pub = cell.fieldVars.filter(isPublishedField);
   const cols = csvColumns(cell, meta.storeAttrs, meta.datasetId);
-  const lat = rowLat(cell.grid, cell.iy), lon = colLon(cell.grid, cell.ix);
+  const lat = rowLat(cell.grid, cell.iy), lon = colLon(cell.grid, cell.ix), flat = footprintLat(cell.grid, cell.iy);
   return JSON.stringify({
-    cell: { latitude: lat, longitude: lon, bounds: cellEdges(lat, lon, cell.grid), cell_y: cell.iy, cell_x: cell.ix, grid_index: cell.id, dune_present: cell.dune, total_hours_binned: cell.totalHours },
-    grid: { ...cell.grid, resolution: resolutionText(deg), registration: GRID_REGISTRATION },
+    cell: { latitude: lat, longitude: lon, bounds: cellEdges(flat, lon, cell.grid), cell_y: cell.iy, cell_x: cell.ix, grid_index: cell.id, dune_present: cell.dune, total_hours_binned: cell.totalHours },
+    grid: { ...gridJson(cell.grid), resolution: cellSizeText(deg, Math.abs(cell.grid.dlon)), registration: GRID_REGISTRATION },
     dataset: { id: meta.datasetId, title: meta.datasetTitle, version: meta.dataVersion },
     conventions: {
       wind_direction: "direction_bin_centre (NetCDF ua_bin) = arctan2(v10, u10) = direction the wind blows TOWARD, radians counter-clockwise from east; bearing_toward = (90 - degrees(direction_bin_centre)) mod 360; bearing_from = toward + 180",
@@ -379,7 +384,7 @@ export function metadataJson(cell: CellData, meta: ExportMeta): string {
       const m = AUX_META[v], src = auxSourceAttrs(cell.aux!, v, deg, Math.abs(cell.grid.dlon), ds.id);
       const value = m.kind === "series" ? undefined : (Number.isFinite(cell.aux!.scalars[v]) ? cell.aux!.scalars[v] : null);
       return [v, { long_name: m.longName, long_name_latex: `${m.longName} $${m.symbolTex}$`, units: m.units, ...(m.kind === "scalar" ? { value } : { in_file: "fields_by_threshold.csv" }),
-        description: texToPlain(auxDescription(v, deg)), ...Object.fromEntries(["source", "references", "license", "url", "comment", "method"].filter((k) => src[k]).map((k) => [k, texToPlain(src[k])])) }];
+        description: texToPlain(auxDescription(v, deg, Math.abs(cell.grid.dlon))), ...Object.fromEntries(["source", "references", "license", "url", "comment", "method"].filter((k) => src[k]).map((k) => [k, texToPlain(src[k])])) }];
     })),
     citation: citationJson(citationSources(CELL_SOURCE_IDS, ds.id)),
     fields_citation: fieldsCitation(ds.id), fields_license: fieldsLicence(ds.id),

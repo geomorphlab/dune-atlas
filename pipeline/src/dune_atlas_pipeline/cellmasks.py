@@ -91,16 +91,21 @@ class Regrid:
         return np.asarray((self.Wx.T @ t.T).T) > 0                    # (src.ny, src.nx)
 
 
-def build(lsm_path: str, data_dir: str, out: str, dst: Grid = ERA5_GRID, land_above: float | None = None) -> dict:
-    """era5_cellmasks.nc (land, dunes, lsm on the ERA5 grid) + statistics of dune cells without ERA5 land."""
+def build(lsm_path: str, data_dir: str, out: str, dst: Grid | None = None, land_above: float | None = None,
+          dataset: str = "era5") -> dict:
+    """<dataset>_cellmasks.nc (land, dunes, lsm on the dataset's grid) + statistics of dune cells without land.
+    `lsm_path`: the dataset's land fraction (ny, nx), rows north to south, columns from -180 (ERA5: lsm; MERRA-2:
+    FRLAND + FRLANDICE; JRA-3Q: land cover fraction)."""
     import xarray as xr
+    from .grid import DATASETS
+    wd = DATASETS[dataset]
+    dst = dst or wd.grid
     lsm = np.load(lsm_path).astype("f8")
     assert lsm.shape == dst.shape, lsm.shape
     with xr.open_dataset(f"{data_dir}/layers.nc") as L:
         dunes01 = L["dunes"].values.astype(bool)
     assert dunes01.shape == ERA5_LAND_GRID.shape
-    from .grid import DATASETS
-    thr = DATASETS["era5"].lsm_land_above if land_above is None else land_above
+    thr = wd.lsm_land_above if land_above is None else land_above
     land = lsm > thr
     R = Regrid(dst, ERA5_LAND_GRID)
     dune_area = R.overlap_area(dunes01)                    # / R^2
@@ -116,25 +121,25 @@ def build(lsm_path: str, data_dir: str, out: str, dst: Grid = ERA5_GRID, land_ab
         "dune_cells_not_land": int((dunes & ~land).sum()),
         "dune_area_in_not_land_cells_km2": float(dune_area[dunes & ~land].sum() * km2),
         "dune_area_in_land_cells_km2": float(dune_area[dunes & land].sum() * km2),
-        "dune_cells_0p1_without_era5_land": int(lost_src.sum()),
-        "dune_area_0p1_without_era5_land_km2": float(src_area[lost_src].sum() * km2),
+        "dune_cells_0p1_without_land": int(lost_src.sum()),
+        "dune_area_0p1_without_land_km2": float(src_area[lost_src].sum() * km2),
         "weights": "exact spherical overlap areas of lat/lon rectangles (R² Δλ Δsin φ), rows clipped to ±90°",
     }
-    lat, lon = dst.lat(), dst.lon()
+    lat, lon = dst.lat_exact(), dst.lon()   # exact (Gaussian) row centres where the grid has them
     ds = xr.Dataset(
         {"land": (("latitude", "longitude"), land.astype("u1"), {
             "long_name": "atlas land cell", "flag_values": [0, 1],
-            "definition": f"ERA5 land–sea mask fraction > {thr:g}"}),
+            "definition": f"{wd.name} land–sea mask fraction > {thr:g}"}),
          "dunes": (("latitude", "longitude"), dunes.astype("u1"), {
              "long_name": "cell footprint overlaps a 0.1° dune cell", "flag_values": [0, 1],
              "definition": "at least one 0.1° cell of the dune map (dune-mask-rev1) overlaps the cell footprint"}),
          "lsm": (("latitude", "longitude"), lsm.astype("f4"), {
-             "long_name": "ERA5 land-sea mask", "units": "1", "standard_name": "land_binary_mask"}),
+             "long_name": f"{wd.name} land-sea mask", "units": "1", "standard_name": "land_binary_mask"}),
          "dune_area": (("latitude", "longitude"), (dune_area * km2).astype("f4"), {
              "long_name": "area of 0.1° dune cells inside the cell footprint", "units": "km2"})},
         coords={"latitude": ("latitude", lat, {"units": "degrees_north"}),
                 "longitude": ("longitude", lon, {"units": "degrees_east"})},
-        attrs={"title": "dune-atlas ERA5 0.25° cell masks", "grid": json.dumps(dst.attrs()),
+        attrs={"title": f"dune-atlas {wd.name} {dst.label} cell masks", "grid": json.dumps(dst.attrs()),
                "statistics": json.dumps(st)})
     enc = {v: {"zlib": True, "complevel": 4} for v in ds.data_vars}
     ds.to_netcdf(out, encoding=enc)
@@ -147,8 +152,9 @@ def main(argv=None):
     sub = p.add_subparsers(dest="cmd", required=True)
     b = sub.add_parser("build")
     b.add_argument("--lsm", required=True); b.add_argument("--data", default=DEFAULT_DATA); b.add_argument("--out", required=True)
+    b.add_argument("--dataset", default="era5")
     a = p.parse_args(argv)
-    st = build(a.lsm, a.data, a.out)
+    st = build(a.lsm, a.data, a.out, dataset=a.dataset)
     print(json.dumps(st, indent=1))
     return st
 

@@ -30,6 +30,8 @@ export interface ModesPlotOptions {
 }
 
 const f2 = (v: number) => (Math.round(v * 100) / 100).toString();
+/** largest bearing change (deg) along one straight piece of a drawn trace */
+const MAX_STEP_DEG = 1.5;
 
 /** Split a bearing series into continuous runs (break at NaN or jumps > maxJump deg). For axes
  *  the values are unwrapped mod 180 so the trace stays continuous across 0/180. */
@@ -89,8 +91,12 @@ export function modesPlotSvg(o: ModesPlotOptions): string {
     for (const off of offsets) {
       for (const run of runs) {
         if (run.length < 2) continue;
-        // smooth: shape-preserving cubic of the (unwrapped) bearing vs u*,th, r = u*,th
-        const sm = pchipDense(run.map(({ k }) => o.x[k]), unwrapDeg(run.map(({ v }) => v)), 8);
+        // smooth: shape-preserving cubic of the (unwrapped) bearing vs u*,th, r = u*,th; sampled densely enough that
+        // no straight piece of the path turns by more than MAX_STEP_DEG (a mode that swings fast near the rim stays a curve)
+        const ys = unwrapDeg(run.map(({ v }) => v));
+        let swing = 0;
+        for (let i = 1; i < ys.length; i++) swing = Math.max(swing, Math.abs(ys[i] - ys[i - 1]));
+        const sm = pchipDense(run.map(({ k }) => o.x[k]), ys, Math.max(8, Math.ceil(swing / MAX_STEP_DEG)));
         const d = sm.x.map((u, i) => { const [x, y] = pt(sm.y[i] + off, u); return `${i ? "L" : "M"}${f2(x)},${f2(y)}`; }).join("");
         p.push(`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${f2((s.width ?? 1.8) * (T.lw > 1 ? 1.4 : 1))}" stroke-linecap="round"${s.dash ? ` stroke-dasharray="${s.dash}"` : ""}><title>${escapeHtml(s.label)}</title></path>`);
       }
