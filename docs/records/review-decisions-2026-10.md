@@ -274,3 +274,23 @@ min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 
 | Second check from mainland China (language switch, Chinese text, a cell download, a map image export) | PI's colleague | after release |
 | Weak aggregator sources for a few dune-field names | agent | done: 25 names re-sourced (PR #23); five weaker matches listed above |
 | Weekly backup of usage.csv to GitHub | PI | done (PR #23 records it) |
+
+## PI preview of 16 October (branch features/visit-defaults)
+
+| Report | Finding | Change |
+|---|---|---|
+| Wind dataset ⓘ: text box wrap | The popover was 100 % of the line wide plus its left indent, padding and border, so it ran past the right edge of the panel. | `.dataset-line > .info-popover` may shrink (`flex: 1 1 100%; min-width: 0; box-sizing: border-box`). |
+| Selector tooltip "what is this?" | The hover text of the Wind dataset menu options (name, grid, period and land rule of each dataset). | None. |
+| Site-wide tone | Review of all public English (staging/language-review/language-review.csv, 47 rows): advice on use ("treat as uncertain", "use as a guide", "do not apply"), judgements of datasets and methods ("not an independent estimate", "poorly defined", "approximation"), repetition and jargon. | All 47 applied: app texts, registry, pipeline definitions (fields.py, vegetation.py, mars/sidecars.py, then the registry fragments regenerated), Concepts. About heading "Earth and Mars: methods and data". The Mars grain-diameter ⓘ says "for each time step" (MACDA: every two Mars hours). |
+| ERA5 ocean cell mentions ERA5-Land | The non-land message named the other datasets. | Each dataset's message names only its own land rule. |
+| Download comment "This page was created …" | Downloads carried the notice written for the web page. | Downloads (NetCDF `comment`, README.txt, metadata.json `ai_notice`, region files) carry a file notice: produced by, and downloaded from, the Dune Atlas website (map.geomorphlab.org or /mars); the website and the code that produced the file were created with assistance from Claude AI. The page keeps its own notice. |
+| MACDA south pole at the antimeridian | Not a rendering fault: in the MACDA data the column of cells centred on 180° has lower lowest-level winds than its neighbours near the south pole (MY30 cell store at 82.5° S: mean speed 12.2 m/s against 15.7 and 16.0 m/s either side; at 87.5° S 10.7 against 13.1 and 13.4 m/s). The same column is low in the ARCO-MACDA source arrays (three 10-sol chunks checked), and the pipeline only rolls MACDA columns, without interpolation. FV3 and EMARS are smooth across 180°. | None to the data; the PI decides whether the MACDA source text should say so. |
+| Ring of a polar cell drawn at 85° | The ring is a circle layer, drawn from Web Mercator tiles, which end at 85.05°. | On the globe the ring of a cell poleward of 85° is a screen-space marker at the true cell centre (hidden on the far side of the globe, fading with zoom like the circle layer); the flat map is unchanged. |
+| Region export stuck at "90 of 93" (FV3, over the antimeridian near 75° S) | Not reproduced outside the browser (the same box, 3 × 31 cells, with and without wind, 12 requests at a time, completes). A request that never returns left the export waiting, and Cancel only acted between cells. | Each cell may take at most 45 s; it is read again up to 3 times in all, then the export stops with a message naming the cell. Cancel acts at once. |
+
+Tia's notes on the Help text (16 October):
+- "The line under the box shows how the text was read" now reads "While you type coordinates, the line under the box shows the position they were read as ("Go to …")". The "Go to" of that line is now translated (Aller à, 前往).
+- The Petals switch exists (flux-rose section, under "% of total / m²/yr": "Petals: toward / from"); Help now names it as "Petals: toward / from".
+- Map image width: the code asks for 1.5 × the on-screen map width, kept within 1600–2400 px, and tags the PNG 300 dpi. Under check: the pixel sizes Tia got.
+
+French and Chinese: the 47 changed entries and the new "Go to" key were machine-drafted with the glossary (npm run i18n: 0 untranslated, 0 stale). They are not yet reviewed by Tia or YL.

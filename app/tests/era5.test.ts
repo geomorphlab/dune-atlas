@@ -240,13 +240,13 @@ describe.skipIf(!haveFix)("ERA5 fixture: panel and downloads", () => {
     const root = await panel(await cs.query(458, 770), "era5");
     const es = root.querySelector(".empty-state")!;
     expect(es.querySelector("strong")!.textContent).toBe("Outside the ERA5 land mask");
-    expect(es.querySelectorAll("p")[1].textContent).toBe("The atlas computes wind roses and sand-flux statistics only for land cells (land–sea mask fraction above 0, i.e. any land in the cell). This cell has no land (land–sea mask fraction 0), so the atlas has no statistics for it. Choose a nearby land cell, or switch to ERA5-Land (coastal cells can differ between the land masks of the datasets).");
+    expect(es.querySelectorAll("p")[1].textContent).toBe("Wind roses and sand-flux statistics are computed for land cells (land–sea mask fraction above 0, i.e. any land in the cell). This cell has no land (land–sea mask fraction 0). Choose a nearby land cell.");
     expect(es.querySelector(".help")!.textContent).toBe("0.25° cell: row 458, column 770; centre 24.5°S, 12.5°E.");
     // ERA5-Land: its own land definition, otherwise the same text with the names swapped
     const land = { ...(await cs.query(458, 770)), grid: { lat0: 90, dlat: -0.1, lon0: -180, dlon: 0.1, ny: 1801, nx: 3600 } };
     const r2 = await panel(land as CellData, "era5-land");
     const p2 = r2.querySelectorAll(".empty-state p")[1].textContent!;
-    expect(p2).toBe("The atlas computes wind roses and sand-flux statistics only for land cells (land–sea mask fraction above 0.5). This cell is mainly water, so the atlas has no statistics for it. Choose a nearby land cell, or switch to ERA5 (coastal cells can differ between the land masks of the datasets).");
+    expect(p2).toBe("Wind roses and sand-flux statistics are computed for land cells (land–sea mask fraction above 0.5). This cell is mainly water. Choose a nearby land cell.");
     expect(r2.querySelector(".empty-state strong")!.textContent).toBe("Outside the ERA5-Land land mask");
     for (const t of [es.textContent!, r2.querySelector(".empty-state")!.textContent!]) expect(t).not.toMatch(/\bstored\b|lsm/);
   });

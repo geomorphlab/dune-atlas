@@ -4,6 +4,7 @@
 // the cell panel when the cell has data. Named places (core/search/places.ts) are offered only when the
 // body's place list is enabled; until then the field takes coordinates only.
 import { h, nextId } from "./dom";
+import { t } from "../../i18n";
 import { formatCoord, parseCoordinates, type LonRange } from "../search/coords";
 import { matchPlaces, PLACE_TEXT, type Place, type PlaceHit } from "../search/places";
 
@@ -28,7 +29,7 @@ export const SEARCH_TEXT = {
   label: "Search coordinates",
   labelPlaces: "Search places or coordinates",
   button: "Go",
-  read: "Go to",
+  read: t("search.goTo"),   // the line under the box: "Go to 24.5000°S, 15.2000°E" (Help names it)
   cannotRead: "Cannot read:",
   noPlace: "No place or coordinates match.",
 };

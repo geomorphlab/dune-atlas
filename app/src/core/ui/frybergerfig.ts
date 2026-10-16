@@ -36,7 +36,7 @@ export const FRY_TEXT = {
     "For a wind blowing at one speed for the whole year. Atlas DP: the saturated flux of Martin & Kok (2017) from $u_* = \\kappa U_{10} / \\ln(z/z_0)$ with $z_0$ = 1 mm, at the threshold set above. " +
     "Fryberger DP: $V^2(V - V_t)$ with $V$ in knots, $V_t$ = 12 knots and the wind blowing 100 % of the time. " +
     "Dashed lines: the two thresholds; between them only one DP is above zero. " +
-    "The ratio changes with wind speed, so there is no fixed conversion factor: for a real wind record, the ratio of the two DPs depends on its mix of wind speeds. Hours above 20 m/s are not counted by the atlas.",
+    "The ratio changes with wind speed, so there is no fixed conversion factor; for a real wind record it depends on the mix of wind speeds. Hours above 20 m/s are not counted by the atlas.",
 };
 
 /** FRY_TEXT in the current language (keys fry.<name>; i18n/catalogue.ts) */

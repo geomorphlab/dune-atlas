@@ -10,10 +10,10 @@
 import type { CellData } from "../cell/cellstore";
 import type { Grid } from "../cell/snap";
 import { writeNetcdf3, type NcAttrs, type NcVariable } from "../cell/netcdf3";
-import { ATLAS_NAME, fieldMeta, INSTITUTION, sourceText, type ExportMeta } from "../cell/export";
+import { ATLAS_NAME, FILE_AI_NOTICE, fieldMeta, INSTITUTION, sourceText, type ExportMeta } from "../cell/export";
 import { cellEdges, colLon, exactCoord, latBounds, licenceStatement, noticeAttrs, rowLat, timeCoverage } from "../cell/exportmeta";
 import { AUX_META, auxDescription, auxSourceAttrs } from "../cell/auxinfo";
-import { AI_NOTICE, citationSources, citationText, datasetNotice, fieldsCitation, fieldsLicence, referencesLine } from "../cell/citation";
+import { citationSources, citationText, datasetNotice, fieldsCitation, fieldsLicence, referencesLine } from "../cell/citation";
 import { CELL_SOURCE_IDS, DUNE_FLAG_LICENCE, DUNE_FLAG_LONG_NAME, TRANSPORT_LAW_ATTR } from "@body/citation";
 import { datasetInfo, resolutionText } from "../cell/datasetinfo";
 import { texToPlain } from "../util/plaintext";
@@ -103,18 +103,50 @@ export function sizeText(b: number): string {
 }
 
 /** Fetch the box's cells with a few requests in flight; `onProgress(done, total)`; cancelled by `signal`. */
+/** Reading one cell of a region: each attempt may take at most `timeoutMs`; a failed or timed-out cell is read again
+ *  up to `attempts` times in all, then the export stops with an error naming the cell (it does not wait forever on a
+ *  request that never returns). Cancel takes effect at once, also while a cell is loading. */
+export const REGION_FETCH = { timeoutMs: 45_000, attempts: 3 };
+
+function abortError() { return new DOMException("cancelled", "AbortError"); }
+/** `p`, or a rejection after `ms` or on abort */
+function deadline<T>(p: Promise<T>, ms: number, signal: AbortSignal | undefined, what: string): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    if (signal?.aborted) return reject(abortError());
+    const onAbort = () => { clearTimeout(t); reject(abortError()); };
+    const t = setTimeout(() => { signal?.removeEventListener("abort", onAbort); reject(new Error(`${what} did not load within ${Math.round(ms / 1000)} s`)); }, ms);
+    signal?.addEventListener("abort", onAbort, { once: true });
+    p.then((v) => { clearTimeout(t); signal?.removeEventListener("abort", onAbort); resolve(v); },
+      (e) => { clearTimeout(t); signal?.removeEventListener("abort", onAbort); reject(e); });
+  });
+}
+
 export async function fetchRegion<T extends CellData>(store: { query(iy: number, ix: number, opts?: { wind?: boolean }): Promise<T> }, cells: { iys: number[]; ixs: number[] },
-  o: { concurrency?: number; onProgress?: (done: number, total: number) => void; signal?: AbortSignal; wind?: boolean } = {}): Promise<(T | null)[]> {
+  o: { concurrency?: number; onProgress?: (done: number, total: number) => void; signal?: AbortSignal; wind?: boolean; timeoutMs?: number; attempts?: number } = {}): Promise<(T | null)[]> {
   const jobs: [number, number][] = [];
   for (const iy of cells.iys) for (const ix of cells.ixs) jobs.push([iy, ix]);
   const out: (T | null)[] = new Array(jobs.length).fill(null);
-  let next = 0, done = 0;
+  const timeoutMs = o.timeoutMs ?? REGION_FETCH.timeoutMs, attempts = Math.max(1, o.attempts ?? REGION_FETCH.attempts);
+  let next = 0, done = 0, failed = false;
+  const readCell = async (iy: number, ix: number): Promise<T> => {
+    const what = `Cell row ${iy}, column ${ix}`;
+    for (let a = 1; ; a++) {
+      try {
+        return await deadline(store.query(iy, ix, { wind: o.wind ?? true }), timeoutMs, o.signal, what);
+      } catch (e) {
+        if ((e as Error)?.name === "AbortError" || failed) throw e;
+        if (a >= attempts) throw new Error(`${(e as Error)?.message ?? e} (tried ${attempts} times)`);
+      }
+    }
+  };
   const worker = async () => {
-    while (next < jobs.length) {
-      if (o.signal?.aborted) throw new DOMException("cancelled", "AbortError");
+    while (next < jobs.length && !failed) {
+      if (o.signal?.aborted) throw abortError();
       const k = next++;
-      const c = await store.query(jobs[k][0], jobs[k][1], { wind: o.wind ?? true });
-      out[k] = c.hasData ? c : null;
+      try {
+        const c = await readCell(jobs[k][0], jobs[k][1]);
+        out[k] = c.hasData ? c : null;
+      } catch (e) { failed = true; throw e; }
       o.onProgress?.(++done, jobs.length);
     }
   };
@@ -262,7 +294,7 @@ export function regionNetcdf(cells: (CellData | null)[], grid: { iys: number[]; 
       Conventions: "CF-1.8",
       date_created: when,
       history: `${when}: downloaded from ${meta.permalink}`,
-      comment: AI_NOTICE,
+      comment: FILE_AI_NOTICE,
     },
     vars,
   });
@@ -309,6 +341,6 @@ Licences of every source: ${licenceUrl}
 
 ${citationText("", citationSources(CELL_SOURCE_IDS, ds.id)).trim()}
 
-${AI_NOTICE}
+${FILE_AI_NOTICE}
 `;
 }

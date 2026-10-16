@@ -71,7 +71,7 @@ DESCRIPTION = (   # shortened for the info popover; source, licence and processi
     "CSIRO MODIS Fractional Cover v3.1 (500 m, monthly) averaged onto the 0.1° cells over the months with valid data. "
     "Calibrated against Australian field sites; saturates under closed canopies. "
     "Total cover includes non-photosynthetic vegetation (dry and dead plant material) as well as green vegetation, "
-    "so it can be substantial where little green vegetation is visible; compare it with the aridity index. "
+    "so it can be substantial where little green vegetation is visible. "
     "No data over ocean, Antarctica, "
     "land north of 70° N and the 180° meridian cells. "
     f"[Explore the full monthly time series at GEOGLAM RAPP]({MAP_URL}).")

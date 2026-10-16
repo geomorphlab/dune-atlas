@@ -3,7 +3,7 @@
   "modules": {
     "src/bodies/earth/cellPanel.ts": {
       "mars": "src/bodies/mars/cellPanel.ts",
-      "blob": "06a86d608d6ec64247b451d97a7898f2566247a5"
+      "blob": "a4a59b0723569b3e3b91e6695df46a36fa551e61"
     },
     "src/core/cell/analysis.ts": {
       "mars": "src/bodies/mars/cell/analysis.ts",
@@ -15,7 +15,7 @@
     },
     "src/core/cell/export.ts": {
       "mars": "src/bodies/mars/cell/export.ts",
-      "blob": "0798461e00bee5318419c21cedd556623a389db5"
+      "blob": "7950d3c9640532f982db9ff988deaf3471c63f8b"
     },
     "src/core/cell/flux.ts": {
       "mars": "src/bodies/mars/cell/marsflux.ts",

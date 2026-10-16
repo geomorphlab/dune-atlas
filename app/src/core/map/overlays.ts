@@ -5,7 +5,7 @@
 // drawing order (top of the list = drawn on top), always above the basemap and below basemap
 // labels / the selected-cell outline.
 import { SELECTION_STYLE, syncGlobeSelection } from "./selection";
-import type { Map as MlMap } from "maplibre-gl";
+import maplibregl, { type Map as MlMap, type Marker } from "maplibre-gl";
 import type { LayerDef, Registry } from "../registry/types";
 import type { LayerState } from "../store";
 import type { LayerConfig } from "../layerconfig";
@@ -226,12 +226,56 @@ export const SELECTED_CELL_RING = "selected-cell-ring";
 export const RING_STYLE = { radius: 8, width: 2.5, showBelowPx: 12, hideAbovePx: 24 } as const;
 /** zoom at which a cell `deg` degrees tall is `px` pixels tall (512 px world at zoom 0, at the equator) */
 export const zoomForCellPx = (deg: number, px: number) => Math.log2((px * 360) / (512 * deg));
-export function ringCentre(bbox: ArrayLike<number>): [number, number] {
+/** true centre of a cell bbox [w, s, e, n] (a cell across the antimeridian has e < w) */
+export function cellCentre(bbox: ArrayLike<number>): [number, number] {
   let e = bbox[2];
   if (e < bbox[0]) e += 360;
   let lon = (bbox[0] + e) / 2;
   if (lon > 180) lon -= 360;
-  return [lon, Math.max(-85, Math.min(85, (bbox[1] + bbox[3]) / 2))];
+  return [lon, (bbox[1] + bbox[3]) / 2];
+}
+/** latitude limit of the circle layer: MapLibre draws GeoJSON points from Web Mercator tiles, which end at ±85.05° */
+export const RING_LAYER_MAX_LAT = 85;
+/** where the ring is drawn: `circle` (the circle layer) or `marker` (a screen-space marker at the true centre).
+ *  Flat map: the circle layer, at most ±85° (the map itself ends at ±85.05°). Globe: the circle layer up to ±85°,
+ *  a marker poleward of it, so the ring of a polar cell is centred on the cell (it was drawn at ±85°). */
+export function ringPlacement(bbox: ArrayLike<number> | null, globe: boolean): { circle: [number, number] | null; marker: [number, number] | null } {
+  if (!bbox) return { circle: null, marker: null };
+  const [lon, lat] = cellCentre(bbox);
+  if (globe && Math.abs(lat) > RING_LAYER_MAX_LAT) return { circle: null, marker: [lon, lat] };
+  return { circle: [lon, Math.max(-RING_LAYER_MAX_LAT, Math.min(RING_LAYER_MAX_LAT, lat))], marker: null };
+}
+/** ring opacity at `zoom`: 1 below z0, 0 above z1, linear between (as the circle layer's paint expression) */
+export const ringOpacity = (zoom: number, z0: number, z1: number): number => (zoom <= z0 ? 1 : zoom >= z1 ? 0 : (z1 - zoom) / (z1 - z0));
+
+/** the part of a MapLibre Marker the ring uses */
+export type RingMarker = Pick<Marker, "setLngLat" | "addTo" | "remove" | "setOpacity">;
+/** makes the ring marker (replaceable in tests, where there is no real map) */
+export const RING_MARKER = {
+  create: (): RingMarker => {
+    const el = document.createElement("div");
+    el.className = "selected-cell-ring-marker";
+    const d = 2 * (RING_STYLE.radius + RING_STYLE.width / 2);   // the circle layer's ring: radius 8 px to the stroke centre
+    el.style.cssText = `width:${d}px;height:${d}px;box-sizing:border-box;border:${RING_STYLE.width}px solid ${SELECTION_STYLE.line};border-radius:50%;pointer-events:none`;
+    return new maplibregl.Marker({ element: el, anchor: "center", pitchAlignment: "viewport", rotationAlignment: "viewport" });
+  },
+};
+interface RingState { bbox: ArrayLike<number> | null; marker?: RingMarker; shown?: boolean; z0: number; z1: number }
+const RINGS = new WeakMap<MlMap, RingState>();
+function placeRing(map: MlMap) {
+  const st = RINGS.get(map);
+  if (!st) return;
+  const globe = map.getProjection?.()?.type === "globe";
+  const { circle, marker } = ringPlacement(st.bbox, globe);
+  const data: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: circle ? [{ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: circle } }] : [] };
+  (map.getSource(SELECTED_CELL_RING) as unknown as { setData(d: unknown): void } | undefined)?.setData(data);
+  if (marker) {
+    st.marker ??= RING_MARKER.create();
+    st.marker.setLngLat(marker);
+    if (!st.shown) { st.marker.addTo(map); st.shown = true; }
+    const o = String(ringOpacity(map.getZoom(), st.z0, st.z1));
+    st.marker.setOpacity(o, "0");   // hidden on the far side of the globe
+  } else if (st.shown) { st.marker?.remove(); st.shown = false; }
 }
 function syncSelectionRing(map: MlMap, bbox: ArrayLike<number> | null, before?: string) {
   if (!map.getSource(SELECTED_CELL_RING)) {
@@ -241,8 +285,16 @@ function syncSelectionRing(map: MlMap, bbox: ArrayLike<number> | null, before?: 
   const deg = bbox ? Math.max(1e-6, Math.abs(bbox[3] - bbox[1])) : 1;
   const z0 = zoomForCellPx(deg, RING_STYLE.showBelowPx), z1 = zoomForCellPx(deg, RING_STYLE.hideAbovePx);
   map.setPaintProperty(SELECTED_CELL_RING, "circle-stroke-opacity", ["interpolate", ["linear"], ["zoom"], z0, 1, z1, 0]);
-  const data: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: bbox ? [{ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: ringCentre(bbox) } }] : [] };
-  (map.getSource(SELECTED_CELL_RING) as unknown as { setData(d: unknown): void }).setData(data);
+  let st = RINGS.get(map);
+  if (!st) {
+    st = { bbox, z0, z1 };
+    RINGS.set(map, st);
+    // the marker follows the projection (globe only) and fades with zoom like the circle layer
+    map.on("projectiontransition", () => placeRing(map));
+    map.on("zoom", () => { const r = RINGS.get(map); if (r?.shown) r.marker!.setOpacity(String(ringOpacity(map.getZoom(), r.z0, r.z1)), "0"); });
+  }
+  Object.assign(st, { bbox, z0, z1 });
+  placeRing(map);
 }
 export const SELECTED_CELL_LINE = "selected-cell-line";
 

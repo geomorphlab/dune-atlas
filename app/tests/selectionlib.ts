@@ -1,7 +1,7 @@
 // Shared by tests/selection.test.ts and tests/mars/selection.test.ts (selected-cell highlight at the poles):
 // the flat-map source (clipped, no vertex on the Mercator edge) and the globe geometry
 // (true bounds; outline without an edge at a pole) of polar cells, and the layer switch by projection.
-import { SELECTED_CELL_RING, zoomForCellPx } from "../src/core/map/overlays";
+import { RING_MARKER, SELECTED_CELL_RING, zoomForCellPx, type RingMarker } from "../src/core/map/overlays";
 import { expect } from "vitest";
 import { cellFeature, cellFromIndex, FLAT_LAT, type Grid } from "../src/core/cell/snap";
 import { globeCellGeometry, SELECTED_CELL_GLOBE_FILL, SELECTED_CELL_GLOBE_LINE } from "../src/core/map/selection";
@@ -62,7 +62,19 @@ export function checkProjectionSwitch(g: Grid, lat: number) {
   let data: unknown = null;
   const sources: Record<string, unknown> = {};
   const paint: Record<string, unknown> = {};
+  // ring marker (globe, cells poleward of 85°): records its position and whether it is on the map
+  const mk = { lngLat: null as number[] | null, on: false, opacity: "" };
+  RING_MARKER.create = () => {
+    const m: RingMarker = {
+      setLngLat: (ll: unknown) => { mk.lngLat = ll as number[]; return m as never; },
+      addTo: () => { mk.on = true; return m as never; },
+      remove: () => { mk.on = false; return m as never; },
+      setOpacity: (o?: string | number) => { mk.opacity = String(o); return m as never; },
+    };
+    return m;
+  };
   const map = {
+    getZoom: () => 0,
     getSource: (id: string) => (id === "selected-cell" ? (data !== null ? { setData: (d: unknown) => { data = d; } } : undefined)
       : id in sources ? { setData: (d: unknown) => { sources[id] = d; } } : undefined),
     addSource: (id: string) => { if (id === "selected-cell") data = { type: "FeatureCollection", features: [] }; else sources[id] = { type: "FeatureCollection", features: [] }; },
@@ -79,9 +91,22 @@ export function checkProjectionSwitch(g: Grid, lat: number) {
   ensureSelectedCellLayers(map as never, cellFeature(c, g));
   expect(layers.map((l) => l.id)).toEqual([SELECTED_CELL_BOTTOM, SELECTED_CELL_LINE, SELECTED_CELL_GLOBE_FILL, SELECTED_CELL_GLOBE_LINE, SELECTED_CELL_RING]);
   // ring at the cell centre, shown while the cell is under 12 px, gone above 24 px
-  const ring = (sources[SELECTED_CELL_RING] as GeoJSON.FeatureCollection).features[0].geometry as GeoJSON.Point;
-  expect(ring.coordinates[0]).toBeCloseTo(c.lon, 6);
-  expect(ring.coordinates[1]).toBeCloseTo(Math.max(-85, Math.min(85, c.lat)), 6);
+  // (globe: a cell poleward of 85° has the ring at its true centre, drawn as a marker; the circle layer, from
+  // Web Mercator tiles, would put it at 85°)
+  const ringFeatures = () => (sources[SELECTED_CELL_RING] as GeoJSON.FeatureCollection).features;
+  const polar = Math.abs(c.lat) > 85;
+  if (polar) {
+    expect(ringFeatures()).toHaveLength(0);
+    expect(mk.on).toBe(true);
+    expect(mk.lngLat![0]).toBeCloseTo(c.lon, 6);
+    expect(mk.lngLat![1]).toBeCloseTo(c.lat, 6);
+    expect(mk.opacity).toBe("1");                   // zoom 0: the cell is under 12 px
+  } else {
+    const ring = ringFeatures()[0].geometry as GeoJSON.Point;
+    expect(ring.coordinates[0]).toBeCloseTo(c.lon, 6);
+    expect(ring.coordinates[1]).toBeCloseTo(c.lat, 6);
+    expect(mk.on).toBe(false);
+  }
   const op = paint[`${SELECTED_CELL_RING}.circle-stroke-opacity`] as unknown[];
   const fb = cellFeature(c, g).bbox!, deg = Math.abs(fb[3] - fb[1]);   // the cell's own height (half cells at the poles)
   expect(op).toEqual(["interpolate", ["linear"], ["zoom"], zoomForCellPx(deg, 12), 1, zoomForCellPx(deg, 24), 0]);
@@ -91,10 +116,16 @@ export function checkProjectionSwitch(g: Grid, lat: number) {
   expect((layers[3].impl as GlobeLinesLayer).segmentCount).toBeGreaterThan(0);
   projection = "mercator"; handlers.projectiontransition.forEach((f) => f());
   expect([vis(SELECTED_CELL_BOTTOM), vis(SELECTED_CELL_LINE)]).toEqual(["visible", "visible"]);
+  // flat map: always the circle layer, at most 85° (the flat map ends at 85.05°)
+  expect(mk.on).toBe(false);
+  expect((ringFeatures()[0].geometry as GeoJSON.Point).coordinates[1]).toBeCloseTo(Math.max(-85, Math.min(85, c.lat)), 6);
   projection = "globe"; handlers.projectiontransition.forEach((f) => f());
   expect(vis(SELECTED_CELL_BOTTOM)).toBe("none");
+  expect(mk.on).toBe(polar);
   // deselect: both emptied
   ensureSelectedCellLayers(map as never, null);
   expect((layers[2].impl as GlobeFillLayer).triangleCount).toBe(0);
   expect((data as GeoJSON.FeatureCollection).features).toHaveLength(0);
+  expect(ringFeatures()).toHaveLength(0);
+  expect(mk.on).toBe(false);
 }

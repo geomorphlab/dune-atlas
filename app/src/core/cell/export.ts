@@ -11,7 +11,7 @@ import { analyseCell, modeDefined } from "./analysis";
 import { compassPoint } from "../util/angles";
 import { latLonText } from "./downloads";
 import { fieldInfo } from "./fieldinfo";
-import { AI_NOTICE, citationJson, citationSources, citationText, datasetNotice, fieldsCitation, fieldsLicence, referencesLine } from "./citation";
+import { citationJson, fileAiNotice, citationSources, citationText, datasetNotice, fieldsCitation, fieldsLicence, referencesLine } from "./citation";
 import { CELL_SOURCE_IDS, DUNE_FLAG_LICENCE, DUNE_FLAG_LONG_NAME } from "@body/citation";
 import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "./auxinfo";
 import { DATASET_INFO, datasetInfo, resolutionText, type DatasetInfo } from "./datasetinfo";
@@ -20,6 +20,10 @@ import { PROFILE } from "@body/profile";
 import { BODY } from "../body";
 /** the atlas in titles and README headings: "Dune Atlas" (Earth) / "Mars Dune Atlas" */
 export const ATLAS_NAME = BODY === "mars" ? "Mars Dune Atlas" : "Dune Atlas";
+/** public address of this atlas, as named in downloads */
+export const ATLAS_SITE = BODY === "mars" ? "map.geomorphlab.org/mars" : "map.geomorphlab.org";
+/** AI-assistance notice written into every download of this atlas (the website that produced the file) */
+export const FILE_AI_NOTICE = fileAiNotice(ATLAS_NAME, ATLAS_SITE);
 
 /** The wind dataset of a cell: from the export metadata id, else from the cell grid spacing. */
 export function cellDataset(cell: Pick<CellData, "grid">, datasetId?: string): DatasetInfo {
@@ -281,7 +285,7 @@ export function cellNetcdf(cell: CellData, meta: ExportMeta): Uint8Array {
       Conventions: "CF-1.8",
       date_created: when,
       history: `${when}: downloaded from ${meta.permalink}`,
-      comment: AI_NOTICE,
+      comment: FILE_AI_NOTICE,
     },
     vars,
   });
@@ -380,7 +384,7 @@ export function metadataJson(cell: CellData, meta: ExportMeta): string {
     citation: citationJson(citationSources(CELL_SOURCE_IDS, ds.id)),
     fields_citation: fieldsCitation(ds.id), fields_license: fieldsLicence(ds.id),
     license: licenceStatement(ds.id), dune_present_license: DUNE_FLAG_LICENCE, ...noticeAttrs(ds.id), institution: INSTITUTION,
-    generated: (meta.generated ?? new Date()).toISOString(), permalink: meta.permalink, ai_notice: AI_NOTICE,
+    generated: (meta.generated ?? new Date()).toISOString(), permalink: meta.permalink, ai_notice: FILE_AI_NOTICE,
   }, null, 1) + "\n";
 }
 
@@ -415,7 +419,7 @@ ${colDoc("flux_rose.csv")}
 
 ${ROSE16_FILE}  The panel's wind rose and flat-bed sand flux rose in 16 compass sectors (degrees), at
   ${utText(cell, meta)}: one row per sector. Wind: % of the counted hours blowing FROM the sector; sand flux:
-  m2 yr-1 moving TOWARD the sector. For other thresholds or sectors use flux_rose.csv.
+  m2 yr-1 moving TOWARD the sector. flux_rose.csv has every threshold and all 128 direction bins.
 ${colDoc(ROSE16_FILE)}
 
 metadata.json  Cell coordinates, grid, conventions, column definitions, field long names
@@ -439,7 +443,7 @@ Cite the sand-flux fields as: ${fieldsCitation(ds.id)}. Licence of the fields: $
 Licence: ${licenceStatement(ds.id)}${datasetNotice(ds.id) ? `\n${datasetNotice(ds.id)}` : ""}
 Dune flag (dune_present): ${DUNE_FLAG_LICENCE}.
 
-${AI_NOTICE}
+${FILE_AI_NOTICE}
 `;
 }
 

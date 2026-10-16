@@ -22,7 +22,7 @@ import { loadMathRenderer, unitsTex, type MathRenderer } from "../../core/export
 import { EXPORT_TEXT } from "../../core/ui/helpText";
 import { fieldSeries, PLOT_STORAGE, plotQuantities, plotSlug, qplotNotes, qplotSvg, resolvePlot, valueText, type PlotQuantity, type QPlotAxis } from "../../core/cell/qplot";
 import { AUX_META, aridityClass } from "../../core/cell/auxinfo";
-import { DATASET_INFO, datasetInfo, type DatasetInfo } from "../../core/cell/datasetinfo";
+import { datasetInfo, type DatasetInfo } from "../../core/cell/datasetinfo";
 import { fieldInfo } from "../../core/cell/fieldinfo";
 import { citationFile, triggerDownload } from "../../core/cell/downloads";
 import { countCopy } from "../../core/usage";
@@ -106,7 +106,7 @@ function reserves(cell: CellData, utValues: ArrayLike<number>): Reserves {
 }
 
 /** vegetation cover caveat in the table: total cover includes dry vegetation */
-export const VEG_CAVEAT = "Total cover includes non-photosynthetic vegetation (dry and dead plant material) as well as green vegetation, so it can be substantial where little green vegetation is visible; compare it with the aridity index.";
+export const VEG_CAVEAT = "Total cover includes non-photosynthetic vegetation (dry and dead plant material) as well as green vegetation, so it can be substantial where little green vegetation is visible.";
 
 /** flux divergence note of the quantity plot */
 const QSDIV_NOTE = "Negative values (flux convergence) imply deposition. Divergence of the time-averaged flux vector (RDP, RDD) following Gunn (2026), Methods M6.";
@@ -465,10 +465,8 @@ export class CellPanel {
     const body = this.#frame(cell);
     if (!cell.hasData) {
       const ds = this.#ds(cell);
-      const others = Object.values(DATASET_INFO).filter((x) => x.id !== ds.id).map((x) => escapeHtml(x.name));
-      const otherText = others.length ? `, or switch to ${others.length > 1 ? `${others.slice(0, -1).join(", ")} or ${others[others.length - 1]}` : others[0]} (coastal cells can differ between the land masks of the datasets)` : "";
       body.innerHTML = `<div class="empty-state"><p><strong>Outside the ${escapeHtml(ds.name)} land mask</strong></p>
-        <p>The atlas computes wind roses and sand-flux statistics only for ${escapeHtml(ds.landRule.split(";")[0])}. ${escapeHtml(ds.nonLandReason)}, so the atlas has no statistics for it. Choose a nearby land cell${otherText}.</p>
+        <p>Wind roses and sand-flux statistics are computed for ${escapeHtml(ds.landRule.split(";")[0])}. ${escapeHtml(ds.nonLandReason)}. Choose a nearby land cell.</p>
         <p class="help">${ds.resolution} cell: row ${cell.iy}, column ${cell.ix}; centre ${fmtLat(cell.lat)}, ${fmtLon(cell.lon)}.</p></div>`;
       return;
     }
@@ -597,7 +595,7 @@ export class CellPanel {
     // the total ends the caption's first line (a block), so the room kept for longer values is not a hole
     const totalTxt = live(`${Number.isFinite(v.fluxTotal) ? `${fmtNum(v.fluxTotal)}&nbsp;m²/yr` : MISSING}.`, v.fluxMode === "flat" ? R.dpTotal : R.total, "left");
     D.fluxCap.innerHTML = `<span class="cap-lead"><strong>${escapeHtml(fm.label)}</strong>${v.fluxMode === "flat" ? "" : ` (${MISSING} = mode direction undefined at this threshold)`}: ${mathHtml(fm.totalTex)} = ${totalTxt}</span> ${petalCaptionHtml(this.#petals)}; ${v.fluxSectors.length} sectors of ${w}°. Radius = ${pct ? "% of the total flux in each sector (sums to 100 %)" : `time-averaged flux in each sector, m²/yr (sums to ${escapeHtml(fm.totalText)})`}. Time-averaged ${what}, Σ<sub>speed</sub> n·q / Σ<sub>all</sub> n from the wind histogram. Colours split each sector by the excess shear ${mathHtml(ratioTex)} of the winds carrying the flux (only ${mathHtml(v.fluxMode === "flat" ? "$u_{*f} > u_{*,th}$" : "$u_c > u_{*,th}$")} transports sand). DP, RDP, RDP/DP, RDD and the arrows are the map fields at this threshold; a direction is hidden where the flux defining it is zero.`;
-    D.modesCap.innerHTML = `Mode bearings (toward) for ${mathHtml("$u_{*,th}$")} = ${v.utValues[0].toFixed(2)} m/s (centre) to ${v.utValues[v.utValues.length - 1].toFixed(2)} m/s (rim); ${mathHtml("$\\alpha_H$")} is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current threshold. Where RDP/DP is low (below about 0.3), transport in opposing directions nearly cancels, so RDD is poorly defined and can swing by up to 180° with a small change of threshold or wind dataset. The modes depend on the whole flux rose rather than on its resultant: ${mathHtml("$\\alpha_T$")} follows the crest orientation ${mathHtml("$\\alpha_H$")} that maximises gross transport across crests, so it can stay steady and differ from RDD.`;
+    D.modesCap.innerHTML = `Mode bearings (toward) for ${mathHtml("$u_{*,th}$")} = ${v.utValues[0].toFixed(2)} m/s (centre) to ${v.utValues[v.utValues.length - 1].toFixed(2)} m/s (rim); ${mathHtml("$\\alpha_H$")} is an axis, drawn both ways. Traces break where a mode is undefined (no defining flux). Dashed ring and dots: current threshold. Where RDP/DP is low (below about 0.3), transport in opposing directions nearly cancels, and RDD can turn by up to 180° with a small change of threshold or wind dataset. The modes depend on the whole flux rose rather than on its resultant: ${mathHtml("$\\alpha_T$")} follows the crest orientation ${mathHtml("$\\alpha_H$")} that maximises gross transport across crests, so it can stay steady and differ from RDD.`;
     const modesOpts = (t: PlotTheme) => ({ x: v.utValues, currentIndex: v.utIndex, size: Math.min(size, 420), theme: t, series: MODE_KEYS.map((k) => ({ label: s[k].label, color: seriesColor(s[k].color, t), dash: "dash" in s[k] ? (s[k] as { dash: string }).dash : undefined, values: v.modeSeries[k], axis: k === "ab", width: k === "ao" ? 2.8 : undefined })) });
     D.modesSvg.innerHTML = modesPlotSvg(modesOpts(DARK_THEME));
     // "<quantity> vs threshold": title, plot, live value (a slot ending the caption's first line) and notes

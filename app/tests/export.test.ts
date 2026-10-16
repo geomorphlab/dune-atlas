@@ -14,7 +14,7 @@ import { citationFile } from "../src/core/cell/downloads";
 import { fluxRose, crestFluxRose } from "../src/core/cell/flux";
 import { fieldValue } from "../src/core/cell/cellstore";
 import { C } from "../src/core/util/constants";
-import { AI_NOTICE } from "../src/core/cell/citation";
+import { FILE_AI_NOTICE as AI_NOTICE } from "../src/core/cell/export";
 import { makeCell, FIELD_VARS } from "./helpers";
 import fixture from "./fixtures/flux-parity.json";
 

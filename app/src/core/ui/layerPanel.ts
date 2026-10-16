@@ -48,16 +48,16 @@ export const DATA_SOURCES_HTML = `<h4>Data sources</h4><ul class="sources">
   ${Object.values(DATASET_INFO).map(datasetSourceItem).join("\n  ")}
   ${DATA_SOURCES_ITEMS_HTML}${placesAvailable(PLACES) ? `\n  <li class="places-note"><strong>${PLACE_TEXT.aboutItem}</strong>: ${placesNoteHtml(PLACES)}</li>` : ""}
 </ul>`;
-/** About: "Earth and Mars: what can be compared" (identical in both atlases) */
-export const COMPARE_HTML = `<div class="earth-mars"><h4>Earth and Mars: what can be compared</h4>
+/** About: "Earth and Mars: methods and data" (identical in both atlases) */
+export const COMPARE_HTML = `<div class="earth-mars"><h4>Earth and Mars: methods and data</h4>
 <p>Both atlases compute the same quantities with the methods outlined in Gunn (2026): the time-averaged saturated sand flux over a flat bed fully covered by loose sand (DP), its resultant (RDP, RDD, RDP/DP), crest fluxes, dune-orientation modes and flux divergence. Both report fluxes as volumes of packed sand (packing fraction 0.6, pore space included) per metre width per Earth year of 365.25 days (m²/yr), and both show wind roses as the direction the wind blows from and sand roses as the direction sand moves toward. They differ in four ways.</p>
 <ul class="sources">
   <li><strong>Control</strong>: on Earth the slider sets one threshold friction velocity u*,th for the whole record (default 0.15 m/s); on Mars it sets the median grain diameter d (default 200 µm), and the threshold is computed for each time step of the wind record from d and that step's air density and temperature.</li>
   <li><strong>Transport law and wind profile</strong>: Earth uses the transport law of Martin &amp; Kok (2017), with u* from the 10 m wind and a roughness length of 1 mm; Mars uses the transport law of Pähtz &amp; Durán (2023), with u* from the wind at the lowest level of the wind dataset (its height above the surface differs between datasets) and a smooth-wall profile without a roughness length.</li>
-  <li><strong>Winds and grid</strong>: Earth uses decades of hourly reanalysis winds (e.g., ERA5-Land, 0.1° grid, 1950–2024); Mars uses one Mars year (668 sols, about 1.9 Earth years) of winds from a climate-model simulation or a reanalysis (e.g., MCMC FV3, 2° grid), so one Mars cell can span several dune fields and year-to-year variability is not sampled.</li>
+  <li><strong>Winds and grid</strong>: Earth uses decades of hourly reanalysis winds (e.g., ERA5-Land, 0.1° grid, 1950–2024); Mars uses one Mars year (668 sols, about 1.9 Earth years) of winds from a climate-model simulation or a reanalysis (e.g., MCMC FV3, 2° grid, about 120 km at the equator), with no year-to-year variation.</li>
   <li><strong>Downloads</strong>: Earth cells provide a wind histogram and the fields against threshold (wind_histogram.csv, fields_by_threshold.csv); Mars cells provide the wind and air series and the fields against grain diameter (wind_series.csv, fields_by_grain_size.csv).</li>
 </ul>
-<p>DP values on the two planets can therefore be compared in order of magnitude, not as precise numbers. RDP/DP, RDD and the mode directions compare more directly, but each depends on the threshold or grain-diameter setting.</p></div>`;
+<p>On both planets, DP, RDP/DP, RDD and the mode directions depend on the threshold or grain-diameter setting.</p></div>`;
 /** About: how to cite the map fields of every wind dataset (one format with the info popovers and the downloads). */
 export function fieldsCitationHtml(): string {
   return `<h4 id="cite-fields" tabindex="-1">Citing the map fields</h4><ul class="sources">${Object.values(DATASET_INFO).map((d) => `<li><strong>${protectText(`${d.name} ${d.resolution}`)}</strong>: ${noTranslateHtml(richHtml(fieldsCitation(d.id)))}. Licence: ${noTranslateHtml(escapeHtml(fieldsLicence(d.id)))}.</li>`).join("")}</ul>`;

@@ -16,7 +16,7 @@ groups:
 - id: morphology
   title: Ratios & morphology indices
   collapsed: true
-  description: Dimensionless flux ratios that discriminate dune morphology and stability.
+  description: Dimensionless flux ratios related to dune morphology and stability.
 - id: wind
   title: Wind statistics
   collapsed: true
@@ -36,9 +36,8 @@ layers:
     by loose sand (Gunn 2026). Like the drift potential of Fryberger & Dean (1979) it measures the wind''s capacity
     to transport sand, but it is a different quantity: Fryberger''s DP is in vector units, computed from 10 m wind
     speeds in knots as $V^2(V - V_t)$ with a 12-knot threshold, whereas this DP is a physical flux computed from
-    the friction velocity with the threshold set by the slider. The two cannot be converted into each other without
-    the wind-speed distribution, and Fryberger''s energy classes (below 200, 200–400 and above 400 vector units)
-    do not apply to these values.'
+    the friction velocity with the threshold set by the slider. The ratio of the two depends on the wind-speed distribution,
+    and Fryberger''s energy classes (below 200, 200–400 and above 400 vector units) are in vector units.'
   citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
     winds: ERA5 hourly 10 m winds 1950–2024 (Hersbach, H. et al. (2020). The ERA5 global reanalysis. Quarterly Journal
     of the Royal Meteorological Society 146, 1999–2049. doi:10.1002/qj.3803; data: Hersbach, H. et al. (2023). ERA5
@@ -105,8 +104,8 @@ layers:
   thresholdAware: true
   units: °
   description: Direction of the time-averaged flat-bed flux vector, $\arg \sum n q e^{i\theta}$, the direction sand
-    moves, as a compass bearing (clockwise from north). Poorly defined where RDP/DP is low, because transport in
-    opposing directions nearly cancels.
+    moves, as a compass bearing (clockwise from north). Where RDP/DP is low, transport in opposing directions nearly
+    cancels, and a small change of the threshold or the winds can turn this direction by up to 180°.
   citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
     winds: ERA5 hourly 10 m winds 1950–2024 (Hersbach, H. et al. (2020). The ERA5 global reanalysis. Quarterly Journal
     of the Royal Meteorological Society 146, 1999–2049. doi:10.1002/qj.3803; data: Hersbach, H. et al. (2023). ERA5
@@ -142,8 +141,8 @@ layers:
   description: 'Directional variability of sand flux: ratio of resultant to total drift potential, $RDP/DP$ (0 =
     multidirectional, 1 = unidirectional). Undefined where there is no sand flux ($DP = 0$). Fryberger & Dean (1979)
     classes: below 0.3 low (complex or obtuse bimodal winds), 0.3–0.8 intermediate (obtuse to acute bimodal winds),
-    above 0.8 high (unimodal winds). Only transport above the threshold counts here, and the flux law differs from
-    Fryberger''s, so use the classes as a guide.'
+    above 0.8 high (unimodal winds). Here only transport above the threshold counts, and the flux law differs from
+    Fryberger''s.'
   citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
     winds: ERA5 hourly 10 m winds 1950–2024 (Hersbach, H. et al. (2020). The ERA5 global reanalysis. Quarterly Journal
     of the Royal Meteorological Society 146, 1999–2049. doi:10.1002/qj.3803; data: Hersbach, H. et al. (2023). ERA5
@@ -578,10 +577,10 @@ layers:
     Q_{\parallel}(\alpha_H)\rangle/\langle Q_{\bot}(\alpha_H)\rangle|$. Along-crest transport tends to keep crests
     straight, while across-crest transport, which drives migration, tends to make them sinuous (Rubin 2012), so
     higher values suggest straighter long-crested dunes on sand-covered beds. For dunes migrating on starved beds,
-    the ratio measures the asymmetry of sand fluxes that makes dunes such as barchans asymmetric (Courrech du Pont
-    et al. 2024). In the sand-covered-bed examples of Courrech du Pont et al. (2024) it is about 0.03 for transverse,
-    0.4 for oblique and 22 for longitudinal dunes. The ratio goes to infinity where its denominator (a net flux)
-    goes to zero (shown clipped to ±60,000).
+    the ratio measures how far the migration direction departs from the direction of the sand flux on the dune,
+    which makes dunes such as barchans asymmetric (Courrech du Pont et al. 2024). In the sand-covered-bed examples
+    of Courrech du Pont et al. (2024) it is about 0.03 for transverse, 0.4 for oblique and 22 for longitudinal dunes.
+    The ratio goes to infinity where its denominator (a net flux) goes to zero (shown clipped to ±60,000).
   citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
     winds: ERA5 hourly 10 m winds 1950–2024 (Hersbach, H. et al. (2020). The ERA5 global reanalysis. Quarterly Journal
     of the Royal Meteorological Society 146, 1999–2049. doi:10.1002/qj.3803; data: Hersbach, H. et al. (2023). ERA5

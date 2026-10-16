@@ -21,7 +21,7 @@ layers:
     (q\cos\theta)}{\partial\lambda} + \frac{\partial (q\sin\theta\cos\phi)}{\partial\phi}\right]$ with $q = RDP$,
     $\theta = RDD$. By conservation of sand mass, negative values (flux convergence) imply deposition and positive
     values (flux divergence) erosion. The values assume a saturated flux and an unlimited supply of loose sand,
-    so on rock, crusted or vegetated surfaces actual erosion is limited by the sand available.'
+    so on rock or crusted surfaces actual erosion is limited by the sand available.'
   citation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y;
     transport law: Pähtz, T. & Durán, O. (2023). Scaling laws for planetary sediment transport from DEM-RANS numerical
     simulations. Journal of Fluid Mechanics 963, A20. doi:10.1017/jfm.2023.343; winds: EMARS v1.0 reanalysis, Mars

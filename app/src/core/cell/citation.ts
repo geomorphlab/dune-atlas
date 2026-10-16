@@ -6,7 +6,7 @@ import { richHtml } from "../util/richtext";
 import { ABOUT_SOURCE_IDS, BODY_CITATION_SOURCES } from "@body/citation";
 import { DATASET_CITATION_SOURCES, DATASET_INFO, datasetCredits } from "./datasetinfo";
 import { loadRegistry } from "../registry/load";
-export { AI_NOTICE, PAPER_DOI } from "./paper";
+export { AI_NOTICE, fileAiNotice, PAPER_DOI } from "./paper";
 
 /** One citable work: a DOI (preferred) or a URL. */
 export interface CitationEntry {

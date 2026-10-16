@@ -80,7 +80,9 @@ label.inline.dataset-row { display: flex; align-items: center; gap: 6px; margin:
 .dataset-row select { flex: 1 1 auto; min-width: 0; width: 100%; }
 /* Wind dataset row with its ⓘ */
 .dataset-line { display: flex; flex-wrap: wrap; align-items: center; column-gap: 6px; }
-.dataset-line > .info-popover { flex: 1 0 100%; }
+/* own line below the selector; may shrink so its left indent, padding and border stay inside the panel (it ran past
+   the right edge: 100 % wide plus the indent) */
+.dataset-line > .info-popover { flex: 1 1 100%; min-width: 0; box-sizing: border-box; }
 .dataset-line > label.inline.dataset-row { flex: 1 1 auto; min-width: 0; }
 .dataset-line > .info-button { flex: 0 0 auto; margin-bottom: 4px; }
 .layer-group { margin: 8px 0; }

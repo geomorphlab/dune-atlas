@@ -134,7 +134,7 @@ describe("info texts at the source, one field citation, licences, basemap info",
     expect(L("rdpa").description).not.toMatch(/radians|CCW/);
     const veg = L("vegetation").description!;
     expect(veg.length).toBeLessThan(700); // was 707; + the non-photosynthetic-cover sentence
-    expect(veg).toMatch(/Total cover includes non-photosynthetic vegetation \(dry and dead plant material\) as well as green vegetation, so it can be substantial where little green vegetation is visible; compare it with the aridity index\./);
+    expect(veg).toMatch(/Total cover includes non-photosynthetic vegetation \(dry and dead plant material\) as well as green vegetation, so it can be substantial where little green vegetation is visible\./);
     expect(veg).toMatch(/\[Explore the full monthly time series at GEOGLAM RAPP\]\(https:\/\/map\.geo-rapp\.org\/\)/);
   });
   it("every atlas-derived field: one citation format (= fieldsCitation) and the dataset licence row", async () => {

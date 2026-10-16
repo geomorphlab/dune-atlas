@@ -7,11 +7,11 @@ import { texToPlain } from "../../../core/util/plaintext";
 import { mathToBearingDeg } from "../../../core/util/angles";
 import { nUt } from "../../../core/cell/cellstore";
 import { DEFAULT_BINS } from "../../../core/cell/flux";
-import { csvColumnDoc, csvColumnJson, csvTable, fieldMeta, fmtF32, fmtF64, exportBaseName, versionFromPrefix, rose16Columns, rose16Csv, sourceText, CSV_LAYOUT_TEXT, DIR_COLUMNS, INSTITUTION, ROSE16_FILE, ROSE_MODES, type CsvColumn, type ExportMeta } from "../../../core/cell/export";
+import { csvColumnDoc, csvColumnJson, csvTable, fieldMeta, fmtF32, fmtF64, exportBaseName, versionFromPrefix, rose16Columns, rose16Csv, sourceText, CSV_LAYOUT_TEXT, DIR_COLUMNS, FILE_AI_NOTICE, INSTITUTION, ROSE16_FILE, ROSE_MODES, type CsvColumn, type ExportMeta } from "../../../core/cell/export";
 import { cellEdges, colLon, GRID_INDEX_COMMENT, GRID_REGISTRATION, latBounds, licenceStatement, noticeAttrs, rowLat } from "../../../core/cell/exportmeta";
 import { datasetNotice } from "../../../core/cell/citation";
 import { latLonText } from "../../../core/cell/downloads";
-import { AI_NOTICE, citationJson, citationSources, citationText, referencesLine } from "../../../core/cell/citation";
+import { citationJson, citationSources, citationText, referencesLine } from "../../../core/cell/citation";
 import { CELL_SOURCE_IDS, DUNE_FLAG_LICENCE, DUNE_FLAG_LONG_NAME, TRANSPORT_LAW_ATTR } from "../citation";
 import { fieldsCitation, fieldsLicence } from "../../../core/cell/citation";
 import { AUX_META, auxDescription, auxSourceAttrs, auxVars } from "../../../core/cell/auxinfo";
@@ -162,7 +162,7 @@ export function cellNetcdf(cell: MarsCellData, meta: ExportMeta): Uint8Array {
       Conventions: "CF-1.8",
       date_created: when,
       history: `${when}: downloaded from ${meta.permalink}`,
-      comment: AI_NOTICE,
+      comment: FILE_AI_NOTICE,
     },
     vars,
   });
@@ -231,7 +231,7 @@ export function metadataJson(cell: MarsCellData, meta: ExportMeta): string {
     citation: citationJson(citationSources(CELL_SOURCE_IDS, ds.id)),
     fields_citation: fieldsCitation(ds.id), fields_license: fieldsLicence(ds.id),
     license: licenceStatement(ds.id), dune_present_license: DUNE_FLAG_LICENCE, ...noticeAttrs(ds.id), institution: INSTITUTION,
-    generated: (meta.generated ?? new Date()).toISOString(), permalink: meta.permalink, ai_notice: AI_NOTICE,
+    generated: (meta.generated ?? new Date()).toISOString(), permalink: meta.permalink, ai_notice: FILE_AI_NOTICE,
   }, null, 1) + "\n";
 }
 
@@ -266,7 +266,7 @@ ${colDoc("flux_rose.csv")}
 
 ${ROSE16_FILE}  The panel's wind rose and flat-bed sand flux rose in 16 compass sectors (degrees), at
   d = ${cell.dValuesUm[rose16Index(cell, meta)]} um: one row per sector. Wind: % of the ${sm.units} blowing FROM the sector (lowest-level
-  wind); sand flux: m2 yr-1 moving TOWARD the sector. For other grain sizes or sectors use flux_rose.csv.
+  wind); sand flux: m2 yr-1 moving TOWARD the sector. flux_rose.csv has every grain diameter and all 128 direction bins.
 ${colDoc(ROSE16_FILE)}
 
 Physics, all from Pähtz & Durán (2023) J. Fluid Mech. 963:A20: u* from the smooth-wall
@@ -285,7 +285,7 @@ Cite the sand-flux fields as: ${fieldsCitation(ds.id)}. Licence of the fields: $
 Licence: ${licenceStatement(ds.id)}${datasetNotice(ds.id) ? `\n${datasetNotice(ds.id)}` : ""}
 Dune flag and fraction (dune_present, dune_fraction): ${DUNE_FLAG_LICENCE}.
 
-${AI_NOTICE}
+${FILE_AI_NOTICE}
 `;
 }
 

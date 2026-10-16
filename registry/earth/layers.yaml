@@ -30,11 +30,10 @@ datasets:
       landThreshold: 0.5
       nonLandReason: This cell is mainly water
       landShort: 'land cells: land–sea mask fraction > 0.5'
-      note: 'ERA5-Land, used by Gunn (2026), is a land-surface rerun driven by ERA5 atmospheric fields interpolated to its grid (Muñoz-Sabater et al. 2021), so its winds are not an independent estimate, and the datasets can still differ: e.g., Baas (2026) reports ERA5-Land 10 m wind speeds 20–30 % below those of ERA5.'
+      note: 'ERA5-Land, used by Gunn (2026), re-runs ECMWF''s land-surface model driven by ERA5 atmospheric fields interpolated to its 0.1° grid (Muñoz-Sabater et al. 2021); Baas (2026) reports its 10 m wind speeds 20–30 % below those of ERA5.'
       dunesRule: the cell overlaps at least one 0.1° dune cell of the dune map (Gunn 2026)
       fieldsFrom: paper
-      sourceHtml: ERA5-Land 1950–2024 hourly 10 m winds (0.1°; Copernicus Climate Change Service, CC BY 4.0) and the qsat parameters of Gunn (2026), Supplementary
-        Data (Zenodo, CC BY 4.0). Drift potentials (DP, RDP, RDD, RDP/DP) and crest fluxes are averages over the hourly
+      sourceHtml: ERA5-Land 1950–2024 hourly 10 m winds (0.1°; Copernicus Climate Change Service, CC BY 4.0) and the saturated sand-flux (qsat) parameters of Gunn (2026), Supplementary Data (Zenodo, CC BY 4.0). Drift potentials (DP, RDP, RDD, RDP/DP) and crest fluxes are averages over the hourly
         record.
     credits:
       sources:

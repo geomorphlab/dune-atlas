@@ -9,12 +9,12 @@ import { mathHtml } from "../../core/util/math";
 /** datasets whose rows stop short of the poles: where their cells end (registry info.grid) */
 const coverageNotes = () => Object.values(DATASET_INFO).filter((d) => d.grid && gridLatRange(d.grid)[1] < 90 - 1e-6).map((d) => outsideGridText(1, d.grid!, d.name));
 /** the Wind dataset selector's ⓘ (with more than one dataset; the facts from the registry entries) */
-export const DATASET_INFO_TEXT = Object.keys(DATASET_INFO).length < 2 ? "" : `The Wind dataset selector switches between Mars wind datasets (${Object.values(DATASET_INFO).map((d) => `${d.name}, ${d.resolution}`).join("; ")}), each one Mars year of lowest-level winds on its own grid${datasetKindsText() ? ` (${datasetKindsText()})` : ""}.${datasetNotes().map((t) => ` ${t}`).join("")} The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. Where the datasets give different results, treat them as uncertain.${coverageNotes().map((t) => ` ${t}`).join("")}`;
+export const DATASET_INFO_TEXT = Object.keys(DATASET_INFO).length < 2 ? "" : `The Wind dataset selector switches between Mars wind datasets (${Object.values(DATASET_INFO).map((d) => `${d.name}, ${d.resolution}`).join("; ")}), each one Mars year of lowest-level winds on its own grid${datasetKindsText() ? ` (${datasetKindsText()})` : ""}.${datasetNotes().map((t) => ` ${t}`).join("")} The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset.${coverageNotes().map((t) => ` ${t}`).join("")}`;
 
 export const HELP_SECTIONS: HelpSection[] = [
   {
     id: "threshold", title: "Median grain diameter $d$",
-    body: "Sand moves when the friction velocity of the wind exceeds a threshold that depends on the grain size and on the thin Martian air. The slider at the top of the layer panel sets the median grain diameter d (50–1000 µm, default 200 µm) for every grain-size-dependent map layer and for the cell panel. For each time step of the wind dataset (each of its samples of the Mars year) the threshold $u_{*,th}$ is computed from d and that step's air density and temperature (Pähtz & Durán 2023).",
+    body: "Sand moves when the friction velocity of the wind exceeds a threshold that depends on the grain size and on the thin Martian air. The slider at the top of the layer panel sets the median grain diameter d (50–1000 µm, default 200 µm) for every grain-size-dependent map layer and for the cell panel. For each time step of the wind dataset, the threshold $u_{*,th}$ is computed from d and that step's air density and temperature (Pähtz & Durán 2023).",
   },
   {
     id: "layers", title: "Layers and Active layers",
@@ -26,11 +26,11 @@ export const HELP_SECTIONS: HelpSection[] = [
   },
   {
     id: "search", title: "Search",
-    body: "Type a feature name (e.g. Gale crater or Olympia Undae) or a latitude and a longitude in the box at the top of the layer panel. Names are IAU-approved feature names from the Gazetteer of Planetary Nomenclature, with a few informal aliases (e.g. Bagnold Dunes); the list under the box shows each match with its feature type and the best matches first. Coordinates can be in decimal degrees or in degrees, minutes and seconds, signed or with N, S, E or W (e.g. 4.5, 137.4 or 4°30′N 137°24′E). Latitude comes first unless the letters say otherwise. Longitudes are planetocentric and east-positive, from −180° to 180°; a longitude typed as 0–360° E (e.g. 354.8) is converted (to −5.2). The line under the box shows how the text was read; Enter moves the map there and opens the cell panel when the cell has data.",
+    body: "Type a feature name (e.g. Gale crater or Olympia Undae) or a latitude and a longitude in the box at the top of the layer panel. Names are IAU-approved feature names from the Gazetteer of Planetary Nomenclature, with a few informal aliases (e.g. Bagnold Dunes); the list under the box shows each match with its feature type and the best matches first. Coordinates can be in decimal degrees or in degrees, minutes and seconds, signed or with N, S, E or W (e.g. 4.5, 137.4 or 4°30′N 137°24′E). Latitude comes first unless the letters say otherwise. Longitudes are planetocentric and east-positive, from −180° to 180°; a longitude typed as 0–360° E (e.g. 354.8) is converted (to −5.2). While you type coordinates, the line under the box shows the position they were read as (“Go to …”); Enter moves the map there and opens the cell panel when the cell has data.",
   },
   {
     id: "cell", title: "Clicking a cell",
-    body: "Click any cell to open the cell panel: the wind rose, the sand-flux rose at the current grain diameter, dune-orientation modes against the grain diameter, the flux divergence and a table of all parameters. Sand-flux rose petals point toward where sand moves; the Petals switch above the rose turns them to show where the wind comes from instead (the arrows always point toward). Section headings fold and unfold. Close the panel with × or Esc. The planetocentric latitude and east longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The button {icon_centre} next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).",
+    body: "Click any cell to open the cell panel: the wind rose, the sand-flux rose at the current grain diameter, dune-orientation modes against the grain diameter, the flux divergence and a table of all parameters. Sand-flux rose petals point toward where sand moves; the “Petals: toward / from” choice above the rose turns them to show where the wind comes from instead (the arrows always point toward). Section headings fold and unfold. Close the panel with × or Esc. The planetocentric latitude and east longitude under the cursor are shown next to the scale bar, bottom left (on touch screens: the last tapped point). The button {icon_centre} next to the cell title centres the map on the cell (zooming in only if the cell would be too small to see).",
   },
   {
     id: "datasets", title: "Wind dataset",
@@ -85,7 +85,7 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "cell", targets: ["#cell-panel:not([hidden])", "#map"], title: "Click a cell",
-    body: "Clicking a cell opens the cell panel, shown here for the dune field of Nili Patera (9° N, 67° E): wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own grain-diameter slider at the top (outlined), linked to the main one. At the bottom you can download these data in NetCDF or CSV files and access citation information. The button {icon_centre} next to its title centres the map on the cell.",
+    body: "Clicking a cell opens the cell panel, shown here for the dune field of Nili Patera (9° N, 67° E): wind rose, sand-flux rose, dune-orientation modes and a table of all parameters. The panel has its own grain-diameter slider at the top (outlined), linked to the main one. At the bottom, Download & cite saves these data as NetCDF or CSV, with the citations. The button {icon_centre} next to its title centres the map on the cell.",
   },
   {
     id: "tools", targets: [".atlas-tools .share-btn", ".atlas-tools"], span: [".atlas-tools .share-btn", ".atlas-tools .export-btn", ".atlas-tools .region-btn"], title: "Share and export",

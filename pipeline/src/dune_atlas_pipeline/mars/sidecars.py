@@ -211,8 +211,8 @@ def extra_fragment(qsdiv_clim, rho_clim) -> dict:
                          r"\left[\frac{\partial (q\cos\theta)}{\partial\lambda} + \frac{\partial (q\sin\theta\cos\phi)}"
                          r"{\partial\phi}\right]$ with $q = RDP$, $\theta = RDD$. By conservation of sand mass, negative "
                          r"values (flux convergence) imply deposition and positive values (flux divergence) erosion. The "
-                         r"values assume a saturated flux and an unlimited supply of loose sand, so on rock, crusted or "
-                         r"vegetated surfaces actual erosion is limited by the sand available."),
+                         r"values assume a saturated flux and an unlimited supply of loose sand, so on rock or crusted "
+                         r"surfaces actual erosion is limited by the sand available."),
          # Mars has no land mask, and the
          # divergence is defined in every cell (one-sided differences at the first and last rows).
          "citation": CITATION, "attribution": dict(ATTRIBUTION), "visible": False, "opacity": 0.85, "queryable": False,

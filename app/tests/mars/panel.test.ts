@@ -155,9 +155,9 @@ describe("Mars public text", () => {
     renderLayerPanel(root, reg, new Store(initState()));
     for (const b of root.querySelectorAll("details")) (b as HTMLDetailsElement).open = true;
     for (const p of root.querySelectorAll(".info-popover")) (p as HTMLElement).hidden = false;
-    // About, "Earth and Mars: what can be compared" names Earth on purpose: present, then left out
+    // About, "Earth and Mars: methods and data" names Earth on purpose: present, then left out
     const cmp = root.querySelector(".about .earth-mars")!;
-    expect(text(cmp)).toMatch(/^Earth and Mars: what can be compared Both atlases compute the same quantities/);
+    expect(text(cmp)).toMatch(/^Earth and Mars: methods and data Both atlases compute the same quantities/);
     cmp.remove();
     const t = text(root);
     expect(t).toMatch(/Mars Dune Atlas/);

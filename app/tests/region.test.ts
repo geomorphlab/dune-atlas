@@ -103,6 +103,34 @@ describe("fetching", () => {
     const store = { query: async (iy: number, ix: number) => { ctl.abort(); return cellAt(iy, ix, ERA5); } };
     await expect(fetchRegion(store, boxCells({ west: 0, east: 1, south: 0, north: 1 }, ERA5), { signal: ctl.signal, concurrency: 1 })).rejects.toThrow("cancelled");
   });
+  it("a cell that never loads is read again, then the export stops with an error naming it (no endless wait)", async () => {
+    const cells = boxCells({ west: 0, east: 1, south: 0, north: 0.5 }, ERA5);
+    const [hy, hx] = [cells.iys[0], cells.ixs[1]];
+    let tries = 0;
+    const store = { query: (iy: number, ix: number) => {
+      if (iy === hy && ix === hx) { tries++; return new Promise<never>(() => {}); }   // a request that never returns
+      return Promise.resolve(cellAt(iy, ix, ERA5));
+    } };
+    await expect(fetchRegion(store, cells, { timeoutMs: 20, attempts: 3, concurrency: 2 })).rejects.toThrow(`Cell row ${hy}, column ${hx} did not load within 0 s (tried 3 times)`);
+    expect(tries).toBe(3);
+  });
+  it("a cell that hangs once loads on the next attempt", async () => {
+    const cells = boxCells({ west: 0, east: 1, south: 0, north: 0.5 }, ERA5);
+    let first = true;
+    const store = { query: (iy: number, ix: number) => {
+      if (first) { first = false; return new Promise<never>(() => {}); }
+      return Promise.resolve(cellAt(iy, ix, ERA5));
+    } };
+    const out = await fetchRegion(store, cells, { timeoutMs: 20, concurrency: 1 });
+    expect(out.every((c) => c !== null)).toBe(true);
+  });
+  it("cancel stops at once while a cell is loading", async () => {
+    const ctl = new AbortController();
+    const store = { query: () => { setTimeout(() => ctl.abort(), 5); return new Promise<never>(() => {}); } };
+    const t0 = Date.now();
+    await expect(fetchRegion(store, boxCells({ west: 0, east: 1, south: 0, north: 1 }, ERA5), { signal: ctl.signal, timeoutMs: 10_000 })).rejects.toThrow("cancelled");
+    expect(Date.now() - t0).toBeLessThan(1000);
+  });
 });
 
 describe("NetCDF content (CF-1.8)", () => {
