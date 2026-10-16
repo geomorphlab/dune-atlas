@@ -418,6 +418,15 @@ def keepbits_benchmark(blk: np.ndarray, ks=range(8, 17)) -> dict:
     return res
 
 
+def z_range(ab: dict, T=(100.0, 350.0), ps=(50.0, 1500.0)) -> tuple[float, float]:
+    """Plausible range (m) of the lowest-level height z of a store whose lowest layer has the hybrid interfaces `ab`
+    (attrs air_state_interfaces): physics.layer_height over the validation T range and surface pressures `ps` (Pa),
+    widened by 10 %. FV3 about 1-4 m; a thick lowest layer (EMARS, bk_top = 0.993) tens of metres."""
+    z = [float(P.layer_height(p, t, ab["ak_bottom"], ab["bk_bottom"], ab["ak_top"], ab["bk_top"]))
+         for t in T for p in ps]
+    return 0.9 * min(z), 1.1 * max(z)
+
+
 def validate(out: str, n_cells: int = 6, n_recompute: int = 2, seed: int = 0, cells=None,
              require_all_shards: bool = True) -> dict:
     """Checks a built store before it replaces the published one: layout and attrs, one object per shard for series
@@ -440,9 +449,8 @@ def validate(out: str, n_cells: int = 6, n_recompute: int = 2, seed: int = 0, ce
     rng = np.random.default_rng(seed)
     if cells is None:
         cells = list(zip(rng.integers(0, NY, n_cells).tolist(), rng.integers(0, NX, n_cells).tolist()))
-    # z depends on the dataset's lowest level (FV3 1.5-3.2 m; sigma 0.9995: 0.026 m/K x T): spec notes z_range_m
     ranges = {"u": (-80, 80), "v": (-80, 80), "T": (100, 350), "rho": (1e-4, 0.1),
-              "z": tuple(DS.notes.get("z_range_m", (0.5, 5.0)))}
+              "z": z_range(a["air_state_interfaces"])}
     rec = []
     for i, j in cells:
         x = S[i, j]

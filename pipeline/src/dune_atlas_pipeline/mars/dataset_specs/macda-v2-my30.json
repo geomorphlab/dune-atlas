@@ -34,10 +34,6 @@
  "meta_json": "registry/mars/datasets/macda-v2-my30/qsat_field_metadata.json",
  "fields_method": "23 sand-flux fields at 64 median grain diameters from the lowest-level winds, time-averaged over Mars Year 30 (one sample every two Mars hours), per-sample threshold and flux (Pähtz & Durán 2023) with the crest-mode methods outlined in Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y",
  "notes": {
-  "resolution_deg": 5.0,
-  "z_range_m": [
-   2.0,
-   10.0
-  ]
+  "resolution_deg": 5.0
  }
 }
