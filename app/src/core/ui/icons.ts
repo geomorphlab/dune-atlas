@@ -1,0 +1,13 @@
+// Icons of the map tool buttons (top right). Also drawn inline in the help and tour text (ui/texticons.ts),
+// so the text shows the same symbols as the buttons.
+export const TOOL_ICONS = {
+  help: '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.6 7.6a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.2.9-1.2 1.8v.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="14.6" r="1" fill="currentColor"/></svg>',
+  share: '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M8.5 11.5l3-3M7 9.5L5.2 11.3a2.6 2.6 0 0 0 3.7 3.7L10.7 13M13 10.5l1.8-1.8a2.6 2.6 0 0 0-3.7-3.7L9.3 6.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+  // ringed planet (line icon): the ring's front arc crosses the planet, its back arc stops at the disc
+  planet: '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="4.7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M17.79 6.85A8.4 2.7 -22 0 1 2.21 13.15M2.21 13.15A8.4 2.7 -22 0 1 5.35 9.33M12.88 6.29A8.4 2.7 -22 0 1 17.79 6.85" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+  // academic cap (mortarboard): the board, the cap below it and the tassel
+  concepts: '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M10 4.2L1.8 8 10 11.8 18.2 8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5.2 9.7v3.6c1.3 1.3 3 1.9 4.8 1.9s3.5-.6 4.8-1.9V9.7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M17 8.6v4.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="17" cy="14" r=".9" fill="currentColor"/></svg>',
+  // dashed box with a downward arrow: a region of the grid to download
+  region: '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="2.6" y="2.6" width="14.8" height="12.2" rx="1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2.6 1.8"/><path d="M10 6v8.6M6.8 11.4L10 14.6l3.2-3.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  camera: '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M3 7h3l1.4-2h5.2L14 7h3v8.5H3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="10" cy="11" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+};

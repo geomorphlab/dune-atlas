@@ -976,8 +976,16 @@
   "area": "Exported images"
  },
  {
+  "en": "Download a region",
+  "area": "Other"
+ },
+ {
   "en": "Switch to Earth",
-  "area": "Screen-reader labels and tooltips"
+  "area": "Other"
+ },
+ {
+  "en": "Centre map on this cell",
+  "area": "Other"
  },
  {
   "en": "Close",
@@ -1037,10 +1045,6 @@
  },
  {
   "en": "No place or coordinates match.",
-  "area": "Search and messages"
- },
- {
-  "en": "Download a region",
   "area": "Search and messages"
  },
  {

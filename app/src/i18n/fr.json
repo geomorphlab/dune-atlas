@@ -132,8 +132,8 @@
   "en": "7a137040"
  },
  "earth.help.concepts.body": {
-  "text": "Le bouton Concepts (mortier, sous le bouton Aide) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.",
-  "en": "e5f5c516"
+  "text": "Le bouton Concepts {icon_concepts} (sous le bouton Aide {icon_help}) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.",
+  "en": "239635d1"
  },
  "earth.help.search.title": {
   "text": "Recherche",
@@ -148,8 +148,8 @@
   "en": "a63656ea"
  },
  "earth.help.cell.body": {
-  "text": "Cliquez sur n’importe quelle cellule terrestre pour ouvrir le panneau de cellule : la rose des vents, la rose des flux de sable au seuil actuel, les modes d’orientation des dunes en fonction du seuil, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers l’endroit où se déplace le sable ; l’interrupteur Pétales au-dessus de la rose les inverse pour montrer plutôt d’où vient le vent (les flèches pointent toujours vers la direction de transport). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude et la longitude sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton en forme de réticule à côté du titre de la cellule centre la carte sur la cellule (en ne zoomant que si la cellule est trop petite pour être visible).",
-  "en": "cff60dc4"
+  "text": "Cliquez sur n’importe quelle cellule terrestre pour ouvrir le panneau de cellule : la rose des vents, la rose des flux de sable au seuil actuel, les modes d’orientation des dunes en fonction du seuil, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers l’endroit où se déplace le sable ; l’interrupteur Pétales au-dessus de la rose les inverse pour montrer plutôt d’où vient le vent (les flèches pointent toujours vers la direction de transport). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude et la longitude sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton {icon_centre} à côté du titre de la cellule centre la carte sur la cellule (en ne zoomant que si la cellule est trop petite pour être visible).",
+  "en": "56ecf77d"
  },
  "earth.help.datasets.title": {
   "text": "Jeux de données de vent",
@@ -172,40 +172,40 @@
   "en": "1ededbc8"
  },
  "earth.help.region.body": {
-  "text": "Le bouton situé sous l’appareil photo (un cadre en pointillés) enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres, puis choisissez tous les seuils ou le seuil actuel. La taille est estimée au fur et à mesure et ne peut dépasser ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète sous Télécharger et citer.",
-  "en": "14add06e"
+  "text": "Le bouton de région {icon_region}, sous le bouton appareil photo {icon_camera}, enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres, puis choisissez tous les seuils ou le seuil actuel. La taille est estimée au fur et à mesure et ne peut dépasser ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète sous Télécharger et citer.",
+  "en": "c88add45"
  },
  "earth.help.images.title": {
   "text": "Exporter des images",
   "en": "7ede8ef5"
  },
  "earth.help.images.body": {
-  "text": "Exporter l’image de la carte (bouton appareil photo, en haut à droite) enregistre la vue actuelle au format PNG, avec une largeur de 1600 à 2400 pixels (1,5 fois sa largeur à l’écran), avec ou sans fond de carte, sur fond blanc ou transparent. Sous la carte figurent les barres de couleur, les légendes, la flèche du nord et la barre d’échelle, puis la vue, le jeu de données de vent et les sources des données. Chaque graphique du panneau de cellule dispose d’un menu Exporter qui produit un PNG (1600 pixels de large) ou un SVG en thème clair, avec la même mise en page.",
-  "en": "de092154"
+  "text": "Exporter l’image de la carte (bouton appareil photo {icon_camera}, en haut à droite) enregistre la vue actuelle au format PNG, avec une largeur de 1600 à 2400 pixels (1,5 fois sa largeur à l’écran), avec ou sans fond de carte, sur fond blanc ou transparent. Sous la carte figurent les barres de couleur, les légendes, la flèche du nord et la barre d’échelle, puis la vue, le jeu de données de vent et les sources des données. Chaque graphique du panneau de cellule dispose d’un menu Exporter qui produit un PNG (1600 pixels de large) ou un SVG en thème clair, avec la même mise en page.",
+  "en": "d8fe6f6f"
  },
  "earth.help.share.title": {
   "text": "Partager la vue",
   "en": "eee8fa99"
  },
  "earth.help.share.body": {
-  "text": "Le bouton de partage (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, jeu de données de vent, seuil, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient aussi en permanence un lien complet vers la vue actuelle.",
-  "en": "a481f212"
+  "text": "Le bouton de partage {icon_share} (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, jeu de données de vent, seuil, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient aussi en permanence un lien complet vers la vue actuelle.",
+  "en": "fcd5f3c5"
  },
  "earth.tour.help.title": {
   "text": "Bienvenue dans le Dune Atlas",
   "en": "62096a5c"
  },
  "earth.tour.help.body": {
-  "text": "Cette courte visite guidée présente les principales commandes. Le bouton Aide (?), mis en évidence ici dans le coin supérieur droit, ouvre un aide-mémoire et relance cette visite à tout moment.",
-  "en": "dc80d674"
+  "text": "Cette courte visite guidée présente les principales commandes. Le bouton Aide {icon_help}, mis en évidence ici dans le coin supérieur droit, ouvre un aide-mémoire et relance cette visite à tout moment.",
+  "en": "0835997f"
  },
  "earth.tour.concepts.title": {
   "text": "Concepts",
   "en": "7a137040"
  },
  "earth.tour.concepts.body": {
-  "text": "Le bouton Concepts (mortier) explique la signification des grandeurs représentées sur la carte, avec leurs références. Le ⓘ de chaque calque renvoie à l’entrée correspondante.",
-  "en": "a93f5ddc"
+  "text": "Le bouton Concepts {icon_concepts} explique la signification des grandeurs représentées sur la carte, avec leurs références. Le ⓘ de chaque calque renvoie à l’entrée correspondante.",
+  "en": "1266f675"
  },
  "earth.tour.map.title": {
   "text": "La carte",
@@ -244,8 +244,8 @@
   "en": "110fdce7"
  },
  "earth.tour.cell.body": {
-  "text": "Cliquer sur une cellule terrestre ouvre le panneau de cellule, présenté ici pour une cellule de dunes de la Namib Sand Sea : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de tous les paramètres. Le panneau possède en haut son propre curseur $u_{*,th}$ (encadré), lié au curseur principal. En bas, vous pouvez télécharger ces données dans des fichiers NetCDF ou CSV et accéder aux informations de citation. Le réticule à côté de son titre centre la carte sur la cellule.",
-  "en": "8a1d4323"
+  "text": "Cliquer sur une cellule terrestre ouvre le panneau de cellule, présenté ici pour une cellule de dunes de la Namib Sand Sea : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de tous les paramètres. Le panneau possède en haut son propre curseur $u_{*,th}$ (encadré), lié au curseur principal. En bas, vous pouvez télécharger ces données dans des fichiers NetCDF ou CSV et accéder aux informations de citation. Le bouton {icon_centre} à côté de son titre centre la carte sur la cellule.",
+  "en": "10265f2c"
  },
  "earth.tour.dataset.title": {
   "text": "Jeu de données de vent",
@@ -268,8 +268,8 @@
   "en": "e65791dd"
  },
  "earth.tour.planet.body": {
-  "text": "La Terre et Mars partagent cet atlas : le bouton planète, sous l’appareil photo, permet de passer de l’une à l’autre, et chaque atlas rouvre la dernière vue que vous y aviez.",
-  "en": "d3ce9da4"
+  "text": "La Terre et Mars partagent cet atlas : le bouton planète {icon_planet}, sous le bouton appareil photo {icon_camera}, permet de passer de l’une à l’autre, et chaque atlas rouvre la dernière vue que vous y aviez.",
+  "en": "5143d1c1"
  },
  "earth.group.dunes": {
   "text": "Champs de dunes",
@@ -796,8 +796,8 @@
   "en": "7a137040"
  },
  "mars.help.concepts.body": {
-  "text": "Le bouton Concepts (mortier, sous le bouton Aide) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.",
-  "en": "e5f5c516"
+  "text": "Le bouton Concepts {icon_concepts} (sous le bouton Aide {icon_help}) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.",
+  "en": "239635d1"
  },
  "mars.help.search.title": {
   "text": "Recherche",
@@ -812,8 +812,8 @@
   "en": "a63656ea"
  },
  "mars.help.cell.body": {
-  "text": "Cliquez sur une cellule pour ouvrir le panneau de cellule : la rose des vents, la rose des flux de sable au diamètre de grain actuel, les modes d’orientation des dunes en fonction du diamètre des grains, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers la direction où se déplace le sable ; le commutateur Pétales au-dessus de la rose permet de leur faire indiquer plutôt la direction d’où vient le vent (les flèches pointent toujours « vers »). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude planétocentrique et la longitude est sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton à réticule à côté du titre de la cellule centre la carte sur la cellule (en zoomant uniquement si la cellule était trop petite pour être visible).",
-  "en": "2ffc8c39"
+  "text": "Cliquez sur une cellule pour ouvrir le panneau de cellule : la rose des vents, la rose des flux de sable au diamètre de grain actuel, les modes d’orientation des dunes en fonction du diamètre des grains, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers la direction où se déplace le sable ; le commutateur Pétales au-dessus de la rose permet de leur faire indiquer plutôt la direction d’où vient le vent (les flèches pointent toujours « vers »). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude planétocentrique et la longitude est sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton {icon_centre} à côté du titre de la cellule centre la carte sur la cellule (en zoomant uniquement si la cellule était trop petite pour être visible).",
+  "en": "920c4690"
  },
  "mars.help.datasets.title": {
   "text": "Jeu de données de vent",
@@ -844,40 +844,40 @@
   "en": "1ededbc8"
  },
  "mars.help.region.body": {
-  "text": "Le bouton situé sous l’appareil photo (un cadre en pointillés) enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres et choisissez tous les diamètres de grain ou le diamètre actuel ; la taille est estimée au fur et à mesure et limitée à ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète dans Télécharger et citer.",
-  "en": "d991f22b"
+  "text": "Le bouton de région {icon_region}, sous le bouton appareil photo {icon_camera}, enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres et choisissez tous les diamètres de grain ou le diamètre actuel ; la taille est estimée au fur et à mesure et limitée à ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète dans Télécharger et citer.",
+  "en": "0169545a"
  },
  "mars.help.images.title": {
   "text": "Exporter des images",
   "en": "7ede8ef5"
  },
  "mars.help.images.body": {
-  "text": "Exporter l’image de la carte (bouton appareil photo, en haut à droite) enregistre la vue actuelle au format PNG, avec une largeur de 1600 à 2400 pixels (1,5 fois sa largeur à l’écran), avec ou sans fond de carte, sur fond blanc ou transparent. Sous la carte figurent les barres de couleur, les légendes, la flèche du nord et la barre d’échelle, puis la vue, le jeu de données de vent et les sources des données. Chaque graphique du panneau de cellule dispose d’un menu Exporter qui produit un PNG (1600 pixels de large) ou un SVG en thème clair, avec la même mise en page.",
-  "en": "de092154"
+  "text": "Exporter l’image de la carte (bouton appareil photo {icon_camera}, en haut à droite) enregistre la vue actuelle au format PNG, avec une largeur de 1600 à 2400 pixels (1,5 fois sa largeur à l’écran), avec ou sans fond de carte, sur fond blanc ou transparent. Sous la carte figurent les barres de couleur, les légendes, la flèche du nord et la barre d’échelle, puis la vue, le jeu de données de vent et les sources des données. Chaque graphique du panneau de cellule dispose d’un menu Exporter qui produit un PNG (1600 pixels de large) ou un SVG en thème clair, avec la même mise en page.",
+  "en": "d8fe6f6f"
  },
  "mars.help.share.title": {
   "text": "Partager la vue",
   "en": "eee8fa99"
  },
  "mars.help.share.body": {
-  "text": "Le bouton de partage (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, diamètre des grains, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient en outre toujours un lien complet vers la vue actuelle.",
-  "en": "9e8b4f15"
+  "text": "Le bouton de partage {icon_share} (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, diamètre des grains, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient en outre toujours un lien complet vers la vue actuelle.",
+  "en": "5d810b74"
  },
  "mars.tour.help.title": {
   "text": "Bienvenue dans le Mars Dune Atlas",
   "en": "d2ba1abd"
  },
  "mars.tour.help.body": {
-  "text": "Cette courte visite guidée présente les principales commandes. Le bouton Aide (?), mis en évidence ici dans le coin supérieur droit, ouvre un aide-mémoire et relance cette visite à tout moment.",
-  "en": "dc80d674"
+  "text": "Cette courte visite guidée présente les principales commandes. Le bouton Aide {icon_help}, mis en évidence ici dans le coin supérieur droit, ouvre un aide-mémoire et relance cette visite à tout moment.",
+  "en": "0835997f"
  },
  "mars.tour.concepts.title": {
   "text": "Concepts",
   "en": "7a137040"
  },
  "mars.tour.concepts.body": {
-  "text": "Le bouton Concepts (mortier) explique la signification des grandeurs représentées sur la carte, avec leurs références. Le ⓘ de chaque calque renvoie à l’entrée correspondante.",
-  "en": "a93f5ddc"
+  "text": "Le bouton Concepts {icon_concepts} explique la signification des grandeurs représentées sur la carte, avec leurs références. Le ⓘ de chaque calque renvoie à l’entrée correspondante.",
+  "en": "1266f675"
  },
  "mars.tour.map.title": {
   "text": "La carte",
@@ -916,8 +916,8 @@
   "en": "8f49db10"
  },
  "mars.tour.cell.body": {
-  "text": "Cliquer sur une cellule ouvre le panneau de la cellule, présenté ici pour le champ de dunes de Nili Patera (9° N, 67° E) : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de l’ensemble des paramètres. Le panneau possède son propre curseur de diamètre des grains en haut (encadré), lié au curseur principal. En bas, vous pouvez télécharger ces données sous forme de fichiers NetCDF ou CSV et accéder aux informations de citation. Le réticule à côté de son titre centre la carte sur la cellule.",
-  "en": "2bc693ff"
+  "text": "Cliquer sur une cellule ouvre le panneau de la cellule, présenté ici pour le champ de dunes de Nili Patera (9° N, 67° E) : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de l’ensemble des paramètres. Le panneau possède son propre curseur de diamètre des grains en haut (encadré), lié au curseur principal. En bas, vous pouvez télécharger ces données sous forme de fichiers NetCDF ou CSV et accéder aux informations de citation. Le bouton {icon_centre} à côté de son titre centre la carte sur la cellule.",
+  "en": "78b0f9a0"
  },
  "mars.tour.tools.title": {
   "text": "Partager et exporter",
@@ -932,8 +932,8 @@
   "en": "e65791dd"
  },
  "mars.tour.planet.body": {
-  "text": "La Terre et Mars partagent cet atlas : le bouton planète, sous l’appareil photo, permet de passer de l’une à l’autre, et chaque atlas rouvre la dernière vue que vous y aviez.",
-  "en": "d3ce9da4"
+  "text": "La Terre et Mars partagent cet atlas : le bouton planète {icon_planet}, sous le bouton appareil photo {icon_camera}, permet de passer de l’une à l’autre, et chaque atlas rouvre la dernière vue que vous y aviez.",
+  "en": "5143d1c1"
  },
  "mars.group.dunes": {
   "text": "Champs de dunes",
@@ -2890,6 +2890,10 @@
  "c.2905fdb9": {
   "text": "<strong>Carte des dunes</strong> :⟦0⟧⟦1⟧(⟦2⟧;⟦3⟧), complétée par les petits champs de dunes de Fenton (⟦#0⟧, Icarus ⟦#1⟧, ⟦#2⟧), fusionnés en ⟦#3⟧ polygones de champs de dunes (sphère Mars ⟦#4⟧) ; polygones⟦4⟧: domaine public (U.S. Geological Survey) ; champs de dunes de⟦5⟧:⟦6⟧.",
   "en": "2905fdb9"
+ },
+ "c.15ee00d5": {
+  "text": "Centrer la carte sur cette cellule",
+  "en": "15ee00d5"
  },
  "c.762593af": {
   "text": "Polygones⟦0⟧: domaine public (U.S. Geological Survey)",
