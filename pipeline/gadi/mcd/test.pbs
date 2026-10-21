@@ -1,19 +1,17 @@
 #!/bin/bash
-#PBS -P k10
 #PBS -q normal
 #PBS -N mcd_test
 #PBS -l ncpus=1
 #PBS -l mem=4GB
 #PBS -l walltime=01:00:00
-#PBS -l storage=gdata/k10+gdata/xp65+scratch/k10
-#PBS -o /scratch/k10/ag5517/dune-atlas/mars/mcd/logs/test.o
 #PBS -j oe
+# Submit with the site settings (pipeline/gadi/site.example.env):
+#   qsub -P <project> -l storage=<DUNE_ATLAS_STORAGE> -o <R>/logs/test.o -v R,MCD,PY pipeline/gadi/mcd/test.pbs
+#   R = work dir (code/, bin/, work/, out/, logs/), MCD = root of the MCD 6.1 distribution, PY = python
 # Build mcd_series against the verified -O0 MCD 6.1 object (MCD_silent.o) and compare its output at the month
 # centres and stored times of day with level 1 of the MCD files (mcd_tools.py check).
 set -u
-R=/scratch/k10/ag5517/dune-atlas/mars/mcd
-MCD=/g/data/k10/ag5517/mcd61/MCD_6.1
-PY=/g/data/k10/ag5517/apps/omega_venv/bin/python
+: "${R:?work dir}" "${MCD:?MCD_6.1 root}" "${PY:?python with numpy and netCDF4}"
 test -x $PY || exit 127
 command -v module >/dev/null 2>&1 || source /etc/profile.d/modules.sh
 module load gcc/12.2.0 netcdf/4.9.2

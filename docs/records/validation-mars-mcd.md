@@ -4,7 +4,7 @@ Third wind dataset of the Mars atlas next to FV3 beta 1 and MACDA v2.0 MY30 (EMA
 
 ## 1. Source
 
-* **MCD 6.1** full distribution on Gadi (`/g/data/k10/ag5517/mcd61/MCD_6.1`, installed and checked for earlier work: all ten vendor reference cases reproduce byte-identically). `call_mcd` 6.1.2 (`MCD.F90` version history), compiled with gfortran 12.2.0 at `-O0` (the object `MCD_silent.o`, i.e. without the per-call messages). Version 6.1 rather than the current 6.2: the PI's choice (21 October), because 6.1 was installed and verified; every text names 6.1.
+* **MCD 6.1** full distribution on Gadi (project storage; installed and checked for earlier work: all ten vendor reference cases reproduce byte-identically). `call_mcd` 6.1.2 (`MCD.F90` version history), compiled with gfortran 12.2.0 at `-O0` (the object `MCD_silent.o`, i.e. without the per-call messages). Version 6.1 rather than the current 6.2: the PI's choice (21 October), because 6.1 was installed and verified; every text names 6.1.
 * **Scenario 1**, "Climatology ave solar" (`data/clim_aveEUV`: `clim_MM_me.nc`, 12 periods of 30° Ls, each the mean diurnal cycle at 12 prime-meridian times 2, 4, …, 24 h, on 64 × 49 nodes (5.625° × 3.75°, poles included) and 53 hybrid levels). **Mean state**: `perturkey = 1` (no perturbations), so day-to-day variability is not in the series; the dataset's texts say that the fluxes are therefore lower bounds.
 * **Licence**: MCD copyright notice (COPYRIGHT.html): no warranty, free scientific use with correct citation, no commercial use without specific authorisation. The atlas states this as the licence of the MCD-derived fields and series, and the no-warranty notice is written into every download (`data_notice`).
 
