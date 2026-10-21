@@ -4,7 +4,7 @@
   "en": "9a73db9b"
  },
  "header.subtitle": {
-  "text": "Explorateur interactif de géomorphologie éolienne<br>Développé par le <a href=\"https://www.geomorphlab.org/\" target=\"_blank\" rel=\"noopener\">Monash Geomorphology Lab</a>",
+  "text": "Explorateur interactif de géomorphologie éolienne<br>Développé par <a href=\"https://www.geomorphlab.org/\" target=\"_blank\" rel=\"noopener\">Monash Geomorphology Lab</a>",
   "en": "a2487904"
  },
  "header.layers": {
@@ -72,7 +72,7 @@
   "en": "b76c079a"
  },
  "legend.atCurrent": {
-  "text": "actuellement",
+  "text": "à la valeur actuelle de",
   "en": "8e94009d"
  },
  "legend.axis": {
@@ -96,7 +96,7 @@
   "en": "d2deaa55"
  },
  "basemap.failed": {
-  "text": "Le fond de carte « {title} » n’a pas pu être chargé depuis son fournisseur. Il est peut-être bloqué sur votre réseau ou temporairement indisponible. Veuillez choisir un autre fond de carte.",
+  "text": "Le fond de carte « {title} » n’a pas pu être chargé depuis son fournisseur. Il peut être bloqué sur votre réseau ou temporairement indisponible. Veuillez choisir un autre fond de carte.",
   "en": "7a4fa08c"
  },
  "help.title": {
@@ -116,7 +116,7 @@
   "en": "1739c955"
  },
  "earth.help.threshold.body": {
-  "text": "Le sable se met en mouvement lorsque la vitesse de frottement du vent dépasse un seuil. Le curseur situé en haut du panneau des calques fixe ce seuil pour tous les calques cartographiques qui en dépendent ainsi que pour le panneau de cellule (valeur par défaut : 0,15 m/s). Un seuil plus bas fait compter des vents plus faibles comme vents transportant le sable.",
+  "text": "Le sable se met en mouvement lorsque la vitesse de frottement du vent dépasse un seuil. Le curseur situé en haut du panneau des calques fixe ce seuil pour tous les calques cartographiques qui en dépendent, ainsi que pour le panneau de cellule (valeur par défaut : 0,15 m/s). Un seuil plus bas fait compter des vents plus faibles comme vents transportant le sable.",
   "en": "b33241b0"
  },
  "earth.help.layers.title": {
@@ -124,7 +124,7 @@
   "en": "02065ff6"
  },
  "earth.help.layers.body": {
-  "text": "Cochez un calque pour l’afficher. Le bouton ⓘ donne sa définition, ses unités et sa source de données ; Affichage modifie ses couleurs, ses bornes de couleur et son échelle, ou représente les champs de direction par des flèches ou des lignes de courant, avec un curseur d’espacement allant de Plus fin (lignes plus denses) à Plus grossier. Calques actifs liste ce qui est affiché sur la carte, de haut en bas : faites glisser une ligne ou utilisez les flèches pour changer l’ordre de dessin, réglez l’opacité avec son curseur et retirez un calque avec ×. Dunes seulement (sous le sélecteur Jeu de données de vent) dessine tous les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) uniquement dans les cellules contenant des dunes selon le jeu de données, et, à son activation, règle le curseur d’opacité de la carte des dunes sur 50 % afin que ces cellules soient visibles par transparence ; l’aridité, la végétation et les fonds de carte restent inchangés, et le panneau de cellule fonctionne toujours pour n’importe quelle cellule. Ce réglage fait partie du lien. Noms, dans le groupe Champs de dunes, étiquette sur la carte les champs de dunes nommés (là où les noms se chevaucheraient, certains n’apparaissent qu’en zoomant) et masque, tant qu’il est activé, les noms de lieux du fond de carte autres que ceux des pays et des États ; cliquez sur un nom pour zoomer sur le champ et voir ses autres noms, ses pays et ses sources.",
+  "text": "Cochez un calque pour l’afficher. Le bouton ⓘ donne sa définition, ses unités et sa source de données ; Affichage modifie ses couleurs, les bornes de son échelle couleur et son échelle, ou bien représente les champs de direction par des flèches ou des lignes de courant, avec un curseur d’espacement allant de Plus fin (lignes plus denses) à Plus gros. Calques actifs liste ce qui est affiché sur la carte, de haut en bas : faites glisser une ligne ou utilisez les flèches pour changer l’ordre d’affichage, réglez l’opacité avec son curseur et retirez un calque avec ×. Dunes seules (en dessous du menu Jeu de données de vent) affiche tous les calques dérivés du jeu de données de vent (flux de sable, divergence du flux, flèches et lignes de courant) seulement dans les cellules du jeu de données qui contiennent des dunes et, à son activation, règle le curseur d’opacité de la carte des dunes sur 50 % afin que ces cellules soient visibles par transparence ; l’aridité, la végétation et les fonds de carte restent tels quels, et le panneau de cellule fonctionne toujours pour n’importe quelle cellule. Ce réglage fait partie du lien. Noms, dans le groupe Champs de dunes, ajoute sur la carte des étiquettes aux champs de dunes nommés (là où les noms se chevaucheraient, certains n’apparaissent qu’en zoomant) et, tant qu’il est actif, masque les noms de lieux du fond de carte autres que ceux des pays et des États ; cliquez sur un nom pour zoomer sur le champ et voir ses autres noms, ses pays et ses sources.",
   "en": "c04cff6c"
  },
  "earth.help.concepts.title": {
@@ -132,7 +132,7 @@
   "en": "7a137040"
  },
  "earth.help.concepts.body": {
-  "text": "Le bouton Concepts {icon_concepts} (sous le bouton Aide {icon_help}) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.",
+  "text": "Le bouton Concepts {icon_concepts} (sous le bouton Aide {icon_help}) explique les concepts clés, chacun référencé. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.",
   "en": "239635d1"
  },
  "earth.help.search.title": {
@@ -140,7 +140,7 @@
   "en": "c646a2c9"
  },
  "earth.help.search.body": {
-  "text": "Saisissez le nom d’un champ de dunes (p. ex. Namib Sand Sea ou Rub' al Khali), un pays, ou une latitude et une longitude dans la zone située en haut du panneau des calques. Les noms correspondent à l’une ou l’autre ligne d’une étiquette ainsi qu’aux autres noms sous lesquels un champ est connu, y compris ses parties nommées, sans tenir compte des accents ; la liste sous la zone affiche chaque correspondance avec ses pays, les meilleures correspondances en premier. Les coordonnées peuvent être données en degrés décimaux ou en degrés, minutes et secondes, avec un signe ou avec N, S, E ou W (p. ex. -24.5, 15.2 ou 24°30′S 15°12′E). La latitude vient en premier, sauf si les lettres indiquent le contraire. Pendant que vous saisissez des coordonnées, la ligne sous la zone affiche la position telle qu’elle a été interprétée (« Aller à … ») ; Entrée déplace la carte à cet endroit et ouvre le panneau de cellule lorsque la cellule contient des données.",
+  "text": "Saisissez le nom d’un champ de dunes (par exemple Namib Sand Sea ou Rub' al Khali), un pays, ou une latitude et une longitude dans la case située tout en haut du panneau des calques. Les noms correspondent soit à une ligne d’une étiquette soit à un des autres noms sous lesquels un champ est connu, y compris ses parties nommées, sans tenir compte des accents; la liste sous la case affiche chaque correspondance avec ses pays, les meilleures correspondances en premier. Les coordonnées peuvent être données en degrés décimaux ou en degrés-minutes-secondes, avec un signe ou avec N, S, E ou W (par exemple -24.5, 15.2 ou 24°30′S 15°12′E). La latitude vient en premier, sauf si les lettres indiquent le contraire. Pendant que vous saisissez des coordonnées, la ligne sous la case affiche la position telle qu’elle a été interprétée (« Aller à … ») ; Entrée déplace la carte à cet endroit et ouvre le panneau de cellule lorsque la cellule contient des données.",
   "en": "3674e79f"
  },
  "earth.help.cell.title": {
@@ -156,7 +156,7 @@
   "en": "87c1b770"
  },
  "earth.help.datasets.body": {
-  "text": "Le sélecteur Jeu de données de vent permet de basculer entre des jeux de données de vent (ERA5-Land, 0,1°, 1950–2024 ; ERA5, 0,25°, 1950–2024 ; JRA-3Q, 0,375°, 1980–2025 ; MERRA-2, 0,5° × 0,625°, 1980–2025). ERA5-Land, utilisé par Gunn (2026), est une réexécution du modèle de surface terrestre d'ECMWF forcée par les champs atmosphériques d'ERA5 interpolés sur sa grille de 0,1° (Muñoz-Sabater et al. 2021) ; Baas (2026) signale des vitesses du vent à 10 m d'ERA5-Land inférieures de 20 à 30 % à celles d'ERA5. Les données JRA-3Q sont réservées à un usage non commercial (CC BY-NC-SA 4.0), tout comme les histogrammes de vent et les champs de flux de sable JRA-3Q de l'atlas. Les calques de vent et de flux de sable ainsi que le panneau de cellule suivent la sélection ; le masque des champs de dunes et les calques d'aridité et de végétation sont les mêmes pour tous les jeux de données.",
+  "text": "Le sélecteur Jeu de données de vent permet de basculer entre des jeux de données de vent (ERA5-Land, 0,1°, 1950–2024 ; ERA5, 0,25°, 1950–2024 ; JRA-3Q, 0,375°, 1980–2025 ; MERRA-2, 0,5° × 0,625°, 1980–2025). ERA5-Land, utilisé par Gunn (2026), est une réexécution du modèle de surface terrestre d’ECMWF forcée par les champs atmosphériques d’ERA5 interpolés sur sa grille de 0,1° (Muñoz-Sabater et al. 2021) ; Baas (2026) indique des vitesses du vent à 10 m d’ERA5-Land inférieures de 20 à 30 % à celles d’ERA5. Les données JRA-3Q sont réservées à un usage non commercial (CC BY-NC-SA 4.0), tout comme les histogrammes de vent et les champs de flux de sable JRA-3Q de l’atlas. Les calques de vent et de flux de sable ainsi que le panneau de cellule suivent la sélection ; le masque des champs de dunes et les calques d’aridité et de végétation sont les mêmes pour tous les jeux de données.",
   "en": "5b0991d9"
  },
  "earth.help.downloads.title": {
@@ -172,7 +172,7 @@
   "en": "1ededbc8"
  },
  "earth.help.region.body": {
-  "text": "Le bouton de région {icon_region}, sous le bouton appareil photo {icon_camera}, enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres, puis choisissez tous les seuils ou le seuil actuel. La taille est estimée au fur et à mesure et ne peut dépasser ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète sous Télécharger et citer.",
+  "text": "Le bouton de région {icon_region}, sous le bouton appareil photo {icon_camera}, enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un fichier README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez-y un cadre (Échap, au clavier, pour annuler). Cochez les paramètres, puis choisissez tous les seuils ou le seuil actuel. La taille du fichier est estimée au fur et à mesure et ne peut dépasser ce que votre navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète sous Télécharger et citer.",
   "en": "c88add45"
  },
  "earth.help.images.title": {
@@ -220,7 +220,7 @@
   "en": "1739c955"
  },
  "earth.tour.threshold.body": {
-  "text": "Ce curseur fixe la vitesse de frottement au-delà de laquelle le vent transporte le sable. Tous les calques dépendant du seuil, ainsi que le panneau de cellule, se mettent à jour lorsque vous le déplacez.",
+  "text": "Ce curseur fixe la vitesse de frottement au-dessus de laquelle le vent transporte le sable. Tous les calques dépendant du seuil, ainsi que le panneau de cellule, se mettent à jour lorsque vous le déplacez.",
   "en": "9dbf9449"
  },
  "earth.tour.layers.title": {
@@ -228,7 +228,7 @@
   "en": "9454a308"
  },
  "earth.tour.layers.body": {
-  "text": "Cochez des calques pour les ajouter à la carte ; ⓘ explique un calque. Affichage, ouvert ici pour la direction de dérive résultante (RDD), modifie les couleurs et les bornes de l’échelle de couleurs d’un calque et, pour les champs de directions, trace une carte en couleurs, des flèches ou des lignes de courant avec la couleur de trait et l’espacement de votre choix. Dunes seulement, sous le sélecteur Jeu de données de vent, restreint les calques dérivés du vent aux cellules comportant des dunes.",
+  "text": "Cochez des calques pour les ajouter à la carte ; ⓘ explique un calque. Affichage, ouvert ici et montrant la direction de dérive résultante (RDD), modifie les couleurs et les bornes de l’échelle de couleurs d’un calque. Pour les champs de directions, Affichage trace une carte en couleur, des flèches ou des lignes de courant avec la couleur de trait et l’espacement de votre choix. Dunes seules, sous le sélecteur Jeu de données de vent, restreint les calques dérivés du vent aux cellules comportant des dunes.",
   "en": "cd35a714"
  },
  "earth.tour.active.title": {
@@ -236,7 +236,7 @@
   "en": "08b59f97"
  },
  "earth.tour.active.body": {
-  "text": "Les calques présents sur la carte, de haut en bas. Faites glisser une ligne ou utilisez les flèches pour choisir le calque dessiné au-dessus, le curseur pour régler l’opacité et × pour retirer un calque.",
+  "text": "Les calques présents sur la carte, présentés de haut en bas. Faites glisser une ligne ou utilisez les flèches pour choisir le calque à dessiner tout au-dessus, le curseur pour régler l’opacité et × pour retirer un calque.",
   "en": "933e731e"
  },
  "earth.tour.cell.title": {
@@ -244,7 +244,7 @@
   "en": "110fdce7"
  },
  "earth.tour.cell.body": {
-  "text": "Cliquer sur une cellule terrestre ouvre le panneau de cellule, présenté ici pour une cellule de dunes de la Namib Sand Sea : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de tous les paramètres. Le panneau possède en haut son propre curseur $u_{*,th}$ (encadré), lié au curseur principal. En bas, Télécharger et citer enregistre ces données au format NetCDF ou CSV, avec les citations. Le bouton {icon_centre} à côté de son titre centre la carte sur la cellule.",
+  "text": "Cliquer sur une cellule terrestre ouvre le panneau de cellule, présenté ici pour une cellule de dunes de la mer de sable du Namib : rose des vents, rose des flux de sable, modes d’orientation des dunes et tableau de tous les paramètres. Le panneau possède en haut son propre curseur $u_{*,th}$ (encadré), lié au curseur principal. En bas, Télécharger et citer enregistre ces données au format NetCDF ou CSV, avec les citations. Le bouton {icon_centre} à côté de son titre centre la carte sur la cellule.",
   "en": "a85da19f"
  },
  "earth.tour.dataset.title": {
@@ -340,7 +340,7 @@
   "en": "c196f3c8"
  },
  "earth.layer.qacb.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "earth.layer.qncb.title": {
@@ -348,7 +348,7 @@
   "en": "21faa716"
  },
  "earth.layer.qncb.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "earth.layer.qnlb.title": {
@@ -356,7 +356,7 @@
   "en": "3c67928e"
  },
  "earth.layer.qnlb.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "earth.layer.qalb.title": {
@@ -364,7 +364,7 @@
   "en": "072a2e50"
  },
  "earth.layer.qalb.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "earth.layer.qnle.title": {
@@ -372,7 +372,7 @@
   "en": "4444554d"
  },
  "earth.layer.qnle.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "earth.layer.qale.title": {
@@ -380,7 +380,7 @@
   "en": "ac5d8101"
  },
  "earth.layer.qale.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "earth.layer.qace.title": {
@@ -388,7 +388,7 @@
   "en": "58a4bc41"
  },
  "earth.layer.qace.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "earth.group.morphology": {
@@ -484,7 +484,7 @@
   "en": "53efd352"
  },
  "earth.layer.dpm.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "earth.layer.rdpm.title": {
@@ -492,7 +492,7 @@
   "en": "29cbdf6e"
  },
  "earth.layer.rdpm.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "earth.layer.rdpa.title": {
@@ -516,7 +516,7 @@
   "en": "913c2dd2"
  },
  "earth.layer.qsdiv.units": {
-  "text": "m/kyr",
+  "text": "m/ka",
   "en": "43183fd1"
  },
  "earth.group.climate": {
@@ -572,7 +572,7 @@
   "en": "ebaf7f16"
  },
  "concept.earth.saturated-sand-flux-and-the-transport-law.p1": {
-  "text": "Le flux de sable saturé est le débit auquel le vent déplacerait le sable sur un lit plat entièrement couvert de sable meuble et sec. C’est la capacité de transport du vent, et non nécessairement le transport qui a réellement lieu. Il est nul en dessous de la vitesse de frottement seuil et croît avec l’excès de contrainte du vent au-delà de ce seuil. L’atlas Terre utilise la loi de transport de Martin & Kok (2017), linéaire en fonction de l’excès de contrainte de cisaillement. La vitesse de frottement u* y est déduite de la série horaire du vent à 10 m par un profil logarithmique, avec une longueur de rugosité de 1 mm. Les flux sont des volumes de sable compacté (compacité 0,6, espace poral inclus) par mètre de largeur et par an (m²/yr). Le transport réel est plus faible partout où le sable est rare, humide, encroûté ou couvert de végétation.",
+  "text": "Le flux de sable saturé est le débit auquel le vent déplacerait le sable sur un lit plat entièrement couvert de sable mobile et sec. C’est la capacité de transport du vent, et pas nécessairement le transport qui a réellement lieu. Il est nul en dessous de la vitesse de frottement seuil et croît avec l’excès de contrainte du vent au-delà de ce seuil. L’atlas Terre utilise la loi de transport de Martin & Kok (2017), linéaire en fonction de l’excès de contrainte de cisaillement. La vitesse de frottement u* y est déduite de la série horaire du vent à 10 m par un profil logarithmique, avec une longueur de rugosité de 1 mm. Les flux sont des volumes de sable compacté (compacité 0,6, espace poral inclus) par mètre de largeur et par an (m²/an). Le transport réel est plus faible partout où le sable est rare, humide, encroûté ou couvert de végétation.",
   "en": "8adf461d"
  },
  "fry.heading": {
@@ -584,7 +584,7 @@
   "en": "4e638a07"
  },
  "fry.atlas": {
-  "text": "DP de l’atlas (m²/yr)",
+  "text": "DP de l’atlas (m²/an)",
   "en": "497d98fe"
  },
  "fry.fryberger": {
@@ -596,7 +596,7 @@
   "en": "92da440d"
  },
  "fry.ratioUnits": {
-  "text": "(m²/yr par VU)",
+  "text": "(m²/an par VU)",
   "en": "dcb6fcfd"
  },
  "fry.xAxis": {
@@ -644,7 +644,7 @@
   "en": "8edeaba5"
  },
  "concept.drift-potential-dp.p1": {
-  "text": "Le DP est le flux de sable saturé moyenné sur chaque pas de temps de la série, quelle que soit sa direction : il exprime la quantité de sable que le vent pourrait déplacer en un an sur un lit sableux plat, en m²/yr. Un DP plus élevé traduit un environnement de transport sableux plus venteux et plus énergétique. Le nom reprend celui de Fryberger & Dean (1979), dont le potentiel de dérive mesure lui aussi une capacité de transport, mais il s’agit de deux grandeurs différentes. Le DP de Fryberger s’exprime en unités vectorielles et se calcule à partir des vitesses du vent à 10 m en nœuds, selon V²(V − Vt), avec un seuil de 12 nœuds. Le DP de l’atlas est un flux physique calculé à partir de la vitesse de frottement. Comme les deux formules croissent différemment avec la vitesse du vent, il n’existe pas de facteur de conversion fixe entre elles ; les classes de faible, moyenne et forte énergie de Fryberger (inférieur à 200, de 200 à 400 et supérieur à 400 unités vectorielles) sont définies en unités vectorielles.",
+  "text": "Le DP est le flux de sable saturé moyenné sur chaque pas de temps de la série, quelle que soit sa direction : il exprime la quantité de sable que le vent pourrait déplacer en un an sur un lit sableux plat, en m²/an. Un DP plus élevé traduit un environnement de transport sableux plus venteux et plus énergétique. Le nom reprend celui de Fryberger & Dean (1979), dont le potentiel de dérive mesure lui aussi une capacité de transport, mais il s’agit de deux grandeurs différentes. Le DP de Fryberger s’exprime en unités vectorielles et se calcule à partir des vitesses du vent à 10 m en nœuds, selon V²(V − Vt), avec un seuil de 12 nœuds. Le DP de l’atlas est un flux physique calculé à partir de la vitesse de frottement. Comme les deux formules croissent différemment avec la vitesse du vent, il n’existe pas de facteur de conversion fixe entre elles ; les classes de faible, moyenne et forte énergie de Fryberger (inférieur à 200, de 200 à 400 et supérieur à 400 unités vectorielles) sont définies en unités vectorielles.",
   "en": "0fed6ecf"
  },
  "concept.resultant-drift-potential-rdp.title": {
@@ -652,7 +652,7 @@
   "en": "a7c0ad69"
  },
  "concept.resultant-drift-potential-rdp.p1": {
-  "text": "Le RDP est le flux de sable net : les flux de chaque pas de temps sont additionnés comme des vecteurs, de sorte que les transports de sens opposés s’annulent, puis moyennés sur la série (m²/yr). Il n’est égal au DP que si tout le transport s’effectue dans la même direction. Une cellule à DP élevé mais à RDP faible connaît des vents forts qui déplacent le sable dans un sens puis dans l’autre, avec un faible déplacement net ; une cellule dont le RDP est proche du DP déplace le sable de façon régulière dans une seule direction. Le RDP est la norme du vecteur dont la direction est la direction de dérive résultante (RDD), et la divergence de ce vecteur fournit le calque de divergence du flux.",
+  "text": "Le RDP est le flux de sable net : les flux de chaque pas de temps sont additionnés comme des vecteurs, de sorte que les transports de sens opposés s’annulent, puis moyennés sur la série (m²/an). Il n’est égal au DP que si tout le transport s’effectue dans la même direction. Une cellule à DP élevé mais à RDP faible connaît des vents forts qui déplacent le sable dans un sens puis dans l’autre, avec un faible déplacement net ; une cellule dont le RDP est proche du DP déplace le sable de façon régulière dans une seule direction. Le RDP est la norme du vecteur dont la direction est la direction de dérive résultante (RDD), et la divergence de ce vecteur fournit le calque de divergence du flux.",
   "en": "0b7ff426"
  },
  "concept.resultant-drift-direction-rdd.title": {
@@ -684,7 +684,7 @@
   "en": "126097bd"
  },
  "concept.earth.threshold-friction-velocity.p1": {
-  "text": "Le sable se met en mouvement lorsque la vitesse de frottement u* du vent, mesure de la contrainte de cisaillement que le vent exerce sur la surface, dépasse un seuil u*,th. La valeur par défaut de 0,15 m/s est celle utilisée pour l’analyse globale de Gunn (2026) : une valeur unique pour le globe entier, non calibrée pour un site particulier. Les valeurs comprises entre 0,1 et 0,4 m/s sont typiques, et pour un sable sec et meuble, le seuil dépend principalement de la taille et de la masse volumique des grains. Avec le profil de vent de l’atlas, 0,15 m/s correspond à un vent de 3,4 m/s à 10 m (6,6 nœuds), et les 12 nœuds de Fryberger correspondent à environ 0,27 m/s. Relever le seuil diminue le DP et peut modifier les directions.",
+  "text": "Le sable se met en mouvement lorsque la vitesse de frottement u* du vent, mesure de la contrainte de cisaillement que le vent exerce sur la surface, dépasse un seuil u*,th. La valeur par défaut de 0,15 m/s est celle utilisée pour l’analyse globale de Gunn (2026) : une valeur unique pour le globe entier, non calibrée pour un site particulier. Les valeurs comprises entre 0,1 et 0,4 m/s sont typiques, et pour un sable sec et mobile, le seuil dépend principalement de la taille et de la masse volumique des grains. Avec le profil de vent de l’atlas, 0,15 m/s correspond à un vent de 3,4 m/s à 10 m (6,6 nœuds), et les 12 nœuds de Fryberger correspondent à environ 0,27 m/s. Relever le seuil diminue le DP et peut modifier les directions.",
   "en": "2da748e7"
  },
  "concept.two-ways-dunes-orient-bed-instability-and-elongation.title": {
@@ -692,7 +692,7 @@
   "en": "6a9a1499"
  },
  "concept.two-ways-dunes-orient-bed-instability-and-elongation.p1": {
-  "text": "Les dunes peuvent croître de deux manières, qui donnent des orientations différentes sous un même régime de vent. Là où du sable meuble recouvre le lit, les dunes croissent en hauteur à partir du lit lui-même (l’instabilité du lit) : les crêtes s’alignent de sorte que le transport brut de sable qui les traverse soit le plus grand possible (Rubin & Hunter 1987), et les dunes migrent. Là où le sable est rare sur un lit non érodable, les dunes peuvent au contraire croître en longueur à partir d’une source de sable (le mode d’allongement) : elles s’étendent dans la direction du flux net de sable sur la dune, là où le flux net à travers la crête est nul. Les dunes en allongement nécessitent des vents provenant de plus d’une direction, et sous des vents approximativement bidirectionnels, les deux orientations diffèrent souvent de plus de 90°. Les orientations de crête cartographiées peuvent être comparées aux deux prédictions.",
+  "text": "Les dunes peuvent croître de deux manières, qui donnent des orientations différentes sous un même régime de vent. Là où du sable mobile recouvre le lit, les dunes croissent en hauteur à partir du lit lui-même (l’instabilité du lit) : les crêtes s’alignent de sorte que le transport brut de sable qui les traverse soit le plus grand possible (Rubin & Hunter 1987), et les dunes migrent. Là où le sable est rare sur un lit non érodable, les dunes peuvent au contraire croître en longueur à partir d’une source de sable (le mode d’allongement) : elles s’étendent dans la direction du flux net de sable sur la dune, là où le flux net à travers la crête est nul. Les dunes en allongement nécessitent des vents provenant de plus d’une direction, et sous des vents approximativement bidirectionnels, les deux orientations diffèrent souvent de plus de 90°. Les orientations de crête cartographiées peuvent être comparées aux deux prédictions.",
   "en": "771128be"
  },
  "concept.migration-direction-αt.title": {
@@ -740,7 +740,7 @@
   "en": "9fa37c5e"
  },
  "concept.along-crest-versus-across-crest-transport-q-h.p1": {
-  "text": "Q̂∥/⊥,H est le flux net de sable le long des crêtes correspondant à l'orientation d'instabilité du lit, divisé par le flux net à travers celles-ci. Le transport à travers la crête fait migrer les dunes et tend à rendre les crêtes sinueuses ; le transport le long de la crête tend à les maintenir rectilignes (Rubin 2012). Des valeurs plus élevées suggèrent donc des dunes à crête longue plus rectilignes sur des lits couverts de sable. Pour les dunes migrant sur des lits pauvres en sable, le rapport mesure l'écart entre la direction de migration et la direction du flux de sable sur la dune, un écart qui rend asymétriques des dunes telles que les barkhanes. Dans des exemples de dunes à crête longue sur des lits couverts de sable, il vaut environ 0,03 pour les dunes transverses, 0,4 pour les dunes obliques et 22 pour les dunes longitudinales.",
+  "text": "Q̂∥/⊥,H est le flux net de sable le long des crêtes correspondant à l’orientation d’instabilité du lit, divisé par le flux net à travers celles-ci. Le transport à travers la crête fait migrer les dunes et tend à rendre les crêtes sinueuses ; le transport le long de la crête tend à les maintenir rectilignes (Rubin 2012). Des valeurs plus élevées suggèrent donc des dunes à crête longue plus rectilignes sur des lits couverts de sable. Pour les dunes migrant sur des lits pauvres en sable, le rapport mesure l’écart entre la direction de migration et la direction du flux de sable sur la dune, un écart qui rend asymétriques des dunes telles que les barkhanes. Dans des exemples de dunes à crête longue sur des lits couverts de sable, il vaut environ 0,03 pour les dunes transverses, 0,4 pour les dunes obliques et 22 pour les dunes longitudinales.",
   "en": "6688076e"
  },
  "concept.growth-in-height-versus-migration-q-h.title": {
@@ -764,7 +764,7 @@
   "en": "bc8b099c"
  },
  "concept.flux-divergence.p1": {
-  "text": "La divergence du flux indique si davantage de sable quitte un lieu qu'il n'en arrive. Il s'agit de la divergence, sur la sphère, du vecteur flux saturé net (de norme RDP et de direction RDD), exprimée en mètres de niveau du lit par millier d'années ; par conservation de la masse de sable, elle donne la vitesse à laquelle le lit s'abaisserait ou s'exhausserait. Les valeurs négatives (convergence) correspondent à un dépôt ; les valeurs positives (divergence) à une érosion. Gunn (2026) a constaté que les dunes sont plus fréquentes là où le flux converge. Ces valeurs supposent un flux saturé partout, c'est-à-dire un apport illimité de sable meuble ; sur des surfaces rocheuses, graveleuses, encroûtées ou végétalisées, les valeurs positives indiquent une érosion potentielle.",
+  "text": "La divergence du flux indique si davantage de sable quitte un lieu qu’il n’en arrive. Il s’agit de la divergence, sur la sphère, du vecteur flux saturé net (de norme RDP et de direction RDD), exprimée en mètres de niveau du lit par millier d’années ; par conservation de la masse de sable, elle donne la vitesse à laquelle le lit s’abaisserait ou s’exhausserait. Les valeurs négatives (convergence) correspondent à un dépôt ; les valeurs positives (divergence) à une érosion. Gunn (2026) a constaté que les dunes sont plus fréquentes là où le flux converge. Ces valeurs supposent un flux saturé partout, c’est-à-dire un apport illimité de sable mobile ; sur des surfaces rocheuses, graveleuses, encroûtées ou végétalisées, les valeurs positives indiquent une érosion potentielle.",
   "en": "f861a9a3"
  },
  "concept.earth.the-two-era5-wind-datasets.title": {
@@ -780,7 +780,7 @@
   "en": "37e94b33"
  },
  "mars.help.threshold.body": {
-  "text": "Le sable se met en mouvement lorsque la vitesse de frottement du vent dépasse un seuil qui dépend de la taille des grains et de l’air martien raréfié. Le curseur en haut du panneau des calques fixe le diamètre médian des grains d (50–1000 µm, 200 µm par défaut) pour tous les calques cartographiques dépendant de la taille des grains et pour le panneau de cellule. Pour chaque pas de temps du jeu de données de vent, le seuil $u_{*,th}$ est calculé à partir de d ainsi que de la masse volumique et de la température de l’air à ce pas de temps (Pähtz & Durán 2023).",
+  "text": "Le sable se met en mouvement lorsque la vitesse de frottement du vent dépasse un seuil qui dépend de la taille des grains et de l’air raréfié martien. Le curseur en haut du panneau des calques fixe le diamètre médian des grains d (50–1000 µm, 200 µm par défaut) pour tous les calques cartographiques qui dépendent de la taille des grains et pour le panneau de cellule. Pour chaque pas de temps du jeu de données de vent, le seuil $u_{*,th}$ est calculé à partir de d ainsi que de la masse volumique et de la température de l’air à ce pas de temps (Pähtz & Durán 2023).",
   "en": "29a46c37"
  },
  "mars.help.layers.title": {
@@ -788,7 +788,7 @@
   "en": "02065ff6"
  },
  "mars.help.layers.body": {
-  "text": "Cochez un calque pour l’afficher. Le bouton ⓘ en donne la définition, les unités et la source des données ; Affichage modifie ses couleurs, les bornes de couleur et l’échelle, ou représente les champs de direction par des flèches ou des lignes de courant, avec un curseur d’espacement allant de Plus fin (lignes plus denses) à Plus grossier. Calques actifs liste ce qui figure sur la carte, de haut en bas : faites glisser une ligne ou utilisez les flèches pour modifier l’ordre d’affichage, réglez l’opacité avec son curseur et retirez un calque avec ×. Dunes seulement (sous le sélecteur Jeu de données de vent) n’affiche tous les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) que dans les cellules contenant des dunes du jeu de données, et, à son activation, règle le curseur d’opacité de la carte des dunes sur 50 % afin que ces cellules soient visibles par transparence ; l’altitude, la masse volumique de l’air et les fonds de carte restent inchangés, et le panneau de cellule fonctionne toujours pour n’importe quelle cellule. Ce réglage fait partie du lien. Noms, dans le groupe Champs de dunes, affiche sur la carte les noms des champs de dunes et des entités nommées (là où les noms se chevaucheraient, certains n’apparaissent qu’en zoomant) ; cliquez sur un nom pour zoomer sur l’entité et voir son type, ses autres noms et ses sources.",
+  "text": "Cochez un calque pour l’afficher. Le bouton ⓘ en donne la définition, les unités et la source des données ; Affichage modifie ses couleurs, les bornes de son échelle couleur et son échelle, ou bien représente les champs de direction par des flèches ou des lignes de courant, avec un curseur d’espacement allant de Plus fin (lignes plus denses) à Plus gros. Calques actifs liste ce qui figure sur la carte, de haut en bas : faites glisser une ligne ou utilisez les flèches pour modifier l’ordre d’affichage, réglez l’opacité avec son curseur et retirez un calque avec ×. Dunes seules (en dessous du menu Jeu de données de vent) affiche tous les calques dérivés du jeu de données de vent (flux de sable, divergence du flux, flèches et lignes de courant) seulement dans les cellules du jeu de données qui contiennent des dunes et, à son activation, règle le curseur d’opacité de la carte des dunes sur 50 % afin que ces cellules soient visibles par transparence ; l’altitude, la masse volumique de l’air et les fonds de carte restent tels quels, et le panneau de cellule fonctionne toujours pour n’importe quelle cellule. Ce réglage fait partie du lien. Noms, dans le groupe Champs de dunes, affiche sur la carte les noms des champs de dunes et des entités nommées (là où les noms se chevaucheraient, certains n’apparaissent qu’en zoomant) ; cliquez sur un nom pour zoomer sur l’entité et voir son type, ses autres noms et ses sources.",
   "en": "5ed1c2b3"
  },
  "mars.help.concepts.title": {
@@ -796,7 +796,7 @@
   "en": "7a137040"
  },
  "mars.help.concepts.body": {
-  "text": "Le bouton Concepts {icon_concepts} (sous le bouton Aide {icon_help}) explique les grandeurs de l’atlas, chacune avec ses références. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.",
+  "text": "Le bouton Concepts {icon_concepts} (sous le bouton Aide {icon_help}) explique les concepts clés, chacun référencé. Le lien Concept dans le ⓘ d’un calque ouvre l’entrée correspondante.",
   "en": "239635d1"
  },
  "mars.help.search.title": {
@@ -804,7 +804,7 @@
   "en": "c646a2c9"
  },
  "mars.help.search.body": {
-  "text": "Saisissez le nom d'une entité (p. ex. Gale crater ou Olympia Undae) ou une latitude et une longitude dans le champ en haut du panneau des calques. Les noms sont les noms d'entités approuvés par l'IAU issus du Gazetteer of Planetary Nomenclature, avec quelques alias informels (p. ex. Bagnold Dunes) ; la liste sous le champ présente chaque correspondance avec son type d'entité, les meilleures correspondances en premier. Les coordonnées peuvent être exprimées en degrés décimaux ou en degrés, minutes et secondes, signées ou accompagnées de N, S, E ou W (p. ex. 4.5, 137.4 ou 4°30′N 137°24′E). La latitude vient en premier, sauf si les lettres indiquent le contraire. Les longitudes sont planétocentriques et positives vers l'est, de −180° à 180° ; une longitude saisie entre 0 et 360° E (p. ex. 354.8) est convertie (en −5.2). Pendant la saisie des coordonnées, la ligne sous le champ indique la position telle qu'elle a été interprétée (« Aller à … ») ; Entrée déplace la carte à cet endroit et ouvre le panneau de cellule lorsque la cellule contient des données.",
+  "text": "Saisissez le nom d’une entité (par exemple Gale crater ou Olympia Undae) ou une latitude et une longitude dans le champ en haut du panneau des calques. Les noms d’entités sont ceux approuvés par l’IAU issus du Gazetteer of Planetary Nomenclature, avec quelques alias informels (par exemple Bagnold Dunes) ; la liste sous le champ présente chaque correspondance avec son type d’entité, les meilleures correspondances en premier. Les coordonnées peuvent être exprimées en degrés décimaux ou en degrés-minutes-secondes, signées ou accompagnées de N, S, E ou W (par exemple 4.5, 137.4 ou 4°30′N 137°24′E). La latitude vient en premier, sauf si les lettres indiquent le contraire. Les longitudes sont planétocentriques et positives vers l’est, de −180° à 180° ; une longitude saisie entre 0 et 360° E (par exemple 354.8) est convertie (en −5.2). Pendant la saisie des coordonnées, la ligne sous le champ indique la position telle qu’elle a été interprétée (« Aller à … ») ; Entrée déplace la carte à cet endroit et ouvre le panneau de cellule lorsque la cellule contient des données.",
   "en": "5d971090"
  },
  "mars.help.cell.title": {
@@ -812,7 +812,7 @@
   "en": "a63656ea"
  },
  "mars.help.cell.body": {
-  "text": "Cliquez sur une cellule pour ouvrir le panneau de cellule : la rose des vents, la rose des flux de sable au diamètre de grain actuel, les modes d’orientation des dunes en fonction du diamètre des grains, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers la direction où se déplace le sable ; le choix « Pétales : vers / depuis » au-dessus de la rose permet de leur faire indiquer plutôt la direction d’où vient le vent (les flèches pointent toujours « vers »). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude planétocentrique et la longitude est sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton {icon_centre} à côté du titre de la cellule centre la carte sur la cellule (en zoomant uniquement si la cellule était trop petite pour être visible).",
+  "text": "Cliquez sur une cellule pour ouvrir son panneau de cellule : la rose des vents, la rose des flux de sable au diamètre de grain actuel, les modes d’orientation des dunes en fonction du diamètre des grains, la divergence du flux et un tableau de tous les paramètres. Les pétales de la rose des flux de sable pointent vers la direction où se déplace le sable ; le choix « Pétales : vers / depuis » au-dessus de la rose permet de leur faire indiquer plutôt la direction d’où vient le vent (les flèches pointent toujours « vers »). Les titres de section se replient et se déplient. Fermez le panneau avec × ou Échap. La latitude planétocentrique et la longitude sous le curseur sont affichées à côté de la barre d’échelle, en bas à gauche (sur écran tactile : le dernier point touché). Le bouton {icon_centre} à côté du titre de la cellule centre la carte sur la cellule (en zoomant uniquement si la cellule était trop petite pour être visible).",
   "en": "d9dc0b68"
  },
  "mars.help.datasets.title": {
@@ -828,7 +828,7 @@
   "en": "f3e85667"
  },
  "mars.help.basemaps.body": {
-  "text": "Le fond de carte initial est un relief ombré du modèle d’élévation fusionné MOLA–HRSC (Fergason, Hare & Laura 2018), publié sous licence CC BY-SA 3.0 IGO (dérivé de HRSC, CC BY-SA 3.0 IGO, et de MOLA, CC0). Dans Fond de carte, vous pouvez également choisir les images de Mars d’OpenPlanetaryMap et d’Esri : la mosaïque globale CTX (environ 5 m par pixel ; The Murray Lab), HiRISE (jusqu’à environ 25 cm par pixel), la mosaïque en couleur Viking MDIM 2.1 et le relief ombré en couleur MOLA–HRSC. HiRISE ne couvre que la petite partie de la surface qu’il a imagée ; ailleurs, la carte est sombre. Les crédits figurent dans l’attribution de la carte.",
+  "text": "Le fond de carte initial est un relief ombré du modèle d’élévation fusionné MOLA–HRSC (Fergason, Hare & Laura 2018), publié sous licence CC BY-SA 3.0 IGO (dérivé de HRSC, CC BY-SA 3.0 IGO, et de MOLA, CC0). Dans Fond de carte, vous pouvez choisir les images de Mars d’OpenPlanetaryMap et d’Esri : la mosaïque globale CTX (environ 5 m par pixel ; The Murray Lab), HiRISE (jusqu’à environ 25 cm par pixel), la mosaïque en couleur Viking MDIM 2.1 et le relief ombré en couleur MOLA–HRSC. HiRISE ne couvre que les petites parties de la surface qu’il a imagées ; ailleurs, la carte est sombre. Les crédits figurent dans l’attribution de la carte.",
   "en": "df5ce866"
  },
  "mars.help.downloads.title": {
@@ -844,7 +844,7 @@
   "en": "1ededbc8"
  },
  "mars.help.region.body": {
-  "text": "Le bouton de région {icon_region}, sous le bouton appareil photo {icon_camera}, enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap pour annuler). Cochez les paramètres et choisissez tous les diamètres de grain ou le diamètre actuel ; la taille est estimée au fur et à mesure et limitée à ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète dans Télécharger et citer.",
+  "text": "Le bouton de région {icon_region}, sous le bouton appareil photo {icon_camera}, enregistre toutes les cellules du jeu de données de vent sélectionné comprises dans un cadre en latitude-longitude, sous la forme d’un unique fichier NetCDF accompagné d’un README. Saisissez les limites, ou appuyez sur Dessiner sur la carte et tracez un cadre sur la carte (Échap, au clavier, pour annuler). Cochez les paramètres et choisissez tous les diamètres de grain ou le diamètre actuel ; la taille est estimée au fur et à mesure et limitée à ce qu’un navigateur peut contenir. Pour la grille entière, voir Obtenir la grille complète dans Télécharger et citer.",
   "en": "0169545a"
  },
  "mars.help.images.title": {
@@ -860,7 +860,7 @@
   "en": "eee8fa99"
  },
  "mars.help.share.body": {
-  "text": "Le bouton de partage {icon_share} (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, diamètre des grains, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient en outre toujours un lien complet vers la vue actuelle.",
+  "text": "Le bouton de partage {icon_share} (en haut à droite) copie un lien court qui restaure cette vue : position, zoom, globe ou carte plane, diamètre des grains, fond de carte, calques actifs avec leurs paramètres d’affichage, et cellule sélectionnée. La barre d’adresse contient toujours un lien complet vers la vue actuelle.",
   "en": "5d810b74"
  },
  "mars.tour.help.title": {
@@ -892,7 +892,7 @@
   "en": "37e94b33"
  },
  "mars.tour.threshold.body": {
-  "text": "Ce curseur règle le diamètre des grains. La vitesse de frottement seuil est calculée pour chaque pas de temps à partir de d ainsi que de la masse volumique et de la température de l’air à ce pas de temps ; tous les calques dépendant de la taille des grains et le panneau de la cellule se mettent à jour lorsque vous le déplacez.",
+  "text": "Ce curseur règle le diamètre des grains. La vitesse de frottement seuil est calculée pour chaque pas de temps à partir de d, de la masse volumique et de la température de l’air à ce pas de temps ; tous les calques dépendant de la taille des grains, et le panneau de la cellule se met à jour lorsque vous le déplacez.",
   "en": "5d70237e"
  },
  "mars.tour.layers.title": {
@@ -900,7 +900,7 @@
   "en": "9454a308"
  },
  "mars.tour.layers.body": {
-  "text": "Cochez des calques pour les ajouter à la carte ; ⓘ explique un calque. Affichage, ouvert ici pour la direction de dérive résultante (RDD), modifie les couleurs et les bornes de l’échelle de couleurs d’un calque et, pour les champs de directions, trace une carte en couleurs, des flèches ou des lignes de courant avec la couleur de trait et l’espacement de votre choix. Dunes seulement, sous le sélecteur Jeu de données de vent, restreint les calques dérivés du vent aux cellules comportant des dunes.",
+  "text": "Cochez des calques pour les ajouter à la carte ; ⓘ explique un calque. Affichage, ouvert ici et montrant la direction de dérive résultante (RDD), modifie les couleurs et les bornes de l’échelle de couleurs d’un calque. Pour les champs de directions, Affichage trace une carte en couleur, des flèches ou des lignes de courant avec la couleur de trait et l’espacement de votre choix. Dunes seules, sous le sélecteur Jeu de données de vent, restreint les calques dérivés du vent aux cellules comportant des dunes.",
   "en": "cd35a714"
  },
  "mars.tour.active.title": {
@@ -908,7 +908,7 @@
   "en": "08b59f97"
  },
  "mars.tour.active.body": {
-  "text": "Les calques présents sur la carte, de haut en bas. Faites glisser une ligne ou utilisez les flèches pour choisir le calque dessiné au-dessus, le curseur pour régler l’opacité et × pour retirer un calque.",
+  "text": "Les calques présents sur la carte, présentés de haut en bas. Faites glisser une ligne ou utilisez les flèches pour choisir le calque à dessiner tout au-dessus, le curseur pour régler l’opacité et × pour retirer un calque.",
   "en": "933e731e"
  },
  "mars.tour.cell.title": {
@@ -1004,7 +1004,7 @@
   "en": "c196f3c8"
  },
  "mars.layer.qacb.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "mars.layer.qncb.title": {
@@ -1012,7 +1012,7 @@
   "en": "21faa716"
  },
  "mars.layer.qncb.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "mars.layer.qnlb.title": {
@@ -1020,7 +1020,7 @@
   "en": "3c67928e"
  },
  "mars.layer.qnlb.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "mars.layer.qalb.title": {
@@ -1028,7 +1028,7 @@
   "en": "072a2e50"
  },
  "mars.layer.qalb.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "mars.layer.qnle.title": {
@@ -1036,7 +1036,7 @@
   "en": "4444554d"
  },
  "mars.layer.qnle.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "mars.layer.qale.title": {
@@ -1044,7 +1044,7 @@
   "en": "ac5d8101"
  },
  "mars.layer.qale.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "mars.layer.qace.title": {
@@ -1052,7 +1052,7 @@
   "en": "58a4bc41"
  },
  "mars.layer.qace.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "mars.group.morphology": {
@@ -1148,7 +1148,7 @@
   "en": "53efd352"
  },
  "mars.layer.dpm.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "mars.layer.rdpm.title": {
@@ -1156,7 +1156,7 @@
   "en": "29cbdf6e"
  },
  "mars.layer.rdpm.units": {
-  "text": "m²/yr",
+  "text": "m²/an",
   "en": "c9e3f234"
  },
  "mars.layer.rdpa.title": {
@@ -1180,7 +1180,7 @@
   "en": "913c2dd2"
  },
  "mars.layer.qsdiv.units": {
-  "text": "m/kyr",
+  "text": "m/ka",
   "en": "43183fd1"
  },
  "mars.group.environment": {
@@ -1240,11 +1240,11 @@
   "en": "ebaf7f16"
  },
  "concept.mars.saturated-sand-flux-and-the-transport-law.p1": {
-  "text": "Le flux de sable saturé est le débit auquel le vent déplacerait le sable sur un lit plat entièrement recouvert de sable meuble et sec : c’est la capacité de transport du vent, et pas nécessairement le transport qui a effectivement lieu. Sur Mars, l’atlas utilise la loi de transport de Pähtz & Durán (2023), établie à partir de simulations numériques pour des conditions planétaires. Pour chaque pas de temps, la vitesse de frottement u* est obtenue à partir du vent au niveau le plus bas du modèle climatique au moyen d’un profil de paroi lisse. Le seuil est obtenu à partir du diamètre des grains ainsi que de la masse volumique et de la température de l’air à ce pas de temps. Les flux sont exprimés en volumes de sable compacté (compacité 0,6, espace poreux inclus) par mètre de largeur et par année terrestre (m²/yr), comme sur Terre. Le transport réel est plus faible partout où le sable est rare ou induré.",
+  "text": "Le flux de sable saturé est le débit auquel le vent déplacerait le sable sur un lit plat entièrement recouvert de sable mobile et sec : c’est la capacité de transport du vent, et pas nécessairement le transport qui a effectivement lieu. Sur Mars, l’atlas utilise la loi de transport de Pähtz & Durán (2023), établie à partir de simulations numériques pour des conditions planétaires. Pour chaque pas de temps, la vitesse de frottement u* est obtenue à partir du vent au niveau le plus bas du modèle climatique au moyen d’un profil de paroi lisse. Le seuil est obtenu à partir du diamètre des grains ainsi que de la masse volumique et de la température de l’air à ce pas de temps. Les flux sont exprimés en volumes de sable compacté (compacité 0,6, espace poreux inclus) par mètre de largeur et par année terrestre (m²/an), comme sur Terre. Le transport réel est plus faible partout où le sable est rare ou induré.",
   "en": "306e7e7d"
  },
  "concept.mars.grain-size-and-threshold.title": {
-  "text": "Taille des grains et seuil",
+  "text": "Taille et seuil des grains",
   "en": "efa451a3"
  },
  "concept.mars.grain-size-and-threshold.p1": {
@@ -1252,7 +1252,7 @@
   "en": "797e30f3"
  },
  "panel.dunesOnly": {
-  "text": "Dunes seulement",
+  "text": "Dunes seules",
   "en": "074019c2"
  },
  "panel.names": {
@@ -1268,7 +1268,7 @@
   "en": "d960f0ed"
  },
  "panel.coarser": {
-  "text": "Plus grossier",
+  "text": "Plus gros",
   "en": "ff4b5982"
  },
  "panel.active": {
@@ -1340,7 +1340,7 @@
   "en": "1b597f46"
  },
  "c.7e0bca77": {
-  "text": "Espacement des lignes pour {title}, du plus fin au plus grossier",
+  "text": "Espacement des lignes pour {title}, du plus fin au plus gros",
   "en": "7e0bca77"
  },
  "c.cf77fd20": {
@@ -1412,7 +1412,7 @@
   "en": "82a20f6e"
  },
  "c.c158f449": {
-  "text": "⟦0⟧ inverser (terres sans dunes)",
+  "text": "⟦0⟧ inverser (régions sans dunes)",
   "en": "c158f449"
  },
  "c.4422e95b": {
@@ -1440,15 +1440,15 @@
   "en": "c739a747"
  },
  "c.8b3f7f3a": {
-  "text": "Couleur de ligne ⟦0⟧",
+  "text": "Couleur des lignes ⟦0⟧",
   "en": "8b3f7f3a"
  },
  "c.f9cf5751": {
-  "text": "Espacement entre les flèches / lignes de courant : à gauche plus fin (lignes plus denses), à droite plus grossier",
+  "text": "Espacement entre les flèches / lignes de courant : à gauche plus fin (lignes plus denses), à droite plus gros",
   "en": "f9cf5751"
  },
  "c.bc8b4ab6": {
-  "text": "Espacement <span class=\"spacing-end\">Plus fin</span>⟦0⟧<span class=\"spacing-end\">Plus grossier</span>",
+  "text": "Espacement <span class=\"spacing-end\">Plus fin</span>⟦0⟧<span class=\"spacing-end\">Plus gros</span>",
   "en": "bc8b4ab6"
  },
  "c.02860b5d": {
@@ -1500,7 +1500,7 @@
   "en": "9b74c01c"
  },
  "c.fc8f6378": {
-  "text": "Mis à jour avec la commande ⟦0⟧.",
+  "text": "Se met à jour avec la commande ⟦0⟧.",
   "en": "fc8f6378"
  },
  "c.cb6596aa": {
@@ -1508,7 +1508,7 @@
   "en": "cb6596aa"
  },
  "c.27cf9488": {
-  "text": "Direction d’allongement⟦0⟧: direction dans laquelle une dune croît en longueur sans migrer, là où le flux net de sable à travers sa crête est nul et le flux net le long de celle-ci est positif (⟦1⟧). Elle s’applique aux dunes situées sur des lits où le sable est limité, qui croissent généralement à partir d’une source de sable fixe. Lorsqu’un régime de vents admet plusieurs directions de ce type, l’atlas affiche la plus stable.",
+  "text": "Direction d’allongement⟦0⟧: direction dans laquelle une dune croît en longueur sans migrer, là où le flux net de sable à travers sa crête est nul et le flux net le long de sa crête est positif (⟦1⟧). Elle s’applique aux dunes situées sur des lits où le sable est limité, qui croissent généralement à partir d’une source de sable fixe. Lorsqu’un régime de vents admet plusieurs directions de ce type, l’atlas affiche la plus stable.",
   "en": "27cf9488"
  },
  "c.e2c0f300": {
@@ -1536,7 +1536,7 @@
   "en": "69ce2e68"
  },
  "c.8dcaa52f": {
-  "text": "Rapport des taux de croissance en hauteur des dunes selon les orientations d’allongement et d’instabilité du lit,⟦0⟧, compris entre ⟦#0⟧ et ⟦#1⟧. Il permet d’évaluer si les dunes qui s’allongent à partir d’une source de sable sur un lit pauvre en sable sont stables : dans les simulations numériques et pour les dunes situées autour du massif du Tibesti, des dunes linéaires en allongement se forment lorsque le rapport est supérieur à environ ⟦#2⟧, et des trains de barkhanes se forment en dessous (⟦1⟧;⟦2⟧). Il ne tient pas compte de la mobilité du lit ni des autres conditions aux limites.",
+  "text": "Rapport des taux de croissance en hauteur des dunes selon les orientations d’allongement et d’instabilité du lit,⟦0⟧, compris entre ⟦#0⟧ et ⟦#1⟧. Ce rapport permet d’évaluer si les dunes qui s’allongent à partir d’une source de sable sur un lit pauvre en sable sont stables : dans les simulations numériques et pour les dunes situées autour du massif du Tibesti, des dunes linéaires en allongement se forment lorsque le rapport est supérieur à environ ⟦#2⟧, et des trains de barkhanes se forment en dessous (⟦1⟧;⟦2⟧). Ce rapport ne tient pas compte de la mobilité du lit ni des autres conditions aux limites.",
   "en": "8dcaa52f"
  },
  "c.b4eb3711": {
@@ -1544,7 +1544,7 @@
   "en": "b4eb3711"
  },
  "c.e3ecff1e": {
-  "text": "Rapport du flux de sable brut à travers la crête au flux net le long de la crête pour les dunes dans l’orientation du mode d’allongement,⟦0⟧, soit l’équilibre entre croissance en hauteur et allongement. Pour les dunes qui s’allongent sans migrer, c’est le paramètre censé distinguer leurs formes. Comparé à⟦1⟧, il indique si l’allongement ou la migration est le plus susceptible de déterminer la forme et l’orientation des dunes sur un lit pauvre en sable : la dynamique présentant le rapport le plus élevé favorise davantage la croissance en hauteur et devrait l’emporter (⟦2⟧). Le rapport tend vers l’infini lorsque son dénominateur (un flux net) tend vers zéro (valeurs affichées écrêtées à ±⟦#0⟧).",
+  "text": "Rapport du flux de sable brut à travers la crête au flux net le long de la crête pour les dunes dans l’orientation du mode d’allongement,⟦0⟧, soit l’équilibre entre croissance en hauteur et allongement. Pour les dunes qui s’allongent sans migrer, c’est le paramètre censé distinguer leurs formes. Comparé à ⟦1⟧, il indique si l’allongement ou la migration est le plus susceptible de déterminer la forme et l’orientation des dunes sur un lit pauvre en sable : la dynamique présentant le rapport le plus élevé favorise davantage la croissance en hauteur et devrait l’emporter (⟦2⟧). Le rapport tend vers l’infini lorsque son dénominateur (un flux net) tend vers zéro (valeurs affichées écrêtées à ±⟦#0⟧).",
   "en": "e3ecff1e"
  },
  "c.e5c17d00": {
@@ -1560,11 +1560,11 @@
   "en": "d66d70dc"
  },
  "c.7aed9ffd": {
-  "text": "Fraction du flux de crête en mode d’instabilité du lit (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête.",
+  "text": "Fraction du flux de crête en mode d’instabilité du lit (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. ⟦#0⟧ là où le flux de crête ne se produit que lorsque la vitesse de frottement sur lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête.",
   "en": "7aed9ffd"
  },
  "c.0d2dc35f": {
-  "text": "Fraction du flux de crête en mode d’allongement (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. ⟦#0⟧ là où le flux de crête ne se produit que lorsque le lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête.",
+  "text": "Fraction du flux de crête en mode d’allongement (⟦0⟧) qui se produit lorsque la vitesse de frottement sur lit plat dépasse le seuil,⟦1⟧. ⟦#0⟧ là où le flux de crête ne se produit que lorsque la vitesse de frottement sur lit plat est sous le seuil ; non définie là où il n’y a pas de flux de crête.",
   "en": "0d2dc35f"
  },
  "c.40039fa4": {
@@ -1572,7 +1572,7 @@
   "en": "40039fa4"
  },
  "c.d590db9a": {
-  "text": "Divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦0⟧, direction⟦1⟧) sur la sphère, d’après⟦2⟧, Méthodes⟦3⟧:⟦4⟧avec⟦5⟧,⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence du flux) impliquent un dépôt et les valeurs positives (divergence du flux) une érosion. Ces valeurs supposent un flux saturé et un apport illimité de sable meuble ; sur les surfaces rocheuses, encroûtées ou végétalisées, l’érosion réelle est donc limitée par le sable disponible. Pas de données sur les côtes (une cellule voisine ne dispose pas de données de vent) ni sur les rangées à ±⟦#0⟧°.",
+  "text": "Divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦0⟧, direction⟦1⟧) sur la sphère, d’après⟦2⟧, Méthodes⟦3⟧:⟦4⟧avec⟦5⟧,⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence du flux) impliquent un dépôt et les valeurs positives (divergence du flux) une érosion. Ces valeurs supposent un flux saturé et un apport illimité de sable mobile ; sur les surfaces rocheuses, encroûtées ou végétalisées, l’érosion réelle est donc limitée par le sable disponible. Pas de données sur les côtes (une cellule voisine ne dispose pas de données de vent) ni sur les rangées à ±⟦#0⟧°.",
   "en": "d590db9a"
  },
  "c.925905dc": {
@@ -1636,7 +1636,7 @@
   "en": "aee818af"
  },
  "c.c432f449": {
-  "text": "Carte vectorielle, nette à tous les niveaux de zoom (détail à l’échelle de la rue)",
+  "text": "Carte vectorielle, nette à tous les niveaux de zoom (détail à l’échelle de rue)",
   "en": "c432f449"
  },
  "c.9f1c6cab": {
@@ -1656,7 +1656,7 @@
   "en": "243e42f5"
  },
  "c.5d6289ac": {
-  "text": "Service⟦0⟧régi par le⟦1⟧/ les conditions d’utilisation",
+  "text": "Le service⟦0⟧ est régi par le⟦1⟧/ les conditions d’utilisation",
   "en": "5d6289ac"
  },
  "c.e32b80e2": {
@@ -1664,7 +1664,7 @@
   "en": "e32b80e2"
  },
  "c.22335d7a": {
-  "text": "⟦0⟧données d’altitude ouvertes :⟦1⟧modèles d’altitude ouverts mondiaux et nationaux, lorsqu’ils sont disponibles",
+  "text": "⟦0⟧données d’altitude libres :⟦1⟧modèles d’altitude libres mondiaux et nationaux, lorsqu’ils sont disponibles",
   "en": "22335d7a"
  },
  "c.a5298609": {
@@ -1684,7 +1684,7 @@
   "en": "45fc789b"
  },
  "c.b47179e7": {
-  "text": "Environ ⟦#0⟧ m par pixel à l’équateur au niveau de zoom le plus rapproché",
+  "text": "Environ ⟦#0⟧ m par pixel à l’équateur au niveau de zoom le plus fort",
   "en": "b47179e7"
  },
  "c.816ba161": {
@@ -1728,7 +1728,7 @@
   "en": "c117cfda"
  },
  "c.e1abc281": {
-  "text": "Les deux atlas calculent les mêmes grandeurs selon les méthodes décrites dans⟦0⟧ : le flux de sable saturé moyenné dans le temps sur un lit plat entièrement recouvert de sable meuble (⟦1⟧), sa résultante (⟦2⟧,⟦3⟧,⟦4⟧), les flux de crête, les modes d’orientation des dunes et la divergence du flux. Tous deux expriment les flux en volumes de sable compacté (compacité ⟦#0⟧, espace poreux inclus) par mètre de largeur et par année terrestre de ⟦#1⟧ jours (m²/yr), et tous deux représentent les roses des vents selon la direction d’où souffle le vent et les roses des flux de sable selon la direction vers laquelle se déplace le sable. Ils diffèrent sur quatre points.",
+  "text": "Les deux atlas calculent les mêmes grandeurs selon les méthodes décrites dans⟦0⟧ : le flux de sable saturé moyenné dans le temps sur un lit plat entièrement recouvert de sable mobile (⟦1⟧), sa résultante (⟦2⟧,⟦3⟧,⟦4⟧), les flux de crête, les modes d’orientation des dunes et la divergence du flux. Tous deux expriment les flux en volumes de sable compacté (compacité ⟦#0⟧, espace poreux inclus) par mètre de largeur et par année terrestre de ⟦#1⟧ jours (m²/an), et tous deux représentent les roses des vents selon la direction d’où souffle le vent et les roses des flux de sable selon la direction vers laquelle se déplace le sable. Ils diffèrent sur quatre points.",
   "en": "e1abc281"
  },
  "c.8726a129": {
@@ -1812,7 +1812,7 @@
   "en": "5d9e5efa"
  },
  "c.9f03a7d2": {
-  "text": "Direction D’OÙ souffle le vent (météorologique), ⟦#0⟧ secteurs de ⟦#1⟧° ; rayon = % des ⟦#2⟧ échantillons horaires comptabilisés (total de ⟦#3⟧ % ; les heures &gt; ⟦#4⟧ m/s ne figurent pas dans l’histogramme).⟦0⟧Vent à ⟦#5⟧ m, ⟦#6⟧–⟦#7⟧.",
+  "text": "Direction d’OÙ souffle le vent (météorologique), ⟦#0⟧ secteurs de ⟦#1⟧° ; rayon = % des ⟦#2⟧ échantillons horaires comptabilisés (total de ⟦#3⟧ % ; les heures &gt; ⟦#4⟧ m/s ne figurent pas dans l’histogramme).⟦0⟧Vent à ⟦#5⟧ m, ⟦#6⟧–⟦#7⟧.",
   "en": "9f03a7d2"
  },
  "c.aab9a2de": {
@@ -1984,7 +1984,7 @@
   "en": "7a7dbf8c"
  },
  "c.f42590f9": {
-  "text": "Les angles sont des azimuts de la direction du transport ; les flux sont convertis de m²/s en m²/yr ; — = non défini (p. ex. aucun flux de crête).",
+  "text": "Les angles sont des azimuts de la direction du transport ; les flux sont convertis de m²/s en m²/an ; — = non défini (par exemple aucun flux de crête).",
   "en": "f42590f9"
  },
  "c.4598f0fa": {
@@ -2168,7 +2168,7 @@
   "en": "2a037b62"
  },
  "c.9ebf3d9d": {
-  "text": "Sorties⟦0⟧Ames⟦1⟧; aucune licence indiquée (⟦2⟧données ouvertes)",
+  "text": "Résultats ⟦0⟧Ames⟦1⟧; aucune licence indiquée (⟦2⟧données ouvertes)",
   "en": "9ebf3d9d"
  },
  "c.eec05683": {
@@ -2212,7 +2212,7 @@
   "en": "8540dd31"
  },
  "c.ee2e3cf3": {
-  "text": "Mosaïque globale en niveaux de gris d’images de la Context Camera (⟦0⟧) de⟦1⟧.",
+  "text": "Mosaïque globale en échelle de gris d’images de la Context Camera (⟦0⟧) de⟦1⟧.",
   "en": "ee2e3cf3"
  },
  "c.dcf459d8": {
@@ -2268,7 +2268,7 @@
   "en": "a5d6c844"
  },
  "c.d62fb31c": {
-  "text": "Relief ombré codé en couleur du modèle d’altitude⟦0⟧fusionné.",
+  "text": "Relief ombré codé par couleur du modèle d’altitude⟦0⟧fusionné.",
   "en": "d62fb31c"
  },
  "c.7ab4f976": {
@@ -2360,7 +2360,7 @@
   "en": "55fb0a53"
  },
  "c.54424ba2": {
-  "text": "Direction D’OÙ souffle le vent (convention météorologique), ⟦#0⟧ secteurs de ⟦#1⟧° ; rayon = % des ⟦#2⟧ échantillons horaires (total de ⟦#3⟧ %).⟦0⟧vent au niveau le plus bas (hauteur dans cette cellule ⟦#4⟧–⟦#5⟧ m), une année martienne (6e année simulée, ⟦#6⟧ sols).",
+  "text": "Direction d’OÙ souffle le vent (convention météorologique), ⟦#0⟧ secteurs de ⟦#1⟧° ; rayon = % des ⟦#2⟧ échantillons horaires (total de ⟦#3⟧ %).⟦0⟧vent au niveau le plus bas (hauteur dans cette cellule ⟦#4⟧–⟦#5⟧ m), une année martienne (6e année simulée, ⟦#6⟧ sols).",
   "en": "54424ba2"
  },
  "c.705e31ee": {
@@ -2472,7 +2472,7 @@
   "en": "e638d1ea"
  },
  "c.dae8c832": {
-  "text": "nord en haut au centre de la vue",
+  "text": "Le nord est en haut au centre de la vue",
   "en": "dae8c832"
  },
  "c.1aa05d8b": {
@@ -2688,7 +2688,7 @@
   "en": "eb82bb19"
  },
  "c.70583d0e": {
-  "text": "Dunes seulement : calques dérivés du vent affichés dans les cellules comportant des dunes.",
+  "text": "Dunes seules : calques dérivés du vent affichés dans les cellules comportant des dunes.",
   "en": "70583d0e"
  },
  "c.b72a8db3": {
@@ -2800,15 +2800,15 @@
   "en": "d62ef04b"
  },
  "c.238c1534": {
-  "text": "<strong>Champs de flux de sable</strong> : pour chaque pas de temps du jeu de données de vent, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/yr, comme sur Terre.",
+  "text": "<strong>Champs de flux de sable</strong> : pour chaque pas de temps du jeu de données de vent, le seuil et le débit de transport saturé selon⟦0⟧au diamètre médian des grains d sélectionné (masse volumique des grains ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), moyennés sur l’année ; les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes décrites dans⟦1⟧. Les flux sont des volumes de sable compacté (compacité ⟦#2⟧, porosité incluse) par mètre de largeur et par année terrestre (⟦#3⟧ jours), en m²/an, comme sur Terre.",
   "en": "238c1534"
  },
  "c.e5c7b256": {
-  "text": "La valeur par défaut, ⟦#0⟧ m/s, est celle utilisée pour l’analyse globale de⟦0⟧, une seule valeur pour l’ensemble du globe, non calibrée pour un site particulier. Des valeurs comprises entre ⟦#1⟧ et ⟦#2⟧ m/s sont typiques ; pour un sable sec et meuble, le seuil dépend principalement de la taille et de la masse volumique des grains.",
+  "text": "La valeur par défaut, ⟦#0⟧ m/s, est celle utilisée pour l’analyse globale de⟦0⟧, une seule valeur pour l’ensemble du globe, non calibrée pour un site particulier. Des valeurs comprises entre ⟦#1⟧ et ⟦#2⟧ m/s sont typiques ; pour un sable sec et mobile, le seuil dépend principalement de la taille et de la masse volumique des grains.",
   "en": "e5c7b256"
  },
  "c.00a48377": {
-  "text": "Les cellules de dunes à ⟦#0⟧° de la carte des dunes, regroupées en ⟦#1⟧ champs de dunes de cellules en contact (partageant un côté ou un coin) ; les contours des polygones suivent les limites des cellules de la grille. La superficie est la somme des aires sphériques des cellules.",
+  "text": "Les cellules de dunes à ⟦#0⟧° de la carte des dunes, regroupées en ⟦#1⟧ champs de dunes de cellules en contact (partageant un côté ou un coin) ; les contours des polygones suivent les limites des cellules de la grille. Leur superficie est la somme des aires sphériques de leurs cellules.",
   "en": "00a48377"
  },
  "c.bf48091d": {
@@ -2816,11 +2816,11 @@
   "en": "bf48091d"
  },
  "c.6816201a": {
-  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des classes de vitesse et de direction : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par an sur un lit plat entièrement recouvert de sable meuble (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement, avec le seuil fixé par le curseur. Le rapport entre les deux dépend de la distribution des vitesses du vent, et les classes d’énergie de Fryberger (moins de ⟦#2⟧, ⟦#3⟧–⟦#4⟧ et plus de ⟦#5⟧ unités vectorielles) sont exprimées en unités vectorielles.",
+  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des classes de vitesse et de direction : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par an sur un lit plat entièrement recouvert de sable mobile (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement, avec le seuil fixé par le curseur. Le rapport entre les deux dépend de la distribution des vitesses du vent, et les classes d’énergie de Fryberger (moins de ⟦#2⟧, ⟦#3⟧–⟦#4⟧ et plus de ⟦#5⟧ unités vectorielles) sont exprimées en unités vectorielles.",
   "en": "6816201a"
  },
  "c.c7e3069a": {
-  "text": "Direction du vecteur de flux à lit plat moyenné dans le temps,⟦0⟧, la direction dans laquelle le sable se déplace, exprimée en azimut (dans le sens horaire depuis le nord). Lorsque⟦1⟧est faible, le transport dans des directions opposées s'annule presque, et une petite variation du seuil ou des vents peut faire tourner cette direction jusqu'à ⟦#0⟧°.",
+  "text": "Direction du vecteur de flux à lit plat moyenné dans le temps,⟦0⟧, la direction dans laquelle le sable se déplace, exprimée en azimut (dans le sens horaire depuis le nord). Lorsque⟦1⟧est faible, le transport dans des directions opposées s’annule presque, et une petite variation du seuil ou des vents peut faire tourner cette direction jusqu’à ⟦#0⟧°.",
   "en": "c7e3069a"
  },
  "c.b2c9170b": {
@@ -2848,7 +2848,7 @@
   "en": "500b2800"
  },
  "c.2ebf7276": {
-  "text": "<strong>Vents et grille</strong> : sur Terre, on utilise des décennies de vents horaires issus de réanalyses (p. ex.⟦0⟧, grille à ⟦#0⟧°, ⟦#1⟧–⟦#2⟧) ; sur Mars, on utilise une année martienne (⟦#3⟧ sols, soit environ ⟦#4⟧ années terrestres) de vents issus d’une simulation de modèle climatique ou d’une réanalyse (p. ex.⟦1⟧, grille à ⟦#5⟧°, soit environ ⟦#6⟧ km à l’équateur), sans variabilité d’une année à l’autre.",
+  "text": "<strong>Vents et grille</strong> : sur Terre, on utilise des décennies de vents horaires issus de réanalyses (par exemple⟦0⟧, grille à ⟦#0⟧°, ⟦#1⟧–⟦#2⟧) ; sur Mars, on utilise une année martienne (⟦#3⟧ sols, soit environ ⟦#4⟧ années terrestres) de vents issus d’une simulation de modèle climatique ou d’une réanalyse (par exemple⟦1⟧, grille à ⟦#5⟧°, soit environ ⟦#6⟧ km à l’équateur), sans variabilité d’une année à l’autre.",
   "en": "2ebf7276"
  },
  "c.cadf63de": {
@@ -2876,11 +2876,11 @@
   "en": "59fd3775"
  },
  "c.df0d9fab": {
-  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des N échantillons de l’année martienne : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par année terrestre sur un lit plat entièrement couvert de sable meuble (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement avec un seuil déterminé à partir du diamètre des grains. Il n’existe pas de rapport fixe entre les deux, et les classes d’énergie de Fryberger (inférieures à ⟦#2⟧, de ⟦#3⟧ à ⟦#4⟧ et supérieures à ⟦#5⟧ unités vectorielles) sont exprimées en unités vectorielles.",
+  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des N échantillons de l’année martienne : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par année terrestre sur un lit plat entièrement couvert de sable mobile (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement avec un seuil déterminé à partir du diamètre des grains. Il n’existe pas de rapport fixe entre les deux, et les classes d’énergie de Fryberger (inférieures à ⟦#2⟧, de ⟦#3⟧ à ⟦#4⟧ et supérieures à ⟦#5⟧ unités vectorielles) sont exprimées en unités vectorielles.",
   "en": "df0d9fab"
  },
  "c.0b10586c": {
-  "text": "Divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦0⟧, direction⟦1⟧) sur la sphère martienne, d’après⟦2⟧, Méthodes⟦3⟧:⟦4⟧avec⟦5⟧,⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence du flux) impliquent un dépôt et les valeurs positives (divergence du flux) une érosion. Ces valeurs supposent un flux saturé et un apport illimité de sable meuble ; ainsi, sur les surfaces rocheuses ou encroûtées, l’érosion réelle est limitée par le sable disponible.",
+  "text": "Divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦0⟧, direction⟦1⟧) sur la sphère martienne, d’après⟦2⟧, Méthodes⟦3⟧:⟦4⟧avec⟦5⟧,⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence du flux) impliquent un dépôt et les valeurs positives (divergence du flux) impliquent une érosion. Ces valeurs supposent un flux saturé et un apport illimité de sable mobile ; ainsi, sur les surfaces rocheuses ou encroûtées, l’érosion réelle est limitée par le sable disponible.",
   "en": "0b10586c"
  },
  "c.ca9b878e": {
@@ -2900,7 +2900,7 @@
   "en": "b74eb9b0"
  },
  "c.a7435465": {
-  "text": "Le sélecteur Jeu de données de vent permet de basculer entre des jeux de données de vent (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧ ;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧ ;⟦2⟧, ⟦#6⟧°, ⟦#7⟧–⟦#8⟧ ;⟦3⟧, ⟦#9⟧° × ⟦#10⟧°, ⟦#11⟧–⟦#12⟧).⟦4⟧, utilisé par⟦5⟧, est une réexécution du modèle de surface terrestre d'⟦6⟧ forcée par les champs atmosphériques d'⟦7⟧interpolés sur sa grille de ⟦#13⟧° (Muñoz-Sabater et al. ⟦#14⟧) ;⟦8⟧signale des vitesses du vent à ⟦#15⟧ m inférieures de ⟦#16⟧ à ⟦#17⟧ % à celles d'⟦9⟧.⟦10⟧données sont réservées à un usage non commercial (⟦11⟧), tout comme les⟦12⟧histogrammes de vent et les champs de flux de sable de l'atlas. Les calques de vent et de flux de sable ainsi que le panneau de cellule suivent la sélection ; le masque des champs de dunes et les calques d'aridité et de végétation sont les mêmes pour tous les jeux de données.",
+  "text": "Le sélecteur Jeu de données de vent permet de basculer entre des jeux de données de vent (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧ ;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧ ;⟦2⟧, ⟦#6⟧°, ⟦#7⟧–⟦#8⟧ ;⟦3⟧, ⟦#9⟧° × ⟦#10⟧°, ⟦#11⟧–⟦#12⟧).⟦4⟧, utilisé par⟦5⟧, est une réexécution du modèle de surface terrestre d’⟦6⟧ forcée par les champs atmosphériques d’⟦7⟧interpolés sur sa grille de ⟦#13⟧° (Muñoz-Sabater et al. ⟦#14⟧) ;⟦8⟧indique des vitesses du vent à ⟦#15⟧ m inférieures de ⟦#16⟧ à ⟦#17⟧ % à celles d’⟦9⟧.⟦10⟧données sont réservées à un usage non commercial (⟦11⟧), tout comme les⟦12⟧histogrammes de vent et les champs de flux de sable de l’atlas. Les calques de vent et de flux de sable ainsi que le panneau de cellule suivent la sélection ; le masque des champs de dunes et les calques d’aridité et de végétation sont les mêmes pour tous les jeux de données.",
   "en": "a7435465"
  },
  "c.ece4ef12": {
@@ -2908,11 +2908,11 @@
   "en": "ece4ef12"
  },
  "c.b7a93df1": {
-  "text": "<strong>Champs de flux de sable</strong> : pour chaque heure, la vitesse de frottement⟦0⟧= κ U₁₀ / ln(z/z₀) est obtenue à partir de la vitesse du vent à ⟦#0⟧ m U₁₀ (profil logarithmique du vent ; κ = ⟦#1⟧, z = ⟦#2⟧ m, longueur de rugosité z₀ = ⟦#3⟧ mm), ainsi que le taux de transport saturé de⟦1⟧, q = C ρ<sub>f</sub>⟦2⟧(u*² − u*,th²) / (g ρ<sub>s</sub> φ) pour⟦3⟧&gt;⟦4⟧, avec C = ⟦#4⟧, masse volumique de l’air ρ<sub>f</sub> = ⟦#5⟧ kg/m³, masse volumique des grains ρ<sub>s</sub> = ⟦#6⟧ kg/m³, compacité φ = ⟦#7⟧ et g = ⟦#8⟧ m/s², au seuil sélectionné⟦5⟧, moyenné sur ⟦#9⟧–⟦#10⟧ ou ⟦#11⟧–⟦#12⟧ (⟦6⟧, Méthodes⟦7⟧). Les flux sont des volumes de sable compacté (porosité incluse) par mètre de largeur et par année de ⟦#13⟧ jours (m²/yr). Les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes passées en revue dans⟦8⟧.",
+  "text": "<strong>Champs de flux de sable</strong> : pour chaque heure, la vitesse de frottement⟦0⟧= κ U₁₀ / ln(z/z₀) est obtenue à partir de la vitesse du vent à ⟦#0⟧ m U₁₀ (profil logarithmique du vent ; κ = ⟦#1⟧, z = ⟦#2⟧ m, longueur de rugosité z₀ = ⟦#3⟧ mm), ainsi que le taux de transport saturé de⟦1⟧, q = C ρ<sub>f</sub>⟦2⟧(u*² − u*,th²) / (g ρ<sub>s</sub> φ) pour⟦3⟧&gt;⟦4⟧, avec C = ⟦#4⟧, masse volumique de l’air ρ<sub>f</sub> = ⟦#5⟧ kg/m³, masse volumique des grains ρ<sub>s</sub> = ⟦#6⟧ kg/m³, compacité φ = ⟦#7⟧ et g = ⟦#8⟧ m/s², au seuil sélectionné⟦5⟧, moyenné sur ⟦#9⟧–⟦#10⟧ ou ⟦#11⟧–⟦#12⟧ (⟦6⟧, Méthodes⟦7⟧). Les flux sont des volumes de sable compacté (porosité incluse) par mètre de largeur et par année de ⟦#13⟧ jours (m²/an). Les potentiels de dérive, les flux de crête et les modes d’orientation des dunes suivent les méthodes passées en revue dans⟦8⟧.",
   "en": "b7a93df1"
  },
  "c.37ce9ecb": {
-  "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦1⟧, direction⟦2⟧) sur la sphère, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) avec q =⟦3⟧, θ =⟦4⟧, latitude φ, longitude λ et R = ⟦#0⟧ km, calculée par différences centrées sur la grille du jeu de données de vent sélectionné (⟦#1⟧° ou ⟦#2⟧° ou ⟦#3⟧° ou ⟦#4⟧° × ⟦#5⟧°), d’après⟦5⟧, Méthodes⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence) traduisent un dépôt et les valeurs positives une érosion, en mètres de niveau du lit par millier d’années. Ces valeurs supposent un flux saturé et un apport illimité de sable meuble.",
+  "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦1⟧, direction⟦2⟧) sur la sphère, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) avec q =⟦3⟧, θ =⟦4⟧, latitude φ, longitude λ et R = ⟦#0⟧ km, calculée par différences centrées sur la grille du jeu de données de vent sélectionné (⟦#1⟧° ou ⟦#2⟧° ou ⟦#3⟧° ou ⟦#4⟧° × ⟦#5⟧°), d’après⟦5⟧, Méthodes⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence) suggèrent un dépôt et les valeurs positives une érosion, en mètres de niveau du lit par millier d’années. Ces valeurs supposent un flux saturé et un apport illimité de sable mobile.",
   "en": "37ce9ecb"
  },
  "c.05b1cf35": {
@@ -2932,7 +2932,7 @@
   "en": "97317967"
  },
  "c.0b5ec76e": {
-  "text": "Dunes seulement n’affiche les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) que dans les cellules du jeu de données de vent sélectionné qui contiennent des dunes cartographiées.",
+  "text": "Dunes seules n’affiche les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) que dans les cellules du jeu de données de vent sélectionné qui contiennent des dunes cartographiées.",
   "en": "0b5ec76e"
  },
  "c.fea3fd30": {
@@ -2948,7 +2948,7 @@
   "en": "ea559417"
  },
  "c.33496956": {
-  "text": "Tant qu’elle est activée, la carte des dunes est tracée à une opacité d’au plus ⟦#0⟧ %, afin que les couleurs des cellules de dunes transparaissent à travers elle. Son propre réglage d’opacité s’applique de nouveau lorsque Dunes seulement est désactivé.",
+  "text": "Tant qu’elle est activée, la carte des dunes est tracée à une opacité d’au plus ⟦#0⟧ %, afin que les couleurs des cellules de dunes transparaissent à travers elle. Son propre réglage d’opacité s’applique de nouveau lorsque Dunes seules est désactivé.",
   "en": "33496956"
  },
  "c.e20362fc": {
@@ -2960,7 +2960,7 @@
   "en": "a7651e74"
  },
  "c.2bc3ff20": {
-  "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦1⟧, direction⟦2⟧) sur la sphère, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) avec q =⟦3⟧, θ =⟦4⟧, latitude φ, longitude λ et R = ⟦#0⟧ km, calculée par différences centrées sur la grille du jeu de données de vent sélectionné (⟦#1⟧° ou ⟦#2⟧°), d’après⟦5⟧, Méthodes⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence) traduisent un dépôt et les valeurs positives une érosion, en mètres de niveau du lit par millier d’années. Ces valeurs supposent un flux saturé et un apport illimité de sable meuble.",
+  "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦1⟧, direction⟦2⟧) sur la sphère, ∇·q = [∂(q cos θ)/∂λ + ∂(q sin θ cos φ)/∂φ] / (R cos φ) avec q =⟦3⟧, θ =⟦4⟧, latitude φ, longitude λ et R = ⟦#0⟧ km, calculée par différences centrées sur la grille du jeu de données de vent sélectionné (⟦#1⟧° ou ⟦#2⟧°), d’après⟦5⟧, Méthodes⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence) traduisent un dépôt et les valeurs positives une érosion, en mètres de niveau du lit par millier d’années. Ces valeurs supposent un flux saturé et un apport illimité de sable mobile.",
   "en": "2bc3ff20"
  },
  "c.1a6f67b1": {
@@ -2968,15 +2968,15 @@
   "en": "1a6f67b1"
  },
  "c.2c67fa30": {
-  "text": "Le sélecteur de dataset de vent permet de basculer entre jeux de données de vent (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧).⟦2⟧, utilisé par⟦3⟧, fait tourner à nouveau le modèle de surface continentale de⟦4⟧ piloté par les champs atmosphériques de⟦5⟧interpolés sur sa grille de ⟦#6⟧° (Muñoz-Sabater et al. ⟦#7⟧);⟦6⟧indique des vitesses de vent à ⟦#8⟧ m inférieures de ⟦#9⟧–⟦#10⟧ % à celles de⟦7⟧. Les calques de vent et de flux de sable ainsi que le panneau de cellule suivent la sélection; le masque du champ de dunes, l'aridité et les calques de végétation restent identiques pour chaque jeu de données.",
+  "text": "Le sélecteur de dataset de vent permet de basculer entre jeux de données de vent (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧).⟦2⟧, utilisé par⟦3⟧, fait tourner à nouveau le modèle de surface continentale de⟦4⟧ piloté par les champs atmosphériques de⟦5⟧interpolés sur sa grille de ⟦#6⟧° (Muñoz-Sabater et al. ⟦#7⟧);⟦6⟧indique des vitesses de vent à ⟦#8⟧ m inférieures de ⟦#9⟧–⟦#10⟧ % à celles de⟦7⟧. Les calques de vent et de flux de sable ainsi que le panneau de cellule suivent la sélection; le masque du champ de dunes, l’aridité et les calques de végétation restent identiques pour chaque jeu de données.",
   "en": "2c67fa30"
  },
  "c.30170ce5": {
-  "text": "Dunes seulement n’affiche les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) que dans les cellules du jeu de données de vent sélectionné qui contiennent des dunes cartographiées ; les autres cellules de ces calques restent vides.",
+  "text": "Dunes seules n’affiche les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) que dans les cellules du jeu de données de vent sélectionné qui contiennent des dunes cartographiées ; les autres cellules de ces calques restent vides.",
   "en": "30170ce5"
  },
  "c.037dc143": {
-  "text": "La valeur par défaut, ⟦#0⟧ m/s, est celle utilisée pour l’analyse globale de⟦0⟧: une approximation globale courante, utilisée à la place de valeurs locales plus précises, et non calibrée pour un site particulier. Des valeurs comprises entre ⟦#1⟧ et ⟦#2⟧ m/s sont typiques ; pour un sable sec et meuble, le seuil dépend principalement de la taille et de la masse volumique des grains.",
+  "text": "La valeur par défaut, ⟦#0⟧ m/s, est celle utilisée pour l’analyse globale de⟦0⟧: une approximation globale courante, utilisée à la place de valeurs locales plus précises, et non calibrée pour un site particulier. Des valeurs comprises entre ⟦#1⟧ et ⟦#2⟧ m/s sont typiques ; pour un sable sec et mobile, le seuil dépend principalement de la taille et de la masse volumique des grains.",
   "en": "037dc143"
  },
  "c.785bb05c": {
@@ -2988,7 +2988,7 @@
   "en": "a776804c"
  },
  "c.4c826ecf": {
-  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des classes de vitesse et de direction : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par an sur un lit plat entièrement recouvert de sable meuble (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement, avec le seuil fixé par le curseur. Les deux ne peuvent être convertis l’un en l’autre sans la distribution des vitesses du vent, et les classes d’énergie de Fryberger (moins de ⟦#2⟧, ⟦#3⟧–⟦#4⟧ et plus de ⟦#5⟧ unités vectorielles) ne s’appliquent pas à ces valeurs.",
+  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des classes de vitesse et de direction : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par an sur un lit plat entièrement recouvert de sable mobile (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement, avec le seuil fixé par le curseur. Les deux ne peuvent être convertis l’un en l’autre sans la distribution des vitesses du vent, et les classes d’énergie de Fryberger (moins de ⟦#2⟧, ⟦#3⟧–⟦#4⟧ et plus de ⟦#5⟧ unités vectorielles) ne s’appliquent pas à ces valeurs.",
   "en": "4c826ecf"
  },
  "c.4837126c": {
@@ -3032,7 +3032,7 @@
   "en": "e7c53466"
  },
  "c.a2cd8175": {
-  "text": "Divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦0⟧, direction⟦1⟧) sur la sphère martienne, d’après⟦2⟧, Méthodes⟦3⟧:⟦4⟧avec⟦5⟧,⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence du flux) impliquent un dépôt et les valeurs positives (divergence du flux) une érosion. Ces valeurs supposent un flux saturé et un apport illimité de sable meuble ; ainsi, sur les surfaces rocheuses, encroûtées ou végétalisées, l’érosion réelle est limitée par le sable disponible.",
+  "text": "Divergence du vecteur flux de sable saturé moyenné dans le temps (intensité⟦0⟧, direction⟦1⟧) sur la sphère martienne, d’après⟦2⟧, Méthodes⟦3⟧:⟦4⟧avec⟦5⟧,⟦6⟧. Par conservation de la masse de sable, les valeurs négatives (convergence du flux) impliquent un dépôt et les valeurs positives (divergence du flux) une érosion. Ces valeurs supposent un flux saturé et un apport illimité de sable mobile ; ainsi, sur les surfaces rocheuses, encroûtées ou végétalisées, l’érosion réelle est limitée par le sable disponible.",
   "en": "a2cd8175"
  },
  "c.76650ed5": {
@@ -3052,7 +3052,7 @@
   "en": "3ae7fe48"
  },
  "c.5cedc7f4": {
-  "text": "<strong>Vents et grille</strong> : sur Terre, on utilise des décennies de vents horaires issus de réanalyses (p. ex.⟦0⟧, grille à ⟦#0⟧°, ⟦#1⟧–⟦#2⟧) ; sur Mars, on utilise une année martienne (⟦#3⟧ sols, soit environ ⟦#4⟧ années terrestres) de vents issus d’une simulation de modèle climatique ou d’une réanalyse (p. ex.⟦1⟧, grille à ⟦#5⟧°), de sorte qu’une cellule martienne peut couvrir plusieurs champs de dunes et que la variabilité interannuelle n’est pas échantillonnée.",
+  "text": "<strong>Vents et grille</strong> : sur Terre, on utilise des décennies de vents horaires issus de réanalyses (par exemple⟦0⟧, grille à ⟦#0⟧°, ⟦#1⟧–⟦#2⟧) ; sur Mars, on utilise une année martienne (⟦#3⟧ sols, soit environ ⟦#4⟧ années terrestres) de vents issus d’une simulation de modèle climatique ou d’une réanalyse (par exemple⟦1⟧, grille à ⟦#5⟧°), de sorte qu’une cellule martienne peut couvrir plusieurs champs de dunes et que la variabilité interannuelle n’est pas échantillonnée.",
   "en": "5cedc7f4"
  },
  "c.2d038d14": {
@@ -3068,7 +3068,7 @@
   "en": "8f6fed46"
  },
  "c.350b19fe": {
-  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des N échantillons de l’année martienne : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par année terrestre sur un lit plat entièrement couvert de sable meuble (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement avec un seuil déterminé à partir du diamètre des grains. Les deux ne peuvent pas être convertis l’un en l’autre, et les classes d’énergie de Fryberger ne s’appliquent pas à ces valeurs.",
+  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des N échantillons de l’année martienne : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par année terrestre sur un lit plat entièrement couvert de sable mobile (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement avec un seuil déterminé à partir du diamètre des grains. Les deux ne peuvent pas être convertis l’un en l’autre, et les classes d’énergie de Fryberger ne s’appliquent pas à ces valeurs.",
   "en": "350b19fe"
  },
  "c.005fdc07": {
@@ -3088,7 +3088,7 @@
   "en": "182e7ab0"
  },
  "c.3b78ea48": {
-  "text": "<strong>Vents et grille</strong> : sur Terre, on utilise une période de vents horaires issus de réanalyses (p. ex.⟦0⟧, grille à ⟦#0⟧° sur ⟦#1⟧ ans, ⟦#2⟧–⟦#3⟧) ; sur Mars, on utilise une année représentative (⟦#4⟧ sols, soit environ ⟦#5⟧ années terrestres) de vents horaires simulés (p. ex.⟦1⟧, grille à ⟦#6⟧°), de sorte qu’une cellule martienne peut couvrir plusieurs champs de dunes et que la variabilité interannuelle n’est pas échantillonnée.",
+  "text": "<strong>Vents et grille</strong> : sur Terre, on utilise une période de vents horaires issus de réanalyses (par exemple⟦0⟧, grille à ⟦#0⟧° sur ⟦#1⟧ ans, ⟦#2⟧–⟦#3⟧) ; sur Mars, on utilise une année représentative (⟦#4⟧ sols, soit environ ⟦#5⟧ années terrestres) de vents horaires simulés (par exemple⟦1⟧, grille à ⟦#6⟧°), de sorte qu’une cellule martienne peut couvrir plusieurs champs de dunes et que la variabilité interannuelle n’est pas échantillonnée.",
   "en": "3b78ea48"
  },
  "c.6251885f": {
@@ -3120,7 +3120,7 @@
   "en": "8843ab2c"
  },
  "c.5dd4040a": {
-  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des N heures de l’année martienne : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par année terrestre sur un lit plat entièrement couvert de sable meuble (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement avec un seuil déterminé à partir du diamètre des grains. Les deux ne peuvent pas être convertis l’un en l’autre, et les classes d’énergie de Fryberger ne s’appliquent pas à ces valeurs.",
+  "text": "Flux de sable saturé sur lit plat moyenné dans le temps,⟦0⟧sur l’ensemble des N heures de l’année martienne : le volume de sable compacté par mètre de largeur que le vent pourrait déplacer par année terrestre sur un lit plat entièrement couvert de sable mobile (⟦1⟧). Comme le potentiel de dérive de⟦2⟧il mesure la capacité du vent à transporter le sable, mais il s’agit d’une grandeur différente : le⟦3⟧de Fryberger est exprimé en unités vectorielles et calculé à partir des vitesses du vent à ⟦#0⟧ m en nœuds selon⟦4⟧avec un seuil de ⟦#1⟧ nœuds, tandis que ce⟦5⟧est un flux physique calculé à partir de la vitesse de frottement avec un seuil déterminé à partir du diamètre des grains. Les deux ne peuvent pas être convertis l’un en l’autre, et les classes d’énergie de Fryberger ne s’appliquent pas à ces valeurs.",
   "en": "5dd4040a"
  },
  "c.75d2f7e2": {
@@ -3264,7 +3264,7 @@
   "en": "0f656ead"
  },
  "c.b053850f": {
-  "text": "⟦0⟧Dunes seulement<span class=\"visually-hidden\">Afficher les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) uniquement dans les cellules comportant des dunes ; les autres calques et le panneau de la cellule restent inchangés.</span>",
+  "text": "⟦0⟧Dunes seules<span class=\"visually-hidden\">Afficher les calques dérivés du vent (champs de flux de sable, divergence du flux, flèches et lignes de courant) uniquement dans les cellules comportant des dunes ; les autres calques et le panneau de la cellule restent inchangés.</span>",
   "en": "b053850f"
  },
  "c.49e605be": {
