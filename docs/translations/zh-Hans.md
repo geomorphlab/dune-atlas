@@ -870,8 +870,8 @@ EN: Wind dataset
 ZH: 风场数据集
 
 ## mars.help.datasets.body (Help panel)
-EN: The Wind dataset selector switches between Mars wind datasets (MCMC FV3, 2°; EMARS, 6° × 5.14°; MACDA, 5°), each one Mars year of lowest-level winds on its own grid (MCMC FV3: free-running climate-model simulation; EMARS and MACDA: reanalysis of Mars Year 30, with spacecraft observations of the atmosphere assimilated into a climate model). The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. No EMARS data poleward of 87.43° N: the northernmost cells of its grid are centred at 84.86° N.
-ZH: “风场数据集”选择器可在不同的火星风场数据集之间切换（MCMC FV3，2°；EMARS，6°×5.14°；MACDA，5°），每个数据集均为各自网格上一个火星年的最低层风（MCMC FV3：自由运行的气候模型模拟；EMARS 和 MACDA：第 30 个火星年的再分析数据集，将航天器对大气的观测同化到气候模型中）。风场与输沙通量图层以及网格单元面板随所选数据集而变；沙丘图和高程对所有数据集都相同。87.43° N 以北无 EMARS 数据：其网格最北一行单元的中心位于 84.86° N。
+EN: The Wind dataset selector switches between Mars wind datasets (MCMC FV3, 2°; EMARS, 6° × 5.14°; MACDA, 5°; MCD, 5.625° × 3.75°), each one Mars year of lowest-level winds on its own grid (MCMC FV3: free-running climate-model simulation; EMARS and MACDA: reanalysis of Mars Year 30, with spacecraft observations of the atmosphere assimilated into a climate model; MCD: climatology of a climate model). The MCD gives the mean state of the atmosphere for each season and time of day, without day-to-day variability, so its sand fluxes are lower bounds. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. No EMARS data poleward of 87.43° N: the northernmost cells of its grid are centred at 84.86° N. No MCD data poleward of 88.13° N: the northernmost cells of its grid are centred at 86.25° N.
+ZH: “风场数据集”选择器可在不同的火星风场数据集之间切换（MCMC FV3，2°；EMARS，6°×5.14°；MACDA，5°；MCD，5.625°×3.75°），每个数据集均为各自网格上一个火星年的最低层风（MCMC FV3：自由运行的气候模型模拟；EMARS 和 MACDA：第 30 个火星年的再分析数据集，将航天器对大气的观测同化到气候模型中；MCD：气候模型的气候态数据）。MCD 给出每个季节、每个时段大气的平均状态，不含逐日变化，因此其输沙通量为下限值。风场与输沙通量图层以及网格单元面板随所选数据集而变；沙丘图和高程对所有数据集都相同。87.43° N 以北无 EMARS 数据：其网格最北一行单元的中心位于 84.86° N。88.13° N 以北无 MCD 数据：其网格最北一行单元的中心位于 86.25° N。
 
 ## mars.help.basemaps.title (Help panel)
 EN: Basemaps
@@ -3011,10 +3011,6 @@ ZH: RDD（合成输沙方向）：⟦#0⟧°（⟦#1⟧）
 EN: <strong>Winds (⟦0⟧v2.0 reanalysis, Mars Year ⟦#0⟧)</strong>: lowest-level winds, temperature and surface pressure, one sample every two Mars hours, of the Mars Analysis Correction Data Assimilation (⟦1⟧) v2.0 reanalysis (⟦2⟧,⟦3⟧Centre for Environmental Data Analysis; read from the analysis-ready⟦4⟧copy), Mars Year ⟦#1⟧, on its native ⟦#2⟧° grid (⟦#3⟧ × ⟦#4⟧ cells, about ⟦#5⟧ km across at the equator; the first column is centred on ⟦#6⟧°). The winds are those of the lowest model level (σ = ⟦#7⟧); air density ρ = p/(R T) with p = σ p<sub>s</sub>, the height of that level z = (R T/g) ln(⟦#8⟧/σ), and the friction velocity⟦5⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#9⟧, eq. ⟦#10⟧) under constant stress at that height (no roughness length); that level is ⟦#11⟧–⟦#12⟧ m above the surface (⟦6⟧⟦#13⟧–⟦#14⟧ m). In Mars Year ⟦#15⟧ the first ⟦#16⟧ samples (Ls ⟦#17⟧–⟦#18⟧°) assimilate Mars Odyssey⟦7⟧column dust, the others⟦8⟧⟦9⟧temperature and dust profiles. Data, documentation and file browser: <a href="https://catalogue.ceda.ac.uk/uuid/cd037a9ea387438fabf4d674dbe53088/" target="_blank" rel="noopener noreferrer">⟦10⟧v2.0 in the⟦11⟧Archive</a>; the analysis-ready copy read by the atlas: <a href="https://huggingface.co/datasets/ananyo01/ARCO-MACDA" target="_blank" rel="noopener noreferrer">⟦12⟧</a>. Contains public sector information licensed under the Open Government Licence v3.0 (⟦13⟧v2.0,⟦14⟧Centre for Environmental Data Analysis).
 ZH: <strong>风场（⟦0⟧v2.0 再分析数据集，第 ⟦#0⟧ 个火星年）</strong>：Mars Analysis Correction Data Assimilation（⟦1⟧）v2.0 再分析数据集（⟦2⟧，⟦3⟧Centre for Environmental Data Analysis；读取自可直接分析的⟦4⟧副本）第 ⟦#1⟧ 个火星年的最低层风、温度与地面气压，每两个火星小时一个样本，位于其原生 ⟦#2⟧° 网格上（⟦#3⟧ × ⟦#4⟧ 个网格单元，在赤道处约 ⟦#5⟧ km 宽；第一列的中心位于 ⟦#6⟧°）。风速取模型最低层（σ = ⟦#7⟧）；空气密度 ρ = p/(R T)，其中 p = σ p<sub>s</sub>，该层高度 z = (R T/g) ln(⟦#8⟧/σ)，摩阻风速⟦5⟧由 Pähtz 与 Durán（⟦#9⟧，式 ⟦#10⟧）在该高度恒定应力条件下的光滑壁面混合长廓线求得（不含空气动力学粗糙度）；该层位于地表以上 ⟦#11⟧–⟦#12⟧ m（⟦6⟧⟦#13⟧–⟦#14⟧ m）。第 ⟦#15⟧ 个火星年的前 ⟦#16⟧ 个样本（Ls ⟦#17⟧–⟦#18⟧°）同化 Mars Odyssey⟦7⟧柱尘量，其余样本同化⟦8⟧⟦9⟧温度和尘埃廓线。数据、文档与文件浏览：<a href="https://catalogue.ceda.ac.uk/uuid/cd037a9ea387438fabf4d674dbe53088/" target="_blank" rel="noopener noreferrer">⟦10⟧v2.0（⟦11⟧Archive）</a>；本图集读取的可直接分析副本：<a href="https://huggingface.co/datasets/ananyo01/ARCO-MACDA" target="_blank" rel="noopener noreferrer">⟦12⟧</a>。Contains public sector information licensed under the Open Government Licence v3.0 (⟦13⟧v2.0,⟦14⟧Centre for Environmental Data Analysis).
 
-## c.912ef7dd (About)
-EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧° or ⟦#2⟧° × ⟦#3⟧° or ⟦#4⟧°). Negative values (convergence) imply deposition.
-ZH: <strong>饱和输沙通量散度</strong> ⟦0⟧：合成输沙势矢量（大小⟦1⟧，方向⟦2⟧）在火星球面（R = ⟦#0⟧ km）上的散度，按⟦3⟧方法编号⟦4⟧，在风场数据集网格（⟦#1⟧° 或 ⟦#2⟧°×⟦#3⟧° 或 ⟦#4⟧°）上以中心差分计算。负值（汇）意味着堆积。
-
 ## c.c682ba25 (About)
 EN: <strong>⟦0⟧⟦#0⟧° × ⟦#1⟧°</strong>: ⟦1⟧. Licence: ⟦2⟧.
 ZH: <strong>⟦0⟧⟦#0⟧°×⟦#1⟧°</strong>：⟦1⟧。许可协议：⟦2⟧。
@@ -3175,10 +3171,6 @@ ZH: 仅针对陆地网格单元（陆海掩膜比例大于 ⟦#0⟧，即网格�
 
 # Layer popovers
 
-## c.fb1d1176 (Layer popovers)
-EN: The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°), each one Mars year of lowest-level winds on its own grid (⟦3⟧: free-running climate-model simulation;⟦4⟧and⟦5⟧: reanalysis of Mars Year ⟦#4⟧, with spacecraft observations of the atmosphere assimilated into a climate model). The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. No⟦6⟧data poleward of ⟦#5⟧° N: the northernmost cells of its grid are centred at ⟦#6⟧° N.
-ZH: “风场数据集”选择器可在不同的火星风场数据集之间切换（⟦0⟧，⟦#0⟧°；⟦1⟧，⟦#1⟧°×⟦#2⟧°；⟦2⟧，⟦#3⟧°），每个数据集均为各自网格上一个火星年的最低层风（⟦3⟧：自由运行的气候模型模拟；⟦4⟧和⟦5⟧：第 ⟦#4⟧ 个火星年的再分析数据集，将航天器对大气的观测同化到气候模型中）。风场与输沙通量图层以及网格单元面板随所选数据集而变；沙丘图和高程对所有数据集都相同。⟦#5⟧° N 以北无⟦6⟧数据：其网格最北一行单元的中心位于 ⟦#6⟧° N。
-
 ## c.59fd3775 (Layer popovers)
 EN: The median diameter ⟦0⟧ of the sand grains. Every grain-size-dependent map layer (its ⓘ says so) and the cell panel use the value set here. The threshold friction velocity ⟦1⟧ is computed for each time step from ⟦2⟧ and that step's air density and temperature (⟦3⟧).
 ZH: 沙粒的中值粒径⟦0⟧。所有依赖粒径的地图图层（其 ⓘ 中有说明）以及网格单元面板均使用此处设定的值。临界摩阻风速⟦1⟧按每个时间段的⟦2⟧及该时间段的空气密度与温度（⟦3⟧）计算得出。
@@ -3259,7 +3251,53 @@ ZH: “仅沙丘”只在所选风场数据集中含有已制图沙丘的网格�
 EN: Switching it on sets the dune map's opacity slider to ⟦#0⟧ %, so the colours of the dune cells show through it; the slider can be moved as usual.
 ZH: 将其开启会把沙丘分布图的不透明度滑块设置为 ⟦#0⟧%，以便透过它看到沙丘网格单元的颜色；该滑块仍可照常移动。
 
+## c.2e077e7d (Layer popovers)
+EN: The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°;⟦3⟧, ⟦#4⟧° × ⟦#5⟧°), each one Mars year of lowest-level winds on its own grid (⟦4⟧: free-running climate-model simulation;⟦5⟧and⟦6⟧: reanalysis of Mars Year ⟦#6⟧, with spacecraft observations of the atmosphere assimilated into a climate model;⟦7⟧: climatology of a climate model). The⟦8⟧gives the mean state of the atmosphere for each season and time of day, without day-to-day variability, so its sand fluxes are lower bounds. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. No⟦9⟧data poleward of ⟦#7⟧° N: the northernmost cells of its grid are centred at ⟦#8⟧° N. No⟦10⟧data poleward of ⟦#9⟧° N: the northernmost cells of its grid are centred at ⟦#10⟧° N.
+ZH: “风场数据集”选择器可在不同的火星风场数据集之间切换（⟦0⟧，⟦#0⟧°；⟦1⟧，⟦#1⟧°×⟦#2⟧°；⟦2⟧，⟦#3⟧°；⟦3⟧，⟦#4⟧°×⟦#5⟧°），每个数据集均为各自网格上一个火星年的最低层风（⟦4⟧：自由运行的气候模型模拟；⟦5⟧和⟦6⟧：第 ⟦#6⟧ 个火星年的再分析数据集，将航天器对大气的观测同化到气候模型中；⟦7⟧：气候模型的气候态）。⟦8⟧给出的是每个季节和每个时刻的大气平均状态，不包含逐日变率，因此其输沙通量为下限值。风场与输沙通量图层以及网格单元面板随所选数据集而变；沙丘图和高程对所有数据集都相同。⟦#7⟧° N 以北无⟦9⟧数据：其网格最北一行单元的中心位于 ⟦#8⟧° N。⟦#9⟧° N 以北无⟦10⟧数据：其网格最北一行单元的中心位于 ⟦#10⟧° N。
+
+# About
+
+## c.fd8280ee (About)
+EN: <strong>Winds (Mars Climate Database ⟦#0⟧, climatology)</strong>: lowest-level winds, temperature and surface pressure of the Mars Climate Database (⟦0⟧) version ⟦#1⟧ (Laboratoire de Météorologie Dynamique, Paris;⟦1⟧,⟦2⟧), climatology scenario with average solar⟦3⟧, read with the⟦4⟧software (call_mcd) on its native grid (⟦#2⟧ × ⟦#3⟧ cells of ⟦#4⟧° × ⟦#5⟧°, about ⟦#6⟧ × ⟦#7⟧ km at the equator; the pole rows are left out) every two Mars hours through one climatological Mars year. The⟦5⟧stores monthly means of the diurnal cycle; between them it interpolates in season. <b>These are mean-state winds: day-to-day variability is not included, so the sand fluxes are lower bounds.</b> The winds are those of the lowest model level (about ⟦#8⟧ m above the surface; ⟦#9⟧–⟦#10⟧ m over all cells and samples); air density ρ = p/(R T), and the friction velocity⟦6⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#11⟧, eq. ⟦#12⟧) under constant stress at that height (no roughness length). The⟦7⟧data are provided without warranty of any kind as to their reliability or validity, and may not be put to commercial use without authorisation. Explore the database in the <a href="https://www-mars.lmd.jussieu.fr/mcd_python/" target="_blank" rel="noopener noreferrer">⟦8⟧web interface</a>; the full version, with the original data, is available on <a href="https://www-mars.lmd.jussieu.fr/mars/access.html" target="_blank" rel="noopener noreferrer">registration</a>.
+ZH: <strong>风场（Mars Climate Database ⟦#0⟧，气候态）</strong>：Mars Climate Database（⟦0⟧）第 ⟦#1⟧ 版（Laboratoire de Météorologie Dynamique，Paris；⟦1⟧，⟦2⟧）的最低层风、温度与地面气压，采用平均太阳⟦3⟧的气候态情景，通过⟦4⟧软件（call_mcd）读取，位于其原生网格上（⟦#2⟧ × ⟦#3⟧ 个网格单元，每个 ⟦#4⟧° × ⟦#5⟧°，在赤道处约 ⟦#6⟧ × ⟦#7⟧ km；极地行被略去），在一个气候态火星年内每两个火星小时取一个样本。⟦5⟧存储每月日变化循环的月平均值；在月份之间按季节插值。<b>这些是平均态风场：未包含逐日变率，因此输沙通量为下限值。</b>风速取模型最低层（约在地表以上 ⟦#8⟧ m；全部网格单元和样本范围为 ⟦#9⟧–⟦#10⟧ m）；空气密度 ρ = p/(R T)，摩阻风速⟦6⟧由 Pähtz 与 Durán（⟦#11⟧，式 ⟦#12⟧）在该高度恒定应力条件下的光滑壁面混合长廓线求得（不含空气动力学粗糙度）。⟦7⟧数据不提供任何有关其可靠性或有效性的保证，未经授权不得用于商业用途。可在<a href="https://www-mars.lmd.jussieu.fr/mcd_python/" target="_blank" rel="noopener noreferrer">⟦8⟧网页界面</a>中浏览该数据库；包含原始数据的完整版本可通过<a href="https://www-mars.lmd.jussieu.fr/mars/access.html" target="_blank" rel="noopener noreferrer">注册</a>获取。
+
+## c.d827ecdc (About)
+EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧° or ⟦#2⟧° × ⟦#3⟧° or ⟦#4⟧° or ⟦#5⟧° × ⟦#6⟧°). Negative values (convergence) imply deposition.
+ZH: <strong>饱和输沙通量散度</strong> ⟦0⟧：合成输沙势矢量（大小⟦1⟧，方向⟦2⟧）在火星球面（R = ⟦#0⟧ km）上的散度，按⟦3⟧方法编号⟦4⟧，在风场数据集网格（⟦#1⟧° 或 ⟦#2⟧°×⟦#3⟧° 或 ⟦#4⟧° 或 ⟦#5⟧°×⟦#6⟧°）上以中心差分计算。负值（汇）意味着堆积。
+
+## c.59edac2e (About)
+EN: Mars Climate Database version ⟦#0⟧ (climatology, average solar⟦0⟧)
+ZH: Mars Climate Database 第⟦#0⟧版（气候态，平均太阳⟦0⟧）
+
+## c.a1d254a9 (About)
+EN: Model and database: ⟦0⟧
+ZH: 模型和数据库：⟦0⟧
+
+## c.6657ba99 (About)
+EN: Database: ⟦0⟧
+ZH: 数据库：⟦0⟧
+
+## c.9386b33f (About)
+EN: Web interface (explore the database): ⟦0⟧
+ZH: 网页界面（浏览数据库）：⟦0⟧
+
+## c.b8ed5585 (About)
+EN: Full version (original data, on registration): ⟦0⟧
+ZH: 完整版本（原始数据，需注册）：⟦0⟧
+
+## c.051b2d7d (About)
+EN: Derived from the Mars Climate Database version ⟦#0⟧ (⟦0⟧). The⟦1⟧team makes no representations or warranties regarding the reliability or validity of the data and bears no responsibility for any use made of them.
+ZH: 基于火星气候数据库（Mars Climate Database）版本⟦#0⟧（⟦0⟧）推算得出。⟦1⟧团队不对数据的可靠性或有效性做出任何陈述或保证，亦不对数据的任何使用方式承担责任。
+
 # Unused (English changed or removed)
+
+## c.912ef7dd (Unused (English changed or removed))
+EN: <strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧° or ⟦#2⟧° × ⟦#3⟧° or ⟦#4⟧°). Negative values (convergence) imply deposition.
+ZH: <strong>饱和输沙通量散度</strong> ⟦0⟧：合成输沙势矢量（大小⟦1⟧，方向⟦2⟧）在火星球面（R = ⟦#0⟧ km）上的散度，按⟦3⟧方法编号⟦4⟧，在风场数据集网格（⟦#1⟧° 或 ⟦#2⟧°×⟦#3⟧° 或 ⟦#4⟧°）上以中心差分计算。负值（汇）意味着堆积。
+
+## c.fb1d1176 (Unused (English changed or removed))
+EN: The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°), each one Mars year of lowest-level winds on its own grid (⟦3⟧: free-running climate-model simulation;⟦4⟧and⟦5⟧: reanalysis of Mars Year ⟦#4⟧, with spacecraft observations of the atmosphere assimilated into a climate model). The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. No⟦6⟧data poleward of ⟦#5⟧° N: the northernmost cells of its grid are centred at ⟦#6⟧° N.
+ZH: “风场数据集”选择器可在不同的火星风场数据集之间切换（⟦0⟧，⟦#0⟧°；⟦1⟧，⟦#1⟧°×⟦#2⟧°；⟦2⟧，⟦#3⟧°），每个数据集均为各自网格上一个火星年的最低层风（⟦3⟧：自由运行的气候模型模拟；⟦4⟧和⟦5⟧：第 ⟦#4⟧ 个火星年的再分析数据集，将航天器对大气的观测同化到气候模型中）。风场与输沙通量图层以及网格单元面板随所选数据集而变；沙丘图和高程对所有数据集都相同。⟦#5⟧° N 以北无⟦6⟧数据：其网格最北一行单元的中心位于 ⟦#6⟧° N。
 
 ## c.f9cfdc68 (Unused (English changed or removed))
 EN: Threshold ⟦0⟧: <strong>⟦1⟧</strong>

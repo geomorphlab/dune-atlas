@@ -1,0 +1,44 @@
+{
+ "$comment": "Spec of the Mars Climate Database 6.1 climatology dataset (mars/datasets.py). Series from the Gadi extraction pipeline/gadi/mcd (call_mcd, lowest model level), assembled by mars/sources/mcd.py.",
+ "id": "mcd-v61-clim",
+ "name": "Mars Climate Database 6.1, climatology scenario with average solar EUV (5.625° × 3.75°, every 2 Mars hours, mean state)",
+ "resolution_text": "5.625° × 3.75°",
+ "grid": {
+  "lat0": 86.25,
+  "dlat": -3.75,
+  "lon0": -180.0,
+  "dlon": 5.625,
+  "ny": 47,
+  "nx": 64,
+  "cell_registration": "centre"
+ },
+ "samples_per_sol": 12,
+ "n_samples": 8023,
+ "prefix": "dune-atlas/mars/v2/datasets/mcd-v61-clim",
+ "reader": "contract",
+ "source": "https://www-mars.lmd.jussieu.fr/",
+ "citation": "Mars Climate Database version 6.1 (LMD, Paris; climatology scenario with average solar EUV, mean state). Forget, F., Hourdin, F., Fournier, R., Hourdin, C., Talagrand, O., Collins, M., Lewis, S. R., Read, P. L. & Huot, J.-P. (1999). Improved general circulation models of the Martian atmosphere from the surface to above 80 km. J. Geophys. Res. 104(E10), 24155-24175. doi:10.1029/1999JE001025; Millour, E. et al. (2018). The Mars Climate Database (version 5.3). Scientific Workshop: From Mars Express to ExoMars, ESAC, Madrid. https://www-mars.lmd.jussieu.fr/. One MCD year, 12 samples per sol, lowest model level (aps = 0.00456 Pa, bps = 0.99954), native grid without the pole rows.",
+ "licence": "Mars Climate Database: free scientific use with citation; no commercial use without authorisation (LMD); no warranty",
+ "license_spdx": "LicenseRef-MCD-noncommercial",
+ "winds_phrase": "Mars Climate Database 6.1 climatology (average solar EUV), mean-state lowest-level winds every two Mars hours through one MCD year (Forget, F. et al. (1999). J. Geophys. Res. 104(E10), 24155-24175. doi:10.1029/1999JE001025; Millour, E. et al. (2018). The Mars Climate Database (version 5.3). From Mars Express to ExoMars workshop, ESAC, Madrid; https://www-mars.lmd.jussieu.fr/)",
+ "gcm_citation": "Mars Climate Database version 6.1, climatology scenario with average solar EUV (Forget, F. et al. (1999). J. Geophys. Res. 104(E10), 24155-24175. doi:10.1029/1999JE001025; Millour, E. et al. (2018). The Mars Climate Database (version 5.3). From Mars Express to ExoMars workshop, ESAC, Madrid; https://www-mars.lmd.jussieu.fr/)",
+ "store_title": "dune-atlas Mars cell store: Mars Climate Database 6.1 climatology (average solar EUV) two-hourly mean-state lowest-level winds, air state and sand-flux fields at 64 grain sizes",
+ "series_note": "u, v = zonal and meridional wind of the lowest MCD model level (call_mcd, mean state, the wind at that sample's height z); T = temperature of that level; rho = p/(R T) with p = aps1 + bps1 ps (aps1 = 0.00456 Pa, bps1 = 0.99954); z = (R T/g) ln(ps/p); float32 with mantissas rounded to series_keepbits (|error| <= 0.005 m/s, 0.02 K, 0.05 % rho, 1 mm z). Fields are computed from the unrounded values. Monthly-mean diurnal cycles interpolated in season: day-to-day variability is not included.",
+ "ls_definition": "areocentric solar longitude Ls (deg) returned by call_mcd (extvar 9) for sol s, MCD sol2ls (sol 0 = Ls 0, 668.6-sol year)",
+ "sol_definition": "sols since Ls 0 of the MCD year, s = (k + 1)/12 for sample k; the fraction of a sol is the true solar time of day at the prime meridian (2, 4, ..., 24 h), the stored times of day of the MCD",
+ "pyramid_source": "Fields computed for the Mars dune atlas from the Mars Climate Database 6.1 climatology scenario with average solar EUV (Forget et al. 1999, J. Geophys. Res. 104, 24155-24175, doi:10.1029/1999JE001025; Millour et al. 2018; https://www-mars.lmd.jussieu.fr/), two-hourly mean-state lowest-level winds, temperature and air density through one MCD year, with the per-hour threshold and transport rate of Pähtz & Durán (2023) J. Fluid Mech. 963, A20, doi:10.1017/jfm.2023.343, and the crest-mode methods outlined in Gunn, A. (2026) The distribution of Earth's wind-blown sand dunes. Nature Communications. doi:10.1038/s41467-026-75466-y",
+ "qsdiv_grid_text": "on the MCD 5.625° × 3.75° grid (periodic in longitude, one-sided at the ±86.25° rows)",
+ "rho_description": "Mean over the two-hourly samples of one MCD year of the lowest-level air density rho_f = p/(R T) (p = aps1 + bps1 ps at the lowest MCD model level, T = temperature of that level, R = 191.8 J kg-1 K-1).",
+ "cell_text": "the 5.625° × 3.75° cell",
+ "registry_dir": "registry/mars/datasets/mcd-v61-clim",
+ "meta_json": "registry/mars/datasets/mcd-v61-clim/qsat_field_metadata.json",
+ "fields_method": "23 sand-flux fields at 64 median grain diameters from the mean-state lowest-level winds, time-averaged over one MCD climatological year (one sample every two Mars hours), per-sample threshold and flux (Pähtz & Durán 2023) with the crest-mode methods outlined in Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y",
+ "notes": {
+  "resolution_deg": {
+   "lon": 5.625,
+   "lat": 3.75
+  },
+  "latitude_limit_deg": 88.125,
+  "z_range_m": [2, 10]
+ }
+}

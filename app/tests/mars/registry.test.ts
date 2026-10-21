@@ -17,7 +17,7 @@ describe("Mars registry", () => {
   it("is the Mars registry (@body/registry: registry/mars) and validates", () => {
     expect(errors).toEqual([]);
     expect(validateMarsRegistry(reg, schema)).toEqual([]);
-    expect(reg.datasets?.map((d) => d.id)).toEqual(["fv3-beta1", "emars-v1-my30", "macda-v2-my30"]);
+    expect(reg.datasets?.map((d) => d.id)).toEqual(["fv3-beta1", "emars-v1-my30", "macda-v2-my30", "mcd-v61-clim"]);
     expect(reg.datasets?.[0].prefix).toBe("dune-atlas/mars/v2/datasets/fv3-beta1");
     expect(reg.defaultDataset).toBe("fv3-beta1");
   });

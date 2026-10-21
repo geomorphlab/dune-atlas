@@ -71,7 +71,8 @@ export function resolutionText(deg: number): string {
 export function gridResolutionText(g: Pick<Grid, "dlat" | "dlon">): string {
   const dy = Math.abs(g.dlat), dx = Math.abs(g.dlon);
   if (Math.abs(dx - dy) < 1e-9) return resolutionText(dy);
-  const r = (v: number) => `${Number(v.toPrecision(3))}°`;
+  // exact steps of up to three decimals as written (MCD 5.625°), others to three significant digits (EMARS 5.14°)
+  const r = (v: number) => `${Math.abs(v * 1000 - Math.round(v * 1000)) < 1e-6 ? Number(v.toFixed(3)) : Number(v.toPrecision(3))}°`;
   return `${r(dx)} × ${r(dy)}`;
 }
 

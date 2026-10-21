@@ -1,0 +1,30 @@
+#!/bin/bash
+#PBS -q normal
+#PBS -N mcd_test
+#PBS -l ncpus=1
+#PBS -l mem=4GB
+#PBS -l walltime=01:00:00
+#PBS -j oe
+# Submit with the site settings (pipeline/gadi/site.example.env):
+#   qsub -P <project> -l storage=<DUNE_ATLAS_STORAGE> -o <R>/logs/test.o -v R,MCD,PY pipeline/gadi/mcd/test.pbs
+#   R = work dir (code/, bin/, work/, out/, logs/), MCD = root of the MCD 6.1 distribution, PY = python
+# Build mcd_series against the verified -O0 MCD 6.1 object (MCD_silent.o) and compare its output at the month
+# centres and stored times of day with level 1 of the MCD files (mcd_tools.py check).
+set -u
+: "${R:?work dir}" "${MCD:?MCD_6.1 root}" "${PY:?python with numpy and netCDF4}"
+test -x $PY || exit 127
+command -v module >/dev/null 2>&1 || source /etc/profile.d/modules.sh
+module load gcc/12.2.0 netcdf/4.9.2
+cd $R/code || exit 2
+NCI="-I$NETCDF_ROOT/include/GNU"; NCL="-L$NETCDF_ROOT/lib/GNU -lnetcdff -lnetcdf"
+export LD_LIBRARY_PATH=$NETCDF_ROOT/lib/GNU:${LD_LIBRARY_PATH:-}
+gfortran -O0 $NCI -I$MCD/mcd $MCD/mcd/MCD_silent.o mcd_series.F90 -o $R/bin/mcd_series $NCL > $R/logs/build.log 2>&1 || { cat $R/logs/build.log; exit 3; }
+read A1 B1 < <($PY mcd_tools.py lowest $MCD/data)
+echo "aps1=$A1 bps1=$B1" | tee $R/logs/lowest.txt
+$PY mcd_tools.py testtimes $R/work
+t0=$(date +%s)
+$R/bin/mcd_series $MCD/data/ 1 $A1 $B1 $R/work/test_times.txt $R/work/test.bin > $R/logs/test_run.log 2>&1
+echo "exit=$? seconds=$(( $(date +%s) - t0 )) for 144 samples" | tee $R/logs/test_timing.txt
+cat $R/work/test.bin.meta
+$PY mcd_tools.py check $R/work/test.bin $MCD/data 2>&1 | tee $R/logs/test_check.txt
+echo done

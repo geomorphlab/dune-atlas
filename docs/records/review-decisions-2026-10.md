@@ -276,6 +276,21 @@ min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 
 | Weekly backup of usage.csv to GitHub | PI | done (PR #23 records it) |
 | Dataset comparison tab in the Earth cell panel (DP, RDD, RDP/DP of the other wind datasets at the same place; replaces the lines removed from above the wind rose on 17 October) | PI, agent | open |
 
+## Mars Climate Database as a fourth Mars wind dataset (21 October 2026)
+
+The MCD team (E. Millour, LMD) agreed to MCD-derived map layers, the cell panel and per-cell downloads including the wind series, with Forget et al. (1999) and Millour et al. (2018) cited, the MCD website linked and the MCD version stated. Record: docs/records/validation-mars-mcd.md.
+
+| Item | Decision |
+|---|---|
+| Version | MCD 6.1 (installed and verified on Gadi), not 6.2 as named in the email to the MCD team: PI's choice; every text names 6.1 |
+| Scenario and state | Climatology with average solar EUV (scenario 1), mean state: no day-to-day variability, so the sand fluxes are lower bounds (said in the dataset ⓘ, About, layer information and downloads) |
+| Wind height | The lowest model level (about 4.5 m), u* from the Pähtz & Durán (2023) profile at each sample's height, as for FV3, EMARS and MACDA (PI's choice; the MCD team had no recommendation) |
+| Time sampling | Every two Mars hours through one climatological year (8,023 samples, as MACDA), the MCD interpolating between its monthly means (PI's choice) |
+| Grid | The native MCD nodes as cell centres, without the pole rows (47 × 64 cells of 5.625° × 3.75°; no cells poleward of ±88.125°); GCM-resolution fields (hireskey 0) |
+| Air density | ρ = p/(R T) with the atlas constant R, as for the other datasets; MCD's own density (composition-dependent R) differs by a median of 0.4 %, up to 15 % at the polar rows in winter |
+| Dataset id | `mcd-v61-clim` (registry ids allow only lower-case letters, digits and hyphens) |
+| Licence | MCD terms (scientific use with citation, no commercial use without authorisation, no warranty); DATA_LICENSE.md note 10 |
+
 ## French review by Tia (21 October 2026)
 
 Word document `Dune-Atlas-French-review_AK.docx`, built from `docs/translations/fr.md` at c437592 (16 October); 611 rows, 67 edited, no tracked changes.

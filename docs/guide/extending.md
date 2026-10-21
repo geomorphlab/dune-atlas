@@ -74,7 +74,7 @@ Mars: hourly series) needs no app code:
      non-square and the rows need not reach the poles) and `info.series` (`samplesPerSol`, and `indexText` /
      `solText`, the long names of the `hour` and `sol` columns of the downloads). The app uses them until the cell
      store is open, then the store's root attrs (`grid`, `dataset.samples_per_sol`, series length); the panel and
-     downloads word the samples by the sampling ("hourly", "two-hourly"). EMARS and MACDA
+     downloads word the samples by the sampling ("hourly", "two-hourly"). EMARS, MACDA and MCD
      (`registry/mars/datasets/<id>/dataset.yaml`) are examples.
 3. Add the dataset's layer fragments in `registry/<body>/datasets/<id>/`: a file with the same name as a
    `generated/` fragment replaces it for this dataset (e.g. `qsat_fields.yaml` with sources

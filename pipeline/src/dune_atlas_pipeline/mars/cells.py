@@ -459,7 +459,12 @@ def validate(out: str, n_cells: int = 6, n_recompute: int = 2, seed: int = 0, ce
             lo, hi = ranges[name]
             assert lo <= x[k].min() and x[k].max() <= hi, (name, i, j, float(x[k].min()), float(x[k].max()))
         f = F[i, j]
-        assert np.isnan(f).mean() < 0.05, ("fields NaN", i, j)
+        # few undefined fields among the grain sizes that move at all (DP > 0): where no sample exceeds the threshold
+        # every directional field is undefined by design (Earth convention); common for the weak mean-state winds of
+        # a climatology (mcd-v61-clim), rare for hourly model output
+        moving = f[QSAT_VARS.index("dpm")] > 0
+        assert np.isnan(f[:, moving]).mean() < 0.05 if moving.any() else True, ("fields NaN", i, j)
+        assert not np.isnan(f[QSAT_VARS.index("dpm")]).any(), ("DP undefined", i, j)
         rec.append([i, j])
     diffs = []
     for i, j in cells[:n_recompute]:
