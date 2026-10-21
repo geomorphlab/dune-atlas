@@ -32,6 +32,7 @@ const rootAttrs = (p: string) => (JSON.parse(fs.readFileSync(path.join(p, "zarr.
 const CASES = [
   { id: "emars-v1-my30", sps: 24, word: "hourly", edges: [[0, 40], [33, 50]] as [number, number][], bounds: [-180, -87.42857142857143, 180, 87.42857142857143], first: [-177, 84.857142857] },
   { id: "macda-v2-my30", sps: 12, word: "two-hourly", edges: [[16, 0], [16, 71]] as [number, number][], bounds: [-182.5, -90, 177.5, 90], first: [-180, 87.5] },
+  { id: "mcd-v61-clim", sps: 12, word: "two-hourly", edges: [[16, 0], [16, 63]] as [number, number][], bounds: [-182.8125, -88.125, 177.1875, 88.125], first: [-180, 86.25] },
 ];
 
 for (const C of CASES) {
@@ -62,7 +63,7 @@ for (const C of CASES) {
         expect(Math.abs(v.fluxTotal / (fieldValue(cell, "dpm", k) * M.S2Y) - 1), `d index ${k}`).toBeLessThan(1e-5);
       }
     });
-    it("cells at the grid edges carry data (EMARS outer rows, MACDA columns either side of 180°)", async () => {
+    it("cells at the grid edges carry data (EMARS outer rows, MACDA and MCD columns either side of 180°)", async () => {
       const s = await open(C.id);
       for (const [iy, ix] of C.edges) {
         const cell = await s.query(iy, ix);
@@ -89,7 +90,7 @@ for (const C of CASES) {
       expect(w.nx * w.dlon).toBeGreaterThan(20);
       // centre of window column j: lon0 + j dlon (unwrapped past 180)
       const lons = Array.from({ length: w.nx }, (_, j) => w.lon0 + j * w.dlon);
-      expect(lons.some((x) => Math.abs(x - 180 - (C.id.startsWith("macda") ? 0 : 3)) < 1e-6)).toBe(true);
+      expect(lons.some((x) => Math.abs(x - 180 - (C.id.startsWith("emars") ? 3 : 0)) < 1e-6)).toBe(true);
       expect(Array.from(w.data).some(Number.isFinite)).toBe(true);
     });
     it("panel and NetCDF from the store: the dataset's sampling words and sample count", async () => {

@@ -26,8 +26,8 @@ import { FIELD_VARS, makeDatasetCell, makeMarsCell } from "./helpers";
 const mem = new Map<string, string>();
 vi.stubGlobal("localStorage", { getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => { mem.set(k, v); }, removeItem: (k: string) => { mem.delete(k); }, clear: () => mem.clear() });
 const reg = loadRegistry().registry;
-const IDS = ["fv3-beta1", "emars-v1-my30", "macda-v2-my30"];
-const EMARS = datasetGrid("emars-v1-my30")!, MACDA = datasetGrid("macda-v2-my30")!;
+const IDS = ["fv3-beta1", "emars-v1-my30", "macda-v2-my30", "mcd-v61-clim"];
+const EMARS = datasetGrid("emars-v1-my30")!, MACDA = datasetGrid("macda-v2-my30")!, MCD = datasetGrid("mcd-v61-clim")!;
 const metaOf = (id: string) => ({ datasetId: id, datasetTitle: reg.datasets!.find((d) => d.id === id)!.title, dataVersion: "v2", permalink: `https://example.org/mars/?dataset=${id}`, generated: new Date("2026-10-14T00:00:00Z") });
 const initState = (dataset = "fv3-beta1"): AppState => ({ basemap: reg.basemaps[0].id, projection: "globe", utIndex: 29, layers: Object.fromEntries(reg.layers.map((l) => [l.id, { visible: !!l.visible, opacity: l.opacity ?? 1 }])), order: reg.layers.map((l) => l.id), dataset, cell: null, embed: false });
 const text = (el: Element) => (el.textContent ?? "").replace(/\s+/g, " ");
@@ -42,19 +42,21 @@ async function openPanel(cell: MarsCellData) {
 }
 
 describe("Mars wind datasets: registry", () => {
-  it("three datasets, FV3 the default; grid and sampling of each (info.grid, info.series)", () => {
+  it("four datasets, FV3 the default; grid and sampling of each (info.grid, info.series)", () => {
     expect(reg.datasets!.map((d) => [d.id, d.title, d.prefix])).toEqual([
       ["fv3-beta1", "MCMC FV3", "dune-atlas/mars/v2/datasets/fv3-beta1"],
       ["emars-v1-my30", "EMARS v1.0 (MY30)", "dune-atlas/mars/v2/datasets/emars-v1-my30"],
       ["macda-v2-my30", "MACDA v2.0 (MY30)", "dune-atlas/mars/v2/datasets/macda-v2-my30"],
+      ["mcd-v61-clim", "MCD 6.1 (climatology)", "dune-atlas/mars/v2/datasets/mcd-v61-clim"],
     ]);
     expect(reg.defaultDataset).toBe("fv3-beta1");
     expect(datasetGrid("fv3-beta1")).toEqual(MARS_GRID);
     expect(EMARS).toEqual({ lat0: 84.85714285714286, dlat: -5.142857142857143, lon0: -177, dlon: 6, ny: 34, nx: 60 });
     expect(MACDA).toEqual({ lat0: 87.5, dlat: -5, lon0: -180, dlon: 5, ny: 36, nx: 72 });
-    expect(IDS.map((id) => marsTiming(id).sampling.samplesPerSol)).toEqual([24, 24, 12]);
-    expect(IDS.map((id) => gridResolutionText(datasetGrid(id)!))).toEqual(["2°", "6° × 5.14°", "5°"]);
-    expect(IDS.map((id) => datasetInfo(id).resolution)).toEqual(["2°", "6° × 5.14°", "5°"]);
+    expect(MCD).toEqual({ lat0: 86.25, dlat: -3.75, lon0: -180, dlon: 5.625, ny: 47, nx: 64 });
+    expect(IDS.map((id) => marsTiming(id).sampling.samplesPerSol)).toEqual([24, 24, 12, 12]);
+    expect(IDS.map((id) => gridResolutionText(datasetGrid(id)!))).toEqual(["2°", "6° × 5.14°", "5°", "5.625° × 3.75°"]);
+    expect(IDS.map((id) => datasetInfo(id).resolution)).toEqual(["2°", "6° × 5.14°", "5°", "5.625° × 3.75°"]);
     // FV3 keeps its numbers and texts
     expect(marsTiming("fv3-beta1")).toMatchObject({ nSamples: 16032, nSols: 668 });
     expect(datasetTooltip("fv3-beta1")).toBe("MCMC FV3 2°, one Mars year (6th simulated year, 668 sols)");
@@ -75,15 +77,23 @@ describe("Mars wind datasets: registry", () => {
     expect(ids("fv3-beta1")).toEqual(["dune-atlas-mars", "fv3", "pahtz-duran", "dunes", "dem"]);
     expect(ids("emars-v1-my30")).toEqual(["dune-atlas-mars-emars", "emars", "pahtz-duran", "dunes", "dem"]);
     expect(ids("macda-v2-my30")).toEqual(["dune-atlas-mars-macda", "macda", "pahtz-duran", "dunes", "dem"]);
+    expect(ids("mcd-v61-clim")).toEqual(["dune-atlas-mars-mcd", "mcd", "pahtz-duran", "dunes", "dem"]);
     const dois = (id: string) => citationSources([], id).flatMap((s) => s.entries.map((e) => e.doi)).filter(Boolean);
     for (const d of ["10.18113/D3W375", "10.1002/gdj3.77", "10.57967/hf/8859"]) expect(dois("emars-v1-my30")).toContain(d);
     for (const d of ["10.5285/cd037a9ea387438fabf4d674dbe53088", "10.57967/hf/8771"]) expect(dois("macda-v2-my30")).toContain(d);
+    // MCD: the citations, version, website and no-warranty notice agreed with the MCD team (21 October 2026)
+    expect(dois("mcd-v61-clim")).toContain("10.1029/1999JE001025");
+    const mcdText = JSON.stringify(citationSources([], "mcd-v61-clim"));
+    for (const t of ["Millour, E. et al. (2018)", "Version used here: 6.1", "https://www-mars.lmd.jussieu.fr/mcd_python/", "https://www-mars.lmd.jussieu.fr/mars/access.html", "no representations or warranties"]) expect(mcdText).toContain(t);
+    expect(fieldsCitation("mcd-v61-clim")).toMatch(/winds: Mars Climate Database version 6\.1, climatology scenario with average solar EUV, mean-state lowest-level winds every two Mars hours \(Forget, F\. et al\. \(1999\).*Millour, E\. et al\. \(2018\)/);
+    expect(fieldsLicence("mcd-v61-clim")).toMatch(/no commercial use without authorisation.*without warranty/);
+    expect(windSourceText("mcd-v61-clim")).toMatch(/^Wind: Mars Climate Database 6\.1 .*mean-state lowest-level wind every two Mars hours/);
     expect(fieldsCitation("emars-v1-my30")).toMatch(/^Gunn, A\. \(2026\)\. .*; transport law: Pähtz.*; winds: EMARS v1\.0 reanalysis, Mars Year 30 hourly lowest-level winds/);
     expect(fieldsCitation("macda-v2-my30")).toMatch(/winds: MACDA v2\.0 reanalysis, Mars Year 30 lowest-level winds every two Mars hours/);
     expect(fieldsLicence("macda-v2-my30")).toMatch(/Open Government Licence v3\.0/);
     expect(windSourceText("emars-v1-my30")).toMatch(/^Wind: EMARS v1\.0 reanalysis .*6° × 5\.14°$/);
     expect(windSourceText("macda-v2-my30")).toMatch(/every two Mars hours, 5°$/);
-    for (const id of ["emars-v1-my30", "macda-v2-my30"]) expect(citationSources([], id)[0].notice).not.toMatch(/FV3/);
+    for (const id of ["emars-v1-my30", "macda-v2-my30", "mcd-v61-clim"]) expect(citationSources([], id)[0].notice).not.toMatch(/FV3/);
   });
 });
 
@@ -113,15 +123,15 @@ describe("Mars wind datasets: selector, About, attribution", () => {
   it("share links carry the selected dataset and the cell (ids not in SHARE_IDS are written inline)", async () => {
     const { encodeShare, decodeShare } = await import("../../src/core/share/shortlink");
     const { DEFAULT_VIEW } = await import("../../src/core/defaultview");
-    for (const id of ["emars-v1-my30", "macda-v2-my30"]) {
+    for (const id of ["emars-v1-my30", "macda-v2-my30", "mcd-v61-clim"]) {
       const sh = decodeShare(encodeShare({ ...DEFAULT_VIEW, dataset: id, cell: [16, 0] }));
       expect([sh?.dataset, sh?.cell]).toEqual([id, [16, 0]]);
     }
   });
   it("About: a Data sources item and a field citation per dataset", () => {
-    for (const t of ["Winds (MCMC FV3 Mars GCM, beta release 1)", "Winds (EMARS v1.0 reanalysis, Mars Year 30)", "Winds (MACDA v2.0 reanalysis, Mars Year 30)"]) expect(DATA_SOURCES_HTML).toContain(`<strong>${t}</strong>`);
+    for (const t of ["Winds (MCMC FV3 Mars GCM, beta release 1)", "Winds (EMARS v1.0 reanalysis, Mars Year 30)", "Winds (MACDA v2.0 reanalysis, Mars Year 30)", "Winds (Mars Climate Database 6.1, climatology)"]) expect(DATA_SOURCES_HTML).toContain(`<strong>${t}</strong>`);
     const fc = fieldsCitationHtml().replace(/<[^>]+>/g, "");
-    for (const n of ["MCMC FV3 2°", "EMARS 6° × 5.14°", "MACDA 5°"]) expect(fc).toContain(n);
+    for (const n of ["MCMC FV3 2°", "EMARS 6° × 5.14°", "MACDA 5°", "MCD 5.625° × 3.75°"]) expect(fc).toContain(n);
   });
   it("map attribution and the air-density credit name the selected dataset (FV3 unchanged)", () => {
     expect(APP_HOOKS.attribution("fv3-beta1")[0]).toBe(`Winds: <a href="https://data.nas.nasa.gov/legacygcm/fv3betaout1/fv3betaout1/" target="_blank" rel="noopener">MCMC FV3 Mars GCM beta 1</a> (NASA Ames)`);

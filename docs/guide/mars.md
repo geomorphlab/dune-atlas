@@ -79,7 +79,7 @@ selects the `d` index of its `(d, y, x)` pyramid. Layers: dunes (vector), the 23
 near-surface air density `rho_mean` and elevation (2-D, group "Related data" (id `environment`), the counterpart of Earth's "Related data" group (id `climate`)). No aridity, vegetation, land mask or ERA5 datasets.
 
 Cell panel (`src/bodies/mars/cell/analysis.ts`, `marsflux.ts`): reads `cells.zarr/series` (u, v, T, rho, z per
-sample; z = the sample's lowest-level height, ≈ 1.5–3 m in MCMC FV3, 3.6–7.3 m in MACDA, 22–50 m in EMARS; registry sourceHtml of each dataset) and computes, at the selected d, everything the Earth
+sample; z = the sample's lowest-level height, ≈ 1.5–3 m in MCMC FV3, 3.6–7.3 m in MACDA, 3.2–6.4 m in MCD, 22–50 m in EMARS; registry sourceHtml of each dataset) and computes, at the selected d, everything the Earth
 panel computes from the histogram: per hour u* from |U| at height z through the smooth-wall mixing-length
 profile of Pähtz & Durán (2023) eq. 2.2 under constant stress (`frictionVelocity(u, v, z, ν)`, ν = μ(T)/ρ;
 no roughness length), direction, u*,th(d, ρ, T), q(u*) and the crest flux q(u_c) with the same hour's
@@ -94,8 +94,10 @@ step costs ~10 ms on a full year (16,032 hours) in node.
 Wind datasets (selector, `registry/mars/layers.yaml` and `registry/mars/datasets/<id>/dataset.yaml`): MCMC FV3
 beta release 1 (default; 2°, 90 × 180, 24 samples per sol, 16,032 samples), EMARS v1.0 Mars Year 30 (34 × 60 cells of
 6° in longitude × 5.14° in latitude, centres from 84.86° N to 84.86° S: no cells poleward of ±87.43°; 24 per sol)
-and MACDA v2.0 Mars Year 30 (5°, 36 × 72, column 0 centred on −180° so its field pyramids start at −182.5°; 12 per
-sol, every two Mars hours). The registry entry gives each grid (`info.grid`) and sampling (`info.series`:
+MACDA v2.0 Mars Year 30 (5°, 36 × 72, column 0 centred on −180° so its field pyramids start at −182.5°; 12 per
+sol, every two Mars hours) and the Mars Climate Database 6.1 climatology scenario (47 × 64 cells of 5.625° × 3.75°,
+the native MCD nodes without the pole rows, no cells poleward of ±88.125°; 12 per sol; mean-state winds, so its
+fluxes are lower bounds; extraction on Gadi, `pipeline/gadi/mcd/`, record `docs/records/validation-mars-mcd.md`). The registry entry gives each grid (`info.grid`) and sampling (`info.series`:
 samples per sol, the long names of the `hour` and `sol` columns of the downloads); once the cell store is open its
 root attrs win (`grid`, `dataset.samples_per_sol`, the series length; `src/bodies/mars/datasets.ts`). The panel,
 captions and downloads name the samples by the dataset's sampling ("hourly samples", "two-hourly samples"; the
@@ -167,11 +169,11 @@ python scripts/mars/app/make_rose_fixture.py                                    
   per-hour Mars law and the eq. 2.2 u* (crest-mode search on every 25th hour). dunes/dune: the real overlap
   fraction.
 * `cells-aux.zarr`: qsdiv (divergence on R_MARS of the map RDP/RDD), rho_mean, elev_mean (synthetic).
-* `datasets/emars-v1-my30/`, `datasets/macda-v2-my30/`: the same stores on the EMARS and MACDA grids (from the
+* `datasets/emars-v1-my30/`, `datasets/macda-v2-my30/`, `datasets/mcd-v61-clim/`: the same stores on the EMARS, MACDA and MCD grids (from the
   pipeline's `mars/dataset_specs/<id>.json`), 16,044 hourly and 8,028 two-hourly samples (fixture counts; the
   builds set the real ones) of `fixture_common.synth_series_at`, the synthetic dune fraction. Shards: EMARS (0, 2)
   (Nili Patera and the northernmost row) and (2, 3) (the southernmost rows); MACDA (1, 3) (Nili Patera), (1, 0)
-  and (1, 4) (the columns either side of 180°).
+  and (1, 4) (the columns either side of 180°); MCD (1, 2) (Nili Patera), (1, 0) and (1, 3) (either side of 180°).
 * `fields/*.zarr`: topozarr pyramids (2 levels; dims `(d, y, x)`) of dpm, rdpm, rdpa, qha_rdp_dp, uft, ufm,
   at, ae, ab, qacb, qace, qsdiv, rho_mean; `fields/elevation.zarr` (0.25°, 3 levels).
 * `basemaps/hrsc-mola-terrarium.pmtiles`: FAKE z0–3 terrarium of the synthetic topography (clamped to z3 by
@@ -200,10 +202,10 @@ cell-store checks on the real store. Screenshots without servers: `scripts/mars/
 | `rose-parity.test.ts` | per-bin flux roses and excess-shear classes (flat + crest, d = 50/200/1000 µm, eq. 2.2 u* at the hour's z) vs the Python reference (pipeline `mars/physics.py`) to 1e-12; threshold statistics; Ga√s validity |
 | `geometry.test.ts` | snap on the Mars grid; metersPerPixel and export scale bar on R_MARS; scale-bar control; Esri tile plan; pmtiles archive-depth clamp |
 | `esri.test.ts` | Esri basemaps in the registry and their attributions; graceful failure of `esri-mars://` (failing fetch, HTTP 500/400, JSON body, changed tiling, unknown service, cancellation); HiRISE empty quadtree; the registered protocol with a failing global fetch |
-| `body.test.ts` | one UI: header "Dune Atlas Mars", two-line subtitle, Wind dataset selector (MCMC FV3, EMARS, MACDA), dune invert toggle, info-popover row order (Licence row, KaTeX definitions, one field citation), basemap ⓘ (HiRISE coverage), planet toggle under the camera ("Switch to Earth", site root from `/mars/`, embed carried), Mars tour step, every storage key `duneAtlasMars.*` (Earth flag does not suppress the Mars tour). Earth mirror: `tests/body.test.ts` |
+| `body.test.ts` | one UI: header "Dune Atlas Mars", two-line subtitle, Wind dataset selector (MCMC FV3, EMARS, MACDA, MCD), dune invert toggle, info-popover row order (Licence row, KaTeX definitions, one field citation), basemap ⓘ (HiRISE coverage), planet toggle under the camera ("Switch to Earth", site root from `/mars/`, embed carried), Mars tour step, every storage key `duneAtlasMars.*` (Earth flag does not suppress the Mars tour). Earth mirror: `tests/body.test.ts` |
 | `panel.test.ts` | Mars panel sections/texts (happy-dom), slider updates, plot exports; NetCDF read-back (incl. z); CSV bundle; no log-law / z₀ wording; public text without Earth-only wording; default view |
-| `datasets.test.ts` | the three wind datasets: registry grids and sampling, credits per dataset, selector switching and tooltip, the dataset ⓘ and About items, map attribution and air-density credit; snapping at the MACDA antimeridian column and the EMARS latitude limit (no-cell message), region boxes; panel wording and downloads (NetCDF / CSV / README / metadata) of MACDA and EMARS cells; FV3 wording unchanged |
-| `datasetstores.test.ts` | the EMARS and MACDA fixture stores: root attrs = registry grid, the store's sample count and samples per sol; tour cell (flat-rose total = stored DP), edge cells, field-pyramid bounds (MACDA from −182.5°), arrows reader across 180°, panel and NetCDF from the store |
+| `datasets.test.ts` | the four wind datasets: registry grids and sampling, credits per dataset, selector switching and tooltip, the dataset ⓘ and About items, map attribution and air-density credit; snapping at the MACDA antimeridian column and the EMARS latitude limit (no-cell message), region boxes; panel wording and downloads (NetCDF / CSV / README / metadata) of MACDA and EMARS cells; FV3 wording unchanged |
+| `datasetstores.test.ts` | the EMARS, MACDA and MCD fixture stores: root attrs = registry grid, the store's sample count and samples per sol; tour cell (flat-rose total = stored DP), edge cells, field-pyramid bounds (MACDA from −182.5°), arrows reader across 180°, panel and NetCDF from the store |
 | `cellstore.test.ts` | the fixture (or `MARS_STORE_ROOT`) store: contract attrs (5 series vars, z in m); Nili Patera cell; flat-rose total = stored DP; uft = fraction of hours above threshold |
 | `jitter.test.ts` | slider over all 64 d: layer and cell panel text/structure constant outside the live slots; every value fits its slot; readout padded |
 | `dunesonly.test.ts` | Dunes only: classification (rho_mean, elevation, dunes unaffected), synthetic pyramid masking (level 0 exact, block-any), fixture / devroot `cells.zarr/dune` (2,749 cells) masking of dpm and qsdiv, toggle + short/long link round trip, overlay manager |

@@ -1,0 +1,38 @@
+#!/bin/bash
+#PBS -P k10
+#PBS -q normal
+#PBS -N mcd_full
+#PBS -l ncpus=12
+#PBS -l mem=46GB
+#PBS -l walltime=02:00:00
+#PBS -l storage=gdata/k10+gdata/xp65+scratch/k10
+#PBS -o /scratch/k10/ag5517/dune-atlas/mars/mcd/logs/full.o
+#PBS -j oe
+# Full MCD 6.1 extraction (clim, average EUV): 8023 two-hourly samples of one MCD year in 12 chunks, one process
+# each (2.8 GB per process measured in test.pbs). A chunk counts as done only if its .meta says "done" and its
+# size is nt x (2 + 9 x 47 x 64) x 4 bytes; done chunks are skipped, so the job can be re-run.
+set -u
+R=/scratch/k10/ag5517/dune-atlas/mars/mcd
+MCD=/g/data/k10/ag5517/mcd61/MCD_6.1
+PY=/g/data/k10/ag5517/apps/omega_venv/bin/python
+test -x $PY || exit 127
+test -x $R/bin/mcd_series || exit 3
+command -v module >/dev/null 2>&1 || source /etc/profile.d/modules.sh
+module load netcdf/4.9.2
+export LD_LIBRARY_PATH=$NETCDF_ROOT/lib/GNU:${LD_LIBRARY_PATH:-}
+cd $R/code || exit 2
+read A1 B1 < <($PY mcd_tools.py lowest $MCD/data)
+test -n "$B1" || exit 4
+$PY mcd_tools.py times $R/work 12 > /dev/null
+run_chunk() {
+  c=$1; t=$R/work/times_$c.txt; o=$R/out/chunk_$c.bin
+  n=$(wc -l < $t); want=$(( n * (2 + 9 * 47 * 64) * 4 ))
+  if [ -f $o.meta ] && grep -q '^done' $o.meta && [ "$(stat -c %s $o 2>/dev/null)" = "$want" ]; then echo "skip $c"; return 0; fi
+  t0=$(date +%s)
+  $R/bin/mcd_series $MCD/data/ 1 $A1 $B1 $t $o > $R/logs/chunk_$c.log 2>&1
+  echo "chunk $c exit=$? n=$n seconds=$(( $(date +%s) - t0 )) size=$(stat -c %s $o) want=$want"
+}
+export -f run_chunk; export R MCD A1 B1
+seq -w 0 11 | xargs -P 12 -I{} bash -c 'run_chunk {}'
+cat $R/out/chunk_*.bin.meta | grep -E '^(nt|ier_)' | sort | uniq -c
+echo done

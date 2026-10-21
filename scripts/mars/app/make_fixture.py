@@ -12,6 +12,8 @@ v2/ since the packed-sand fluxes, phi = 0.6, the body-level elevation pyramid st
                                       ±84.86° only), 16,044 hourly samples (24 per sol)
   datasets/macda-v2-my30/...          the same stores on the MACDA grid (36 x 72 cells of 5°, first column centred
                                       on -180°), 8,028 samples (12 per sol, every two Mars hours)
+  datasets/mcd-v61-clim/...           the same stores on the MCD 6.1 grid (47 x 64 cells of 5.625° x 3.75°, no pole
+                                      rows, first column centred on -180°), 8,028 samples (12 per sol)
 
 The grids come from the pipeline's dataset specs (mars/dataset_specs/<id>.json); the sample counts of the two
 reanalyses are fixture choices (their builds set the real ones). --datasets selects which datasets are written.
@@ -25,9 +27,9 @@ Dunes: the real overlap fraction (assessment artifact fv3_dunefrac.npz, FV3 grid
 contract grid.
 
     cd <repo> && nice python scripts/mars/app/make_fixture.py [--dunefrac <npz>] [--out staging/fixture-mars]
-                                                             [--datasets fv3-beta1,emars-v1-my30,macda-v2-my30]
+                                                             [--datasets fv3-beta1,emars-v1-my30,macda-v2-my30,mcd-v61-clim]
 
-Without --dunefrac the dune fraction is synthetic (synthetic_dunefrac), as in CI; the EMARS and MACDA stores always
+Without --dunefrac the dune fraction is synthetic (synthetic_dunefrac), as in CI; the EMARS, MACDA and MCD stores always
 use the synthetic one (on their grids).
 """
 from __future__ import annotations
@@ -98,6 +100,8 @@ FIXTURE_DATASETS = {
     "fv3-beta1": FixtureDataset("fv3-beta1", FC.GRID_ATTRS, FC.N_HOURS, 24, "2,7;0,10;0,3", DATASET, 0, "Mars dune atlas cell store (FIXTURE)"),
     "emars-v1-my30": _reanalysis("emars-v1-my30", 16044, "0,2;2,3", 30_000_001),
     "macda-v2-my30": _reanalysis("macda-v2-my30", 8028, "1,3;1,0;1,4", 30_000_002),
+    # MCD 6.1 climatology: 47 x 64 cells of 5.625° x 3.75° (no pole rows); Nili Patera and both sides of -180°
+    "mcd-v61-clim": _reanalysis("mcd-v61-clim", 8028, "1,2;1,0;1,3", 30_000_003),
 }
 
 

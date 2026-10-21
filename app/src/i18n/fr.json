@@ -820,8 +820,8 @@
   "en": "9f43d0a3"
  },
  "mars.help.datasets.body": {
-  "text": "Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (MCMC FV3, 2° ; EMARS, 6° × 5,14° ; MACDA, 5°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille (MCMC FV3 : simulation libre d’un modèle climatique ; EMARS et MACDA : réanalyse de l’année martienne 30, avec des observations de l’atmosphère faites par des sondes spatiales assimilées dans un modèle climatique). Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Pas de données EMARS au-delà de 87,43° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur 84,86° N.",
-  "en": "cdd67187"
+  "text": "Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (MCMC FV3, 2° ; EMARS, 6° × 5,14° ; MACDA, 5° ; MCD, 5,625° × 3,75°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille (MCMC FV3 : simulation libre d’un modèle climatique ; EMARS et MACDA : réanalyse de l’année martienne 30, avec des observations de l’atmosphère faites par des sondes spatiales assimilées dans un modèle climatique ; MCD : climatologie d’un modèle climatique). La MCD donne l’état moyen de l’atmosphère pour chaque saison et chaque moment de la journée, sans la variabilité d’un jour à l’autre, de sorte que ses flux de sable constituent des bornes inférieures. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Pas de données EMARS au-delà de 87,43° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur 84,86° N. Pas de données MCD au-delà de 88,13° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur 86,25° N.",
+  "en": "3cd02070"
  },
  "mars.help.basemaps.title": {
   "text": "Fonds de carte",
@@ -2723,10 +2723,6 @@
   "text": "<strong>Vents (⟦0⟧v2.0, réanalyse, année martienne ⟦#0⟧)</strong> : vents du niveau le plus bas, température et pression de surface, un échantillon toutes les deux heures martiennes, de la réanalyse Mars Analysis Correction Data Assimilation (⟦1⟧) v2.0 (⟦2⟧,⟦3⟧Centre for Environmental Data Analysis ; lue dans la copie⟦4⟧prête à l’analyse), année martienne ⟦#1⟧, sur sa grille native de ⟦#2⟧° (⟦#3⟧ × ⟦#4⟧ cellules, environ ⟦#5⟧ km de côté à l’équateur ; la première colonne est centrée sur ⟦#6⟧°). Les vents sont ceux du niveau le plus bas du modèle (σ = ⟦#7⟧) ; masse volumique de l’air ρ = p/(R T) avec p = σ p<sub>s</sub>, hauteur de ce niveau z = (R T/g) ln(⟦#8⟧/σ), et la vitesse de frottement⟦5⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#9⟧, éq. ⟦#10⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité) ; ce niveau se situe à ⟦#11⟧–⟦#12⟧ m au-dessus de la surface (⟦6⟧⟦#13⟧–⟦#14⟧ m). Pendant l’année martienne ⟦#15⟧, les ⟦#16⟧ premiers échantillons (Ls ⟦#17⟧–⟦#18⟧°) assimilent les colonnes de poussière de Mars Odyssey⟦7⟧et les autres les profils⟦8⟧⟦9⟧de température et de poussière. Données, documentation et explorateur de fichiers : <a href=\"https://catalogue.ceda.ac.uk/uuid/cd037a9ea387438fabf4d674dbe53088/\" target=\"_blank\" rel=\"noopener noreferrer\">⟦10⟧v2.0 dans le⟦11⟧Archive</a> ; la copie prête à l’analyse lue par l’atlas : <a href=\"https://huggingface.co/datasets/ananyo01/ARCO-MACDA\" target=\"_blank\" rel=\"noopener noreferrer\">⟦12⟧</a>. Contains public sector information licensed under the Open Government Licence v3.0 (⟦13⟧v2.0,⟦14⟧Centre for Environmental Data Analysis).",
   "en": "9192f9b0"
  },
- "c.912ef7dd": {
-  "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur potentiel de dérive résultant (norme⟦1⟧, direction⟦2⟧) sur la sphère martienne (R = ⟦#0⟧ km), selon⟦3⟧, Methods⟦4⟧, avec des différences centrées sur la grille du jeu de données de vent (⟦#1⟧° ou ⟦#2⟧° × ⟦#3⟧° ou ⟦#4⟧°). Les valeurs négatives (convergence) indiquent un dépôt.",
-  "en": "912ef7dd"
- },
  "c.c682ba25": {
   "text": "<strong>⟦0⟧⟦#0⟧° × ⟦#1⟧°</strong> : ⟦1⟧. Licence : ⟦2⟧.",
   "en": "c682ba25"
@@ -2867,10 +2863,6 @@
   "text": "Les roses des vents et les statistiques de flux de sable sont calculées pour les cellules terrestres (fraction du masque terre–mer supérieure à ⟦#0⟧, c’est-à-dire toute cellule contenant des terres). Cette cellule ne comporte aucune terre (fraction du masque terre–mer ⟦#1⟧). Choisissez une cellule terrestre voisine.",
   "en": "53215ad6"
  },
- "c.fb1d1176": {
-  "text": "Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° × ⟦#2⟧° ;⟦2⟧, ⟦#3⟧°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille (⟦3⟧ : simulation libre d’un modèle climatique ;⟦4⟧et⟦5⟧: réanalyse de l’année martienne ⟦#4⟧, avec des observations de l’atmosphère faites par des sondes spatiales assimilées dans un modèle climatique). Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Pas de données⟦6⟧au-delà de ⟦#5⟧° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur ⟦#6⟧° N.",
-  "en": "fb1d1176"
- },
  "c.59fd3775": {
   "text": "Le diamètre médian ⟦0⟧ des grains de sable. Chaque calque de la carte dépendant de la taille des grains (son ⓘ l’indique) ainsi que le panneau de cellule utilisent la valeur définie ici. La vitesse de frottement seuil ⟦1⟧ est calculée pour chaque pas de temps à partir de ⟦2⟧ et de la masse volumique et de la température de l’air à ce pas de temps (⟦3⟧).",
   "en": "59fd3775"
@@ -2938,6 +2930,50 @@
  "c.fea3fd30": {
   "text": "L’activer règle le curseur d’opacité de la carte des dunes sur ⟦#0⟧ %, afin que les couleurs des cellules de dunes transparaissent à travers elle ; le curseur peut être déplacé comme d’habitude.",
   "en": "fea3fd30"
+ },
+ "c.2e077e7d": {
+  "text": "Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° × ⟦#2⟧° ;⟦2⟧, ⟦#3⟧° ;⟦3⟧, ⟦#4⟧° × ⟦#5⟧°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille (⟦4⟧ : simulation libre d’un modèle climatique ;⟦5⟧et⟦6⟧: réanalyse de l’année martienne ⟦#6⟧, avec des observations de l’atmosphère faites par des sondes spatiales assimilées dans un modèle climatique ;⟦7⟧: climatologie d’un modèle climatique). La⟦8⟧donne l’état moyen de l’atmosphère pour chaque saison et chaque moment de la journée, sans la variabilité d’un jour à l’autre, de sorte que ses flux de sable constituent des bornes inférieures. Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Pas de données⟦9⟧au-delà de ⟦#7⟧° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur ⟦#8⟧° N. Pas de données⟦10⟧au-delà de ⟦#9⟧° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur ⟦#10⟧° N.",
+  "en": "2e077e7d"
+ },
+ "c.fd8280ee": {
+  "text": "<strong>Vents (Mars Climate Database ⟦#0⟧, climatologie)</strong> : vents du niveau le plus bas, température et pression de surface de la Mars Climate Database (⟦0⟧) version ⟦#1⟧ (Laboratoire de Météorologie Dynamique, Paris ;⟦1⟧,⟦2⟧), scénario climatologique à flux⟦3⟧solaire moyen, lus avec le logiciel de la⟦4⟧(call_mcd) sur sa grille native (⟦#2⟧ × ⟦#3⟧ cellules de ⟦#4⟧° × ⟦#5⟧°, environ ⟦#6⟧ × ⟦#7⟧ km à l’équateur ; les lignes polaires sont exclues) toutes les deux heures martiennes sur une année martienne climatologique. La⟦5⟧stocke les moyennes mensuelles du cycle diurne ; entre elles, il interpole selon la saison. <b>Il s’agit de vents d’état moyen : la variabilité d’un jour à l’autre n’est pas incluse, si bien que les flux de sable constituent des bornes inférieures.</b> Les vents sont ceux du niveau le plus bas du modèle (environ ⟦#8⟧ m au-dessus de la surface ; ⟦#9⟧–⟦#10⟧ m sur l’ensemble des cellules et des échantillons) ; masse volumique de l’air ρ = p/(R T), et la vitesse de frottement⟦6⟧est obtenue à partir du profil de longueur de mélange en paroi lisse de Pähtz &amp; Durán (⟦#11⟧, éq. ⟦#12⟧) sous contrainte constante à cette hauteur (sans longueur de rugosité). Les données de la⟦7⟧sont fournies sans garantie d’aucune sorte quant à leur fiabilité ou leur validité, et ne peuvent être utilisées à des fins commerciales sans autorisation. Explorez la base de données dans l’<a href=\"https://www-mars.lmd.jussieu.fr/mcd_python/\" target=\"_blank\" rel=\"noopener noreferrer\">interface web de la⟦8⟧</a> ; la version complète, avec les données originales, est disponible sur <a href=\"https://www-mars.lmd.jussieu.fr/mars/access.html\" target=\"_blank\" rel=\"noopener noreferrer\">inscription</a>.",
+  "en": "fd8280ee"
+ },
+ "c.d827ecdc": {
+  "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur potentiel de dérive résultant (norme⟦1⟧, direction⟦2⟧) sur la sphère martienne (R = ⟦#0⟧ km), selon⟦3⟧, Methods⟦4⟧, avec des différences centrées sur la grille du jeu de données de vent (⟦#1⟧° ou ⟦#2⟧° × ⟦#3⟧° ou ⟦#4⟧° ou ⟦#5⟧° × ⟦#6⟧°). Les valeurs négatives (convergence) indiquent un dépôt.",
+  "en": "d827ecdc"
+ },
+ "c.59edac2e": {
+  "text": "Mars Climate Database version ⟦#0⟧ (climatologie, flux⟦0⟧solaire moyen)",
+  "en": "59edac2e"
+ },
+ "c.a1d254a9": {
+  "text": "Modèle et base de données : ⟦0⟧",
+  "en": "a1d254a9"
+ },
+ "c.6657ba99": {
+  "text": "Base de données : ⟦0⟧",
+  "en": "6657ba99"
+ },
+ "c.9386b33f": {
+  "text": "Interface web (explorer la base de données) : ⟦0⟧",
+  "en": "9386b33f"
+ },
+ "c.b8ed5585": {
+  "text": "Version complète (données originales, sur inscription) : ⟦0⟧",
+  "en": "b8ed5585"
+ },
+ "c.051b2d7d": {
+  "text": "Dérivé de la Mars Climate Database version ⟦#0⟧ (⟦0⟧). L’équipe de la⟦1⟧ne fait aucune déclaration ni n’offre aucune garantie quant à la fiabilité ou à la validité des données, et n’assume aucune responsabilité quant à l’usage qui en est fait.",
+  "en": "051b2d7d"
+ },
+ "c.912ef7dd": {
+  "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur potentiel de dérive résultant (norme⟦1⟧, direction⟦2⟧) sur la sphère martienne (R = ⟦#0⟧ km), selon⟦3⟧, Methods⟦4⟧, avec des différences centrées sur la grille du jeu de données de vent (⟦#1⟧° ou ⟦#2⟧° × ⟦#3⟧° ou ⟦#4⟧°). Les valeurs négatives (convergence) indiquent un dépôt.",
+  "en": "912ef7dd"
+ },
+ "c.fb1d1176": {
+  "text": "Le sélecteur Jeu de données de vent permet de passer d’un jeu de données de vent martien à l’autre (⟦0⟧, ⟦#0⟧° ;⟦1⟧, ⟦#1⟧° × ⟦#2⟧° ;⟦2⟧, ⟦#3⟧°), chacun couvrant une année martienne de vents du niveau le plus bas sur sa propre grille (⟦3⟧ : simulation libre d’un modèle climatique ;⟦4⟧et⟦5⟧: réanalyse de l’année martienne ⟦#4⟧, avec des observations de l’atmosphère faites par des sondes spatiales assimilées dans un modèle climatique). Les calques de vent et de flux de sable ainsi que le panneau de la cellule suivent la sélection ; la carte des dunes et l’altitude sont les mêmes pour tous les jeux de données. Pas de données⟦6⟧au-delà de ⟦#5⟧° N vers le pôle : les cellules les plus septentrionales de sa grille sont centrées sur ⟦#6⟧° N.",
+  "en": "fb1d1176"
  },
  "c.f9cfdc68": {
   "text": "Seuil ⟦0⟧ : <strong>⟦1⟧</strong>",

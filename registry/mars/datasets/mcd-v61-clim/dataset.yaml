@@ -1,0 +1,119 @@
+# Mars Climate Database 6.1, climatology scenario with average solar EUV: registry entry of this wind dataset (a
+# `datasets` list entry, schema registry/layers.schema.json datasets.items), merged with registry/mars/layers.yaml by
+# the app (core/registry/load.ts). The layer fragments (qsat_fields.yaml, x_extra_fields.yaml) and
+# qsat_field_metadata.json are written by the pipeline (mars/sidecars.py with DUNE_ATLAS_MARS_DATASET=mcd-v61-clim).
+# Use agreed with the MCD team (E. Millour, LMD, 21 October 2026): cite Forget et al. (1999) and Millour et al.
+# (2018), point to the MCD website, state the MCD version (docs/records/validation-mars-mcd.md).
+- id: mcd-v61-clim
+  title: MCD 6.1 (climatology)
+  prefix: dune-atlas/mars/v2/datasets/mcd-v61-clim
+  description: 'Mars Climate Database version 6.1, climatology scenario with average solar EUV (5.625° × 3.75°, one
+    sample every two Mars hours, mean state; no cells poleward of ±88.1°): lowest-level winds, temperature and air
+    density.'
+  citation: 'Mars Climate Database version 6.1 (LMD), climatology scenario with average solar EUV. Forget, F.,
+    Hourdin, F., Fournier, R., Hourdin, C., Talagrand, O., Collins, M., Lewis, S. R., Read, P. L. & Huot, J.-P.
+    (1999). Improved general circulation models of the Martian atmosphere from the surface to above 80 km. Journal
+    of Geophysical Research 104(E10), 24155–24175. doi:10.1029/1999JE001025; Millour, E. et al. (2018). The Mars
+    Climate Database (version 5.3). Scientific Workshop: From Mars Express to ExoMars, ESAC, Madrid.
+    https://www-mars.lmd.jussieu.fr/'
+  cellAuxStores: ['{dataset}/cells-aux.zarr']
+  info:
+    name: MCD
+    resolution: 5.625° × 3.75°
+    resDeg: 3.75
+    period: 'one climatological Mars year (MCD 6.1 climatology)'
+    nHours: 8023   # samples of the built store (the app takes the length from the cell store's series)
+    landRule: 'every cell (Mars has no land mask: all 3,008 cells carry wind data); the grid stops at ±88.1°
+      latitude (no polar rows)'
+    landThreshold: 0
+    nonLandReason: ''
+    kind: climatology of a climate model
+    note: 'The MCD gives the mean state of the atmosphere for each season and time of day, without day-to-day
+      variability, so its sand fluxes are lower bounds.'
+    dunesRule: 'the cell overlaps at least one dune polygon of the merged dune map (USGS Mars Global Digital
+      Dune Database and Fenton 2020)'
+    fieldsFrom: atlas
+    sourceTitle: 'Winds (Mars Climate Database 6.1, climatology)'
+    sourceHtml: 'lowest-level winds, temperature and surface pressure of the Mars Climate Database (MCD) version 6.1
+      (Laboratoire de Météorologie Dynamique, Paris; Forget et al. 1999, Millour et al. 2018), climatology scenario
+      with average solar EUV, read with the MCD software (call_mcd) on its native grid (64 × 47 cells of 5.625° ×
+      3.75°, about 330 × 220 km at the equator; the pole rows are left out) every two Mars hours through one
+      climatological Mars year. The MCD stores monthly means of the diurnal cycle; between them it interpolates in
+      season. <b>These are mean-state winds: day-to-day variability is not included, so the sand fluxes are lower
+      bounds.</b> The winds are those of the lowest model level (about 4.5 m above the surface; 3.2–6.4 m over all
+      cells and samples); air density ρ = p/(R T), and the friction velocity u* comes from the smooth-wall
+      mixing-length profile of Pähtz &amp; Durán (2023, eq. 2.2) under constant stress at that height (no
+      roughness length). The MCD data are provided without warranty of any kind as to their reliability or
+      validity, and may not be put to commercial use without authorisation. Explore the database in the <a
+      href="https://www-mars.lmd.jussieu.fr/mcd_python/" target="_blank" rel="noopener noreferrer">MCD web
+      interface</a>; the full version, with the original data, is available on <a
+      href="https://www-mars.lmd.jussieu.fr/mars/access.html" target="_blank" rel="noopener noreferrer">registration</a>.'
+    grid: { lat0: 86.25, dlat: -3.75, lon0: -180.0, dlon: 5.625, ny: 47, nx: 64 }
+    series:
+      samplesPerSol: 12
+      indexText: 'sample index of the record (one sample every two Mars hours; 0 = first sample after Ls 0 of the
+        MCD year)'
+      solText: 'sols since Ls 0 of the MCD climatological year (the fraction of a sol is the true solar time at the
+        prime meridian; one sample every two Mars hours)'
+  credits:
+    sources:
+    - dune-atlas-mars-mcd
+    - mcd
+    - pahtz-duran
+    - dunes
+    dataSource: mcd
+    fieldsCitation: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications.
+      doi:10.1038/s41467-026-75466-y; transport law: Pähtz, T. & Durán, O. (2023). Scaling laws
+      for planetary sediment transport from DEM-RANS numerical simulations. Journal of Fluid
+      Mechanics 963, A20. doi:10.1017/jfm.2023.343; winds: Mars Climate Database version 6.1, climatology scenario
+      with average solar EUV, mean-state lowest-level winds every two Mars hours (Forget, F. et al. (1999). Journal
+      of Geophysical Research 104(E10), 24155–24175. doi:10.1029/1999JE001025; Millour, E. et al. (2018). The Mars
+      Climate Database (version 5.3). Scientific Workshop: From Mars Express to ExoMars, ESAC, Madrid;
+      https://www-mars.lmd.jussieu.fr/)'
+    fieldsLicence: 'Mars Climate Database: scientific use with citation, no commercial use without authorisation
+      (LMD); provided without warranty'
+    windSourceText: 'Wind: Mars Climate Database 6.1 (LMD; Forget et al. 1999, doi:10.1029/1999JE001025; Millour et
+      al. 2018), climatology scenario with average solar EUV, mean-state lowest-level wind every two Mars hours,
+      5.625° × 3.75°; https://www-mars.lmd.jussieu.fr/'
+    notice: 'Derived from the Mars Climate Database version 6.1 (LMD), climatology scenario with average solar EUV,
+      mean state (no day-to-day variability; sand fluxes are lower bounds). The MCD data are made available on the
+      condition that the MCD team makes no representations or warranties regarding their reliability or validity
+      nor the use to which they should be put, and bears no responsibility for any use made of them. No commercial
+      use without authorisation. Original data: https://www-mars.lmd.jussieu.fr/'
+  citationSources:
+  - id: dune-atlas-mars-mcd
+    title: 'Mars Dune Atlas (method)'
+    entries:
+    - label: Method (wind-regime and dune-orientation fields)
+      text: 'Gunn, A. (2026). The distribution of Earth''s wind-blown sand dunes. Nature Communications.'
+      doi: '10.1038/s41467-026-75466-y'
+      key: method_wind_regime_and_dune_orientation_fields
+    notice: 'Mars wind series, sand-flux fields and flux divergence computed for the Mars Dune Atlas from the
+      mean-state lowest-level winds of the Mars Climate Database version 6.1 (climatology scenario, average solar
+      EUV) with the transport law of Pähtz & Durán (2023) and the methods outlined in Gunn (2026).'
+  - id: mcd
+    title: 'Mars Climate Database version 6.1 (climatology, average solar EUV)'
+    entries:
+    - label: Model and database
+      text: 'Forget, F., Hourdin, F., Fournier, R., Hourdin, C., Talagrand, O., Collins, M., Lewis, S. R., Read,
+        P. L. & Huot, J.-P. (1999). Improved general circulation models of the Martian atmosphere from the surface
+        to above 80 km. Journal of Geophysical Research 104(E10), 24155–24175.'
+      doi: '10.1029/1999JE001025'
+    - label: Database
+      text: 'Millour, E. et al. (2018). The Mars Climate Database (version 5.3). Scientific Workshop: From Mars
+        Express to ExoMars, ESAC, Madrid. Version used here: 6.1.'
+      doi: ''
+      url: 'https://www-mars.lmd.jussieu.fr/'
+      license: 'MCD copyright: scientific use with citation; no commercial use without authorisation; no warranty'
+      key: data_mcd
+    - label: Web interface (explore the database)
+      text: 'Mars Climate Database web interface (MCD 6.2), LMD, Paris.'
+      doi: ''
+      url: 'https://www-mars.lmd.jussieu.fr/mcd_python/'
+    - label: Full version (original data, on registration)
+      text: 'Mars Climate Database full version: datafiles and access software, free on registration (LMD).'
+      doi: ''
+      url: 'https://www-mars.lmd.jussieu.fr/mars/access.html'
+    notice: 'Derived from the Mars Climate Database version 6.1 (LMD). The MCD team makes no representations or
+      warranties regarding the reliability or validity of the data and bears no responsibility for any use made of
+      them.'

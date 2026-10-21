@@ -80,7 +80,7 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
-  "en": "The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°), each one Mars year of lowest-level winds on its own grid (⟦3⟧: free-running climate-model simulation;⟦4⟧and⟦5⟧: reanalysis of Mars Year ⟦#4⟧, with spacecraft observations of the atmosphere assimilated into a climate model). The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. No⟦6⟧data poleward of ⟦#5⟧° N: the northernmost cells of its grid are centred at ⟦#6⟧° N.",
+  "en": "The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°;⟦3⟧, ⟦#4⟧° × ⟦#5⟧°), each one Mars year of lowest-level winds on its own grid (⟦4⟧: free-running climate-model simulation;⟦5⟧and⟦6⟧: reanalysis of Mars Year ⟦#6⟧, with spacecraft observations of the atmosphere assimilated into a climate model;⟦7⟧: climatology of a climate model). The⟦8⟧gives the mean state of the atmosphere for each season and time of day, without day-to-day variability, so its sand fluxes are lower bounds. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. No⟦9⟧data poleward of ⟦#7⟧° N: the northernmost cells of its grid are centred at ⟦#8⟧° N. No⟦10⟧data poleward of ⟦#9⟧° N: the northernmost cells of its grid are centred at ⟦#10⟧° N.",
   "area": "Layer popovers"
  },
  {
@@ -520,6 +520,10 @@
   "area": "About"
  },
  {
+  "en": "<strong>Winds (Mars Climate Database ⟦#0⟧, climatology)</strong>: lowest-level winds, temperature and surface pressure of the Mars Climate Database (⟦0⟧) version ⟦#1⟧ (Laboratoire de Météorologie Dynamique, Paris;⟦1⟧,⟦2⟧), climatology scenario with average solar⟦3⟧, read with the⟦4⟧software (call_mcd) on its native grid (⟦#2⟧ × ⟦#3⟧ cells of ⟦#4⟧° × ⟦#5⟧°, about ⟦#6⟧ × ⟦#7⟧ km at the equator; the pole rows are left out) every two Mars hours through one climatological Mars year. The⟦5⟧stores monthly means of the diurnal cycle; between them it interpolates in season. <b>These are mean-state winds: day-to-day variability is not included, so the sand fluxes are lower bounds.</b> The winds are those of the lowest model level (about ⟦#8⟧ m above the surface; ⟦#9⟧–⟦#10⟧ m over all cells and samples); air density ρ = p/(R T), and the friction velocity⟦6⟧comes from the smooth-wall mixing-length profile of Pähtz &amp; Durán (⟦#11⟧, eq. ⟦#12⟧) under constant stress at that height (no roughness length). The⟦7⟧data are provided without warranty of any kind as to their reliability or validity, and may not be put to commercial use without authorisation. Explore the database in the <a href=\"https://www-mars.lmd.jussieu.fr/mcd_python/\" target=\"_blank\" rel=\"noopener noreferrer\">⟦8⟧web interface</a>; the full version, with the original data, is available on <a href=\"https://www-mars.lmd.jussieu.fr/mars/access.html\" target=\"_blank\" rel=\"noopener noreferrer\">registration</a>.",
+  "area": "About"
+ },
+ {
   "en": "<strong>Sand-flux fields</strong>: for each time step of the wind dataset, the threshold and the saturated transport rate of⟦0⟧at the selected median grain diameter d (grain density ⟦#0⟧ kg/m³, g = ⟦#1⟧ m/s²), averaged over the year; drift potentials, crest fluxes and dune-orientation modes follow the methods outlined in⟦1⟧. Fluxes are volumes of packed sand (packing fraction ⟦#2⟧, pore space included) per metre width per Earth year (⟦#3⟧ days), in m²/yr, as on Earth.",
   "area": "About"
  },
@@ -528,7 +532,7 @@
   "area": "About"
  },
  {
-  "en": "<strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧° or ⟦#2⟧° × ⟦#3⟧° or ⟦#4⟧°). Negative values (convergence) imply deposition.",
+  "en": "<strong>Saturated flux divergence</strong> ⟦0⟧: divergence of the resultant drift potential vector (magnitude⟦1⟧, direction⟦2⟧) on the Mars sphere (R = ⟦#0⟧ km), following⟦3⟧, Methods⟦4⟧, with central differences on the grid of the wind dataset (⟦#1⟧° or ⟦#2⟧° × ⟦#3⟧° or ⟦#4⟧° or ⟦#5⟧° × ⟦#6⟧°). Negative values (convergence) imply deposition.",
   "area": "About"
  },
  {
@@ -633,6 +637,30 @@
  },
  {
   "en": "Contains public sector information licensed under the Open Government Licence v3.0 (⟦0⟧v2.0,⟦1⟧Centre for Environmental Data Analysis).",
+  "area": "About"
+ },
+ {
+  "en": "Mars Climate Database version ⟦#0⟧ (climatology, average solar⟦0⟧)",
+  "area": "About"
+ },
+ {
+  "en": "Model and database: ⟦0⟧",
+  "area": "About"
+ },
+ {
+  "en": "Database: ⟦0⟧",
+  "area": "About"
+ },
+ {
+  "en": "Web interface (explore the database): ⟦0⟧",
+  "area": "About"
+ },
+ {
+  "en": "Full version (original data, on registration): ⟦0⟧",
+  "area": "About"
+ },
+ {
+  "en": "Derived from the Mars Climate Database version ⟦#0⟧ (⟦0⟧). The⟦1⟧team makes no representations or warranties regarding the reliability or validity of the data and bears no responsibility for any use made of them.",
   "area": "About"
  },
  {
