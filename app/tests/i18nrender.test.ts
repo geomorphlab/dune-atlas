@@ -52,6 +52,6 @@ describe("rendered in another language", () => {
     const dp = document.querySelector('[data-layer="dpm"] .info-popover')?.textContent ?? "";
     expect(dp.length).toBeGreaterThan(50);
     expect(dp).not.toMatch(/\bthe saturated sand flux\b/i);
-    expect(document.querySelector(".dunes-only-row")!.textContent).toContain("Dunes seulement");
+    expect(document.querySelector(".dunes-only-row")!.textContent).toContain("Dunes seules");
   });
 });

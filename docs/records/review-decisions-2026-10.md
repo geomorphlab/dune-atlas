@@ -269,12 +269,25 @@ min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 
 |---|---|---|
 | Licence of the Fenton (2020) Mars dune polygons | PI asked Lori Fenton | done: CC BY 4.0 (PR #23) |
 | Persian names of the six new Iran fields | PI's Iranian colleague | pending; names not shown until confirmed |
-| Student review of the French text (incl. "potentiel de dérive" vs "potentiel de transport", "barkhane" vs "barchane") | Tia via the PI | not planned for new text (PI, 16 October): text added since is machine-drafted only |
+| Student review of the French text (incl. "potentiel de dérive" vs "potentiel de transport", "barkhane" vs "barchane") | Tia via the PI | done: review of 16 October text received 21 October and applied (section below); glossary terms kept ("potentiel de dérive", "barkhane"); text added since 16 October is machine-drafted only |
 | Student review of the Chinese text | Chinese PhD student via the PI | first corrections applied (PR #24); compass names chosen by the PI (PR #24) |
 | Second check from mainland China (language switch, Chinese text, a cell download, a map image export) | PI's colleague | after release |
 | Weak aggregator sources for a few dune-field names | agent | done: 25 names re-sourced (PR #23); five weaker matches listed above |
 | Weekly backup of usage.csv to GitHub | PI | done (PR #23 records it) |
 | Dataset comparison tab in the Earth cell panel (DP, RDD, RDP/DP of the other wind datasets at the same place; replaces the lines removed from above the wind rose on 17 October) | PI, agent | open |
+
+## French review by Tia (21 October 2026)
+
+Word document `Dune-Atlas-French-review_AK.docx`, built from `docs/translations/fr.md` at c437592 (16 October); 611 rows, 67 edited, no tracked changes.
+
+| Item | Decision |
+|---|---|
+| Edits applied | 67 edited rows covering 88 keys: 68 applied as written; 20 whose English has changed since 16 October merged into the current text (14 automatically, 6 by hand); 12 rows of strings no longer used carried over to the strings that replaced them |
+| Corrections to the edits | Spelling and agreement ("dépendent", "Se met", "6e", "qu'il a imagées", "impliquent une érosion"); "pas nécessairement" kept in the Mars concept (the English says "not necessarily"); region help "ne peut dépasser ce que votre navigateur…" (the suggested wording reversed the meaning); layers help says the Dunes only filter keeps the cells of the wind dataset that contain dunes, and keeps "calques"; "mer de sable du Namib" in the tour, while the search example keeps "Namib Sand Sea" because search matches English names |
+| Consistency passes over all French text | "sable mobile" (not "meuble"); "Dunes seules" (her suggestion) for the switch and every mention of it; "par exemple" everywhere instead of "p. ex."; typographic apostrophe ’ throughout; units m²/an and m/ka in labels, legends and help |
+| Kept as before | Acronyms DP, RDP, RDD, as in the formulas (PI to decide whether to translate them; Tia offered to do the rest); spaced " ;" before semicolons; "copies plus grossières" (coarser resolution) |
+| Not changed | Numbers in the cell panel and in downloads keep m²/yr and m/kyr (live values and UDUNITS file attributes) |
+| Suggestions for the English (open) | Mars search example: a longitude other than 354.8 (hard to read for dyslexic readers; Tia suggests −5.2); state the MOLA resolution in the Mars basemaps help; passages she highlighted without comment (Petals sentence in the cell help, "1.5 times its on-screen width" in the images help, the coordinate rules in the search help) |
 
 ## PI preview of 17 October (branch features/reanalysis: MERRA-2, JRA-3Q, icon, Dunes only)
 
