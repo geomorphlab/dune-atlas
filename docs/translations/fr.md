@@ -3289,6 +3289,680 @@ FR: Version complète (données originales, sur inscription) : ⟦0⟧
 EN: Derived from the Mars Climate Database version ⟦#0⟧ (⟦0⟧). The⟦1⟧team makes no representations or warranties regarding the reliability or validity of the data and bears no responsibility for any use made of them.
 FR: Dérivé de la Mars Climate Database version ⟦#0⟧ (⟦0⟧). L’équipe de la⟦1⟧ne fait aucune déclaration ni n’offre aucune garantie quant à la fiabilité ou à la validité des données, et n’assume aucune responsabilité quant à l’usage qui en est fait.
 
+# Other
+
+## c.9f43d0a3 (Other)
+EN: Wind dataset
+FR: Jeu de données de vent
+
+## c.074019c2 (Other)
+EN: Dunes only
+FR: Dunes seules
+
+## c.825d092a (Other)
+EN: Dark (OpenFreeMap)
+FR: Sombre (OpenFreeMap)
+
+## c.ac1d20ea (Other)
+EN: Satellite imagery (Esri)
+FR: Imagerie satellite (Esri)
+
+## c.7784e854 (Other)
+EN: Shaded relief (Mapterhorn, 2D)
+FR: Relief ombré (Mapterhorn, 2D)
+
+## c.347b22b2 (Other)
+EN: Topographic (OpenTopoMap)
+FR: Topographique (OpenTopoMap)
+
+## c.45eb5840 (Other)
+EN: Light (OpenFreeMap Positron)
+FR: Clair (OpenFreeMap Positron)
+
+# Screen-reader labels and tooltips
+
+## c.f7f02383 (Screen-reader labels and tooltips)
+EN: Show / hide layers
+FR: Afficher / masquer les calques
+
+# Layer panel
+
+## c.75418ba0 (Layer panel)
+EN: Wind dataset ⟦0⟧
+FR: Jeu de données de vent ⟦0⟧
+
+# Screen-reader labels and tooltips
+
+## c.aafe1b6b (Screen-reader labels and tooltips)
+EN: ERA5 ⟦#0⟧°, ⟦#1⟧–⟦#2⟧; land cells: land–sea mask fraction > ⟦#3⟧
+FR: ERA5 ⟦#0⟧°, ⟦#1⟧–⟦#2⟧ ; cellules terrestres : fraction du masque terre–mer > ⟦#3⟧
+
+## c.b0a858c6 (Screen-reader labels and tooltips)
+EN: JRA-3Q ⟦#0⟧°, ⟦#1⟧–⟦#2⟧; land cells: land fraction > ⟦#3⟧
+FR: JRA-3Q ⟦#0⟧°, ⟦#1⟧–⟦#2⟧ ; cellules terrestres : fraction terrestre > ⟦#3⟧
+
+## c.4c01b956 (Screen-reader labels and tooltips)
+EN: MERRA-⟦#0⟧ ⟦#1⟧° × ⟦#2⟧°, ⟦#3⟧–⟦#4⟧; land cells: land fraction > ⟦#5⟧
+FR: MERRA-⟦#0⟧ ⟦#1⟧° × ⟦#2⟧°, ⟦#3⟧–⟦#4⟧ ; cellules terrestres : fraction terrestre > ⟦#5⟧
+
+## c.126097bd (Screen-reader labels and tooltips)
+EN: Threshold friction velocity
+FR: Vitesse de frottement seuil
+
+# Layer panel
+
+## c.fb52111a (Layer panel)
+EN: Threshold friction velocity ⟦0⟧
+FR: Vitesse de frottement seuil ⟦0⟧
+
+## c.457953af (Layer panel)
+EN: arrows
+FR: Flèches
+
+## c.373a8f5c (Layer panel)
+EN: streamlines
+FR: Lignes de courant
+
+## c.6c1bd587 (Layer panel)
+EN: ⟦0⟧ log scale <span class="hint log-hint"></span>
+FR: ⟦0⟧ échelle log <span class="hint log-hint"></span>
+
+# Layer popovers
+
+## c.f96647ef (Layer popovers)
+EN: Absolute across-crest bed-instability-mode flux⟦0⟧.
+FR: Flux absolu à travers la crête, mode d’instabilité du lit⟦0⟧.
+
+## c.c9e3f234 (Layer popovers)
+EN: m²/yr
+FR: m²/an
+
+## c.f07054e3 (Layer popovers)
+EN: Net across-crest bed-instability-mode flux⟦0⟧.
+FR: Flux net à travers la crête, mode d’instabilité du lit⟦0⟧.
+
+## c.f45174f7 (Layer popovers)
+EN: Net along-crest bed-instability-mode flux⟦0⟧.
+FR: Flux net le long de la crête, mode d’instabilité du lit⟦0⟧.
+
+## c.2d9914e3 (Layer popovers)
+EN: Absolute along-crest bed-instability-mode flux⟦0⟧.
+FR: Flux absolu le long de la crête, mode d’instabilité du lit⟦0⟧.
+
+## c.0c0bc5b3 (Layer popovers)
+EN: Net along-crest elongation-mode flux⟦0⟧.
+FR: Flux net le long de la crête, mode d’allongement⟦0⟧.
+
+## c.774ba04f (Layer popovers)
+EN: Absolute along-crest elongation-mode flux⟦0⟧.
+FR: Flux absolu le long de la crête, mode d’allongement⟦0⟧.
+
+## c.afb13b6b (Layer popovers)
+EN: Absolute across-crest elongation-mode flux⟦0⟧.
+FR: Flux absolu à travers la crête, mode d’allongement⟦0⟧.
+
+## c.05d2e076 (Layer popovers)
+EN: dimensionless
+FR: sans dimension
+
+## c.43183fd1 (Layer popovers)
+EN: m/kyr
+FR: m/ka
+
+# About
+
+## c.383923e2 (About)
+EN: About, data sources &amp; citation
+FR: À propos, sources des données &amp; citation
+
+# Cell panel
+
+## c.c0ab6504 (Cell panel)
+EN: m/s at ⟦#0⟧ m
+FR: m/s à ⟦#0⟧ m
+
+## c.4d71dbff (Cell panel)
+EN: ⟦0⟧ m²/yr
+FR: ⟦0⟧ m²/an
+
+## c.0eeca8ee (Cell panel)
+EN: Petals:
+FR: Pétales :
+
+## c.b94aa293 (Cell panel)
+EN: ⟦0⟧ toward
+FR: ⟦0⟧ vers
+
+## c.93adea74 (Cell panel)
+EN: ⟦0⟧ from
+FR: ⟦0⟧ depuis
+
+## c.4eda5e0a (Cell panel)
+EN: ⟦0⟧⟦1⟧(crest orientation, bed-instability mode): ⟦2⟧
+FR: ⟦0⟧⟦1⟧(orientation de la crête, mode d’instabilité du lit) : ⟦2⟧
+
+## c.546876b7 (Cell panel)
+EN: ⟦0⟧⟦1⟧(elongation direction): ⟦2⟧
+FR: ⟦0⟧⟦1⟧(direction d’allongement) : ⟦2⟧
+
+## c.5eae0e7e (Cell panel)
+EN: ⟦0⟧⟦1⟧(transverse migration direction): ⟦2⟧
+FR: ⟦0⟧⟦1⟧(direction de migration transverse) : ⟦2⟧
+
+## c.bd20d398 (Cell panel)
+EN: ⟦0⟧⟦1⟧(resultant drift direction): ⟦2⟧
+FR: ⟦0⟧⟦1⟧(direction de dérive résultante) : ⟦2⟧
+
+## c.fb7bfaeb (Cell panel)
+EN: ⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> m²/yr
+FR: ⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> m²/an
+
+## c.641b8727 (Cell panel)
+EN: current u*,th = ⟦#0⟧ m/s
+FR: u*,th actuel = ⟦#0⟧ m/s
+
+## c.c962eae5 (Cell panel)
+EN: αT (transverse migration direction)
+FR: αT (direction de migration transverse)
+
+## c.78f4ea9f (Cell panel)
+EN: αE (elongation direction)
+FR: αE (direction d’allongement)
+
+## c.28f075b7 (Cell panel)
+EN: αO (along-crest transport direction)
+FR: αO (direction du transport le long de la crête)
+
+## c.d0f6d865 (Cell panel)
+EN: αH (crest orientation, bed-instability mode)
+FR: αH (orientation de la crête, mode d’instabilité du lit)
+
+## c.559cc0c6 (Cell panel)
+EN: RDD (resultant drift direction)
+FR: RDD (direction de dérive résultante)
+
+## c.83980e5f (Cell panel)
+EN: ⟦0⟧⟦1⟧ (transverse migration direction)
+FR: ⟦0⟧⟦1⟧ (direction de migration transverse)
+
+## c.1a97c00c (Cell panel)
+EN: ⟦0⟧⟦1⟧ (elongation direction)
+FR: ⟦0⟧⟦1⟧ (direction d’allongement)
+
+## c.59643444 (Cell panel)
+EN: ⟦0⟧⟦1⟧ (along-crest transport direction)
+FR: ⟦0⟧⟦1⟧ (direction du transport le long de la crête)
+
+## c.b20dffdb (Cell panel)
+EN: ⟦0⟧⟦1⟧ (crest orientation, bed-instability mode)
+FR: ⟦0⟧⟦1⟧ (orientation de la crête, mode d’instabilité du lit)
+
+## c.ccff776d (Cell panel)
+EN: ⟦0⟧⟦1⟧ (resultant drift direction)
+FR: ⟦0⟧⟦1⟧ (direction de dérive résultante)
+
+## c.8edeaba5 (Cell panel)
+EN: Drift potential (DP)
+FR: Potentiel de dérive (DP)
+
+## c.a7c0ad69 (Cell panel)
+EN: Resultant drift potential (RDP)
+FR: Potentiel de dérive résultant (RDP)
+
+## c.1b0b5ac6 (Cell panel)
+EN: Resultant drift direction (RDD)
+FR: Direction de dérive résultante (RDD)
+
+## c.6c886b64 (Cell panel)
+EN: Saturated flux divergence (∇·qs)
+FR: Divergence du flux saturé (∇·qs)
+
+## c.82a7644d (Cell panel)
+EN: Transverse migration direction (αT)
+FR: Direction de migration transverse (αT)
+
+## c.4f659b0b (Cell panel)
+EN: Crest orientation, bed-instability mode (αH)
+FR: Orientation de la crête, mode d’instabilité du lit (αH)
+
+## c.1e47696f (Cell panel)
+EN: Elongation direction (αE)
+FR: Direction d’allongement (αE)
+
+## c.33dbe217 (Cell panel)
+EN: Along-crest transport direction (αO)
+FR: Direction du transport le long de la crête (αO)
+
+## c.37c01f7a (Cell panel)
+EN: Net across-crest flux, bed-instability mode ⟨Q⊥(αH)⟩
+FR: Flux net à travers la crête, mode d’instabilité du lit ⟨Q⊥(αH)⟩
+
+## c.37d6d79a (Cell panel)
+EN: Absolute across-crest flux, bed-instability mode ⟨|Q⊥(αH)|⟩
+FR: Flux absolu à travers la crête, mode d’instabilité du lit ⟨|Q⊥(αH)|⟩
+
+## c.9ca1a73e (Cell panel)
+EN: Net along-crest flux, bed-instability mode ⟨Q∥(αH)⟩
+FR: Flux net le long de la crête, mode d’instabilité du lit ⟨Q∥(αH)⟩
+
+## c.7af3b85e (Cell panel)
+EN: Absolute along-crest flux, bed-instability mode ⟨|Q∥(αH)|⟩
+FR: Flux absolu le long de la crête, mode d’instabilité du lit ⟨|Q∥(αH)|⟩
+
+## c.5ee1ed93 (Cell panel)
+EN: Net along-crest flux, elongation mode ⟨Q∥(αE)⟩
+FR: Flux net le long de la crête, mode d’allongement ⟨Q∥(αE)⟩
+
+## c.2362fa45 (Cell panel)
+EN: Absolute along-crest flux, elongation mode ⟨|Q∥(αE)|⟩
+FR: Flux absolu le long de la crête, mode d’allongement ⟨|Q∥(αE)|⟩
+
+## c.51a4d7c9 (Cell panel)
+EN: Absolute across-crest flux, elongation mode ⟨|Q⊥(αE)|⟩
+FR: Flux absolu à travers la crête, mode d’allongement ⟨|Q⊥(αE)|⟩
+
+## c.c47e2cb7 (Cell panel)
+EN: Stability of elongating dunes on starved beds (σE/σH)
+FR: Stabilité des dunes en allongement sur lits pauvres en sable (σE/σH)
+
+## c.294c015f (Cell panel)
+EN: Crest straightness vs sinuosity, bed-instability mode (Q̂∥/⊥,H)
+FR: Rectitude vs sinuosité des crêtes, mode d’instabilité du lit (Q̂∥/⊥,H)
+
+## c.f828d252 (Cell panel)
+EN: Growth-in-height vs migration balance (Q̂|⊥|/⊥,H)
+FR: Équilibre entre croissance en hauteur et migration (Q̂|⊥|/⊥,H)
+
+## c.3693ba79 (Cell panel)
+EN: Morphology of elongating dunes (Q̂|⊥|/∥,E)
+FR: Morphologie des dunes en allongement (Q̂|⊥|/∥,E)
+
+## c.886dbe81 (Cell panel)
+EN: Fraction of time above threshold (T | u*f &gt; u*th / T)
+FR: Fraction du temps au-dessus du seuil (T | u*f &gt; u*th / T)
+
+## c.e4841e87 (Cell panel)
+EN: Mean above-threshold friction velocity / threshold (⟨u*f | u*f &gt; u*th⟩ / u*th)
+FR: Vitesse de frottement moyenne au-dessus du seuil / seuil (⟨u*f | u*f &gt; u*th⟩ / u*th)
+
+## c.32d71304 (Cell panel)
+EN: Fraction of bed-instability-mode flux while flat bed above threshold
+FR: Fraction du flux en mode d’instabilité du lit lorsque la vitesse de frottement sur lit plat dépasse le seuil
+
+## c.c2cd6422 (Cell panel)
+EN: Fraction of elongation-mode flux while flat bed above threshold
+FR: Fraction du flux en mode d’allongement lorsque la vitesse de frottement sur lit plat dépasse le seuil
+
+## c.9fc71e32 (Cell panel)
+EN: u*,th (m/s)
+FR: u*,th (m/s)
+
+## c.c1c00ebb (Cell panel)
+EN: DP (m²/yr)
+FR: DP (m²/an)
+
+## c.8b7ac902 (Cell panel)
+EN: Drift potential
+FR: Potentiel de dérive
+
+## c.b7a85154 (Cell panel)
+EN: ⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> <span class="unit">m⟦0⟧/yr</span>
+FR: ⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> <span class="unit">m⟦0⟧/an</span>
+
+## c.6ab2ba40 (Cell panel)
+EN: Resultant drift potential
+FR: Potentiel de dérive résultant
+
+## c.f91bba5b (Cell panel)
+EN: Resultant drift direction
+FR: Direction de dérive résultante
+
+## c.8def0c56 (Cell panel)
+EN: Flux directionality
+FR: Directionnalité du flux
+
+## c.84bdbc5f (Cell panel)
+EN: Saturated flux divergence
+FR: Divergence du flux saturé
+
+## c.e7e6acc9 (Cell panel)
+EN: ⟦#0⟧ <span class="unit">m/kyr</span>
+FR: ⟦#0⟧ <span class="unit">m/ka</span>
+
+## c.987bd280 (Cell panel)
+EN: Bedform orientation
+FR: Orientation des formes de lit
+
+## c.e1d707d3 (Cell panel)
+EN: Transverse migration direction
+FR: Direction de migration transverse
+
+## c.f431cc59 (Cell panel)
+EN: Crest orientation, bed-instability mode
+FR: Orientation de la crête, mode d’instabilité du lit
+
+## c.75004e72 (Cell panel)
+EN: Elongation direction
+FR: Direction d’allongement
+
+## c.4790afd8 (Cell panel)
+EN: Along-crest transport direction
+FR: Direction du transport le long de la crête
+
+## c.f78160a5 (Cell panel)
+EN: Crest-normal/parallel fluxes
+FR: Flux normaux et parallèles à la crête
+
+## c.a9c937e9 (Cell panel)
+EN: Net across-crest flux, bed-instability mode
+FR: Flux net à travers la crête, mode d’instabilité du lit
+
+## c.685e9c85 (Cell panel)
+EN: Absolute across-crest flux, bed-instability mode
+FR: Flux absolu à travers la crête, mode d’instabilité du lit
+
+## c.f20423cd (Cell panel)
+EN: Net along-crest flux, bed-instability mode
+FR: Flux net le long de la crête, mode d’instabilité du lit
+
+## c.4f0b77e9 (Cell panel)
+EN: Absolute along-crest flux, bed-instability mode
+FR: Flux absolu le long de la crête, mode d’instabilité du lit
+
+## c.0dececcb (Cell panel)
+EN: Net along-crest flux, elongation mode
+FR: Flux net le long de la crête, mode d’allongement
+
+## c.cb733487 (Cell panel)
+EN: Absolute along-crest flux, elongation mode
+FR: Flux absolu le long de la crête, mode d’allongement
+
+## c.31a290a3 (Cell panel)
+EN: Absolute across-crest flux, elongation mode
+FR: Flux absolu à travers la crête, mode d’allongement
+
+## c.fb08c8c7 (Cell panel)
+EN: Ratios &amp; morphology indices
+FR: Rapports &amp; indices morphologiques
+
+## c.28abd612 (Cell panel)
+EN: Stability of elongating dunes on starved beds
+FR: Stabilité des dunes en allongement sur lits pauvres en sable
+
+## c.62eca722 (Cell panel)
+EN: ⟦#0⟧ <span class="unit">ratio</span>
+FR: ⟦#0⟧ <span class="unit">rapport</span>
+
+## c.7989eb1e (Cell panel)
+EN: Crest straightness vs sinuosity, bed-instability mode
+FR: Rectitude vs sinuosité des crêtes, mode d’instabilité du lit
+
+## c.0dd50e3d (Cell panel)
+EN: Growth-in-height vs migration balance
+FR: Équilibre entre croissance en hauteur et migration
+
+## c.6217aa03 (Cell panel)
+EN: Morphology of elongating dunes
+FR: Morphologie des dunes en allongement
+
+## c.6a69004a (Cell panel)
+EN: Wind statistics
+FR: Statistiques du vent
+
+## c.73a9606f (Cell panel)
+EN: Fraction of time above threshold
+FR: Fraction du temps au-dessus du seuil
+
+## c.a851b244 (Cell panel)
+EN: Mean above-threshold friction velocity / threshold
+FR: Vitesse de frottement moyenne au-dessus du seuil / seuil
+
+## c.900d5770 (Cell panel)
+EN: Related data
+FR: Données associées
+
+## c.278a6de1 (Cell panel)
+EN: Aridity index
+FR: Indice d’aridité
+
+## c.42628f17 (Cell panel)
+EN: Download &amp; cite
+FR: Télécharger &amp; citer
+
+## c.1563eb60 (Cell panel)
+EN: ⟦0⟧(.nc)
+FR: ⟦0⟧(.nc)
+
+## c.ddeeb38e (Cell panel)
+EN: ⟦#0⟧ m²/yr.
+FR: ⟦#0⟧ m²/an.
+
+## c.23d5135f (Cell panel)
+EN: AI
+FR: AI
+
+# Exported images
+
+## c.ad5f3ea0 (Exported images)
+EN: ° · at $u_{*,th}$ = ⟦#0⟧ $\mathrm{m\,s^{⟦#1⟧}}$
+FR: ° · à $u_{*,th}$ = ⟦#0⟧ $\mathrm{m\,s^{⟦#1⟧}}$
+
+## c.c7a2dc12 (Exported images)
+EN: $\mathrm{m^{⟦#0⟧}\,yr^{⟦#1⟧}}$ · at $u_{*,th}$ = ⟦#2⟧ $\mathrm{m\,s^{⟦#3⟧}}$
+FR: $\mathrm{m^{⟦#0⟧}\,yr^{⟦#1⟧}}$ · à $u_{*,th}$ = ⟦#2⟧ $\mathrm{m\,s^{⟦#3⟧}}$
+
+## c.76d4df5d (Exported images)
+EN: dimensionless · at $u_{*,th}$ = ⟦#0⟧ $\mathrm{m\,s^{⟦#1⟧}}$
+FR: sans dimension · à $u_{*,th}$ = ⟦#0⟧ $\mathrm{m\,s^{⟦#1⟧}}$
+
+## c.8ccb466c (Exported images)
+EN: $\mathrm{m\,kyr^{⟦#0⟧}}$ · at $u_{*,th}$ = ⟦#1⟧ $\mathrm{m\,s^{⟦#2⟧}}$
+FR: $\mathrm{m\,kyr^{⟦#0⟧}}$ · à $u_{*,th}$ = ⟦#1⟧ $\mathrm{m\,s^{⟦#2⟧}}$
+
+## c.e6e3ee83 (Exported images)
+EN: wind dataset
+FR: jeu de données de vent
+
+## c.cbddab1d (Exported images)
+EN: threshold friction velocity
+FR: vitesse de frottement seuil
+
+# Screen-reader labels and tooltips
+
+## c.73284af3 (Screen-reader labels and tooltips)
+EN: Help and tour
+FR: Aide et visite guidée
+
+## c.7a137040 (Screen-reader labels and tooltips)
+EN: Concepts
+FR: Concepts
+
+## c.d8bbba62 (Screen-reader labels and tooltips)
+EN: Share / copy link
+FR: Partager / copier le lien
+
+## c.d7e31a24 (Screen-reader labels and tooltips)
+EN: Export map image
+FR: Exporter l’image de la carte
+
+# Tool panels
+
+## c.b89df01a (Tool panels)
+EN: Help
+FR: Aide
+
+## c.885fd34e (Tool panels)
+EN: Restart tour
+FR: Relancer la visite guidée
+
+# Screen-reader labels and tooltips
+
+## c.30bc41b1 (Screen-reader labels and tooltips)
+EN: Back to the threshold of the map
+FR: Revenir au seuil de la carte
+
+## c.48db8db9 (Screen-reader labels and tooltips)
+EN: Atlas DP and Fryberger DP for a steady wind
+FR: DP de l’atlas et DP de Fryberger pour un vent constant
+
+# Search and messages
+
+## c.41d0c56b (Search and messages)
+EN: Go
+FR: Aller
+
+## c.b74eb9b0 (Search and messages)
+EN: Go to
+FR: Aller à
+
+## c.7355c12f (Search and messages)
+EN: Names
+FR: Noms
+
+# Screen-reader labels and tooltips
+
+## c.6dc01f19 (Screen-reader labels and tooltips)
+EN: Place or e.g. ⟦#0⟧, ⟦#1⟧ or ⟦#2⟧°⟦#3⟧′S ⟦#4⟧°⟦#5⟧′E
+FR: Lieu ou par exemple ⟦#0⟧, ⟦#1⟧ ou ⟦#2⟧°⟦#3⟧′S ⟦#4⟧°⟦#5⟧′E
+
+## c.211d5723 (Screen-reader labels and tooltips)
+EN: e.g. ⟦#0⟧, ⟦#1⟧ or ⟦#2⟧°⟦#3⟧′S ⟦#4⟧°⟦#5⟧′E
+FR: par exemple ⟦#0⟧, ⟦#1⟧ ou ⟦#2⟧°⟦#3⟧′S ⟦#4⟧°⟦#5⟧′E
+
+## c.a808d03d (Screen-reader labels and tooltips)
+EN: Places
+FR: Lieux
+
+# Other
+
+## c.d4fee6aa (Other)
+EN: Shaded relief (MOLA–HRSC, 2D)
+FR: Relief ombré (MOLA–HRSC, 2D)
+
+## c.a3a76911 (Other)
+EN: OpenPlanetaryMap Mars (v0.2)
+FR: OpenPlanetaryMap Mars (v0.2)
+
+## c.3af51f08 (Other)
+EN: CTX mosaic, 5 m (Murray Lab V01, Esri)
+FR: Mosaïque CTX, 5 m (Murray Lab V01, Esri)
+
+## c.f238b38b (Other)
+EN: HiRISE, where imaged (Esri)
+FR: HiRISE, là où disponible (Esri)
+
+## c.45c8fb55 (Other)
+EN: Viking MDIM 2.1 colour (Esri)
+FR: Viking MDIM 2.1 en couleur (Esri)
+
+## c.2d04414b (Other)
+EN: MOLA–HRSC colour shaded relief (Esri)
+FR: Relief ombré en couleur MOLA–HRSC (Esri)
+
+# Screen-reader labels and tooltips
+
+## c.9fe7613c (Screen-reader labels and tooltips)
+EN: EMARS ⟦#0⟧° × ⟦#1⟧°, one Mars year (Mars Year ⟦#2⟧)
+FR: EMARS ⟦#0⟧° × ⟦#1⟧°, une année martienne (année martienne ⟦#2⟧)
+
+## c.13319dab (Screen-reader labels and tooltips)
+EN: MACDA ⟦#0⟧°, one Mars year (Mars Year ⟦#1⟧)
+FR: MACDA ⟦#0⟧°, une année martienne (année martienne ⟦#1⟧)
+
+## c.fad743ba (Screen-reader labels and tooltips)
+EN: MCD ⟦#0⟧° × ⟦#1⟧°, one climatological Mars year (MCD ⟦#2⟧ climatology)
+FR: MCD ⟦#0⟧° × ⟦#1⟧°, une année martienne climatologique (climatologie MCD ⟦#2⟧)
+
+## c.fcddc797 (Screen-reader labels and tooltips)
+EN: Median grain diameter
+FR: Diamètre médian des grains
+
+# Layer panel
+
+## c.a57fd254 (Layer panel)
+EN: Median grain diameter ⟦0⟧
+FR: Diamètre médian des grains ⟦0⟧
+
+## c.61449a27 (Layer panel)
+EN: ⟦#0⟧ µm
+FR: ⟦#0⟧ µm
+
+# Layer popovers
+
+## c.16ec1ca4 (Layer popovers)
+EN: kg/m³
+FR: kg/m³
+
+# Cell panel
+
+## c.97c06ed4 (Cell panel)
+EN: ⟦#0⟧ m²/yr
+FR: ⟦#0⟧ m²/an
+
+## c.8da77fc1 (Cell panel)
+EN: current d = ⟦#0⟧ µm
+FR: d actuel = ⟦#0⟧ µm
+
+## c.bf237892 (Cell panel)
+EN: d (µm, log scale)
+FR: d (µm, échelle logarithmique)
+
+## c.1565ef3b (Cell panel)
+EN: ⟦#0⟧ <span class="unit">m⟦0⟧/yr</span>
+FR: ⟦#0⟧ <span class="unit">m⟦0⟧/an</span>
+
+## c.05aa19ce (Cell panel)
+EN: ⟦#0⟧ <span class="unit">kg/m³</span>
+FR: ⟦#0⟧ <span class="unit">kg/m³</span>
+
+# Exported images
+
+## c.2fd17bae (Exported images)
+EN: $\mathrm{m^{⟦#0⟧}\,yr^{⟦#1⟧}}$ · at $d$ = ⟦#2⟧ $\mathrm{\mu m}$
+FR: $\mathrm{m^{⟦#0⟧}\,yr^{⟦#1⟧}}$ · à $d$ = ⟦#2⟧ $\mathrm{\mu m}$
+
+## c.cde96ea2 (Exported images)
+EN: ° · at $d$ = ⟦#0⟧ $\mathrm{\mu m}$
+FR: ° · à $d$ = ⟦#0⟧ $\mathrm{\mu m}$
+
+## c.93a52d79 (Exported images)
+EN: dimensionless · at $d$ = ⟦#0⟧ $\mathrm{\mu m}$
+FR: sans dimension · à $d$ = ⟦#0⟧ $\mathrm{\mu m}$
+
+## c.e0d2a7f7 (Exported images)
+EN: $\mathrm{m\,kyr^{⟦#0⟧}}$ · at $d$ = ⟦#1⟧ $\mathrm{\mu m}$
+FR: $\mathrm{m\,kyr^{⟦#0⟧}}$ · à $d$ = ⟦#1⟧ $\mathrm{\mu m}$
+
+## c.e80c2f78 (Exported images)
+EN: m
+FR: m
+
+## c.62f029f7 (Exported images)
+EN: median grain diameter
+FR: diamètre médian des grains
+
+# Screen-reader labels and tooltips
+
+## c.ad327f76 (Screen-reader labels and tooltips)
+EN: Place or e.g. ⟦#0⟧, ⟦#1⟧ or ⟦#2⟧°⟦#3⟧′N ⟦#4⟧°⟦#5⟧′E
+FR: Lieu ou par exemple ⟦#0⟧, ⟦#1⟧ ou ⟦#2⟧°⟦#3⟧′N ⟦#4⟧°⟦#5⟧′E
+
+## c.d34be400 (Screen-reader labels and tooltips)
+EN: e.g. ⟦#0⟧, ⟦#1⟧ or ⟦#2⟧°⟦#3⟧′N ⟦#4⟧°⟦#5⟧′E
+FR: par exemple ⟦#0⟧, ⟦#1⟧ ou ⟦#2⟧°⟦#3⟧′N ⟦#4⟧°⟦#5⟧′E
+
+# Search and messages
+
+## c.9ea447b9 (Search and messages)
+EN: Planetocentric latitude, east-positive longitude (⟦#0⟧° to ⟦#1⟧°; ⟦#2⟧–⟦#3⟧° E is converted).
+FR: Latitude planétocentrique, longitude positive vers l’est (⟦#0⟧° à ⟦#1⟧° ; une longitude ⟦#2⟧–⟦#3⟧° E est convertie).
+
+# Screen-reader labels and tooltips
+
+## c.d9c2be13 (Screen-reader labels and tooltips)
+EN: About this control
+FR: À propos de ce réglage
+
 # Unused (English changed or removed)
 
 ## c.912ef7dd (Unused (English changed or removed))

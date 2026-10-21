@@ -313,6 +313,16 @@ Word document `Dune-Atlas-French-review_AK.docx`, built from `docs/translations/
 | Not changed | Numbers in the cell panel and in downloads keep m²/yr and m/kyr (live values and UDUNITS file attributes) |
 | Suggestions for the English (open) | Mars search example: a longitude other than 354.8 (hard to read for dyslexic readers; Tia suggests −5.2); state the MOLA resolution in the Mars basemaps help; passages she highlighted without comment (Petals sentence in the cell help, "1.5 times its on-screen width" in the images help, the coordinate rules in the search help) |
 
+## English left in the French and Chinese panel header (21 October 2026)
+
+The PI found English in the first section of the Mars panel in French and Chinese: the search placeholder, the "Planetocentric latitude…" note, "Wind dataset" and "Median grain diameter d".
+
+| Item | Decision |
+|---|---|
+| Cause | The string collector dropped a rendered text when its words matched a catalogue entry already listed (for example "Wind dataset ⟦0⟧", the label followed by the dataset name, was dropped because "Wind dataset" existed). Those texts then had no translation on the page. The search placeholder and the coordinate note were never collected, nor were the tooltips of the dataset list, two hidden screen-reader texts and the label of the threshold info button. |
+| Fix | The collector keeps every rendered text and collects the search texts of each planet; dataset-list tooltips and the hidden texts are translated. A test checks the French header (dataset label, info button, search placeholder). |
+| New strings | 129 Earth and 27 Mars strings (many in the cell panel and downloads, which had the same problem); 33 were identical to English already translated, the others machine-drafted with the glossary and checked by hand for units (m²/an, m/ka), "par exemple" and lower case inside sentences. Not yet reviewed by Tia or YL. |
+
 ## PI preview of 17 October (branch features/reanalysis: MERRA-2, JRA-3Q, icon, Dunes only)
 
 | Report | Finding | Change |

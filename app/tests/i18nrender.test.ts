@@ -54,4 +54,28 @@ describe("rendered in another language", () => {
     expect(dp).not.toMatch(/\bthe saturated sand flux\b/i);
     expect(document.querySelector(".dunes-only-row")!.textContent).toContain("Dunes seules");
   });
+  it("French: the panel header (wind dataset, threshold control, search box) translated on the page", async () => {
+    // regression: labels with a live value (\"Wind dataset ⟦0⟧\") and the search placeholder were left in English
+    vi.resetModules();
+    history.replaceState(null, "", "/?lang=fr");
+    document.body.innerHTML = '<aside id="layer-panel"></aside>';
+    const { startDomTranslation } = await import("../src/i18n/dom");
+    startDomTranslation();
+    const { loadRegistry } = await import("../src/core/registry/load");
+    const { Store } = await import("../src/core/store");
+    const { renderLayerPanel } = await import("../src/core/ui/layerPanel");
+    const { DEFAULT_VIEW } = await import("../src/core/defaultview");
+    const { SearchBox } = await import("../src/core/ui/search");
+    const { PROFILE } = await import("@body/profile");
+    const { loadPlaces } = await import("../src/core/search/places");
+    const search = new SearchBox({ ...PROFILE.search, places: loadPlaces(), goTo: () => {}, goToPlace: () => {} } as never);
+    const reg = loadRegistry().registry;
+    renderLayerPanel(document.getElementById("layer-panel")!, reg, new Store({ basemap: reg.basemaps[0].id, projection: "globe", utIndex: 14, layers: {}, order: [], dataset: DEFAULT_VIEW.dataset, cell: null, embed: false } as never), { search: search.el });
+    await new Promise((r) => setTimeout(r, 0));
+    const panel = document.getElementById("layer-panel")!.textContent ?? "";
+    expect(panel).toContain("Jeu de données de vent");
+    expect(panel).not.toContain("Wind dataset");
+    expect(panel).not.toContain("About this control");
+    expect(search.el.querySelector("input")!.getAttribute("placeholder")).toMatch(/^Lieu ou par exemple /);
+  });
 });
