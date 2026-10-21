@@ -175,7 +175,7 @@ export function dunesOnlyToggle(store: Store, reg?: Registry): HTMLElement {
   });
   store.subscribe((st, ch) => { if (ch.has("dunesOnly")) cb.checked = !!st.dunesOnly; });
   const label = h("label", { class: "inline dunes-only-row", for: "dunes-only", title: DUNES_ONLY_HELP }, cb, ui("panel.dunesOnly"),
-    h("span", { id: "dunes-only-help", class: "visually-hidden" }, DUNES_ONLY_HELP));
+    h("span", { id: "dunes-only-help", class: "visually-hidden" }, trc(DUNES_ONLY_HELP, "Screen-reader labels and tooltips")));
   // one line with its ⓘ, the popover wrapping below (as the Wind dataset line)
   const t = infoToggle("Dunes only", DUNES_ONLY_INFO_HTML, "dunes-only");
   return h("div", { class: "dunes-only-line" }, label, t.button, t.pop);
@@ -190,7 +190,7 @@ export function namesToggle(store: Store): HTMLElement {
   cb.addEventListener("change", () => store.set({ names: cb.checked }));
   store.subscribe((st, ch) => { if (ch.has("names")) cb.checked = !!st.names; });
   const label = h("label", { for: "show-names", title: PLACE_TEXT.toggleHelp }, ui("panel.names"),
-    h("span", { id: "show-names-help", class: "visually-hidden" }, PLACE_TEXT.toggleHelp));
+    h("span", { id: "show-names-help", class: "visually-hidden" }, trc(PLACE_TEXT.toggleHelp, "Screen-reader labels and tooltips")));
   // the ⓘ: what the labels do, then the naming note (the same text as the mask's ⓘ, About and the search results)
   const t = infoToggle(PLACE_TEXT.aboutItem, `<p class="info-def">${escapeHtml(PLACE_TEXT.toggleHelp)}</p><p class="help places-note">${placesNoteHtml(PLACES)}</p>`, "names");
   return h("li", { class: "layer-item names-item" }, h("div", { class: "layer-row" }, cb, label, t.button), t.pop);

@@ -9,6 +9,7 @@ import { h } from "./dom";
 import { mathHtml } from "../util/math";
 import { padFigure, reserveCh } from "./livenum";
 import { PROFILE } from "@body/profile";
+import { trc } from "../../i18n";
 
 export function formatUt(v: number): string {
   return PROFILE.control.format(v);
@@ -50,7 +51,7 @@ export function thresholdControl(t: ThresholdDef, store: Store, opts: { compact?
   // layer panel, identical structure in both builds: label line (with ⓘ) | value + default |
   // slider | one short description line; the details are in the ⓘ popover (and Help)
   const popId = `${p}ut-info`;
-  const info = h("button", { type: "button", class: "info-button notranslate", translate: "no", "aria-expanded": "false", "aria-controls": popId, "aria-label": "About this control" }, "i") as HTMLButtonElement;
+  const info = h("button", { type: "button", class: "info-button notranslate", translate: "no", "aria-expanded": "false", "aria-controls": popId, "aria-label": trc("About this control", "Screen-reader labels and tooltips") }, "i") as HTMLButtonElement;
   const pop = h("div", { id: popId, class: "info-popover", hidden: true, role: "note", html: thresholdInfoHtml(t) });
   info.addEventListener("click", () => {
     const open = info.getAttribute("aria-expanded") !== "true";

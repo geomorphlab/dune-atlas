@@ -2967,6 +2967,634 @@
   "text": "Dérivé de la Mars Climate Database version ⟦#0⟧ (⟦0⟧). L’équipe de la⟦1⟧ne fait aucune déclaration ni n’offre aucune garantie quant à la fiabilité ou à la validité des données, et n’assume aucune responsabilité quant à l’usage qui en est fait.",
   "en": "051b2d7d"
  },
+ "c.9f43d0a3": {
+  "text": "Jeu de données de vent",
+  "en": "9f43d0a3"
+ },
+ "c.074019c2": {
+  "text": "Dunes seules",
+  "en": "074019c2"
+ },
+ "c.825d092a": {
+  "text": "Sombre (OpenFreeMap)",
+  "en": "825d092a"
+ },
+ "c.ac1d20ea": {
+  "text": "Imagerie satellite (Esri)",
+  "en": "ac1d20ea"
+ },
+ "c.7784e854": {
+  "text": "Relief ombré (Mapterhorn, 2D)",
+  "en": "7784e854"
+ },
+ "c.347b22b2": {
+  "text": "Topographique (OpenTopoMap)",
+  "en": "347b22b2"
+ },
+ "c.45eb5840": {
+  "text": "Clair (OpenFreeMap Positron)",
+  "en": "45eb5840"
+ },
+ "c.f7f02383": {
+  "text": "Afficher / masquer les calques",
+  "en": "f7f02383"
+ },
+ "c.75418ba0": {
+  "text": "Jeu de données de vent ⟦0⟧",
+  "en": "75418ba0"
+ },
+ "c.aafe1b6b": {
+  "text": "ERA5 ⟦#0⟧°, ⟦#1⟧–⟦#2⟧ ; cellules terrestres : fraction du masque terre–mer > ⟦#3⟧",
+  "en": "aafe1b6b"
+ },
+ "c.b0a858c6": {
+  "text": "JRA-3Q ⟦#0⟧°, ⟦#1⟧–⟦#2⟧ ; cellules terrestres : fraction terrestre > ⟦#3⟧",
+  "en": "b0a858c6"
+ },
+ "c.4c01b956": {
+  "text": "MERRA-⟦#0⟧ ⟦#1⟧° × ⟦#2⟧°, ⟦#3⟧–⟦#4⟧ ; cellules terrestres : fraction terrestre > ⟦#5⟧",
+  "en": "4c01b956"
+ },
+ "c.126097bd": {
+  "text": "Vitesse de frottement seuil",
+  "en": "126097bd"
+ },
+ "c.fb52111a": {
+  "text": "Vitesse de frottement seuil ⟦0⟧",
+  "en": "fb52111a"
+ },
+ "c.457953af": {
+  "text": "Flèches",
+  "en": "457953af"
+ },
+ "c.373a8f5c": {
+  "text": "Lignes de courant",
+  "en": "373a8f5c"
+ },
+ "c.6c1bd587": {
+  "text": "⟦0⟧ échelle log <span class=\"hint log-hint\"></span>",
+  "en": "6c1bd587"
+ },
+ "c.f96647ef": {
+  "text": "Flux absolu à travers la crête, mode d’instabilité du lit⟦0⟧.",
+  "en": "f96647ef"
+ },
+ "c.c9e3f234": {
+  "text": "m²/an",
+  "en": "c9e3f234"
+ },
+ "c.f07054e3": {
+  "text": "Flux net à travers la crête, mode d’instabilité du lit⟦0⟧.",
+  "en": "f07054e3"
+ },
+ "c.f45174f7": {
+  "text": "Flux net le long de la crête, mode d’instabilité du lit⟦0⟧.",
+  "en": "f45174f7"
+ },
+ "c.2d9914e3": {
+  "text": "Flux absolu le long de la crête, mode d’instabilité du lit⟦0⟧.",
+  "en": "2d9914e3"
+ },
+ "c.0c0bc5b3": {
+  "text": "Flux net le long de la crête, mode d’allongement⟦0⟧.",
+  "en": "0c0bc5b3"
+ },
+ "c.774ba04f": {
+  "text": "Flux absolu le long de la crête, mode d’allongement⟦0⟧.",
+  "en": "774ba04f"
+ },
+ "c.afb13b6b": {
+  "text": "Flux absolu à travers la crête, mode d’allongement⟦0⟧.",
+  "en": "afb13b6b"
+ },
+ "c.05d2e076": {
+  "text": "sans dimension",
+  "en": "05d2e076"
+ },
+ "c.43183fd1": {
+  "text": "m/ka",
+  "en": "43183fd1"
+ },
+ "c.383923e2": {
+  "text": "À propos, sources des données &amp; citation",
+  "en": "383923e2"
+ },
+ "c.c0ab6504": {
+  "text": "m/s à ⟦#0⟧ m",
+  "en": "c0ab6504"
+ },
+ "c.4d71dbff": {
+  "text": "⟦0⟧ m²/an",
+  "en": "4d71dbff"
+ },
+ "c.0eeca8ee": {
+  "text": "Pétales :",
+  "en": "0eeca8ee"
+ },
+ "c.b94aa293": {
+  "text": "⟦0⟧ vers",
+  "en": "b94aa293"
+ },
+ "c.93adea74": {
+  "text": "⟦0⟧ depuis",
+  "en": "93adea74"
+ },
+ "c.4eda5e0a": {
+  "text": "⟦0⟧⟦1⟧(orientation de la crête, mode d’instabilité du lit) : ⟦2⟧",
+  "en": "4eda5e0a"
+ },
+ "c.546876b7": {
+  "text": "⟦0⟧⟦1⟧(direction d’allongement) : ⟦2⟧",
+  "en": "546876b7"
+ },
+ "c.5eae0e7e": {
+  "text": "⟦0⟧⟦1⟧(direction de migration transverse) : ⟦2⟧",
+  "en": "5eae0e7e"
+ },
+ "c.bd20d398": {
+  "text": "⟦0⟧⟦1⟧(direction de dérive résultante) : ⟦2⟧",
+  "en": "bd20d398"
+ },
+ "c.fb7bfaeb": {
+  "text": "⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> m²/an",
+  "en": "fb7bfaeb"
+ },
+ "c.641b8727": {
+  "text": "u*,th actuel = ⟦#0⟧ m/s",
+  "en": "641b8727"
+ },
+ "c.c962eae5": {
+  "text": "αT (direction de migration transverse)",
+  "en": "c962eae5"
+ },
+ "c.78f4ea9f": {
+  "text": "αE (direction d’allongement)",
+  "en": "78f4ea9f"
+ },
+ "c.28f075b7": {
+  "text": "αO (direction du transport le long de la crête)",
+  "en": "28f075b7"
+ },
+ "c.d0f6d865": {
+  "text": "αH (orientation de la crête, mode d’instabilité du lit)",
+  "en": "d0f6d865"
+ },
+ "c.559cc0c6": {
+  "text": "RDD (direction de dérive résultante)",
+  "en": "559cc0c6"
+ },
+ "c.83980e5f": {
+  "text": "⟦0⟧⟦1⟧ (direction de migration transverse)",
+  "en": "83980e5f"
+ },
+ "c.1a97c00c": {
+  "text": "⟦0⟧⟦1⟧ (direction d’allongement)",
+  "en": "1a97c00c"
+ },
+ "c.59643444": {
+  "text": "⟦0⟧⟦1⟧ (direction du transport le long de la crête)",
+  "en": "59643444"
+ },
+ "c.b20dffdb": {
+  "text": "⟦0⟧⟦1⟧ (orientation de la crête, mode d’instabilité du lit)",
+  "en": "b20dffdb"
+ },
+ "c.ccff776d": {
+  "text": "⟦0⟧⟦1⟧ (direction de dérive résultante)",
+  "en": "ccff776d"
+ },
+ "c.8edeaba5": {
+  "text": "Potentiel de dérive (DP)",
+  "en": "8edeaba5"
+ },
+ "c.a7c0ad69": {
+  "text": "Potentiel de dérive résultant (RDP)",
+  "en": "a7c0ad69"
+ },
+ "c.1b0b5ac6": {
+  "text": "Direction de dérive résultante (RDD)",
+  "en": "1b0b5ac6"
+ },
+ "c.6c886b64": {
+  "text": "Divergence du flux saturé (∇·qs)",
+  "en": "6c886b64"
+ },
+ "c.82a7644d": {
+  "text": "Direction de migration transverse (αT)",
+  "en": "82a7644d"
+ },
+ "c.4f659b0b": {
+  "text": "Orientation de la crête, mode d’instabilité du lit (αH)",
+  "en": "4f659b0b"
+ },
+ "c.1e47696f": {
+  "text": "Direction d’allongement (αE)",
+  "en": "1e47696f"
+ },
+ "c.33dbe217": {
+  "text": "Direction du transport le long de la crête (αO)",
+  "en": "33dbe217"
+ },
+ "c.37c01f7a": {
+  "text": "Flux net à travers la crête, mode d’instabilité du lit ⟨Q⊥(αH)⟩",
+  "en": "37c01f7a"
+ },
+ "c.37d6d79a": {
+  "text": "Flux absolu à travers la crête, mode d’instabilité du lit ⟨|Q⊥(αH)|⟩",
+  "en": "37d6d79a"
+ },
+ "c.9ca1a73e": {
+  "text": "Flux net le long de la crête, mode d’instabilité du lit ⟨Q∥(αH)⟩",
+  "en": "9ca1a73e"
+ },
+ "c.7af3b85e": {
+  "text": "Flux absolu le long de la crête, mode d’instabilité du lit ⟨|Q∥(αH)|⟩",
+  "en": "7af3b85e"
+ },
+ "c.5ee1ed93": {
+  "text": "Flux net le long de la crête, mode d’allongement ⟨Q∥(αE)⟩",
+  "en": "5ee1ed93"
+ },
+ "c.2362fa45": {
+  "text": "Flux absolu le long de la crête, mode d’allongement ⟨|Q∥(αE)|⟩",
+  "en": "2362fa45"
+ },
+ "c.51a4d7c9": {
+  "text": "Flux absolu à travers la crête, mode d’allongement ⟨|Q⊥(αE)|⟩",
+  "en": "51a4d7c9"
+ },
+ "c.c47e2cb7": {
+  "text": "Stabilité des dunes en allongement sur lits pauvres en sable (σE/σH)",
+  "en": "c47e2cb7"
+ },
+ "c.294c015f": {
+  "text": "Rectitude vs sinuosité des crêtes, mode d’instabilité du lit (Q̂∥/⊥,H)",
+  "en": "294c015f"
+ },
+ "c.f828d252": {
+  "text": "Équilibre entre croissance en hauteur et migration (Q̂|⊥|/⊥,H)",
+  "en": "f828d252"
+ },
+ "c.3693ba79": {
+  "text": "Morphologie des dunes en allongement (Q̂|⊥|/∥,E)",
+  "en": "3693ba79"
+ },
+ "c.886dbe81": {
+  "text": "Fraction du temps au-dessus du seuil (T | u*f &gt; u*th / T)",
+  "en": "886dbe81"
+ },
+ "c.e4841e87": {
+  "text": "Vitesse de frottement moyenne au-dessus du seuil / seuil (⟨u*f | u*f &gt; u*th⟩ / u*th)",
+  "en": "e4841e87"
+ },
+ "c.32d71304": {
+  "text": "Fraction du flux en mode d’instabilité du lit lorsque la vitesse de frottement sur lit plat dépasse le seuil",
+  "en": "32d71304"
+ },
+ "c.c2cd6422": {
+  "text": "Fraction du flux en mode d’allongement lorsque la vitesse de frottement sur lit plat dépasse le seuil",
+  "en": "c2cd6422"
+ },
+ "c.9fc71e32": {
+  "text": "u*,th (m/s)",
+  "en": "9fc71e32"
+ },
+ "c.c1c00ebb": {
+  "text": "DP (m²/an)",
+  "en": "c1c00ebb"
+ },
+ "c.8b7ac902": {
+  "text": "Potentiel de dérive",
+  "en": "8b7ac902"
+ },
+ "c.b7a85154": {
+  "text": "⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> <span class=\"unit\">m⟦0⟧/an</span>",
+  "en": "b7a85154"
+ },
+ "c.6ab2ba40": {
+  "text": "Potentiel de dérive résultant",
+  "en": "6ab2ba40"
+ },
+ "c.f91bba5b": {
+  "text": "Direction de dérive résultante",
+  "en": "f91bba5b"
+ },
+ "c.8def0c56": {
+  "text": "Directionnalité du flux",
+  "en": "8def0c56"
+ },
+ "c.84bdbc5f": {
+  "text": "Divergence du flux saturé",
+  "en": "84bdbc5f"
+ },
+ "c.e7e6acc9": {
+  "text": "⟦#0⟧ <span class=\"unit\">m/ka</span>",
+  "en": "e7e6acc9"
+ },
+ "c.987bd280": {
+  "text": "Orientation des formes de lit",
+  "en": "987bd280"
+ },
+ "c.e1d707d3": {
+  "text": "Direction de migration transverse",
+  "en": "e1d707d3"
+ },
+ "c.f431cc59": {
+  "text": "Orientation de la crête, mode d’instabilité du lit",
+  "en": "f431cc59"
+ },
+ "c.75004e72": {
+  "text": "Direction d’allongement",
+  "en": "75004e72"
+ },
+ "c.4790afd8": {
+  "text": "Direction du transport le long de la crête",
+  "en": "4790afd8"
+ },
+ "c.f78160a5": {
+  "text": "Flux normaux et parallèles à la crête",
+  "en": "f78160a5"
+ },
+ "c.a9c937e9": {
+  "text": "Flux net à travers la crête, mode d’instabilité du lit",
+  "en": "a9c937e9"
+ },
+ "c.685e9c85": {
+  "text": "Flux absolu à travers la crête, mode d’instabilité du lit",
+  "en": "685e9c85"
+ },
+ "c.f20423cd": {
+  "text": "Flux net le long de la crête, mode d’instabilité du lit",
+  "en": "f20423cd"
+ },
+ "c.4f0b77e9": {
+  "text": "Flux absolu le long de la crête, mode d’instabilité du lit",
+  "en": "4f0b77e9"
+ },
+ "c.0dececcb": {
+  "text": "Flux net le long de la crête, mode d’allongement",
+  "en": "0dececcb"
+ },
+ "c.cb733487": {
+  "text": "Flux absolu le long de la crête, mode d’allongement",
+  "en": "cb733487"
+ },
+ "c.31a290a3": {
+  "text": "Flux absolu à travers la crête, mode d’allongement",
+  "en": "31a290a3"
+ },
+ "c.fb08c8c7": {
+  "text": "Rapports &amp; indices morphologiques",
+  "en": "fb08c8c7"
+ },
+ "c.28abd612": {
+  "text": "Stabilité des dunes en allongement sur lits pauvres en sable",
+  "en": "28abd612"
+ },
+ "c.62eca722": {
+  "text": "⟦#0⟧ <span class=\"unit\">rapport</span>",
+  "en": "62eca722"
+ },
+ "c.7989eb1e": {
+  "text": "Rectitude vs sinuosité des crêtes, mode d’instabilité du lit",
+  "en": "7989eb1e"
+ },
+ "c.0dd50e3d": {
+  "text": "Équilibre entre croissance en hauteur et migration",
+  "en": "0dd50e3d"
+ },
+ "c.6217aa03": {
+  "text": "Morphologie des dunes en allongement",
+  "en": "6217aa03"
+ },
+ "c.6a69004a": {
+  "text": "Statistiques du vent",
+  "en": "6a69004a"
+ },
+ "c.73a9606f": {
+  "text": "Fraction du temps au-dessus du seuil",
+  "en": "73a9606f"
+ },
+ "c.a851b244": {
+  "text": "Vitesse de frottement moyenne au-dessus du seuil / seuil",
+  "en": "a851b244"
+ },
+ "c.900d5770": {
+  "text": "Données associées",
+  "en": "900d5770"
+ },
+ "c.278a6de1": {
+  "text": "Indice d’aridité",
+  "en": "278a6de1"
+ },
+ "c.42628f17": {
+  "text": "Télécharger &amp; citer",
+  "en": "42628f17"
+ },
+ "c.1563eb60": {
+  "text": "⟦0⟧(.nc)",
+  "en": "1563eb60"
+ },
+ "c.ddeeb38e": {
+  "text": "⟦#0⟧ m²/an.",
+  "en": "ddeeb38e"
+ },
+ "c.23d5135f": {
+  "text": "AI",
+  "en": "23d5135f"
+ },
+ "c.ad5f3ea0": {
+  "text": "° · à $u_{*,th}$ = ⟦#0⟧ $\\mathrm{m\\,s^{⟦#1⟧}}$",
+  "en": "ad5f3ea0"
+ },
+ "c.c7a2dc12": {
+  "text": "$\\mathrm{m^{⟦#0⟧}\\,yr^{⟦#1⟧}}$ · à $u_{*,th}$ = ⟦#2⟧ $\\mathrm{m\\,s^{⟦#3⟧}}$",
+  "en": "c7a2dc12"
+ },
+ "c.76d4df5d": {
+  "text": "sans dimension · à $u_{*,th}$ = ⟦#0⟧ $\\mathrm{m\\,s^{⟦#1⟧}}$",
+  "en": "76d4df5d"
+ },
+ "c.8ccb466c": {
+  "text": "$\\mathrm{m\\,kyr^{⟦#0⟧}}$ · à $u_{*,th}$ = ⟦#1⟧ $\\mathrm{m\\,s^{⟦#2⟧}}$",
+  "en": "8ccb466c"
+ },
+ "c.e6e3ee83": {
+  "text": "jeu de données de vent",
+  "en": "e6e3ee83"
+ },
+ "c.cbddab1d": {
+  "text": "vitesse de frottement seuil",
+  "en": "cbddab1d"
+ },
+ "c.73284af3": {
+  "text": "Aide et visite guidée",
+  "en": "73284af3"
+ },
+ "c.7a137040": {
+  "text": "Concepts",
+  "en": "7a137040"
+ },
+ "c.d8bbba62": {
+  "text": "Partager / copier le lien",
+  "en": "d8bbba62"
+ },
+ "c.d7e31a24": {
+  "text": "Exporter l’image de la carte",
+  "en": "d7e31a24"
+ },
+ "c.b89df01a": {
+  "text": "Aide",
+  "en": "b89df01a"
+ },
+ "c.885fd34e": {
+  "text": "Relancer la visite guidée",
+  "en": "885fd34e"
+ },
+ "c.30bc41b1": {
+  "text": "Revenir au seuil de la carte",
+  "en": "30bc41b1"
+ },
+ "c.48db8db9": {
+  "text": "DP de l’atlas et DP de Fryberger pour un vent constant",
+  "en": "48db8db9"
+ },
+ "c.41d0c56b": {
+  "text": "Aller",
+  "en": "41d0c56b"
+ },
+ "c.b74eb9b0": {
+  "text": "Aller à",
+  "en": "b74eb9b0"
+ },
+ "c.7355c12f": {
+  "text": "Noms",
+  "en": "7355c12f"
+ },
+ "c.6dc01f19": {
+  "text": "Lieu ou par exemple ⟦#0⟧, ⟦#1⟧ ou ⟦#2⟧°⟦#3⟧′S ⟦#4⟧°⟦#5⟧′E",
+  "en": "6dc01f19"
+ },
+ "c.211d5723": {
+  "text": "par exemple ⟦#0⟧, ⟦#1⟧ ou ⟦#2⟧°⟦#3⟧′S ⟦#4⟧°⟦#5⟧′E",
+  "en": "211d5723"
+ },
+ "c.a808d03d": {
+  "text": "Lieux",
+  "en": "a808d03d"
+ },
+ "c.d4fee6aa": {
+  "text": "Relief ombré (MOLA–HRSC, 2D)",
+  "en": "d4fee6aa"
+ },
+ "c.a3a76911": {
+  "text": "OpenPlanetaryMap Mars (v0.2)",
+  "en": "a3a76911"
+ },
+ "c.3af51f08": {
+  "text": "Mosaïque CTX, 5 m (Murray Lab V01, Esri)",
+  "en": "3af51f08"
+ },
+ "c.f238b38b": {
+  "text": "HiRISE, là où disponible (Esri)",
+  "en": "f238b38b"
+ },
+ "c.45c8fb55": {
+  "text": "Viking MDIM 2.1 en couleur (Esri)",
+  "en": "45c8fb55"
+ },
+ "c.2d04414b": {
+  "text": "Relief ombré en couleur MOLA–HRSC (Esri)",
+  "en": "2d04414b"
+ },
+ "c.9fe7613c": {
+  "text": "EMARS ⟦#0⟧° × ⟦#1⟧°, une année martienne (année martienne ⟦#2⟧)",
+  "en": "9fe7613c"
+ },
+ "c.13319dab": {
+  "text": "MACDA ⟦#0⟧°, une année martienne (année martienne ⟦#1⟧)",
+  "en": "13319dab"
+ },
+ "c.fad743ba": {
+  "text": "MCD ⟦#0⟧° × ⟦#1⟧°, une année martienne climatologique (climatologie MCD ⟦#2⟧)",
+  "en": "fad743ba"
+ },
+ "c.fcddc797": {
+  "text": "Diamètre médian des grains",
+  "en": "fcddc797"
+ },
+ "c.a57fd254": {
+  "text": "Diamètre médian des grains ⟦0⟧",
+  "en": "a57fd254"
+ },
+ "c.61449a27": {
+  "text": "⟦#0⟧ µm",
+  "en": "61449a27"
+ },
+ "c.16ec1ca4": {
+  "text": "kg/m³",
+  "en": "16ec1ca4"
+ },
+ "c.97c06ed4": {
+  "text": "⟦#0⟧ m²/an",
+  "en": "97c06ed4"
+ },
+ "c.8da77fc1": {
+  "text": "d actuel = ⟦#0⟧ µm",
+  "en": "8da77fc1"
+ },
+ "c.bf237892": {
+  "text": "d (µm, échelle logarithmique)",
+  "en": "bf237892"
+ },
+ "c.1565ef3b": {
+  "text": "⟦#0⟧ <span class=\"unit\">m⟦0⟧/an</span>",
+  "en": "1565ef3b"
+ },
+ "c.05aa19ce": {
+  "text": "⟦#0⟧ <span class=\"unit\">kg/m³</span>",
+  "en": "05aa19ce"
+ },
+ "c.2fd17bae": {
+  "text": "$\\mathrm{m^{⟦#0⟧}\\,yr^{⟦#1⟧}}$ · à $d$ = ⟦#2⟧ $\\mathrm{\\mu m}$",
+  "en": "2fd17bae"
+ },
+ "c.cde96ea2": {
+  "text": "° · à $d$ = ⟦#0⟧ $\\mathrm{\\mu m}$",
+  "en": "cde96ea2"
+ },
+ "c.93a52d79": {
+  "text": "sans dimension · à $d$ = ⟦#0⟧ $\\mathrm{\\mu m}$",
+  "en": "93a52d79"
+ },
+ "c.e0d2a7f7": {
+  "text": "$\\mathrm{m\\,kyr^{⟦#0⟧}}$ · à $d$ = ⟦#1⟧ $\\mathrm{\\mu m}$",
+  "en": "e0d2a7f7"
+ },
+ "c.e80c2f78": {
+  "text": "m",
+  "en": "e80c2f78"
+ },
+ "c.62f029f7": {
+  "text": "diamètre médian des grains",
+  "en": "62f029f7"
+ },
+ "c.ad327f76": {
+  "text": "Lieu ou par exemple ⟦#0⟧, ⟦#1⟧ ou ⟦#2⟧°⟦#3⟧′N ⟦#4⟧°⟦#5⟧′E",
+  "en": "ad327f76"
+ },
+ "c.d34be400": {
+  "text": "par exemple ⟦#0⟧, ⟦#1⟧ ou ⟦#2⟧°⟦#3⟧′N ⟦#4⟧°⟦#5⟧′E",
+  "en": "d34be400"
+ },
+ "c.9ea447b9": {
+  "text": "Latitude planétocentrique, longitude positive vers l’est (⟦#0⟧° à ⟦#1⟧° ; une longitude ⟦#2⟧–⟦#3⟧° E est convertie).",
+  "en": "9ea447b9"
+ },
+ "c.d9c2be13": {
+  "text": "À propos de ce réglage",
+  "en": "d9c2be13"
+ },
  "c.912ef7dd": {
   "text": "<strong>Divergence du flux saturé</strong> ⟦0⟧: divergence du vecteur potentiel de dérive résultant (norme⟦1⟧, direction⟦2⟧) sur la sphère martienne (R = ⟦#0⟧ km), selon⟦3⟧, Methods⟦4⟧, avec des différences centrées sur la grille du jeu de données de vent (⟦#1⟧° ou ⟦#2⟧° × ⟦#3⟧° ou ⟦#4⟧°). Les valeurs négatives (convergence) indiquent un dépôt.",
   "en": "912ef7dd"

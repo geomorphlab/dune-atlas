@@ -45,14 +45,18 @@ export async function collectRendered(body: "earth" | "mars"): Promise<{ en: str
   const ht = await import("../src/core/ui/helpText");
   strings(ht.EXPORT_TEXT, "Tool panels"); strings(ht.SHARE_TEXT, "Tool panels"); strings(ht.TOUR_FALLBACK, "Search and messages");
   unit((await import("../src/core/ui/loading")).LOADING_TEXT, "Search and messages");
+  // the search box (placeholder with and without place names, the coordinate note, the results list label), as the
+  // attribute and text templates the page builds from them (i18n varTemplate: numbers and compass letters as ⟦#n⟧)
+  const { PROFILE } = await import("@body/profile");
+  const attr = (v: string, area: string) => { const t = i18n.varTemplate(v.replace(/\s+/g, " ").trim(), "en").tpl; if (/\p{L}{2,}/u.test(t) && !i18n.COLLECTED.has(t)) i18n.COLLECTED.set(t, area); };
+  attr(`Place or ${PROFILE.search.example}`, "Screen-reader labels and tooltips");
+  attr(PROFILE.search.example, "Screen-reader labels and tooltips");
+  attr("Places", "Screen-reader labels and tooltips");
+  if (PROFILE.search.conventionNote) attr(PROFILE.search.conventionNote, "Search and messages");
   obs.disconnect();
   (globalThis as { __I18N_COLLECT__?: boolean }).__I18N_COLLECT__ = false;
-  // drop units that are the English of a keyed translation (help, tour, layer names …: translated by key)
-  const { catalogue } = await import("../src/i18n/catalogue");
-  const words = (s: string) => new Set(s.replace(/\$[^$]*\$|⟦#?\d+⟧|<[^>]+>|&\w+;/g, " ").toLowerCase().match(/\p{L}{3,}/gu) ?? []);
-  const keyed = catalogue().map((c) => words(c.en));
-  const near = (w: Set<string>) => keyed.some((k) => { if (!w.size) return true; let n = 0; for (const x of w) if (k.has(x)) n++; return n === w.size && n === k.size; });
-  // a unit with a compass placeholder ("αE (elongation direction): ⟦#0⟧° (⟦#1⟧)") is more than the keyed label
-  const compass = (en: string) => /°\s?\(⟦#\d+⟧\)/.test(en);
-  return [...i18n.COLLECTED].filter(([en]) => compass(en) || !near(words(en))).map(([en, area]) => ({ en, area }));
+  // every rendered unit is kept, also those whose words match a keyed string (help, tour, layer names): the page
+  // looks a unit up by its own English, so a dropped unit stays in English (e.g. the label "Wind dataset ⟦0⟧");
+  // scripts/i18n.ts fills a new unit whose English equals a translated string with that translation
+  return [...i18n.COLLECTED].map(([en, area]) => ({ en, area }));
 }

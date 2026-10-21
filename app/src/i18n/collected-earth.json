@@ -1,6 +1,22 @@
 [
  {
+  "en": "Wind dataset",
+  "area": "Other"
+ },
+ {
   "en": "About {title}",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Draw the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in cells with dunes; the other layers and the cell panel are unchanged.",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Dunes only",
+  "area": "Other"
+ },
+ {
+  "en": "About this control",
   "area": "Screen-reader labels and tooltips"
  },
  {
@@ -30,6 +46,10 @@
  {
   "en": "Dune-field names",
   "area": "Other"
+ },
+ {
+  "en": "Label named dune fields and features on the map; where names would overlap, some appear only as you zoom in. Click a name for its details.",
+  "area": "Screen-reader labels and tooltips"
  },
  {
   "en": "Display {title} as",
@@ -64,16 +84,52 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
+  "en": "Dark (OpenFreeMap)",
+  "area": "Other"
+ },
+ {
+  "en": "Satellite imagery (Esri)",
+  "area": "Other"
+ },
+ {
+  "en": "Shaded relief (Mapterhorn, 2D)",
+  "area": "Other"
+ },
+ {
+  "en": "Topographic (OpenTopoMap)",
+  "area": "Other"
+ },
+ {
+  "en": "Light (OpenFreeMap Positron)",
+  "area": "Other"
+ },
+ {
+  "en": "Show / hide layers",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Wind dataset ⟦0⟧",
+  "area": "Layer panel"
+ },
+ {
   "en": "ERA5-Land ⟦#0⟧°, ⟦#1⟧–⟦#2⟧; land cells: land–sea mask fraction > ⟦#3⟧",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "ERA5 ⟦#0⟧°, ⟦#1⟧–⟦#2⟧; land cells: land–sea mask fraction > ⟦#3⟧",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "JRA-3Q ⟦#0⟧°, ⟦#1⟧–⟦#2⟧; land cells: land fraction > ⟦#3⟧",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "MERRA-⟦#0⟧ ⟦#1⟧° × ⟦#2⟧°, ⟦#3⟧–⟦#4⟧; land cells: land fraction > ⟦#5⟧",
   "area": "Screen-reader labels and tooltips"
  },
  {
   "en": "The Wind dataset selector switches between wind datasets (⟦0⟧, ⟦#0⟧°, ⟦#1⟧–⟦#2⟧;⟦1⟧, ⟦#3⟧°, ⟦#4⟧–⟦#5⟧;⟦2⟧, ⟦#6⟧°, ⟦#7⟧–⟦#8⟧;⟦3⟧, ⟦#9⟧° × ⟦#10⟧°, ⟦#11⟧–⟦#12⟧).⟦4⟧, used by⟦5⟧, re-runs⟦6⟧'s land-surface model driven by⟦7⟧atmospheric fields interpolated to its ⟦#13⟧° grid (Muñoz-Sabater et al. ⟦#14⟧);⟦8⟧reports its ⟦#15⟧ m wind speeds ⟦#16⟧–⟦#17⟧ % below those of⟦9⟧.⟦10⟧data are for non-commercial use only (⟦11⟧), and so are the⟦12⟧wind histograms and sand-flux fields of the atlas. The wind and sand-flux layers and the cell panel follow the selection; the dune-field mask, aridity and vegetation layers are the same for every dataset.",
   "area": "Layer popovers"
- },
- {
-  "en": "Draw the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in cells with dunes; the other layers and the cell panel are unchanged.",
-  "area": "Screen-reader labels and tooltips"
  },
  {
   "en": "Dunes only draws the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in the cells of the selected wind dataset that contain mapped dunes.",
@@ -86,6 +142,14 @@
  {
   "en": "Switching it on sets the dune map's opacity slider to ⟦#0⟧ %, so the colours of the dune cells show through it; the slider can be moved as usual.",
   "area": "Layer popovers"
+ },
+ {
+  "en": "Threshold friction velocity",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Threshold friction velocity ⟦0⟧",
+  "area": "Layer panel"
  },
  {
   "en": "Reset to the default ⟦#0⟧ m/s",
@@ -152,15 +216,19 @@
   "area": "Layer popovers"
  },
  {
-  "en": "Label named dune fields and features on the map; where names would overlap, some appear only as you zoom in. Click a name for its details.",
-  "area": "Screen-reader labels and tooltips"
- },
- {
   "en": "Show as ⟦0⟧",
   "area": "Layer panel"
  },
  {
   "en": "colour map",
+  "area": "Layer panel"
+ },
+ {
+  "en": "arrows",
+  "area": "Layer panel"
+ },
+ {
+  "en": "streamlines",
   "area": "Layer panel"
  },
  {
@@ -248,12 +316,48 @@
   "area": "Layer popovers"
  },
  {
+  "en": "⟦0⟧ log scale <span class=\"hint log-hint\"></span>",
+  "area": "Layer panel"
+ },
+ {
   "en": "Colour scale (logarithmic) from ⟦#0⟧ to ⟦#1⟧",
   "area": "Screen-reader labels and tooltips"
  },
  {
+  "en": "Absolute across-crest bed-instability-mode flux⟦0⟧.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "m²/yr",
+  "area": "Layer popovers"
+ },
+ {
   "en": "Limits span zero: symmetric log scale, linear close to zero",
   "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Net across-crest bed-instability-mode flux⟦0⟧.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "Net along-crest bed-instability-mode flux⟦0⟧.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "Absolute along-crest bed-instability-mode flux⟦0⟧.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "Net along-crest elongation-mode flux⟦0⟧.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "Absolute along-crest elongation-mode flux⟦0⟧.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "Absolute across-crest elongation-mode flux⟦0⟧.",
+  "area": "Layer popovers"
  },
  {
   "en": "Log scale needs min > ⟦#0⟧, or min < ⟦#1⟧ < max (symmetric log)",
@@ -261,6 +365,10 @@
  },
  {
   "en": "Ratio of the growth rates in height of dunes in the elongation and bed-instability orientations,⟦0⟧, between ⟦#0⟧ and ⟦#1⟧. It assesses whether dunes elongating from a sand source on a starved bed are stable: in numerical simulations and in dunes around the Tibesti Massif, elongating linear dunes form where the ratio is above about ⟦#2⟧ and trains of barchans form below it (⟦1⟧;⟦2⟧). It does not take bed mobility or other boundary conditions into account.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "dimensionless",
   "area": "Layer popovers"
  },
  {
@@ -313,6 +421,10 @@
  },
  {
   "en": "Divergence of the time-averaged saturated sand-flux vector (magnitude⟦0⟧, direction⟦1⟧) on the sphere, following⟦2⟧, Methods⟦3⟧:⟦4⟧with⟦5⟧,⟦6⟧. By conservation of sand mass, negative values (flux convergence) imply deposition and positive values (flux divergence) erosion. The values assume a saturated flux and an unlimited supply of loose sand, so on rock, crusted or vegetated surfaces actual erosion is limited by the sand available. No data at coasts (a neighbouring cell has no wind data) and on the ±⟦#0⟧° rows.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "m/kyr",
   "area": "Layer popovers"
  },
  {
@@ -446,6 +558,10 @@
  {
   "en": "To see the imagery under the colour layers, lower their opacity in Active layers.",
   "area": "Layer panel"
+ },
+ {
+  "en": "About, data sources &amp; citation",
+  "area": "About"
  },
  {
   "en": "This page was created with assistance from Claude⟦0⟧. I have reviewed the functionality and underlying data but if you notice any issues or errors please contact me at <a href=\"mailto:a.gunn@monash.edu\">a.gunn@monash.edu</a>.",
@@ -620,6 +736,10 @@
   "area": "Cell panel"
  },
  {
+  "en": "m/s at ⟦#0⟧ m",
+  "area": "Cell panel"
+ },
+ {
   "en": "Direction the wind blows FROM (meteorological), ⟦#0⟧ sectors of ⟦#1⟧°; radius = % of the ⟦#2⟧ counted hourly samples (sums to ⟦#3⟧ %; hours &gt; ⟦#4⟧ m/s are not in the histogram).⟦0⟧⟦#5⟧ m wind ⟦#6⟧–⟦#7⟧.",
   "area": "Cell panel"
  },
@@ -668,8 +788,24 @@
   "area": "Cell panel"
  },
  {
+  "en": "⟦0⟧ m²/yr",
+  "area": "Cell panel"
+ },
+ {
   "en": "Flux rose petal direction",
   "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Petals:",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧ toward",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧ from",
+  "area": "Cell panel"
  },
  {
   "en": "Time-averaged flat-bed sand flux by the direction sand moves toward, ⟦#0⟧ sectors of ⟦#1⟧ degrees, stacked by excess shear u*f/u*,th, percent of total flux, at u*,th ⟦#2⟧ m/s.",
@@ -696,7 +832,27 @@
   "area": "Cell panel"
  },
  {
+  "en": "⟦0⟧⟦1⟧(crest orientation, bed-instability mode): ⟦2⟧",
+  "area": "Cell panel"
+ },
+ {
   "en": "⟦#0⟧° (axis)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧(elongation direction): ⟦2⟧",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧(transverse migration direction): ⟦2⟧",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧(resultant drift direction): ⟦2⟧",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> m²/yr",
   "area": "Cell panel"
  },
  {
@@ -712,7 +868,51 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
+  "en": "current u*,th = ⟦#0⟧ m/s",
+  "area": "Cell panel"
+ },
+ {
+  "en": "αT (transverse migration direction)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "αE (elongation direction)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "αO (along-crest transport direction)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "αH (crest orientation, bed-instability mode)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "RDD (resultant drift direction)",
+  "area": "Cell panel"
+ },
+ {
   "en": "radius: u*,th (m/s)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧ (transverse migration direction)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧ (elongation direction)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧ (along-crest transport direction)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧ (crest orientation, bed-instability mode)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧ (resultant drift direction)",
   "area": "Cell panel"
  },
  {
@@ -732,12 +932,112 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
+  "en": "Drift potential (DP)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Resultant drift potential (RDP)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Resultant drift direction (RDD)",
+  "area": "Cell panel"
+ },
+ {
   "en": "Flux directionality (RDP/DP)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Saturated flux divergence (∇·qs)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Transverse migration direction (αT)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Crest orientation, bed-instability mode (αH)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Elongation direction (αE)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Along-crest transport direction (αO)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Net across-crest flux, bed-instability mode ⟨Q⊥(αH)⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute across-crest flux, bed-instability mode ⟨|Q⊥(αH)|⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Net along-crest flux, bed-instability mode ⟨Q∥(αH)⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute along-crest flux, bed-instability mode ⟨|Q∥(αH)|⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Net along-crest flux, elongation mode ⟨Q∥(αE)⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute along-crest flux, elongation mode ⟨|Q∥(αE)|⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute across-crest flux, elongation mode ⟨|Q⊥(αE)|⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Stability of elongating dunes on starved beds (σE/σH)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Crest straightness vs sinuosity, bed-instability mode (Q̂∥/⊥,H)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Growth-in-height vs migration balance (Q̂|⊥|/⊥,H)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Morphology of elongating dunes (Q̂|⊥|/∥,E)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Fraction of time above threshold (T | u*f &gt; u*th / T)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Mean above-threshold friction velocity / threshold (⟨u*f | u*f &gt; u*th⟩ / u*th)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Fraction of bed-instability-mode flux while flat bed above threshold",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Fraction of elongation-mode flux while flat bed above threshold",
   "area": "Cell panel"
  },
  {
   "en": "Drift potential (DP) vs threshold",
   "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "u*,th (m/s)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "DP (m²/yr)",
+  "area": "Cell panel"
  },
  {
   "en": "<span class=\"cap-lead\">At the current threshold: ⟦0⟧</span> Drift potential (⟦1⟧) of this cell for every threshold; dot and dashed line: current threshold. Triangles at the top or bottom edge: infinite ratio (its denominator, a net flux, is zero; ±⟦#0⟧ in the data), not plotted.",
@@ -760,7 +1060,27 @@
   "area": "Cell panel"
  },
  {
+  "en": "Drift potential",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> <span class=\"unit\">m⟦0⟧/yr</span>",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Resultant drift potential",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Resultant drift direction",
+  "area": "Cell panel"
+ },
+ {
   "en": "⟦#0⟧° <span class=\"unit\">(bearing, toward)</span>",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Flux directionality",
   "area": "Cell panel"
  },
  {
@@ -772,12 +1092,116 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
+  "en": "Saturated flux divergence",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦#0⟧ <span class=\"unit\">m/kyr</span>",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Bedform orientation",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Transverse migration direction",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Crest orientation, bed-instability mode",
+  "area": "Cell panel"
+ },
+ {
   "en": "⟦#0⟧° <span class=\"unit\">(axis, ⟦#1⟧–⟦#2⟧)</span>",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Elongation direction",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Along-crest transport direction",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Crest-normal/parallel fluxes",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Net across-crest flux, bed-instability mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute across-crest flux, bed-instability mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Net along-crest flux, bed-instability mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute along-crest flux, bed-instability mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Net along-crest flux, elongation mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute along-crest flux, elongation mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute across-crest flux, elongation mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Ratios &amp; morphology indices",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Stability of elongating dunes on starved beds",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦#0⟧ <span class=\"unit\">ratio</span>",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Crest straightness vs sinuosity, bed-instability mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Growth-in-height vs migration balance",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Morphology of elongating dunes",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Wind statistics",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Fraction of time above threshold",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Mean above-threshold friction velocity / threshold",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Related data",
   "area": "Cell panel"
  },
  {
   "en": "Cell mean, threshold-independent; ⟦#0⟧ % of cell valid, ⟦#1⟧ % saturated",
   "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Aridity index",
+  "area": "Cell panel"
  },
  {
   "en": "Some pixels are at the source saturation value ⟦#0⟧, so the mean is a lower bound",
@@ -812,8 +1236,16 @@
   "area": "Cell panel"
  },
  {
+  "en": "Download &amp; cite",
+  "area": "Cell panel"
+ },
+ {
   "en": "Wind histogram, all fields vs threshold, flux roses and metadata in one NetCDF-⟦#0⟧ file (CF-⟦#1⟧)",
   "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "⟦0⟧(.nc)",
+  "area": "Cell panel"
  },
  {
   "en": "wind_histogram.csv, fields_by_threshold.csv, flux_rose.csv, rose_16_sectors.csv (⟦#0⟧ sectors, degrees), metadata.json and README.txt",
@@ -860,7 +1292,15 @@
   "area": "Cell panel"
  },
  {
+  "en": "⟦#0⟧ m²/yr.",
+  "area": "Cell panel"
+ },
+ {
   "en": "infinite (⟦#0⟧ in the data).",
+  "area": "Cell panel"
+ },
+ {
+  "en": "AI",
   "area": "Cell panel"
  },
  {
@@ -882,6 +1322,22 @@
  {
   "en": "Wind roses and sand-flux statistics are computed for land cells (land–sea mask fraction above ⟦#0⟧, i.e. any land in the cell). This cell has no land (land–sea mask fraction ⟦#1⟧). Choose a nearby land cell.",
   "area": "Other interface"
+ },
+ {
+  "en": "° · at $u_{*,th}$ = ⟦#0⟧ $\\mathrm{m\\,s^{⟦#1⟧}}$",
+  "area": "Exported images"
+ },
+ {
+  "en": "$\\mathrm{m^{⟦#0⟧}\\,yr^{⟦#1⟧}}$ · at $u_{*,th}$ = ⟦#2⟧ $\\mathrm{m\\,s^{⟦#3⟧}}$",
+  "area": "Exported images"
+ },
+ {
+  "en": "dimensionless · at $u_{*,th}$ = ⟦#0⟧ $\\mathrm{m\\,s^{⟦#1⟧}}$",
+  "area": "Exported images"
+ },
+ {
+  "en": "$\\mathrm{m\\,kyr^{⟦#0⟧}}$ · at $u_{*,th}$ = ⟦#1⟧ $\\mathrm{m\\,s^{⟦#2⟧}}$",
+  "area": "Exported images"
  },
  {
   "en": "north up at view centre",
@@ -908,6 +1364,14 @@
   "area": "Exported images"
  },
  {
+  "en": "wind dataset",
+  "area": "Exported images"
+ },
+ {
+  "en": "threshold friction velocity",
+  "area": "Exported images"
+ },
+ {
   "en": "Exported {date} from {site}.",
   "area": "Exported images"
  },
@@ -928,7 +1392,39 @@
   "area": "Other"
  },
  {
+  "en": "Help and tour",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Concepts",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Share / copy link",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Export map image",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Help",
+  "area": "Tool panels"
+ },
+ {
   "en": "Close",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Restart tour",
+  "area": "Tool panels"
+ },
+ {
+  "en": "Back to the threshold of the map",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Atlas DP and Fryberger DP for a steady wind",
   "area": "Screen-reader labels and tooltips"
  },
  {
@@ -977,6 +1473,14 @@
  },
  {
   "en": "Search places or coordinates",
+  "area": "Search and messages"
+ },
+ {
+  "en": "Go",
+  "area": "Search and messages"
+ },
+ {
+  "en": "Go to",
   "area": "Search and messages"
  },
  {
@@ -1068,6 +1572,10 @@
   "area": "Search and messages"
  },
  {
+  "en": "Names",
+  "area": "Search and messages"
+ },
+ {
   "en": "Also called",
   "area": "Search and messages"
  },
@@ -1146,5 +1654,17 @@
  {
   "en": "Loading map…",
   "area": "Search and messages"
+ },
+ {
+  "en": "Place or e.g. ⟦#0⟧, ⟦#1⟧ or ⟦#2⟧°⟦#3⟧′S ⟦#4⟧°⟦#5⟧′E",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "e.g. ⟦#0⟧, ⟦#1⟧ or ⟦#2⟧°⟦#3⟧′S ⟦#4⟧°⟦#5⟧′E",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Places",
+  "area": "Screen-reader labels and tooltips"
  }
 ]

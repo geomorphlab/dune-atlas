@@ -88,7 +88,8 @@ const holdsText = (el: Element) => [...el.childNodes].some((n) => n.nodeType ===
 export function translateDom(root: Element) {
   if (!active()) return;
   const walk = (el: Element) => {
-    if (el.matches(SKIP_SEL)) return;
+    // protected text (e.g. the dataset names of the Wind dataset menu) keeps its words, but its tooltip is translated
+    if (el.matches(SKIP_SEL)) { if (el.tagName === "OPTION") translateAttrs(el); return; }
     translateAttrs(el);
     if (holdsText(el) && !isInlineOnly(el)) {
       translateUnit(el);

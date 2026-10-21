@@ -3289,6 +3289,680 @@ ZH: 完整版本（原始数据，需注册）：⟦0⟧
 EN: Derived from the Mars Climate Database version ⟦#0⟧ (⟦0⟧). The⟦1⟧team makes no representations or warranties regarding the reliability or validity of the data and bears no responsibility for any use made of them.
 ZH: 基于火星气候数据库（Mars Climate Database）版本⟦#0⟧（⟦0⟧）推算得出。⟦1⟧团队不对数据的可靠性或有效性做出任何陈述或保证，亦不对数据的任何使用方式承担责任。
 
+# Other
+
+## c.9f43d0a3 (Other)
+EN: Wind dataset
+ZH: 风场数据集
+
+## c.074019c2 (Other)
+EN: Dunes only
+ZH: 仅沙丘
+
+## c.825d092a (Other)
+EN: Dark (OpenFreeMap)
+ZH: 深色（OpenFreeMap）
+
+## c.ac1d20ea (Other)
+EN: Satellite imagery (Esri)
+ZH: 卫星影像（Esri）
+
+## c.7784e854 (Other)
+EN: Shaded relief (Mapterhorn, 2D)
+ZH: 阴影地形（Mapterhorn，2D）
+
+## c.347b22b2 (Other)
+EN: Topographic (OpenTopoMap)
+ZH: 地形图（OpenTopoMap）
+
+## c.45eb5840 (Other)
+EN: Light (OpenFreeMap Positron)
+ZH: 浅色（OpenFreeMap Positron）
+
+# Screen-reader labels and tooltips
+
+## c.f7f02383 (Screen-reader labels and tooltips)
+EN: Show / hide layers
+ZH: 显示 / 隐藏图层
+
+# Layer panel
+
+## c.75418ba0 (Layer panel)
+EN: Wind dataset ⟦0⟧
+ZH: 风场数据集 ⟦0⟧
+
+# Screen-reader labels and tooltips
+
+## c.aafe1b6b (Screen-reader labels and tooltips)
+EN: ERA5 ⟦#0⟧°, ⟦#1⟧–⟦#2⟧; land cells: land–sea mask fraction > ⟦#3⟧
+ZH: ERA5 ⟦#0⟧°，⟦#1⟧–⟦#2⟧；陆地网格单元：陆海掩膜比例 > ⟦#3⟧
+
+## c.b0a858c6 (Screen-reader labels and tooltips)
+EN: JRA-3Q ⟦#0⟧°, ⟦#1⟧–⟦#2⟧; land cells: land fraction > ⟦#3⟧
+ZH: JRA-3Q ⟦#0⟧°，⟦#1⟧–⟦#2⟧；陆地网格单元：陆地比例 > ⟦#3⟧
+
+## c.4c01b956 (Screen-reader labels and tooltips)
+EN: MERRA-⟦#0⟧ ⟦#1⟧° × ⟦#2⟧°, ⟦#3⟧–⟦#4⟧; land cells: land fraction > ⟦#5⟧
+ZH: MERRA-⟦#0⟧ ⟦#1⟧° × ⟦#2⟧°，⟦#3⟧–⟦#4⟧；陆地网格单元：陆地比例 > ⟦#5⟧
+
+## c.126097bd (Screen-reader labels and tooltips)
+EN: Threshold friction velocity
+ZH: 临界摩阻风速
+
+# Layer panel
+
+## c.fb52111a (Layer panel)
+EN: Threshold friction velocity ⟦0⟧
+ZH: 临界摩阻风速 ⟦0⟧
+
+## c.457953af (Layer panel)
+EN: arrows
+ZH: 箭头
+
+## c.373a8f5c (Layer panel)
+EN: streamlines
+ZH: 流线
+
+## c.6c1bd587 (Layer panel)
+EN: ⟦0⟧ log scale <span class="hint log-hint"></span>
+ZH: ⟦0⟧ 对数刻度 <span class="hint log-hint"></span>
+
+# Layer popovers
+
+## c.f96647ef (Layer popovers)
+EN: Absolute across-crest bed-instability-mode flux⟦0⟧.
+ZH: 垂直于脊线的绝对输沙通量，床面失稳模式⟦0⟧。
+
+## c.c9e3f234 (Layer popovers)
+EN: m²/yr
+ZH: m²/yr
+
+## c.f07054e3 (Layer popovers)
+EN: Net across-crest bed-instability-mode flux⟦0⟧.
+ZH: 垂直于脊线的净输沙通量（床面失稳模式）⟦0⟧。
+
+## c.f45174f7 (Layer popovers)
+EN: Net along-crest bed-instability-mode flux⟦0⟧.
+ZH: 沿脊线净床面失稳模式输沙通量⟦0⟧。
+
+## c.2d9914e3 (Layer popovers)
+EN: Absolute along-crest bed-instability-mode flux⟦0⟧.
+ZH: 沿脊线绝对床面失稳模式输沙通量⟦0⟧。
+
+## c.0c0bc5b3 (Layer popovers)
+EN: Net along-crest elongation-mode flux⟦0⟧.
+ZH: 净沿脊伸长模式输沙通量⟦0⟧。
+
+## c.774ba04f (Layer popovers)
+EN: Absolute along-crest elongation-mode flux⟦0⟧.
+ZH: 沿脊线方向伸长模式输沙通量的绝对值⟦0⟧。
+
+## c.afb13b6b (Layer popovers)
+EN: Absolute across-crest elongation-mode flux⟦0⟧.
+ZH: 绝对垂直脊线伸长模式输沙率⟦0⟧。
+
+## c.05d2e076 (Layer popovers)
+EN: dimensionless
+ZH: 无量纲
+
+## c.43183fd1 (Layer popovers)
+EN: m/kyr
+ZH: m/kyr
+
+# About
+
+## c.383923e2 (About)
+EN: About, data sources &amp; citation
+ZH: 关于、数据来源与引用
+
+# Cell panel
+
+## c.c0ab6504 (Cell panel)
+EN: m/s at ⟦#0⟧ m
+ZH: m/s，⟦#0⟧ m处
+
+## c.4d71dbff (Cell panel)
+EN: ⟦0⟧ m²/yr
+ZH: ⟦0⟧ m²/yr
+
+## c.0eeca8ee (Cell panel)
+EN: Petals:
+ZH: 扇区：
+
+## c.b94aa293 (Cell panel)
+EN: ⟦0⟧ toward
+ZH: ⟦0⟧去向
+
+## c.93adea74 (Cell panel)
+EN: ⟦0⟧ from
+ZH: ⟦0⟧来向
+
+## c.4eda5e0a (Cell panel)
+EN: ⟦0⟧⟦1⟧(crest orientation, bed-instability mode): ⟦2⟧
+ZH: ⟦0⟧⟦1⟧（脊线走向，床面失稳模式）：⟦2⟧
+
+## c.546876b7 (Cell panel)
+EN: ⟦0⟧⟦1⟧(elongation direction): ⟦2⟧
+ZH: ⟦0⟧⟦1⟧（伸长方向）：⟦2⟧
+
+## c.5eae0e7e (Cell panel)
+EN: ⟦0⟧⟦1⟧(transverse migration direction): ⟦2⟧
+ZH: ⟦0⟧⟦1⟧（横向迁移方向）：⟦2⟧
+
+## c.bd20d398 (Cell panel)
+EN: ⟦0⟧⟦1⟧(resultant drift direction): ⟦2⟧
+ZH: ⟦0⟧⟦1⟧（合成输沙方向）：⟦2⟧
+
+## c.fb7bfaeb (Cell panel)
+EN: ⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> m²/yr
+ZH: ⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> m²/yr
+
+## c.641b8727 (Cell panel)
+EN: current u*,th = ⟦#0⟧ m/s
+ZH: 当前 u*,th = ⟦#0⟧ m/s
+
+## c.c962eae5 (Cell panel)
+EN: αT (transverse migration direction)
+ZH: αT（横向迁移方向）
+
+## c.78f4ea9f (Cell panel)
+EN: αE (elongation direction)
+ZH: αE（伸长方向）
+
+## c.28f075b7 (Cell panel)
+EN: αO (along-crest transport direction)
+ZH: αO（沿脊线输沙方向）
+
+## c.d0f6d865 (Cell panel)
+EN: αH (crest orientation, bed-instability mode)
+ZH: αH（脊线走向，床面失稳模式）
+
+## c.559cc0c6 (Cell panel)
+EN: RDD (resultant drift direction)
+ZH: RDD（合成输沙方向）
+
+## c.83980e5f (Cell panel)
+EN: ⟦0⟧⟦1⟧ (transverse migration direction)
+ZH: ⟦0⟧⟦1⟧（横向迁移方向）
+
+## c.1a97c00c (Cell panel)
+EN: ⟦0⟧⟦1⟧ (elongation direction)
+ZH: ⟦0⟧⟦1⟧（伸长方向）
+
+## c.59643444 (Cell panel)
+EN: ⟦0⟧⟦1⟧ (along-crest transport direction)
+ZH: ⟦0⟧⟦1⟧（沿脊线输沙方向）
+
+## c.b20dffdb (Cell panel)
+EN: ⟦0⟧⟦1⟧ (crest orientation, bed-instability mode)
+ZH: ⟦0⟧⟦1⟧（脊线走向，床面失稳模式）
+
+## c.ccff776d (Cell panel)
+EN: ⟦0⟧⟦1⟧ (resultant drift direction)
+ZH: ⟦0⟧⟦1⟧（合成输沙方向）
+
+## c.8edeaba5 (Cell panel)
+EN: Drift potential (DP)
+ZH: 输沙势（DP）
+
+## c.a7c0ad69 (Cell panel)
+EN: Resultant drift potential (RDP)
+ZH: 合成输沙势（RDP）
+
+## c.1b0b5ac6 (Cell panel)
+EN: Resultant drift direction (RDD)
+ZH: 合成输沙方向（RDD）
+
+## c.6c886b64 (Cell panel)
+EN: Saturated flux divergence (∇·qs)
+ZH: 饱和输沙通量散度（∇·qs）
+
+## c.82a7644d (Cell panel)
+EN: Transverse migration direction (αT)
+ZH: 横向迁移方向（αT）
+
+## c.4f659b0b (Cell panel)
+EN: Crest orientation, bed-instability mode (αH)
+ZH: 脊线走向，床面失稳模式（αH）
+
+## c.1e47696f (Cell panel)
+EN: Elongation direction (αE)
+ZH: 伸长方向（αE）
+
+## c.33dbe217 (Cell panel)
+EN: Along-crest transport direction (αO)
+ZH: 沿脊线输沙方向（αO）
+
+## c.37c01f7a (Cell panel)
+EN: Net across-crest flux, bed-instability mode ⟨Q⊥(αH)⟩
+ZH: 垂直于脊线的净输沙通量，床面失稳模式 ⟨Q⊥(αH)⟩
+
+## c.37d6d79a (Cell panel)
+EN: Absolute across-crest flux, bed-instability mode ⟨|Q⊥(αH)|⟩
+ZH: 垂直于脊线的绝对输沙通量，床面失稳模式 ⟨|Q⊥(αH)|⟩
+
+## c.9ca1a73e (Cell panel)
+EN: Net along-crest flux, bed-instability mode ⟨Q∥(αH)⟩
+ZH: 沿脊线的净输沙通量，床面失稳模式 ⟨Q∥(αH)⟩
+
+## c.7af3b85e (Cell panel)
+EN: Absolute along-crest flux, bed-instability mode ⟨|Q∥(αH)|⟩
+ZH: 沿脊线的绝对输沙通量，床面失稳模式 ⟨|Q∥(αH)|⟩
+
+## c.5ee1ed93 (Cell panel)
+EN: Net along-crest flux, elongation mode ⟨Q∥(αE)⟩
+ZH: 净沿脊线输沙通量，伸长模式 ⟨Q∥(αE)⟩
+
+## c.2362fa45 (Cell panel)
+EN: Absolute along-crest flux, elongation mode ⟨|Q∥(αE)|⟩
+ZH: 沿脊线的绝对输沙通量，伸长模式 ⟨|Q∥(αE)|⟩
+
+## c.51a4d7c9 (Cell panel)
+EN: Absolute across-crest flux, elongation mode ⟨|Q⊥(αE)|⟩
+ZH: 垂直于脊线的绝对输沙通量，伸长模式 ⟨|Q⊥(αE)|⟩
+
+## c.c47e2cb7 (Cell panel)
+EN: Stability of elongating dunes on starved beds (σE/σH)
+ZH: 沙源不足的床面上伸长沙丘的稳定性（σE/σH）
+
+## c.294c015f (Cell panel)
+EN: Crest straightness vs sinuosity, bed-instability mode (Q̂∥/⊥,H)
+ZH: 脊线平直度与弯曲度对比，床面失稳模式（Q̂∥/⊥,H）
+
+## c.f828d252 (Cell panel)
+EN: Growth-in-height vs migration balance (Q̂|⊥|/⊥,H)
+ZH: 高度增长与迁移的平衡（Q̂|⊥|/⊥,H）
+
+## c.3693ba79 (Cell panel)
+EN: Morphology of elongating dunes (Q̂|⊥|/∥,E)
+ZH: 伸长沙丘的形态（Q̂|⊥|/∥,E）
+
+## c.886dbe81 (Cell panel)
+EN: Fraction of time above threshold (T | u*f &gt; u*th / T)
+ZH: Fraction of time above threshold（T | u*f &gt; u*th / T)
+
+## c.e4841e87 (Cell panel)
+EN: Mean above-threshold friction velocity / threshold (⟨u*f | u*f &gt; u*th⟩ / u*th)
+ZH: 平均超过临界值时的摩阻风速 / 临界值（⟨u*f | u*f &gt; u*th⟩ / u*th）
+
+## c.32d71304 (Cell panel)
+EN: Fraction of bed-instability-mode flux while flat bed above threshold
+ZH: 平坦床面超过临界值期间床面失稳模式输沙通量所占比例
+
+## c.c2cd6422 (Cell panel)
+EN: Fraction of elongation-mode flux while flat bed above threshold
+ZH: 平坦床面超过临界值期间伸长模式输沙通量所占比例
+
+## c.9fc71e32 (Cell panel)
+EN: u*,th (m/s)
+ZH: u*,th（m/s）
+
+## c.c1c00ebb (Cell panel)
+EN: DP (m²/yr)
+ZH: DP（m²/yr）
+
+## c.8b7ac902 (Cell panel)
+EN: Drift potential
+ZH: 输沙势
+
+## c.b7a85154 (Cell panel)
+EN: ⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> <span class="unit">m⟦0⟧/yr</span>
+ZH: ⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> <span class="unit">m⟦0⟧/yr</span>
+
+## c.6ab2ba40 (Cell panel)
+EN: Resultant drift potential
+ZH: 合成输沙势
+
+## c.f91bba5b (Cell panel)
+EN: Resultant drift direction
+ZH: 合成输沙方向
+
+## c.8def0c56 (Cell panel)
+EN: Flux directionality
+ZH: 输沙通量方向变率
+
+## c.84bdbc5f (Cell panel)
+EN: Saturated flux divergence
+ZH: 饱和输沙通量散度
+
+## c.e7e6acc9 (Cell panel)
+EN: ⟦#0⟧ <span class="unit">m/kyr</span>
+ZH: ⟦#0⟧ <span class="unit">m/kyr</span>
+
+## c.987bd280 (Cell panel)
+EN: Bedform orientation
+ZH: 床面形态走向
+
+## c.e1d707d3 (Cell panel)
+EN: Transverse migration direction
+ZH: 横向迁移方向
+
+## c.f431cc59 (Cell panel)
+EN: Crest orientation, bed-instability mode
+ZH: 脊线走向，床面失稳模式
+
+## c.75004e72 (Cell panel)
+EN: Elongation direction
+ZH: 伸长方向
+
+## c.4790afd8 (Cell panel)
+EN: Along-crest transport direction
+ZH: 沿脊线输沙方向
+
+## c.f78160a5 (Cell panel)
+EN: Crest-normal/parallel fluxes
+ZH: 垂直与平行于脊线的输沙通量
+
+## c.a9c937e9 (Cell panel)
+EN: Net across-crest flux, bed-instability mode
+ZH: 垂直于脊线的净输沙通量，床面失稳模式
+
+## c.685e9c85 (Cell panel)
+EN: Absolute across-crest flux, bed-instability mode
+ZH: 垂直于脊线的绝对输沙通量，床面失稳模式
+
+## c.f20423cd (Cell panel)
+EN: Net along-crest flux, bed-instability mode
+ZH: 沿脊线的净输沙通量，床面失稳模式
+
+## c.4f0b77e9 (Cell panel)
+EN: Absolute along-crest flux, bed-instability mode
+ZH: 平行于脊线的绝对输沙通量，床面失稳模式
+
+## c.0dececcb (Cell panel)
+EN: Net along-crest flux, elongation mode
+ZH: 净沿脊输沙通量，伸长模式
+
+## c.cb733487 (Cell panel)
+EN: Absolute along-crest flux, elongation mode
+ZH: 沿脊线的绝对输沙通量，伸长模式
+
+## c.31a290a3 (Cell panel)
+EN: Absolute across-crest flux, elongation mode
+ZH: 垂直于脊线的绝对输沙通量，伸长模式
+
+## c.fb08c8c7 (Cell panel)
+EN: Ratios &amp; morphology indices
+ZH: 比值与形态指数
+
+## c.28abd612 (Cell panel)
+EN: Stability of elongating dunes on starved beds
+ZH: 沙源不足的床面上伸长沙丘的稳定性
+
+## c.62eca722 (Cell panel)
+EN: ⟦#0⟧ <span class="unit">ratio</span>
+ZH: ⟦#0⟧ <span class="unit">比值</span>
+
+## c.7989eb1e (Cell panel)
+EN: Crest straightness vs sinuosity, bed-instability mode
+ZH: 脊线平直度与弯曲度对比，床面失稳模式
+
+## c.0dd50e3d (Cell panel)
+EN: Growth-in-height vs migration balance
+ZH: 高度增长与迁移的平衡
+
+## c.6217aa03 (Cell panel)
+EN: Morphology of elongating dunes
+ZH: 伸长沙丘的形态
+
+## c.6a69004a (Cell panel)
+EN: Wind statistics
+ZH: 风况统计
+
+## c.73a9606f (Cell panel)
+EN: Fraction of time above threshold
+ZH: 高于临界值的时间比例
+
+## c.a851b244 (Cell panel)
+EN: Mean above-threshold friction velocity / threshold
+ZH: 超过临界值期间的平均摩阻风速 / 临界值
+
+## c.900d5770 (Cell panel)
+EN: Related data
+ZH: 相关数据
+
+## c.278a6de1 (Cell panel)
+EN: Aridity index
+ZH: 干旱指数
+
+## c.42628f17 (Cell panel)
+EN: Download &amp; cite
+ZH: 下载与引用
+
+## c.1563eb60 (Cell panel)
+EN: ⟦0⟧(.nc)
+ZH: ⟦0⟧（.nc）
+
+## c.ddeeb38e (Cell panel)
+EN: ⟦#0⟧ m²/yr.
+ZH: ⟦#0⟧ m²/yr。
+
+## c.23d5135f (Cell panel)
+EN: AI
+ZH: AI
+
+# Exported images
+
+## c.ad5f3ea0 (Exported images)
+EN: ° · at $u_{*,th}$ = ⟦#0⟧ $\mathrm{m\,s^{⟦#1⟧}}$
+ZH: °·在 $u_{*,th}$ = ⟦#0⟧ $\mathrm{m\,s^{⟦#1⟧}}$ 时
+
+## c.c7a2dc12 (Exported images)
+EN: $\mathrm{m^{⟦#0⟧}\,yr^{⟦#1⟧}}$ · at $u_{*,th}$ = ⟦#2⟧ $\mathrm{m\,s^{⟦#3⟧}}$
+ZH: $\mathrm{m^{⟦#0⟧}\,yr^{⟦#1⟧}}$ · 当 $u_{*,th}$ = ⟦#2⟧ $\mathrm{m\,s^{⟦#3⟧}}$ 时
+
+## c.76d4df5d (Exported images)
+EN: dimensionless · at $u_{*,th}$ = ⟦#0⟧ $\mathrm{m\,s^{⟦#1⟧}}$
+ZH: 无量纲 · 当 $u_{*,th}$ = ⟦#0⟧ $\mathrm{m\,s^{⟦#1⟧}}$ 时
+
+## c.8ccb466c (Exported images)
+EN: $\mathrm{m\,kyr^{⟦#0⟧}}$ · at $u_{*,th}$ = ⟦#1⟧ $\mathrm{m\,s^{⟦#2⟧}}$
+ZH: $\mathrm{m\,kyr^{⟦#0⟧}}$ · 当 $u_{*,th}$ = ⟦#1⟧ $\mathrm{m\,s^{⟦#2⟧}}$ 时
+
+## c.e6e3ee83 (Exported images)
+EN: wind dataset
+ZH: 风场数据集
+
+## c.cbddab1d (Exported images)
+EN: threshold friction velocity
+ZH: 临界摩阻风速
+
+# Screen-reader labels and tooltips
+
+## c.73284af3 (Screen-reader labels and tooltips)
+EN: Help and tour
+ZH: 帮助与导览
+
+## c.7a137040 (Screen-reader labels and tooltips)
+EN: Concepts
+ZH: 概念
+
+## c.d8bbba62 (Screen-reader labels and tooltips)
+EN: Share / copy link
+ZH: 分享 / 复制链接
+
+## c.d7e31a24 (Screen-reader labels and tooltips)
+EN: Export map image
+ZH: 导出地图图像
+
+# Tool panels
+
+## c.b89df01a (Tool panels)
+EN: Help
+ZH: 帮助
+
+## c.885fd34e (Tool panels)
+EN: Restart tour
+ZH: 重新开始导览
+
+# Screen-reader labels and tooltips
+
+## c.30bc41b1 (Screen-reader labels and tooltips)
+EN: Back to the threshold of the map
+ZH: 恢复为地图所用临界值
+
+## c.48db8db9 (Screen-reader labels and tooltips)
+EN: Atlas DP and Fryberger DP for a steady wind
+ZH: 稳态风条件下的图集 DP 与 Fryberger DP
+
+# Search and messages
+
+## c.41d0c56b (Search and messages)
+EN: Go
+ZH: 前往
+
+## c.b74eb9b0 (Search and messages)
+EN: Go to
+ZH: 前往
+
+## c.7355c12f (Search and messages)
+EN: Names
+ZH: 名称
+
+# Screen-reader labels and tooltips
+
+## c.6dc01f19 (Screen-reader labels and tooltips)
+EN: Place or e.g. ⟦#0⟧, ⟦#1⟧ or ⟦#2⟧°⟦#3⟧′S ⟦#4⟧°⟦#5⟧′E
+ZH: 地点，或例如 ⟦#0⟧、⟦#1⟧ 或 ⟦#2⟧°⟦#3⟧′S ⟦#4⟧°⟦#5⟧′E
+
+## c.211d5723 (Screen-reader labels and tooltips)
+EN: e.g. ⟦#0⟧, ⟦#1⟧ or ⟦#2⟧°⟦#3⟧′S ⟦#4⟧°⟦#5⟧′E
+ZH: 例如 ⟦#0⟧、⟦#1⟧或⟦#2⟧°⟦#3⟧′S ⟦#4⟧°⟦#5⟧′E
+
+## c.a808d03d (Screen-reader labels and tooltips)
+EN: Places
+ZH: 地名
+
+# Other
+
+## c.d4fee6aa (Other)
+EN: Shaded relief (MOLA–HRSC, 2D)
+ZH: 阴影地形（MOLA–HRSC，2D）
+
+## c.a3a76911 (Other)
+EN: OpenPlanetaryMap Mars (v0.2)
+ZH: OpenPlanetaryMap Mars（v0.2）
+
+## c.3af51f08 (Other)
+EN: CTX mosaic, 5 m (Murray Lab V01, Esri)
+ZH: CTX 拼接图，5 m（Murray Lab V01，Esri）
+
+## c.f238b38b (Other)
+EN: HiRISE, where imaged (Esri)
+ZH: HiRISE（仅限已成像区域）（Esri）
+
+## c.45c8fb55 (Other)
+EN: Viking MDIM 2.1 colour (Esri)
+ZH: Viking MDIM 2.1 彩色（Esri）
+
+## c.2d04414b (Other)
+EN: MOLA–HRSC colour shaded relief (Esri)
+ZH: MOLA–HRSC 彩色阴影地形（Esri）
+
+# Screen-reader labels and tooltips
+
+## c.9fe7613c (Screen-reader labels and tooltips)
+EN: EMARS ⟦#0⟧° × ⟦#1⟧°, one Mars year (Mars Year ⟦#2⟧)
+ZH: EMARS ⟦#0⟧° × ⟦#1⟧°，一个火星年（第 ⟦#2⟧ 个火星年）
+
+## c.13319dab (Screen-reader labels and tooltips)
+EN: MACDA ⟦#0⟧°, one Mars year (Mars Year ⟦#1⟧)
+ZH: MACDA ⟦#0⟧°，一个火星年（第 ⟦#1⟧ 个火星年）
+
+## c.fad743ba (Screen-reader labels and tooltips)
+EN: MCD ⟦#0⟧° × ⟦#1⟧°, one climatological Mars year (MCD ⟦#2⟧ climatology)
+ZH: MCD ⟦#0⟧° × ⟦#1⟧°，一个气候态火星年（MCD ⟦#2⟧ 气候态）
+
+## c.fcddc797 (Screen-reader labels and tooltips)
+EN: Median grain diameter
+ZH: 中值粒径
+
+# Layer panel
+
+## c.a57fd254 (Layer panel)
+EN: Median grain diameter ⟦0⟧
+ZH: 中值粒径 ⟦0⟧
+
+## c.61449a27 (Layer panel)
+EN: ⟦#0⟧ µm
+ZH: ⟦#0⟧ µm
+
+# Layer popovers
+
+## c.16ec1ca4 (Layer popovers)
+EN: kg/m³
+ZH: kg/m³
+
+# Cell panel
+
+## c.97c06ed4 (Cell panel)
+EN: ⟦#0⟧ m²/yr
+ZH: ⟦#0⟧ m²/yr
+
+## c.8da77fc1 (Cell panel)
+EN: current d = ⟦#0⟧ µm
+ZH: 当前 d = ⟦#0⟧ µm
+
+## c.bf237892 (Cell panel)
+EN: d (µm, log scale)
+ZH: d（µm，对数刻度）
+
+## c.1565ef3b (Cell panel)
+EN: ⟦#0⟧ <span class="unit">m⟦0⟧/yr</span>
+ZH: ⟦#0⟧ <span class="unit">m⟦0⟧/yr</span>
+
+## c.05aa19ce (Cell panel)
+EN: ⟦#0⟧ <span class="unit">kg/m³</span>
+ZH: ⟦#0⟧ <span class="unit">kg/m³</span>
+
+# Exported images
+
+## c.2fd17bae (Exported images)
+EN: $\mathrm{m^{⟦#0⟧}\,yr^{⟦#1⟧}}$ · at $d$ = ⟦#2⟧ $\mathrm{\mu m}$
+ZH: $\mathrm{m^{⟦#0⟧}\,yr^{⟦#1⟧}}$ ·$d$ = ⟦#2⟧ $\mathrm{\mu m}$ 时
+
+## c.cde96ea2 (Exported images)
+EN: ° · at $d$ = ⟦#0⟧ $\mathrm{\mu m}$
+ZH: ° · 在 $d$ = ⟦#0⟧ $\mathrm{\mu m}$ 时
+
+## c.93a52d79 (Exported images)
+EN: dimensionless · at $d$ = ⟦#0⟧ $\mathrm{\mu m}$
+ZH: 无量纲 · 当 $d$ = ⟦#0⟧ $\mathrm{\mu m}$ 时
+
+## c.e0d2a7f7 (Exported images)
+EN: $\mathrm{m\,kyr^{⟦#0⟧}}$ · at $d$ = ⟦#1⟧ $\mathrm{\mu m}$
+ZH: $\mathrm{m\,kyr^{⟦#0⟧}}$ · $d$ = ⟦#1⟧ $\mathrm{\mu m}$ 时
+
+## c.e80c2f78 (Exported images)
+EN: m
+ZH: m
+
+## c.62f029f7 (Exported images)
+EN: median grain diameter
+ZH: 中值粒径
+
+# Screen-reader labels and tooltips
+
+## c.ad327f76 (Screen-reader labels and tooltips)
+EN: Place or e.g. ⟦#0⟧, ⟦#1⟧ or ⟦#2⟧°⟦#3⟧′N ⟦#4⟧°⟦#5⟧′E
+ZH: 地点或例如⟦#0⟧、⟦#1⟧或⟦#2⟧°⟦#3⟧′N ⟦#4⟧°⟦#5⟧′E
+
+## c.d34be400 (Screen-reader labels and tooltips)
+EN: e.g. ⟦#0⟧, ⟦#1⟧ or ⟦#2⟧°⟦#3⟧′N ⟦#4⟧°⟦#5⟧′E
+ZH: 例如 ⟦#0⟧、⟦#1⟧ 或 ⟦#2⟧°⟦#3⟧′N ⟦#4⟧°⟦#5⟧′E
+
+# Search and messages
+
+## c.9ea447b9 (Search and messages)
+EN: Planetocentric latitude, east-positive longitude (⟦#0⟧° to ⟦#1⟧°; ⟦#2⟧–⟦#3⟧° E is converted).
+ZH: 行星中心纬度，经度以东为正（⟦#0⟧° 至 ⟦#1⟧°；输入 ⟦#2⟧–⟦#3⟧° E 将自动换算）。
+
+# Screen-reader labels and tooltips
+
+## c.d9c2be13 (Screen-reader labels and tooltips)
+EN: About this control
+ZH: 关于此控件
+
 # Unused (English changed or removed)
 
 ## c.912ef7dd (Unused (English changed or removed))

@@ -1,6 +1,22 @@
 [
  {
+  "en": "Wind dataset",
+  "area": "Other"
+ },
+ {
   "en": "About {title}",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Draw the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in cells with dunes; the other layers and the cell panel are unchanged.",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Dunes only",
+  "area": "Other"
+ },
+ {
+  "en": "About this control",
   "area": "Screen-reader labels and tooltips"
  },
  {
@@ -30,6 +46,10 @@
  {
   "en": "Dune-field names",
   "area": "Other"
+ },
+ {
+  "en": "Label named dune fields and features on the map; where names would overlap, some appear only as you zoom in. Click a name for its details.",
+  "area": "Screen-reader labels and tooltips"
  },
  {
   "en": "Display {title} as",
@@ -64,6 +84,30 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
+  "en": "Shaded relief (MOLA–HRSC, 2D)",
+  "area": "Other"
+ },
+ {
+  "en": "OpenPlanetaryMap Mars (v0.2)",
+  "area": "Other"
+ },
+ {
+  "en": "CTX mosaic, 5 m (Murray Lab V01, Esri)",
+  "area": "Other"
+ },
+ {
+  "en": "HiRISE, where imaged (Esri)",
+  "area": "Other"
+ },
+ {
+  "en": "Viking MDIM 2.1 colour (Esri)",
+  "area": "Other"
+ },
+ {
+  "en": "MOLA–HRSC colour shaded relief (Esri)",
+  "area": "Other"
+ },
+ {
   "en": "Best viewed full screen: opens this view in a new tab",
   "area": "Screen-reader labels and tooltips"
  },
@@ -76,16 +120,32 @@
   "area": "Other interface"
  },
  {
+  "en": "Show / hide layers",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Wind dataset ⟦0⟧",
+  "area": "Layer panel"
+ },
+ {
   "en": "MCMC FV3 ⟦#0⟧°, one Mars year (6th simulated year, ⟦#1⟧ sols)",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "EMARS ⟦#0⟧° × ⟦#1⟧°, one Mars year (Mars Year ⟦#2⟧)",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "MACDA ⟦#0⟧°, one Mars year (Mars Year ⟦#1⟧)",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "MCD ⟦#0⟧° × ⟦#1⟧°, one climatological Mars year (MCD ⟦#2⟧ climatology)",
   "area": "Screen-reader labels and tooltips"
  },
  {
   "en": "The Wind dataset selector switches between Mars wind datasets (⟦0⟧, ⟦#0⟧°;⟦1⟧, ⟦#1⟧° × ⟦#2⟧°;⟦2⟧, ⟦#3⟧°;⟦3⟧, ⟦#4⟧° × ⟦#5⟧°), each one Mars year of lowest-level winds on its own grid (⟦4⟧: free-running climate-model simulation;⟦5⟧and⟦6⟧: reanalysis of Mars Year ⟦#6⟧, with spacecraft observations of the atmosphere assimilated into a climate model;⟦7⟧: climatology of a climate model). The⟦8⟧gives the mean state of the atmosphere for each season and time of day, without day-to-day variability, so its sand fluxes are lower bounds. The wind and sand-flux layers and the cell panel follow the selection; the dune map and the elevation are the same for every dataset. No⟦9⟧data poleward of ⟦#7⟧° N: the northernmost cells of its grid are centred at ⟦#8⟧° N. No⟦10⟧data poleward of ⟦#9⟧° N: the northernmost cells of its grid are centred at ⟦#10⟧° N.",
   "area": "Layer popovers"
- },
- {
-  "en": "Draw the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in cells with dunes; the other layers and the cell panel are unchanged.",
-  "area": "Screen-reader labels and tooltips"
  },
  {
   "en": "Dunes only draws the wind-derived layers (sand-flux fields, flux divergence, arrows and streamlines) only in the cells of the selected wind dataset that contain mapped dunes.",
@@ -98,6 +158,18 @@
  {
   "en": "Switching it on sets the dune map's opacity slider to ⟦#0⟧ %, so the colours of the dune cells show through it; the slider can be moved as usual.",
   "area": "Layer popovers"
+ },
+ {
+  "en": "Median grain diameter",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Median grain diameter ⟦0⟧",
+  "area": "Layer panel"
+ },
+ {
+  "en": "⟦#0⟧ µm",
+  "area": "Layer panel"
  },
  {
   "en": "Reset to the default ⟦#0⟧ µm",
@@ -188,15 +260,19 @@
   "area": "Layer popovers"
  },
  {
-  "en": "Label named dune fields and features on the map; where names would overlap, some appear only as you zoom in. Click a name for its details.",
-  "area": "Screen-reader labels and tooltips"
- },
- {
   "en": "Show as ⟦0⟧",
   "area": "Layer panel"
  },
  {
   "en": "colour map",
+  "area": "Layer panel"
+ },
+ {
+  "en": "arrows",
+  "area": "Layer panel"
+ },
+ {
+  "en": "streamlines",
   "area": "Layer panel"
  },
  {
@@ -288,12 +364,48 @@
   "area": "Layer popovers"
  },
  {
+  "en": "⟦0⟧ log scale <span class=\"hint log-hint\"></span>",
+  "area": "Layer panel"
+ },
+ {
   "en": "Colour scale (logarithmic) from ⟦#0⟧ to ⟦#1⟧",
   "area": "Screen-reader labels and tooltips"
  },
  {
+  "en": "Absolute across-crest bed-instability-mode flux⟦0⟧.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "m²/yr",
+  "area": "Layer popovers"
+ },
+ {
   "en": "Limits span zero: symmetric log scale, linear close to zero",
   "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Net across-crest bed-instability-mode flux⟦0⟧.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "Net along-crest bed-instability-mode flux⟦0⟧.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "Absolute along-crest bed-instability-mode flux⟦0⟧.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "Net along-crest elongation-mode flux⟦0⟧.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "Absolute along-crest elongation-mode flux⟦0⟧.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "Absolute across-crest elongation-mode flux⟦0⟧.",
+  "area": "Layer popovers"
  },
  {
   "en": "Log scale needs min > ⟦#0⟧, or min < ⟦#1⟧ < max (symmetric log)",
@@ -301,6 +413,10 @@
  },
  {
   "en": "Ratio of the growth rates in height of dunes in the elongation and bed-instability orientations,⟦0⟧, between ⟦#0⟧ and ⟦#1⟧. It assesses whether dunes elongating from a sand source on a starved bed are stable: in numerical simulations and in dunes around the Tibesti Massif, elongating linear dunes form where the ratio is above about ⟦#2⟧ and trains of barchans form below it (⟦1⟧;⟦2⟧). It does not take bed mobility or other boundary conditions into account.",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "dimensionless",
   "area": "Layer popovers"
  },
  {
@@ -356,7 +472,15 @@
   "area": "Layer popovers"
  },
  {
+  "en": "m/kyr",
+  "area": "Layer popovers"
+ },
+ {
   "en": "Mean over the samples of the Mars year of the lowest-layer air density⟦0⟧of the wind dataset (one sample per Mars hour;⟦1⟧= mid pressure of the lowest layer,⟦2⟧= lowest-level temperature).",
+  "area": "Layer popovers"
+ },
+ {
+  "en": "kg/m³",
   "area": "Layer popovers"
  },
  {
@@ -494,6 +618,10 @@
  {
   "en": "To see the imagery under the colour layers, lower their opacity in Active layers.",
   "area": "Layer panel"
+ },
+ {
+  "en": "About, data sources &amp; citation",
+  "area": "About"
  },
  {
   "en": "This page was created with assistance from Claude⟦0⟧. I have reviewed the functionality and underlying data but if you notice any issues or errors please contact me at <a href=\"mailto:a.gunn@monash.edu\">a.gunn@monash.edu</a>.",
@@ -784,8 +912,24 @@
   "area": "Cell panel"
  },
  {
+  "en": "⟦0⟧ m²/yr",
+  "area": "Cell panel"
+ },
+ {
   "en": "Flux rose petal direction",
   "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Petals:",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧ toward",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧ from",
+  "area": "Cell panel"
  },
  {
   "en": "Time-averaged flat-bed sand flux by the direction sand moves toward, ⟦#0⟧ sectors of ⟦#1⟧ degrees, stacked by excess shear u*/u*,th of each hour, percent of total flux, at grain diameter d = ⟦#2⟧ µm.",
@@ -812,7 +956,27 @@
   "area": "Cell panel"
  },
  {
+  "en": "⟦0⟧⟦1⟧(crest orientation, bed-instability mode): ⟦2⟧",
+  "area": "Cell panel"
+ },
+ {
   "en": "⟦#0⟧° (axis)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧(elongation direction): ⟦2⟧",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧(transverse migration direction): ⟦2⟧",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧(resultant drift direction): ⟦2⟧",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦#0⟧ m²/yr",
   "area": "Cell panel"
  },
  {
@@ -828,7 +992,51 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
+  "en": "current d = ⟦#0⟧ µm",
+  "area": "Cell panel"
+ },
+ {
+  "en": "αT (transverse migration direction)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "αE (elongation direction)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "αO (along-crest transport direction)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "αH (crest orientation, bed-instability mode)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "RDD (resultant drift direction)",
+  "area": "Cell panel"
+ },
+ {
   "en": "radius: d (µm, log scale)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧ (transverse migration direction)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧ (elongation direction)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧ (along-crest transport direction)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧ (crest orientation, bed-instability mode)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦0⟧⟦1⟧ (resultant drift direction)",
   "area": "Cell panel"
  },
  {
@@ -848,7 +1056,99 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
+  "en": "Drift potential (DP)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Resultant drift potential (RDP)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Resultant drift direction (RDD)",
+  "area": "Cell panel"
+ },
+ {
   "en": "Flux directionality (RDP/DP)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Saturated flux divergence (∇·qs)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Transverse migration direction (αT)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Crest orientation, bed-instability mode (αH)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Elongation direction (αE)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Along-crest transport direction (αO)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Net across-crest flux, bed-instability mode ⟨Q⊥(αH)⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute across-crest flux, bed-instability mode ⟨|Q⊥(αH)|⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Net along-crest flux, bed-instability mode ⟨Q∥(αH)⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute along-crest flux, bed-instability mode ⟨|Q∥(αH)|⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Net along-crest flux, elongation mode ⟨Q∥(αE)⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute along-crest flux, elongation mode ⟨|Q∥(αE)|⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute across-crest flux, elongation mode ⟨|Q⊥(αE)|⟩",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Stability of elongating dunes on starved beds (σE/σH)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Crest straightness vs sinuosity, bed-instability mode (Q̂∥/⊥,H)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Growth-in-height vs migration balance (Q̂|⊥|/⊥,H)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Morphology of elongating dunes (Q̂|⊥|/∥,E)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Fraction of time above threshold (T | u*f &gt; u*th / T)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Mean above-threshold friction velocity / threshold (⟨u*f | u*f &gt; u*th⟩ / u*th)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Fraction of bed-instability-mode flux while flat bed above threshold",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Fraction of elongation-mode flux while flat bed above threshold",
   "area": "Cell panel"
  },
  {
@@ -858,6 +1158,14 @@
  {
   "en": "Drift potential (DP) vs grain diameter",
   "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "d (µm, log scale)",
+  "area": "Cell panel"
+ },
+ {
+  "en": "DP (m²/yr)",
+  "area": "Cell panel"
  },
  {
   "en": "<span class=\"cap-lead\">At the current grain diameter: ⟦0⟧</span> Drift potential (⟦1⟧) of this cell for every grain diameter; dot and dashed line: current grain diameter.",
@@ -880,7 +1188,27 @@
   "area": "Cell panel"
  },
  {
+  "en": "Drift potential",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦#0⟧ <span class=\"unit\">m⟦0⟧/yr</span>",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Resultant drift potential",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Resultant drift direction",
+  "area": "Cell panel"
+ },
+ {
   "en": "⟦#0⟧° <span class=\"unit\">(bearing, toward)</span>",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Flux directionality",
   "area": "Cell panel"
  },
  {
@@ -892,11 +1220,103 @@
   "area": "Screen-reader labels and tooltips"
  },
  {
+  "en": "Saturated flux divergence",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦#0⟧ <span class=\"unit\">m/kyr</span>",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Bedform orientation",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Transverse migration direction",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Crest orientation, bed-instability mode",
+  "area": "Cell panel"
+ },
+ {
   "en": "⟦#0⟧° <span class=\"unit\">(axis, ⟦#1⟧–⟦#2⟧)</span>",
   "area": "Cell panel"
  },
  {
+  "en": "Elongation direction",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Along-crest transport direction",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Crest-normal/parallel fluxes",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Net across-crest flux, bed-instability mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute across-crest flux, bed-instability mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Net along-crest flux, bed-instability mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute along-crest flux, bed-instability mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Net along-crest flux, elongation mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute along-crest flux, elongation mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Absolute across-crest flux, elongation mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Ratios &amp; morphology indices",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Stability of elongating dunes on starved beds",
+  "area": "Cell panel"
+ },
+ {
   "en": "⟦#0⟧×⟦#1⟧<sup>⟦#2⟧</sup> <span class=\"unit\">ratio</span>",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Crest straightness vs sinuosity, bed-instability mode",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Growth-in-height vs migration balance",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Morphology of elongating dunes",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Wind statistics",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Fraction of time above threshold",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Mean above-threshold friction velocity / threshold",
   "area": "Cell panel"
  },
  {
@@ -913,6 +1333,14 @@
  },
  {
   "en": "Median air density",
+  "area": "Cell panel"
+ },
+ {
+  "en": "⟦#0⟧ <span class=\"unit\">kg/m³</span>",
+  "area": "Cell panel"
+ },
+ {
+  "en": "Related data",
   "area": "Cell panel"
  },
  {
@@ -956,8 +1384,16 @@
   "area": "Cell panel"
  },
  {
+  "en": "Download &amp; cite",
+  "area": "Cell panel"
+ },
+ {
   "en": "Hourly wind and air series, all fields vs grain size, flux roses and metadata in one NetCDF-⟦#0⟧ file (CF-⟦#1⟧)",
   "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "⟦0⟧(.nc)",
+  "area": "Cell panel"
  },
  {
   "en": "wind_series.csv, fields_by_grain_size.csv, flux_rose.csv, rose_16_sectors.csv (⟦#0⟧ sectors, degrees), metadata.json and README.txt",
@@ -1004,6 +1440,30 @@
   "area": "Cell panel"
  },
  {
+  "en": "⟦#0⟧ m²/yr.",
+  "area": "Cell panel"
+ },
+ {
+  "en": "$\\mathrm{m^{⟦#0⟧}\\,yr^{⟦#1⟧}}$ · at $d$ = ⟦#2⟧ $\\mathrm{\\mu m}$",
+  "area": "Exported images"
+ },
+ {
+  "en": "° · at $d$ = ⟦#0⟧ $\\mathrm{\\mu m}$",
+  "area": "Exported images"
+ },
+ {
+  "en": "dimensionless · at $d$ = ⟦#0⟧ $\\mathrm{\\mu m}$",
+  "area": "Exported images"
+ },
+ {
+  "en": "$\\mathrm{m\\,kyr^{⟦#0⟧}}$ · at $d$ = ⟦#1⟧ $\\mathrm{\\mu m}$",
+  "area": "Exported images"
+ },
+ {
+  "en": "m",
+  "area": "Exported images"
+ },
+ {
   "en": "north up at view centre",
   "area": "Exported images"
  },
@@ -1025,6 +1485,14 @@
  },
  {
   "en": "zoom",
+  "area": "Exported images"
+ },
+ {
+  "en": "wind dataset",
+  "area": "Exported images"
+ },
+ {
+  "en": "median grain diameter",
   "area": "Exported images"
  },
  {
@@ -1052,8 +1520,32 @@
   "area": "Other"
  },
  {
+  "en": "Help and tour",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Concepts",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Share / copy link",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Export map image",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Help",
+  "area": "Tool panels"
+ },
+ {
   "en": "Close",
   "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Restart tour",
+  "area": "Tool panels"
  },
  {
   "en": "Share this view",
@@ -1101,6 +1593,14 @@
  },
  {
   "en": "Search places or coordinates",
+  "area": "Search and messages"
+ },
+ {
+  "en": "Go",
+  "area": "Search and messages"
+ },
+ {
+  "en": "Go to",
   "area": "Search and messages"
  },
  {
@@ -1192,6 +1692,10 @@
   "area": "Search and messages"
  },
  {
+  "en": "Names",
+  "area": "Search and messages"
+ },
+ {
   "en": "Also called",
   "area": "Search and messages"
  },
@@ -1269,6 +1773,22 @@
  },
  {
   "en": "Loading map…",
+  "area": "Search and messages"
+ },
+ {
+  "en": "Place or e.g. ⟦#0⟧, ⟦#1⟧ or ⟦#2⟧°⟦#3⟧′N ⟦#4⟧°⟦#5⟧′E",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "e.g. ⟦#0⟧, ⟦#1⟧ or ⟦#2⟧°⟦#3⟧′N ⟦#4⟧°⟦#5⟧′E",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Places",
+  "area": "Screen-reader labels and tooltips"
+ },
+ {
+  "en": "Planetocentric latitude, east-positive longitude (⟦#0⟧° to ⟦#1⟧°; ⟦#2⟧–⟦#3⟧° E is converted).",
   "area": "Search and messages"
  }
 ]
