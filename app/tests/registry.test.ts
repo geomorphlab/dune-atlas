@@ -28,8 +28,8 @@ describe("registry/earth/layers.yaml", () => {
     expect(base.threshold.values.length).toBe(64);
     expect(base.threshold.values[base.threshold.defaultIndex]).toBeCloseTo(0.15, 12);
   });
-  it("basemaps: dark OpenFreeMap default, Esri imagery with the required attribution, 2D hillshade, OpenTopoMap, OpenFreeMap light", () => {
-    expect(base.basemaps.find((b) => b.default)!.id).toBe("openfreemap-dark");
+  it("basemaps: shaded relief (hillshade) default, dark OpenFreeMap, Esri imagery with the required attribution, 2D hillshade, OpenTopoMap, OpenFreeMap light", () => {
+    expect(base.basemaps.find((b) => b.default)!.id).toBe("hillshade");
     const esri = base.basemaps.find((b) => b.id === "esri-imagery")!;
     expect(esri.attribution).toBe("Esri, Maxar, Earthstar Geographics, and the GIS User Community");
     expect(base.basemaps.some((b) => b.kind === "hillshade")).toBe(true);

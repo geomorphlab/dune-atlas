@@ -276,6 +276,15 @@ min (cache miss; fixtures in parallel: Earth 7.5, Mars 3.3 min), second run 3.2 
 | Weekly backup of usage.csv to GitHub | PI | done (PR #23 records it) |
 | Dataset comparison tab in the Earth cell panel (DP, RDD, RDP/DP of the other wind datasets at the same place; replaces the lines removed from above the wind rose on 17 October) | PI, agent | open |
 
+## Opacity sliders and the opening view (PI request, 22 October 2026)
+
+| Request | Change |
+|---|---|
+| Every opacity slider goes from fully transparent to fully opaque | The dune map's fill multiplied the slider by its style opacity (0.55), so the top of its slider drew at 55 %. The slider value is now the drawn opacity for the vector layers (dune map and its invert view); the style opacity was removed from the registry and the pipeline writer, and the dune map's default opacity is 0.55 (the previous look). Raster fields already drew at the slider value; RDD arrows keep their magnitude shading (0.35–1 × slider) |
+| Dune names on at arrival | Both opening views have 'Show names' on |
+| Shaded relief basemap at arrival, both planets | Earth opens on the Mapterhorn shaded relief (now the registry default basemap); Mars already opened on the MOLA–HRSC shaded relief |
+| Opening link | Earth `#v=AUXirhW4wRLgAgIDDgMJVSACATcAB1UA` (was `AQXirhW4wRLgAgIBDgMJVSACAWQAB1UA`). Older share links that set the dune map to 100 % now draw it fully opaque (before: 55 %) |
+
 ## Mars Climate Database as a fourth Mars wind dataset (21 October 2026)
 
 The MCD team (E. Millour, LMD) agreed to MCD-derived map layers, the cell panel and per-cell downloads including the wind series, with Forget et al. (1999) and Millour et al. (2018) cited, the MCD website linked and the MCD version stated. Record: docs/records/validation-mars-mcd.md.

@@ -96,12 +96,12 @@ function check(map: FakeMap, ov: OverlayManager, layers: Record<string, LayerSta
   // opacity, colours, invert
   const fill = map.getLayer("ov-dunes-fill")!;
   const dop = layers.dunes.opacity, dcol = layers.dunes.cfg!.fill;
-  expect(fill.paint["fill-opacity"]).toBeCloseTo(0.55 * dop, 12);
+  expect(fill.paint["fill-opacity"]).toBeCloseTo(dop, 12);          // the slider is the drawn opacity
   expect(fill.paint["fill-color"]).toBe(dcol);
   expect(fill.layout.visibility).toBe(invert ? "none" : "visible");
   if (invert) {
     const inv = map.getLayer("ov-dunes-invert")!;
-    expect(inv.paint["fill-opacity"]).toBeCloseTo(0.55 * dop, 12);
+    expect(inv.paint["fill-opacity"]).toBeCloseTo(dop, 12);
     expect(inv.paint["fill-color"]).toBe(dcol);
     expect(inv.layout.visibility).toBe("visible");
   }
@@ -152,7 +152,7 @@ describe("basemap switching keeps the overlays", () => {
     layers.dunes = { ...layers.dunes, opacity: 0.4, cfg: { fill: "#00ff00", invert: false } };
     ov.sync(layers); // style still loading: handles are stale, nothing may throw
     await settle(map, ov);
-    expect(map.getLayer("ov-dunes-fill")!.paint["fill-opacity"]).toBeCloseTo(0.55 * 0.4, 12);
+    expect(map.getLayer("ov-dunes-fill")!.paint["fill-opacity"]).toBeCloseTo(0.4, 12);
     expect(map.getLayer("ov-dunes-fill")!.paint["fill-color"]).toBe("#00ff00");
     check(map, ov, layers, ids[1], false);
     // reordering afterwards still works (dunes to the bottom)

@@ -47,16 +47,18 @@ export const PROFILE: BodyProfile = {
       lineTickText: (t) => String(Math.round(10 ** t)),
     },
   },
-  /** globe over the north polar erg (the most dune-rich region), FV3 beta 1, d = 200 µm */
+  /** globe over the north polar erg (the most dune-rich region), FV3 beta 1, d = 200 µm, shaded relief; RDD as
+   *  streamlines (85 %) over the dune fields (55 %) over DP (85 %); dune-field names shown */
   defaultView: {
     lon: 160, lat: 62, zoom: 2.2, proj: "globe",
     dataset: "fv3-beta1", basemap: "hrsc-mola-hillshade", ut: 29,
     layers: [
       { id: "rdpa", opacity: 0.85, cfg: { mode: "streamlines" } },
-      { id: "dunes", opacity: 1 },
+      { id: "dunes", opacity: 0.55 },
       { id: "dpm", opacity: 0.85 },
     ],
     cell: null,
     panel: true,
+    names: true,
   },
 };
