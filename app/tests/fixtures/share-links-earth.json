@@ -250,7 +250,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -458,7 +458,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -691,7 +691,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -947,7 +947,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -1352,7 +1352,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -1562,7 +1562,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -1773,7 +1773,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -1957,7 +1957,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -2156,7 +2156,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -2344,7 +2344,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -2524,7 +2524,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -3004,7 +3004,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -3192,7 +3192,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -3389,7 +3389,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -3570,7 +3570,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -3958,7 +3958,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -4180,7 +4180,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -4389,7 +4389,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -4612,7 +4612,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -4843,7 +4843,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -5045,7 +5045,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -5225,7 +5225,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -5406,7 +5406,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -5600,7 +5600,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -5816,7 +5816,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -6009,7 +6009,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -6185,7 +6185,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -6406,7 +6406,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -6659,7 +6659,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -6896,7 +6896,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": true,
@@ -7134,7 +7134,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -7580,7 +7580,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -7764,7 +7764,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -7945,7 +7945,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -8157,7 +8157,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,
@@ -8416,7 +8416,7 @@
     "layers": {
      "dunes": {
       "visible": false,
-      "opacity": 1
+      "opacity": 0.55
      },
      "at": {
       "visible": false,

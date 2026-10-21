@@ -1,6 +1,6 @@
 // The state of the atlas when it is opened without view state in the URL (no #v= share link, no
 // ?query permalink): the author's chosen opening view, equal to the share link
-//   https://map.geomorphlab.org/#v=AQXirhW4wRLgAgIBDgMJVSACAWQAB1UA
+//   https://map.geomorphlab.org/#v=AUXirhW4wRLgAgIDDgMJVSACATcAB1UA
 // (tests check that encoding DEFAULT_VIEW gives exactly this link). The bare address stays clean
 // (map.geomorphlab.org) until the user changes something.
 //
@@ -16,7 +16,7 @@ import { migrateLegacySpacing } from "./layerconfig";
 import { defaultBasemap } from "./map/basemaps";
 import { PROFILE } from "@body/profile";
 
-export const DEFAULT_SHARE_CODE = "AQXirhW4wRLgAgIBDgMJVSACAWQAB1UA";
+export const DEFAULT_SHARE_CODE = "AUXirhW4wRLgAgIDDgMJVSACATcAB1UA";
 
 /** Opening view of this body (the body profile's; Earth: Africa and Arabia, globe, ERA5 0.25°,
  *  u*,th = 0.15 m/s, RDD streamlines over the dune fields over DP; Mars: the north polar erg). */

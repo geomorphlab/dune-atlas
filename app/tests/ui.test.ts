@@ -194,8 +194,9 @@ describe("layer panel", () => {
   it("dunes: fill colour picker and invert only (no outline controls, no colour swatch)", () => {
     const it_ = item(root, "dunes");
     const fc = it_.querySelector('input[aria-label^="Fill colour"]') as HTMLInputElement;
-    expect(fc.value).toBe("#a0a0a0"); // neutral grey default (registry), opacity 0.55
-    expect(reg.layers.find((l) => l.id === "dunes")!.style!.fill!["fill-opacity"]).toBe(0.55);
+    expect(fc.value).toBe("#a0a0a0"); // neutral grey default (registry); default opacity 0.55, the slider's own value
+    expect(reg.layers.find((l) => l.id === "dunes")!.style!.fill!["fill-opacity"]).toBeUndefined();
+    expect(reg.layers.find((l) => l.id === "dunes")!.opacity).toBe(0.55);
     fc.value = "#123456"; fire(fc, "input");
     expect(store.state.layers.dunes.cfg?.fill).toBe("#123456");
     expect(it_.querySelector('input[aria-label^="Outline"]')).toBeNull();

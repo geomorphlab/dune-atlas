@@ -16,7 +16,7 @@ layers:
     source: dune-atlas/v1/dunes/dunes.pmtiles
     sourceLayer: dunes
     visible: true
-    opacity: 1
+    opacity: 0.55
     queryable: true
     minzoom: 0
     maxzoom: 24
@@ -30,4 +30,3 @@ layers:
     style:
       fill:
         fill-color: "#a0a0a0"   # neutral grey, readable on the dark basemaps and on imagery
-        fill-opacity: 0.55

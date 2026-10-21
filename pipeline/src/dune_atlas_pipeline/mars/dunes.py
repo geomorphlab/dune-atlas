@@ -432,7 +432,7 @@ def registry_fragment(summary: dict) -> dict:
         "layers": [{
             "id": "dunes", "title": "Dune-field mask", "shortTitle": "Mask", "group": "dunes", "type": "pmtiles-vector",
             "source": DUNES_KEY, "sourceLayer": "dunes",
-            "visible": True, "opacity": 1, "queryable": True, "minzoom": 0, "maxzoom": 24,
+            "visible": True, "opacity": 0.55, "queryable": True, "minzoom": 0, "maxzoom": 24,
             "description": (f"Mapped aeolian dune fields of Mars: the USGS Mars Global Digital Dune Database (MGD3; "
                             f"equatorial MC2–MC29, north polar MC-1, south polar MC-30; Hayward et al. 2007, 2010, 2012, "
                             f"2014) plus the small dune fields of Fenton (2020), merged into {n:,} polygons "
@@ -447,7 +447,7 @@ def registry_fragment(summary: dict) -> dict:
             # included); built by dunes.invert_features / build_invert_pmtiles
             "invertSource": INVERT_KEY,
             "invertSourceLayer": "invert",
-            "style": {"fill": {"fill-color": "#a0a0a0", "fill-opacity": 0.55}},
+            "style": {"fill": {"fill-color": "#a0a0a0"}},
         }],
     }
 

@@ -1,5 +1,5 @@
 // The opening view: with no view state in the URL the atlas opens in the state of
-//   https://map.geomorphlab.org/#v=AQXirhW4wRLgAgIBDgMJVSACAWQAB1UA
+//   https://map.geomorphlab.org/#v=AUXirhW4wRLgAgIDDgMJVSACATcAB1UA
 // (set as defaults at the source, not by redirecting); #v= links and ?query permalinks override
 // it; a returning user's explicit dataset choice persists; embed mode uses the same default; the
 // default re-encodes to the same link.
@@ -24,8 +24,8 @@ const visible = (a: ReturnType<typeof open>["app"]) => a.order.filter((id) => a.
 describe("the default view", () => {
   it("is the decoded author link, and encodes back to exactly the same link", () => {
     const d = decodeShare(DEFAULT_SHARE_CODE)!;
-    expect(d).toEqual({ lon: 17.5025, lat: 15.1644, zoom: 3.52, proj: "globe", dataset: "era5", basemap: "openfreemap-dark", ut: 14,
-      layers: [{ id: "rdpa", opacity: 0.85, cfg: { mode: "streamlines" } }, { id: "dunes", opacity: 1 }, { id: "dpm", opacity: 0.85 }], cell: null, panel: true });
+    expect(d).toEqual({ lon: 17.5025, lat: 15.1644, zoom: 3.52, proj: "globe", dataset: "era5", basemap: "hillshade", ut: 14,
+      layers: [{ id: "rdpa", opacity: 0.85, cfg: { mode: "streamlines" } }, { id: "dunes", opacity: 0.55 }, { id: "dpm", opacity: 0.85 }], cell: null, panel: true, names: true });
     expect(DEFAULT_VIEW).toEqual(d);
     expect(encodeShare(DEFAULT_VIEW)).toBe(DEFAULT_SHARE_CODE);
     expect(reg.threshold.values[DEFAULT_VIEW.ut]).toBeCloseTo(0.15, 9);
@@ -39,12 +39,13 @@ describe("the default view", () => {
       const { start, app } = open("", search);
       expect(start.source).toBe("default");
       expect(app.dataset).toBe("era5");
-      expect(app.basemap).toBe("openfreemap-dark");
+      expect(app.basemap).toBe("hillshade");
+      expect(app.names).toBe(true);                // dune-field names shown
       expect(app.projection).toBe("globe");
       expect(app.utIndex).toBe(14);
       expect(app.cell).toBeNull();
       expect(app.embed).toBe(search.includes("embed"));
-      expect(visible(app)).toEqual([["rdpa", 0.85, { mode: "streamlines" }], ["dunes", 1, null], ["dpm", 0.85, null]]);
+      expect(visible(app)).toEqual([["rdpa", 0.85, { mode: "streamlines" }], ["dunes", 0.55, null], ["dpm", 0.85, null]]);
       expect(app.order.filter((id) => app.layers[id].visible)).toEqual(["rdpa", "dunes", "dpm"]); // drawing order, top first
       expect([start.url.lon, start.url.lat, start.url.zoom]).toEqual([17.5025, 15.1644, 3.52]);
       expect(start.bearing).toBe(0);
@@ -56,7 +57,7 @@ describe("the default view", () => {
     const { start, app } = open("", "", "era5-land");
     expect(start.source).toBe("default");
     expect(app.dataset).toBe("era5-land");
-    expect(visible(app)).toEqual([["rdpa", 0.85, { mode: "streamlines" }], ["dunes", 1, null], ["dpm", 0.85, null]]);
+    expect(visible(app)).toEqual([["rdpa", 0.85, { mode: "streamlines" }], ["dunes", 0.55, null], ["dpm", 0.85, null]]);
     expect(open("", "", "era5").app.dataset).toBe("era5");
     expect(open("", "", "no-such-dataset").app.dataset).toBe(reg.defaultDataset); // unknown stored id: registry fallback
   });
@@ -84,7 +85,7 @@ describe("links override the default", () => {
     expect(visible(q.app).map((v) => v[0])).toEqual(["dunes", "at"].sort((a, b) => reg.layers.findIndex((l) => l.id === a) - reg.layers.findIndex((l) => l.id === b)));
     expect(q.app.utIndex).toBe(10);
     expect(q.app.cell).toEqual([1145, 1952]);
-    expect(q.app.basemap).toBe("openfreemap-dark");
+    expect(q.app.basemap).toBe("hillshade");
     expect([q.start.url.lon, q.start.url.lat, q.start.url.zoom]).toEqual([15.2, -24.5, 6.2]);
     const e = open("", "?dataset=era5&zoom=5");
     expect(e.app.dataset).toBe("era5");

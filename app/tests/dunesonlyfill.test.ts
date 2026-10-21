@@ -34,10 +34,11 @@ async function settle(map: FakeMap, ov: OverlayManager) {
 }
 
 describe("Dunes only and the dune map's opacity", () => {
-  it("map: the fill follows the slider with Dunes only on or off (opacity 1 = the style's full opacity)", async () => {
+  it("map: the fill opacity is the slider value (0 transparent … 1 opaque), with Dunes only on or off", async () => {
     const dunes = reg.layers.find((l) => l.id === "dunes")!;
     expect(isDuneMap(dunes)).toBe(true);
-    const base = (dunes.style?.fill?.["fill-opacity"] as number | undefined) ?? 0.55;
+    expect(dunes.style?.fill?.["fill-opacity"]).toBeUndefined();          // no style opacity under the slider
+    const base = 1;
     const map = new FakeMap(URLS);
     const ov = new OverlayManager(map as unknown as MlMap, reg, "https://data.example", 14, { datasetPrefix: "dune-atlas/v1" });
     const layers: Record<string, LayerState> = Object.fromEntries(reg.layers.map((l) => [l.id, { visible: false, opacity: 1 }]));

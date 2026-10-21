@@ -84,7 +84,6 @@ basemaps:
     tone: dark              # dune-name labels: pale on dark, dark brown on light (map/placelabels.ts)
     style: https://tiles.openfreemap.org/styles/dark
     attribution: "OpenFreeMap © OpenMapTiles Data from OpenStreetMap"
-    default: true             # the atlas UI is dark-themed
     info:
       description: "Dark vector basemap of OpenStreetMap roads, places, water and land cover, styled to sit under the atlas colours."
       source: "OpenFreeMap, from OpenStreetMap data (OpenMapTiles schema), dark style"
@@ -109,6 +108,7 @@ basemaps:
   - id: hillshade
     title: Shaded relief (Mapterhorn, 2D)
     kind: hillshade
+    default: true             # the opening basemap of both atlases is shaded relief
     tone: dark              # dune-name labels: pale on dark, dark brown on light (map/placelabels.ts)
     # Mapterhorn: Terrarium-encoded 512 px WebP tiles, global ~30 m (z12), finer in some countries.
     # Alternative: AWS Terrain Tiles https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png (256 px, z15).
@@ -191,12 +191,12 @@ layers:
     invertSource: dunes/nondune-land.pmtiles   # fixture: staging/fixture/dunes -> ../dunes
     invertSourceLayer: nondune_land
     visible: true
-    opacity: 0.8
+    opacity: 0.55
     units: "Cells mapped as sand dunes"
     description: "ERA5-Land 0.1° cells containing wind-blown sand dunes (canonical mask, 106,540 cells)."
     citation: "Gunn (2026) Nat Commun doi:10.1038/s41467-026-75466-y"
     style:
-      fill: {fill-color: "#a0a0a0", fill-opacity: 0.55}
+      fill: {fill-color: "#a0a0a0"}
   - id: at
     title: Migration direction αT
     titleTex: "Migration direction $\\alpha_T$"

@@ -54,17 +54,18 @@ export const PROFILE: BodyProfile = {
       lineTicks: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
     },
   },
-  /** Africa and Arabia, globe; ERA5 0.25°; u*,th = 0.15 m/s (index 14); dark basemap; RDD as streamlines
-   *  (85 %) over the dune fields (100 %) over DP (85 %); layer list open. */
+  /** Africa and Arabia, globe; ERA5 0.25°; u*,th = 0.15 m/s (index 14); shaded-relief basemap; RDD as
+   *  streamlines (85 %) over the dune fields (55 %) over DP (85 %); dune-field names shown; layer list open. */
   defaultView: {
     lon: 17.5025, lat: 15.1644, zoom: 3.52, proj: "globe",
-    dataset: "era5", basemap: "openfreemap-dark", ut: 14,
+    dataset: "era5", basemap: "hillshade", ut: 14,
     layers: [
       { id: "rdpa", opacity: 0.85, cfg: { mode: "streamlines" } },
-      { id: "dunes", opacity: 1 },
+      { id: "dunes", opacity: 0.55 },
       { id: "dpm", opacity: 0.85 },
     ],
     cell: null,
     panel: true,
+    names: true,
   },
 };

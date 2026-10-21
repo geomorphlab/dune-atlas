@@ -212,9 +212,9 @@ within ±90°, texture coordinates in [0, 1]; the unpatched code fails these che
   then the last tapped point. DOM only, so never in image exports.
 * **Opening view** (`src/core/defaultview.ts`): without view state in the URL (no `#v=`, no view keys in
   `?query`; `embed=1` / `tour=1` alone do not count, so embeds open the same way) the atlas opens
-  in `DEFAULT_VIEW`, the decoded author link `#v=AQXirhW4wRLgAgIBDgMJVSACAWQAB1UA`: globe centred
-  at 15.1644° N, 17.5025° E, zoom 3.52; ERA5 0.25°; u*,th = 0.15 m/s (index 14); dark basemap;
-  RDD as streamlines at 85 % over the dune fields (100 %) over DP (85 %); no selected cell; layer
+  in `DEFAULT_VIEW`, the decoded author link `#v=AUXirhW4wRLgAgIDDgMJVSACATcAB1UA`: globe centred
+  at 15.1644° N, 17.5025° E, zoom 3.52; ERA5 0.25°; u*,th = 0.15 m/s (index 14); shaded-relief basemap;
+  RDD as streamlines at 85 % over the dune fields (55 %) over DP (85 %); dune-field names shown; no selected cell; layer
   list open (on narrow screens it stays collapsed, the responsive default). Defaults are set at the
   source (`resolveInitialState` -> `initialAppState`), not by redirecting: the address stays bare
   while the state equals the opening one (and becomes bare again when it returns to it, e.g. after

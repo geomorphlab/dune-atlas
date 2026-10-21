@@ -398,7 +398,7 @@ function vectorFieldHandle(layer: LayerDef, ctx: AdapterContext, opacity: number
 }
 
 const DEFAULT_VECTOR_STYLE: Record<string, Record<string, unknown>> = {
-  fill: { "fill-color": DEFAULT_VECTOR_FILL, "fill-opacity": 0.55 },
+  fill: { "fill-color": DEFAULT_VECTOR_FILL },
 };
 const OPACITY_PROP: Record<string, string> = { fill: "fill-opacity", circle: "circle-opacity", raster: "raster-opacity" };
 const GEOM_FILTER: Record<string, unknown> = {
@@ -407,8 +407,10 @@ const GEOM_FILTER: Record<string, unknown> = {
 };
 
 /** Shared by vector-ish adapters: one MapLibre layer per style key (fill, circle; outlines are
- *  not drawn, a registry `line` style is ignored), opacity scaling, the user fill colour, and the
- *  optional 'invert' complement fill (layer.invertSource). */
+ *  not drawn, a registry `line` style is ignored), the user fill colour, and the optional 'invert'
+ *  complement fill (layer.invertSource). The opacity slider is the drawn opacity (0 = transparent,
+ *  1 = opaque): an opacity in the registry style is not applied on top of it (the layer's default
+ *  look is its registry `opacity`). */
 function addStyledLayers(layer: LayerDef, ctx: AdapterContext, opacity: number, sourceSpec: Parameters<MlMap["addSource"]>[1], kinds: string[], extra: (kind: string) => Partial<AddLayerObject>): LayerHandle {
   const map = ctx.map;
   const sourceId = `ovsrc-${layer.id}`;
@@ -420,20 +422,19 @@ function addStyledLayers(layer: LayerDef, ctx: AdapterContext, opacity: number, 
   let op = opacity;
   let col = vectorColors(layer, ctx.cfg);
   const invId = `ov-${layer.id}-invert`, invSrc = `ovsrc-${layer.id}-invert`;
-  const fillBase = typeof style.fill?.["fill-opacity"] === "number" ? (style.fill["fill-opacity"] as number) : 0.55;
   const ensureInvert = () => {
     if (!layer.invertSource || own.has(invId)) return;
     ensurePmtiles();
     own.addSource(invSrc, { type: "vector", url: `pmtiles://${res(ctx, layer.invertSource)}` });
     const first = ids[0] && own.has(ids[0]) ? ids[0] : ctx.beforeId;
-    own.addLayer({ id: invId, type: "fill", source: invSrc, "source-layer": layer.invertSourceLayer ?? "", paint: { "fill-color": col.fill, "fill-opacity": fillBase * op } } as AddLayerObject, first);
+    own.addLayer({ id: invId, type: "fill", source: invSrc, "source-layer": layer.invertSourceLayer ?? "", paint: { "fill-color": col.fill, "fill-opacity": op } } as AddLayerObject, first);
   };
   for (const kind of kinds) {
     if (!(kind in style)) continue;
     const paint = { ...style[kind] } as Record<string, unknown>;
     const opp = OPACITY_PROP[kind];
-    base[kind] = typeof paint[opp] === "number" ? (paint[opp] as number) : 1;
-    paint[opp] = base[kind] * opacity;
+    base[kind] = 1;
+    paint[opp] = opacity;
     if (kind === "fill") paint["fill-color"] = col.fill;
     const id = `ov-${layer.id}-${kind}`;
     own.addLayer({ id, type: kind, source: sourceId, paint, minzoom: layer.minzoom ?? 0, maxzoom: layer.maxzoom ?? 24, ...extra(kind) } as AddLayerObject, ctx.beforeId);
@@ -451,7 +452,7 @@ function addStyledLayers(layer: LayerDef, ctx: AdapterContext, opacity: number, 
     setOpacity: (o: number) => {
       op = o;
       for (const kind of Object.keys(base)) if (own.has(`ov-${layer.id}-${kind}`)) map.setPaintProperty(`ov-${layer.id}-${kind}`, OPACITY_PROP[kind], base[kind] * o);
-      if (own.has(invId)) map.setPaintProperty(invId, "fill-opacity", fillBase * o);
+      if (own.has(invId)) map.setPaintProperty(invId, "fill-opacity", o);
     },
     applyConfig: (cfg) => {
       col = vectorColors(layer, cfg);
